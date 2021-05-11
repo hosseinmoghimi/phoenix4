@@ -43,8 +43,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', 
 
 
-    'core',
     'authentication',
+    'core',
+    'dashboard',
+    'farm',
+    'market',
+    'projectmanager',
+    'utility',
     'web',
 
 ]

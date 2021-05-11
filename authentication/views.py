@@ -15,3 +15,7 @@ class ProfileViews(View):
     def profile(self,request,*args, **kwargs):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"profile.html",context)
+class AuthenticationViews(View):
+    def login(self,request,*args, **kwargs):
+        context=getContext(request)
+        return render(request,TEMPLATE_ROOT+"profile.html",context)

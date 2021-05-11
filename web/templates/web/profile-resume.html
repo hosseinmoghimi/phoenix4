@@ -1,0 +1,86 @@
+{% extends "web/profile-layout.html" %}
+{% load static %}
+
+{% block content_resumes %}
+
+<div class="row">
+    <div class="col-lg-2 col-1">
+
+    </div>
+    <div class="col-lg-8 col-10">
+        <ul>
+            {% for resumecategory in selected_profile.resumecategory_set.all %}
+            <li class="rtl text-right">
+                <h3>
+                    {{resumecategory.title}}
+
+                </h3>
+                <ul>
+                    {% for resume in resumecategory.resumes %}
+                    <li زمclass="rtl text-right">
+                        <a href="{{resume.get_absolute_url}}">
+                            {{resume.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script2 %}
+
+
+
+{% if DEBUG %}
+<script src="{% static 'vendor/js/vue.js' %}"></script>
+{% else %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% endif %}
+<script>
+    let resumecategories = JSON.parse(`{{resumecategories_s|escapejs}}`)
+    profile_id = parseInt("{{selected_profile.id}}")
+    let url_add_resume_category = "{% url 'web:add_resume_category' %}"
+    let url_add_resume = "{% url 'web:add_resume' %}"
+</script>
+
+
+
+
+
+
+{% if add_resume_category_form %}
+<script>
+    let add_resume_category_form = true
+
+</script>
+{% else %}
+<script>
+    let add_resume_category_form = false
+
+</script>
+{% endif %}
+
+
+
+<script src="{% static 'web/leo/js/profile-app.js' %}"></script>
+
+{% for resumecategory in selected_profile.resumecategory_set.all %}
+
+<script>
+    $("#resumecategory{{resumecategory.pk}}").addClass("active")
+    $("#resumecategory{{resumecategory.pk}}").addClass("show")
+    $("#resumecategory{{resumecategory.pk}}").removeClass("active")
+    $("#resumecategory{{resumecategory.pk}}").removeClass("show")
+
+</script>
+{% endfor %}
+
+
+
+{% endblock %}
