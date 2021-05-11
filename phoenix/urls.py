@@ -9,9 +9,9 @@ from django.conf.urls import url
 
 urlpatterns = [
     # path('accounts/login/', AuthenticationView().login),
-    # path('', include('web.urls')),
+    path('', include('web.urls')),
     path('admin/', admin.site.urls),
-    # path('authentication/', include('authentication.urls')),
+    path('authentication/', include('authentication.urls')),
 
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
     url('favicon.ico/', serve, {'document_root': STATIC_ROOT}),
