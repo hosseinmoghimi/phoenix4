@@ -27,8 +27,7 @@ class ProjectRepo():
     def list(self,*args, **kwargs):
         objects=self.objects
         if 'search_for' in kwargs:
-            objects=objects.filter(title__contains=kwargs['search_for'])
-        
+            objects=objects.filter(title__contains=kwargs['search_for'])        
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
         return objects.all()

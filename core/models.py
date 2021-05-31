@@ -94,8 +94,8 @@ class Image(models.Model):
 
 class BasicPage(models.Model):
     for_home=models.BooleanField(_("for_home"),default=False)
-    parent = models.ForeignKey("basicpage",related_name="childs", verbose_name=_(
-        "basicpage"), on_delete=models.CASCADE)
+    parent = models.ForeignKey("BasicPage",related_name="childs",null=True,blank=True, verbose_name=_(
+        "parent"), on_delete=models.CASCADE)
     title = models.CharField(_("title"), max_length=50)
     icon = models.ForeignKey("icon", verbose_name=_(
         "icon"), null=True, blank=True, on_delete=models.CASCADE)
@@ -123,9 +123,9 @@ class BasicPage(models.Model):
                              choices=ColorEnum.choices, default=ColorEnum.PRIMARY, max_length=50)
     tags = models.ManyToManyField(
         "Tag", verbose_name=_("برچسب ها"), blank=True)
-    meta_data=models.CharField(_("MetaData"), max_length=100)
-    app_name = models.CharField(_("app_name"), max_length=50)
-    class_name = models.CharField(_("class_name"), max_length=50)
+    meta_data=models.CharField(_("MetaData"),null=True,blank=True, max_length=100)
+    app_name = models.CharField(_("app_name"),null=True,blank=True, max_length=50)
+    class_name = models.CharField(_("class_name"),null=True,blank=True, max_length=50)
     date_added = models.DateTimeField(
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(

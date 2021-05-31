@@ -9,40 +9,61 @@
                     projects
 
                 </h3>
-                {{admin_utility.add_project_btn|safe}}
 
-                <a href="/admin/projectmanager/project/add/" target="_blank" class="btn btn-link btn-info">
-                    Add Project
-                </a>
+
             </div>
 
             <div class="card-body">
-                {% for project in projects %}
-                <div>
-                    <a href="{{project.get_absolute_url}}">
-                        <div class="media">
-                            <img src="{{project.thumbnail}}" class="rounded" width="64" alt="">
-                            <div class="media-body">
-                                <h4>
-                                    {{project.title}}
-                                </h4>
-                                {% if project.short_description %}
-                                <p>
-                                    {{project.short_description|safe}}
-                                </p>
 
-                                {% endif %}
-                            </div>
-                        </div>
-                        {{project.title}}
-                    </a>
-                </div>
-                {% endfor %}
+                {{admin_utility.add_project_btn|safe}}
+                <a href="/admin/projectmanager/project/add/" target="_blank" class="btn btn-link btn-info">
+                    Add Project
+                </a>
             </div>
             <div class="card-footer">
 
             </div>
         </div>
     </div>
+    {% for project in projects %}
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <a href="{{project.get_absolute_url}}">
+
+                    <h3 class="card-title">
+                        {{project.title}}
+
+                    </h3>
+                </a>
+
+
+            </div>
+
+            <div class="card-body">
+                <div class="media">
+                    <img class="mr-3" src="{{project.thumbnail}}" alt="Generic placeholder image">
+                    <div class="media-body">
+                        {% if project.short_description %}
+
+                        {{project.short_description|safe}}
+                        {% endif %}
+                        <a href="{{project.get_absolute_url}}">
+                            more ...
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="card-footer">
+                <a href="{{project.get_absolute_url}}">
+                    more ...
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock content %}

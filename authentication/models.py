@@ -48,9 +48,9 @@ class Profile(models.Model):
     @property
     def name(self):
         if self.user is not None:
-            name=""
+            name="پروفایل"
             if not self.user.first_name=="":
-                name+=self.user.first_name+" "
+                name=self.user.first_name+" "
                 
             if not self.user.last_name=="":
                 name+=self.user.last_name+" "
