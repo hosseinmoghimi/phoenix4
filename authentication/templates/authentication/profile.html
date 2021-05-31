@@ -12,5 +12,12 @@
 
     {{user.first_name}}
     {{user.last_name}}
+    <div>
+        {% for contact in profile.profilecontact_set.all %}
+          <div>
+              {{contact.name}} : {{contact.value}}
+          </div>
+        {% endfor %}
+    </div>
 </body>
 </html>

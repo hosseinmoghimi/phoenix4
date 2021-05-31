@@ -18,6 +18,6 @@ def CoreContext(request,app_name,*args, **kwargs):
     context['PUSHER_IS_ENABLE']=PUSHER_IS_ENABLE
 
     return context
-def DefaultContext(request):
-    context=CoreContext(request=request,app_name='core')
+def DefaultContext(request,app_name='core'):
+    context=CoreContext(request=request,app_name=app_name)
     return context

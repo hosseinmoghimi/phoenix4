@@ -73,14 +73,14 @@ class Profile(models.Model):
         return reverse(APP_NAME+":profile", kwargs={"pk": self.pk})
 
 
-# class ProfileContact(models.Model):
+class ProfileContact(models.Model):
 
-#     profile=models.ForeignKey("profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-#     name=models.CharField(_("name"), max_length=50)
-#     value=models.CharField(_("value"), max_length=50)
-#     class Meta:
-#         verbose_name = _("ProfileContact")
-#         verbose_name_plural = _("ProfileContacts")
+    profile=models.ForeignKey("profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    name=models.CharField(_("name"), max_length=50)
+    value=models.CharField(_("value"), max_length=50)
+    class Meta:
+        verbose_name = _("ProfileContact")
+        verbose_name_plural = _("ProfileContacts")
 
-#     def __str__(self):
-#         return f"""{self.profile.name} : {self.name} : {self.value}"""
+    def __str__(self):
+        return f"""{str(self.profile)} : {self.name} : {self.value}"""

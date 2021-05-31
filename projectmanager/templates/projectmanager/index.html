@@ -1,0 +1,48 @@
+{% extends layout_root %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    projects
+
+                </h3>
+                {{admin_utility.add_project_btn|safe}}
+
+                <a href="/admin/projectmanager/project/add/" target="_blank" class="btn btn-link btn-info">
+                    Add Project
+                </a>
+            </div>
+
+            <div class="card-body">
+                {% for project in projects %}
+                <div>
+                    <a href="{{project.get_absolute_url}}">
+                        <div class="media">
+                            <img src="{{project.thumbnail}}" class="rounded" width="64" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    {{project.title}}
+                                </h4>
+                                {% if project.short_description %}
+                                <p>
+                                    {{project.short_description|safe}}
+                                </p>
+
+                                {% endif %}
+                            </div>
+                        </div>
+                        {{project.title}}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -9,7 +9,8 @@ from django.conf.urls import url
 
 urlpatterns = [
     # path('accounts/login/', AuthenticationView().login),
-    path('', include('web.urls')),
+    path('', include('projectmanager.urls')),
+    path('web/', include('web.urls')),
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),
 

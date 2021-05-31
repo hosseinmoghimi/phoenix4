@@ -4,20 +4,20 @@ from enum import Enum
 
    
 class AppNameEnum(TextChoices):
-    drassistant='drassistant',_('drassistant')
+    # drassistant='drassistant',_('drassistant')
     web='web',_('web')
-    stock='stock',_('stock')
-    charity='charity',_('charity')
+    # stock='stock',_('stock')
+    # charity='charity',_('charity')
     projectmanager='projectmanager',_('projectmanager')
-    market='market',_('market')
-    transport='transport',_('transport')
-    livestock='livestock',_('livestock')
-    charirt='charirty',_('charirty')
+    # market='market',_('market')
+    # transport='transport',_('transport')
+    # livestock='livestock',_('livestock')
+    # charirt='charirty',_('charirty')
     core='core',_('core')
-    dashboard='dashboard',_('dashboard')
-    realestate='realestate',_('realestate')
-    vehicles='vehicles',_('vehicles')
-    projectcontrol='projectcontrol',_('projectcontrol')
+    # dashboard='dashboard',_('dashboard')
+    # realestate='realestate',_('realestate')
+    # vehicles='vehicles',_('vehicles')
+    # projectcontrol='projectcontrol',_('projectcontrol')
   
 class TextDirectionEnum(TextChoices):
     Rtl='rtl',_('rtl')
