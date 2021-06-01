@@ -19,7 +19,6 @@ class BasicPageRepo:
         new_page.title=title
         if 'parent_id' in kwargs:
             new_page.parent_id=kwargs['parent_id']
-            new_page.parent_id=kwargs['parent_id']
         new_page.save()
         new_page.app_name=new_page.parent.app_name
         new_page.class_name=new_page.parent.class_name
@@ -43,6 +42,32 @@ class BasicPageRepo:
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
         return objects.all()
+
+class PageLinkRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        self.objects=PageLink.objects
+    def add_page_link(self,title,url,page_id,*args, **kwargs):
+        new_page_link=PageLink(title=title,page_id=page_id,url=url,icon_fa="fa fa-tag")
+        
+        new_page_link.save()
+        return new_page_link
+
+    def page_link(self,*args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'page_link_id' in kwargs:
+            return self.objects.filter(pk=kwargs['page_link_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
 
 
 class ParameterRepo:

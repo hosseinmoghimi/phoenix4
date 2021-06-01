@@ -9,7 +9,12 @@ from .utils import AdminUtility
 from .constants import *
 from django.views import View
 TEMPLATE_ROOT="core/"
-
+def PageContext(request,page):
+    context={}
+    context['page']=page
+    if request.user.has_perm(APP_NAME+".add_pagelink"):
+        context['add_page_link_form']=AddPageLinkForm()
+    return context
 def getContext(request):
     context=DefaultContext(request=request,app_name=APP_NAME)
     context["layout_root"]=TEMPLATE_ROOT+"/layout.html"

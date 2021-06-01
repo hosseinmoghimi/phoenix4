@@ -2,7 +2,7 @@ from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from typing import ContextManager
 from django.shortcuts import render
 from .apps import APP_NAME
-from core.views import DefaultContext
+from core.views import DefaultContext,PageContext
 from .repo import OrganizationUnitRepo, ProjectRepo
 from django.views import View
 from .utils import AdminUtility
@@ -24,9 +24,10 @@ class BasicViews(View):
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class ProjectViews(View):
     def project(self,request,*args, **kwargs):
-        project=ProjectRepo(request).project(*args, **kwargs)        
+        project=ProjectRepo(request).project(*args, **kwargs)   
+        page=project     
         context=getContext(request)
-        context['page']=project
+        context.update(PageContext(request=request,page=page))
         context['project']=project
         context['add_project_form']=AddProjectForm()
         context['projects']=project.childs.all()
@@ -35,8 +36,9 @@ class ProjectViews(View):
 class OrganizationUnitViews(View):
     def organization_unit(self,request,*args, **kwargs):
         organization_unit=OrganizationUnitRepo(request).organization_unit(*args, **kwargs)        
-        context=getContext(request)
-        context['page']=organization_unit
+        page=organization_unit     
+        context=getContext(request)  
+        context.update(PageContext(request=request,page=page))
         context['organization_unit']=organization_unit
         context['add_organization_unit_form']=AddOrganizationUnitForm()
         context['organization_units']=organization_unit.childs.all()

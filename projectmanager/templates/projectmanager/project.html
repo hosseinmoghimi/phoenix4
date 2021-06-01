@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block content %}
-<div id="project-app">
+<div>
 
 
     <div class="farsi">
@@ -25,7 +25,7 @@
 
 
         <div class="col-md-4">
-            <div class="card my-3">
+            <div class="card mb-3"  id="project-app">
                 <div class="card-header">
 
                     <h5 class="card-title text-center farsi">
@@ -81,7 +81,7 @@
                         <div class="row">
                             <div class="col-8">
                                 <input required type="text" v-model="new_project_title" class="farsi form-control"
-                                    placeholder="فرزند جدید">
+                                    placeholder="پروژه جدید">
 
                             </div>
                             <div class="col-4">
@@ -100,7 +100,9 @@
 
         </div>
 
-
+        <div class="col-md-4">
+            {% include "core/includes/page-link-app.html" %}
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -108,12 +110,12 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "core/includes/page-script.html" %}
+
 <script>
-    let project_id = parseInt("{{project.id}}")
     let project_app = new Vue({
         el: "#project-app",
         data: {
-            project_id: project_id,
             new_project_title: "",
             sub_projects: [],
 
@@ -123,7 +125,7 @@
                 let url = "{% url 'projectmanager:add_project' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    parent_id: project_id,
+                    parent_id: page_id,
                     title: this.new_project_title,
                 }
                 let posting = $.post(url, payload)

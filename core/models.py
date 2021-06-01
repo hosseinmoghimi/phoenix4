@@ -4,8 +4,9 @@ from .apps import APP_NAME
 from django.utils.translation import gettext as _
 from .settings import *
 from django.shortcuts import reverse
+from django.http import Http404
 from .enums import *
-
+from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
 
 class Icon(models.Model):
@@ -24,7 +25,7 @@ class Icon(models.Model):
         verbose_name_plural = _("Icons")
 
     def __str__(self):
-        return self.name
+        return self.name if self.name is not None else ("icon "+str(self.pk))
 
     def get_icon_tag(self, icon_style='', color=None,no_color=False):
         
@@ -194,7 +195,8 @@ class BasicPage(models.Model):
         try:
             return f"{self.app_name}:{self.class_name}  {self.title}"
         except:
-            return "sdssdsdsdsdsd"
+            return self.title
+            # return "sdssdsdsdsdsd"
 
     def get_edit_url(self):
         return f"{ADMIN_URL}{self.app_name}/{self.class_name}/{self.pk}/change/"
@@ -211,6 +213,179 @@ class BasicPage(models.Model):
         return reverse(self.app_name+":"+self.class_name, kwargs={"pk": self.pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
+
+class Link(Icon):    
+    title = models.CharField(_("عنوان"), max_length=200)
+    priority = models.IntegerField(_("ترتیب"), default=100)
+    url = models.CharField(_("آدرس لینک"), max_length=2000, default="#")
+    profile_adder = models.ForeignKey(
+        "authentication.Profile", verbose_name=_("پروفایل"),null=True,blank=True, on_delete=models.CASCADE)
+    new_tab=models.BooleanField(_('در صفحه جدید باز شود؟'),default=False)
+    date_added = models.DateTimeField(
+        _("افزوده شده در"), auto_now=False, auto_now_add=True)
+    date_updated = models.DateTimeField(
+        _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    def persian_date_added_tag(self):
+        value = self.date_added
+        a = PersianCalendar().from_gregorian(value)
+        return f"""
+        <span  title="{value.strftime("%Y/%m/%d %H:%M:%S") }" class="text-secondary">
+            <small>
+                {str(a)}
+            </small>   
+        </span>
+        """
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+
+    def persian_date_updated(self):
+        return PersianCalendar().from_gregorian(self.date_updated)
+    
+    def get_link(self):
+        return f"""
+
+            <a target="_blank" href="{self.url}">
+            {self.get_icon_tag()}
+            <span class="mx-2">
+            {self.title}
+            </span>
+            
+            </a>
+        """
+    def get_link_btn(self):
+        target='target="_blank"' if self.new_tab else ''
+        return f"""
+
+            <a {target} class="btn btn-{self.icon_color} " href="{self.url}">
+            <span class="ml-2">
+            {self.get_icon_tag_pure()}
+            </span>
+            {self.title}
+            </a>
+        """
+
+    def get_link_icon_tag(self):
+        if self.url:
+            icon = self.get_icon_tag()
+            return f'<a title="{self.title}" href="{self.url}">{icon}</a>'
+        else:
+            return self.get_icon_tag()
+
+    def to_link_tag(self):
+        return """
+          <a class="btn  btn-round btn-block btn-{color}" href="{url}">
+         {icon}
+          {title}</a>
+        """.format(color=self.color, icon=self.get_icon_tag(), url=self.url, title=self.title)
+    def target(self):
+        if self.new_tab:
+            return '_blank'
+        # return '_parent'
+        # return '_top'
+        return '_self'
+    class Meta:
+        verbose_name = _("Link")
+        verbose_name_plural = _("لینک ها")
+
+    def __str__(self):
+        return self.title+'  ==> ' +self.url
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/link/{self.pk}/change/'
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" class="mx-2" title="ویرایش">
+                <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        """
+class PageLink(Link):
+    page=models.ForeignKey("BasicPage",related_name="links", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name = _("لینک صفحات")
+        verbose_name_plural = _("لینک های صفحات")
+
+
+class Document(Icon):
+    download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
+    title = models.CharField(_('عنوان'), max_length=200)
+    priority = models.IntegerField(_('ترتیب'), default=100)
+    profile = models.ForeignKey("authentication.Profile", verbose_name=_(
+        "پروفایل"), on_delete=models.CASCADE)
+    file = models.FileField(_("فایل ضمیمه"), null=True, blank=True,
+                            upload_to=APP_NAME+'/Document', max_length=100)
+    mirror_link = models.CharField(_('آدرس بیرونی'),null=True,blank=True, max_length=10000)
+    date_added = models.DateTimeField(
+        _("افزوده شده در"), auto_now=False, auto_now_add=True)
+    date_updated = models.DateTimeField(
+        _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    def persian_date_added_tag(self):
+        value = self.date_added
+        a = PersianCalendar().from_gregorian(value)
+        return f"""
+        <span  title="{value.strftime("%Y/%m/%d %H:%M:%S") }" class="text-secondary">
+            <small>
+                {str(a)}
+            </small>   
+        </span>
+        """
+    
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+
+    def persian_date_updated(self):
+        return PersianCalendar().from_gregorian(self.date_updated)
+    def get_link(self):
+        return f"""
+
+            <a href="{self.get_download_url()}">
+            {self.get_icon_tag()}
+            {self.title}</a>
+        """
+
+    class Meta:
+        verbose_name = _("Document")
+        verbose_name_plural = _("اسناد")
+
+    def get_download_url(self):
+        if self.mirror_link and self.mirror_link is not None:
+            return self.mirror_link
+        if self.file:
+            return reverse(APP_NAME+':download', kwargs={'pk': self.pk})
+        else:
+            return ''
+
+    def download_response(self):
+        #STATIC_ROOT2 = os.path.join(BASE_DIR, STATIC_ROOT)
+        file_path = str(self.file.path)
+        # print(file_path)
+        # return JsonResponse({'download:':str(file_path)})
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(
+                    fh.read(), content_type="application/force-download")
+                response['Content-Disposition'] = 'inline; filename=' + \
+                    os.path.basename(file_path)
+                self.download_counter+=1
+                self.save()
+                return response
+        raise Http404
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("dashboard:document", kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
+
+ 
+class PageDocument(Document):
+    page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
+    
 
 
 class Parameter(models.Model):

@@ -1,0 +1,31 @@
+<script>
+    let page_id=parseInt("{{page.id}}")
+    let link_app = new Vue({
+        el: "#link-app",
+        data: {
+            new_link_title: "",
+            new_link_url: "",
+            links: [],
+            show_add_link:false,
+        },
+        methods: {
+            add_page_link: function () {
+                let url = "{% url 'core:add_page_link' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    page_id: page_id,
+                    title: this.new_link_title,
+                    url: this.new_link_url,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+
+                        link_app.links.push(data.page_link)
+                        link_app.new_link_title = ""
+                    }
+                })
+            },
+        }
+    })
+</script>
