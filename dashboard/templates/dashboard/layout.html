@@ -1,0 +1,38 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+    {% include "dashboard/includes/head.html" %}
+
+    {% block head %}
+
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container">
+
+        {% include "dashboard/includes/navbar.html" %}
+
+
+        <div class="pt-5">
+
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    {% csrf_token %}
+    {% include "dashboard/includes/layout-scripts.html" %}
+
+   
+    {% block script %}
+
+    {% endblock %}
+</body>
+
+</html>

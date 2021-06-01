@@ -130,7 +130,62 @@ class BasicPage(models.Model):
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    def image(self):
+        if self.image_main_origin:
+            return MEDIA_URL+str(self.image_main_origin)
+    def image_header(self):
+        if self.image_header_origin:
+            return MEDIA_URL+str(self.image_header_origin)
+        if self.image_main_origin:
+            return MEDIA_URL+str(self.image_main_origin)
+        if self.image_thumbnail_origin:
+            return MEDIA_URL+str(self.image_thumbnail_origin)
+        else:
+            return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.child_class}.jpg'
+
+    def thumbnail(self):
+        if self.image_thumbnail_origin:
+            return MEDIA_URL+str(self.image_thumbnail_origin)
+        elif self.image_main_origin:
+            return MEDIA_URL+str(self.image_main_origin)
+        elif self.image_header_origin:
+            return MEDIA_URL+str(self.image_header_origin)
+        
+
+        return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.jpg'
     
+
+    def get_breadcrumb_li(self):
+        this_page_li= f"""
+            <li class="breadcrumb-item">
+            <a href="{self.get_absolute_url()}">{self.title}</a></li>
+            """
+        if self.parent is not None:
+            return self.parent.get_breadcrumb_li()+this_page_li
+        return this_page_li
+
+    # def get_breadcrumb_li(self):
+    #     if self.parent is None:
+    #         home='<li class="breadcrumb-item"><a href="'+reverse('market:list',kwargs={'parent_id':0})+'">خانه</a></li>'        
+    #         return home+'<li class="breadcrumb-item"><a href="'+reverse('market:list',kwargs={'parent_id':self.id})+'">'+self.name+'</a></li>'  
+    #     else:
+    #         return self.parent.get_breadcrumb_li()+self.get_breadcrumb_li()
+    def get_breadcrumb(self):
+        home_url=reverse(f'{self.app_name}:home')
+        
+        startnav="""<nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0" style="background:none !important;">
+            """
+        home=f"""
+        <li class="breadcrumb-item">
+            <a href="{home_url}">
+                خانه
+            </a>
+        </li>"""
+        inside=home+self.get_breadcrumb_li()         
+        endnav='</ol></nav>'
+        return startnav+inside+endnav
+
     class Meta:
         verbose_name = _("BasicPage")
         verbose_name_plural = _("BasicPages")
@@ -143,6 +198,7 @@ class BasicPage(models.Model):
 
     def get_edit_url(self):
         return f"{ADMIN_URL}{self.app_name}/{self.class_name}/{self.pk}/change/"
+        # return f"{ADMIN_URL}core/basicpage/{self.pk}/change/"
     def get_edit_btn(self):
         return f"""
         <a title="ویرایش {self.title}" href="{self.get_edit_url()}">
@@ -153,6 +209,7 @@ class BasicPage(models.Model):
         """
     def get_absolute_url(self):
         return reverse(self.app_name+":"+self.class_name, kwargs={"pk": self.pk})
+        # return reverse("core:page", kwargs={"pk": self.pk})
 
 
 

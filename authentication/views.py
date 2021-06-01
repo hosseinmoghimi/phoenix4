@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .repo import *
+from .forms import *
 from django.views import View
 from core.views import CoreContext
 
@@ -17,5 +18,34 @@ class ProfileViews(View):
         return render(request,TEMPLATE_ROOT+"profile.html",context)
 class AuthenticationViews(View):
     def login(self,request,*args, **kwargs):
-        context=getContext(request)
-        return render(request,TEMPLATE_ROOT+"profile.html",context)
+        if request.method=='POST':
+            login_form=LoginForm(request.POST)
+            if login_form.is_valid():
+                username=login_form.cleaned_data['username']
+
+                password=login_form.cleaned_data['password']
+                back_url=login_form.cleaned_data['back_url']
+                if back_url is None or not back_url:
+                    back_url=reverse('projectmanager:home')
+                request1=ProfileRepo(user=None).login(request=request,username=username,password=password)
+                if request1 is not None and request1.user is not None and request1.user.is_authenticated :
+                    # print(back_url)
+                    # print(100*'#')
+                    # Token.objects.filter(user=request1.user).delete()
+                    # Token.objects.create(user=request1.user)
+                    return redirect(back_url)
+                else:   
+                    context=getContext(request=request)
+                    context['message']='نام کاربری و کلمه عبور صحیح نمی باشد.'
+                    context['login_form']=LoginForm()
+                    context['search_form']=None
+                    context['register_form']=RegisterForm()
+                    context['back_url']=back_url
+                    context['reset_password_form']=ResetPasswordForm()
+                    return render(request,TEMPLATE_ROOT+'login.html',context)
+        else:
+            context=getContext(request)
+            return render(request,TEMPLATE_ROOT+"login.html",context)
+    def logout(self,request):
+        ProfileRepo.logout(request)
+        return redirect(reverse('authentication:login'))

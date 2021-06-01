@@ -1,12 +1,25 @@
+from core.apis import BasicApi
 from django.shortcuts import render
 from .apps import APP_NAME
+from .forms import *
+from .repo import *
 from .settings import *
 from .enums import *
+from .utils import AdminUtility
 from .constants import *
+from django.views import View
+TEMPLATE_ROOT="core/"
+
+def getContext(request):
+    context=DefaultContext(request=request,app_name=APP_NAME)
+    context["layout_root"]=TEMPLATE_ROOT+"/layout.html"
+    context["admin_utility"]=AdminUtility(request=request)
+    return context
 # Create your views here.
 def CoreContext(request,app_name,*args, **kwargs):
     context={}
     context['user']=request.user
+    context['profile']=ProfileRepo(user=request.user).me
     context['APP_NAME']=app_name
     
     context[app_name+'_sidebar']=True
@@ -18,6 +31,21 @@ def CoreContext(request,app_name,*args, **kwargs):
     context['PUSHER_IS_ENABLE']=PUSHER_IS_ENABLE
 
     return context
-def DefaultContext(request,app_name='core'):
+def DefaultContext(request,app_name='core',*args, **kwargs):
     context=CoreContext(request=request,app_name=app_name)
     return context
+
+
+class BasicViews(View):
+    def home(self,request,*args, **kwargs):
+        context=getContext(request)
+        context['pages']=BasicPageRepo(request=request).list(for_home=True)
+        return render(request,TEMPLATE_ROOT+"index.html",context)
+class PageViews(View):
+    def page(self,request,*args, **kwargs):
+        page=BasicPageRepo(request).page(*args, **kwargs)        
+        context=getContext(request)
+        context['page']=page
+        context['add_child_form']=AddPageForm()
+        context['childs']=page.childs.all()
+        return render(request,TEMPLATE_ROOT+"page.html",context)

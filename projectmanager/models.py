@@ -22,3 +22,16 @@ class Project(ProjectManagerPage):
     def save(self,*args, **kwargs):
         self.class_name="project"
         return super(Project,self).save(*args, **kwargs)
+
+
+class OrganizationUnit(ProjectManagerPage):
+    
+    class Meta:
+        verbose_name = _("OrganizationUnit")
+        verbose_name_plural = _("OrganizationUnits")
+    def save(self,*args, **kwargs):
+        self.class_name="organizationunit"
+        return super(OrganizationUnit,self).save(*args, **kwargs)
+
+
+
