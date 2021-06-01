@@ -1,6 +1,6 @@
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Project,OrganizationUnit
+from .models import Employee, Material, Project,OrganizationUnit
 
 
 class ProjectRepo():
@@ -88,3 +88,95 @@ class OrganizationUnitRepo():
         
         new_organization.save()
         return new_organization
+
+
+        
+
+class EmployeeRepo():
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.objects=Employee.objects
+    def employee(self,*args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'employee_id' in kwargs:
+            return self.objects.filter(pk=kwargs['employee_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
+    def get(self,*args, **kwargs):
+        return self.organization_unit(*args, **kwargs)
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])        
+        if 'for_home' in kwargs:
+            objects=objects.filter(Q(for_home=kwargs['for_home'])|Q(parent=None))
+        return objects.all()
+    def add_employee(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_employee"):
+            return None
+        new_employee=Employee()
+
+        if 'profile_id' in kwargs:
+            new_employee.profile_id=kwargs['profile_id']
+
+        if 'organization_unit_id' in kwargs:
+            new_employee.organization_unit_id=kwargs['organization_unit_id']
+        
+        new_employee.save()
+        return new_employee
+
+
+
+   
+
+class MaterialRepo():
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.objects=Material.objects
+    def material(self,*args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'material_id' in kwargs:
+            return self.objects.filter(pk=kwargs['material_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
+    def get(self,*args, **kwargs):
+        return self.organization_unit(*args, **kwargs)
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])        
+        if 'for_home' in kwargs:
+            objects=objects.filter(Q(for_home=kwargs['for_home'])|Q(parent=None))
+        return objects.all()
+    def add_material(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_material"):
+            return None
+        new_material=Material()
+
+        if 'parent_id' in kwargs:
+            new_material.parent_id=kwargs['parent_id']
+
+        if 'title' in kwargs:
+            new_material.title=kwargs['title']
+        
+        new_material.save()
+        return new_material
+

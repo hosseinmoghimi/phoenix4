@@ -102,7 +102,82 @@
         </div>
 
         <div class="col-md-4">
-        {% include "core/includes/page-link-app.html" %}
+            <div class="card mb-3" id="employees-app">
+                <div class="card-header">
+
+                    <h5 class="card-title text-center farsi">
+                        پرسنل
+                    </h5>
+
+
+                </div>
+
+                <div class="card-body">
+                    {% for employee in organization_unit.employee_set.all %}
+                    <a href="{{employee.get_absolute_url}}">
+                        <div class="media">
+                            <img class="mr-3 rounded" width="64" src="{{employee.profile.image}}" alt="">
+                            <div class="media-body farsi">
+
+                                <h5>
+                                    {{employee.profile.name}}
+
+                                </h5>
+
+
+                            </div>
+                        </div>
+                    </a>
+
+                    {% endfor %}
+                    <div v-for="employee in employees">
+                        <a :href="employee.get_absolute_url">
+                            <div class="media">
+                                <img class="mr-3 rounded" width="64" :src="employee.profile.image" alt="">
+                                <div class="media-body farsi">
+
+                                    <h5 v-text="employee.profile.name">
+
+                                    </h5>
+
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer ">
+
+                    {% if add_employee_form %}
+
+                    <form @submit.prevent="add_employee()">
+                        <div class="row">
+                            <div class="col-8">
+                                <input required type="text" v-model="new_employee_fist_name" class="farsi form-control"
+                                    placeholder="نام پرسنل جدید">
+                                <input required type="text" v-model="new_employee_last_name" class="farsi form-control"
+                                    placeholder="نام خانوادگی پرسنل جدید">
+
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="col-md-4">
+            {% include "core/includes/page-link-app.html" %}
         </div>
     </div>
 </div>
@@ -112,11 +187,12 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-script.html" %}
+{% include "projectmanager/includes/employees-app.html" %}
 <script>
 
 
 
-   
+
     let organization_unit_app = new Vue({
         el: "#organization-unit-app",
         data: {

@@ -1,8 +1,8 @@
-from projectmanager.serializers import OrganizationUnitSerializer, ProjectSerializer
+from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import OrganizationUnitRepo, ProjectRepo
+from .repo import MaterialRepo, OrganizationUnitRepo, ProjectRepo
 from .forms import *
 
 
@@ -38,6 +38,24 @@ class OrganizationUnitApi(APIView):
                 parent_id=add_organization_unit_form.cleaned_data['parent_id']
                 organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,title=title)
                 context['organization_unit']=OrganizationUnitSerializer(organization_unit).data
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+
+class MaterialApi(APIView):
+    def add_material(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_material_form=AddMaterialForm(request.POST)
+            if add_material_form.is_valid():
+                log+=1
+                title=add_material_form.cleaned_data['title']
+                parent_id=add_material_form.cleaned_data['parent_id']
+                material=MaterialRepo(request=request).add_material(parent_id=parent_id,title=title)
+                context['material']=MaterialSerializer(material).data
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

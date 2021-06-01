@@ -1,0 +1,52 @@
+{% load to_price %}
+<table class="table table-striped">
+    <thead>
+        <th>
+            متریال
+        </th>
+        <th>
+            تعداد
+        </th>
+        <th>
+            قیمت واحد
+        </th>
+        <th>
+            جمع
+        </th>
+        <th>
+
+        </th>
+    </thead>
+    <tbody>
+        {% for material_request in project.materialrequest_set.all %}
+        <tr>
+            <td>
+                <a href="{{material_request.material.get_absolute_url}}">
+
+                    {{material_request.material.title}}
+                </a>
+            </td>
+            <td>
+                {{material_request.quantity}}
+                <small>
+
+                    {{material_request.unit_name}}
+                </small>
+
+            </td>
+            <td>
+                {{material_request.unit_price|to_price_pure}}
+
+            </td>
+            <td>
+                {{material_request.line_total|to_price}}
+
+            </td>
+            <td>
+                {{material_request.get_status_tag|safe}}
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

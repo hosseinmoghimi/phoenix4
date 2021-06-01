@@ -164,6 +164,84 @@
         </div>
 
 
+         
+        <div class="col-md-4">
+            <div class="card my-3">
+                <div class="card-header card-header-success">
+
+                    <h5 class="card-title text-center farsi">
+متریال ها                    </h5>
+
+
+                </div>
+
+                <div class="card-body">
+                    {% for material in materials %}
+                    <a href="{{material.get_absolute_url}}">
+                        <div class="media">
+                            <img class="mr-3 rounded" width="64" src="{{material.thumbnail}}" alt="">
+                            <div class="media-body farsi">
+
+                                <h5>
+                                    {{material.title}}
+
+                                </h5>
+                                {% if material.short_description %}
+
+                                {{material.short_description|safe}}
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </a>
+
+                    {% endfor %}
+                    <div v-for="material in materials">
+                        <a :href="material.get_absolute_url">
+                            <div class="media">
+                                <img class="mr-3 rounded" width="64" :src="material.thumbnail" alt="">
+                                <div class="media-body farsi">
+
+                                    <h5 v-text="material.title">
+
+                                    </h5>
+                                    <div v-html="material.short_description"></div>
+
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer ">
+
+                    {% if add_material_form %}
+
+                    <form @submit.prevent="add_material()">
+                        <div class="row">
+                            <div class="col-8">
+                                <input required type="text" v-model="new_organization_unit_title" class="farsi form-control"
+                                    placeholder="واحد سازمانی جدید">
+
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+
 
     </div>
 </div>
@@ -180,6 +258,7 @@
             new_project_title: "",
             projects: [],
             organization_units:[],
+            materials:[],
             new_organization_unit_title:"",
 
         },
