@@ -96,6 +96,8 @@ class EmployeeViews(View):
         employee=EmployeeRepo(request).employee(*args, **kwargs)        
         context=getContext(request)  
         context['employee']=employee
+        
+        context['layout']="base-layout.html"
         context['selected_profile']=employee.profile
         return render(request,TEMPLATE_ROOT+"employee.html",context)
 

@@ -15,6 +15,7 @@ class BasicViews(View):
 class ProfileViews(View):
     def profile(self,request,*args, **kwargs):
         context=getContext(request)
+        context['layout']="base-layout.html"
         selected_profile=ProfileRepo(user=request.user)
         if 'profile_id' in kwargs:
             selected_profile=ProfileRepo(request.user).profile(pk=kwargs['profile_id'])

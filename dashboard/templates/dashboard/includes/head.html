@@ -35,4 +35,9 @@ th,td{
             margin-right: 1em;
         }
     </style>
-    <title>{{app.title}}</title>
+    <title>{{app.title}}
+
+        {% if page.title %}
+          | {{page.title}}
+        {% endif %}
+    </title>

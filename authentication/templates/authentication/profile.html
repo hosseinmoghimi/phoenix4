@@ -1,4 +1,4 @@
-{% extends layout %}
+{% extends "base-layout.html" %}
 {% load static %}
 {% block head %}
 <style>
@@ -90,12 +90,14 @@
                                 <p class="text-secondary mb-1">{% if selected_profile.bio %}{{selected_profile.bio}}{% endif %}</p>
                                 
                                 
-                                <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
                                 {% block content_1 %}
                                   
                                 {% endblock %}
-                                <button class="btn btn-primary">Follow</button>
-                                <a class="btn btn-outline-danger" href="{{selected_profile.get_edit_url}}">ویرایش</a>
+                                <button class="btn btn-outline-primary">Follow</button>
+                                <a class="btn btn-outline-danger" href="{{selected_profile.get_edit_url}}">
+                                    
+                                    
+                                    ویرایش</a>
                             </div>
                         </div>
                     </div>
