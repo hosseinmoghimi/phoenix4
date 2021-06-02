@@ -28,12 +28,12 @@
 
     <div class="row ">
 
-<div class="col-md-4">
-    <div class="mb-3 py-3">
+        <div class="col-md-4">
+            <div class="mb-3 py-3">
 
-        <img src="{{material.thumbnail}}" class="rounded w-100" alt="">
-    </div>
-</div>
+                <img src="{{material.thumbnail}}" class="rounded w-100" alt="">
+            </div>
+        </div>
         <div class="col-md-4">
 
             {% include "projectmanager/includes/materials-app/template.html" %}
@@ -43,6 +43,8 @@
 
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
+            {% include "core/includes/page-documents-app/template.html" %}
+
         </div>
 
 
@@ -168,9 +170,14 @@
 
 
 {% block script %}
+<script>
+    let parent_id = parseInt("{{parent_id}}")
+
+</script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
 
+{% include "core/includes/page-documents-app/script.html" %}
 
 {% include "projectmanager/includes/materials-app/script.html" %}
 

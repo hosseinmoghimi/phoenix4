@@ -16,6 +16,9 @@ def PageContext(request,page):
 
     if request.user.has_perm(APP_NAME+".add_pagelink"):
         context['add_page_link_form']=AddPageLinkForm()
+
+    if request.user.has_perm(APP_NAME+".add_pagedocument"):
+        context['add_page_document_form']=AddPageDocumentForm()
     return context
 def getContext(request):
     context=DefaultContext(request=request,app_name=APP_NAME)
@@ -43,12 +46,85 @@ def DefaultContext(request,app_name='core',*args, **kwargs):
     return context
 
 
+class MessageView(View):
+    def __init__(response):
+        response.links=[]
+        response.message_color='warning'
+        response.has_home_link=True
+        response.header_color="rose"
+        response.message_icon=''
+        response.header_icon='<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+        response.message_text=None
+        response.header_text=None
+    def response(self,request,*args, **kwargs):
+        return self.show(request=request)
+    def show(self,request,*args, **kwargs):
+        context=CoreContext(request)
+        if self.header_text is None:
+            self.header_text='خطا'
+        if self.message_text is None:
+            self.message_text='متاسفانه خطایی رخ داده است.'
+        if self.has_home_link:
+            btn_home=Link(url=reverse('web:home'),icon_color=ColorEnum.SUCCESS+' btn-round',icon_material=IconsEnum.home,title='خانه',icon_title='ssss',new_tab=False)
+            self.links.append(btn_home)
+        context['links']=self.links
+
+        context['header_text']=self.header_text
+        context['header_color']=self.header_color
+        context['header_icon']=self.header_icon
+
+        context['message_color']=self.message_color
+        context['message_icon']=self.message_icon
+        context['message_text']=self.message_text
+
+        context['search_form']=None
+        return render(request,TEMPLATE_ROOT+'error.html',context)
+
+
+
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         context['pages']=BasicPageRepo(request=request).list(for_home=True)
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class PageViews(View):
+    def download(self,request,pk):
+        if request.user.is_authenticated and request.user.has_perm("core.change_document"):
+            document=DocumentRepo(user=request.user).document(document_id=pk)
+            return document.download_response()
+        
+        document=DocumentRepo(user=request.user).document(pk=pk)
+        if document is None:
+            raise Http404
+
+
+        if self.access(request=request,pk=pk) and document is not None:
+            return document.download_response()
+        message_view= MessageView()
+        message_view.links=[]
+        message_view.links.append(Link(title='تلاش مجدد',icon_color="warning",icon_material="apartment",url=document.get_download_url()))
+        message_view.message_color='warning'
+        message_view.has_home_link=True
+        message_view.header_color="rose"
+        message_view.message_icon=''
+        message_view.header_icon='<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+        message_view.message_text='مجوز شما برای دسترسی به این صفحه مجاز نمی باشد.'
+        message_view.header_text='دسترسی غیر مجاز'
+
+        return message_view.response(request)
+
+    def access(self,request,pk):
+        return True
+        document=DocumentRepo(user=request.user).document(pk=pk)
+        self.me=ProfileRepo(user=request.user).me
+        if self.me is not None and document.page in self.me.my_pages().all():
+            return True
+        if request.user.has_perm(APP_NAME+'.view_document'):
+            return True
+        if document.page.app_name=='web':
+            return True
+        return False
+
     def page(self,request,*args, **kwargs):
         page=BasicPageRepo(request).page(*args, **kwargs)        
         context=getContext(request)

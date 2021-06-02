@@ -25,6 +25,7 @@ class ProfileViews(View):
         return render(request,TEMPLATE_ROOT+"profile.html",context)
     def profile2(self,request,*args, **kwargs):
         context=getContext(request)
+        context['layout']="base-layout.html"
         return render(request,TEMPLATE_ROOT+"profile2.html",context)
 class AuthenticationViews(View):
     def login(self,request,*args, **kwargs):

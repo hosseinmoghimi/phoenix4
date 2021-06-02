@@ -1,4 +1,5 @@
 <script>
+    let url_add_page_link="{% url 'core:add_page_link' %}"
     let page_id=parseInt("{{page.id}}")
     let link_app = new Vue({
         el: "#links-app",
@@ -10,7 +11,7 @@
         },
         methods: {
             add_page_link: function () {
-                let url = "{% url 'core:add_page_link' %}"
+                let url = url_add_page_link
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     page_id: page_id,

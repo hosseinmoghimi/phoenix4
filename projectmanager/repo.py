@@ -48,7 +48,7 @@ class ProjectRepo():
         if 'title' in kwargs:
             new_project.title = kwargs['title']
 
-        if 'parent_id' in kwargs:
+        if 'parent_id' in kwargs and kwargs['parent_id']>0:
             new_project.parent_id = kwargs['parent_id']
 
         new_project.save()
@@ -96,8 +96,18 @@ class OrganizationUnitRepo():
         if 'title' in kwargs:
             new_organization.title = kwargs['title']
 
-        if 'parent_id' in kwargs:
-            new_organization.parent_id = kwargs['parent_id']
+        if 'parent_id' in kwargs and kwargs['parent_id']==0:
+            employer=Employer(title=kwargs['title'])
+            employer.save()
+            new_organization.employer = employer
+        if 'parent_id' in kwargs and kwargs['parent_id']>0:
+            parent_organization =OrganizationUnit.objects.filter(pk=kwargs['parent_id']).first()
+            if parent_organization is not None:
+                new_organization.employer=parent_organization.employer
+                new_organization.parent=parent_organization
+        elif 'employer_title' in kwargs:
+            pass
+            
 
         new_organization.save()
         return new_organization
@@ -272,12 +282,10 @@ class MaterialRepo():
             return None
         new_material = Material()
 
-        if 'parent_id' in kwargs:
+        if 'parent_id' in kwargs and kwargs['parent_id']>0:
             new_material.parent_id = kwargs['parent_id']
 
         if 'title' in kwargs:
             new_material.title = kwargs['title']
-        if new_material.parent_id == 0:
-            new_material.parent = None
         new_material.save()
         return new_material

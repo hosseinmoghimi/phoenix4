@@ -13,7 +13,7 @@
                 let url = "{% url 'projectmanager:add_project' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    parent_id: page_id,
+                    parent_id: parent_id,
                     title: this.new_project_title,
                 }
                 let posting = $.post(url, payload)

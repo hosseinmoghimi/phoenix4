@@ -108,3 +108,31 @@ class ParameterRepo:
             self.set(name=name)
             parameter=self.objects.filter(app_name=self.app_name).get(name=name)
         return parameter
+
+class DocumentRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=Document.objects.order_by('priority')
+
+    def document(self,document_id):
+        try:
+            return self.objects.get(pk=document_id)
+        except:
+            return None
+
+    def add_page_document(self,title,file,priority=1000,page_id=None):
+        
+        page=BasicPage.objects.get(pk=page_id)
+        if page is None:
+            return None
+
+        document=PageDocument(icon_material="get_app",title=title,file=file,priority=priority,page=page,profile=self.profile)
+        document.save()
+        return document

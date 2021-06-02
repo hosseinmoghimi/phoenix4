@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BasicPage, PageLink
+from .models import BasicPage, PageDocument, PageLink
 
 class BasicPageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,3 +9,7 @@ class PageLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageLink
         fields=['id','title','url','get_edit_url']
+class PageDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PageDocument
+        fields=['id','title','get_download_url','get_edit_url']

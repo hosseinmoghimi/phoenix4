@@ -3,6 +3,7 @@
 
 
 
+
     let organization_unit_app = new Vue({
         el: "#organization-unit-app",
         data: {
@@ -16,7 +17,7 @@
                 let url = "{% url 'projectmanager:add_organization_unit' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    parent_id: page_id,
+                    parent_id: parent_id,
                     title: this.new_organization_unit_title,
                 }
                 let posting = $.post(url, payload)

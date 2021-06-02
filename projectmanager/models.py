@@ -88,7 +88,10 @@ class Material(ProjectManagerPage):
         self.class_name="material"
         return super(Material,self).save(*args, **kwargs)
 
-
+    def thumbnail(self):
+        if self.image_thumbnail_origin:
+            return super(Material,self).thumbnail()
+        return STATIC_URL+"projectmanager/img/pages/thumbnail/material.png"
 class OrganizationUnit(ProjectManagerPage):
     employer=models.ForeignKey("employer", verbose_name=_("employer"), on_delete=models.CASCADE)
     class Meta:
@@ -98,6 +101,21 @@ class OrganizationUnit(ProjectManagerPage):
         self.class_name="organizationunit"
         return super(OrganizationUnit,self).save(*args, **kwargs)
 
+class EmployeeSpeciality(ProjectManagerPage):
+    employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
+    max=models.IntegerField(_("max"))
+    value=models.IntegerField(_("value"))
+    percent=models.IntegerField(_("percent"))
+    verified=models.BooleanField(_("verified"),default=False)
+    class Meta:
+        verbose_name = _("EmployeeSpeciality")
+        verbose_name_plural = _("EmployeeSpecialitys")
+
+    def __str__(self):
+        return f"""{self.employee} {self.title}"""
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":employee_speciality", kwargs={"pk": self.pk})
 
 
 

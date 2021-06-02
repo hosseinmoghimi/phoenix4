@@ -332,6 +332,15 @@ class Document(Icon):
     
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
+
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" class="mx-2" title="ویرایش">
+                <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        """
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
 
@@ -362,6 +371,8 @@ class Document(Icon):
         file_path = str(self.file.path)
         # print(file_path)
         # return JsonResponse({'download:':str(file_path)})
+        import os
+        from django.http import HttpResponse
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:
                 response = HttpResponse(

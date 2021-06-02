@@ -1,13 +1,17 @@
 {% extends "authentication/profile.html" %}
 
-{% block content_1 %}
+{% block card %}
 
 <p class="text-secondary mb-1">
     <a href="{{employee.organization_unit.get_absolute_url}}">
         {{employee.organization_unit.title}}
     </a>
 </p>
+<button class="btn btn-outline-primary">Follow</button>
+<a class="btn btn-outline-danger" href="{{employee.get_edit_url}}">
 
+
+    ویرایش</a>
 {% endblock %}
 
 
@@ -42,4 +46,40 @@
     </span>
 </li>
 
+{% endblock %}
+
+{% block table %}
+
+<div class="col-sm-6 mb-3">
+    <div class="card h-100">
+        <div class="card-body">
+            <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>تخصص ها</h6>
+
+            {% for speciality in employee.employeespeciality_set.all %}
+            <div class="mx-3 text-right farsi rtl">
+                <small class="text-center">{{speciality.title}}</small>
+                <small>
+
+                    <small class="text-center text-secondary">
+
+                        {{speciality.max}}
+                    </small>
+                    /
+                    <small class="text-center text-secondary">
+                        {{speciality.value}}
+
+                    </small>
+                </small>
+            </div>
+            <div class="progress mb-3" style="height: 5px">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{speciality.percent}}%"
+                    aria-valuenow="{{speciality.value}}" aria-valuemin="0" aria-valuemax="{{speciality.max}}"></div>
+            </div>
+            {% endfor %}
+
+
+
+        </div>
+    </div>
+</div>
 {% endblock %}
