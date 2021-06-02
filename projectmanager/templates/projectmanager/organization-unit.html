@@ -26,158 +26,22 @@
 
 
         <div class="col-md-4">
-            <div class="card mb-3" id="organization-unit-app">
-                <div class="card-header">
-
-                    <h5 class="card-title text-center farsi">
-                        زیر مجموعه ها
-                    </h5>
+{% include "projectmanager/includes/organization-unit-app/template.html" %}
 
 
-                </div>
-
-                <div class="card-body">
-                    {% for organization_unit in organization_units %}
-                    <a href="{{organization_unit.get_absolute_url}}">
-                        <div class="media">
-                            <img class="mr-3 rounded" width="64" src="{{organization_unit.thumbnail}}" alt="">
-                            <div class="media-body farsi">
-
-                                <h5>
-                                    {{organization_unit.title}}
-
-                                </h5>
-                                {% if organization_unit.short_description %}
-
-                                {{organization_unit.short_description|safe}}
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </a>
-
-                    {% endfor %}
-                    <div v-for="organization_unit in sub_organization_units">
-                        <a :href="organization_unit.get_absolute_url">
-                            <div class="media">
-                                <img class="mr-3 rounded" width="64" :src="organization_unit.thumbnail" alt="">
-                                <div class="media-body farsi">
-
-                                    <h5 v-text="organization_unit.title">
-
-                                    </h5>
-                                    <div v-html="organization_unit.short_description"></div>
-
-
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-footer ">
-
-                    {% if add_organization_unit_form %}
-
-                    <form @submit.prevent="add_organization_unit()">
-                        <div class="row">
-                            <div class="col-8">
-                                <input required type="text" v-model="new_organization_unit_title"
-                                    class="farsi form-control" placeholder="واحد سازمانی جدید">
-
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
-
-                            </div>
-                        </div>
-
-                    </form>
-                    {% endif %}
-
-
-                </div>
-            </div>
 
 
         </div>
 
         <div class="col-md-4">
-            <div class="card mb-3" id="employees-app">
-                <div class="card-header">
-
-                    <h5 class="card-title text-center farsi">
-                        پرسنل
-                    </h5>
-
-
-                </div>
-
-                <div class="card-body">
-                    {% for employee in organization_unit.employee_set.all %}
-                    <a href="{{employee.get_absolute_url}}">
-                        <div class="media">
-                            <img class="mr-3 rounded" width="64" src="{{employee.profile.image}}" alt="">
-                            <div class="media-body farsi">
-
-                                <h5>
-                                    {{employee.profile.name}}
-
-                                </h5>
-
-
-                            </div>
-                        </div>
-                    </a>
-
-                    {% endfor %}
-                    <div v-for="employee in employees">
-                        <a :href="employee.get_absolute_url">
-                            <div class="media">
-                                <img class="mr-3 rounded" width="64" :src="employee.profile.image" alt="">
-                                <div class="media-body farsi">
-
-                                    <h5 v-text="employee.profile.name">
-
-                                    </h5>
-
-
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-footer ">
-
-                    {% if add_employee_form %}
-
-                    <form @submit.prevent="add_employee()">
-                        <div class="row">
-                            <div class="col-8">
-                                <input required type="text" v-model="new_employee_fist_name" class="farsi form-control"
-                                    placeholder="نام پرسنل جدید">
-                                <input required type="text" v-model="new_employee_last_name" class="farsi form-control"
-                                    placeholder="نام خانوادگی پرسنل جدید">
-
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
-
-                            </div>
-                        </div>
-
-                    </form>
-                    {% endif %}
-
-
-                </div>
-            </div>
-
+          
+            {% include "projectmanager/includes/employees-app/template.html" %}
 
         </div>
 
 
         <div class="col-md-4">
-            {% include "core/includes/page-link-app.html" %}
+            {% include "core/includes/page-links-app/template.html" %}
         </div>
     </div>
 </div>
@@ -186,39 +50,9 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "core/includes/page-script.html" %}
-{% include "projectmanager/includes/employees-app.html" %}
-<script>
+{% include "core/includes/page-links-app/script.html" %}
+{% include "projectmanager/includes/employees-app/script.html" %}
+{% include "projectmanager/includes/organization-unit-app/script.html" %}
 
 
-
-
-    let organization_unit_app = new Vue({
-        el: "#organization-unit-app",
-        data: {
-            new_organization_unit_title: "",
-            sub_organization_units: [],
-
-        },
-        methods: {
-            add_organization_unit: function () {
-                let url = "{% url 'projectmanager:add_organization_unit' %}"
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    parent_id: page_id,
-                    title: this.new_organization_unit_title,
-                }
-                let posting = $.post(url, payload)
-                posting.done((data) => {
-                    if (data.result === 'SUCCEED') {
-
-                        organization_unit_app.sub_organization_units.push(data.organization_unit)
-                        organization_unit_app.new_organization_unit_title = ""
-                    }
-                })
-            },
-
-        }
-    })
-</script>
 {% endblock %}

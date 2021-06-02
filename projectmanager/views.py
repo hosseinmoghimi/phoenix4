@@ -1,6 +1,10 @@
+from projectmanager.serializers import MaterialSerializer
+from projectmanager.models import Material
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from typing import ContextManager
 from django.shortcuts import render
+from .forms import *
+import json
 from .apps import APP_NAME
 from core.views import DefaultContext,PageContext
 from .repo import EmployeeRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo
@@ -30,6 +34,9 @@ class ProjectViews(View):
         context=getContext(request)
         context.update(PageContext(request=request,page=page))
         context['project']=project
+        materials=MaterialRepo(request=request).list()
+        context['materials_s']=json.dumps(MaterialSerializer(materials,many=True).data)
+        context['add_material_request_form']=AddMaterialRequestForm()
         context['add_project_form']=AddProjectForm()
         context['projects']=project.childs.all()
         return render(request,TEMPLATE_ROOT+"project.html",context)
@@ -52,6 +59,12 @@ class EmployeeViews(View):
         return render(request,TEMPLATE_ROOT+"employee.html",context)
 
 class MaterialViews(View):
+    def material_request(self,request,pk,*args, **kwargs):
+        material_request=MaterialRepo(request).material_request(*args, **kwargs)        
+        context=getContext(request)  
+        context['material_request']=material_request
+        return render(request,TEMPLATE_ROOT+"material-request.html",context)
+
     def material(self,request,pk,*args, **kwargs):
         material=MaterialRepo(request).material(*args, **kwargs)        
         context=getContext(request)  

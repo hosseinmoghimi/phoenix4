@@ -1,0 +1,33 @@
+<script>
+
+
+
+
+    let organization_unit_app = new Vue({
+        el: "#organization-unit-app",
+        data: {
+            new_organization_unit_title: "",
+            sub_organization_units: [],
+
+        },
+        methods: {
+            add_organization_unit: function () {
+                let url = "{% url 'projectmanager:add_organization_unit' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    parent_id: page_id,
+                    title: this.new_organization_unit_title,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+
+                        organization_unit_app.sub_organization_units.push(data.organization_unit)
+                        organization_unit_app.new_organization_unit_title = ""
+                    }
+                })
+            },
+
+        }
+    })
+</script>

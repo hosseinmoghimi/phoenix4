@@ -167,7 +167,7 @@
 
 
         <div class="col-md-4">
-            {% include "core/includes/page-link-app.html" %}
+            {% include "core/includes/page-links-app/template.html" %}
         </div>
     </div>
 </div>
@@ -176,7 +176,7 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "core/includes/page-script.html" %}
+{% include "core/includes/page-links-app/script.html" %}
 
 <script>
     let material_app = new Vue({

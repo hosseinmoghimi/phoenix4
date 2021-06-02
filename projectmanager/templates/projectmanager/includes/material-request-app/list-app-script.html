@@ -1,0 +1,86 @@
+<script>
+    let materials = JSON.parse(`{{materials_s|escapejs}}`)
+    let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
+    let material_request_app = new Vue({
+        el: "#material-request-app",
+        data: {
+            new_material_request_material_id: 1,
+            add_material_request_form_title: "",
+            materials: materials.slice(0, 6),
+            add_material_request_form_unit_price: 0,
+            add_material_request_form_unit_name: "",
+            add_material_request_form_quantity: "",
+            material_requests: [],
+            waiting: false,
+            sum_material_requests: 0,
+            show_add_material_request_form:false,
+        },
+        methods: {
+            selected_material: function () {
+                if (this.add_material_request_form_title === "") {
+                    return {}
+                }
+                if (this.materials.length > 0)
+                    return this.materials[0]
+                return {}
+            },
+            add_material_request: function () {
+                material_request_app.waiting = true
+
+                let payload = {
+                    project_id: page_id,
+                    material_id: this.selected_material().id,
+                    unit_price: this.add_material_request_form_unit_price,
+                    unit_name: this.add_material_request_form_unit_name,
+                    quantity: this.add_material_request_form_quantity,
+                    // status: this.add_material_request_form_status,
+                    // description: this.add_material_request_form_description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                console.log(payload)
+
+
+                var posting = $.post(url_add_material_request, payload);
+                posting.fail(function (xhr, status, error) {
+                    material_request_app.waiting_material_requests = false
+                    showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                })
+                // Put the results in a div
+                posting.done(function (data) {
+                    material_request_app.waiting = false
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        material_request_app.sum_material_requests = 0
+                        material_request_app.material_requests.push(data.material_request) 
+                        material_request_app.show_add_material_request_form=false
+                        material_request_app.sum_material_requests += material_request.quantity * material_request.unit_price
+
+
+
+                    }
+                    else {
+                    }
+                })
+
+            },
+            select_material: function (material) {
+                this.add_material_request_form_unit_name = material.unit_name
+                this.add_material_request_form_unit_price = material.unit_price
+                this.add_material_request_form_title = material.title
+            },
+            filter_list: function () {
+                if (this.add_material_request_form_title) {
+
+                    this.materials = materials.filter(item => item.title.toUpperCase().includes(this.add_material_request_form_title.toUpperCase())).slice(0, 6);
+                    try {
+                        this.add_material_request_form_unit_price = this.selected_material().unit_price
+                        this.add_material_request_form_unit_name = this.selected_material().unit_name
+                    } catch (error) {
+
+                    }
+                }
+
+            },
+        }
+    })
+</script>

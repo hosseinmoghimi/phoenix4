@@ -22,7 +22,14 @@ class Employee(models.Model):
 
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
- 
+    def get_edit_btn(self):
+        return f"""
+        <a title="ویرایش {self.title}" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
 class ProjectManagerPage(CoreBasicPage):   
 
     class Meta:
@@ -40,7 +47,11 @@ class Project(ProjectManagerPage):
     def save(self,*args, **kwargs):
         self.class_name="project"
         return super(Project,self).save(*args, **kwargs)
-
+    def sum_materials(self):
+        sum=0
+        for material_request in self.materialrequest_set.all():
+            sum+=material_request.quantity*material_request.unit_price
+        return sum
 
 class Material(ProjectManagerPage):
     unit_name=models.CharField(_("unit_name"),choices=MaterialUnitNameEnum.choices,default=MaterialUnitNameEnum.ADAD, max_length=50)
@@ -69,7 +80,7 @@ class OrganizationUnit(ProjectManagerPage):
 class MaterialRequest(models.Model):
     material=models.ForeignKey("Material", verbose_name=_("متریال"), on_delete=models.PROTECT)
     quantity=models.IntegerField(_("تعداد"))
-    unit_name=models.CharField(_("واحد"),max_length=50)
+    unit_name=models.CharField(_("واحد"),choices=MaterialUnitNameEnum.choices,default=MaterialUnitNameEnum.ADAD,max_length=50)
     unit_price=models.IntegerField(_("فی"))
     project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
     description=models.CharField(_("توضیحات"),null=True,blank=True,default='', max_length=50)
@@ -81,10 +92,7 @@ class MaterialRequest(models.Model):
     class_name='materialrequest'
     def can_be_edited(self):
         return self.project.can_be_edited
-    def get_project_url(self):
-        return self.project.get_absolute_url()
-    def project_title(self):
-        return self.project.title
+    
     class Meta:
         verbose_name = _("درخواست متریال")
         verbose_name_plural = _("درخواست های متریال")
@@ -100,6 +108,14 @@ class MaterialRequest(models.Model):
         return reverse(f'{APP_NAME}:{self.class_name}', kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+    def get_edit_btn(self):
+        return f"""
+        <a title="ویرایش" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
     def get_status_color(self):
         return StatusColor(self.status)
 

@@ -26,77 +26,7 @@
 
 
         <div class="col-md-4">
-            <div class="card mb-3" id="project-app">
-                <div class="card-header">
-
-                    <h5 class="card-title text-center farsi">
-                        زیر پروژه ها
-                    </h5>
-
-
-                </div>
-
-                <div class="card-body">
-                    {% for project in projects %}
-                    <a title="جزئیات" href="{{project.get_absolute_url}}">
-                        <div class="media">
-                            <img class="mr-3 rounded" width="64" src="{{project.thumbnail}}" alt="">
-                            <div class="media-body farsi">
-
-                                <h5>
-                                    {{project.title}}
-
-                                </h5>
-                                {% if project.short_description %}
-
-                                {{project.short_description|safe}}
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </a>
-
-                    {% endfor %}
-                    <div v-for="project in sub_projects">
-                        <a title="جزئیات" :href="project.get_absolute_url">
-                            <div class="media">
-                                <img class="mr-3 rounded" width="64" :src="project.thumbnail" alt="">
-                                <div class="media-body farsi">
-
-                                    <h5 v-text="project.title">
-
-                                    </h5>
-                                    <div v-html="project.short_description"></div>
-
-
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-footer ">
-
-                    {% if add_project_form %}
-
-                    <form @submit.prevent="add_project()">
-                        <div class="row">
-                            <div class="col-8">
-                                <input required type="text" v-model="new_project_title" class="farsi form-control"
-                                    placeholder="پروژه جدید">
-
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
-
-                            </div>
-                        </div>
-
-                    </form>
-                    {% endif %}
-
-
-                </div>
-            </div>
+            {% include "projectmanager/includes/project-app/template.html" %}
 
 
         </div>
@@ -105,50 +35,17 @@
 
 
         <div class="col-md-8">
-            <div class="card mb-3" id="material-request-app">
-                <div class="card-header">
 
-                    <h5 class="card-title text-center farsi">
-                        درخواست های متریال
-                    </h5>
+            {% include "projectmanager/includes/material-request-app/list-app-template.html" %}
 
 
-                </div>
-
-                <div class="card-body">
-{% include "projectmanager/includes/material-request-table.html" %}
-                 
-                </div>
-                <div class="card-footer ">
-
-                    {% if add_material_request_form %}
-
-                    <form @submit.prevent="add_project()">
-                        <div class="row">
-                            <div class="col-8">
-                                <input required type="text" v-model="new_project_title" class="farsi form-control"
-                                    placeholder="پروژه جدید">
-
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
-
-                            </div>
-                        </div>
-
-                    </form>
-                    {% endif %}
-
-
-                </div>
-            </div>
 
 
         </div>
 
 
         <div class="col-md-4">
-            {% include "core/includes/page-link-app.html" %}
+            {% include "core/includes/page-links-app/template.html" %}
         </div>
     </div>
 </div>
@@ -157,34 +54,8 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "core/includes/page-script.html" %}
+{% include "core/includes/page-links-app/script.html" %}
+{% include "projectmanager/includes/project-app/script.html" %}
+{% include "projectmanager/includes/material-request-app/list-app-script.html" %}
 
-<script>
-    let project_app = new Vue({
-        el: "#project-app",
-        data: {
-            new_project_title: "",
-            sub_projects: [],
-
-        },
-        methods: {
-            add_project: function () {
-                let url = "{% url 'projectmanager:add_project' %}"
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    parent_id: page_id,
-                    title: this.new_project_title,
-                }
-                let posting = $.post(url, payload)
-                posting.done((data) => {
-                    if (data.result === 'SUCCEED') {
-
-                        project_app.sub_projects.push(data.project)
-                        project_app.new_project_title = ""
-                    }
-                })
-            },
-        }
-    })
-</script>
 {% endblock %}

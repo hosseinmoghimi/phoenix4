@@ -1,4 +1,4 @@
-from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer
+from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -44,6 +44,25 @@ class OrganizationUnitApi(APIView):
 
 
 class MaterialApi(APIView):
+    def add_material_request(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_material_request_form=AddMaterialRequestForm(request.POST)
+            if add_material_request_form.is_valid():
+                log+=1
+                material_id=add_material_request_form.cleaned_data['material_id']
+                project_id=add_material_request_form.cleaned_data['project_id']
+                quantity=add_material_request_form.cleaned_data['quantity']
+                unit_name=add_material_request_form.cleaned_data['unit_name']
+                unit_price=add_material_request_form.cleaned_data['unit_price']
+                material_request=MaterialRepo(request=request).add_material_request(unit_price=unit_price,unit_name=unit_name,quantity=quantity,material_id=material_id,project_id=project_id)
+                context['material_request']=MaterialRequestSerializer(material_request).data
+                context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
     def add_material(self,request,*args, **kwargs):
         context={}
         log=1

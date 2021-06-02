@@ -1,0 +1,76 @@
+<div class="card mb-3" id="project-app">
+    <div class="card-header">
+
+        <h5 class="card-title text-center farsi">
+            زیر پروژه ها
+        </h5>
+
+
+    </div>
+
+    <div class="card-body">
+        {% for project in projects %}
+        <a title="جزئیات" href="{{project.get_absolute_url}}">
+            <div class="media">
+                <img class="mr-3 rounded" width="64" src="{{project.thumbnail}}" alt="">
+                <div class="media-body farsi">
+
+                    <h5>
+                        {{project.title}}
+
+                    </h5>
+                    {% if project.short_description %}
+
+                    {{project.short_description|safe}}
+                    {% endif %}
+
+                </div>
+            </div>
+        </a>
+
+        {% endfor %}
+        <div v-for="project in sub_projects">
+            <a title="جزئیات" :href="project.get_absolute_url">
+                <div class="media">
+                    <img class="mr-3 rounded" width="64" :src="project.thumbnail" alt="">
+                    <div class="media-body farsi">
+
+                        <h5 v-text="project.title">
+
+                        </h5>
+                        <div v-html="project.short_description"></div>
+
+
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="card-footer ">
+
+        {% if add_project_form %}
+
+        <form @submit.prevent="add_project()">
+            <div class="row">
+                <div class="col-8">
+                    <input required type="text" v-model="new_project_title" class="farsi form-control"
+                        placeholder="پروژه جدید">
+
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary btn-link text-light" type="submit">
+                        
+                        <i class="material-icons">
+                            add
+                        </i>
+                        </button>
+
+                </div>
+            </div>
+
+        </form>
+        {% endif %}
+
+
+    </div>
+</div>

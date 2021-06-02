@@ -7,14 +7,14 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link farsi" href="/admin/core/basicpage/add/">صفحه جدید</a>
+            <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi " href="/admin/core/basicpage/add/">صفحه جدید</a>
             </li>
 
 
 
 
-            <li class="nav-item dropdown farsi">
+            <li class="nav-item dropdown  my-auto farsi mx-2">
                 <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     گزارش
@@ -28,23 +28,25 @@
             </li>
 
 
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-
+           
 
 
             {% if profile %}
-            <li class="nav-item dropdown farsi">
-                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            <li class="nav-item dropdown farsi mx-2">
+                <a title="{{profile.name}}" class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    {{profile.name}}
+                    <img src="{{profile.image}}" class="rounded-circle" width="48" alt="">
+                  
+                   
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{profile.get_absolute_url}}">پروفایل</a>
-                    <a class="dropdown-item" href="{{profile.get_dashboard_url}}">دشبورد</a>
+                    <div class="text-center">
+                        <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
+                    </div>
+                    <a class="dropdown-item text-center" href="{{profile.get_absolute_url}}">پروفایل</a>
+                    <a class="dropdown-item text-center" href="{{profile.get_dashboard_url}}">دشبورد</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'authentication:logout' %}">خروج</a>
+                    <a class="dropdown-item text-center" href="{% url 'authentication:logout' %}">خروج</a>
                 </div>
             </li>
 
@@ -52,7 +54,7 @@
 
 
             {% else %}
-            <li class="nav-item">
+            <li class="nav-item my-auto mx-2">
                 <a class="nav-link farsi" href="{% url 'authentication:login' %}">ورود</a>
             </li>
 

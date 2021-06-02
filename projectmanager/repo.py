@@ -1,6 +1,9 @@
+from authentication.repo import ProfileRepo
+from authentication.models import Profile
+from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Employee, Material, Project,OrganizationUnit
+from .models import Employee, Material, MaterialRequest, Project,OrganizationUnit
 
 
 class ProjectRepo():
@@ -157,6 +160,16 @@ class MaterialRepo():
             return self.objects.filter(pk=kwargs['material_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
+    def material_request(self,*args, **kwargs):
+        objects=MaterialRequest.objects
+        if 'pk' in kwargs:
+            return objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return objects.filter(pk=kwargs['id']).first()
+        if 'material_id' in kwargs:
+            return objects.filter(pk=kwargs['material_id']).first()
+        if 'title' in kwargs:
+            return objects.filter(pk=kwargs['title']).first()
     def get(self,*args, **kwargs):
         return self.organization_unit(*args, **kwargs)
     def list(self,*args, **kwargs):
@@ -166,6 +179,27 @@ class MaterialRepo():
         if 'for_home' in kwargs:
             objects=objects.filter(Q(for_home=kwargs['for_home'])|Q(parent=None))
         return objects.all()
+    def add_material_request(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_materialrequest"):
+            return None
+        new_material_request=MaterialRequest()
+        if 'project_id' in kwargs:
+            new_material_request.project_id=kwargs['project_id']
+        if 'material_id' in kwargs:
+            new_material_request.material_id=kwargs['material_id']
+        if 'quantity' in kwargs:
+            new_material_request.quantity=kwargs['quantity']
+        if 'unit_name' in kwargs:
+            new_material_request.unit_name=kwargs['unit_name']
+        if 'unit_price' in kwargs:
+            new_material_request.unit_price=kwargs['unit_price']
+        if 'description' in kwargs:
+            new_material_request.description=kwargs['description']
+        if 'status' in kwargs:
+            new_material_request.status=kwargs['status']
+        new_material_request.profile=ProfileRepo(user=self.user).me
+        new_material_request.save()
+        return new_material_request
     def add_material(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_material"):
             return None

@@ -1,0 +1,29 @@
+
+<script>
+    let project_app = new Vue({
+        el: "#project-app",
+        data: {
+            new_project_title: "",
+            sub_projects: [],
+
+        },
+        methods: {
+            add_project: function () {
+                let url = "{% url 'projectmanager:add_project' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    parent_id: page_id,
+                    title: this.new_project_title,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+
+                        project_app.sub_projects.push(data.project)
+                        project_app.new_project_title = ""
+                    }
+                })
+            },
+        }
+    })
+</script>

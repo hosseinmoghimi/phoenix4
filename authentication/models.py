@@ -1,9 +1,11 @@
+from core.settings import MEDIA_URL, STATIC_URL
 from django.db import models
 from .enums import ProfileStatusEnum
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 from django.conf import settings
 from .apps import APP_NAME
+IMAGE_FOLDER=APP_NAME+"/images/"
 
 from django.db.models.signals import post_save
 
@@ -45,6 +47,21 @@ class Profile(models.Model):
     user=models.OneToOneField(settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,null=True,blank=True)
     current=models.BooleanField(_("current"),default=True)
+    mobile=models.CharField(_("mobile"),null=True,blank=True, max_length=50)
+    bio=models.CharField(_("mobile"),null=True,blank=True, max_length=50)
+    mobile=models.CharField(_("mobile"),null=True,blank=True, max_length=50)
+    image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
+    @property
+    def first_name(self):
+        return self.user.first_name
+    @property
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+        return STATIC_URL+APP_NAME+"/images/default-avatar.jpg"
+    @property
+    def last_name(self):
+        return self.user.last_name
     @property
     def name(self):
         if self.user is not None:
