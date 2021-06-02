@@ -1,3 +1,4 @@
+{% load static %}
 <div class="card mb-3" id="project-app">
     <div class="card-header">
 
@@ -12,7 +13,11 @@
         {% for project in projects %}
         <a title="جزئیات" href="{{project.get_absolute_url}}">
             <div class="media">
-                <img class="mr-3 rounded" width="64" src="{{project.thumbnail}}" alt="">
+
+                <i class="material-icons">
+                    engineering
+                </i>
+
                 <div class="media-body farsi">
 
                     <h5>
@@ -32,7 +37,11 @@
         <div v-for="project in sub_projects">
             <a title="جزئیات" :href="project.get_absolute_url">
                 <div class="media">
-                    <img class="mr-3 rounded" width="64" :src="project.thumbnail" alt="">
+
+                    <i class="material-icons">
+                        engineering
+                    </i>
+
                     <div class="media-body farsi">
 
                         <h5 v-text="project.title">
@@ -58,12 +67,17 @@
 
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-primary btn-link text-light" type="submit">
-                        
-                        <i class="material-icons">
+                        <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                       
+
+                    <button v-if="!waiting" class="btn btn-primary btn-link text-light" type="submit">
+
+                        <i  class="material-icons">
                             add
                         </i>
-                        </button>
+                    </button>
+
 
                 </div>
             </div>

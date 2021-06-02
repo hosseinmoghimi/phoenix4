@@ -180,7 +180,7 @@ class BasicPage(models.Model):
         home=f"""
         <li class="breadcrumb-item">
             <a href="{home_url}">
-                خانه
+                <i class="material-icons">home</i>
             </a>
         </li>"""
         inside=home+self.get_breadcrumb_li()         

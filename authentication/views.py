@@ -15,7 +15,16 @@ class BasicViews(View):
 class ProfileViews(View):
     def profile(self,request,*args, **kwargs):
         context=getContext(request)
+        selected_profile=ProfileRepo(user=request.user)
+        if 'profile_id' in kwargs:
+            selected_profile=ProfileRepo(request.user).profile(pk=kwargs['profile_id'])
+        if 'pk' in kwargs:
+            selected_profile=ProfileRepo(request.user).profile(pk=kwargs['pk'])
+        context['selected_profile']=selected_profile
         return render(request,TEMPLATE_ROOT+"profile.html",context)
+    def profile2(self,request,*args, **kwargs):
+        context=getContext(request)
+        return render(request,TEMPLATE_ROOT+"profile2.html",context)
 class AuthenticationViews(View):
     def login(self,request,*args, **kwargs):
         if request.method=='POST':

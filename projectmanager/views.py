@@ -52,10 +52,11 @@ class OrganizationUnitViews(View):
         context['organization_units']=organization_unit.childs.all()
         return render(request,TEMPLATE_ROOT+"organization-unit.html",context)
 class EmployeeViews(View):
-    def employee(self,request,pk,*args, **kwargs):
+    def employee(self,request,*args, **kwargs):
         employee=EmployeeRepo(request).employee(*args, **kwargs)        
         context=getContext(request)  
         context['employee']=employee
+        context['selected_profile']=employee.profile
         return render(request,TEMPLATE_ROOT+"employee.html",context)
 
 class MaterialViews(View):

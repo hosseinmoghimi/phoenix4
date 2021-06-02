@@ -22,7 +22,9 @@
                     {% for project in projects %}
                     <a href="{{project.get_absolute_url}}">
                         <div class="media">
-                            <img class="mr-3 rounded" width="64" src="{{project.thumbnail}}" alt="">
+<i class="material-icons">
+    engineering
+</i>
                             <div class="media-body farsi">
 
                                 <h5>
@@ -42,8 +44,10 @@
                     <div v-for="project in projects">
                         <a :href="project.get_absolute_url">
                             <div class="media">
-                                <img class="mr-3 rounded" width="64" :src="project.thumbnail" alt="">
-                                <div class="media-body farsi">
+                                <i class="material-icons">
+                                    engineering
+                                </i>
+                                 <div class="media-body farsi">
 
                                     <h5 v-text="project.title">
 
@@ -102,8 +106,10 @@
                     {% for organization_unit in organization_units %}
                     <a href="{{organization_unit.get_absolute_url}}">
                         <div class="media">
-                            <img class="mr-3 rounded" width="64" src="{{organization_unit.thumbnail}}" alt="">
-                            <div class="media-body farsi">
+                            <i class="material-icons">
+                                apartment
+                            </i>
+                             <div class="media-body farsi">
 
                                 <h5>
                                     {{organization_unit.title}}
@@ -122,8 +128,10 @@
                     <div v-for="organization_unit in organization_units">
                         <a :href="organization_unit.get_absolute_url">
                             <div class="media">
-                                <img class="mr-3 rounded" width="64" :src="organization_unit.thumbnail" alt="">
-                                <div class="media-body farsi">
+                                <i class="material-icons">
+                                    apartment
+                                </i>
+                                   <div class="media-body farsi">
 
                                     <h5 v-text="organization_unit.title">
 

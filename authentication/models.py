@@ -1,4 +1,4 @@
-from core.settings import MEDIA_URL, STATIC_URL
+from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from .enums import ProfileStatusEnum
 from django.shortcuts import reverse
@@ -48,8 +48,8 @@ class Profile(models.Model):
         on_delete=models.SET_NULL,null=True,blank=True)
     current=models.BooleanField(_("current"),default=True)
     mobile=models.CharField(_("mobile"),null=True,blank=True, max_length=50)
-    bio=models.CharField(_("mobile"),null=True,blank=True, max_length=50)
-    mobile=models.CharField(_("mobile"),null=True,blank=True, max_length=50)
+    bio=models.CharField(_("bio"),null=True,blank=True, max_length=50)
+    address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
     @property
     def first_name(self):
@@ -58,7 +58,7 @@ class Profile(models.Model):
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
-        return STATIC_URL+APP_NAME+"/images/default-avatar.jpg"
+        return STATIC_URL+APP_NAME+"/images/default-avatar.png"
     @property
     def last_name(self):
         return self.user.last_name
@@ -88,6 +88,12 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":profile", kwargs={"pk": self.pk})
+
+    def get_absolute_url2(self):
+        return reverse(APP_NAME+":profile2", kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"""
 
 
 class ProfileContact(models.Model):

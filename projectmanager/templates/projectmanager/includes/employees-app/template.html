@@ -12,7 +12,7 @@
         {% for employee in organization_unit.employee_set.all %}
         <a href="{{employee.get_absolute_url}}">
             <div class="media">
-                <img class="mr-3 rounded" width="64" src="{{employee.profile.image}}" alt="">
+                <img class="rounded-circle mr-3" width="64" src="{{employee.profile.image}}" alt="">
                 <div class="media-body farsi">
 
                     <h5>
@@ -29,7 +29,7 @@
         <div v-for="employee in employees">
             <a :href="employee.get_absolute_url">
                 <div class="media">
-                    <img class="mr-3 rounded" width="64" :src="employee.profile.image" alt="">
+                    <img class="rounded-circle mr-3 " width="64" :src="employee.profile.image" alt="">
                     <div class="media-body farsi">
 
                         <h5 v-text="employee.profile.name">

@@ -111,9 +111,7 @@ class EmployeeRepo():
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
         if 'employee_id' in kwargs:
-            return self.objects.filter(pk=kwargs['employee_id']).first()
-        if 'title' in kwargs:
-            return self.objects.filter(pk=kwargs['title']).first()
+            return self.objects.filter(pk=kwargs['employee_id']).first()        
     def get(self,*args, **kwargs):
         return self.organization_unit(*args, **kwargs)
     def list(self,*args, **kwargs):
