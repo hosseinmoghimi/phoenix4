@@ -1,5 +1,5 @@
 from projectmanager.serializers import MaterialSerializer
-from projectmanager.models import Material
+from projectmanager.models import Material, OrganizationUnit
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from typing import ContextManager
 from django.shortcuts import render
@@ -13,12 +13,36 @@ from .utils import AdminUtility
 TEMPLATE_ROOT=APP_NAME+"/"
 def getContext(request):
     context=DefaultContext(request=request,app_name=APP_NAME)
-    context["layout_root"]=TEMPLATE_ROOT+"layout.html"
+    context["layout"]=TEMPLATE_ROOT+"layout.html"
     context["admin_utility"]=AdminUtility(request=request)
+    context['search_action']=reverse(APP_NAME+":search")
+    context['search_form']=SearchForm()
     return context
 
 
 class BasicViews(View):
+    def search(self,request,*args, **kwargs):
+        context=getContext(request)
+        log=1
+        if request.method=='POST':
+            log+=1
+            search_form=SearchForm(request.POST)
+            if search_form.is_valid():
+                log+=1
+                search_for=search_form.cleaned_data['search_for']
+                context['search_for']=search_for
+                context['materials']=MaterialRepo(request=request).list(search_for=search_for)
+                context['projects']=ProjectRepo(request=request).list(search_for=search_for)
+                context['organization_units']=OrganizationUnitRepo(request=request).list(search_for=search_for)
+                context['log']=log
+                return render(request,TEMPLATE_ROOT+"index.html",context)
+        context=getContext(request)
+        context['add_organization_unit_form']=AddOrganizationUnitForm()
+        context['add_project_form']=AddProjectForm()
+        context['projects']=ProjectRepo(request=request).list(for_home=True)
+        context['materials']=MaterialRepo(request=request).list(for_home=True)
+        context['organization_units']=OrganizationUnitRepo(request=request).list(for_home=True)
+        return render(request,TEMPLATE_ROOT+"index.html",context)
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         context['add_organization_unit_form']=AddOrganizationUnitForm()

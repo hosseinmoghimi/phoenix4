@@ -1,5 +1,8 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Phoenix</a>
+    <a class="navbar-brand" href="{{app_home_url}}">
+    <img width="64" src="{% static 'logo.png' %}" alt="">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -28,16 +31,16 @@
             </li>
 
 
-           
+
 
 
             {% if profile %}
             <li class="nav-item dropdown farsi mx-2">
-                <a title="{{profile.name}}" class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                <a title="{{profile.name}}" class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img src="{{profile.image}}" class="rounded-circle" width="48" alt="">
-                  
-                   
+
+
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <div class="text-center">
@@ -61,9 +64,16 @@
 
             {% endif %}
         </ul>
-        <form class="form-inline my-2 ">
-            <input class="d-inline form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="d-inline btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        {% if search_form %}
+
+        <form class="form-inline my-2 " action="{{search_action}}" method="POST">
+            {% csrf_token %}
+            <input required class="d-inline form-control mr-sm-2" type="search" name="search_for" placeholder="Search"
+                aria-label="Search">
+            <button class="d-inline btn btn-outline-success my-2 my-sm-0" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
         </form>
+        {% endif %}
     </div>
 </nav>

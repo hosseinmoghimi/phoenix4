@@ -32,6 +32,7 @@ def CoreContext(request,app_name,*args, **kwargs):
     context['ADMIN_URL']=ADMIN_URL
     context['MEDIA_URL']=MEDIA_URL
     context['SITE_URL']=SITE_URL
+    context['app_home_url']=reverse(app_name+":home")
     context['CURRENCY']=CURRENCY
     context['PUSHER_IS_ENABLE']=PUSHER_IS_ENABLE
 
