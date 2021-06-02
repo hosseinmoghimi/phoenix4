@@ -1,4 +1,5 @@
 <script>
+    let sum_material_requests = parseInt("{{project.sum_material_requests}}")
     let materials = JSON.parse(`{{materials_s|escapejs}}`)
     let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
     let material_request_app = new Vue({
@@ -12,10 +13,13 @@
             add_material_request_form_quantity: "",
             material_requests: [],
             waiting: false,
-            sum_material_requests: 0,
-            show_add_material_request_form:false,
+            sum_material_requests: sum_material_requests,
+            show_add_material_request_form: false,
         },
         methods: {
+            to_price: function (value,CURRENCY) {
+                return to_price(value,CURRENCY)
+            },
             selected_material: function () {
                 if (this.add_material_request_form_title === "") {
                     return {}
@@ -50,10 +54,9 @@
                     material_request_app.waiting = false
                     console.log(data)
                     if (data.result === 'SUCCEED') {
-                        material_request_app.sum_material_requests = 0
-                        material_request_app.material_requests.push(data.material_request) 
-                        material_request_app.show_add_material_request_form=false
-                        material_request_app.sum_material_requests += material_request.quantity * material_request.unit_price
+                        material_request_app.material_requests.push(data.material_request)
+                        // material_request_app.show_add_material_request_form = false
+                        material_request_app.sum_material_requests += data.material_request.quantity * data.material_request.unit_price
 
 
 

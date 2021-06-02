@@ -89,11 +89,11 @@
 
                     </td>
                     <td>
-                        <span v-text="material_request.unit_price"></span>
+                        <span v-text="to_price(material_request.unit_price,'')"></span>
 
                     </td>
                     <td>
-                        <span v-text="material_request.line_total"></span>
+                        <span v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
 
                     </td>
                     <td>
@@ -163,9 +163,8 @@
             <span class="small text-secondary">
                 مجموع متریال ها :
             </span>
-            <span>
+            <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')">
 
-                {{project.sum_materials|to_price}}
             </span>
         </p>
 

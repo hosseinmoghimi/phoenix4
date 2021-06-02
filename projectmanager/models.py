@@ -47,7 +47,7 @@ class Project(ProjectManagerPage):
     def save(self,*args, **kwargs):
         self.class_name="project"
         return super(Project,self).save(*args, **kwargs)
-    def sum_materials(self):
+    def sum_material_requests(self):
         sum=0
         for material_request in self.materialrequest_set.all():
             sum+=material_request.quantity*material_request.unit_price

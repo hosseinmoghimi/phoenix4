@@ -4,15 +4,14 @@
 {% block content %}
 <div>
 
-    <div class="farsi">
 
+    <h3 class="text-center">
+        <i class="material-icons">apartment</i>
+        <small class="text-secondary">
+            واحد سازمانی
 
-        {{organization_unit.get_breadcrumb|safe}}
-    </div>
-    <h6 class="text-secondary">
-        واحد سازمانی
-    </h6>
-    <h3>
+        </small>
+
         {{organization_unit.title}}
         {% if perms.projectmanager.change_organizationunit %}
         <a title="ویرایش" target="_blank" href="{{organization_unit.get_edit_url}}">
@@ -22,11 +21,16 @@
         </a>
         {% endif %}
     </h3>
+    <div class="farsi">
+
+
+        {{organization_unit.get_breadcrumb|safe}}
+    </div>
     <div class="row ">
 
 
         <div class="col-md-4">
-{% include "projectmanager/includes/organization-unit-app/template.html" %}
+            {% include "projectmanager/includes/organization-unit-app/template.html" %}
 
 
 
@@ -34,7 +38,7 @@
         </div>
 
         <div class="col-md-4">
-          
+
             {% include "projectmanager/includes/employees-app/template.html" %}
 
         </div>
