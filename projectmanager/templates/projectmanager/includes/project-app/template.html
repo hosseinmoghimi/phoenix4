@@ -59,7 +59,7 @@
 
         {% if add_project_form %}
 
-        <form @submit.prevent="add_project()">
+        <form v-cloak @submit.prevent="add_project()">
             <div class="row">
                 <div class="col-8">
                     <input required type="text" v-model="new_project_title" class="farsi form-control"

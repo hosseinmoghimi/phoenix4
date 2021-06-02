@@ -1,3 +1,4 @@
+{% load static %}
 {% load to_price %}
 <div class="card mb-3" id="material-request-app">
     <div class="card-header">
@@ -136,7 +137,10 @@
                         </div>
 
                         <div class="col-6">
-                            <button class="btn btn-primary" type="submit">Add</button>
+                            <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                            
+                            <button  v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-secondary" @click="show_add_material_request_form=false"

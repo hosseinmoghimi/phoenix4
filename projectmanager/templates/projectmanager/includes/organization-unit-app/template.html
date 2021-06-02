@@ -1,4 +1,4 @@
-
+{% load static %}
             <div class="card mb-3" id="organization-unit-app">
                 <div class="card-header">
 
@@ -67,7 +67,10 @@
 
                             </div>
                             <div class="col-4">
-                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
+                                <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                                
+                                <button v-if="waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
 
                             </div>
                         </div>
