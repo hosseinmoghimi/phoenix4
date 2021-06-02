@@ -1,4 +1,5 @@
 {% load static %}
+{% load to_persian_date %}
 {% load to_price %}
 <div class="card mb-3" id="material-request-app">
     <div class="card-header">
@@ -15,6 +16,9 @@
         <table class="table table-striped">
             <thead>
                 <th>
+                    تاریخ درخواست
+                </th>
+                <th>
                     متریال
                 </th>
                 <th>
@@ -27,20 +31,22 @@
                     جمع
                 </th>
                 <th>
-
+                    وضعیت
                 </th>
             </thead>
             <tbody>
                 {% for material_request in project.materialrequest_set.all %}
                 <tr>
                     <td>
-                        <a href="{{material_request.get_absolute_url}}" title="نمایش کامل">
-                            <i class="material-icons">
-                                description
-                            </i>
-                        </a>
-                        <a href="{{material_request.material.get_absolute_url}}">
+                        <small>
 
+                            {{material_request.date_added|to_persian_date|safe}}
+                        </small>
+                    </td>
+                    <td>
+
+                        <a href="{{material_request.material.get_absolute_url}}">
+<!-- <img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32" alt=""> -->
                             {{material_request.material.title}}
                         </a>
                     </td>
@@ -62,6 +68,12 @@
                     </td>
                     <td>
                         {{material_request.get_status_tag|safe}}
+                        <a href="{{material_request.get_absolute_url}}" title="نمایش کامل">
+                            <i class="material-icons">
+                                description
+                            </i>
+                        </a>
+
                         {% if perms.projectmanager.change_materialrequest %}
                         {{material_request.get_edit_btn|safe}}
 
@@ -72,12 +84,12 @@
 
                 <tr v-for="material_request in material_requests">
                     <td>
+                        <small v-text="material_request.persian_date_added">
 
-                        <a :href="material_request.get_absolute_url" title="نمایش کامل">
-                            <i class="material-icons">
-                                description
-                            </i>
-                        </a>
+                        </small>
+                    </td>
+                    <td>
+
                         <a :href="material_request.material.get_absolute_url" v-text="material_request.material.title">
 
                         </a>
@@ -94,11 +106,18 @@
 
                     </td>
                     <td>
-                        <span v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
+                        <span
+                            v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
 
                     </td>
                     <td>
                         <span v-html="material_request.get_status_tag"></span>
+
+                        <a :href="material_request.get_absolute_url" title="نمایش کامل">
+                            <i class="material-icons">
+                                description
+                            </i>
+                        </a>
                         {% if perms.projectmanager.change_materialrequest %}
                         <a title="ویرایش" :href="material_request.get_edit_url">
                             <i class="material-icons">edit</i>
@@ -122,14 +141,28 @@
 
                     <input @input="filter_list" required type="text" v-model="add_material_request_form_title"
                         class="farsi form-control" placeholder="متریال">
+                    <p class="text-right">
+                        <span>هر </span>
+                        <span v-text="add_material_request_form_unit_name"></span>
+                        <span v-text="to_price(add_material_request_form_unit_price,'')"></span>
+                        <small>
+
+                            {{CURRENCY}}
+                        </small>
+                    </p>
                     <div class="row">
                         <div class="col-4">
-                            <input type="number" min="0" placeholder="تعداد" class="form-control"
+                            <input required type="number" min="0" placeholder="تعداد" class="form-control"
                                 v-model="add_material_request_form_quantity">
                         </div>
                         <div class="col-4">
-                            <input required type="text" v-model="add_material_request_form_unit_name"
-                                class="farsi form-control" placeholder="نام واحد">
+                            <select v-model="add_material_request_form_unit_name" class="form-control farsi" id="">
+                                <option disabled selected>نام واحد</option>
+                                {% for unit_name in unit_names %}
+                                <option value="{{unit_name}}">{{unit_name}}</option>
+                                {% endfor %}
+                            </select>
+
                         </div>
                         <div class="col-4">
                             <input required type="number" v-model="add_material_request_form_unit_price"
@@ -137,10 +170,10 @@
                         </div>
 
                         <div class="col-6">
-                            <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+                            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
-                            
-                            <button  v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
+
+                            <button v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-secondary" @click="show_add_material_request_form=false"

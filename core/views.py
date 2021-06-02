@@ -12,6 +12,8 @@ TEMPLATE_ROOT="core/"
 def PageContext(request,page):
     context={}
     context['page']=page
+    context['parent_id']=page.id
+
     if request.user.has_perm(APP_NAME+".add_pagelink"):
         context['add_page_link_form']=AddPageLinkForm()
     return context
@@ -32,7 +34,6 @@ def CoreContext(request,app_name,*args, **kwargs):
     context['ADMIN_URL']=ADMIN_URL
     context['MEDIA_URL']=MEDIA_URL
     context['SITE_URL']=SITE_URL
-    context['app_home_url']=reverse(app_name+":home")
     context['CURRENCY']=CURRENCY
     context['PUSHER_IS_ENABLE']=PUSHER_IS_ENABLE
 

@@ -4,8 +4,9 @@ from .apps import APP_NAME
 from .enums import *
 from django.utils.translation import gettext as _
 from django.shortcuts import reverse
-from core.settings import ADMIN_URL
+from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from utility.persian import PersianCalendar
+IMAGE_FOLDER=APP_NAME+"/images/"
 class Employee(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     organization_unit=models.ForeignKey("organizationunit", verbose_name=_("organizationunit"), on_delete=models.CASCADE)
@@ -39,6 +40,28 @@ class ProjectManagerPage(CoreBasicPage):
         self.app_name=APP_NAME
         return super(ProjectManagerPage,self).save(*args, **kwargs)
 
+class Employer(models.Model):
+    pre_title=models.CharField(_("pre_title"), null=True,blank=True,max_length=50)
+    title=models.CharField(_("title"), max_length=50)
+    image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/", height_field=None, width_field=None, max_length=None)
+    
+    def image(self):
+        if self.image_origin:
+            return f"{MEDIA_URL}{self.image_origin}"
+        return f"{STATIC_URL}{APP_NAME}/img/pages/thumbnail/employer.jpg"
+    class Meta:
+        verbose_name = _("Employer")
+        verbose_name_plural = _("Employers")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":employer", kwargs={"pk": self.pk})
+     
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/employer/{self.pk}/change/"""
+     
 class Project(ProjectManagerPage):
     
     class Meta:
@@ -56,7 +79,8 @@ class Project(ProjectManagerPage):
 class Material(ProjectManagerPage):
     unit_name=models.CharField(_("unit_name"),choices=MaterialUnitNameEnum.choices,default=MaterialUnitNameEnum.ADAD, max_length=50)
     unit_price=models.IntegerField(_("unit_price"),default=0)
-
+    def childs(self):
+        return Material.objects.filter(parent=self)
     class Meta:
         verbose_name = _("Material")
         verbose_name_plural = _("Materials")
@@ -66,7 +90,7 @@ class Material(ProjectManagerPage):
 
 
 class OrganizationUnit(ProjectManagerPage):
-    
+    employer=models.ForeignKey("employer", verbose_name=_("employer"), on_delete=models.CASCADE)
     class Meta:
         verbose_name = _("OrganizationUnit")
         verbose_name_plural = _("OrganizationUnits")
@@ -87,7 +111,7 @@ class MaterialRequest(models.Model):
     profile=models.ForeignKey("authentication.Profile", verbose_name=_("تحویل گیرنده"), on_delete=models.PROTECT)
     date_added=models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
     date_delivered=models.DateTimeField(_("تاریخ درخواست"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    status=models.CharField(_("وضعیت"),choices=MaterialRequestStatusEnum.choices,default=MaterialRequestStatusEnum.DEFAULT, max_length=50)
+    status=models.CharField(_("وضعیت"),choices=MaterialRequestStatusEnum.choices,default=MaterialRequestStatusEnum.REQUESTED, max_length=50)
 
     class_name='materialrequest'
     def can_be_edited(self):
@@ -143,11 +167,11 @@ class MaterialRequest(models.Model):
         return super(MaterialRequest,self).save(*args, **kwargs)
 
 class MaterialRequestSignature(models.Model):
-    materialrequest=models.ForeignKey("materialrequest", verbose_name=_("درخواست"), on_delete=models.CASCADE)
+    material_request=models.ForeignKey("materialrequest", verbose_name=_("درخواست"), on_delete=models.CASCADE)
     profile=models.ForeignKey("authentication.Profile", verbose_name=_("profile"), on_delete=models.PROTECT)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     description=models.CharField(_("description"), max_length=200)
-    status=models.CharField(_("status"),choices=SignatureStatusEnum.choices,default=SignatureStatusEnum.DEFAULT, max_length=200)
+    status=models.CharField(_("status"),choices=SignatureStatusEnum.choices,default=SignatureStatusEnum.REQUESTED, max_length=200)
     class Meta:
         verbose_name = _("امضای درخواست متریال")
         verbose_name_plural = _("امضا های درخواست متریال")

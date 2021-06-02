@@ -24,3 +24,10 @@ class AddMaterialRequestForm(forms.Form):
 class SearchForm(forms.Form):
     search_for=forms.CharField(max_length=50, required=True)
                
+class AddEmployerForm(forms.Form):
+    title=forms.CharField(max_length=50, required=True)
+                  
+class AddMaterialForm(forms.Form):
+    title=forms.CharField(max_length=50, required=True)
+    parent_id=forms.IntegerField( required=False)
+               

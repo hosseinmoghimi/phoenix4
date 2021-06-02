@@ -59,7 +59,7 @@
                 <div class="col-4">
                     <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
-                    <button   v-if="waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
+                    <button   v-if="!waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
 
                 </div>
             </div>

@@ -1,17 +1,17 @@
 {% extends "projectmanager/layout.html" %}
 
 {% load static %}
+{% load to_persian_date %}
+{% load to_price %}
 {% block content %}
 <div>
+    <h3 class="text-center">
 
+        <i class="material-icons">engineering</i>
+        <small class="text-secondary">
+            متریال
 
-    <div class="farsi">
-        {{material.get_breadcrumb|safe}}
-    </div>
-    <h6 class="text-secondary">
-        متریال
-    </h6>
-    <h3>
+        </small>
         {{material.title}}
         {% if perms.projectmanager.change_material %}
         <a title="ویرایش" target="_blank" href="{{material.get_edit_url}}">
@@ -21,94 +21,37 @@
         </a>
         {% endif %}
     </h3>
+    <div class="farsi">
+        {{material.get_breadcrumb|safe}}
+    </div>
+
+
     <div class="row ">
 
+<div class="col-md-4">
+    <div class="mb-3 py-3">
 
+        <img src="{{material.thumbnail}}" class="rounded w-100" alt="">
+    </div>
+</div>
         <div class="col-md-4">
-            <div class="card mb-3" id="material-app">
-                <div class="card-header">
 
-                    <h5 class="card-title text-center farsi">
-                        زیر مجموعه ها
-                    </h5>
-
-
-                </div>
-
-                <div class="card-body">
-                    {% for material in materials %}
-                    <a title="جزئیات" href="{{material.get_absolute_url}}">
-                        <div class="media">
-                            <img class="mr-3 rounded" width="64" src="{{material.thumbnail}}" alt="">
-                            <div class="media-body farsi">
-
-                                <h5>
-                                    {{material.title}}
-
-                                </h5>
-                                {% if material.short_description %}
-
-                                {{material.short_description|safe}}
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </a>
-
-                    {% endfor %}
-                    <div v-for="material in sub_materials">
-                        <a title="جزئیات" :href="material.get_absolute_url">
-                            <div class="media">
-                                <img class="mr-3 rounded" width="64" :src="material.thumbnail" alt="">
-                                <div class="media-body farsi">
-
-                                    <h5 v-text="material.title">
-
-                                    </h5>
-                                    <div v-html="material.short_description"></div>
-
-
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-footer ">
-
-                    {% if add_material_form %}
-
-                    <form @submit.prevent="add_material()">
-                        <div class="row">
-                            <div class="col-8">
-                                <input required type="text" v-model="new_material_title" class="farsi form-control"
-                                    placeholder="پروژه جدید">
-
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-primary btn-block" type="submit">تایید</button>
-
-                            </div>
-                        </div>
-
-                    </form>
-                    {% endif %}
-
-
-                </div>
-            </div>
-
+            {% include "projectmanager/includes/materials-app/template.html" %}
 
         </div>
 
 
+        <div class="col-md-4">
+            {% include "core/includes/page-links-app/template.html" %}
+        </div>
 
 
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card mb-3" id="material-request-app">
                 <div class="card-header">
 
                     <h5 class="card-title text-center farsi">
-پروژه ها
+                        درخواست های مربوط به این متریال
                     </h5>
 
 
@@ -119,17 +62,70 @@
                     <table class="table table-striped">
                         <thead>
                             <th>
-                                متریال
+                                تاریخ درخواست
+                            </th>
+                            <th>
+                                پروژه
+                            </th>
+                            <th>
+                                تعداد
+                            </th>
+                            <th>
+                                قیمت واحد
+                            </th>
+                            <th>
+                                جمع
+                            </th>
+                            <th>
+                                وضعیت
                             </th>
                         </thead>
                         <tbody>
                             {% for material_request in material.materialrequest_set.all %}
                             <tr>
                                 <td>
-                                    <a href="{{material_request.material.get_absolute_url}}">
+                                    <small>
+                                        {{material_request.date_added|to_persian_date|safe}}
+                                    </small>
+                                </td>
+                                <td>
+                                    <a href="{{material_request.project.get_absolute_url}}">
 
-                                        {{material_request.material.title}}
+                                        {{material_request.project.title}}
                                     </a>
+                                </td>
+                                <td>
+                                    {{material_request.quantity}}
+                                    <small>
+
+                                        {{material_request.unit_name}}
+                                    </small>
+                                </td>
+
+                                <td>
+                                    {{material_request.unit_price|to_price_pure}}
+
+                                </td>
+
+                                <td>
+                                    {{material_request.line_total|to_price}}
+
+                                </td>
+                                <td>
+
+                                    {{material_request.get_status_tag|safe}}
+                                    <a title="جزئیات" href="{{material_request.get_absolute_url}}">
+                                        <i class="material-icons">
+                                            description
+                                        </i>
+                                    </a>
+                                    {% if perms.projectmanager.change_materialrequest %}
+                                    <a title="ویرایش" href="{{material_request.get_edit_url}}">
+                                        <i class="material-icons">
+                                            edit
+                                        </i>
+                                    </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
@@ -166,9 +162,6 @@
         </div>
 
 
-        <div class="col-md-4">
-            {% include "core/includes/page-links-app/template.html" %}
-        </div>
     </div>
 </div>
 {% endblock %}
@@ -178,32 +171,7 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
 
-<script>
-    let material_app = new Vue({
-        el: "#material-app",
-        data: {
-            new_material_title: "",
-            sub_materials: [],
 
-        },
-        methods: {
-            add_material: function () {
-                let url = "{% url 'projectmanager:add_material' %}"
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    parent_id: page_id,
-                    title: this.new_material_title,
-                }
-                let posting = $.post(url, payload)
-                posting.done((data) => {
-                    if (data.result === 'SUCCEED') {
+{% include "projectmanager/includes/materials-app/script.html" %}
 
-                        material_app.sub_materials.push(data.material)
-                        material_app.new_material_title = ""
-                    }
-                })
-            },
-        }
-    })
-</script>
 {% endblock %}

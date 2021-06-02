@@ -9,3 +9,37 @@
 </p>
 
 {% endblock %}
+
+
+{% block list %}
+<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+    <h6 class="mb-0">
+        <span class="material-icons">
+            apartment
+        </span>
+        شاغل در
+    </h6>
+
+    <span class="text-secondary">
+        <a href="{{employee.organization_unit.employer.get_absolute_url}}">
+            {{employee.organization_unit.employer.title}}
+        </a>
+    </span>
+</li>
+
+<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+    <h6 class="mb-0">
+        <span class="material-icons">
+            apartment
+        </span>
+        واحد سازمانی
+    </h6>
+
+    <span class="text-secondary">
+        <a href="{{employee.organization_unit.get_absolute_url}}">
+            {{employee.organization_unit.title}}
+        </a>
+    </span>
+</li>
+
+{% endblock %}

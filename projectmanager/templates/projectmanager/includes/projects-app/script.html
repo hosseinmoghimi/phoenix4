@@ -4,7 +4,7 @@
         el: "#project-app",
         data: {
             new_project_title: "",
-            sub_projects: [],
+            projects: [],
             waiting:false,
         },
         methods: {
@@ -21,7 +21,7 @@
                     if (data.result === 'SUCCEED') {
                         project_app.waiting=false
 
-                        project_app.sub_projects.push(data.project)
+                        project_app.projects.push(data.project)
                         project_app.new_project_title = ""
                     }
                 })

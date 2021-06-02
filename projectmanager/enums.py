@@ -6,6 +6,11 @@ class MaterialUnitNameEnum(TextChoices):
     KILOGERAM="کیلوگرم",_("کیلوگرم")
     TON="تن",_("تن")
     METER="متر",_("متر")
+    METER2="متر مربع",_("متر مربع")
+    METER3="متر مکعب",_("متر مکعب")
+    PART="قطعه",_("قطعه")
+    SHAKHEH="شاخه",_("شاخه")
+    DASTGAH="دستگاه",_("دستگاه")
 
 class SignatureStatusEnum(TextChoices):
     DEFAULT='DEFAULT',_('DEFAULT')
@@ -14,6 +19,7 @@ class SignatureStatusEnum(TextChoices):
     DENIED='رد شده',_('ردشده')
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     PURCHASING='درحال خرید',_('درحال خرید')
+    REQUESTED='درخواست شده',_('درخواست شده')
 
 class MaterialRequestStatusEnum(TextChoices):
     DEFAULT='DEFAULT',_('DEFAULT')
@@ -22,6 +28,7 @@ class MaterialRequestStatusEnum(TextChoices):
     IN_PROGRESS='در حال بررسی',_('در حال بررسی')
     DENIED='رد شده',_('رد شده')
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
+    REQUESTED='درخواست شده',_('درخواست شده')
     PURCHASING='در حال خرید',_('در حال خرید')
     ALREADY_AVAILABLE='متعلق به کارفرما',_('متعلق به کارفرما')
 

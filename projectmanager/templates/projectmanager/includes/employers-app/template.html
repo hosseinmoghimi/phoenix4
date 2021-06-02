@@ -1,0 +1,92 @@
+{% load static %}
+<div class="card mb-3" id="employers-app">
+    <div class="card-header">
+
+        <h5 class="card-title text-center farsi">
+            لیست کارفرما ها
+        </h5>
+
+
+    </div>
+
+    <div class="card-body">
+        {% for employer in employers %}
+        <a href="{{employer.get_absolute_url}}">
+            <div class="media">
+
+                <i class="material-icons">
+                    apartment
+                </i>
+
+                <div class="media-body farsi">
+
+                    <h5>
+                        {% if employer.pre_title %}
+                        <small>
+                            {{employer.pre_title}}
+
+                        </small>
+
+                        {% endif %}
+                        {{employer.title}}
+
+                    </h5>
+
+
+                </div>
+            </div>
+        </a>
+
+        {% endfor %}
+        <div v-for="employer in employers">
+            <a :href="employer.get_absolute_url">
+                <div class="media">
+
+                    <i class="material-icons">
+                        apartment
+                    </i>
+
+                    <div class="media-body farsi">
+
+                        <h5>
+                            <small v-text="employer.pre_title">
+
+                            </small>
+                            <span v-html="employer.title">
+                            </span>
+
+                        </h5>
+
+
+
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="card-footer ">
+
+        {% if add_employer_form %}
+
+        <form @submit.prevent="add_employer()">
+            <div class="row">
+                <div class="col-8">
+                    <input required type="text" v-model="new_employer_title" class="farsi form-control"
+                        placeholder="کارفرمای جدید">
+
+                </div>
+                <div class="col-4">
+                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+                    <button v-if="!waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
+
+                </div>
+            </div>
+
+        </form>
+        {% endif %}
+
+
+    </div>
+</div>

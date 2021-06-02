@@ -1,0 +1,36 @@
+<script>
+
+
+
+let parent_id=parseInt("{{parent_id}}")
+    let materials_app = new Vue({
+        el: "#materials-app",
+        data: {
+            new_material_title: "",
+            materials: [],
+
+            waiting:false,
+        },
+        methods: {
+            add_material: function () {
+                materials_app.waiting=true
+                let url = "{% url 'projectmanager:add_material' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: materials_app.new_material_title,
+                    parent_id: parent_id,
+                }
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+
+                        materials_app.materials.push(data.material)
+                        materials_app.new_material_title = ""
+                    }
+                })
+            },
+
+        }
+    })
+</script>
