@@ -7,6 +7,7 @@ urlpatterns = [
     path('',views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),
     path('project/<int:pk>/',views.ProjectViews().project,name="project"),
+    path('project-chart/',views.BasicViews().project_chart,name="project_chart"),
     path('employer/<int:pk>/',views.OrganizationUnitViews().employer,name="employer"),
     path('employee/<int:pk>/',views.EmployeeViews().employee,name="employee"),
     path('organizationunit/<int:pk>/',views.OrganizationUnitViews().organization_unit,name="organizationunit"),

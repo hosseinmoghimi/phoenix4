@@ -31,6 +31,10 @@
             {% include "projectmanager/includes/projects-app/template.html" %}
         </div>
         <div class="col-md-4">
+            
+{% include "projectmanager/includes/organization-units-app/template.html" %}
+        </div>
+        <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
         </div>
         <div class="col-md-4">
@@ -60,5 +64,6 @@
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "projectmanager/includes/material-requests-app/script.html" %}
 {% include "projectmanager/includes/service-requests-app/script.html" %}
+{% include "projectmanager/includes/organization-units-app/script.html" %}
 
 {% endblock %}

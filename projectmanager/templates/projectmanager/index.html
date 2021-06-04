@@ -1,5 +1,13 @@
 {% extends "projectmanager/layout.html" %}
 {% load static %}
+{% block navbar %}
+
+<li class="nav-item my-auto mx-2">
+    <a class="nav-link farsi " href="{% url 'projectmanager:project_chart' %}">
+        مدیریت
+    </a>
+</li>
+{% endblock  %}
 {% block content %}
 <div id="home-app">
 

@@ -27,7 +27,20 @@
         {{organization_unit.get_breadcrumb|safe}}
     </div>
     <div class="row ">
+        <div class="col-md-4">
+            <p>
+                کارفرما :
+                <a href="{{organization_unit.employer.get_absolute_url}}">
+                    {% if organization_unit.employer.pre_title %}
 
+                    <small>
+                        {{organization_unit.employer.pre_title}}
+                    </small>
+                    {% endif %}
+                    {{organization_unit.employer.title}}
+                </a>
+            </p>
+        </div>
 
         <div class="col-md-4">
             {% include "projectmanager/includes/organization-units-app/template.html" %}
@@ -46,7 +59,7 @@
 
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
-{% include "core/includes/page-documents-app/template.html" %}
+            {% include "core/includes/page-documents-app/template.html" %}
 
         </div>
     </div>
@@ -56,7 +69,7 @@
 
 {% block script %}
 <script>
-    let parent_id=parseInt("{{parent_id}}")
+    let parent_id = parseInt("{{parent_id}}")
 
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>

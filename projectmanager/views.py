@@ -1,3 +1,4 @@
+from core.serializers import BasicPageSerializer
 from projectmanager.enums import UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo
@@ -41,11 +42,19 @@ class BasicViews(View):
                 search_for=search_form.cleaned_data['search_for']
                 context['search_for']=search_for
                 context['materials']=MaterialRepo(request=request).list(search_for=search_for)
+                context['services']=ServiceRepo(request=request).list(search_for=search_for)
+                context['employers']=EmployerRepo(request=request).list(search_for=search_for)
                 context['projects']=ProjectRepo(request=request).list(search_for=search_for)
                 context['organization_units']=OrganizationUnitRepo(request=request).list(search_for=search_for)
                 context['log']=log
                 return render(request,TEMPLATE_ROOT+"index.html",context)
-       
+    def project_chart(self,request,*args, **kwargs):
+        context=getContext(request)
+
+        pages=ProjectRepo(request=request).list()
+        pages_s=BasicPageSerializer(pages,many=True).data
+        context['pages_s']=json.dumps(pages_s)
+        return render(request,"dashboard/pages-chart.html",context)
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         context['parent_id']=0
@@ -67,6 +76,7 @@ class ProjectViews(View):
         context=getContext(request)
         context.update(PageContext(request=request,page=page))
         context['project']=project
+        context['organization_units']=project.organization_units.all()
         context['unit_names']=(i[0] for i in UnitNameEnum.choices)
         context['unit_names2']=(i[0] for i in UnitNameEnum.choices)
         materials=MaterialRepo(request=request).list()
