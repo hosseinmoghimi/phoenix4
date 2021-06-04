@@ -1,4 +1,4 @@
-{% extends layout %}
+{% extends "base-layout.html" %}
 {% load static %}
 {% block head %}
 <style>
@@ -65,7 +65,7 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="container">
+<div class="container" id="employer-app">
     <div class="main-body">
 
         <!-- Breadcrumb -->
@@ -189,14 +189,37 @@
             <div class="col-md-8">
                 <div class="card mb-3">
                     <div class="card-body">
+                        {% if add_organization_unit_form %}
+                        <form @submit.prevent="add_organization_unit()">
+                            <div class="row">
+                                <div class="col-8">
+                                    <input required type="text" v-model="new_organization_unit_title"
+                                        class="farsi form-control" placeholder="واحد سازمانی جدید">
 
+                                </div>
+                                <div class="col-4">
+                                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+                                    <button v-if="!waiting" class="btn btn-outline-primary" type="submit">
+                                        <i class="material-icons">
+                                            add
+                                        </i>
+                                    </button>
+
+                                </div>
+                            </div>
+
+                        </form>
+
+                        {% endif %}
                         {% for organization_unit in employer.organizationunit_set.all %}
                         <div class="row">
                             <div class="col-sm-3">
                                 <h6 class="mb-0">
                                     {% for employee in organization_unit.employee_set.all %}
                                     <a href="{{employee.get_absolute_url}}">
-                                       <img src="{{employee.profile.image}}" class="rounded-circle" width="48" alt="">
+                                        <img src="{{employee.profile.image}}" class="rounded-circle" width="48" alt="">
                                         {{employee.profile.name}}
                                     </a>
                                     {% endfor %}
@@ -210,7 +233,7 @@
                         </div>
                         <hr>
                         {% endfor %}
-
+                        
 
                     </div>
                 </div>
@@ -292,3 +315,37 @@
     </div>
 </div>
 {% endblock %}
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let url_add_organization_unit = "{% url 'projectmanager:add_organization_unit' %}"
+    let employer_id = parseInt("{{employer.id}}")
+    let employer_app = new Vue({
+        el: "#employer-app",
+        data: {
+            new_organization_unit_title: "",
+            waiting:false,
+            organization_units:[],
+        },
+        methods: {
+            add_organization_unit: function () {
+                let url = "{% url 'projectmanager:add_organization_unit' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    employer_id: employer_id,
+                    title: this.new_organization_unit_title,
+                }
+                console.log(payload)
+                let posting = $.post(url_add_organization_unit, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+
+                        employer_app.organization_units.push(data.organization_unit)
+                        employer_app.new_organization_unit_title = ""
+                    }
+                })
+            }
+        }
+    })
+</script>
+{% endblock script %}
