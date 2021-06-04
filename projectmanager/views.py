@@ -1,7 +1,7 @@
-from projectmanager.enums import MaterialUnitNameEnum
+from projectmanager.enums import UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo
-from projectmanager.serializers import MaterialSerializer
+from projectmanager.serializers import MaterialSerializer, ServiceSerializer
 from projectmanager.models import Material, OrganizationUnit
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from typing import ContextManager
@@ -10,7 +10,7 @@ from .forms import *
 import json
 from .apps import APP_NAME
 from core.views import DefaultContext,PageContext
-from .repo import EmployeeRepo, EmployerRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo
+from .repo import EmployeeRepo, EmployerRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
 from django.views import View
 from .utils import AdminUtility
 TEMPLATE_ROOT=APP_NAME+"/"
@@ -49,10 +49,12 @@ class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         context['parent_id']=0
+        context['add_service_form']=AddServiceForm()
         context['add_organization_unit_form']=AddOrganizationUnitForm()
         context['add_employer_form']=AddEmployerForm()
         context['add_material_form']=AddMaterialForm()
         context['add_project_form']=AddProjectForm()
+        context['services']=ServiceRepo(request=request).list(for_home=True)
         context['projects']=ProjectRepo(request=request).list(for_home=True)
         context['materials']=MaterialRepo(request=request).list(for_home=True)
         context['employers']=EmployerRepo(request=request).list(for_home=True)
@@ -65,10 +67,15 @@ class ProjectViews(View):
         context=getContext(request)
         context.update(PageContext(request=request,page=page))
         context['project']=project
-        context['unit_names']=(i[0] for i in MaterialUnitNameEnum.choices)
+        context['unit_names']=(i[0] for i in UnitNameEnum.choices)
+        context['unit_names2']=(i[0] for i in UnitNameEnum.choices)
         materials=MaterialRepo(request=request).list()
         context['materials_s']=json.dumps(MaterialSerializer(materials,many=True).data)
+        services=ServiceRepo(request=request).list()
+        context['services_s']=json.dumps(ServiceSerializer(services,many=True).data)
         context['add_material_request_form']=AddMaterialRequestForm()
+        context['add_service_request_form']=AddServiceRequestForm()
+        
         context['add_project_form']=AddProjectForm()
         context['projects']=project.childs.all()
         return render(request,TEMPLATE_ROOT+"project.html",context)
@@ -116,3 +123,19 @@ class MaterialViews(View):
         context.update(PageContext(request=request,page=material))
         context['add_material_form']=AddMaterialForm()
         return render(request,TEMPLATE_ROOT+"material.html",context)
+
+class ServiceViews(View):
+    def service_request(self,request,pk,*args, **kwargs):
+        service_request=ServiceRepo(request).service_request(*args, **kwargs)        
+        context=getContext(request)  
+        context['service_request']=service_request
+        return render(request,TEMPLATE_ROOT+"service-request.html",context)
+
+    def service(self,request,*args, **kwargs):
+        service=ServiceRepo(request).service(*args, **kwargs)
+        context=getContext(request)  
+        context['service']=service
+        context['services']=service.childs()
+        context.update(PageContext(request=request,page=service))
+        context['add_service_form']=AddServiceForm()
+        return render(request,TEMPLATE_ROOT+"service.html",context)

@@ -1,0 +1,94 @@
+<script>
+    let sum_service_requests = parseInt("{{project.sum_service_requests}}")
+    let services = JSON.parse(`{{services_s|escapejs}}`)
+    let url_add_service_request = "{% url 'projectmanager:add_service_request' %}"
+    let service_requests_app = new Vue({
+        el: "#service-requests-app",
+        data: {
+            add_service_request_form_title: "",
+            services: services.slice(0, 6),
+            add_service_request_form_unit_price: 0,
+            add_service_request_form_unit_name: "",
+            add_service_request_form_quantity: "",
+            service_requests: [],
+            waiting: false,
+            sum_service_requests: sum_service_requests,
+            show_add_service_request_form: false,
+        },
+        methods: {
+            to_price: function (value, CURRENCY) {
+                return to_price(value, CURRENCY)
+            },
+            selected_service: function () {
+                if (this.add_service_request_form_title === "") {
+                    return {}
+                }
+                if (this.services.length > 0)
+                    return this.services[0]
+                return {}
+            },
+            add_service_request: function () {
+                service_requests_app.waiting = true
+
+                let payload = {
+                    project_id: page_id,
+                    service_id: this.selected_service().id,
+                    unit_price: this.add_service_request_form_unit_price,
+                    unit_name: this.add_service_request_form_unit_name,
+                    quantity: this.add_service_request_form_quantity,
+                    // status: this.add_service_request_form_status,
+                    // description: this.add_service_request_form_description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                console.log(payload)
+
+
+                var posting = $.post(url_add_service_request, payload);
+                posting.fail(function (xhr, status, error) {
+                    service_requests_app.waiting = false
+                    // showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                })
+                // Put the results in a div
+                posting.done(function (data) {
+                    service_requests_app.waiting = false
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        service_requests_app.service_requests.push(data.service_request)
+                        // service_request_app.show_add_service_request_form = false
+                        service_requests_app.sum_service_requests += data.service_request.quantity * data.service_request.unit_price
+
+
+
+
+
+
+
+                    }
+                    else {
+                    }
+                })
+
+            },
+            select_service: function (service) {
+                this.add_service_request_form_unit_name = service.unit_name
+                this.add_service_request_form_unit_price = service.unit_price
+                this.add_service_request_form_title = service.title
+                console.log(service)
+                this.services = [service]
+            },
+            filter_list: function () {
+                if (this.add_service_request_form_title) {
+
+                    this.services = services.filter(item => item.title.toUpperCase().includes(this.add_service_request_form_title.toUpperCase())).slice(0, 6);
+                    try {
+                        this.add_service_request_form_unit_price = this.selected_service().unit_price
+                        this.add_service_request_form_unit_name = this.selected_service().unit_name
+                    } catch (error) {
+
+                    }
+                }
+
+            },
+        }
+    })
+</script>

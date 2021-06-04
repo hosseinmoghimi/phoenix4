@@ -14,7 +14,7 @@
             add_page_document: function () {
             let title = this.new_document_title
             let formData = new FormData();
-            let file1 = $('#add-document-form')[0].elements[2].files[0]
+            let file1 = $('#add-document-form')[0].elements[1].files[0]
             formData.append("file1", file1);
             formData.append("title", title);
             formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);

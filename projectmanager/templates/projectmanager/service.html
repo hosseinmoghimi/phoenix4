@@ -9,12 +9,12 @@
 
         <i class="material-icons">engineering</i>
         <small class="text-secondary">
-            متریال
+            سرویس
 
         </small>
-        {{material.title}}
-        {% if perms.projectmanager.change_material %}
-        <a title="ویرایش" target="_blank" href="{{material.get_edit_url}}">
+        {{service.title}}
+        {% if perms.projectmanager.change_service %}
+        <a title="ویرایش" target="_blank" href="{{service.get_edit_url}}">
             <i class="material-icons">
                 edit
             </i>
@@ -22,7 +22,7 @@
         {% endif %}
     </h3>
     <div class="farsi">
-        {{material.get_breadcrumb|safe}}
+        {{service.get_breadcrumb|safe}}
     </div>
 
 
@@ -31,12 +31,12 @@
         <div class="col-md-4">
             <div class="mb-3 py-3">
 
-                <img src="{{material.image}}" class="rounded w-100" alt="">
+                <img src="{{service.thumbnail}}" class="rounded w-100" alt="">
             </div>
         </div>
         <div class="col-md-4">
 
-            {% include "projectmanager/includes/materials-app/template.html" %}
+            {% include "projectmanager/includes/services-app/template.html" %}
 
         </div>
 
@@ -138,7 +138,7 @@
                 </div>
                 <div class="card-footer ">
 
-                
+
 
                 </div>
             </div>
@@ -162,6 +162,6 @@
 
 {% include "core/includes/page-documents-app/script.html" %}
 
-{% include "projectmanager/includes/materials-app/script.html" %}
+{% include "projectmanager/includes/services-app/script.html" %}
 
 {% endblock %}

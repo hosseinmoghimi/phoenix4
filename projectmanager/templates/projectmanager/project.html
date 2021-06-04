@@ -37,7 +37,10 @@
             {% include "core/includes/page-documents-app/template.html" %}
         </div>
         <div class="col-md-12">
-            {% include "projectmanager/includes/material-request-app/list-app-template.html" %}
+            {% include "projectmanager/includes/material-requests-app/template.html" %}
+        </div>
+        <div class="col-md-12">
+            {% include "projectmanager/includes/service-requests-app/template.html" %}
         </div>
         <div class="col-md-8">
         </div>
@@ -55,6 +58,7 @@
 {% include "core/includes/page-links-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
-{% include "projectmanager/includes/material-request-app/list-app-script.html" %}
+{% include "projectmanager/includes/material-requests-app/script.html" %}
+{% include "projectmanager/includes/service-requests-app/script.html" %}
 
 {% endblock %}

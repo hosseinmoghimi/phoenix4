@@ -1,8 +1,8 @@
-from projectmanager.serializers import MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer
+from projectmanager.serializers import MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import EmployerRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo
+from .repo import EmployerRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
 from .forms import *
 
 
@@ -92,3 +92,44 @@ class MaterialApi(APIView):
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
+
+
+class ServiceApi(APIView):
+    def add_service_request(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_service_request_form=AddServiceRequestForm(request.POST)
+            if add_service_request_form.is_valid():
+                log+=1
+                service_id=add_service_request_form.cleaned_data['service_id']
+                project_id=add_service_request_form.cleaned_data['project_id']
+                quantity=add_service_request_form.cleaned_data['quantity']
+                unit_name=add_service_request_form.cleaned_data['unit_name']
+                unit_price=add_service_request_form.cleaned_data['unit_price']
+                service_request=ServiceRepo(request=request).add_service_request(unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_id=service_id,project_id=project_id)
+                print(100*"#76553456")
+                print(service_request.service.title)
+                context['service_request']=ServiceRequestSerializer(service_request).data
+                context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+    def add_service(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_service_form=AddServiceForm(request.POST)
+            if add_service_form.is_valid():
+                log+=1
+                title=add_service_form.cleaned_data['title']
+                parent_id=add_service_form.cleaned_data['parent_id']
+                service=ServiceRepo(request=request).add_service(title=title,parent_id=parent_id)
+                context['service']=ServiceSerializer(service).data
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+

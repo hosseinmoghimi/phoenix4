@@ -1,0 +1,214 @@
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+<div class="card mb-3" id="service-requests-app">
+    <div class="card-header">
+        <h5 class="card-title text-center farsi">
+            درخواست های سرویس
+        </h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    تاریخ درخواست
+                </th>
+                <th>
+                    سرویس
+                </th>
+                <th>
+                    تعداد
+                </th>
+                <th>
+                    قیمت واحد
+                </th>
+                <th>
+                    جمع
+                </th>
+                <th>
+                    وضعیت
+                </th>
+            </thead>
+            <tbody>
+                {% for service_request in project.servicerequest_set.all %}
+                <tr>
+                    <td>
+                        <small>
+
+                            {{service_request.date_added|to_persian_date|safe}}
+                        </small>
+                    </td>
+                    <td>
+
+                        <a href="{{service_request.service.get_absolute_url}}">
+<!-- <img src="{{service_request.service.thumbnail}}" class="ml-2 rounded" width="32" alt=""> -->
+                            {{service_request.service.title}}
+                        </a>
+                    </td>
+                    <td>
+                        {{service_request.quantity}}
+                        <small>
+
+                            {{service_request.unit_name}}
+                        </small>
+
+                    </td>
+                    <td>
+                        {{service_request.unit_price|to_price_pure}}
+
+                    </td>
+                    <td>
+                        {{service_request.line_total|to_price}}
+
+                    </td>
+                    <td>
+                        {{service_request.get_status_tag|safe}}
+                        <a href="{{service_request.get_absolute_url}}" title="نمایش کامل">
+                            <i class="material-icons">
+                                description
+                            </i>
+                        </a>
+
+                        {% if perms.projectmanager.change_servicerequest %}
+                        {{service_request.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+                <tr v-for="service_request in service_requests">
+                    <td>
+                        <small v-text="service_request.persian_date_added">
+
+                        </small>
+                    </td>
+                    <td>
+
+                        <a :href="service_request.service.get_absolute_url" v-text="service_request.service.title">
+
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="service_request.quantity"></span>
+                        <small v-text="service_request.unit_name">
+
+                        </small>
+
+                    </td>
+                    <td>
+                        <span v-text="to_price(service_request.unit_price,'')"></span>
+
+                    </td>
+                    <td>
+                        <span
+                            v-text="to_price(service_request.unit_price*service_request.quantity,'{{CURRENCY}}')"></span>
+
+                    </td>
+                    <td>
+                        <span v-html="service_request.get_status_tag"></span>
+
+                        <a :href="service_request.get_absolute_url" title="نمایش کامل">
+                            <i class="material-icons">
+                                description
+                            </i>
+                        </a>
+                        {% if perms.projectmanager.change_servicerequest %}
+                        <a title="ویرایش" :href="service_request.get_edit_url">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% if add_service_request_form %}
+        <button v-if="!show_add_service_request_form" @click="show_add_service_request_form=true"
+            class="btn btn-success">
+            <i class="material-icons text-light">
+                add
+            </i>
+        </button>
+        <div class="row" v-if="show_add_service_request_form">
+            <div class="col-8">
+                <form @submit.prevent="add_service_request()">
+
+                    <input @input="filter_list" required type="text" v-model="add_service_request_form_title"
+                        class="farsi form-control" placeholder="سرویس">
+                    <p class="text-right">
+                        <span v-text="selected_service().title"></span>
+                        <!--  -->
+                        <span>هر </span>
+                        <span v-text="add_service_request_form_unit_name"></span>
+                        <span v-text="to_price(add_service_request_form_unit_price,'')"></span>
+                        <small>
+
+                            {{CURRENCY}}
+                        </small>
+                    </p>
+                    <div class="row">
+                        <div class="col-4">
+                            <input required type="number" min="0" placeholder="تعداد" class="form-control"
+                                v-model="add_service_request_form_quantity">
+                        </div>
+                    
+                        
+                        <div class="col-4">
+                            <select v-model="add_service_request_form_unit_name" class="form-control farsi" id="">
+                                <option disabled selected>نام واحد</option>
+                                {% for unit_name in unit_names2 %}
+                                <option value="{{unit_name}}">{{unit_name}}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                        <div class="col-4">
+                            <input required type="number" v-model="add_service_request_form_unit_price"
+                                class="farsi form-control" placeholder="قیمت واحد">
+                        </div>
+
+                        <div class="col-6">
+                            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+                            <button v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-secondary" @click="show_add_service_request_form=false"
+                                type="reset">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+                <div v-for="service in services">
+                    <button class="btn btn-secondary my-2" @click="select_service(service)"
+                        v-text="service.title"></button>
+                        <a :href="service.get_absolute_url" title="نمایش کامل ">
+
+                            <i class="material-icons">description</i>
+                        </a>
+                </div>
+            </div>
+
+
+        </div>
+
+        {% endif %}
+    </div>
+    <div class="card-footer ">
+        <p>
+
+            <span class="small text-secondary">
+                مجموع سرویس ها :
+            </span>
+            <span v-text="to_price(sum_service_requests,'{{CURRENCY}}')">
+
+            </span>
+        </p>
+
+
+
+    </div>
+</div>

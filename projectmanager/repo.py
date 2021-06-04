@@ -1,10 +1,10 @@
-from projectmanager.enums import MaterialRequestStatusEnum, SignatureStatusEnum
+from projectmanager.enums import RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
 from authentication.models import Profile
 from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Employee, Employer, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit
+from .models import Employee, Employer, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
 
 
 class ProjectRepo():
@@ -202,6 +202,95 @@ class EmployerRepo():
         return new_employer
 
 
+class ServiceRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Service.objects
+
+    def service(self, *args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'service_id' in kwargs:
+            return self.objects.filter(pk=kwargs['service_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
+
+    def service_request(self, *args, **kwargs):
+        objects = ServiceRequest.objects
+        if 'pk' in kwargs:
+            return objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return objects.filter(pk=kwargs['id']).first()
+        if 'service_request_id' in kwargs:
+            return objects.filter(pk=kwargs['service_request_id']).first()
+        if 'title' in kwargs:
+            return objects.filter(pk=kwargs['title']).first()
+
+    def get(self, *args, **kwargs):
+        return self.organization_unit(*args, **kwargs)
+
+    def list(self, *args, **kwargs):
+        objects = self.objects
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(
+                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects.all()
+
+    def add_service_request(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_servicerequest"):
+            return None
+        new_service_request = ServiceRequest(status=RequestStatusEnum.REQUESTED)
+        if 'project_id' in kwargs:
+            new_service_request.project_id = kwargs['project_id']
+        if 'service_id' in kwargs:
+            new_service_request.service_id = kwargs['service_id']
+        if 'quantity' in kwargs:
+            new_service_request.quantity = kwargs['quantity']
+        if 'unit_name' in kwargs:
+            new_service_request.unit_name = kwargs['unit_name']
+        if 'unit_price' in kwargs:
+            new_service_request.unit_price = kwargs['unit_price']
+        if 'description' in kwargs:
+            new_service_request.description = kwargs['description']
+        if 'status' in kwargs:
+            new_service_request.status = kwargs['status']
+        if 'status' in kwargs:
+            new_service_request.status = kwargs['status']
+        profile = ProfileRepo(user=self.user).me
+        new_service_request.profile = profile
+        if new_service_request.quantity > 0 and new_service_request.unit_price > 0:
+            new_service_request.save()
+            new_service_request.service.unit_price = new_service_request.unit_price
+            new_service_request.service.unit_name = new_service_request.unit_name
+            new_service_request.service.save()
+            service_request_signature=ServiceRequestSignature(profile=profile,service_request=new_service_request,status=SignatureStatusEnum.REQUESTED)
+            service_request_signature.save()
+            return new_service_request
+
+    def add_service(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_service"):
+            return None
+        new_service = Service(unit_name=UnitNameEnum.SERVICE,unit_price=0)
+
+       
+        if 'title' in kwargs:
+            new_service.title = kwargs['title']
+        if 'parent_id' in kwargs:
+            new_service.parent_id = kwargs['parent_id']
+        new_service.save()
+        return new_service
+
+
 class MaterialRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -229,8 +318,8 @@ class MaterialRepo():
             return objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return objects.filter(pk=kwargs['id']).first()
-        if 'material_id' in kwargs:
-            return objects.filter(pk=kwargs['material_id']).first()
+        if 'material_request_id' in kwargs:
+            return objects.filter(pk=kwargs['material_request_id']).first()
         if 'title' in kwargs:
             return objects.filter(pk=kwargs['title']).first()
 
@@ -249,7 +338,7 @@ class MaterialRepo():
     def add_material_request(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_materialrequest"):
             return None
-        new_material_request = MaterialRequest(status=MaterialRequestStatusEnum.REQUESTED)
+        new_material_request = MaterialRequest(status=RequestStatusEnum.REQUESTED)
         if 'project_id' in kwargs:
             new_material_request.project_id = kwargs['project_id']
         if 'material_id' in kwargs:
@@ -280,7 +369,7 @@ class MaterialRepo():
     def add_material(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_material"):
             return None
-        new_material = Material()
+        new_material = Material(image_main_origin="core/images/Page/Image/material.png")
 
         if 'parent_id' in kwargs and kwargs['parent_id']>0:
             new_material.parent_id = kwargs['parent_id']

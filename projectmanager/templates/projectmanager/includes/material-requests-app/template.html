@@ -142,6 +142,7 @@
                     <input @input="filter_list" required type="text" v-model="add_material_request_form_title"
                         class="farsi form-control" placeholder="متریال">
                     <p class="text-right">
+                        <span v-text="selected_material().title"></span>
                         <span>هر </span>
                         <span v-text="add_material_request_form_unit_name"></span>
                         <span v-text="to_price(add_material_request_form_unit_price,'')"></span>

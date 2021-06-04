@@ -1,6 +1,6 @@
 from authentication.repo import ProfileRepo
 from rest_framework import serializers
-from .models import Employer, Material, MaterialRequest, Project,OrganizationUnit
+from .models import Employer, Material, MaterialRequest, Project,OrganizationUnit, Service, ServiceRequest
 from authentication.serilizers import ProfileSerializer
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -22,6 +22,13 @@ class EmployerSerializer(serializers.ModelSerializer):
         fields=['id','title','image','pre_title','get_edit_url','get_absolute_url']
 
 
+class ServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=Service
+        fields=['id','title','unit_name','unit_price','thumbnail','get_absolute_url']
+
+
 class MaterialRequestSerializer(serializers.ModelSerializer):
     material=MaterialSerializer()
     project=ProjectSerializer()
@@ -29,6 +36,14 @@ class MaterialRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model=MaterialRequest
         fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
+
+class ServiceRequestSerializer(serializers.ModelSerializer):
+    service=ServiceSerializer()
+    project=ProjectSerializer()
+    profile=ProfileSerializer()
+    class Meta:
+        model=ServiceRequest
+        fields=['id','service','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
 
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):

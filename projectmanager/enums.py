@@ -1,6 +1,6 @@
 from core.enums import *
 from django.utils.translation import gettext as _
-class MaterialUnitNameEnum(TextChoices):
+class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")
     GERAM="گرم",_("گرم")
     KILOGERAM="کیلوگرم",_("کیلوگرم")
@@ -11,6 +11,7 @@ class MaterialUnitNameEnum(TextChoices):
     PART="قطعه",_("قطعه")
     SHAKHEH="شاخه",_("شاخه")
     DASTGAH="دستگاه",_("دستگاه")
+    SERVICE="سرویس",_("سرویس")
 
 class SignatureStatusEnum(TextChoices):
     DEFAULT='DEFAULT',_('DEFAULT')
@@ -21,7 +22,7 @@ class SignatureStatusEnum(TextChoices):
     PURCHASING='درحال خرید',_('درحال خرید')
     REQUESTED='درخواست شده',_('درخواست شده')
 
-class MaterialRequestStatusEnum(TextChoices):
+class RequestStatusEnum(TextChoices):
     DEFAULT='DEFAULT',_('DEFAULT')
     INITIAL='تعریف اولیه در سیستم',_('تعریف اولیه در سیستم')
     DELIVERED='تحویل شده',_('تحویل شده')
@@ -55,18 +56,18 @@ def StatusColor(status):
         color= 'secondary'
     elif status==AssignmentStatusEnum.DENIED:
         color= 'danger'
-    elif status==MaterialRequestStatusEnum.DEFAULT:
+    elif status==RequestStatusEnum.DEFAULT:
         color= 'rose'
-    elif status==MaterialRequestStatusEnum.ALREADY_AVAILABLE:
+    elif status==RequestStatusEnum.ALREADY_AVAILABLE:
         color= 'info'
-    elif status==MaterialRequestStatusEnum.IN_PROGRESS:
+    elif status==RequestStatusEnum.IN_PROGRESS:
         color= 'info'
-    elif status==MaterialRequestStatusEnum.ACCEPTED:
+    elif status==RequestStatusEnum.ACCEPTED:
         color= 'success'
-    elif status==MaterialRequestStatusEnum.DELIVERED:
+    elif status==RequestStatusEnum.DELIVERED:
         color= 'success'
-    elif status==MaterialRequestStatusEnum.DENIED:
+    elif status==RequestStatusEnum.DENIED:
         color= 'danger'
-    elif status==MaterialRequestStatusEnum.PURCHASING:
+    elif status==RequestStatusEnum.PURCHASING:
         color= 'primary'
     return color
