@@ -7,6 +7,31 @@ from django.shortcuts import reverse
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from utility.persian import PersianCalendar
 IMAGE_FOLDER=APP_NAME+"/images/"
+
+
+class Employer(models.Model):
+    pre_title=models.CharField(_("pre_title"), null=True,blank=True,max_length=50)
+    title=models.CharField(_("title"), max_length=50)
+    image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/", height_field=None, width_field=None, max_length=None)
+    owner=models.ForeignKey("authentication.Profile", verbose_name=_("owner"), on_delete=models.CASCADE)
+    def image(self):
+        if self.image_origin:
+            return f"{MEDIA_URL}{self.image_origin}"
+        return f"{STATIC_URL}{APP_NAME}/img/pages/thumbnail/employer.jpg"
+    class Meta:
+        verbose_name = _("Employer")
+        verbose_name_plural = _("Employers")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":employer", kwargs={"pk": self.pk})
+     
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/employer/{self.pk}/change/"""
+
+
 class Employee(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     organization_unit=models.ForeignKey("organizationunit", verbose_name=_("organizationunit"), on_delete=models.CASCADE)
@@ -31,7 +56,9 @@ class Employee(models.Model):
             </i>
         </a>
         """
-class ProjectManagerPage(CoreBasicPage):   
+
+
+class ProjectManagerPage(CoreBasicPage):
 
     class Meta:
         verbose_name = _("ProjectManagerPage")
@@ -39,36 +66,24 @@ class ProjectManagerPage(CoreBasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(ProjectManagerPage,self).save(*args, **kwargs)
-
-class Employer(models.Model):
-    pre_title=models.CharField(_("pre_title"), null=True,blank=True,max_length=50)
-    title=models.CharField(_("title"), max_length=50)
-    image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/", height_field=None, width_field=None, max_length=None)
-    
-    def image(self):
-        if self.image_origin:
-            return f"{MEDIA_URL}{self.image_origin}"
-        return f"{STATIC_URL}{APP_NAME}/img/pages/thumbnail/employer.jpg"
-    class Meta:
-        verbose_name = _("Employer")
-        verbose_name_plural = _("Employers")
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":employer", kwargs={"pk": self.pk})
-     
-    def get_edit_url(self):
-        return f"""{ADMIN_URL}{APP_NAME}/employer/{self.pk}/change/"""
-     
+  
 class Project(ProjectManagerPage):
-    
+    organization_units=models.ManyToManyField("OrganizationUnit", verbose_name=_("organization_units"),blank=True)
+    employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("employer"), on_delete=models.CASCADE)
+    contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("contractor"), on_delete=models.CASCADE)
     class Meta:
         verbose_name = _("Project")
         verbose_name_plural = _("Projects")
+    def parent_project(self):
+        return Project.objects.filter(pk=self.parent_id).first()
     def save(self,*args, **kwargs):
+
+
         self.class_name="project"
+        if self.contractor is None and self.parent is not None:
+            self.contractor=self.parent_project().contractor
+        if self.employer is None and self.parent is not None:
+            self.employer=self.parent_project().employer
         return super(Project,self).save(*args, **kwargs)
     def sum_material_requests(self):
         sum=0
@@ -80,7 +95,7 @@ class Project(ProjectManagerPage):
         for service_request in self.servicerequest_set.all():
             sum+=service_request.quantity*service_request.unit_price
         return sum
-
+    
 class Material(ProjectManagerPage):
     unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     unit_price=models.IntegerField(_("unit_price"),default=0)
@@ -309,7 +324,7 @@ class MaterialRequestSignature(models.Model):
         verbose_name_plural = _("امضا های درخواست متریال")
 
     def __str__(self):
-        return f'{self.profile.name()} : {self.description} @ {PersianCalendar().from_gregorian(self.date_added)}'
+        return f'{self.profile.name} : {self.description} @ {PersianCalendar().from_gregorian(self.date_added)}'
 
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)

@@ -35,9 +35,9 @@ class AddServiceForm(forms.Form):
     parent_id=forms.IntegerField( required=False)
          
 class AddServiceRequestForm(forms.Form):
-    service_id=forms.IntegerField(required=True)
     project_id=forms.IntegerField(required=True)
     quantity=forms.IntegerField(required=True)
     unit_price=forms.IntegerField(required=True)
     unit_name=forms.CharField(max_length=50, required=True)
+    service_title=forms.CharField(max_length=50, required=True)
                      

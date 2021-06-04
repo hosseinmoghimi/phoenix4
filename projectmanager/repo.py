@@ -17,6 +17,7 @@ class ProjectRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Project.objects
+        self.me=ProfileRepo(user=self.user).me
 
     def project(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -51,6 +52,7 @@ class ProjectRepo():
         if 'parent_id' in kwargs and kwargs['parent_id']>0:
             new_project.parent_id = kwargs['parent_id']
 
+        new_project.creator=self.me
         new_project.save()
         return new_project
 
@@ -266,6 +268,14 @@ class ServiceRepo():
             new_service_request.status = kwargs['status']
         if 'status' in kwargs:
             new_service_request.status = kwargs['status']
+        if 'service_title' in kwargs:
+            service=Service.objects.filter(title=kwargs['service_title']).first()
+            if service is None:
+                service=Service(title=kwargs['service_title'],unit_price=kwargs['unit_price'],unit_name=kwargs['unit_name'])
+                service.save()            
+            print(service)
+            print(100*"#2455346")
+            new_service_request.service_id=service.id
         profile = ProfileRepo(user=self.user).me
         new_service_request.profile = profile
         if new_service_request.quantity > 0 and new_service_request.unit_price > 0:

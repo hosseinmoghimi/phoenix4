@@ -53,7 +53,7 @@
                 <div class="card-header">
 
                     <h5 class="card-title text-center farsi">
-                        درخواست های مربوط به این متریال
+                        درخواست های مربوط به این سرویس
                     </h5>
 
 
@@ -83,46 +83,46 @@
                             </th>
                         </thead>
                         <tbody>
-                            {% for material_request in material.materialrequest_set.all %}
+                            {% for service_request in service.servicerequest_set.all %}
                             <tr>
                                 <td>
                                     <small>
-                                        {{material_request.date_added|to_persian_date|safe}}
+                                        {{service_request.date_added|to_persian_date|safe}}
                                     </small>
                                 </td>
                                 <td>
-                                    <a href="{{material_request.project.get_absolute_url}}">
+                                    <a href="{{service_request.project.get_absolute_url}}">
 
-                                        {{material_request.project.title}}
+                                        {{service_request.project.title}}
                                     </a>
                                 </td>
                                 <td>
-                                    {{material_request.quantity}}
+                                    {{service_request.quantity}}
                                     <small>
 
-                                        {{material_request.unit_name}}
+                                        {{service_request.unit_name}}
                                     </small>
                                 </td>
 
                                 <td>
-                                    {{material_request.unit_price|to_price_pure}}
+                                    {{service_request.unit_price|to_price_pure}}
 
                                 </td>
 
                                 <td>
-                                    {{material_request.line_total|to_price}}
+                                    {{service_request.line_total|to_price}}
 
                                 </td>
                                 <td>
 
-                                    {{material_request.get_status_tag|safe}}
-                                    <a title="جزئیات" href="{{material_request.get_absolute_url}}">
+                                    {{service_request.get_status_tag|safe}}
+                                    <a title="جزئیات" href="{{service_request.get_absolute_url}}">
                                         <i class="material-icons">
                                             description
                                         </i>
                                     </a>
-                                    {% if perms.projectmanager.change_materialrequest %}
-                                    <a title="ویرایش" href="{{material_request.get_edit_url}}">
+                                    {% if perms.projectmanager.change_servicerequest %}
+                                    <a title="ویرایش" href="{{service_request.get_edit_url}}">
                                         <i class="material-icons">
                                             edit
                                         </i>

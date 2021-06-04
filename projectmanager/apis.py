@@ -104,12 +104,12 @@ class ServiceApi(APIView):
             add_service_request_form=AddServiceRequestForm(request.POST)
             if add_service_request_form.is_valid():
                 log+=1
-                service_id=add_service_request_form.cleaned_data['service_id']
+                service_title=add_service_request_form.cleaned_data['service_title']
                 project_id=add_service_request_form.cleaned_data['project_id']
                 quantity=add_service_request_form.cleaned_data['quantity']
                 unit_name=add_service_request_form.cleaned_data['unit_name']
                 unit_price=add_service_request_form.cleaned_data['unit_price']
-                service_request=ServiceRepo(request=request).add_service_request(unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_id=service_id,project_id=project_id)
+                service_request=ServiceRepo(request=request).add_service_request(unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_title=service_title,project_id=project_id)
                 print(100*"#76553456")
                 print(service_request.service.title)
                 context['service_request']=ServiceRequestSerializer(service_request).data
