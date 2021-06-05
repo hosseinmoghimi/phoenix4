@@ -4,7 +4,7 @@ from authentication.models import Profile
 from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Employee, Employer, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
+from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
 
 
 class ProjectRepo():
@@ -98,11 +98,14 @@ class OrganizationUnitRepo():
         if 'title' in kwargs:
             new_organization.title = kwargs['title']
 
+        if 'employer_id' in kwargs and kwargs['employer_id'] is not None:
+            new_organization.employer_id = kwargs['employer_id']
+
         if 'parent_id' in kwargs and kwargs['parent_id']==0:
             employer=Employer(title=kwargs['title'])
             employer.save()
             new_organization.employer = employer
-        if 'parent_id' in kwargs and kwargs['parent_id']>0:
+        if 'parent_id' in kwargs and kwargs['parent_id'] is not None and kwargs['parent_id']>0:
             parent_organization =OrganizationUnit.objects.filter(pk=kwargs['parent_id']).first()
             if parent_organization is not None:
                 new_organization.employer=parent_organization.employer
@@ -299,6 +302,43 @@ class ServiceRepo():
             new_service.parent_id = kwargs['parent_id']
         new_service.save()
         return new_service
+
+
+class EventRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Event.objects
+
+    def event(self, *args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'event_id' in kwargs:
+            return self.objects.filter(pk=kwargs['event_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
+    def add_event(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_event"):
+            return None
+        if 'event_datetime' in kwargs:
+            event_datetime=kwargs['event_datetime']
+        else:
+            from django.utils import timezone
+            event_datetime=timezone.now()
+        new_event=Event(adder=ProfileRepo(self.user).me,event_datetime=event_datetime)
+        if 'project_id' in kwargs:
+            new_event.project_related_id = kwargs['project_id']
+        if 'title' in kwargs:
+            new_event.title = kwargs['title']
+        new_event.save()
+        return new_event
 
 
 class MaterialRepo():

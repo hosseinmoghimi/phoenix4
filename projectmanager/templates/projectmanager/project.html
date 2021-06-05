@@ -31,11 +31,14 @@
             {% include "projectmanager/includes/projects-app/template.html" %}
         </div>
         <div class="col-md-4">
-            
-{% include "projectmanager/includes/organization-units-app/template.html" %}
+
+            {% include "projectmanager/includes/organization-units-app/template.html" %}
         </div>
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
+        </div>
+        <div class="col-md-8">
+            {% include "projectmanager/includes/events-app/template.html" %}
         </div>
         <div class="col-md-4">
             {% include "core/includes/page-documents-app/template.html" %}
@@ -57,6 +60,7 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
     let parent_id = parseInt("{{parent_id}}")
+    let project_id = parseInt("{{parent_id}}")
 
 </script>
 {% include "core/includes/page-links-app/script.html" %}
@@ -65,5 +69,6 @@
 {% include "projectmanager/includes/material-requests-app/script.html" %}
 {% include "projectmanager/includes/service-requests-app/script.html" %}
 {% include "projectmanager/includes/organization-units-app/script.html" %}
+{% include "projectmanager/includes/events-app/script.html" %}
 
 {% endblock %}

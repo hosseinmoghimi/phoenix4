@@ -1,0 +1,30 @@
+<script>
+    let url_add_event = "{% url 'projectmanager:add_event' %}"
+    let events_app = new Vue({
+        el: "#events-app",
+        data: {
+            events: [],
+            add_event_form_title: "",
+            waiting: false
+        },
+        methods: {
+            add_event: function () {
+                this.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.add_event_form_title,
+                    project_id: parent_id,
+                }
+                let posting = $.post(url_add_event, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        events_app.events.push(data.event)
+                        events_app.add_event_form_title = ""
+                        events_app.waiting = false
+                    }
+                })
+            },
+        }
+    })
+</script>

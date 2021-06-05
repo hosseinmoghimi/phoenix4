@@ -1,0 +1,72 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+<div>
+    <h3 class="text-center">
+
+        <i class="material-icons">engineering</i>
+        <small class="text-secondary">
+            رویداد
+
+        </small>
+        {{event.title}}
+        {% if perms.projectmanager.change_service %}
+        <a title="ویرایش" target="_blank" href="{{event.get_edit_url}}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        {% endif %}
+    </h3>
+    <div class="farsi">
+        {{event.get_breadcrumb|safe}}
+    </div>
+
+
+    <div class="row ">
+
+        <div class="col-md-4">
+            <a href="{{event.project_related.get_absolute_url}}">
+                {{event.project_related.title}}
+            </a>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-3 py-3">
+
+                <img src="{{event.thumbnail}}" class="rounded w-100" alt="">
+            </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            {% include "core/includes/page-links-app/template.html" %}
+            {% include "core/includes/page-documents-app/template.html" %}
+
+        </div>
+
+
+
+
+
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+    let parent_id = parseInt("{{parent_id}}")
+
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "core/includes/page-links-app/script.html" %}
+
+{% include "core/includes/page-documents-app/script.html" %}
+
+
+{% endblock %}

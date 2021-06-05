@@ -1,0 +1,74 @@
+{% load to_persian_date %}
+<div class="card mb-3" id="events-app">
+    <div class="card-header">
+        <h5 class="text-center">
+            رویداد ها
+        </h5>
+
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+                <th>
+                    زمان
+                </th>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>
+                        <a href="{{event.get_absolute_url}}">
+                            {{event.title}}
+                        </a>
+                    </td>
+                    <td>
+<small>
+
+    {{event.event_datetime|to_persian_datetime|safe}}
+</small>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                <tr v-for="event in events">
+                    <td>
+                        <a :href="event.get_absolute_url">
+                            <span v-text="event.title">
+
+
+                            </span>
+                        </a>
+                    </td>
+                    <td>
+                        <small v-text="event.persian_event_datetime">
+
+                        </small>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div>
+            <form @submit.prevent="add_event">
+                <div class="row">
+                    <div class="col-10">
+
+                        <input required type="text" class="form-control" v-model="add_event_form_title">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-success" type="submit">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>

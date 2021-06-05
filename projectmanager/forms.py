@@ -8,10 +8,14 @@ class AddProjectForm(forms.Form):
 
 class AddOrganizationUnitForm(forms.Form):
     parent_id=forms.IntegerField(required=False)
+    employer_id=forms.IntegerField(required=False)
     title=forms.CharField(max_length=50, required=True)
 
 class AddMaterialForm(forms.Form):
     parent_id=forms.IntegerField(required=False)
+    title=forms.CharField(max_length=50, required=True)
+class AddEventForm(forms.Form):
+    project_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=50, required=True)
 class AddMaterialRequestForm(forms.Form):
     project_id=forms.IntegerField(required=True)

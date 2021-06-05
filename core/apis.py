@@ -54,8 +54,6 @@ class BasicApi(APIView):
                 page_id=add_page_document_form.cleaned_data['page_id']
                 file=request.FILES['file1']              
                 page_document=DocumentRepo(request=request).add_page_document(title=title,file=file,page_id=page_id)
-                print(page_document)
-                print(100*"#23643#")
                 if page_document is not None:
                     context['page_document']=PageDocumentSerializer(page_document,context={'request':request}).data
         context['result']=SUCCEED

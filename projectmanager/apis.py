@@ -1,8 +1,8 @@
-from projectmanager.serializers import MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceSerializer
+from projectmanager.serializers import EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import EmployerRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
+from .repo import EmployerRepo, EventRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
 from .forms import *
 
 
@@ -24,6 +24,22 @@ class ProjectApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+class EventApi(APIView):
+    def add_event(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_event_form=AddEventForm(request.POST)
+            if add_event_form.is_valid():
+                log+=1
+                title=add_event_form.cleaned_data['title']
+                project_id=add_event_form.cleaned_data['project_id']
+                event=EventRepo(request=request).add_event(project_id=project_id,title=title)
+                context['event']=EventSerializer(event).data
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
 
 class OrganizationUnitApi(APIView):
     def add_organization_unit(self,request,*args, **kwargs):
@@ -36,7 +52,8 @@ class OrganizationUnitApi(APIView):
                 log+=1
                 title=add_organization_unit_form.cleaned_data['title']
                 parent_id=add_organization_unit_form.cleaned_data['parent_id']
-                organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,title=title)
+                employer_id=add_organization_unit_form.cleaned_data['employer_id']
+                organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,employer_id=employer_id,title=title)
                 context['organization_unit']=OrganizationUnitSerializer(organization_unit).data
         context['result']=SUCCEED
         context['log']=log

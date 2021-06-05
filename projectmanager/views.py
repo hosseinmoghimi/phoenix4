@@ -11,7 +11,7 @@ from .forms import *
 import json
 from .apps import APP_NAME
 from core.views import DefaultContext,PageContext
-from .repo import EmployeeRepo, EmployerRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
 from django.views import View
 from .utils import AdminUtility
 TEMPLATE_ROOT=APP_NAME+"/"
@@ -76,6 +76,7 @@ class ProjectViews(View):
         context=getContext(request)
         context.update(PageContext(request=request,page=page))
         context['project']=project
+        context['events']=project.event_set.all()
         context['organization_units']=project.organization_units.all()
         context['unit_names']=(i[0] for i in UnitNameEnum.choices)
         context['unit_names2']=(i[0] for i in UnitNameEnum.choices)
@@ -104,6 +105,8 @@ class OrganizationUnitViews(View):
         employer=EmployerRepo(request).employer(*args, **kwargs)        
         context=getContext(request)  
         context['employer']=employer
+        if request.user.has_perms(APP_NAME+".add_organizationunit"):
+            context["add_organization_unit_form"]=AddOrganizationUnitForm()
         context['layout']="base-layout.html"
         context['organization_units']=employer.organizationunit_set.all()
         return render(request,TEMPLATE_ROOT+"employer.html",context)
@@ -134,6 +137,13 @@ class MaterialViews(View):
         context['add_material_form']=AddMaterialForm()
         return render(request,TEMPLATE_ROOT+"material.html",context)
 
+class EventViews(View):
+    def event(self,request,pk,*args, **kwargs):
+        event=EventRepo(request).event(*args, **kwargs)       
+        context=getContext(request)  
+        context.update(PageContext(request=request,page=event)) 
+        context['event']=event
+        return render(request,TEMPLATE_ROOT+"event.html",context)
 class ServiceViews(View):
     def service_request(self,request,pk,*args, **kwargs):
         service_request=ServiceRepo(request).service_request(*args, **kwargs)        

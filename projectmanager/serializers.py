@@ -1,6 +1,6 @@
 from authentication.repo import ProfileRepo
 from rest_framework import serializers
-from .models import Employer, Material, MaterialRequest, Project,OrganizationUnit, Service, ServiceRequest
+from .models import Employer, Event, Material, MaterialRequest, Project,OrganizationUnit, Service, ServiceRequest
 from authentication.serilizers import ProfileSerializer
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -44,7 +44,10 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model=ServiceRequest
         fields=['id','service','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
-
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Event
+        fields=['id','title','get_absolute_url','persian_event_datetime']
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
     class Meta:

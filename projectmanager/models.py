@@ -13,7 +13,7 @@ class Employer(models.Model):
     pre_title=models.CharField(_("pre_title"), null=True,blank=True,max_length=50)
     title=models.CharField(_("title"), max_length=50)
     image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/", height_field=None, width_field=None, max_length=None)
-    owner=models.ForeignKey("authentication.Profile", verbose_name=_("owner"), on_delete=models.CASCADE)
+    owner=models.ForeignKey("authentication.Profile",null=True,blank=True, verbose_name=_("owner"), on_delete=models.CASCADE)
     def image(self):
         if self.image_origin:
             return f"{MEDIA_URL}{self.image_origin}"
@@ -129,9 +129,20 @@ class Service(ProjectManagerPage):
         verbose_name = _("خدمات")
         verbose_name_plural = _("خدمات")
     
+class Event(ProjectManagerPage):
+    project_related=models.ForeignKey("project", verbose_name=_("project"), on_delete=models.CASCADE)
+    event_datetime=models.DateTimeField(_("event_datetime"), auto_now=False, auto_now_add=False)
+    adder=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    def save(self,*args, **kwargs):
+        self.class_name="event"
+        return super(Event,self).save(*args, **kwargs)
 
-
-
+    def persian_event_datetime(self):
+        return PersianCalendar().from_gregorian(self.event_datetime)
+    class Meta:
+        verbose_name = _("رویداد")
+        verbose_name_plural = _("رویداد ها")
+    
 
 
 class OrganizationUnit(ProjectManagerPage):

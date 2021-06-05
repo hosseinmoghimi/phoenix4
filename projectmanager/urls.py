@@ -15,8 +15,10 @@ urlpatterns = [
     path('materialrequest/<int:pk>/',views.MaterialViews().material_request,name="materialrequest"),
     path('service/<int:pk>/',views.ServiceViews().service,name="service"),
     path('servicerequest/<int:pk>/',views.ServiceViews().service_request,name="servicerequest"),
+    path('event/<int:pk>/',views.EventViews().event,name="event"),
     
     
+    path('add_event/',apis.EventApi().add_event,name="add_event"),
     path('add_employer/',apis.OrganizationUnitApi().add_employer,name="add_employer"),
     path('add_service_request/',apis.ServiceApi().add_service_request,name="add_service_request"),
     path('add_service/',apis.ServiceApi().add_service,name="add_service"),

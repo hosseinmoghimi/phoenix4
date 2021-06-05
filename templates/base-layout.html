@@ -48,7 +48,15 @@
     <script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'vendor/js/popper.min.js' %}"></script>
     <script src="{% static 'utility/js/utility.js' %}"></script>
+    {% csrf_token %}
+    <script>
 
+        var csrfmiddlewaretoken = ''
+        $(document).ready(function () {
+            // Javascript method's body can be found in assets/js/demos.js
+            csrfmiddlewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+        })
+    </script>
     {% block script %}
 
     {% endblock %}
