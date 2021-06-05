@@ -34,8 +34,9 @@ class EventApi(APIView):
             if add_event_form.is_valid():
                 log+=1
                 title=add_event_form.cleaned_data['title']
+                event_datetime=add_event_form.cleaned_data['event_datetime']
                 project_id=add_event_form.cleaned_data['project_id']
-                event=EventRepo(request=request).add_event(project_id=project_id,title=title)
+                event=EventRepo(request=request).add_event(event_datetime=event_datetime,project_id=project_id,title=title)
                 context['event']=EventSerializer(event).data
         context['result']=SUCCEED
         context['log']=log

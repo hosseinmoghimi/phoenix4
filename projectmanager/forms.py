@@ -16,6 +16,7 @@ class AddMaterialForm(forms.Form):
     title=forms.CharField(max_length=50, required=True)
 class AddEventForm(forms.Form):
     project_id=forms.IntegerField(required=True)
+    event_datetime=forms.CharField( max_length=20, required=False)
     title=forms.CharField(max_length=50, required=True)
 class AddMaterialRequestForm(forms.Form):
     project_id=forms.IntegerField(required=True)

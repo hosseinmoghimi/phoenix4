@@ -1,3 +1,4 @@
+from django.utils import timezone
 from core.apis import BasicApi
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -9,6 +10,21 @@ from .utils import AdminUtility
 from .constants import *
 from django.views import View
 TEMPLATE_ROOT="core/"
+def CoreContext(request,app_name,*args, **kwargs):
+    context={}
+    context['user']=request.user
+    context['profile']=ProfileRepo(user=request.user).me
+    context['APP_NAME']=app_name
+    context['current_datetime']=PersianCalendar().from_gregorian(timezone.now())
+    context[app_name+'_sidebar']=True
+    context['DEBUG']=DEBUG
+    context['ADMIN_URL']=ADMIN_URL
+    context['MEDIA_URL']=MEDIA_URL
+    context['SITE_URL']=SITE_URL
+    context['CURRENCY']=CURRENCY
+    context['PUSHER_IS_ENABLE']=PUSHER_IS_ENABLE
+
+    return context
 def PageContext(request,page):
     context={}
     context['page']=page
@@ -26,21 +42,6 @@ def getContext(request):
     context["admin_utility"]=AdminUtility(request=request)
     return context
 # Create your views here.
-def CoreContext(request,app_name,*args, **kwargs):
-    context={}
-    context['user']=request.user
-    context['profile']=ProfileRepo(user=request.user).me
-    context['APP_NAME']=app_name
-    
-    context[app_name+'_sidebar']=True
-    context['DEBUG']=DEBUG
-    context['ADMIN_URL']=ADMIN_URL
-    context['MEDIA_URL']=MEDIA_URL
-    context['SITE_URL']=SITE_URL
-    context['CURRENCY']=CURRENCY
-    context['PUSHER_IS_ENABLE']=PUSHER_IS_ENABLE
-
-    return context
 def DefaultContext(request,app_name='core',*args, **kwargs):
     context=CoreContext(request=request,app_name=app_name)
     return context

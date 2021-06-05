@@ -5,7 +5,7 @@ from projectmanager.serializers import MaterialRequestSerializer, MaterialSerial
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
 from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
-
+from utility.persian import PersianCalendar
 
 class ProjectRepo():
     def __init__(self, *args, **kwargs):
@@ -337,6 +337,12 @@ class EventRepo():
             new_event.project_related_id = kwargs['project_id']
         if 'title' in kwargs:
             new_event.title = kwargs['title']
+        if 'event_datetime' in kwargs:
+            event_datetime = kwargs['event_datetime']
+
+            event_datetime=PersianCalendar().to_gregorian(event_datetime)
+            new_event.event_datetime=event_datetime
+            
         new_event.save()
         return new_event
 

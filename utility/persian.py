@@ -30,7 +30,8 @@ class PersianCalendar:
         return JalaliDateTime.today()
     def parse(self,value,add_time_zone=False):
         shamsi_date_time=value
-        year_=int(shamsi_date_time[0:4])-YEAR_ADDED
+
+        year_=int(shamsi_date_time[0:4])
         month_=int(shamsi_date_time[5:7])
         day_=int(shamsi_date_time[8:10])
         padding=shamsi_date_time.find(':')
