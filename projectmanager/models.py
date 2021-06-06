@@ -158,6 +158,8 @@ class OrganizationUnit(ProjectManagerPage):
         return super(OrganizationUnit,self).save(*args, **kwargs)
     def employees(self):
         return self.employee_set.all()
+    def childs(self):
+        return OrganizationUnit.objects.filter(parent_id=self.id)
 class EmployeeSpeciality(ProjectManagerPage):
     employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     max=models.IntegerField(_("max"))

@@ -1,3 +1,4 @@
+from django.http import request
 from projectmanager.enums import RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
 from authentication.models import Profile
@@ -18,6 +19,19 @@ class ProjectRepo():
             self.user = kwargs['user']
         self.objects = Project.objects
         self.me=ProfileRepo(user=self.user).me
+
+
+
+    def add_organization_unit(self,*args, **kwargs):
+        project=self.project(*args, **kwargs)
+        organization_unit=OrganizationUnitRepo(user=self.user).organization_unit(*args, **kwargs)
+        if project is not None and organization_unit is not None:
+            project.organization_units.add(organization_unit)
+            # project.save()
+            # print(organization_unit)
+            # print(10*"#35366647535")
+            return organization_unit
+             
 
     def project(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -75,6 +89,8 @@ class OrganizationUnitRepo():
             return self.objects.filter(pk=kwargs['id']).first()
         if 'new_organization_id' in kwargs:
             return self.objects.filter(pk=kwargs['new_organization_id']).first()
+        if 'organization_unit_id' in kwargs:
+            return self.objects.filter(pk=kwargs['organization_unit_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 

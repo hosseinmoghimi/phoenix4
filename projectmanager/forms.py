@@ -7,6 +7,8 @@ class AddProjectForm(forms.Form):
     title=forms.CharField(max_length=50, required=True)
 
 class AddOrganizationUnitForm(forms.Form):
+    project_id=forms.IntegerField( required=False)
+    organization_unit_id=forms.IntegerField( required=False)
     parent_id=forms.IntegerField(required=False)
     employer_id=forms.IntegerField(required=False)
     title=forms.CharField(max_length=50, required=True)

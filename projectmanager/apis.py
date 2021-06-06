@@ -51,10 +51,15 @@ class OrganizationUnitApi(APIView):
             add_organization_unit_form=AddOrganizationUnitForm(request.POST)
             if add_organization_unit_form.is_valid():
                 log+=1
+                organization_unit_id=add_organization_unit_form.cleaned_data['organization_unit_id']
+                project_id=add_organization_unit_form.cleaned_data['project_id']
                 title=add_organization_unit_form.cleaned_data['title']
                 parent_id=add_organization_unit_form.cleaned_data['parent_id']
                 employer_id=add_organization_unit_form.cleaned_data['employer_id']
-                organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,employer_id=employer_id,title=title)
+                if organization_unit_id is not None and project_id is not None:
+                    organization_unit=ProjectRepo(request=request).add_organization_unit(organization_unit_id=organization_unit_id,project_id=project_id)
+                else:
+                    organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,employer_id=employer_id,title=title)
                 context['organization_unit']=OrganizationUnitSerializer(organization_unit).data
         context['result']=SUCCEED
         context['log']=log

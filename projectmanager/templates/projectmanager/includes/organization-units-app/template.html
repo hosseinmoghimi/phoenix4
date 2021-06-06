@@ -10,8 +10,9 @@
     </div>
 
     <div class="card-body">
-        {% for organization_unit in organization_units %}
-        <a href="{{organization_unit.get_absolute_url}}">
+        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+        <div v-for="organization_unit in organization_units">
             <div class="media">
 
                 <i class="material-icons">
@@ -19,41 +20,29 @@
                 </i>
 
                 <div class="media-body farsi">
-
-                    <h5>
-                        {{organization_unit.title}}
-
-                    </h5>
-                    {% if organization_unit.short_description %}
-
-                    {{organization_unit.short_description|safe}}
-                    {% endif %}
-
-                </div>
-            </div>
-        </a>
-
-        {% endfor %}
-        <div v-for="organization_unit in sub_organization_units">
-            <a :href="organization_unit.get_absolute_url">
-                <div class="media">
-
-                    <i class="material-icons">
-                        apartment
-                    </i>
-
-                    <div class="media-body farsi">
+                    <a :href="organization_unit.get_absolute_url">
 
                         <h5 v-text="organization_unit.title">
 
                         </h5>
-                        <div v-html="organization_unit.short_description"></div>
+                    </a>
+                    <div v-html="organization_unit.short_description"></div>
+<div v-for="employee in organization_unit.employees">
+<a :href="employee.get_absolute_url">
+    <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
+    <span v-text="employee.profile.name"></span>
+</a>
+</div>
+                    <button v-if="new_organization_unit_title" class="btn btn-success" @click="add_organization_unit_to_project(organization_unit.id)">
+                        <i class="material-icons">
+                            add
+                        </i>
 
-
-                    </div>
+                    </button>
                 </div>
-            </a>
+            </div>
         </div>
+
     </div>
     <div class="card-footer ">
 
@@ -62,15 +51,15 @@
         <form @submit.prevent="add_organization_unit()">
             <div class="row">
                 <div class="col-8">
-                    <input required type="text" v-model="new_organization_unit_title" class="farsi form-control"
-                        placeholder="واحد سازمانی جدید">
+                    <input @input="filter()" required type="text" v-model="new_organization_unit_title"
+                        class="farsi form-control" placeholder="واحد سازمانی جدید">
 
                 </div>
                 <div class="col-4">
                     <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
 
-                    <button v-if="!waiting" class="btn btn-outline-primary" type="submit">
+                    <button v-if="show_add_btn()" class="btn btn-outline-primary" type="submit">
                         <i class="material-icons">
                             add
                         </i>
@@ -81,6 +70,8 @@
 
         </form>
         {% endif %}
+
+
 
 
     </div>

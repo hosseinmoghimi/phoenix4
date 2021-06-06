@@ -12,8 +12,8 @@
         {% for material in materials %}
         <a href="{{material.get_absolute_url}}">
             <div class="media">
-                <img class="ml-3 rounded" width="64" src="{{material.thumbnail}}" alt="">
-                <div class="media-body farsi">
+                <img class="ml-3 rounded" width="48" src="{{material.thumbnail}}" alt="">
+                <div class="media-body farsi my-auto">
 
                     <h6>
                         {{material.title}}
@@ -32,8 +32,8 @@
         <div v-for="material in materials">
             <a :href="material.get_absolute_url">
                 <div class="media">
-                    <img class="ml-3 rounded" width="64" :src="material.thumbnail" alt="">
-                    <div class="media-body farsi">
+                    <img class="ml-3 rounded" width="48" :src="material.thumbnail" alt="">
+                    <div class="media-body farsi my-auto">
 
                         <h6 v-text="material.title">
 

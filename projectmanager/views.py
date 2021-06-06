@@ -2,7 +2,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo
-from projectmanager.serializers import MaterialSerializer, ServiceSerializer
+from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ServiceSerializer
 from projectmanager.models import Material, OrganizationUnit
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from typing import ContextManager
@@ -67,7 +67,11 @@ class BasicViews(View):
         context['projects']=ProjectRepo(request=request).list(for_home=True)
         context['materials']=MaterialRepo(request=request).list(for_home=True)
         context['employers']=EmployerRepo(request=request).list(for_home=True)
-        context['organization_units']=OrganizationUnitRepo(request=request).list(for_home=True)
+        organization_units=OrganizationUnitRepo(request=request).list(for_home=True)
+        context['organization_units']=organization_units
+        context['organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
+        context['all_organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
+        
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class ProjectViews(View):
     def project(self,request,*args, **kwargs):
@@ -77,7 +81,11 @@ class ProjectViews(View):
         context.update(PageContext(request=request,page=page))
         context['project']=project
         context['events']=project.event_set.all()
-        context['organization_units']=project.organization_units.all()
+        organization_units=project.organization_units.all()
+        context['add_organization_unit_form']=AddOrganizationUnitForm()
+        context['organization_units']=organization_units
+        context['organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
+        context['all_organization_units_s']=json.dumps(OrganizationUnitSerializer(OrganizationUnitRepo(request=request).list(),many=True).data)
         context['unit_names']=(i[0] for i in UnitNameEnum.choices)
         context['unit_names2']=(i[0] for i in UnitNameEnum.choices)
         materials=MaterialRepo(request=request).list()
@@ -99,7 +107,12 @@ class OrganizationUnitViews(View):
         context.update(PageContext(request=request,page=page))
         context['organization_unit']=organization_unit
         context['add_organization_unit_form']=AddOrganizationUnitForm()
-        context['organization_units']=organization_unit.childs.all()
+        context['organization_units']=organization_unit.childs()
+        organization_units=organization_unit.childs()
+        context['organization_units']=organization_units
+        context['organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
+        context['all_organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
+        
         return render(request,TEMPLATE_ROOT+"organization-unit.html",context)
     def employer(self,request,*args, **kwargs):
         employer=EmployerRepo(request).employer(*args, **kwargs)        
