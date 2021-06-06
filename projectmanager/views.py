@@ -138,7 +138,7 @@ class MaterialViews(View):
         return render(request,TEMPLATE_ROOT+"material.html",context)
 
 class EventViews(View):
-    def event(self,request,pk,*args, **kwargs):
+    def event(self,request,*args, **kwargs):
         event=EventRepo(request).event(*args, **kwargs)       
         context=getContext(request)  
         context.update(PageContext(request=request,page=event)) 

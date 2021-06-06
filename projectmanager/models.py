@@ -68,6 +68,9 @@ class ProjectManagerPage(CoreBasicPage):
         return super(ProjectManagerPage,self).save(*args, **kwargs)
   
 class Project(ProjectManagerPage):
+    percentage_completed=models.IntegerField(_("درصد تکمیل پروژه"),default=0)
+    start_date=models.DateTimeField(_("زمان شروع پروژه"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    end_date=models.DateTimeField(_("زمان پایان پروژه"),null=True,blank=True, auto_now=False, auto_now_add=False)
     organization_units=models.ManyToManyField("OrganizationUnit", verbose_name=_("organization_units"),blank=True)
     employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("employer"), on_delete=models.CASCADE)
     contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("contractor"), on_delete=models.CASCADE)
@@ -153,7 +156,8 @@ class OrganizationUnit(ProjectManagerPage):
     def save(self,*args, **kwargs):
         self.class_name="organizationunit"
         return super(OrganizationUnit,self).save(*args, **kwargs)
-
+    def employees(self):
+        return self.employee_set.all()
 class EmployeeSpeciality(ProjectManagerPage):
     employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     max=models.IntegerField(_("max"))
