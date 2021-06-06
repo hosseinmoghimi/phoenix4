@@ -33,7 +33,7 @@
     <span v-text="employee.profile.name"></span>
 </a>
 </div>
-                    <button v-if="new_organization_unit_title" class="btn btn-success" @click="add_organization_unit_to_project(organization_unit.id)">
+                    <button v-if="show_select_btn()" class="btn btn-success" @click="add_organization_unit_to_project(organization_unit.id)">
                         <i class="material-icons">
                             add
                         </i>

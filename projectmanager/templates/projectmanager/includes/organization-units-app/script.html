@@ -21,6 +21,9 @@
             show_add_btn: function () {
                 return !this.waiting && (typeof organization_unit_id !='undefined') && this.new_organization_unit_title 
             },
+            show_select_btn: function () {
+                return !this.waiting && (typeof project_id !='undefined') && this.new_organization_unit_title 
+            },
             filter: function () {
                 this.organization_units = all_organization_units.filter((organization_unit) => {
                     return organization_unit.title.indexOf(organization_unit_app.new_organization_unit_title) > -1
