@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = False
 SERVER_ON_HEROKU=False
-SERVER_ON_AZURE=True
+SERVER_ON_AZURE=False
 
 
 # SECURITY WARNING: don't run with debug turned on in production!

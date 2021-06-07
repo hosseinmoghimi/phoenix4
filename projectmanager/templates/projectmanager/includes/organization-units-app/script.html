@@ -19,10 +19,10 @@
         },
         methods: {
             show_add_btn: function () {
-                return !this.waiting && (typeof organization_unit_id !='undefined') && this.new_organization_unit_title 
+                return !this.waiting && (typeof organization_unit_id != 'undefined') && this.new_organization_unit_title
             },
             show_select_btn: function () {
-                return !this.waiting && (typeof project_id !='undefined') && this.new_organization_unit_title 
+                return !this.waiting && (typeof project_id != 'undefined') && this.new_organization_unit_title
             },
             filter: function () {
                 this.organization_units = all_organization_units.filter((organization_unit) => {
@@ -42,9 +42,9 @@
                     if (data.result === 'SUCCEED') {
                         console.log(data)
                         organization_units.push(data.organization_unit)
-                        organization_unit_app.organization_units = organization_units
                         organization_unit_app.new_organization_unit_title = ""
                     }
+                    organization_unit_app.organization_units = organization_units
                 })
             },
             add_organization_unit: function () {

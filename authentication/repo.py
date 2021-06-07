@@ -24,12 +24,14 @@ class ProfileRepo():
         else:
             self.objects=self.my_profiles
        
-    def profile(self,pk):
-        try:
-            return self.objects.get(pk=pk)
-        except:
-            return None
-    
+    def profile(self,*args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'profile_id' in kwargs:
+            return self.objects.filter(pk=kwargs['profile_id']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
     @classmethod
     def logout(self,request):
         logout(request=request)

@@ -98,7 +98,8 @@ class Project(ProjectManagerPage):
         for service_request in self.servicerequest_set.all():
             sum+=service_request.quantity*service_request.unit_price
         return sum
-    
+    def sub_projects(self):
+        return Project.objects.filter(parent_id=self.id)
 class Material(ProjectManagerPage):
     unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     unit_price=models.IntegerField(_("unit_price"),default=0)

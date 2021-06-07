@@ -1,3 +1,5 @@
+from authentication.repo import ProfileRepo
+from authentication.serilizers import ProfileSerializer
 from core.serializers import BasicPageSerializer
 from projectmanager.enums import UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
@@ -96,7 +98,7 @@ class ProjectViews(View):
         context['add_service_request_form']=AddServiceRequestForm()
         
         context['add_project_form']=AddProjectForm()
-        context['projects']=project.childs.all()
+        context['projects']=project.sub_projects()
         return render(request,TEMPLATE_ROOT+"project.html",context)
 
 class OrganizationUnitViews(View):
@@ -110,9 +112,13 @@ class OrganizationUnitViews(View):
         context['organization_units']=organization_unit.childs()
         organization_units=organization_unit.childs()
         context['organization_units']=organization_units
+        context['add_employee_form']=AddEmployerForm()
+        all_profiles=ProfileRepo(user=request.user).objects.all()
+        context['all_profiles_s']=json.dumps(ProfileSerializer(all_profiles,many=True).data)
         context['organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
         context['all_organization_units_s']=json.dumps(OrganizationUnitSerializer(organization_units,many=True).data)
         
+        context['projects']=organization_unit.project_set.all()
         return render(request,TEMPLATE_ROOT+"organization-unit.html",context)
     def employer(self,request,*args, **kwargs):
         employer=EmployerRepo(request).employer(*args, **kwargs)        

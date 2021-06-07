@@ -25,6 +25,8 @@ class ProjectRepo():
     def add_organization_unit(self,*args, **kwargs):
         project=self.project(*args, **kwargs)
         organization_unit=OrganizationUnitRepo(user=self.user).organization_unit(*args, **kwargs)
+        if organization_unit in project.organization_units.all():
+            return None
         if project is not None and organization_unit is not None:
             project.organization_units.add(organization_unit)
             # project.save()
@@ -132,6 +134,29 @@ class OrganizationUnitRepo():
 
         new_organization.save()
         return new_organization
+
+    def add_employee(self,*args, **kwargs):
+        profile=ProfileRepo(user=self.request.user).profile(*args, **kwargs)
+        if profile is None:
+            from authentication.models import Profile
+            profile=Profile()
+            if 'first_name' in kwargs and 'last_name' in kwargs and 'username' in kwargs and 'password' in kwargs:
+                from django.contrib.auth.models import User
+                user=User.objects.create(first_name=kwargs['first_name'],last_name=kwargs['last_name'],username=kwargs['username'],password=kwargs['password'])
+                user.save()
+                user.set_password(kwargs['password'])
+                user.save()
+                profile=ProfileRepo(user=self.user).objects.filter(user=user).first()
+                if profile is None:
+                    return None
+        organization_unit=OrganizationUnitRepo(request=self.request).organization_unit(*args, **kwargs)
+        if profile is not None and organization_unit is not None:
+            emp=Employee.objects.filter(profile=profile).filter(organization_unit=organization_unit).first()
+            if emp is None:
+                emp=Employee(profile=profile,organization_unit=organization_unit)
+                emp.save()
+                return emp
+            
 
 
 class EmployeeRepo():

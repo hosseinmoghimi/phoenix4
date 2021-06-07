@@ -20,6 +20,7 @@ urlpatterns = [
     
     path('add_event/',apis.EventApi().add_event,name="add_event"),
     path('add_employer/',apis.OrganizationUnitApi().add_employer,name="add_employer"),
+    path('add_employee/',apis.OrganizationUnitApi().add_employee,name="add_employee"),
     path('add_service_request/',apis.ServiceApi().add_service_request,name="add_service_request"),
     path('add_service/',apis.ServiceApi().add_service,name="add_service"),
     path('add_material_request/',apis.MaterialApi().add_material_request,name="add_material_request"),

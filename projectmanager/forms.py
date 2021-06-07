@@ -27,6 +27,14 @@ class AddMaterialRequestForm(forms.Form):
     unit_price=forms.IntegerField(required=True)
     unit_name=forms.CharField(max_length=50, required=True)
                
+class AddEmployeeForm(forms.Form):
+    organization_unit_id=forms.IntegerField(required=True)
+    profile_id=forms.IntegerField(required=False)
+    username=forms.CharField(max_length=50,required=False)
+    password=forms.CharField(max_length=50,required=False)
+    first_name=forms.CharField(max_length=50,required=False)
+    last_name=forms.CharField(max_length=50,required=False)
+               
 class SearchForm(forms.Form):
     search_for=forms.CharField(max_length=50, required=True)
                

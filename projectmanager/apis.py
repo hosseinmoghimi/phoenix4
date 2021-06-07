@@ -1,4 +1,4 @@
-from projectmanager.serializers import EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -60,8 +60,9 @@ class OrganizationUnitApi(APIView):
                     organization_unit=ProjectRepo(request=request).add_organization_unit(organization_unit_id=organization_unit_id,project_id=project_id)
                 else:
                     organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,employer_id=employer_id,title=title)
-                context['organization_unit']=OrganizationUnitSerializer(organization_unit).data
-        context['result']=SUCCEED
+                if organization_unit is not None:
+                    context['organization_unit']=OrganizationUnitSerializer(organization_unit).data
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
     def add_employer(self,request,*args, **kwargs):
@@ -76,6 +77,27 @@ class OrganizationUnitApi(APIView):
                 employer=EmployerRepo(request=request).add_employer(title=title)
                 context['employer']=EmployerSerializer(employer).data
         context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+    def add_employee(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_employee_form=AddEmployeeForm(request.POST)
+            if add_employee_form.is_valid():
+                log+=1
+                first_name=add_employee_form.cleaned_data['first_name']
+                last_name=add_employee_form.cleaned_data['last_name']
+                username=add_employee_form.cleaned_data['username']
+                password=add_employee_form.cleaned_data['password']
+                organization_unit_id=add_employee_form.cleaned_data['organization_unit_id']
+                profile_id=add_employee_form.cleaned_data['profile_id']
+                employee=OrganizationUnitRepo(request=request).add_employee(username=username,password=password,first_name=first_name,last_name=last_name,profile_id=profile_id,organization_unit_id=organization_unit_id)
+                if employee is not None:
+                    context['employee']=EmployeeSerializer(employee).data
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
 
