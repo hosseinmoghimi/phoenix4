@@ -93,7 +93,7 @@ class Profile(models.Model):
         return reverse(APP_NAME+":profile2", kwargs={"pk": self.pk})
 
     def get_edit_url(self):
-        return f"""{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"""
+        return f"{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"
 
 
 class ProfileContact(models.Model):
@@ -106,4 +106,4 @@ class ProfileContact(models.Model):
         verbose_name_plural = _("ProfileContacts")
 
     def __str__(self):
-        return f"""{str(self.profile)} : {self.name} : {self.value}"""
+        return f"{str(self.profile)} : {self.name} : {self.value}"
