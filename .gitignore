@@ -1,5 +1,6 @@
 
 staticfiles/
+public/
 .DS_Store
 .VsCodeCounter/
 *.sqlite3*

@@ -9,7 +9,7 @@ DEBUG=True
 SECRET_KEY='-+(&pe9ld9unwos@077r(cg#_)1$^l0c##+%gpy@&95da$=_hp'
 SITE_URL='/'
 PUSHER_IS_ENABLE=False
-PUBLIC_ROOT=BASE_DIR
+PUBLIC_ROOT='/home/vsts/work/1/s/phoenix/public/'
 MYSQL=False
 ALLOWED_HOSTS = ['*']
 
