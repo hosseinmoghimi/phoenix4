@@ -1,0 +1,41 @@
+
+{% load static %}
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+<script>
+    let url_add_event = "{% url 'projectmanager:add_event' %}"
+    let events_app = new Vue({
+        el: "#material-request-app",
+        data: {
+            events: [],
+            add_event_form_title: "",
+            waiting: false,
+            event_datetime:current_datetime
+        },
+        components:{
+            DatePicker: VuePersianDatetimePicker
+  
+        },
+        methods: {
+            add_event: function () {
+                this.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.add_event_form_title,
+                    event_datetime:this.event_datetime,
+                    project_id: parent_id,
+                }
+                let posting = $.post(url_add_event, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        events_app.events.push(data.event)
+                        events_app.add_event_form_title = ""
+                        events_app.waiting = false
+                    }
+                })
+            },
+        }
+    })
+</script>

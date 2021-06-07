@@ -1,0 +1,116 @@
+{% load to_persian_date %}
+{% load to_price %}
+<div class="card mb-3" id="service-request-app">
+    <div class="card-body">
+
+
+        <h6 class="text-secondary">
+            پروژه :
+            <a href="{{service_request.project.get_absolute_url}}">
+
+                {{service_request.project.title}}
+            </a>
+        </h6>
+
+        <h5 class="text-right">
+            سرویس :
+            <a href="{{service_request.service.get_absolute_url}}">
+
+                {{service_request.service.title}}
+            </a>
+        </h5>
+
+
+
+
+        <p>
+
+
+            تعداد : {{service_request.quantity}}
+            <small>
+                {{service_request.unit_name}}
+            </small>
+            *
+
+
+            {{service_request.unit_price|to_price_pure}} =
+            <strong>
+                {{service_request.line_total|to_price}}
+            </strong>
+
+        </p>
+        <p>
+            <small>
+
+                {{service_request.line_total|to_horuf}} {{CURRENCY}}
+            </small>
+
+        </p>
+        <table class="table">
+            <thead>
+                <th>
+                    امضا کننده
+                </th>
+                <th>
+                    زمان
+                </th>
+                <th>
+                    وضعیت
+                </th>
+            </thead>
+            <tbody>
+                {% for signature in service_request.servicerequestsignature_set.all %}
+                <tr>
+                    <td colspan="3">
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+
+                    </td>
+                </tr>
+                {% if signature.description %}
+
+                <tr>
+                    <td colspan="3">
+                        <small class="text-{{signature.get_status_color}}">
+
+                            {{signature.description}}
+                        </small>
+                    </td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        <a href="{{signature.profile.get_absolute_url}}">
+                            <img src="{{signature.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
+                            {{signature.profile.name}}
+                        </a>
+                    </td>
+                    <td>
+                        <small>
+
+                            {{signature.date_added|to_persian_datetime|safe}}
+                        </small>
+                    </td>
+                    <td>
+                        {{signature.get_status_tag|safe}}
+                        {{signature.get_edit_btn|safe}}
+
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+        <div>
+
+
+        </div>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>

@@ -259,9 +259,8 @@ class EmployeeViews(View):
 
 
 class MaterialViews(View):
-    def material_request(self, request, pk, *args, **kwargs):
-        material_request = MaterialRepo(
-            request).material_request(*args, **kwargs)
+    def material_request(self, request, *args, **kwargs):
+        material_request = MaterialRepo(request).material_request(*args, **kwargs)
         context = getContext(request)
         context['material_request'] = material_request
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
@@ -286,7 +285,7 @@ class EventViews(View):
 
 
 class ServiceViews(View):
-    def service_request(self, request, pk, *args, **kwargs):
+    def service_request(self, request, *args, **kwargs):
         service_request = ServiceRepo(request).service_request(*args, **kwargs)
         context = getContext(request)
         context['service_request'] = service_request

@@ -336,6 +336,24 @@ class ServiceRequestSignature(models.Model):
     def get_status_color(self):
       return StatusColor(self.status)
 
+    def get_status_tag(self):
+        return f"""
+            <span class="badge badge-{self.get_status_color()}">{self.status}</span>
+        """
+
+   
+   
+    def get_edit_btn(self):
+        return f"""
+            <a target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+               <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        """
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/servicerequestsignature/{self.pk}/change/"
 
 class MaterialRequestSignature(models.Model):
     material_request=models.ForeignKey("materialrequest", verbose_name=_("درخواست"), on_delete=models.CASCADE)
@@ -355,3 +373,20 @@ class MaterialRequestSignature(models.Model):
     
     def get_status_color(self):
       return StatusColor(self.status)
+    
+    def get_status_tag(self):
+        return f"""
+            <span class="badge badge-{self.get_status_color()}">{self.status}</span>
+        """
+
+    def get_edit_btn(self):
+        return f"""
+            <a target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+               <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        """
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/materialrequestsignature/{self.pk}/change/"
