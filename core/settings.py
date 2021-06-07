@@ -1,4 +1,4 @@
-from phoenix import settings,settings_server
+from phoenix import settings
 
 SITE_URL=settings.SITE_URL
 ADMIN_URL=SITE_URL+'admin/'

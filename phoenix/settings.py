@@ -166,6 +166,7 @@ MEDIA_URL = settings_server.MEDIA_URL
 MYSQL = settings_server.MYSQL
 SITE_URL = settings_server.SITE_URL
 DATABASES = settings_server.DATABASES
+
 YEAR_ADDED=settings_server.YEAR_ADDED
 ALLOWED_HOSTS=settings_server.ALLOWED_HOSTS
 PUSHER_IS_ENABLE=settings_server.PUSHER_IS_ENABLE
