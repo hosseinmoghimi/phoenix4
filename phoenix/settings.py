@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = False
 SERVER_ON_HEROKU=False
-
+SERVER_ON_AZURE=True
 
 if SERVER_ON_HEROKU:
     SECRET_KEY = 'django-insecure-glsp_74#5x@o7b(*o$6mc6_zd4^3$-es1h1sav5(=kstm((pn&'
@@ -151,7 +151,9 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-if SERVER_ON_HEROKU:
+if SERVER_ON_AZURE:
+    from . import settings_azure as settings_server
+elif SERVER_ON_HEROKU:
     from . import settings_heroku as settings_server
 else:
     from . import settings_server
