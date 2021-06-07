@@ -55,6 +55,8 @@ class ProjectRepo():
         if 'for_home' in kwargs:
             objects = objects.filter(
                 Q(for_home=kwargs['for_home']) | Q(parent=None))
+        if 'parent_id' in kwargs:
+            objects=objects.filter(parent_id=kwargs['parent_id'])
         return objects.all()
 
     def add_project(self, *args, **kwargs):

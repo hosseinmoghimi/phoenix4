@@ -28,21 +28,45 @@
     </div>
     <div class="row ">
         <div class="col-md-4">
+
+            <p>
+                کارفرما :
+                <a href="{{project.employer.get_absolute_url}}">
+                    {{project.employer.title}}
+                </a>
+            </p>
+
+            <p>
+                پیمانکار :
+                <a href="{{project.contractor.get_absolute_url}}">
+                    {{project.contractor.title}}
+                </a>
+            </p>
+
+            <p>
+                 
+                <a href="{{project.get_chart_url}}">
+                    نمودار
+                </a>
+            </p>
+
+        </div>
+        <div class="col-md-4">
             {% include "projectmanager/includes/projects-app/template.html" %}
         </div>
         <div class="col-md-4">
 
             {% include "projectmanager/includes/organization-units-app/template.html" %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4">      
+            
             {% include "core/includes/page-links-app/template.html" %}
+            {% include "core/includes/page-documents-app/template.html" %}
         </div>
         <div class="col-md-8">
             {% include "projectmanager/includes/events-app/template.html" %}
         </div>
-        <div class="col-md-4">
-            {% include "core/includes/page-documents-app/template.html" %}
-        </div>
+        
         <div class="col-md-12">
             {% include "projectmanager/includes/material-requests-app/template.html" %}
         </div>

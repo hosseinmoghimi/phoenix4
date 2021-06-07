@@ -196,6 +196,7 @@
                                     کارفرمای پروژه های
                                 </h6>
                                 {% for project in employer.projects_out.all %}
+                                {% if not project.parent %}
 
                                 <div class="text-right">
                                     <small>
@@ -214,6 +215,7 @@
                                         aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
                                 </div>
+                                {% endif %}
                                 {% endfor %}
 
 
@@ -228,6 +230,7 @@
                                     پیمانکار پروژه های
                                 </h6>
                                 {% for project in employer.projects_in.all %}
+                                {% if not project.parent %}
 
                                 <div class="text-right">
                                     <small>
@@ -241,12 +244,15 @@
                                         </small>
                                     </small>
                                 </div>
+
+
                                 <div class="progress mb-3" style="height: 5px">
                                     <div class="progress-bar bg-primary" role="progressbar"
                                         style="width: {{project.percentage_completed}}%"
                                         aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
                                 </div>
+                                {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -283,9 +289,9 @@
 
                             <div class="col-sm-6 text-right farsi my-auto">
                                 <a class="" href="{{organization_unit.get_absolute_url}}">
-                                   <i class="material-icons">
-                                       apartment
-                                   </i>
+                                    <i class="material-icons">
+                                        apartment
+                                    </i>
                                     {{organization_unit.title}}
                                 </a>
                             </div>
@@ -308,8 +314,7 @@
                             <div class="row">
 
                                 <div class="col-sm-6 text-right farsi my-auto">
-                                    <a class=""
-                                        :href="organization_unit.get_absolute_url">
+                                    <a class="" :href="organization_unit.get_absolute_url">
                                         <i class="material-icons">
                                             apartment
                                         </i>
