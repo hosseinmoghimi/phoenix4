@@ -1,4 +1,4 @@
-from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialRequestSignatureSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceRequestSignatureSerializer, ServiceSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -23,7 +23,28 @@ class ProjectApi(APIView):
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-
+    def add_signature(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_signature_form=AddSignatureForm(request.POST)
+            if add_signature_form.is_valid():
+                log+=1
+                status=add_signature_form.cleaned_data['status']
+                description=add_signature_form.cleaned_data['description']
+                material_request_id=add_signature_form.cleaned_data['material_request_id']
+                service_request_id=add_signature_form.cleaned_data['service_request_id']
+                if material_request_id is not None:
+                    signature=MaterialRepo(request=request).add_signature(material_request_id=material_request_id,status=status,description=description)
+                    context['signature']=MaterialRequestSignatureSerializer(signature).data
+                    context['result']=SUCCEED
+                if service_request_id is not None:
+                    signature=ServiceRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
+                    context['signature']=ServiceRequestSignatureSerializer(signature).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
 class EventApi(APIView):
     def add_event(self,request,*args, **kwargs):
         context={}

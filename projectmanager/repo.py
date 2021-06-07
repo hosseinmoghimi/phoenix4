@@ -2,7 +2,7 @@ from django.http import request
 from projectmanager.enums import RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
 from authentication.models import Profile
-from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer
+from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer, ServiceRequestSignatureSerializer
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
 from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
@@ -285,6 +285,18 @@ class ServiceRepo():
     def get(self, *args, **kwargs):
         return self.organization_unit(*args, **kwargs)
 
+    def add_signature(self,service_request_id,status,description=None):
+        if self.user.has_perm(APP_NAME+".add_servicerequestsignature"):
+            signature=ServiceRequestSignature()
+            signature.description=description
+            signature.service_request_id=service_request_id
+            signature.status=status
+            signature.profile=ProfileRepo(self.user).me
+            signature.save()
+            return signature
+
+
+                   
     def list(self, *args, **kwargs):
         objects = self.objects
         if 'search_for' in kwargs:
@@ -477,3 +489,14 @@ class MaterialRepo():
             new_material.title = kwargs['title']
         new_material.save()
         return new_material
+    
+    def add_signature(self,material_request_id,status,description=None):
+        if self.user.has_perm(APP_NAME+".add_materialrequestsignature"):
+            signature=MaterialRequestSignature()
+            signature.description=description
+            signature.material_request_id=material_request_id
+            signature.status=status
+            signature.profile=ProfileRepo(self.user).me
+            signature.save()
+            return signature
+

@@ -2,7 +2,7 @@ from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
 from authentication.serilizers import ProfileSerializer
 from core.serializers import BasicPageSerializer
-from projectmanager.enums import UnitNameEnum
+from projectmanager.enums import SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo
 from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ServiceSerializer
@@ -263,6 +263,7 @@ class MaterialViews(View):
         material_request = MaterialRepo(request).material_request(*args, **kwargs)
         context = getContext(request)
         context['material_request'] = material_request
+        context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
 
     def material(self, request, *args, **kwargs):
@@ -289,6 +290,7 @@ class ServiceViews(View):
         service_request = ServiceRepo(request).service_request(*args, **kwargs)
         context = getContext(request)
         context['service_request'] = service_request
+        context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         return render(request, TEMPLATE_ROOT+"service-request.html", context)
 
     def service(self, request, *args, **kwargs):

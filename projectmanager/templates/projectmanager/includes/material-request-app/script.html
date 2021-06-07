@@ -4,12 +4,14 @@
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
-    let url_add_event = "{% url 'projectmanager:add_event' %}"
-    let events_app = new Vue({
+    let material_request_id=parseInt("{{material_request.id}}")
+    let url_add_signature = "{% url 'projectmanager:add_signature' %}"
+    let material_request_app = new Vue({
         el: "#material-request-app",
         data: {
-            events: [],
-            add_event_form_title: "",
+            signatures: [],
+            add_signature_form_status: "",
+            add_signature_form_description:"",
             waiting: false,
             event_datetime:current_datetime
         },
@@ -18,21 +20,22 @@
   
         },
         methods: {
-            add_event: function () {
+            add_signature: function () {
                 this.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    title: this.add_event_form_title,
-                    event_datetime:this.event_datetime,
-                    project_id: parent_id,
+                    material_request_id:material_request_id,
+                    status: this.add_signature_form_status,
+                    description:this.add_signature_form_description,
                 }
-                let posting = $.post(url_add_event, payload)
+                console.log(payload)
+                let posting = $.post(url_add_signature, payload)
                 posting.done((data) => {
                     console.log(data)
                     if (data.result === 'SUCCEED') {
-                        events_app.events.push(data.event)
-                        events_app.add_event_form_title = ""
-                        events_app.waiting = false
+                        material_request_app.signatures.push(data.signature)
+                        material_request_app.add_signature_form_description = ""
+                        material_request_app.waiting = false
                     }
                 })
             },

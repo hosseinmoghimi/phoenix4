@@ -26,7 +26,12 @@ class AddMaterialRequestForm(forms.Form):
     material_id=forms.IntegerField(required=True)
     unit_price=forms.IntegerField(required=True)
     unit_name=forms.CharField(max_length=50, required=True)
-               
+
+class AddSignatureForm(forms.Form):
+    service_request_id=forms.IntegerField(required=False)
+    material_request_id=forms.IntegerField(required=False)
+    description=forms.CharField(max_length=50,required=False)
+    status=forms.CharField(max_length=50,required=True)
 class AddEmployeeForm(forms.Form):
     organization_unit_id=forms.IntegerField(required=True)
     profile_id=forms.IntegerField(required=False)
