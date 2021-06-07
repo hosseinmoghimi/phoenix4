@@ -3,9 +3,9 @@ cryptography
 Django
 django-cleanup
 #django-group-by
-django-mysql
+# django-mysql
 django-resized
-django-tinymce
+# django-tinymce
 djangorestframework
 djecrety
 mysqlclient
