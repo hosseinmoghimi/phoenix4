@@ -39,7 +39,7 @@ MEDIA_ROOT=os.path.join(PUBLIC_ROOT,'media')
 STATIC_URL = SITE_URL+'static/'
 MEDIA_URL =  SITE_URL+'media/'
 
-
+STATICFILES_DIRS=[os.path.join(PUBLIC_ROOT,'static')]
 
 SENDER_EMAIL = "dfdssdf@gmail.com"
 # SENDER_EMAIL_PASSWORD = "fdrD$e%65$%U^ru5uYuru57e4W3WrDfDFE65e45345EREE%$#%^%&^*&"

@@ -170,7 +170,7 @@ DATABASES = settings_server.DATABASES
 YEAR_ADDED=settings_server.YEAR_ADDED
 ALLOWED_HOSTS=settings_server.ALLOWED_HOSTS
 PUSHER_IS_ENABLE=settings_server.PUSHER_IS_ENABLE
-STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+STATICFILES_DIRS=settings_server.STATICFILES_DIRS
 
 if SERVER_ON_HEROKU:
     import django_heroku
