@@ -14,8 +14,6 @@ DEBUG = False
 SERVER_ON_HEROKU=False
 SERVER_ON_AZURE=True
 
-if SERVER_ON_HEROKU:
-    SECRET_KEY = 'django-insecure-glsp_74#5x@o7b(*o$6mc6_zd4^3$-es1h1sav5(=kstm((pn&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 

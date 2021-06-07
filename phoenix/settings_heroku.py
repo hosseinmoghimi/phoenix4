@@ -40,7 +40,6 @@ STATIC_URL = SITE_URL+'static/'
 MEDIA_URL =  SITE_URL+'media/'
 
 
-
 SENDER_EMAIL = "dfdssdf@gmail.com"
 # SENDER_EMAIL_PASSWORD = "fdrD$e%65$%U^ru5uYuru57e4W3WrDfDFE65e45345EREE%$#%^%&^*&"
 # SENDER_EMAIL_PASSWORD = "htTY67&)08&GHgFed45e43e$e56$%$%%4erTR&^"
