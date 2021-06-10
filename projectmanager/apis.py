@@ -1,3 +1,4 @@
+from utility.persian import PersianCalendar
 from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialRequestSignatureSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceRequestSignatureSerializer, ServiceSerializer
 from core.constants import SUCCEED
 from rest_framework.views import APIView
@@ -19,6 +20,27 @@ class ProjectApi(APIView):
                 title=add_project_form.cleaned_data['title']
                 parent_id=add_project_form.cleaned_data['parent_id']
                 project=ProjectRepo(request=request).add_project(parent_id=parent_id,title=title)
+                context['project']=ProjectSerializer(project).data
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def edit_project_timing(self,request,*args, **kwargs):
+        context={}
+        log=1
+        if request.method=='POST':
+            log+=1
+            
+            edit_project_timing_form=EditProjectTimingForm(request.POST)
+            if edit_project_timing_form.is_valid():
+                log+=1
+                project_id=edit_project_timing_form.cleaned_data['project_id']
+                percentage_completed=edit_project_timing_form.cleaned_data['percentage_completed']
+                start_date=edit_project_timing_form.cleaned_data['start_date']
+                end_date=edit_project_timing_form.cleaned_data['end_date']
+                start_date=PersianCalendar().to_gregorian(start_date)
+                end_date=PersianCalendar().to_gregorian(end_date)
+                project=ProjectRepo(request=request).edit_project_timing(project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date)
                 context['project']=ProjectSerializer(project).data
         context['result']=SUCCEED
         context['log']=log

@@ -5,7 +5,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo
-from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ServiceSerializer
+from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
 from projectmanager.models import Material, OrganizationUnit
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from typing import ContextManager
@@ -188,6 +188,8 @@ class ProjectViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['project'] = project
+        if True:
+            context['edit_project_timing_form']=EditProjectTimingForm()
         context['events'] = project.event_set.all()
         organization_units = project.organization_units.all()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
@@ -209,6 +211,7 @@ class ProjectViews(View):
 
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
+        context['project_s']=json.dumps(ProjectSerializer(project).data)
         return render(request, TEMPLATE_ROOT+"project.html", context)
 
 

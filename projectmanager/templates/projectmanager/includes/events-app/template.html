@@ -25,10 +25,10 @@
                         </a>
                     </td>
                     <td>
-<small>
+                        <small>
 
-    {{event.event_datetime|to_persian_datetime|safe}}
-</small>
+                            {{event.event_datetime|to_persian_datetime|safe}}
+                        </small>
                     </td>
                 </tr>
                 {% endfor %}
@@ -56,9 +56,9 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        
+
                         <date-picker v-model="event_datetime"></date-picker>
-</div>
+                    </div>
                     <div class="col-md-6">
                         <input required type="text" class="form-control" v-model="add_event_form_title">
                     </div>

@@ -14,6 +14,7 @@ class AppNameEnum(TextChoices):
     # livestock='livestock',_('livestock')
     # charirt='charirty',_('charirty')
     core='core',_('core')
+    market='market',_('market')
     # dashboard='dashboard',_('dashboard')
     # realestate='realestate',_('realestate')
     # vehicles='vehicles',_('vehicles')

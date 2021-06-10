@@ -44,7 +44,7 @@
             </p>
 
             <p>
-                 
+
                 <a href="{{project.get_chart_url}}">
                     نمودار
                 </a>
@@ -58,15 +58,19 @@
 
             {% include "projectmanager/includes/organization-units-app/template.html" %}
         </div>
-        <div class="col-md-4">      
-            
+        <div class="col-md-4">
+
             {% include "core/includes/page-links-app/template.html" %}
             {% include "core/includes/page-documents-app/template.html" %}
         </div>
         <div class="col-md-8">
+
+            {% include "projectmanager/includes/project-timing-app/template.html" %}
+        </div>
+        <div class="col-md-8">
             {% include "projectmanager/includes/events-app/template.html" %}
         </div>
-        
+
         <div class="col-md-12">
             {% include "projectmanager/includes/material-requests-app/template.html" %}
         </div>
@@ -85,7 +89,7 @@
 <script>
     let parent_id = parseInt("{{parent_id}}")
     let project_id = parseInt("{{parent_id}}")
-
+    let project = JSON.parse(`{{project_s|escapejs}}`)
 </script>
 {% include "core/includes/page-links-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
@@ -94,5 +98,6 @@
 {% include "projectmanager/includes/service-requests-app/script.html" %}
 {% include "projectmanager/includes/organization-units-app/script.html" %}
 {% include "projectmanager/includes/events-app/script.html" %}
+{% include "projectmanager/includes/project-timing-app/script.html" %}
 
 {% endblock %}

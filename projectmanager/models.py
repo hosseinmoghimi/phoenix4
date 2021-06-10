@@ -74,6 +74,10 @@ class Project(ProjectManagerPage):
     organization_units=models.ManyToManyField("OrganizationUnit", verbose_name=_("organization_units"),blank=True)
     employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("employer"), on_delete=models.CASCADE)
     contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("contractor"), on_delete=models.CASCADE)
+    def persian_start_date(self):
+        return PersianCalendar().from_gregorian(self.start_date)
+    def persian_end_date(self):
+        return PersianCalendar().from_gregorian(self.end_date)
     def get_services_order_url(self):
         return reverse(APP_NAME+':project_services_order',kwargs={'pk':self.pk})
     def get_materials_order_url(self):

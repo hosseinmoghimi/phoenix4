@@ -1,5 +1,4 @@
 from django.utils import timezone
-from core.apis import BasicApi
 from django.shortcuts import render
 from .apps import APP_NAME
 from .forms import *

@@ -51,6 +51,7 @@ class Profile(models.Model):
     bio=models.CharField(_("bio"),null=True,blank=True, max_length=50)
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
+    enabled=models.BooleanField(_("enabled"),default=True)
     @property
     def first_name(self):
         return self.user.first_name
@@ -65,18 +66,21 @@ class Profile(models.Model):
     @property
     def name(self):
         if self.user is not None:
-            name="پروفایل"
-            if not self.user.first_name=="":
+            name=""
+            if not (self.user.first_name is None or self.user.first_name==""):
                 name=self.user.first_name+" "
                 
-            if not self.user.last_name=="":
+            if not (self.user.last_name is None or self.user.last_name==""):
                 name+=self.user.last_name+" "
             if not name=="":    
                 return name
+            else:
+                return self.user.username
         
         else:
             return "profile "+str(self.pk)
 
+    
     
 
     class Meta:

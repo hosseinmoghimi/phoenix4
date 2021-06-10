@@ -1,5 +1,4 @@
 from core.serializers import BasicPageSerializer, PageDocumentSerializer, PageLinkSerializer
-from core.models import BasicPage
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *

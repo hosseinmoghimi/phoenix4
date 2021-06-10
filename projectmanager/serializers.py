@@ -6,7 +6,7 @@ from authentication.serilizers import ProfileSerializer
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model=Project
-        fields=['id','title','get_absolute_url','get_edit_url','short_description','thumbnail']
+        fields=['id','title','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
 
 
 class MaterialSerializer(serializers.ModelSerializer):

@@ -52,6 +52,8 @@ class PersianCalendar:
         self.persian_date=self.from_gregorian(greg_date_time=self.date,add_time_zone=add_time_zone)
         return self
     def from_gregorian(self,greg_date_time,add_time_zone=True):
+        if greg_date_time is None:
+            greg_date_time=timezone.now()
         if not add_time_zone:
             return JalaliDateTime.to_jalali(greg_date_time).strftime("%Y/%m/%d %H:%M:%S") 
         if add_time_zone:

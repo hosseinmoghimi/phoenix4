@@ -20,6 +20,19 @@ class ProjectRepo():
         self.objects = Project.objects
         self.me=ProfileRepo(user=self.user).me
 
+    # def edit_project_timing(self,project_id,percentage_completed,start_date,end_date):
+    def edit_project_timing(self,*args, **kwargs):
+        project=self.project(*args, **kwargs)
+        if project is not None:
+            if 'percentage_completed' in kwargs:
+                project.percentage_completed=kwargs['percentage_completed']
+            if 'start_date' in kwargs:
+                project.start_date=kwargs['start_date']
+            if 'end_date' in kwargs:
+                project.end_date=kwargs['end_date']
+            project.save()
+            return project
+
 
 
     def add_organization_unit(self,*args, **kwargs):

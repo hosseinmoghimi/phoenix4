@@ -2,35 +2,24 @@ from .models import *
 from django.contrib.auth import login, logout, authenticate
 
 class ProfileRepo():
-    def __init__(self,user):
-        self.user=user
-        if user is None or not user.is_authenticated:
-            self.my_profiles=[]
-            self.me=None
-            return
-        self.my_profiles=Profile.objects.filter(user=user) 
-        try:
-            self.me=Profile.objects.filter(user=user).filter(current=True).first()
-        except:
-            for profile in self.my_profiles:
-                profile.current=False
-                profile.save()
-            first_profile=self.my_profiles.first()
-            if first_profile is not None:
-                first_profile.current=True
-                first_profile.save()
-        if user.has_perm(APP_NAME+'.view_profile'):
-            self.objects=Profile.objects
-        else:
-            self.objects=self.my_profiles
+    def __init__(self,user=None):
+        self.me=None
+        self.objects=None   
+        if user is not None and user and user.is_authenticated:
+            self.user = user
+            self.objects = Profile.objects.filter(enabled=True)
+            self.me = self.objects.filter(user=user).first()         
+           
+                  
        
     def profile(self,*args, **kwargs):
         if 'pk' in kwargs:
-            return self.objects.filter(pk=kwargs['pk']).first()
+            pk=kwargs['pk']
         if 'profile_id' in kwargs:
-            return self.objects.filter(pk=kwargs['profile_id']).first()
+            pk=kwargs['profile_id']
         if 'id' in kwargs:
-            return self.objects.filter(pk=kwargs['id']).first()
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
 
     @classmethod
     def logout(self,request):
@@ -43,3 +32,40 @@ class ProfileRepo():
             if user.is_authenticated:
                 return request
         return None
+
+        
+    def change_profile_image(self,profile_id,image):
+        profile=ProfileRepo(user=self.user).get(profile_id=profile_id)
+        if profile is not None:
+            profile.image_origin = image
+            profile.save()
+            return True
+        return False
+    
+
+    def edit_profile(self,profile_id,first_name,last_name,mobile,slogan,address,bio,postal_code):
+        user=self.user
+        if user.is_authenticated:
+            me=ProfileRepo(user).me
+            if me.id==profile_id or me.user.has_perm(APP_NAME+'.change_profile'):
+                edited_profile=self.objects.get(pk=profile_id)
+                
+                if edited_profile is not None:
+                    if edited_profile.user is not None:
+                        edited_profile.user.first_name=first_name
+                        edited_profile.user.last_name=last_name
+                        edited_profile.user.save()
+
+
+                    edited_profile.first_name=first_name
+                    edited_profile.last_name=last_name
+                    edited_profile.mobile=mobile
+                    edited_profile.slogan=slogan
+                    edited_profile.bio=bio
+                    edited_profile.address=address
+                    edited_profile.postal_code=postal_code
+                    
+                    edited_profile.save()
+                    return edited_profile
+        return None
+    

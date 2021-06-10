@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>
+        {{title}}
+    </title>
+
+    {% include "market/includes/head.html" %}
+
+    {% block head %}
+
+    {% endblock %}
+
+
+</head>
+
+
+<body>
+    <!-- Extra details for Live View on GitHub Pages -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    {% include "market/includes/navbar.html" %}
+    <div class="mt-2">
+        <div class="container">
+
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+
+
+
+
+    {% include "market/includes/footer.html" %}
+
+
+
+    {% block modal %}
+
+    {% endblock %}
+
+
+    {% include "market/includes/script.html" %}
+
+
+    {% block script %}
+
+    {% endblock %}
+
+</body>
+
+</html>

@@ -22,6 +22,7 @@ urlpatterns = [
     
     path('add_event/',apis.EventApi().add_event,name="add_event"),
     path('add_signature/',apis.ProjectApi().add_signature,name="add_signature"),
+    path('edit_project_timing/',apis.ProjectApi().edit_project_timing,name="edit_project_timing"),
     path('add_employer/',apis.OrganizationUnitApi().add_employer,name="add_employer"),
     path('add_employee/',apis.OrganizationUnitApi().add_employee,name="add_employee"),
     path('add_service_request/',apis.ServiceApi().add_service_request,name="add_service_request"),
