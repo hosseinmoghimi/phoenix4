@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 from .settings import *
 from django.shortcuts import reverse
 from django.http import Http404
+from tinymce.models import HTMLField
 from .enums import *
 from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
@@ -94,17 +95,17 @@ class Image(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/galleryphoto/{self.pk}/change/'
 
 class BasicPage(models.Model):
-    for_home=models.BooleanField(_("for_home"),default=False)
+    title = models.CharField(_("عنوان"), max_length=50)
+    for_home=models.BooleanField(_("نمایش در خانه"),default=False)
     parent = models.ForeignKey("BasicPage",related_name="childs",null=True,blank=True, verbose_name=_(
-        "parent"), on_delete=models.CASCADE)
-    title = models.CharField(_("title"), max_length=50)
+        "والد"), on_delete=models.CASCADE)
     icon = models.ForeignKey("icon", verbose_name=_(
         "icon"), null=True, blank=True, on_delete=models.CASCADE)
-    panel = models.CharField(_("panel"), null=True, blank=True, max_length=50)
-    short_description = models.CharField(
-        _("short_description"), null=True, blank=True, max_length=50)
-    description = models.CharField(
-        _("description"), null=True, blank=True, max_length=50)
+    panel = HTMLField(_("پنل"), null=True, blank=True)
+    short_description = HTMLField(
+        _("توضیح کوتاه"), null=True, blank=True)
+    description = HTMLField(
+        _("توضیح کامل"), null=True, blank=True)
     image_thumbnail_origin = models.ImageField(_("تصویر کوچک"), upload_to=IMAGE_FOLDER+'Page/Thumbnail/',
                                          null=True, blank=True, height_field=None, width_field=None, max_length=None)
     image_header_origin =models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
@@ -117,16 +118,16 @@ class BasicPage(models.Model):
     priority = models.IntegerField(_('ترتیب'), default=100)
 
     creator = models.ForeignKey("authentication.profile", verbose_name=_(
-        "creator"), null=True, blank=True, on_delete=models.SET_NULL)
+        "ایجاد شده توسط"), null=True, blank=True, on_delete=models.SET_NULL)
 
 
-    color = models.CharField(_("color"), blank=True, null=True,
+    color = models.CharField(_("رنگ"), blank=True, null=True,
                              choices=ColorEnum.choices, default=ColorEnum.PRIMARY, max_length=50)
     tags = models.ManyToManyField(
         "Tag", verbose_name=_("برچسب ها"), blank=True)
-    meta_data=models.CharField(_("MetaData"),null=True,blank=True, max_length=100)
-    app_name = models.CharField(_("app_name"),null=True,blank=True, max_length=50)
-    class_name = models.CharField(_("class_name"),null=True,blank=True, max_length=50)
+    meta_data=models.CharField(_("متا دیتا"),null=True,blank=True, max_length=100)
+    app_name = models.CharField(_("نام اپ"),null=True,blank=True, max_length=50)
+    class_name = models.CharField(_("نام کلاس"),null=True,blank=True, max_length=50)
     date_added = models.DateTimeField(
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
@@ -397,8 +398,11 @@ class Document(Icon):
 class PageDocument(Document):
     page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     
-
-
+class PageComment(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    page=models.ForeignKey("basicpage", verbose_name=_("page"), on_delete=models.CASCADE)
+    comment=HTMLField(verbose_name="comment")
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
 class Parameter(models.Model):
     app_name=models.CharField(_("app_name"),choices=AppNameEnum.choices,null=True,blank=True,max_length=20)
     name = models.CharField(_("نام"), max_length=50)

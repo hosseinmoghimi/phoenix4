@@ -41,10 +41,14 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', 
 
 
+    'tinymce',
+
+    
     'authentication',
     'core',
     'dashboard',
     'farm',
+    'messenger',
     'market',
     'projectmanager',
     'utility',

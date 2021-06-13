@@ -8,13 +8,14 @@ from django.conf.urls import url
 # from authentication.views import AuthenticationView
 
 urlpatterns = [
-    path('', include('market.urls')),
+    path('market/', include('market.urls')),
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),
     # path('dashboard/', include('dashboard.urls')),
     path('core/', include('core.urls')),
     path('web/', include('web.urls')),
-    path('projectmanager/', include('projectmanager.urls')),
+    path('', include('projectmanager.urls')),
+    path('messenger/', include('messenger.urls')),
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),
 

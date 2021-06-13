@@ -2,7 +2,7 @@ from .repo import CategoryRepo,ProductRepo
 from .apps import APP_NAME
 
 from django.shortcuts import render
-TEMPLATE_ROOT=APP_NAME+"/"
+TEMPLATE_ROOT="market2/"
 from django.views import View
 from core.views import CoreContext, PageContext
 def getContext(request,*args, **kwargs):

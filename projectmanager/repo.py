@@ -49,15 +49,14 @@ class ProjectRepo():
              
 
     def project(self, *args, **kwargs):
-        if 'pk' in kwargs:
-            return self.objects.filter(pk=kwargs['pk']).first()
-        if 'id' in kwargs:
-            return self.objects.filter(pk=kwargs['id']).first()
         if 'project_id' in kwargs:
-            return self.objects.filter(pk=kwargs['project_id']).first()
-        if 'title' in kwargs:
-            return self.objects.filter(pk=kwargs['title']).first()
-
+            pk=kwargs['project_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+    
     def get(self, *args, **kwargs):
         return self.project(*args, **kwargs)
 
