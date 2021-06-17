@@ -22,6 +22,7 @@ _activate.bat
 .VSCodeCounter/
 settings_pars.py
 settings_server*.py
+server_settings*.py
 *.cnf
 # connection parameters for  MY SQL,... 
 

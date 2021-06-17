@@ -5,7 +5,7 @@ django-cleanup
 #django-group-by
 # django-mysql
 django-resized
-# django-tinymce
+django-tinymce
 djangorestframework
 djecrety
 mysqlclient
@@ -19,7 +19,9 @@ qrcode
 requests
 sqlparse
 toml
+django-photologue >= 3.6
 pylint-django
 python-resize-image
 django-allauth
 python-dateutil
+django-forums
