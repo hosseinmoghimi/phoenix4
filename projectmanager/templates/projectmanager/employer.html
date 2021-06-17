@@ -285,6 +285,10 @@
 
                         {% endif %}
                         {% for organization_unit in employer.organizationunit_set.all %}
+                        {% if organization_unit.parent %}
+
+                        {% else %}
+
                         <div class="row">
 
                             <div class="col-sm-6 text-right farsi my-auto">
@@ -308,6 +312,8 @@
 
                         </div>
                         <hr>
+                        {% endif %}
+
                         {% endfor %}
 
                         <template v-for="organization_unit in organization_units">

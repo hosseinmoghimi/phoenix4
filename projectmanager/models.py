@@ -169,6 +169,11 @@ class OrganizationUnit(ProjectManagerPage):
         return super(OrganizationUnit,self).save(*args, **kwargs)
     def employees(self):
         return self.employee_set.all()
+    @property
+    def full_title(self):
+        if self.parent is None:
+            return self.title
+        return self.title+" " +OrganizationUnit.objects.get(pk=self.parent.id).full_title
     def childs(self):
         return OrganizationUnit.objects.filter(parent_id=self.id)
 class EmployeeSpeciality(ProjectManagerPage):

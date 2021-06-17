@@ -12,7 +12,8 @@
 
         </small>
 
-        {{organization_unit.title}}
+        {{organization_unit.full_title}}
+        {{organization_unit.employer.title}}
         {% if perms.projectmanager.change_organizationunit %}
         <a title="ویرایش" target="_blank" href="{{organization_unit.get_edit_url}}">
             <i class="material-icons">

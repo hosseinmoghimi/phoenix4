@@ -20,8 +20,10 @@
 
                     </h6>
                     {% if material.short_description %}
+                    <small class="text-secondary text-right">
 
                     {{material.short_description|safe}}
+                 </small>
                     {% endif %}
 
                 </div>
@@ -38,7 +40,12 @@
                         <h6 v-text="material.full_title">
 
                         </h6>
-                        <div v-html="material.short_description"></div>
+                        <small class="text-secondary text-right">
+
+                            <div v-html="material.short_description">
+                                
+                            </div>
+                        </small>
 
 
                     </div>
