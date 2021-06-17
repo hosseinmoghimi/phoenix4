@@ -1,7 +1,7 @@
 <script>
     let url_add_page_link="{% url 'core:add_page_link' %}"
     let page_id=parseInt("{{page.id}}")
-    let link_app = new Vue({
+    let page_links_app = new Vue({
         el: "#links-app",
         data: {
             new_link_title: "",
@@ -22,9 +22,9 @@
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
 
-                        link_app.links.push(data.page_link)
-                        link_app.new_link_title = ""
-                        link_app.new_link_url = ""
+                        page_links_app.links.push(data.page_link)
+                        page_links_app.new_link_title = ""
+                        page_links_app.new_link_url = ""
                     }
                 })
             },
