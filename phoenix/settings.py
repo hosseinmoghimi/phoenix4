@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',   # <--
     'allauth.socialaccount.providers.google', 
 
-   "pinax.forums",  
+#    "pinax.forums",  
 
     'tinymce',
 
