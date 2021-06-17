@@ -147,7 +147,7 @@ class BasicPage(models.Model):
     @property
     def full_title(self):
         if self.parent is not None:
-            return self.parent.full_title+" "+self.title
+            return self.parent.full_title+" / "+self.title
         return self.title
     def thumbnail(self):
         if self.image_thumbnail_origin:
