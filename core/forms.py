@@ -8,7 +8,7 @@ class AddPageForm(forms.Form):
 class AddPageLinkForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100, required=True)
-    url=forms.CharField(max_length=100, required=True)
+    url=forms.CharField(max_length=1000, required=True)
     
 
 class AddPageDocumentForm(forms.Form):
