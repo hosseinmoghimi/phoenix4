@@ -499,6 +499,11 @@ class MaterialRepo():
 
         if 'title' in kwargs:
             new_material.title = kwargs['title']
+        if 'short_description' in kwargs:
+            new_material.short_description = kwargs['short_description']
+        else:
+            new_material.short_description =new_material.full_title
+
         new_material.save()
         return new_material
     

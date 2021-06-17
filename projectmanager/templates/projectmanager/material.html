@@ -12,7 +12,7 @@
             متریال
 
         </small>
-        {{material.title}}
+        {{material.full_title}}
         {% if perms.projectmanager.change_material %}
         <a title="ویرایش" target="_blank" href="{{material.get_edit_url}}">
             <i class="material-icons">
@@ -93,7 +93,7 @@
                                 <td>
                                     <a href="{{material_request.project.get_absolute_url}}">
 
-                                        {{material_request.project.title}}
+                                        {{material_request.project.full_title}}
                                     </a>
                                 </td>
                                 <td>

@@ -69,13 +69,13 @@
             select_material: function (material) {
                 this.add_material_request_form_unit_name = material.unit_name
                 this.add_material_request_form_unit_price = material.unit_price
-                this.add_material_request_form_title = material.title
+                this.add_material_request_form_title = material.full_title
                 this.materials=[material]
             },
             filter_list: function () {
                 if (this.add_material_request_form_title) {
 
-                    this.materials = materials.filter(item => item.title.toUpperCase().includes(this.add_material_request_form_title.toUpperCase())).slice(0, 6);
+                    this.materials = materials.filter(item => item.full_title.toUpperCase().includes(this.add_material_request_form_title.toUpperCase())).slice(0, 6);
                     try {
                         this.add_material_request_form_unit_price = this.selected_material().unit_price
                         this.add_material_request_form_unit_name = this.selected_material().unit_name

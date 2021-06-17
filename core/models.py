@@ -144,7 +144,11 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_thumbnail_origin)
         else:
             return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.child_class}.jpg'
-
+    @property
+    def full_title(self):
+        if self.parent is not None:
+            return self.parent.full_title+" "+self.title
+        return self.title
     def thumbnail(self):
         if self.image_thumbnail_origin:
             return MEDIA_URL+str(self.image_thumbnail_origin)
