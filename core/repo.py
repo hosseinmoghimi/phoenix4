@@ -69,6 +69,25 @@ class PageLinkRepo:
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 
+class PageImageRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        self.objects=PageImage.objects
+    def add_page_image(self,title,image,page_id,*args, **kwargs):
+        image=Image(title=title,image_main_origin=image)
+        image.save()
+        new_page_image=PageImage(image=image,page_id=page_id)
+        
+        new_page_image.save()
+        return new_page_image
+
+   
 
 class ParameterRepo:
     def __init__(self,app_name,user=None):

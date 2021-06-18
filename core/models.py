@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.base import Model
 from django.db.models.fields import BooleanField
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
@@ -80,8 +81,10 @@ class Image(models.Model):
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
-    
-
+    def image(self):
+        return MEDIA_URL+str(self.image_main_origin)
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/image/{self.pk}/change/"
     class Meta:
         verbose_name = _("GalleryPhoto")
         verbose_name_plural = _("تصاویر")
@@ -90,9 +93,6 @@ class Image(models.Model):
 
     def get_absolute_url(self):
         return MEDIA_URL+str(self.image_main_origin)
-
-    def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/galleryphoto/{self.pk}/change/'
 
 class BasicPage(models.Model):
     title = models.CharField(_("عنوان"), max_length=50)
@@ -451,3 +451,19 @@ class Parameter(models.Model):
             self.value_origin=self.value_origin.replace('width="600"','width="100%"')
             self.value_origin=self.value_origin.replace('height="450"','height="400"') 
         super(Parameter,self).save()
+
+
+class PageImage(models.Model):
+    page=models.ForeignKey("basicpage", verbose_name=_("page"),on_delete=models.CASCADE)
+    image=models.ForeignKey("image", verbose_name=_("image"), on_delete=models.CASCADE)
+    
+
+    class Meta:
+        verbose_name = _("PageImage")
+        verbose_name_plural = _("PageImages")
+
+    def __str__(self):
+        return f"{self.page.title} : {self.image.title}"
+
+    def get_absolute_url(self):
+        return reverse("PageImage_detail", kwargs={"pk": self.pk})

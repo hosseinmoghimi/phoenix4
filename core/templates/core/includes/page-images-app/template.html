@@ -1,0 +1,91 @@
+<div class="card" id="page-images-app">
+    <div class="card-header">
+        <h6 class="card-title text-center">
+            تصاویر
+
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for page_image in page.pageimage_set.all %}
+
+            <div class="col-md-4">
+                <a target="_blank" href="{{page_image.image.image}}">
+
+                    <img src="{{page_image.image.image}}" width="100%" alt="{{page_image.image.title}}">
+                </a>
+                <h6 class="text-center">{{page_image.image.title}}</h6>
+                {% if perms.core.change_pageimage %}
+                <div class="text-center">
+
+                    <a title="edit" target="_blank" href="{{page_image.image.get_edit_url}}">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+
+
+
+
+            <div class="col-md-4" v-for="page_image in page_images">
+                <a target="_blank" :href="page_image.image.image">
+               
+                <img :src="page_image.image.image" width="100%" :alt="page_image.image.title">
+                </a>
+                <h6 class="text-center" v-text="page_image.image.title"></h6>
+
+                {% if perms.core.change_pageimage %}
+                <div class="text-center">
+
+                    <a title="edit" target="_blank" :href="page_image.image.get_edit_url">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+
+
+        </div>
+        <button @click="show_add_page_image_form=true" v-if="!show_add_page_image_form" class="btn btn-success">
+            ADD IMAGE
+        </button>
+        {% if add_page_document_form %}
+
+        <form id="add-page-image-form" v-if="show_add_page_image_form" @submit.prevent="add_page_image()"
+            enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-8">
+                    <input required type="text" v-model="add_page_image_form_title" class="farsi form-control"
+                        placeholder="عنوان تصویر جدید">
+
+
+                    <span class="btn btn-raised btn-round btn-default btn-file">
+                        <span class="fileinput-new">انتخاب تصویر</span>
+
+                        <input type="file" v-on:change="document_file=true" name="">
+                        <div class="ripple-container"></div>
+                    </span>
+
+
+                </div>
+                <div class="col-4">
+                    <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
+                    <button @click="show_add_page_image_form=false" class="farsi btn btn-secondary btn-block"
+                        type="reset">انصراف</button>
+
+                </div>
+            </div>
+
+        </form>
+        {% endif %}
+
+    </div>
+</div>

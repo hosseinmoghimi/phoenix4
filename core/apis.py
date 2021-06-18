@@ -1,8 +1,8 @@
-from core.serializers import BasicPageSerializer, PageDocumentSerializer, PageLinkSerializer
+from core.serializers import BasicPageSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *
-from .repo import BasicPageRepo, DocumentRepo, PageLinkRepo
+from .repo import BasicPageRepo, DocumentRepo, PageImageRepo, PageLinkRepo
 from .constants import SUCCEED,FAILED
 class BasicApi(APIView):
     def add_page(self,request,*args, **kwargs):
@@ -55,6 +55,25 @@ class BasicApi(APIView):
                 page_document=DocumentRepo(request=request).add_page_document(title=title,file=file,page_id=page_id)
                 if page_document is not None:
                     context['page_document']=PageDocumentSerializer(page_document,context={'request':request}).data
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def add_page_image(self,request,*args, **kwargs):
+        log=1
+        context={}
+        context['result']=FAILED
+        if request.method=='POST':
+            log+=1
+            add_page_image_form=AddPageImageForm(request.POST,request.FILES)
+            if add_page_image_form.is_valid():
+                log+=1
+                title=add_page_image_form.cleaned_data['title']
+                page_id=add_page_image_form.cleaned_data['page_id']
+                image=request.FILES['image']              
+                page_image=PageImageRepo(request=request).add_page_image(title=title,image=image,page_id=page_id)
+                if page_image is not None:
+                    context['page_image']=PageImageSerializer(page_image,context={'request':request}).data
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

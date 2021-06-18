@@ -77,9 +77,13 @@
         <div class="col-md-12">
             {% include "projectmanager/includes/service-requests-app/template.html" %}
         </div>
-        <div class="col-md-8">
+        <div class="col-md-12">
+         {% include "core/includes/page-images-app/template.html" %}
         </div>
     </div>
+   
+    
+   
 </div>
 {% endblock %}
 
@@ -92,6 +96,7 @@
     let project = JSON.parse(`{{project_s|escapejs}}`)
 </script>
 {% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-images-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "projectmanager/includes/material-requests-app/script.html" %}

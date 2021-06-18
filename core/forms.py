@@ -15,3 +15,8 @@ class AddPageDocumentForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100, required=True)
     
+
+class AddPageImageForm(forms.Form):
+    page_id=forms.IntegerField(required=True)
+    title=forms.CharField(max_length=100, required=True)
+    

@@ -190,8 +190,7 @@ class ProjectViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['project'] = project
-        if True:
-            context['edit_project_timing_form']=EditProjectTimingForm()
+        context['edit_project_timing_form']=EditProjectTimingForm()
         context['events'] = project.event_set.all()
         organization_units = project.organization_units.all()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
