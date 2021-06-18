@@ -39,6 +39,21 @@ class BasicApi(APIView):
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+    def delete_page_comment(self,request,*args, **kwargs):
+        log=1
+        context={}
+        context['result']=FAILED
+        if request.method=='POST':
+            log+=1
+            delete_page_comment_form=DeletePageCommentForm(request.POST)
+            if delete_page_comment_form.is_valid():
+                log+=1
+                page_comment_id=delete_page_comment_form.cleaned_data['page_comment_id']
+                done=PageCommentRepo(request=request).delete_comment(page_comment_id=page_comment_id)
+                if done:
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
     def add_page_link(self,request,*args, **kwargs):
         log=1
         context={}

@@ -25,19 +25,10 @@
         </div>
         {% endfor %}
         <div class="py-3" v-for="page_comment in page_comments">
+            <page-comment-component :page_comment="page_comment">
 
-            <div class="media">
-                <img :src="page_comment.profile.image" class="rounded-circle" width="64" alt="">
-                <div class="media-body">
-                    <h6 class="small">
-                        <span v-text="page_comment.profile.name"></span>
-                        <span class="text-secondary mx-3 small" v-text="page_comment.persian_date_added">
-
-                        </span>
-                    </h6>
-                    <div class="farsi text-secondary text-right" v-html="page_comment.comment"></div>
-                </div>
-            </div>
+            </page-comment-component>
+          
         </div>
 
         <div class="media">

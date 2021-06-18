@@ -1,9 +1,47 @@
 <script>
-    let url_add_page_comment="{% url 'core:add_page_comment' %}"
-    let page_comments=JSON.parse(`{{page_comments_s|escapejs}}`)
+    let url_add_page_comment = "{% url 'core:add_page_comment' %}"
+    let page_comments = JSON.parse(`{{page_comments_s|escapejs}}`)
+    let url_delete_page_comment = "{% url 'core:delete_page_comment' %}"
+
+    let page_comment_template = `{% include "core/includes/page-comments-app/component.html" %}`
+    let page_comment_component = Vue.component('page-comment-component', {
+        data: function () {
+            return {
+                confirm_delete: false,
+            }
+        },
+        methods: {
+            delete_comment: function (page_comment_id) {
+                this.confirm_delete_line = false
+                let url = url_delete_page_comment
+                let payload = {
+                    page_comment_id: page_comment_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                console.log(payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        page_comments_app.page_comments = page_comments_app.page_comments.filter((page_comment) => {
+                            return (page_comment.id != page_comment_id)
+                        })
+                        page_comment_component.confirm_delete=false
+                    }
+                })
+            },
+
+
+        },
+        props: ['page_comment'],
+        template: page_comment_template,
+    })
+
+
     let page_comments_app = new Vue({
         el: "#page-comments-app",
-        
+        components: {
+            page_comment_component
+        },
         data: {
             comment: "",
             page_comments: page_comments,

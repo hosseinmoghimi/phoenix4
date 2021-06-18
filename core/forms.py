@@ -25,3 +25,6 @@ class AddPageCommentForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     comment=forms.CharField(max_length=200, required=True)
     
+
+class DeletePageCommentForm(forms.Form):
+    page_comment_id=forms.IntegerField(required=True)

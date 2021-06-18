@@ -59,6 +59,15 @@ class PageCommentRepo:
         page_comment.save()
         return page_comment
 
+    def delete_comment(self,page_comment_id,*args, **kwargs):
+        profile=ProfileRepo(self.user).me
+        page_comment=PageComment.objects.filter(pk=page_comment_id).first()
+
+        if page_comment is not None and page_comment.profile==profile:
+            page_comment.delete()
+            return True
+        return False
+
     def page_link(self,*args, **kwargs):
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()

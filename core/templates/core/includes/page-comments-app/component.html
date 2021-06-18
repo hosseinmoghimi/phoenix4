@@ -1,0 +1,31 @@
+<div class="media">
+    <img :src="page_comment.profile.image" class="rounded-circle" width="64" alt="">
+    <div class="media-body">
+        <h6 class="small">
+            <span v-text="page_comment.profile.name"></span>
+            <span class="text-secondary mx-3 small" v-text="page_comment.persian_date_added">
+
+            </span>
+            <button v-if="page_comment.profile.id=={{profile.id}} && !confirm_delete" class="btn btn-danger" @click="confirm_delete=true">
+                <i class="material-icons">
+                    delete
+                </i>
+            </button>
+
+
+            <button v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" class="btn btn-secondary" @click="confirm_delete=false">
+                <i class="material-icons">
+                    delete
+                </i>
+            </button>
+            <button v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" class="btn btn-danger" @click="delete_comment(page_comment.id)">
+                <i class="material-icons">
+                    delete
+                </i>
+            </button>
+        
+
+        </h6>
+        <div class="farsi text-secondary text-right" v-html="page_comment.comment"></div>
+    </div>
+</div>
