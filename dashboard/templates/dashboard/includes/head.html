@@ -1,53 +1,65 @@
 {% load static %}
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="{% static 'vendor/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/css/font-awesome.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/css/material-icons.css' %}" rel="stylesheet">
-    <link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
-    <link href="{% static 'leo/css/leo.css' %}" rel="stylesheet">
-    <style>
-        div {
-            direction: rtl;
-        }
-        .nav-link,.nav-item>.dropdown-menu>.dropdown-item{
-            text-align: right;
-        }
-        [v-cloak]{
-            display: none;
-        }
-        p,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        label,
-        th,td{
-            font-family: "HMFONT";
-        }
-th,td{
-    text-align: right;
-}
-        .breadcrumb-item>a {
-            margin-right: 1em;
-        }
-        p{
-            text-align: right;
-            direction: rtl;
-        }
-        .vpd-date > span,.vpd-actions,.vpd-container{
-            font-family: "HMFONT";
-        }
-    </style>
-    <title>{{app.title}}
+<!-- Bootstrap CSS -->
+<link href="{% static 'vendor/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'vendor/css/font-awesome.min.css' %}" rel="stylesheet">
+<link href="{% static 'vendor/css/material-icons.css' %}" rel="stylesheet">
+<link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
+<link href="{% static 'leo/css/leo.css' %}" rel="stylesheet">
+<style>
+    div {
+        direction: rtl;
+    }
 
-        {% if page.title %}
-          | {{page.title}}
-        {% endif %}
-    </title>
+    .nav-link,
+    .nav-item>.dropdown-menu>.dropdown-item {
+        text-align: right;
+    }
+
+    [v-cloak] {
+        display: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    label,
+    th,
+    td {
+        font-family: "HMFONT";
+    }
+
+    th,
+    td {
+        text-align: right;
+    }
+
+    .breadcrumb-item>a {
+        margin-right: 1em;
+    }
+
+    p {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .vpd-date>span,
+    .vpd-actions,
+    .vpd-container {
+        font-family: "HMFONT";
+    }
+</style>
+<title>{{app.title}}
+
+    {% if page.title %}
+    | {{page.title}}
+    {% endif %}
+</title>
