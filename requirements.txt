@@ -24,4 +24,5 @@ pylint-django
 python-resize-image
 django-allauth
 python-dateutil
-django-forums
+# django-forums
+
