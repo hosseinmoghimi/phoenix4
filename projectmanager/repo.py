@@ -301,6 +301,10 @@ class ServiceRepo():
         if self.user.has_perm(APP_NAME+".add_servicerequestsignature"):
             signature=ServiceRequestSignature()
             signature.description=description
+            service_request=self.service_request(service_request_id=service_request_id)
+            if service_request is not None:
+                service_request.status=status
+                service_request.save()
             signature.service_request_id=service_request_id
             signature.status=status
             signature.profile=ProfileRepo(self.user).me
@@ -512,6 +516,10 @@ class MaterialRepo():
             signature=MaterialRequestSignature()
             signature.description=description
             signature.material_request_id=material_request_id
+            material_request=self.material_request(material_request_id=material_request_id)
+            if material_request is not None:
+                material_request.status=status
+                material_request.save()
             signature.status=status
             signature.profile=ProfileRepo(self.user).me
             signature.save()
