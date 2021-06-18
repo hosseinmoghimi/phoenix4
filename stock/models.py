@@ -1,3 +1,4 @@
+from core.settings import ADMIN_URL
 from django.db import models
 from django.db.models.fields import DateTimeField
 from django.utils.translation import gettext as _
@@ -12,7 +13,8 @@ class Stock(models.Model):
     stock2=models.IntegerField(_("stock2"),default=0)   
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/stock/{self.pk}/change/"
     class Meta:
         verbose_name = _("Stock")
         verbose_name_plural = _("Stocks")

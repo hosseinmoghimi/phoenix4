@@ -6,7 +6,7 @@ from enum import Enum
 class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
     web='web',_('web')
-    # stock='stock',_('stock')
+    stock='stock',_('stock')
     # charity='charity',_('charity')
     projectmanager='projectmanager',_('projectmanager')
     # market='market',_('market')
