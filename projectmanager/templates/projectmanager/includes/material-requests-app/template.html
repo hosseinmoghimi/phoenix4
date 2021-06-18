@@ -45,7 +45,7 @@
                     </td>
                     <td>
 
-                        <a href="{{material_request.material.get_absolute_url}}">
+                        <a  target="_blank" href="{{material_request.material.get_absolute_url}}">
 <!-- <img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32" alt=""> -->
                             {{material_request.material.title}}
                         </a>
@@ -68,7 +68,7 @@
                     </td>
                     <td>
                         {{material_request.get_status_tag|safe}}
-                        <a href="{{material_request.get_absolute_url}}" title="نمایش کامل">
+                        <a  target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
@@ -90,7 +90,7 @@
                     </td>
                     <td>
 
-                        <a :href="material_request.material.get_absolute_url" v-text="material_request.material.title">
+                        <a  target="_blank" :href="material_request.material.get_absolute_url" v-text="material_request.material.title">
 
                         </a>
                     </td>
@@ -113,13 +113,13 @@
                     <td>
                         <span v-html="material_request.get_status_tag"></span>
 
-                        <a :href="material_request.get_absolute_url" title="نمایش کامل">
+                        <a  target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
                         </a>
                         {% if perms.projectmanager.change_materialrequest %}
-                        <a title="ویرایش" :href="material_request.get_edit_url">
+                        <a title="ویرایش"  target="_blank" :href="material_request.get_edit_url">
                             <i class="material-icons">edit</i>
                         </a>
                         {% endif %}

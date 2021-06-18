@@ -50,7 +50,7 @@ class Employee(models.Model):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
     def get_edit_btn(self):
         return f"""
-        <a title="ویرایش {self.title}" href="{self.get_edit_url()}">
+        <a  target="_blank" title="ویرایش {self.title}" href="{self.get_edit_url()}">
             <i class="material-icons">
                 edit
             </i>
@@ -227,7 +227,7 @@ class MaterialRequest(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
     def get_edit_btn(self):
         return f"""
-        <a title="ویرایش" href="{self.get_edit_url()}">
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
             <i class="material-icons">
                 edit
             </i>
@@ -293,7 +293,7 @@ class ServiceRequest(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
     def get_edit_btn(self):
         return f"""
-        <a title="ویرایش" href="{self.get_edit_url()}">
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
             <i class="material-icons">
                 edit
             </i>

@@ -208,7 +208,7 @@ class BasicPage(models.Model):
         # return f"{ADMIN_URL}core/basicpage/{self.pk}/change/"
     def get_edit_btn(self):
         return f"""
-        <a title="ویرایش {self.title}" href="{self.get_edit_url()}">
+        <a target="_blank" title="ویرایش {self.title}" href="{self.get_edit_url()}">
             <i class="material-icons">
                 edit
             </i>

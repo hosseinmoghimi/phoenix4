@@ -40,7 +40,7 @@
                     </td>
                     <td>
 
-                        <a href="{{service_request.service.get_absolute_url}}">
+                        <a target="_blank" href="{{service_request.service.get_absolute_url}}">
 <!-- <img src="{{service_request.service.thumbnail}}" class="ml-2 rounded" width="32" alt=""> -->
                             {{service_request.service.title}}
                         </a>
@@ -63,7 +63,7 @@
                     </td>
                     <td>
                         {{service_request.get_status_tag|safe}}
-                        <a href="{{service_request.get_absolute_url}}" title="نمایش کامل">
+                        <a  target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
@@ -85,7 +85,7 @@
                     </td>
                     <td>
 
-                        <a :href="service_request.service.get_absolute_url" v-text="service_request.service.title">
+                        <a target="_blank" :href="service_request.service.get_absolute_url" v-text="service_request.service.title">
 
                         </a>
                     </td>
@@ -108,13 +108,13 @@
                     <td>
                         <span v-html="service_request.get_status_tag"></span>
 
-                        <a :href="service_request.get_absolute_url" title="نمایش کامل">
+                        <a  target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
                         </a>
                         {% if perms.projectmanager.change_servicerequest %}
-                        <a title="ویرایش" :href="service_request.get_edit_url">
+                        <a title="ویرایش"  target="_blank" :href="service_request.get_edit_url">
                             <i class="material-icons">edit</i>
                         </a>
                         {% endif %}
