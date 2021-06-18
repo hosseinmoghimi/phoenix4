@@ -1,8 +1,8 @@
-from core.serializers import BasicPageSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer
+from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *
-from .repo import BasicPageRepo, DocumentRepo, PageImageRepo, PageLinkRepo
+from .repo import BasicPageRepo, DocumentRepo, PageCommentRepo, PageImageRepo, PageLinkRepo
 from .constants import SUCCEED,FAILED
 class BasicApi(APIView):
     def add_page(self,request,*args, **kwargs):
@@ -19,6 +19,23 @@ class BasicApi(APIView):
                 page=BasicPageRepo(request).add_page(title=title,parent_id=parent_id)
                 if page is not None:
                     context['page']=BasicPageSerializer(page).data
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    def add_page_comment(self,request,*args, **kwargs):
+        log=1
+        context={}
+        context['result']=FAILED
+        if request.method=='POST':
+            log+=1
+            add_page_comment_form=AddPageCommentForm(request.POST)
+            if add_page_comment_form.is_valid():
+                log+=1
+                comment=add_page_comment_form.cleaned_data['comment']
+                page_id=add_page_comment_form.cleaned_data['page_id']
+                page_comment=PageCommentRepo(request=request).add_comment(comment=comment,page_id=page_id)
+                if page_comment is not None:
+                    context['page_comment']=PageCommentSerializer(page_comment).data
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

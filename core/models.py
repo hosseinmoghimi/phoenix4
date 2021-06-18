@@ -421,6 +421,13 @@ class PageComment(models.Model):
     page=models.ForeignKey("basicpage", verbose_name=_("page"), on_delete=models.CASCADE)
     comment=HTMLField(verbose_name="comment")
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+    
+    class Meta:
+        verbose_name = _("PageComment")
+        verbose_name_plural = _("PageComments")
+
 class Parameter(models.Model):
     app_name=models.CharField(_("app_name"),choices=AppNameEnum.choices,null=True,blank=True,max_length=20)
     name = models.CharField(_("نام"), max_length=50)

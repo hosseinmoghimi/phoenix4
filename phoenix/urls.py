@@ -16,7 +16,7 @@ urlpatterns = [
     path('web/', include('web.urls')),
     path('', include('projectmanager.urls')),
     path('stock/', include('stock.urls')),
-    path('messenger/', include('messenger.urls')),
+    path('forums/', include('phoenix_forums.urls')),
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),
     # url(r"^forums/", include("pinax.forums.urls", namespace="pinax_forums")),

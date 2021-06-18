@@ -1,0 +1,33 @@
+<script>
+    let url_add_page_comment="{% url 'core:add_page_comment' %}"
+    let page_comments=JSON.parse(`{{page_comments_s|escapejs}}`)
+    let page_comments_app = new Vue({
+        el: "#page-comments-app",
+        
+        data: {
+            comment: "",
+            page_comments: page_comments,
+        },
+        methods: {
+            add_comment: function () {
+                let url = url_add_page_comment
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    page_id: page_id,
+                    comment: this.comment,
+                }
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+
+                    if (data.result === 'SUCCEED') {
+
+                        page_comments_app.page_comments.push(data.page_comment)
+                        page_comments_app.comment = ""
+                    }
+                })
+            },
+        }
+    })
+</script>

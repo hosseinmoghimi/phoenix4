@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BasicPage, Icon, Image, PageImage, Parameter, Tag,Link,PageDocument,PageLink,Document
+from .models import BasicPage, Icon, Image, PageComment, PageImage, Parameter, Tag,Link,PageDocument,PageLink,Document
 
 admin.site.register(Parameter)
 admin.site.register(BasicPage)
@@ -10,4 +10,5 @@ admin.site.register(Tag)
 admin.site.register(Link)
 admin.site.register(Document)
 admin.site.register(PageLink)
+admin.site.register(PageComment)
 admin.site.register(PageDocument)

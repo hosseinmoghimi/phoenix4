@@ -1,5 +1,5 @@
 import json
-from core.serializers import BasicPageSerializer
+from core.serializers import BasicPageSerializer, PageCommentSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -36,6 +36,10 @@ def PageContext(request,page):
 
     if request.user.has_perm(APP_NAME+".add_pagedocument"):
         context['add_page_document_form']=AddPageDocumentForm()
+    page_comments=page.pagecomment_set.all()
+    context['page_comments']=page_comments
+    page_comments_s=json.dumps(PageCommentSerializer(page_comments,many=True).data)
+    context['page_comments_s']=page_comments_s
     return context
 def getContext(request):
     context=DefaultContext(request=request,app_name=APP_NAME)

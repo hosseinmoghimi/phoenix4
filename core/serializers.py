@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import BasicPage, Image, PageDocument, PageImage, PageLink
+from authentication.serilizers import ProfileSerializer
+from .models import BasicPage, Image, PageComment, PageDocument, PageImage, PageLink
 
 class BasicPageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,3 +23,8 @@ class PageImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageImage
         fields=['id','image']
+class PageCommentSerializer(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    class Meta:
+        model = PageComment
+        fields=['id','comment','persian_date_added','profile']

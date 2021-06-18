@@ -42,6 +42,33 @@ class BasicPageRepo:
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
         return objects.all()
+class PageCommentRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        self.objects=PageComment.objects
+    def add_comment(self,comment,page_id,*args, **kwargs):
+        profile=ProfileRepo(self.user).me
+        page_comment=PageComment(comment=comment,page_id=page_id,profile=profile)
+        
+        page_comment.save()
+        return page_comment
+
+    def page_link(self,*args, **kwargs):
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'page_link_id' in kwargs:
+            return self.objects.filter(pk=kwargs['page_link_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
+
 
 class PageLinkRepo:
     def __init__(self,*args, **kwargs):

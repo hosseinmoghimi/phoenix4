@@ -49,9 +49,9 @@ INSTALLED_APPS = [
     'core',
     'dashboard',
     'farm',
-    'messenger',
     'market',
     'projectmanager',
+    'phoenix_forums',
     'utility',
     'web',
 

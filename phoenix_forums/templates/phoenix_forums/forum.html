@@ -1,0 +1,66 @@
+{% extends "phoenix_forums/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+
+{% endblock %}
+{% block content %}
+<div class="row" id="app">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{forum.title}}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if perms.phoenix_forums.change_forum %}
+                {{forum.get_edit_btn|safe}}
+                {% endif %}
+
+                <textarea id="basic-example" class="farsi" v-model="iii">
+                </textarea>
+                <button class="btn btn-success" @click="save()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea#basic-example',
+        height: 500,
+        menubar: false,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+
+</script>
+<script>
+    let app=new Vue({
+        el:"#app",
+        data:{
+iii:`{{forum.description|safe}}`,
+        },
+        methods:{
+            save:function(){
+                console.log(this.iii)
+            }
+        }
+    })
+</script>
+{% endblock %}
