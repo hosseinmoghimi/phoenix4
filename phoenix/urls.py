@@ -15,6 +15,7 @@ urlpatterns = [
     path('core/', include('core.urls')),
     path('web/', include('web.urls')),
     path('', include('projectmanager.urls')),
+    path('stock/', include('stock.urls')),
     path('messenger/', include('messenger.urls')),
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),
