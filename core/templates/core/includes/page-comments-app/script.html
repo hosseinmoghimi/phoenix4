@@ -12,7 +12,8 @@
         },
         methods: {
             delete_comment: function (page_comment_id) {
-                this.confirm_delete_line = false
+                this.confirm_delete=false
+
                 let url = url_delete_page_comment
                 let payload = {
                     page_comment_id: page_comment_id,
