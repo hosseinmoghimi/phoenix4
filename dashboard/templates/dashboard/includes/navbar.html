@@ -1,17 +1,18 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" title="{{app.title}}" href="{{app.home_url}}">
-        <img width="64" src="{% static 'logo.png' %}" alt="">
-    </a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    <a class="navbar-brand" title="{{app.title}}" href="{{app.home_url}}">
+        <img width="64" src="{% static 'logo.png' %}" alt="">
+    </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             {% block navbar %}
-              
+
             {% endblock %}
             {% if perms.core.change_parameter %}
 
