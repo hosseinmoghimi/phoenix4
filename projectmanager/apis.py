@@ -155,6 +155,7 @@ class MaterialApi(APIView):
             if add_material_request_form.is_valid():
                 log+=1
                 material_id=add_material_request_form.cleaned_data['material_id']
+                # material_title=add_material_request_form.cleaned_data['material_title']
                 project_id=add_material_request_form.cleaned_data['project_id']
                 quantity=add_material_request_form.cleaned_data['quantity']
                 unit_name=add_material_request_form.cleaned_data['unit_name']

@@ -98,7 +98,7 @@ class BasicPage(models.Model):
     title = models.CharField(_("عنوان"), max_length=50)
     for_home=models.BooleanField(_("نمایش در خانه"),default=False)
     parent = models.ForeignKey("BasicPage",related_name="childs",null=True,blank=True, verbose_name=_(
-        "والد"), on_delete=models.CASCADE)
+        "والد"), on_delete=models.SET_NULL)
     icon = models.ForeignKey("icon", verbose_name=_(
         "icon"), null=True, blank=True, on_delete=models.CASCADE)
     panel = HTMLField(_("پنل"), null=True, blank=True)
@@ -144,7 +144,11 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_thumbnail_origin)
         else:
             return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.child_class}.jpg'
-
+    @property
+    def full_title(self):
+        if self.parent is not None:
+            return self.parent.full_title+" / "+self.title
+        return self.title
     def thumbnail(self):
         if self.image_thumbnail_origin:
             return MEDIA_URL+str(self.image_thumbnail_origin)
@@ -214,6 +218,11 @@ class BasicPage(models.Model):
         return reverse(self.app_name+":"+self.class_name, kwargs={"pk": self.pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
+    def delete(self,*args, **kwargs):
+        for page in self.childs():
+            page.parent=self.parent
+            page.save()
+        return super(BasicPage,self).delete(*args, **kwargs)
 
 class Link(Icon):    
     title = models.CharField(_("عنوان"), max_length=200)

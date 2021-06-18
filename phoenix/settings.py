@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',   # <--
     'allauth.socialaccount.providers.google', 
 
+#    "pinax.forums",  
 
     'tinymce',
 
@@ -154,27 +155,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 if SERVER_ON_AZURE:
-    from . import settings_azure as settings_server
+    from . import settings_azure as server_settings
 elif SERVER_ON_HEROKU:
-    from . import settings_heroku as settings_server
+    from . import settings_heroku as server_settings
 else:
-    from . import settings_server
+    from . import server_settings
 
-TIME_ZONE=settings_server.TIME_ZONE
-SECRET_KEY=settings_server.SECRET_KEY
-DEBUG=settings_server.DEBUG
-STATIC_ROOT=settings_server.STATIC_ROOT
-MEDIA_ROOT=settings_server.MEDIA_ROOT
-STATIC_URL = settings_server.STATIC_URL
-MEDIA_URL = settings_server.MEDIA_URL
-MYSQL = settings_server.MYSQL
-SITE_URL = settings_server.SITE_URL
-DATABASES = settings_server.DATABASES
+TIME_ZONE=server_settings.TIME_ZONE
+SECRET_KEY=server_settings.SECRET_KEY
+DEBUG=server_settings.DEBUG
+STATIC_ROOT=server_settings.STATIC_ROOT
+MEDIA_ROOT=server_settings.MEDIA_ROOT
+STATIC_URL = server_settings.STATIC_URL
+MEDIA_URL = server_settings.MEDIA_URL
+MYSQL = server_settings.MYSQL
+SITE_URL = server_settings.SITE_URL
+DATABASES = server_settings.DATABASES
 
-YEAR_ADDED=settings_server.YEAR_ADDED
-ALLOWED_HOSTS=settings_server.ALLOWED_HOSTS
-PUSHER_IS_ENABLE=settings_server.PUSHER_IS_ENABLE
-STATICFILES_DIRS=settings_server.STATICFILES_DIRS
+YEAR_ADDED=server_settings.YEAR_ADDED
+ALLOWED_HOSTS=server_settings.ALLOWED_HOSTS
+PUSHER_IS_ENABLE=server_settings.PUSHER_IS_ENABLE
+STATICFILES_DIRS=server_settings.STATICFILES_DIRS
 
 if SERVER_ON_HEROKU:
     import django_heroku

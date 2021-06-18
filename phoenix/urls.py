@@ -18,6 +18,7 @@ urlpatterns = [
     path('messenger/', include('messenger.urls')),
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),
+    # url(r"^forums/", include("pinax.forums.urls", namespace="pinax_forums")),
 
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
     url('favicon.ico/', serve, {'document_root': STATIC_ROOT}),

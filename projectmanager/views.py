@@ -119,7 +119,7 @@ class ProjectViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
-        description = f"""مربوط به پروژه <a href="{project.get_absolute_url()}">{project.title}</a>"""
+        description = f"""مربوط به پروژه <a href="{project.get_absolute_url()}">{project.full_title}</a>"""
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
         order = {
@@ -160,7 +160,7 @@ class ProjectViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
-        description = f"""مربوط به پروژه <a href="{project.get_absolute_url()}">{project.title}</a>"""
+        description = f"""مربوط به پروژه <a href="{project.get_absolute_url()}">{project.full_title}</a>"""
         print(description)
         print(10*"#1045374346#")
         total_for_pay = tax+lines_total

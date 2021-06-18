@@ -132,7 +132,7 @@ class OrganizationUnitRepo():
 
         if 'employer_id' in kwargs and kwargs['employer_id'] is not None:
             new_organization.employer_id = kwargs['employer_id']
-
+        
         if 'parent_id' in kwargs and kwargs['parent_id']==0:
             employer=Employer(title=kwargs['title'])
             employer.save()
@@ -499,6 +499,11 @@ class MaterialRepo():
 
         if 'title' in kwargs:
             new_material.title = kwargs['title']
+        if 'short_description' in kwargs:
+            new_material.short_description = kwargs['short_description']
+        else:
+            new_material.short_description =f'<p>{new_material.full_title}</p>'
+
         new_material.save()
         return new_material
     

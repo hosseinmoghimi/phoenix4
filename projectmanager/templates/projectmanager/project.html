@@ -14,7 +14,7 @@
             پروژه
 
         </small>
-        {{project.title}}
+        {{project.full_title}}
         {% if perms.projectmanager.change_project %}
         <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
             <i class="material-icons">

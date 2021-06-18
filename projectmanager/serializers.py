@@ -6,13 +6,13 @@ from authentication.serilizers import ProfileSerializer
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model=Project
-        fields=['id','title','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
+        fields=['id','title','full_title','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
 
 
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model=Material
-        fields=['id','title','get_absolute_url','unit_price','unit_name','get_edit_url','short_description','thumbnail']
+        fields=['id','title','full_title','get_absolute_url','unit_price','unit_name','get_edit_url','short_description','thumbnail']
 
 
 class EmployerSerializer(serializers.ModelSerializer):
