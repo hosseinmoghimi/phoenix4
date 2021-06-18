@@ -3,8 +3,6 @@
 {% load static %}
 {% block content %}
 <div>
-
-
     <h3 class="text-center">
         <i class="material-icons">apartment</i>
         <small class="text-secondary">
@@ -29,6 +27,15 @@
     </div>
     <div class="row ">
         <div class="col-md-4">
+            <h6>
+                <span class="material-icons">
+                    corporate_fare
+                </span>
+                <a href="{{page.get_chart_url}}" target="_blank">
+
+                    نمودار</a>
+            </h6>
+
             <p>
                 کارفرما :
                 <a href="{{organization_unit.employer.get_absolute_url}}">
@@ -57,7 +64,7 @@
 
         </div>
 
- <div class="col-md-4">
+        <div class="col-md-4">
 
             {% include "projectmanager/includes/projects-app/template.html" %}
 
@@ -76,7 +83,7 @@
 {% block script %}
 <script>
     let parent_id = parseInt("{{organization_unit.id}}")
-    let organization_unit_id=parseInt("{{organization_unit.id}}")
+    let organization_unit_id = parseInt("{{organization_unit.id}}")
 </script>
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>

@@ -91,11 +91,9 @@ class ProjectViews(View):
             pk=kwargs['pk']
         else:
             pk=0
-        pages_a = ProjectRepo(request=request).list(parent_id=pk,all_childs=True).all()
-        pages=[]
-        for page in pages_a:
-            pages.append(page)
-        pages.append(ProjectRepo(request=request).project(pk=pk))
+
+        page=(ProjectRepo(request=request).project(pk=pk))
+        pages=page.all_sub_pages()
         pages_s = BasicPageSerializer(pages, many=True).data
         context['pages_s'] = json.dumps(pages_s)
         return render(request, "dashboard/pages-chart.html", context)

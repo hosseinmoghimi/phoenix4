@@ -144,6 +144,9 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_thumbnail_origin)
         else:
             return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.child_class}.jpg'
+    def get_chart_url(self):
+        return reverse(APP_NAME+':page_chart',kwargs={'pk':self.pk})
+    
     @property
     def full_title(self):
         if self.parent is not None:
@@ -160,7 +163,13 @@ class BasicPage(models.Model):
 
         return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.jpg'
     
-
+    def all_sub_pages(self):
+        pages=[]
+        pages.append(self)
+        for page in BasicPage.objects.filter(parent=self):
+            for page1 in page.all_sub_pages():
+                pages.append(page1)
+        return pages
     def get_breadcrumb_li(self):
         this_page_li= f"""
             <li class="breadcrumb-item">

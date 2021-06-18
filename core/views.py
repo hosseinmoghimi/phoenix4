@@ -1,3 +1,5 @@
+import json
+from core.serializers import BasicPageSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -88,6 +90,19 @@ class BasicViews(View):
         context['pages']=BasicPageRepo(request=request).list(for_home=True)
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class PageViews(View):
+    def page_chart(self, request, *args, **kwargs):
+        context = getContext(request)
+        if 'pk' in kwargs and kwargs['pk']>0:
+            pk=kwargs['pk']
+        else:
+            pk=0
+
+        page=(BasicPageRepo(request=request).page(pk=pk))
+        pages=page.all_sub_pages()
+        pages_s = BasicPageSerializer(pages, many=True).data
+        context['pages_s'] = json.dumps(pages_s)
+        return render(request, "dashboard/pages-chart.html", context)
+
     def download(self,request,pk):
         if request.user.is_authenticated and request.user.has_perm("core.change_document"):
             document=DocumentRepo(user=request.user).document(document_id=pk)
