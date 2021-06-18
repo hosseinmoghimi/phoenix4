@@ -46,7 +46,7 @@
                             </td>
 
                             <td>
-                                <a href="{{stock.agent.get_absolute_url}}">
+                                <a href="{% url 'stock:agent' agent_id=stock.agent.id %}">
                                       <img src="{{stock.agent.image}}" class="rounded-circle" width="32" alt="">
                                     {{stock.agent.name}}
                                 </a>

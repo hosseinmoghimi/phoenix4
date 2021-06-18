@@ -14,6 +14,8 @@ class StockRepo:
         self.objects=Stock.objects
     def list(self,*args, **kwargs):
         objects=self.objects.all()
+        if 'agent_id' in kwargs:
+            objects=objects.filter(agent_id=kwargs['agent_id'])
         return objects
         
 

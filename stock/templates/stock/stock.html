@@ -10,11 +10,32 @@
 {% endblock %}
 {% block content %}
 
-<div class="row">
-    <p>
+<div class="text-center">
 
-        {{stock.profile.name}}
+    <p class="text-center">
+        <img src="{{stock.profile.image}}" class="rounded-circle" width="128" alt="">
     </p>
+    <h5 class="text-center">
+        {{stock.profile.name}}
+
+    </h5>
+
+<h4 class="text-center">
+    {{stock.stock1}}
+    {{stock1.value}}
+    و
+    {{stock.stock2}}
+    {{stock2.value}}
+</h4>
+    <h6 class="text-center">
+      نماینده :
+      <a href="{% url 'stock:agent' stock.agent.id %}">
+          
+          {{stock.agent.name}}
+      </a>
+
+    </h6>
+   
 </div>
 
 {% endblock %}

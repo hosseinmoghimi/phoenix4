@@ -25,7 +25,8 @@
 
 
     </div>
-
+    {% include "dashboard/includes/footer.html" %}
+   
     <!-- Optional JavaScript; choose one of the two! -->
 
     {% csrf_token %}
@@ -35,6 +36,9 @@
     {% block script %}
 
     {% endblock %}
+
+
+
 </body>
 
 </html>
