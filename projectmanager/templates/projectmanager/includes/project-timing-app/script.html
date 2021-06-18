@@ -8,6 +8,7 @@
     let project_timing_app = new Vue({
         el: "#project-timing-app",
         data: {
+
             start_date:project.persian_start_date,
             end_date:project.persian_end_date,
             percentage_completed:project.percentage_completed,
@@ -17,9 +18,9 @@
         components:{
             DatePicker: VuePersianDatetimePicker
         },
-        methods: {          
+        methods: {
             edit_project_timing: function () {
-                services_app.waiting = true
+                project_timing_app.waiting = true
 
                 let payload = {
                     project_id: project.id,
@@ -33,12 +34,12 @@
 
                 var posting = $.post(url_edit_project_timing, payload);
                 posting.fail(function (xhr, status, error) {
-                    services_app.waiting = false
+                    project_timing_app.waiting = false
                     showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
                 })
                 // Put the results in a div
                 posting.done(function (data) {
-                    services_app.waiting = false
+                    project_timing_app.waiting = false
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)

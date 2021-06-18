@@ -210,6 +210,7 @@ class ProjectViews(View):
         context['add_material_request_form'] = AddMaterialRequestForm()
         context['add_service_request_form'] = AddServiceRequestForm()
 
+
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)

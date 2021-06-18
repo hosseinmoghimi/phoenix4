@@ -1,4 +1,4 @@
-<div class="card mb-3">
+<div class="card mb-5">
     <div class="card-header">
 
         <h5 class="card-title text-center farsi">
@@ -11,7 +11,7 @@
     <div class="card-body" id="project-timing-app">
         {% if edit_project_timing_form %}
 
-        
+
         <form @submit.prevent="edit_project_timing()">
             <div class="row">
                 <div class="col-4">
@@ -20,7 +20,7 @@
 
                 </div>
                 <div class="col-4">
-                    <date-picker v-model="end-date"></date-picker>
+                    <date-picker v-model="end_date"></date-picker>
 
 
                 </div>
@@ -40,7 +40,6 @@
 
         </form>
         {% else %}
-
         {% endif %}
     </div>
     <div class="card-footer ">
