@@ -1,0 +1,26 @@
+{% extends "stock/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+<li class="nav-item my-auto mx-2">
+    <a class="nav-link farsi " href="{% url 'stock:home' %}">
+        مدیریت
+    </a>
+</li>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <p>
+
+        {{stock.profile.name}}
+    </p>
+</div>
+
+{% endblock %}
+{% block script %}
+
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% endblock %}

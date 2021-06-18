@@ -1,5 +1,6 @@
 from core.settings import ADMIN_URL
 from django.db import models
+from django.shortcuts import reverse
 from django.db.models.fields import DateTimeField
 from django.utils.translation import gettext as _
 from utility.persian import PersianCalendar
@@ -23,4 +24,4 @@ class Stock(models.Model):
         return self.profile.name
 
     def get_absolute_url(self):
-        return reverse("Stock_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":stock", kwargs={"pk": self.pk})

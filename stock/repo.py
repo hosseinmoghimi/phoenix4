@@ -16,3 +16,14 @@ class StockRepo:
         objects=self.objects.all()
         return objects
         
+
+    def stock(self,*args, **kwargs):
+        pk=0
+        if 'stock_id' in kwargs:
+            pk=kwargs['stock_id']
+        if 'pk' in kwargs:
+            pk=kwargs['pk']
+        if 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+        

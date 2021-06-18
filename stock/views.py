@@ -17,3 +17,9 @@ class BasicViews(View):
         stocks=StockRepo(request=request).list()
         context['stocks']=stocks
         return render(request,TEMPLATE_ROOT+'index.html',context)
+class StockViews(View):
+    def stock(self,request,*args, **kwargs):
+        context=getContext(request)
+        stock=StockRepo(request=request).stock(*args, **kwargs)
+        context['stock']=stock
+        return render(request,TEMPLATE_ROOT+'stock.html',context)
