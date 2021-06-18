@@ -64,5 +64,5 @@ class AddServiceRequestForm(forms.Form):
     quantity=forms.IntegerField(required=True)
     unit_price=forms.IntegerField(required=True)
     unit_name=forms.CharField(max_length=50, required=True)
-    service_title=forms.CharField(max_length=50, required=True)
+    service_title=forms.CharField(max_length=150, required=True)
                      
