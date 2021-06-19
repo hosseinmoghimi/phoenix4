@@ -25,22 +25,23 @@ class ProjectApi(APIView):
         context['log']=log
         return JsonResponse(context)
     
-    def edit_project_timing(self,request,*args, **kwargs):
+    def edit_project(self,request,*args, **kwargs):
         context={}
         log=1
         if request.method=='POST':
             log+=1
             
-            edit_project_timing_form=EditProjectTimingForm(request.POST)
-            if edit_project_timing_form.is_valid():
+            edit_project_form=EditProjectForm(request.POST)
+            if edit_project_form.is_valid():
                 log+=1
-                project_id=edit_project_timing_form.cleaned_data['project_id']
-                percentage_completed=edit_project_timing_form.cleaned_data['percentage_completed']
-                start_date=edit_project_timing_form.cleaned_data['start_date']
-                end_date=edit_project_timing_form.cleaned_data['end_date']
+                project_id=edit_project_form.cleaned_data['project_id']
+                percentage_completed=edit_project_form.cleaned_data['percentage_completed']
+                start_date=edit_project_form.cleaned_data['start_date']
+                end_date=edit_project_form.cleaned_data['end_date']
+                status=edit_project_form.cleaned_data['status']
                 start_date=PersianCalendar().to_gregorian(start_date)
                 end_date=PersianCalendar().to_gregorian(end_date)
-                project=ProjectRepo(request=request).edit_project_timing(project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date)
+                project=ProjectRepo(request=request).edit_project(project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
                 context['project']=ProjectSerializer(project).data
         context['result']=SUCCEED
         context['log']=log

@@ -28,27 +28,80 @@
     </div>
     <div class="row ">
         <div class="col-md-4">
+            <div class="card mb-5">
+                <div class="card-body">
+                    <p>
+                        <span class="small text-secondary">
+                            وضعیت:
 
-            <p>
-                کارفرما :
-                <a href="{{project.employer.get_absolute_url}}">
-                    {{project.employer.title}}
-                </a>
-            </p>
+                        </span>
+                        <span class="badge badge-{{project.get_status_color}}">
+                            {{project.status}}
+                        </span>
+                    </p>
+                    <p>
+                        <span class="small text-secondary">
+                            کارفرما :
 
-            <p>
-                پیمانکار :
-                <a href="{{project.contractor.get_absolute_url}}">
-                    {{project.contractor.title}}
-                </a>
-            </p>
+                        </span>
 
-            <p>
 
-                <a href="{{project.get_chart_url}}">
-                    نمودار
-                </a>
-            </p>
+                        <a href="{{project.employer.get_absolute_url}}">
+                            {{project.employer.title}}
+                        </a>
+                    </p>
+
+                    <p>
+                        <span class="small text-secondary">
+
+                            پیمانکار :
+                        </span>
+
+                        <a href="{{project.contractor.get_absolute_url}}">
+                            {{project.contractor.title}}
+                        </a>
+                    </p>
+                    <P>
+                        <span class="small text-secondary">
+                            ارزش پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+
+                            {{project.sum_total|to_price}}
+                        </span>
+                    </P>
+                    <p>
+
+                        {{project.start_date|to_persian_date|safe}} ~
+                        {{project.end_date|to_persian_date|safe}}
+                    </P>
+                    <p>
+                        <span class="small text-secondary">
+                            پیشرفت پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.percentage_completed}} %
+
+                        </span>
+                    <div class="progress mb-3" style="height: 5px;">
+                        <div role="progressbar" aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
+                            aria-valuemax="100" class="progress-bar bg-primary"
+                            style="width: {{project.percentage_completed}}%;"></div>
+                    </div>
+
+                    </P>
+                    <p>
+
+                        <a href="{{project.get_chart_url}}">
+                            نمودار
+                        </a>
+                    </p>
+                </div>
+            </div>
 
         </div>
         <div class="col-md-4">
@@ -58,14 +111,17 @@
 
             {% include "projectmanager/includes/organization-units-app/template.html" %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             {% include "core/includes/page-links-app/template.html" %}
+        </div>
+        <div class="col-md-6">
+
             {% include "core/includes/page-documents-app/template.html" %}
         </div>
-        <div class="col-md-8">
+        <div class="col-md-12">
 
-            {% include "projectmanager/includes/project-timing-app/template.html" %}
+            {% include "projectmanager/includes/project-app/template.html" %}
         </div>
         <div class="col-md-12">
             {% include "projectmanager/includes/events-app/template.html" %}
@@ -108,6 +164,6 @@
 {% include "projectmanager/includes/service-requests-app/script.html" %}
 {% include "projectmanager/includes/organization-units-app/script.html" %}
 {% include "projectmanager/includes/events-app/script.html" %}
-{% include "projectmanager/includes/project-timing-app/script.html" %}
+{% include "projectmanager/includes/project-app/script.html" %}
 
 {% endblock %}

@@ -59,6 +59,8 @@ class Employee(models.Model):
 
 
 class ProjectManagerPage(CoreBasicPage):
+    def get_status_color(self):
+        return StatusColor(self.status)
 
     class Meta:
         verbose_name = _("ProjectManagerPage")
@@ -103,6 +105,8 @@ class Project(ProjectManagerPage):
         for material_request in self.materialrequest_set.all():
             sum+=material_request.quantity*material_request.unit_price
         return sum
+    def sum_total(self):
+        return self.sum_material_requests()+self.sum_service_requests()
     def sum_service_requests(self):
         sum=0
         for service_request in self.servicerequest_set.all():

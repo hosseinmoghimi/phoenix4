@@ -120,7 +120,7 @@ class BasicPage(models.Model):
     creator = models.ForeignKey("authentication.profile", verbose_name=_(
         "ایجاد شده توسط"), null=True, blank=True, on_delete=models.SET_NULL)
 
-
+    status=models.CharField(_("status"),null=True,blank=True, max_length=50)
     color = models.CharField(_("رنگ"), blank=True, null=True,
                              choices=ColorEnum.choices, default=ColorEnum.PRIMARY, max_length=50)
     tags = models.ManyToManyField(

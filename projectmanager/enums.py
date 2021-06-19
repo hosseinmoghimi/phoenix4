@@ -1,5 +1,9 @@
 from core.enums import *
 from django.utils.translation import gettext as _
+
+
+
+
 class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")
     GERAM="گرم",_("گرم")
@@ -21,6 +25,15 @@ class SignatureStatusEnum(TextChoices):
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     PURCHASING='درحال خرید',_('درحال خرید')
     REQUESTED='درخواست شده',_('درخواست شده')
+
+
+class ProjectStatusEnum(TextChoices):
+    DELIVERED='تحویل شده',_('تحویل شده')
+    IN_PROGRESS='در حال بررسی',_('درحال بررسی')
+    DENIED='رد شده',_('ردشده')
+    ACCEPTED='پذیرفته شده',_('پذیرفته شده')
+    REQUESTED='درخواست شده',_('درخواست شده')
+    CANCELED='کنسل شده',_('کنسل شده')
 
 class RequestStatusEnum(TextChoices):
     DEFAULT='DEFAULT',_('DEFAULT')

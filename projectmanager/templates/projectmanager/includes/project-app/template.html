@@ -9,10 +9,10 @@
     </div>
 
     <div class="card-body" id="project-timing-app">
-        {% if edit_project_timing_form %}
+        {% if edit_project_form %}
 
 
-        <form @submit.prevent="edit_project_timing()">
+        <form @submit.prevent="edit_project()">
             <div class="row">
                 <div class="col-4">
                     <date-picker v-model="start_date"></date-picker>
@@ -27,6 +27,13 @@
                 <div class="col-4">
                     <input required type="number" class="form-control" v-model="percentage_completed">%
 
+                </div>
+                <div class="col-4">
+                    <select name="" id="" class="form-control" v-model="status">
+                        {% for project_status in project_status_enum %}
+                          <option value="{{project_status}}">{{project_status}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="col-4">
                     <button class="btn btn-outline-primary" type="submit">

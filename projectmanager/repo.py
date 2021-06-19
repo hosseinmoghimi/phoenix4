@@ -21,7 +21,7 @@ class ProjectRepo():
         self.me=ProfileRepo(user=self.user).me
 
     # def edit_project_timing(self,project_id,percentage_completed,start_date,end_date):
-    def edit_project_timing(self,*args, **kwargs):
+    def edit_project(self,*args, **kwargs):
         project=self.project(*args, **kwargs)
         if project is not None:
             if 'percentage_completed' in kwargs:
@@ -30,6 +30,8 @@ class ProjectRepo():
                 project.start_date=kwargs['start_date']
             if 'end_date' in kwargs:
                 project.end_date=kwargs['end_date']
+            if 'status' in kwargs:
+                project.status=kwargs['status']
             project.save()
             return project
 

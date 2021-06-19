@@ -4,7 +4,8 @@
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
-    let url_edit_project_timing = "{% url 'projectmanager:edit_project_timing' %}"
+    let status="{{project.status}}"
+    let url_edit_project = "{% url 'projectmanager:edit_project' %}"
     let project_timing_app = new Vue({
         el: "#project-timing-app",
         data: {
@@ -12,34 +13,35 @@
             start_date:project.persian_start_date,
             end_date:project.persian_end_date,
             percentage_completed:project.percentage_completed,
-           
+            status:status,
             waiting: false,
         },
         components:{
             DatePicker: VuePersianDatetimePicker
         },
         methods: {
-            edit_project_timing: function () {
-                project_timing_app.waiting = true
+            edit_project: function () {
+                project_app.waiting = true
 
                 let payload = {
                     project_id: project.id,
                     percentage_completed: this.percentage_completed,
                     start_date: this.start_date,
                     end_date: this.end_date,
+                    status:this.status,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
                 console.log(payload)
 
 
-                var posting = $.post(url_edit_project_timing, payload);
+                var posting = $.post(url_edit_project, payload);
                 posting.fail(function (xhr, status, error) {
-                    project_timing_app.waiting = false
+                    project_app.waiting = false
                     showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
                 })
                 // Put the results in a div
                 posting.done(function (data) {
-                    project_timing_app.waiting = false
+                    project_app.waiting = false
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)

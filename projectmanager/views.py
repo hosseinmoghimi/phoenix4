@@ -2,7 +2,7 @@ from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
 from authentication.serilizers import ProfileSerializer
 from core.serializers import BasicPageSerializer
-from projectmanager.enums import SignatureStatusEnum, UnitNameEnum
+from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo
 from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
@@ -190,7 +190,7 @@ class ProjectViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['project'] = project
-        context['edit_project_timing_form']=EditProjectTimingForm()
+        context['edit_project_form']=EditProjectForm()
         context['events'] = project.event_set.all()
         organization_units = project.organization_units.all()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
@@ -210,7 +210,7 @@ class ProjectViews(View):
         context['add_material_request_form'] = AddMaterialRequestForm()
         context['add_service_request_form'] = AddServiceRequestForm()
 
-
+        context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)

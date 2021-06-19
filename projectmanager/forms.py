@@ -27,11 +27,12 @@ class AddMaterialRequestForm(forms.Form):
     unit_price=forms.IntegerField(required=True)
     unit_name=forms.CharField(max_length=50, required=True)
 
-class EditProjectTimingForm(forms.Form):
+class EditProjectForm(forms.Form):
     project_id=forms.IntegerField(required=True)
     percentage_completed=forms.IntegerField(required=True)
     start_date=forms.CharField(max_length=20, required=True)
     end_date=forms.CharField(max_length=20, required=True)
+    status=forms.CharField(max_length=50, required=False)
 class AddSignatureForm(forms.Form):
     service_request_id=forms.IntegerField(required=False)
     material_request_id=forms.IntegerField(required=False)
