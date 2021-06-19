@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.http import request
 from projectmanager.enums import RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
@@ -309,6 +310,7 @@ class ServiceRepo():
                 service_request.save()
             signature.service_request_id=service_request_id
             signature.status=status
+            signature.date_added=timezone.now()
             signature.profile=ProfileRepo(self.user).me
             signature.save()
             return signature
@@ -523,6 +525,7 @@ class MaterialRepo():
                 material_request.status=status
                 material_request.save()
             signature.status=status
+            signature.date_added=timezone.now()
             signature.profile=ProfileRepo(self.user).me
             signature.save()
             return signature

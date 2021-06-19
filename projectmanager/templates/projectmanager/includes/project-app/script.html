@@ -6,8 +6,8 @@
 <script>
     let status="{{project.status}}"
     let url_edit_project = "{% url 'projectmanager:edit_project' %}"
-    let project_timing_app = new Vue({
-        el: "#project-timing-app",
+    let project_app = new Vue({
+        el: "#project-app",
         data: {
 
             start_date:project.persian_start_date,

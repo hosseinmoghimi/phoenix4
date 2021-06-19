@@ -10,30 +10,35 @@
         <table class="table">
             <thead>
                 <th>
-                    عنوان
+                    زمان
                 </th>
                 <th>
-                    زمان
+                    رویداد
                 </th>
             </thead>
             <tbody>
                 {% for event in events %}
                 <tr>
                     <td>
-                        <a href="{{event.get_absolute_url}}">
-                            {{event.title}}
-                        </a>
-                    </td>
-                    <td>
                         <small>
 
                             {{event.event_datetime|to_persian_datetime|safe}}
                         </small>
                     </td>
+                    <td>
+                        <a href="{{event.get_absolute_url}}">
+                            {{event.title}}
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
 
                 <tr v-for="event in events">
+                    <td>
+                        <small v-text="event.persian_event_datetime">
+
+                        </small>
+                    </td>
                     <td>
                         <a :href="event.get_absolute_url">
                             <span v-text="event.title">
@@ -41,11 +46,6 @@
 
                             </span>
                         </a>
-                    </td>
-                    <td>
-                        <small v-text="event.persian_event_datetime">
-
-                        </small>
                     </td>
                 </tr>
 
@@ -60,7 +60,7 @@
                         <date-picker v-model="event_datetime"></date-picker>
                     </div>
                     <div class="col-md-6">
-                        <input required type="text" class="form-control" v-model="add_event_form_title">
+                        <input required type="text" placeholder="شرح رویداد" class="form-control" v-model="add_event_form_title">
                     </div>
                     <div class="col-2">
                         <button class="btn btn-success" type="submit">
