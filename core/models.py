@@ -228,9 +228,13 @@ class BasicPage(models.Model):
         # return reverse("core:page", kwargs={"pk": self.pk})
 
     def delete(self,*args, **kwargs):
-        for page in self.childs():
-            page.parent=self.parent
-            page.save()
+        if 'delete_childs' in kwargs:
+            for page in self.childs.all():
+                page.delete()
+        else:
+            for page in self.childs.all():
+                page.parent=self.parent
+                page.save()
         return super(BasicPage,self).delete(*args, **kwargs)
 
 class Link(Icon):    
