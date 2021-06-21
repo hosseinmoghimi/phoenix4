@@ -1,3 +1,4 @@
+from .apps import APP_NAME
 from authentication.repo import ProfileRepo
 from .models import Property,PropertyMedia
 from django.db.models import Q
@@ -16,6 +17,7 @@ class PropertyRepo():
         self.objects = Property.objects
         self.me=ProfileRepo(user=self.user).me
     def property(self, *args, **kwargs):
+        pk=0
         if 'property_id' in kwargs:
             pk=kwargs['property_id']
         elif 'pk' in kwargs:
@@ -35,4 +37,13 @@ class PropertyRepo():
             objects = objects.filter(
                 Q(for_home=kwargs['for_home']) | Q(parent=None))
         return objects.all()
-
+    def add_location(self,*args, **kwargs):
+        if self.user.has_perm(APP_NAME+".change_property"):
+            property=self.property(*args, **kwargs)
+            if property is not None and 'location' in kwargs:
+                location=kwargs['location']
+                property.location=location
+                print(property)
+                print(property.location)
+                property.save()
+                return location

@@ -24,7 +24,7 @@ class Property(models.Model):
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=5000)
     image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"Property",null=True,blank=True, height_field=None, width_field=None, max_length=None)
     class_name='property'
-
+    location=models.CharField(_("location"),null=True,blank=True, max_length=5000)
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
@@ -33,7 +33,10 @@ class Property(models.Model):
     class Meta:
         verbose_name = _("Property")
         verbose_name_plural = _("Propertys")
-
+    def save(self,*args, **kwargs):
+        self.location=self.location.replace('width="600"','width="100%"')
+        self.location=self.location.replace('height="450"','height="700"')
+        return super(Property,self).save(*args, **kwargs)
     def __str__(self):
         return self.title
     def get_edit_url(self):

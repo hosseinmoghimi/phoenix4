@@ -297,7 +297,19 @@
             </div>
         </footer>
     </div>
+    {% csrf_token %}
     {% include "realestate2/includes/scripts.html" %}
+    <script>
+        let current_datetime = "{{current_datetime}}"
+        var csrfmiddlewaretoken = ''
+        $(document).ready(function () {
+            // Javascript method's body can be found in assets/js/demos.js
+            csrfmiddlewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+        })
+    </script>
+    {% block script %}
+
+    {% endblock script %}
 </body>
 
 </html>
