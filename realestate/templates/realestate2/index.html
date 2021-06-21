@@ -17,6 +17,12 @@
                 </div>
             </div>
         </div>
+        <div class="text-center">
+            {% if perms.realestate.add_property %}
+
+            {{admin_utility.get_add_property|safe}}
+            {% endif %}
+        </div>
         <div class="row featured_row rtl">
             {% for property in properties %}
 

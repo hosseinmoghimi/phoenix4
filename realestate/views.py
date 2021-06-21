@@ -1,3 +1,4 @@
+from realestate.utils import AdminUtility
 from core.enums import ParametersEnum
 from core.repo import ParameterRepo
 from realestate.models import Property
@@ -11,6 +12,7 @@ TEMPLATE_ROOT=APP_NAME+"2/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     parameter_repo = ParameterRepo(app_name=APP_NAME)
+    context['admin_utility']=AdminUtility()
     context['app'] = {
         'home_url': reverse(APP_NAME+":home"),
         'tel': parameter_repo.get(ParametersEnum.TEL).value,
