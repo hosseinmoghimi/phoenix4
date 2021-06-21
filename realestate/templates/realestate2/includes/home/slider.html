@@ -5,7 +5,7 @@
         <div class="owl-carousel owl-theme home_slider">
 
             {% for property in properties %}
-                       <div class="slide">
+            <div class="slide">
                 <div class="background_image" style="background-image:url({{property.image}})">
                 </div>
                 <div class="home_container">
@@ -14,11 +14,44 @@
                             <div class="col">
                                 <div class="home_content">
                                     <div class="home_title">
-                                        <h1 class="farsi">
-                                            {{property.title}}
-                                        </h1>
+                                      <a href="{{property.get_absolute_url}}">
+
+                                          <h1 class="farsi">
+                                              {{property.title}}
+                                            </h1>
+                                        </a>
                                     </div>
                                     <div class="home_price_tag farsi">{{property.price}} میلیون تومان</div>
+                                    <div class="ltr listing_info" style="background-color: inherit;">
+                                        <ul class="d-flex flex-row align-items-center justify-content-start flex-wrap" style="margin-bottom: 0;">
+                                            <li
+                                                class="property_area d-flex flex-row align-items-center justify-content-start">
+                                                
+                                                <span>{{property.area}} متر مربع</span>
+                                            </li>
+                                            <li title="{{property.bath_rooms}} سرویس بهداشتی"
+                                                class="d-flex flex-row align-items-center justify-content-start">
+                                                <img src="{% static 'realestate2/img/bathroom.webp' %}" alt=""
+                                                    data-pagespeed-url-hash="575094682"
+                                                    onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
+                                                <span>{{property.bath_rooms}}</span>
+                                            </li>
+                                            <li title="{{property.bed_rooms}} اتاق خواب"
+                                                class="d-flex flex-row align-items-center justify-content-start">
+                                                <img src="{% static 'realestate2/img/bedroom.webp' %}" alt=""
+                                                    data-pagespeed-url-hash="869594603"
+                                                    onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
+                                                <span>{{property.bed_rooms}}</span>
+                                            </li>
+                                            <li title="{{property.parking}} پارکینگ"
+                                                class="d-flex flex-row align-items-center justify-content-start">
+                                                <img src="{% static 'realestate2/img/garage.webp' %}" alt=""
+                                                    data-pagespeed-url-hash="1164094524"
+                                                    onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
+                                                <span>{{property.garage}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -26,9 +59,9 @@
                 </div>
             </div>
             {% endfor %}
-   
 
-            
+
+
         </div>
 
         <div class="home_slider_nav"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
