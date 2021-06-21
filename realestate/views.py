@@ -6,7 +6,7 @@ from .apps import APP_NAME
 from core.views import CoreContext, TEMPLATE_ROOT
 from django.views import View
 from .repo import PropertyRepo
-TEMPLATE_ROOT=APP_NAME+"/"
+TEMPLATE_ROOT=APP_NAME+"2/"
 
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)

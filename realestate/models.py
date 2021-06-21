@@ -1,3 +1,4 @@
+
 from core.settings import ADMIN_URL
 from django.db.models.fields.files import FileField
 from realestate.enums import FloorEnum,KitchenTypeEnum
@@ -9,12 +10,14 @@ IMAGE_FOLDER=APP_NAME+"/media/"
 class Property(models.Model):
     title=models.CharField(_("عنوان"), max_length=50)
     floor=models.CharField(_("طبقه"),max_length=50,choices=FloorEnum.choices,default=FloorEnum.HAMKAF)
-    parking=models.BooleanField(_("پارکینگ دارد؟"),default=False)
+    parking=models.IntegerField(_("تعداد پارکینگ"),default=0)
     elevator=models.BooleanField(_("آسانسور دارد؟"),default=False)
-    bedrooms=models.IntegerField(_("تعداد خواب"),default=1)
+    bed_rooms=models.IntegerField(_("تعداد خواب"),default=1)
+    bath_rooms=models.IntegerField(_("تعداد سرویس بهداشتی"),default=1)
     kitchen_type=models.CharField(_("نوع آشپزخانه"),choices=KitchenTypeEnum.choices,default=KitchenTypeEnum.REGULAR, max_length=50)
+    area=models.IntegerField(_("مساحت"))
+    price=models.IntegerField(_("قیمت"))
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=500)
-
     class_name='property'
 
     class Meta:
