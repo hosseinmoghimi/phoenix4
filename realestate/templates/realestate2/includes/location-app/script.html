@@ -1,0 +1,27 @@
+<script>
+    let property_id = parseInt("{{property.id}}")
+    let url_add_location = "{% url 'realestate:add_location' %}"
+    let property_location = `{{property.location}}`
+    let property_app = new Vue({
+        el: "#property-app",
+        data: {
+            show_panel: false,
+            location: property_location,
+        },
+        methods: {
+            add_location: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    property_id: property_id,
+                    location: this.location,
+                }
+                let posting = $.post(url_add_location, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    property_app.location = data.location
+                    property_app.show_panel = false
+                })
+            }
+        }
+    })
+</script>

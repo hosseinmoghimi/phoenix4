@@ -294,22 +294,8 @@
                                 <div class="listing_title">
                                     <h3 class="farsi text-right mb-4">امکانات و ویژگی ها</h3>
                                 </div>
-                                <div class="row">
-                                    {% for feature in property.propertyfeature_set.all %}
-
-                                    <div class="col-lg-6 farsi mb-3 text-right">
-                                        <div class="py-2 px-4" style="background-color: #f3f7fb;">
-
-                                            {{feature.name}}
-                                        </div>
-                                        <div class="py-2 px-4">
-
-                                            {{feature.value}}
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-
-                                </div>
+                                {% include "realestate2/includes/feature-app/template.html" %}
+                               
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -330,21 +316,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="property-app" class="google_map_container">
+                {% include "realestate2/includes/location-app/template.html" %}
 
-                    <div>
-                        <button class="farsi btn btn-info" @click="show_panel=true" v-show="!show_panel">ویرایش
-                            موقعیت</button>
-                        <form v-show="show_panel" @submit.prevent="add_location">
-                            <input type="text" v-model="location" class="form-control " placeholder="location">
-                            <button class="btn btn-success farsi">تایید</button>
-                        </form>
-                    </div>
-               
-                    {{property.location|safe}}
-
-
-                </div>
             </div>
         </div>
     </div>
@@ -356,31 +329,9 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-<script>
-    let property_id = parseInt("{{property.id}}")
-    let url_add_location = "{% url 'realestate:add_location' %}"
-    let property_location = `{{property.location}}`
-    let property_app = new Vue({
-        el: "#property-app",
-        data: {
-            show_panel: false,
-            location: property_location,
-        },
-        methods: {
-            add_location: function () {
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    property_id: property_id,
-                    location: this.location,
-                }
-                let posting = $.post(url_add_location, payload)
-                posting.done((data) => {
-                    console.log(data)
-                    property_app.location = data.location
-                    property_app.show_panel = false
-                })
-            }
-        }
-    })
-</script>
+
+
+{% include "realestate2/includes/feature-app/script.html" %}
+
+{% include "realestate2/includes/location-app/script.html" %}
 {% endblock script %}

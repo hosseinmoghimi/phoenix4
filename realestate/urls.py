@@ -8,4 +8,5 @@ urlpatterns = [
     path('property/<int:pk>/',views.PropertyViews().property,name='property'),
 
     path('add_location/',apis.PropertyApi().add_location,name="add_location"),
+    path('add_feature/',apis.PropertyApi().add_feature,name="add_feature"),
 ]
