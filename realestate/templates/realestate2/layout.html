@@ -3,7 +3,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{% include "realestate2/includes/head.html" %}
+<head>
+    {% include "realestate2/includes/head.html" %}
+
+    {% block style %}
+
+    {% endblock style %}
+
+</head>
 
 <body>
     <div class="super_container">
@@ -71,7 +78,7 @@
                     </div>
                     <div class="log_reg d-flex flex-row align-items-center justify-content-start">
                         <ul class="d-flex flex-row align-items-start justify-content-start">
-                            <li><a href="#">Login</a></li>
+                            <li><a href="{% url 'authentication:login' %}" class="farsi">ورود</a></li>
                             <li><a href="#">Register</a></li>
                         </ul>
                     </div>
@@ -79,7 +86,7 @@
             </div>
 
             <div class="header_content d-flex flex-row align-items-center justify-content-start">
-                <div class="logo"><a href="#">my<span>home</span></a></div>
+                <div class="logo"><a href="{% url 'realestate:home' %}">my<span>home</span></a></div>
                 <nav class="main_nav">
                     <ul class="d-flex flex-row align-items-start justify-content-start">
                         <li class="active"><a href="index.html">Home</a></li>
@@ -115,9 +122,9 @@
             </div>
         </div>
 
-     {% block content %}
-       
-     {% endblock content %}
+        {% block content %}
+
+        {% endblock content %}
         <footer class="footer">
             <div class="footer_content">
                 <div class="container">

@@ -4,7 +4,7 @@
     <div class="listing">
         <div class="listing_image">
             <div class="listing_image_container">
-                <img src="{% static 'realestate2/img/home2.webp' %}" alt=""
+                <img src="{{property.image}}" alt=""
                     data-pagespeed-url-hash="2139347979"
                     onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
             </div>
@@ -13,7 +13,7 @@
                 <div class="tag tag_sale"><a href="listings.html">for sale</a></div>
             </div>
             <div class="tag_price listing_price">
-                {{property.price|to_price}}
+                {{property.price}} میلیون تومان
             </div>
         </div>
         <div class="listing_content">
@@ -54,10 +54,10 @@
                         <span>{{property.bed_rooms}}</span>
                     </li>
                     <li title="{{property.parking}} پارکینگ" class="d-flex flex-row align-items-center justify-content-start">
-                        <img src="{% static 'realestate2/img/parking.webp' %}"
+                        <img src="{% static 'realestate2/img/garage.webp' %}"
                             alt="" data-pagespeed-url-hash="1164094524"
                             onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-                        <span>{{property.parking}}</span>
+                        <span>{{property.garage}}</span>
                     </li>
                 </ul>
             </div>
