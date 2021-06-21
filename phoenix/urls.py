@@ -16,6 +16,7 @@ urlpatterns = [
     path('web/', include('web.urls')),
     path('', include('projectmanager.urls')),
     path('stock/', include('stock.urls')),
+    path('realestate/', include('realestate.urls')),
     path('forums/', include('phoenix_forums.urls')),
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),

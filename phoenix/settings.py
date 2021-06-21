@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', 
 
 #    "pinax.forums",  
-
+    'realestate',
     'tinymce',
 
     'stock',
