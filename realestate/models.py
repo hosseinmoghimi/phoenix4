@@ -34,7 +34,7 @@ class Property(models.Model):
         verbose_name = _("Property")
         verbose_name_plural = _("Propertys")
     def save(self,*args, **kwargs):
-        if self.location:
+        if self.location is not None:
             self.location=self.location.replace('width="600"','width="100%"')
             self.location=self.location.replace('height="450"','height="700"')
         return super(Property,self).save(*args, **kwargs)
