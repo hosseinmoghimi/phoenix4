@@ -61,24 +61,26 @@
             <div class="log_reg d-flex flex-row align-items-center justify-content-start">
                 <ul class="d-flex flex-row align-items-start justify-content-start">
                     <li><a href="{% url 'authentication:login' %}" class="farsi">ورود</a></li>
-                    <li><a href="#">Register</a></li>
+                    <li><a href="#" class="farsi">ثبت نام</a></li>
                 </ul>
             </div>
         </div>
     </div>
 
     <div class="header_content d-flex flex-row align-items-center justify-content-start">
-        <div class="logo"><a href="{% url 'realestate:home' %}">my<span>home</span></a></div>
+        <div class="logo">
+            
+            <a class="farsi" href="{% url 'realestate:home' %}">املاک <span>بازارچه</span></a></div>
         <nav class="main_nav">
-            <ul class="d-flex flex-row align-items-start justify-content-start">
-                <li class="active"><a href="index.html">Home</a></li>
-                <li><a href="about.html">About us</a></li>
-                <li><a href="listings.html">Listings</a></li>
-                <li><a href="blog.html">News</a></li>
-                <li><a href="contact.html">Contact</a></li>
+            <ul class="farsi d-flex flex-row align-items-start justify-content-start">
+                <li class="active"><a href="index.html">خانه</a></li>
+                <li><a href="about.html">درباره ما</a></li>
+                <li><a href="listings.html">لیست املاک</a></li>
+                <li><a href="blog.html">اخبار</a></li>
+                <li><a href="contact.html">تماس</a></li>
             </ul>
         </nav>
-        <div class="submit ml-auto"><a href="#">submit listing</a></div>
+        <div class="farsi submit ml-auto"><a href="#">جستجو</a></div>
         <div class="hamburger ml-auto"><i class="fa fa-bars" aria-hidden="true"></i></div>
     </div>
 </header>
