@@ -4,12 +4,15 @@
         <button class="farsi btn btn-info" @click="show_panel=true" v-show="!show_panel">ویرایش
             موقعیت</button>
         <form v-show="show_panel" @submit.prevent="add_location">
+            <a class="farsi" target="_blank" href="http://maps.google.com/">استفاده از نقشه</a>
             <input type="text" v-model="location" class="form-control " placeholder="location">
             <button class="btn btn-success farsi">تایید</button>
         </form>
     </div>
 
-    {{property.location|safe}}
+    {% if property.location %}
 
+    {{property.location|safe}}
+    {% endif %}
 
 </div>
