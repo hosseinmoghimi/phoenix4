@@ -103,11 +103,14 @@
             {% if add_document_form %}
             <div class="text-center">
 
-                <button @click="show_add_form=true" v-if="!show_add_form" class="btn btn-info">
+                <button @click="show_add_form=true" v-if="!show_add_form" class=" btn btn-info">
                     <i class="material-icons">
                         add
                     </i>
-                    افزودن مدرک جدید
+                    <span class="farsi">
+
+                        افزودن مدرک جدید
+                    </span>
                 </button>
             </div>
             <form v-show="show_add_form" @submit.prevent="add_document()" id="add-document-form">
@@ -119,7 +122,12 @@
                         </h5>
                     </div>
                     <div class="col-md-4">
-                        <div class="farsi">عنوان مدرک</div>
+                        <div class="farsi">
+                            <span class=" text-right farsi">
+
+                                عنوان مدرک
+                            </span>
+                        </div>
                         <div>
                             <select v-model="add_document_form_title" class="form-control">
                                 <option value="تصویر شناسنامه">تصویر شناسنامه</option>
@@ -134,7 +142,12 @@
                     <div class="col-md-4">
                         <div>
                             <span class="btn btn-raised btn-round btn-default btn-file">
-                                <span class="farsi fileinput-new">انتخاب فایل</span>
+                                <span class="farsi fileinput-new">
+                                    <span class=" text-right farsi">
+
+                                        انتخاب فایل
+                                    </span>
+                                </span>
 
                                 <input type="file" name="">
                                 <div class="ripple-container"></div>

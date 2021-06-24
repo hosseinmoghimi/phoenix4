@@ -35,7 +35,11 @@ class StockViews(View):
         context['stock']=stock
         if request.user.has_perm(APP_NAME+".stock.add_document"):
             context['add_document_form']=AddDocumentForm()
+        if request.user.has_perm(APP_NAME+".stock.add_payment"):
+            context['add_payment_form']=AddPaymentForm()
+            context['payment_types']=(ii[0] for ii in PaymentTypeEnum.choices)
         context['documents']=stock.document_set.all()
+        context['payments']=stock.payment_set.all()
         return render(request,TEMPLATE_ROOT+'stock.html',context)
     def agent(self,request,*args, **kwargs):
         context=getContext(request)

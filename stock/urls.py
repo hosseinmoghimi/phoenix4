@@ -10,5 +10,6 @@ urlpatterns = [
     path('agent/<int:agent_id>/',views.StockViews().agent,name="agent"),
     path('download/<int:pk>/',views.DocumentViews().get_download_response,name="get_download_response"),
 
-    path('add_adocument/',apis.DocumentApi().add_document,name="add_adocument"),
+    path('add_document/',apis.DocumentApi().add_document,name="add_document"),
+    path('add_payment/',apis.PaymentApi().add_payment,name="add_payment"),
 ]

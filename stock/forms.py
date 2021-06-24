@@ -11,6 +11,8 @@ class AddDocumentForm(forms.Form):
     title=forms.CharField(max_length=100,required=True)
 
 class AddPaymentForm(forms.Form):
-    amount=forms.IntegerField(required=True)
-    share_holder_id=forms.IntegerField(required=True)
+    stock_id=forms.IntegerField(required=True)
+    value=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100,required=True)
+    date_paid=forms.CharField(max_length=50,required=True)
+    payment_type=forms.CharField(max_length=50, required=True)

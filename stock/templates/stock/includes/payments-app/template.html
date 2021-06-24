@@ -1,0 +1,118 @@
+{% load to_price %}
+{% load to_persian_date %}
+<div class="card" id="payments-app">
+    <div class="card-header">
+        <h3 class="card-title text-center">
+            مبلغ های واریز شده
+        </h3>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+
+                <th>
+                    مبلغ
+                </th>
+                <th>
+                    تاریخ
+                </th>
+                <th>
+
+                </th>
+
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+
+                <tr>
+                    <td>
+                        <span>{{payment.title}}</span>
+                    </td>
+
+                    <td>
+                        <span>{{payment.value|to_price}}</span>
+                    </td>
+
+                    <td>
+                        <small class="text-secondary">
+
+                            <span>{{payment.date_paid|to_persian_datetime|safe}}</span>
+                        </small>
+                    </td>
+                    <td>
+                        {% if perms.stock.change_payment %}
+
+                        <a title="ویرایش" target="_blank" href="{{payment.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        {% if add_payment_form %}
+        <div class="text-center">
+
+            <button @click="show_add_form=true" v-if="!show_add_form" class="btn btn-info">
+                <i class="material-icons">
+                    add
+                </i>
+                <span class="farsi">
+
+                    افزودن واریزی جدید
+                </span>
+            </button>
+        </div>
+
+        <form v-show="show_add_form" @submit.prevent="add_payment()">
+            <div class="row">
+                <div class="col-md-4">
+                    <h6 class=" text-right farsi">
+
+                        تاریخ واریز :
+                    </h6>
+                    <date-picker v-model="add_payment_form_date_paid"></date-picker>
+
+                </div>
+
+                <div class="col-md-4">
+                    <h6 class=" text-right farsi">
+
+                        عنوان واریز :
+                    </h6>
+                    <input type="text" v-model="add_payment_form_title" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <h6 class=" text-right farsi">
+
+                        نوع واریز :
+                    </h6>
+                    <select v-model="add_payment_form_payment_type" class="form-control">
+
+                        {% for payment_type in payment_types %}
+                        <option value="{{payment_type}}">{{payment_type}}</option>
+                        {% endfor %}
+                    </select>
+
+
+                </div>
+                <div class="col-md-4 text-center">
+                    <button class="btn btn-success" type="submit">Upload</button>
+                    <button class="btn btn-secondary" @click="show_add_form=false">Cancel</button>
+
+                </div>
+            </div>
+        </form>
+        {% endif %}
+
+    </div>
+</div>
