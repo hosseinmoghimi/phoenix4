@@ -1,0 +1,161 @@
+{% load to_persian_date %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title text-center">
+            مدارک مرتبط
+        </h4>
+    </div>
+    <div class="card-body">
+
+        <div id="documents-app">
+
+            <table class="table">
+                <thead>
+                    <th>
+                        عنوان مدرک
+                    </th>
+
+                    <th>
+                        تصویر مدرک
+                    </th>
+
+                    <th>
+                        تاریخ آپلود
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+                <tbody>
+                    {% for document in documents %}
+                    <tr>
+
+                        <td>
+                            {% if document.get_image %}
+                            <a target="_blank" href="{{document.get_image}}">
+
+                                <img width="100" src="{{document.get_image}}" alt="">
+                            </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{document.get_download_url}}">
+                                <i class="material-icons ml-2">
+                                    get_app
+                                </i>
+                                {{document.title}}
+                            </a>
+                        </td>
+                        <td>
+                            <small class="text-secondary">
+
+                                {{document.date_added|to_persian_datetime|safe}}
+                            </small>
+                        </td>
+                        <td>
+                            {% if perms.stock.change_document %}
+
+                            <a target="_blank" title="ویرایش" href="{{document.get_edit_url}}">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr v-for="document in documents">
+
+                        <td>
+                            <a v-if="document.get_image" target="_blank" :href="document.get_image">
+
+
+                                <img width="100" :src="document.get_image" alt="">
+                            </a>
+                        </td>
+                        <td>
+                            <a :href="document.get_download_url">
+                                <i class="material-icons ml-2">
+                                    get_app
+                                </i>
+                                <span v-text="document.title"></span>
+                            </a>
+                        </td>
+
+                        <td>
+                            <small class="text-secondary">
+
+                                <span v-text="document.persian_date_added">
+
+                                </span>
+                            </small>
+                        </td>
+                        <td>
+                            {% if perms.stock.change_document %}
+
+                            <a target="_blank" title="ویرایش" :href="document.get_edit_url">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            {% if add_document_form %}
+            <div class="text-center">
+
+                <button @click="show_add_form=true" v-if="!show_add_form" class="btn btn-info">
+                    <i class="material-icons">
+                        add
+                    </i>
+                    افزودن مدرک جدید
+                </button>
+            </div>
+            <form v-show="show_add_form" @submit.prevent="add_document()" id="add-document-form">
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-center py-3 mt-3 farsi">
+
+                            افزودن مدرک جدید
+                        </h5>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="farsi">عنوان مدرک</div>
+                        <div>
+                            <select v-model="add_document_form_title" class="form-control">
+                                <option value="تصویر شناسنامه">تصویر شناسنامه</option>
+                                <option value="تصویر کارت ملی">تصویر کارت ملی</option>
+                                <option value="قولنامه">قولنامه</option>
+                                <option value="تعهد محضری">تعهد محضری</option>
+                                <option value="سند">سند</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div>
+                            <span class="btn btn-raised btn-round btn-default btn-file">
+                                <span class="farsi fileinput-new">انتخاب فایل</span>
+
+                                <input type="file" name="">
+                                <div class="ripple-container"></div>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-success" type="submit">Upload</button>
+                        <button class="btn btn-secondary" @click="show_add_form=false">Cancel</button>
+
+                    </div>
+
+                </div>
+
+
+
+            </form>
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>

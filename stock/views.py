@@ -1,12 +1,15 @@
 from core.settings import SITE_URL
+from .forms import *
 from .enums import *
 from core.repo import ParameterRepo
 from django.shortcuts import render
 from django.shortcuts import reverse
 from django.views import View
 from .apps import APP_NAME
-from .repo import StockRepo
+from .repo import DocumentRepo, StockRepo
 from core.views import CoreContext
+import os
+from django.http import HttpResponse,Http404
 TEMPLATE_ROOT=APP_NAME+'/'
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
@@ -30,9 +33,26 @@ class StockViews(View):
         context=getContext(request)
         stock=StockRepo(request=request).stock(*args, **kwargs)
         context['stock']=stock
+        if request.user.has_perm(APP_NAME+".stock.add_document"):
+            context['add_document_form']=AddDocumentForm()
+        context['documents']=stock.document_set.all()
         return render(request,TEMPLATE_ROOT+'stock.html',context)
     def agent(self,request,*args, **kwargs):
         context=getContext(request)
         stocks=StockRepo(request=request).list(*args, **kwargs)
         context['stocks']=stocks
         return render(request,TEMPLATE_ROOT+'index.html',context)
+class DocumentViews(View):
+    def get_download_response(self,request,*args, **kwargs):
+        document=DocumentRepo(request=request).document(*args, **kwargs)
+        file_path = str(document.file.path)
+        # print(file_path)
+        # return JsonResponse({'download:':str(file_path)})
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(
+                    fh.read(), content_type="application/force-download")
+                response['Content-Disposition'] = 'inline; filename=' + \
+                    os.path.basename(file_path)
+                return response
+        raise Http404

@@ -60,8 +60,25 @@
             </div>
             <div class="log_reg d-flex flex-row align-items-center justify-content-start">
                 <ul class="d-flex flex-row align-items-start justify-content-start">
-                    <li><a href="{% url 'authentication:login' %}" class="farsi">ورود</a></li>
-                    <li><a href="#" class="farsi">ثبت نام</a></li>
+               {% if profile %}
+                 
+               <li><a href="{{profile.get_absolute_url}}" class="farsi rtl">
+                {{profile.name}}
+                <img src="{{profile.image}}" class="rounded-circle" width="28" alt="">
+            </a>
+         </li>
+
+         <li>
+             <a title="خروج" href="{% url 'authentication:logout' %}" class="farsi">
+                 <i class="material-icons">exit_to_app</i>
+                </a>
+     </li>
+               {% else %}
+               
+               
+               <li><a href="{% url 'authentication:login' %}" class="farsi">ورود</a></li>
+               <li><a href="#" class="farsi">ثبت نام</a></li>
+               {% endif %}
                 </ul>
             </div>
         </div>

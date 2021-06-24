@@ -1,23 +1,25 @@
 <script>
-    let url_add_document = "{% url 'core:add_page_document' %}"
-    let page_documents_app = new Vue({
-        el: "#page-documents-app",
+    let stock_id=parseInt("{{stock.pk}}")
+    let documents_app = new Vue({
+        el: "#documents-app",
         data: {
-            new_document_title: "",
             documents: [],
-
-            new_document_file: '',
-            show_add_document_form: false,
+            add_document_form_title: "",
+            show_add_form:false,
         },
         methods: {
-            add_page_document: function () {
-                let title = this.new_document_title
+            add_document: function () {
+                let url_add_document="{% url 'stock:add_adocument' %}"
+
+
+
+                let title = this.add_document_form_title
                 let formData = new FormData();
-                let file1 = $('#add-document-form')[0].elements[1].files[0]
-                formData.append("file1", file1);
+                let file = $('#add-document-form')[0].elements[1].files[0]
+                formData.append("file", file);
                 formData.append("title", title);
                 formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
-                formData.append("page_id", parent_id);
+                formData.append("stock_id", stock_id);
 
                 $.ajax({
                     url: url_add_document,
@@ -29,11 +31,8 @@
                         if (data != 0) {
                             console.log(data)
                             if (data.result === 'SUCCEED') {
-                                page_documents_app.documents.push(data.page_document)
-                                page_documents_app.new_document_title = ''
-                                page_documents_app.new_document_file = ''
-
-
+                                documents_app.documents.push(data.document)
+                                documents_app.add_document_form_title = ''
                             }
                         }
                         else {
@@ -42,7 +41,6 @@
                 });
 
             },
-
         }
     })
 </script>
