@@ -18,4 +18,4 @@ class PaymentSerializer(serializers.ModelSerializer):
     stock=StockSerializer()
     class Meta:
         model =Payment
-        fields = ['id','stock','title','image','persian_date_paid','get_edit_url']
+        fields = ['id','stock','title','image','payment_type','value','persian_date_paid','get_edit_url']

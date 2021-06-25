@@ -10,6 +10,7 @@
         data: {
             payments: [],
             add_payment_form_title: "",
+            add_payment_form_value: "",
             add_payment_form_payment_type: "",
             add_payment_form_date_paid: current_datetime,
             show_add_form:false,
@@ -22,19 +23,22 @@
                 let url_add_payment="{% url 'stock:add_payment' %}"
 
 
-
+                let date_paid=this.add_payment_form_date_paid
                 let title = this.add_payment_form_title
+                let value=this.add_payment_form_value
                 let payment_type= this.add_payment_form_payment_type
                 let formData = new FormData();
-                let image = $('#add-payment-form')[0].elements[1].files[0]
+                let image = $('#add-payment-form')[0].elements[4].files[0]
                 formData.append("image", image);
                 formData.append("title", title);
+                formData.append("value", value);
                 formData.append("payment_type", payment_type);
+                formData.append("date_paid", date_paid);
                 formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
                 formData.append("stock_id", stock_id);
 
                 $.ajax({
-                    url: url_add_document,
+                    url: url_add_payment,
                     type: 'post',
                     data: formData,
                     contentType: false,
@@ -43,8 +47,9 @@
                         if (data != 0) {
                             console.log(data)
                             if (data.result === 'SUCCEED') {
-                                documents_app.documents.push(data.document)
-                                documents_app.add_document_form_title = ''
+                                payments_app.payments.push(data.payment)
+                                payments_app.add_payment_form_title = ''
+                                payments_app.add_payment_form_value = ''
                             }
                         }
                         else {
