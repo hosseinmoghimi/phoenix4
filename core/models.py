@@ -237,7 +237,7 @@ class BasicPage(models.Model):
                 page.save()
         return super(BasicPage,self).delete(*args, **kwargs)
 
-class Link(Icon):    
+class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)
     url = models.CharField(_("آدرس لینک"), max_length=2000, default="#")

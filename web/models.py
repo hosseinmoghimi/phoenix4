@@ -63,7 +63,7 @@ class Carousel(models.Model):
     title = models.CharField(_("عنوان"), null=True, blank=True, max_length=500)
     body = HTMLField(_("بدنه"), null=True, blank=True, max_length=2000)
     text_color = models.CharField(_("رنگ متن"), default="#fff", max_length=20)
-    height=models.IntegerField(_("height"),default=500)
+    height=models.IntegerField(_("height"),default=350)
     priority = models.IntegerField(_("ترتیب"), default=100)
     archive = models.BooleanField(_("بایگانی شود؟"), default=False)
     tag_number = models.IntegerField(_("عدد برچسب"), default=100)

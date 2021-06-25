@@ -19,7 +19,7 @@ def getContext(request):
     context['admin_farm'] = AdminUtility(app_name=APP_NAME, user=request.user)
     parameter_repo = CoreRepo.ParameterRepo(
         user=request.user, app_name=APP_NAME)
-    main_pic_repo = CoreRepo.MainPicRepo(user=request.user, app_name=APP_NAME)
+    picture_repo = CoreRepo.PictureRepo(user=request.user, app_name=APP_NAME)
     link_repo = CoreRepo.LinkRepo(user=request.user)
     # navbar_links_repo = NavBarLinkRepo()
     # # navbar_links = navbar_links_repo.list_roots(app_name=APP_NAME)
@@ -27,15 +27,15 @@ def getContext(request):
     context['app'] = {
         # 'navbar_links': navbar_links,
         # 'navbar_buttons': navbar_buttons,
-        'social_links': CoreRepo.SocialLinkRepo(user=user).list_for_app(app_name=APP_NAME),
+        # 'social_links': CoreRepo.SocialLinkRepo(user=user).list_for_app(app_name=APP_NAME),
         'theme_color': parameter_repo.get(ParametersEnum.THEME_COLOR),
         'about_us_short': parameter_repo.get(ParametersEnum.ABOUT_US_SHORT),
         'NAV_TEXT_COLOR': parameter_repo.get(ParametersEnum.NAV_TEXT_COLOR),
         'NAV_BACK_COLOR': parameter_repo.get(ParametersEnum.NAV_BACK_COLOR),
         'slogan': parameter_repo.get(ParametersEnum.SLOGAN),
-        'logo': main_pic_repo.get(name=MainPicEnum.LOGO),
-        'favicon': main_pic_repo.get(name=MainPicEnum.FAVICON),
-        'loading': main_pic_repo.get(name=MainPicEnum.LOADING),
+        'logo': picture_repo.get(name=MainPicEnum.LOGO),
+        'favicon': picture_repo.get(name=MainPicEnum.FAVICON),
+        'loading': picture_repo.get(name=MainPicEnum.LOADING),
         'pretitle': parameter_repo.get(ParametersEnum.PRE_TILTE),
         'title': parameter_repo.get(ParametersEnum.TITLE),
         'address': parameter_repo.get(ParametersEnum.ADDRESS),
@@ -43,8 +43,8 @@ def getContext(request):
         'email': parameter_repo.get(ParametersEnum.EMAIL),
         'tel': parameter_repo.get(ParametersEnum.TEL),
         'url': parameter_repo.get(ParametersEnum.URL),
-        'our_team_title': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_title(),
-        'our_team_link': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_link(),
+        # 'our_team_title': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_title(),
+        # 'our_team_link': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_link(),
     }
     context['APP_NAME'] = APP_NAME
     return context
