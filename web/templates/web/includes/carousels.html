@@ -13,15 +13,18 @@
         <div class="carousel-item">
             <!-- <img class="d-block w-100" src="{{carousel.image}}" alt="slide {{carousel.pk}}"> -->
 
-            <div style="background-image:url('{{carousel.image}}');background-size: cover;" class="jumbotron">
-                <div class="container">
+            <div  style="background-image:url('{{carousel.image}}');background-size: cover;" class="jumbotron">
+                <div class="container"   style="height: {{carousel.height}}px;">
                     {% if carousel.title %}
                     <h1 class="display-4" style="color: {{carousel.text_color}};">
                         {{carousel.title}}
                     </h1>
 
                     {% endif %}
-                    {% if carousel.body %}
+                    <div style="color: {{carousel.text_color}};">
+
+                        {% if carousel.body %}
+                    </div>
                     {{carousel.body|safe}}
 
                     {% endif %}
