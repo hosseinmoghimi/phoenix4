@@ -3,6 +3,20 @@ from django.utils.translation import gettext as _
 from enum import Enum
 
    
+
+class UnitNameEnum(TextChoices):
+    ADAD="عدد",_("عدد")
+    GERAM="گرم",_("گرم")
+    KILOGERAM="کیلوگرم",_("کیلوگرم")
+    TON="تن",_("تن")
+    METER="متر",_("متر")
+    METER2="متر مربع",_("متر مربع")
+    METER3="متر مکعب",_("متر مکعب")
+    PART="قطعه",_("قطعه")
+    SHAKHEH="شاخه",_("شاخه")
+    DASTGAH="دستگاه",_("دستگاه")
+    SERVICE="سرویس",_("سرویس")
+
 class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
     web='web',_('web')

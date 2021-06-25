@@ -9,6 +9,27 @@
 </li>
 {% endblock %}
 {% block content %}
+<div>
+
+</div>
+<div class="row">
+    {% if carousels %}
+
+    <div class="col-12">
+        {% include "web/includes/carousels.html" %}
+    </div>
+    {% endif %}
+    <div class="col-12">
+
+        <img src="{{splash.image}}" class="rounded " width="100%" alt="">
+    </div>
+    {% if perms.core.change_picture %}
+    <div class="col-12">
+
+        {{splash.get_edit_btn|safe}}
+    </div>
+    {% endif %}
+</div>
 <div id="home-app">
     <div class="row ">
         <div class="col-md-4">
@@ -17,7 +38,7 @@
         <div class="col-md-4">
             {% include "projectmanager/includes/services-app/template.html" %}
         </div>
-      
+
         <div class="col-md-4">
             {% include "projectmanager/includes/materials-app/template.html" %}
         </div>
@@ -38,4 +59,9 @@
 {% include "projectmanager/includes/materials-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "projectmanager/includes/services-app/script.html" %}
+<script>
+
+    $(".carousel-item:first").addClass('active')
+    $(".carousel-indicators:childs:first").addClass('active')
+</script>
 {% endblock %}

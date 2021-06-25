@@ -1,3 +1,148 @@
+import json
+from .utils import AdminUtility
 from django.shortcuts import render
+from django.views import View
+from .apps import APP_NAME
+from .repo import *
+from .enums import *
+from .serializers import *
+from core.enums import ParametersEnum, MainPicEnum
+# from web.repo import NavBarLinkRepo
+from core.views import CoreContext
 
-# Create your views here.
+TEMPLATE_ROOT = APP_NAME+"/"
+
+
+def getContext(request):
+    context = CoreContext(request=request, app_name=APP_NAME)
+    user = request.user
+    context['admin_farm'] = AdminUtility(app_name=APP_NAME, user=request.user)
+    parameter_repo = CoreRepo.ParameterRepo(
+        user=request.user, app_name=APP_NAME)
+    main_pic_repo = CoreRepo.MainPicRepo(user=request.user, app_name=APP_NAME)
+    link_repo = CoreRepo.LinkRepo(user=request.user)
+    # navbar_links_repo = NavBarLinkRepo()
+    # # navbar_links = navbar_links_repo.list_roots(app_name=APP_NAME)
+    # navbar_buttons = navbar_links_repo.buttons(app_name=APP_NAME)
+    context['app'] = {
+        # 'navbar_links': navbar_links,
+        # 'navbar_buttons': navbar_buttons,
+        'social_links': CoreRepo.SocialLinkRepo(user=user).list_for_app(app_name=APP_NAME),
+        'theme_color': parameter_repo.get(ParametersEnum.THEME_COLOR),
+        'about_us_short': parameter_repo.get(ParametersEnum.ABOUT_US_SHORT),
+        'NAV_TEXT_COLOR': parameter_repo.get(ParametersEnum.NAV_TEXT_COLOR),
+        'NAV_BACK_COLOR': parameter_repo.get(ParametersEnum.NAV_BACK_COLOR),
+        'slogan': parameter_repo.get(ParametersEnum.SLOGAN),
+        'logo': main_pic_repo.get(name=MainPicEnum.LOGO),
+        'favicon': main_pic_repo.get(name=MainPicEnum.FAVICON),
+        'loading': main_pic_repo.get(name=MainPicEnum.LOADING),
+        'pretitle': parameter_repo.get(ParametersEnum.PRE_TILTE),
+        'title': parameter_repo.get(ParametersEnum.TITLE),
+        'address': parameter_repo.get(ParametersEnum.ADDRESS),
+        'mobile': parameter_repo.get(ParametersEnum.MOBILE),
+        'email': parameter_repo.get(ParametersEnum.EMAIL),
+        'tel': parameter_repo.get(ParametersEnum.TEL),
+        'url': parameter_repo.get(ParametersEnum.URL),
+        'our_team_title': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_title(),
+        'our_team_link': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_link(),
+    }
+    context['APP_NAME'] = APP_NAME
+    return context
+
+
+class BasicViews(View):
+    def home(self, request, *args, **kwargs):
+
+        context = getContext(request)
+        animals = AnimalRepo(request.user).list()
+        context['animals'] = animals
+
+        saloons = SaloonRepo(request.user).list()
+        context['saloons'] = saloons
+
+        drugs = DrugRepo(request.user).list()
+        context['drugs'] = drugs
+
+        farms = FarmRepo(request.user).list()
+        context['farms'] = farms
+
+        doctors = DoctorRepo(request.user).list()
+        context['doctors'] = doctors
+
+        return render(request, TEMPLATE_ROOT+"index.html", context)
+
+    def drug(self, request, pk, *args, **kwargs):
+
+        context = getContext(request)
+        drug = DrugRepo(request.user).drug(pk)
+        context['drug'] = drug
+        return render(request, TEMPLATE_ROOT+"drug.html", context)
+
+    def saloon(self, request, pk, *args, **kwargs):
+
+        context = getContext(request)
+        saloon = SaloonRepo(request.user).saloon(pk)
+        context['saloon'] = saloon
+        return render(request, TEMPLATE_ROOT+"saloon.html", context)
+
+    def farm(self, request, pk, *args, **kwargs):
+
+        context = getContext(request)
+        farm = FarmRepo(request.user).farm(pk)
+        context['farm'] = farm
+        return render(request, TEMPLATE_ROOT+"farm.html", context)
+
+    def doctor(self, request, pk, *args, **kwargs):
+
+        context = getContext(request)
+        doctor = DoctorRepo(request.user).doctor(pk)
+        context['doctor'] = doctor
+        return render(request, TEMPLATE_ROOT+"doctor.html", context)
+
+    def employee(self, request, pk, *args, **kwargs):
+
+        context = getContext(request)
+        employee = EmployeeRepo(request.user).employee(pk)
+        context['employee'] = employee
+        return render(request, TEMPLATE_ROOT+"employee.html", context)
+
+    def food(self, request, pk, *args, **kwargs):
+        context = getContext(request)
+        food = FoodRepo(request.user).food(pk)
+        context['food'] = food
+        return render(request, TEMPLATE_ROOT+"food.html", context)
+
+    def animal(self, request, pk, *args, **kwargs):
+        context = getContext(request)
+        animal_repo = AnimalRepo(request.user)
+        animal = animal_repo.animal(pk=pk)
+        context['animal'] = animal
+        saloons = SaloonRepo(user=request.user).list()
+        context['saloons'] = saloons
+        ll=AnimalInSaloon.objects.filter(animal=animal).order_by('enter_date')[:10]
+        weights=[0]
+        max_weight=0
+        for lll in list(ll):
+            weights.append(lll.animal_weight)
+            if max_weight<lll.animal_weight:
+                max_weight=lll.animal_weight
+        print(weights)
+        print(10*"#45745#")
+        context['weights']=json.dumps(weights)
+        context['max_weight']=max_weight
+        context['animalinsaloon_set'] = animal.animalinsaloon_set.order_by(
+            '-enter_date')
+        context['saloon_foods'] = animal.foods()
+        return render(request, TEMPLATE_ROOT+"animal.html", context)
+
+    def saloonfood(self, request, pk, *args, **kwargs):
+        context = getContext(request)
+        saloon_food = SaloonFoodRepo(request.user).saloon_food(pk=pk)
+        context['saloon_food'] = saloon_food
+        return render(request, TEMPLATE_ROOT+"saloon-food.html", context)
+
+    def animals(self, request, *args, **kwargs):
+        context = getContext(request)
+        animals = AnimalRepo(request.user).list(*args, **kwargs)
+        context['animals'] = animals
+        return render(request, TEMPLATE_ROOT+"animals.html", context)

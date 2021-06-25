@@ -69,3 +69,23 @@ class BlogRepo:
         return self.objects.filter(pk=pk).first()
 
 
+
+class CarouselRepo:
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.app_name=""
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        if 'app_name' in kwargs:
+            self.app_name = kwargs['app_name']
+        self.objects = Carousel.objects
+        self.me=ProfileRepo(user=self.user).me
+    def list(self,*args, **kwargs):
+        if 'app_name' in kwargs:
+            self.app_name = kwargs['app_name']
+        return self.objects.filter(app_name=self.app_name)
+    

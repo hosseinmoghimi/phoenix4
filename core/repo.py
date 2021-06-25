@@ -191,3 +191,34 @@ class DocumentRepo:
         document=PageDocument(icon_material="get_app",title=title,file=file,priority=priority,page=page,profile=self.profile)
         document.save()
         return document
+
+
+class PictureRepo:
+    
+    def __init__(self,*args, **kwargs):
+        self.app_name=""
+        self.request=None
+        self.user=None
+        if 'app_name' in kwargs:
+            self.app_name=kwargs['app_name']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=Picture.objects.all()
+    def get(self,*args, **kwargs):
+        pk=0
+        name=""
+        if 'name' in kwargs:
+            name=kwargs['name']
+        if 'pk' in kwargs:
+            pk=kwargs['pk']
+        if 'picture_id' in kwargs:
+            pk=kwargs['picture_id']
+        picture= self.objects.filter(app_name=self.app_name).filter(name=name).first()
+        if picture is None:
+            picture=Picture.objects.create(app_name=self.app_name,name=name)
+        return picture
+

@@ -16,8 +16,8 @@ def getContext(request):
     parameter_repo=ParameterRepo(user=request.user,app_name=APP_NAME)
     context['app'] = {
         'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value,
-        'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value,
+        'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value(),
+        'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value(),
     }
     context['stock1']=ParameterRepo(app_name=APP_NAME,user=request.user).get(name=ParametersEnum.STOCK1)
     context['stock2']=ParameterRepo(app_name=APP_NAME,user=request.user).get(name=ParametersEnum.STOCK2)

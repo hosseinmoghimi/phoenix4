@@ -1,10 +1,11 @@
+from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
 from authentication.serilizers import ProfileSerializer
 from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
-from core.repo import ParameterRepo
+from core.repo import ParameterRepo, PictureRepo
 from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
 from projectmanager.models import Material, OrganizationUnit
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
@@ -62,6 +63,13 @@ class BasicViews(View):
     def home(self, request, *args, **kwargs):
         context = getContext(request)
         context['parent_id'] = 0
+        picture_repo=PictureRepo(request=request,app_name=APP_NAME)
+        carousel_repo=CarouselRepo(request=request,app_name=APP_NAME)
+        splash=picture_repo.get(name="index.splash")
+        context['splash']=splash
+        carousels=carousel_repo.list()
+        if len(carousels)>0:
+            context['carousels']=carousels
         context['add_service_form'] = AddServiceForm()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
         context['add_employer_form'] = AddEmployerForm()

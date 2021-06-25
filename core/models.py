@@ -478,3 +478,39 @@ class PageImage(models.Model):
 
     def get_absolute_url(self):
         return reverse("PageImage_detail", kwargs={"pk": self.pk})
+
+
+class Picture(models.Model):
+    app_name=models.CharField(_("app_name"), max_length=50)
+    class_name="picture"
+    name=models.CharField(_("name"), max_length=50)
+    image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"picture/", height_field=None, width_field=None, max_length=None)
+    
+    def get_edit_btn(self):
+        return f"""
+            <a target="_blank" class="text-info" href="{self.get_edit_url()}">
+            <i class="material-icons"   aria-hidden="true" >settings</i>
+            ویرایش تصویر
+            </a>
+        """
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
+    def image(self):
+        if self.image_origin and self.image_origin is not None:
+            return f'{MEDIA_URL}{str(self.image_origin)}'
+        return None
+
+    class Meta:
+        verbose_name = _("Picture")
+        verbose_name_plural = _("Pictures")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Picture_detail", kwargs={"pk": self.pk})
+
+
+

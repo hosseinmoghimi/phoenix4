@@ -12,6 +12,7 @@ urlpatterns = [
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),
     # path('dashboard/', include('dashboard.urls')),
+    path('farm/', include('farm.urls')),
     path('core/', include('core.urls')),
     path('web/', include('web.urls')),
     path('', include('projectmanager.urls')),
