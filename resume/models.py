@@ -1,7 +1,7 @@
 from django.db.models.fields import DateField
 from core.enums import ColorEnum
 from tinymce.models import HTMLField
-from core.settings import ADMIN_URL, MEDIA_URL
+from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
@@ -50,23 +50,6 @@ class Resume(ResumePage):
         self.class_name="resume"
         return super(Resume,self).save(*args, **kwargs)
 
-class ResumeSkill(models.Model):
-    resume=models.ForeignKey("resume", verbose_name=_("resume"), on_delete=models.CASCADE)
-    title=models.CharField(_("title"), max_length=50)
-    persentage=models.IntegerField(_("percentage"),default=10)
-
-    
-
-    class Meta:
-        verbose_name = _("ResumeSkill")
-        verbose_name_plural = _("ResumeSkills")
-
-    def __str__(self):
-        return f"""{self.resume.profile.name} : {self.title} : {self.percentage}"""
-
-    def get_absolute_url(self):
-        return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
-
 class ResumeIndex(models.Model):
     class_name="resumeindex"
     image_header_origin =models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
@@ -74,7 +57,7 @@ class ResumeIndex(models.Model):
   
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"),null=True,blank=True, max_length=100)
-    typing_text=models.CharField(_("typing_text"), null=True,blank=True,default="",max_length=500)
+    typing_text=models.CharField(_("typing_text"), null=True,blank=True,default="Developer,Designer,Programmer",max_length=500)
     about_top=models.TextField(_("about_top"),null=True,blank=True)
     image_main_origin = models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Resume/Main/', height_field=None, width_field=None, max_length=None)
@@ -109,15 +92,15 @@ class ResumeIndex(models.Model):
     def image(self):
         if self.image_main_origin:
             return MEDIA_URL+str(self.image_main_origin)
+        else:
+            from .views import TEMPLATE_ROOT
+            return f'{STATIC_URL}{TEMPLATE_ROOT}/img/profile-img.jpg'
     def image_header(self):
         if self.image_header_origin:
             return MEDIA_URL+str(self.image_header_origin)
-        if self.image_main_origin:
-            return MEDIA_URL+str(self.image_main_origin)
-        if self.image_thumbnail_origin:
-            return MEDIA_URL+str(self.image_thumbnail_origin)
         else:
-            return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.child_class}.jpg'
+            from .views import TEMPLATE_ROOT
+            return f'{STATIC_URL}{TEMPLATE_ROOT}/img/hero-bg.jpg'
     
     def get_absolute_url(self):
         return reverse(APP_NAME+":resume_index", kwargs={"profile_id": self.profile.pk})
@@ -146,7 +129,15 @@ class ResumeService(ResumePage):
         return super(ResumeService,self).save(*args, **kwargs)
 
 class ResumePortfolio(ResumePage):
-
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    # title=models.CharField(_("title"), max_length=500)
+    # image_main_origin =models.ImageField(_("تصویر سربرگ"), upload_to=IMAGE_FOLDER +
+    #                                  'Resume/Portfolio/', height_field=None, width_field=None, max_length=None)                              
+    # category=models.CharField(_("category"), max_length=500)
+    # priority=models.IntegerField(_("priority"),default=100)
+    # def image(self):
+    #     if self.image_main_origin:
+    #         return MEDIA_URL+str(self.image_main_origin)
     
 
     class Meta:
@@ -159,6 +150,42 @@ class ResumePortfolio(ResumePage):
 
 
 
+class ResumeSkill(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"), max_length=50)
+    persentage=models.IntegerField(_("percentage"),default=10)
+
+    
+
+    class Meta:
+        verbose_name = _("ResumeSkill")
+        verbose_name_plural = _("ResumeSkills")
+
+    def __str__(self):
+        return f"""{self.resume.profile.name} : {self.title} : {self.percentage}"""
+
+    def get_absolute_url(self):
+        return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
+
+class ResumeFact(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"), max_length=500)
+    color=models.CharField(_("color"), max_length=50)
+    icon=models.CharField(_("icon"), max_length=100)
+    count=models.IntegerField(_("count"),default=10)
+
+    
+
+    class Meta:
+        verbose_name = _("ResumeFact")
+        verbose_name_plural = _("ResumeFacts")
+
+    def __str__(self):
+        return f"""{self.resume.profile.name} : {self.title} : {self.count}"""
+
+    def get_absolute_url(self):
+        return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
+
 
 
 class ResumeTestimonial(models.Model):
@@ -169,10 +196,13 @@ class ResumeTestimonial(models.Model):
     footer = models.CharField(_("پانوشت"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)
     date_added=models.DateField(_("date_added"), auto_now=False, auto_now_add=False)
-    class_name="resumetestimonial"
     image_origin = models.ImageField(_("تصویر"), upload_to=IMAGE_FOLDER+'Testimonial/',
                                      null=True, blank=True, height_field=None, width_field=None, max_length=None)
-
+    class_name="resumetestimonial"
+    def image(self):
+        if self.image_main_origin:
+            return MEDIA_URL+str(self.image_origin)
+    
     class Meta:
         verbose_name = _("Testimonial")
         verbose_name_plural = _("Testimonial")
