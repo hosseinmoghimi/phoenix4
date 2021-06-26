@@ -91,15 +91,22 @@
                                     {{selected_profile.bio}}
                                     {%endif %}</p>
 
-                                    <button class="btn btn-outline-primary">Follow</button>
-                                    <a class="btn btn-outline-danger" href="{{selected_profile.get_edit_url}}">
-    
-    
-                                        ویرایش</a>
+                                <button class="btn btn-outline-primary">Follow</button>
+                                <a class="btn btn-outline-danger" href="{{selected_profile.get_edit_url}}">
+
+
+                                    ویرایش</a>
+
+                                <a class="btn btn-outline-success"
+                                    href="{% url 'resume:resume_index' profile_id=selected_profile.id %}">
+
+
+                                    رزومه</a>
+
                                 {% block card %}
 
                                 {% endblock %}
-                              
+
                             </div>
                         </div>
                     </div>

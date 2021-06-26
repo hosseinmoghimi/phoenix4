@@ -13,53 +13,6 @@ class WebPage(BasicPage):
         return super(WebPage,self).save(*args, **kwargs)
 
 
-class ResumeCategory(WebPage):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-
-    
-
-    class Meta:
-        verbose_name = _("ResumeCategory")
-        verbose_name_plural = _("ResumeCategorys")
-
-    def save(self,*args, **kwargs):
-        self.class_name="resumecategory"
-        return super(ResumeCategory,self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("ResumeCategory_detail", kwargs={"pk": self.pk})
-
-class Resume(WebPage):
-    category=models.ForeignKey("resumecategory", verbose_name=_("category"), on_delete=models.CASCADE)
-
-    
-
-    class Meta:
-        verbose_name = _("Resume")
-        verbose_name_plural = _("Resumes")
-
-
-    def save(self,*args, **kwargs):
-        self.class_name="resume"
-        return super(Resume,self).save(*args, **kwargs)
-
-class ResumeSkill(models.Model):
-    resume=models.ForeignKey("resume", verbose_name=_("resume"), on_delete=models.CASCADE)
-    title=models.CharField(_("title"), max_length=50)
-    persentage=models.IntegerField(_("percentage"),default=10)
-
-    
-
-    class Meta:
-        verbose_name = _("ResumeSkill")
-        verbose_name_plural = _("ResumeSkills")
-
-    def __str__(self):
-        return f"""{self.resume.profile.name} : {self.title} : {self.percentage}"""
-
-    def get_absolute_url(self):
-        return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
-
 class Blog(WebPage):
 
     
@@ -138,7 +91,7 @@ class Testimonial(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     profile = models.ForeignKey("authentication.Profile", null=True,
                                 blank=True, verbose_name=_("profile"), on_delete=models.PROTECT)
-
+    class_name="testimonial"
     class Meta:
         verbose_name = _("Testimonial")
         verbose_name_plural = _("گفته های مشتریان")
@@ -150,7 +103,7 @@ class Testimonial(models.Model):
         return reverse("Testimonial_detail", kwargs={"pk": self.pk})
 
     def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/testimonial/{self.pk}/change/'
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 
 class Feature(WebPage):

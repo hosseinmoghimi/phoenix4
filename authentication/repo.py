@@ -2,22 +2,32 @@ from .models import *
 from django.contrib.auth import login, logout, authenticate
 
 class ProfileRepo():
-    def __init__(self,user=None):
+    def __init__(self,*args, **kwargs):
+        self.request=None
         self.me=None
         self.objects=None   
-        if user is not None and user and user.is_authenticated:
-            self.user = user
+        self.user=None
+        self.app_name=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'forced' in kwargs:
+            self.objects = Profile.objects.all()
+        elif self.user is not None and self.user and self.user.is_authenticated:
             self.objects = Profile.objects.filter(enabled=True)
-            self.me = self.objects.filter(user=user).first()         
+            self.me = self.objects.filter(user=self.user).first()         
            
                   
        
     def profile(self,*args, **kwargs):
-        if 'pk' in kwargs:
-            pk=kwargs['pk']
+        pk=0
         if 'profile_id' in kwargs:
             pk=kwargs['profile_id']
-        if 'id' in kwargs:
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
@@ -46,7 +56,7 @@ class ProfileRepo():
     def edit_profile(self,profile_id,first_name,last_name,mobile,slogan,address,bio,postal_code):
         user=self.user
         if user.is_authenticated:
-            me=ProfileRepo(user).me
+            me=ProfileRepo(user=user).me
             if me.id==profile_id or me.user.has_perm(APP_NAME+'.change_profile'):
                 edited_profile=self.objects.get(pk=profile_id)
                 

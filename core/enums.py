@@ -21,6 +21,7 @@ class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
     web='web',_('web')
     stock='stock',_('stock')
+    resume='resume',_('resume')
     # charity='charity',_('charity')
     projectmanager='projectmanager',_('projectmanager')
     # market='market',_('market')

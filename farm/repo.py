@@ -170,7 +170,7 @@ class EmployeeRepo():
     def __init__(self,user):
         self.objects=Employee.objects
         self.user=user
-        self.profile=ProfileRepo(user).me
+        self.profile=ProfileRepo(user=user).me
         self.me=Employee.objects.get(profile=self.profile)
     def list(self,*args, **kwargs):
         objects=self.objects.all()

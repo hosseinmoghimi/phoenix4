@@ -10,12 +10,14 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('market/', include('market.urls')),
+    path('projectmanager/', include('projectmanager.urls')),
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),
     # path('dashboard/', include('dashboard.urls')),
     path('farm/', include('farm.urls')),
     path('core/', include('core.urls')),
     path('web/', include('web.urls')),
+    path('resume/', include('resume.urls')),
     path('', include(HOME_APP_URLS)),
     path('stock/', include('stock.urls')),
     path('realestate/', include('realestate.urls')),
