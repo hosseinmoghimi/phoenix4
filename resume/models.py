@@ -1,6 +1,5 @@
-from resume.enums import FilterEnum, IconEnum
+from resume.enums import FilterEnum, IconEnum,ServiceColorEnum
 from django.db.models.fields import DateField
-from core.enums import ColorEnum
 from tinymce.models import HTMLField
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
@@ -118,8 +117,9 @@ class ResumeIndex(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 class ResumeService(ResumePage):
-
-    
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    # color=models.CharField(_("color"),choices=ServiceColorEnum.choices,default=ServiceColorEnum.blue, max_length=50)
+    # class_name="resumeservice"
 
     class Meta:
         verbose_name = _("ResumeService")

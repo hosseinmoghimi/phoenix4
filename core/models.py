@@ -15,7 +15,7 @@ class Icon(models.Model):
     name=models.CharField(_("name"), null=True,blank=True,max_length=50)
     icon_fa=models.CharField(_("fa"), null=True,blank=True,max_length=50)
     icon_material=models.CharField(_("material_icon"),null=True,blank=True, max_length=50)
-    icon_svg=models.CharField(_("svg_icon"),null=True,blank=True, max_length=50)
+    icon_svg=models.TextField(_("svg_icon"),null=True,blank=True)
     color=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
     width = models.IntegerField(_("عرض آیکون"), null=True, blank=True)
     height = models.IntegerField(_("ارتفاع آیکون"), null=True, blank=True)

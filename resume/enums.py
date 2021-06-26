@@ -9,3 +9,10 @@ class FilterEnum(TextChoices):
     app='app',_('app')
     card='card',_('card')
     web='web',_('web')
+class ServiceColorEnum(TextChoices):
+    blue='blue',_('blue')
+    orange='orange',_('orange')
+    pink='pink',_('pink')
+    yellow='yellow',_('yellow')
+    red='red',_('red')
+    teal='teal',_('teal')

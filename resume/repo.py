@@ -1,4 +1,4 @@
-from .models import ResumeIndex, ResumePortfolio
+from .models import ResumeIndex, ResumePortfolio, ResumeService
 from authentication.repo import ProfileRepo
 
 class ResumeIndexRepo:
@@ -59,3 +59,25 @@ class PortfolioRepo:
             pk=kwargs['id']
         portfolio= self.objects.filter(pk=pk).first()
         return portfolio
+class ResumeServiceRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=ResumeService.objects.all()
+    
+    def resume_service(self,*args, **kwargs):
+        pk=0
+        if 'resume_service_id' in kwargs:
+            pk=kwargs['resume_service_id']           
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        resume_service= self.objects.filter(pk=pk).first()
+        return resume_service
