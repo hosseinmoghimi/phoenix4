@@ -5,3 +5,7 @@ class IconEnum(TextChoices):
     richtext='<i class="bi bi-journal-richtext"></i>',_('<i class="bi bi-journal-richtext"></i>')
     headset='<i class="bi bi-headset"></i>',_('<i class="bi bi-headset"></i>')
     award='<i class="bi bi-award"></i>',_('<i class="bi bi-award"></i>')
+class FilterEnum(TextChoices):
+    app='app',_('app')
+    card='card',_('card')
+    web='web',_('web')

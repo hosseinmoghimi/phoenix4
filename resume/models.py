@@ -1,4 +1,4 @@
-from resume.enums import IconEnum
+from resume.enums import FilterEnum, IconEnum
 from django.db.models.fields import DateField
 from core.enums import ColorEnum
 from tinymce.models import HTMLField
@@ -131,10 +131,10 @@ class ResumeService(ResumePage):
 
 class ResumePortfolio(ResumePage):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-    # title=models.CharField(_("title"), max_length=500)
+    filter=models.CharField(_("filter"),choices=FilterEnum.choices,default=FilterEnum.web, max_length=50)
     # image_main_origin =models.ImageField(_("تصویر سربرگ"), upload_to=IMAGE_FOLDER +
     #                                  'Resume/Portfolio/', height_field=None, width_field=None, max_length=None)                              
-    # category=models.CharField(_("category"), max_length=500)
+    category=models.CharField(_("category"), max_length=500)
     # priority=models.IntegerField(_("priority"),default=100)
     # def image(self):
     #     if self.image_main_origin:

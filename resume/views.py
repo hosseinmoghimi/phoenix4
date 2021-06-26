@@ -1,5 +1,7 @@
+from resume.models import ResumePortfolio
+from django.http import Http404
 from authentication.repo import ProfileRepo
-from .repo import ResumeIndexRepo
+from .repo import PortfolioRepo, ResumeIndexRepo
 from . import constants
 from core.repo import ParameterRepo
 from core.views import CoreContext
@@ -13,15 +15,17 @@ def getContext(request):
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)      
-        selected_profile={'pk':0}  
         if 'profile_id' in kwargs:
-            profile_id=kwargs['profile_id']
             resume_index=ResumeIndexRepo(request=request).resume_index(*args, **kwargs)
             context['resume_index']=resume_index
-            selected_profile=ProfileRepo(request=request,forced=1).profile(profile_id=profile_id)
-            parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
-            context['about_us_top']=parameter_repo.get(constants.ABOUT_US_TOP+str(selected_profile.pk))
-            context['about_us_bottom']=parameter_repo.get(constants.ABOUT_US_BOTTOM+str(selected_profile.pk))
-            context['skills_top']=parameter_repo.get(constants.SKILLS_TOP+str(selected_profile.pk))
-        return render(request,TEMPLATE_ROOT+"index.html",context)
+            portfolio_categories=PortfolioRepo(request=request).category_list()
+            context['portfolio_categories']=portfolio_categories
+            return render(request,TEMPLATE_ROOT+"index.html",context)
+        raise Http404
+    def portfolio(self,request,*args, **kwargs):
+        context=getContext(request=request)      
+        if 'pk' in kwargs:
+            portfolio=PortfolioRepo(request=request).portfolio(*args, **kwargs)
+            context['portfolio']=portfolio          
+            return render(request,TEMPLATE_ROOT+"portfolio-details.html",context)
 # Create your views here.
