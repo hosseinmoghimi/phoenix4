@@ -213,6 +213,7 @@ class ResumeFact(models.Model):
 
 
 class ResumeTestimonial(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     teller = models.CharField(_("teller"), max_length=2000)
     teller_description = models.CharField(_("teller_description"), max_length=2000)
     title = models.CharField(_("عنوان"), max_length=2000)
@@ -224,7 +225,7 @@ class ResumeTestimonial(models.Model):
                                      null=True, blank=True, height_field=None, width_field=None, max_length=None)
     class_name="resumetestimonial"
     def image(self):
-        if self.image_main_origin:
+        if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
     
     class Meta:
@@ -236,3 +237,14 @@ class ResumeTestimonial(models.Model):
 
 
 
+    def get_edit_btn(self):
+        return f"""
+          <a target="_blank" title="edit" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
+
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'

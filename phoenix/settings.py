@@ -17,7 +17,7 @@ SERVER_ON_AZURE=False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Application definition
 
