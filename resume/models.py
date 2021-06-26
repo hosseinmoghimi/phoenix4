@@ -1,3 +1,4 @@
+from resume.enums import IconEnum
 from django.db.models.fields import DateField
 from core.enums import ColorEnum
 from tinymce.models import HTMLField
@@ -106,7 +107,7 @@ class ResumeIndex(models.Model):
         return reverse(APP_NAME+":resume_index", kwargs={"profile_id": self.profile.pk})
     def get_edit_btn(self):
         return f"""
-          <a target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+          <a target="_blank" title="edit" href="{self.get_edit_url()}">
             <i class="material-icons">
                 edit
             </i>
@@ -171,8 +172,20 @@ class ResumeFact(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=500)
     color=models.CharField(_("color"), max_length=50)
-    icon=models.CharField(_("icon"), max_length=100)
+    icon=models.CharField(_("icon"),choices=IconEnum.choices, max_length=100)
     count=models.IntegerField(_("count"),default=10)
+    class_name="resumefact"
+    def get_edit_btn(self):
+        return f"""
+          <a target="_blank" title="edit" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
+
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
     
 
@@ -181,7 +194,7 @@ class ResumeFact(models.Model):
         verbose_name_plural = _("ResumeFacts")
 
     def __str__(self):
-        return f"""{self.resume.profile.name} : {self.title} : {self.count}"""
+        return f"""{self.profile.name} : {self.title} : {self.count}"""
 
     def get_absolute_url(self):
         return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
