@@ -1,16 +1,23 @@
+from . import constants
+from core.repo import ParameterRepo
 from django.shortcuts import render
 from .repo import *
 from django.views import View
 from core.views import CoreContext, PageContext
 
-TEMPLATE_ROOT="web/"
+# TEMPLATE_ROOT="web/"
+TEMPLATE_ROOT="my_resume_en/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
-        return render(request,TEMPLATE_ROOT+"index2.html",context)
+        parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        context['about_us_top']=parameter_repo.get(constants.ABOUT_US_TOP)
+        context['about_us_bottom']=parameter_repo.get(constants.ABOUT_US_BOTTOM)
+        context['skills_top']=parameter_repo.get(constants.SKILLS_TOP)
+        return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class ResumeViews(View):
     def resume_category(self,request,*args, **kwargs):

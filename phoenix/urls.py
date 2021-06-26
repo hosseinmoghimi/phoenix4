@@ -1,4 +1,5 @@
 
+from phoenix.server_settings import HOME_APP_URLS
 from django.contrib import admin
 from django.urls import path,include
 
@@ -15,7 +16,7 @@ urlpatterns = [
     path('farm/', include('farm.urls')),
     path('core/', include('core.urls')),
     path('web/', include('web.urls')),
-    path('', include('projectmanager.urls')),
+    path('', include(HOME_APP_URLS)),
     path('stock/', include('stock.urls')),
     path('realestate/', include('realestate.urls')),
     path('forums/', include('phoenix_forums.urls')),

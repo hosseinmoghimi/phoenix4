@@ -50,14 +50,11 @@ class Icon(models.Model):
             return f'<span  style="{icon_style}" class="{text_color}">{self.icon_svg}</span>'
         return ''
 
-
 class Tag(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     title = models.CharField(_("عنوان"), max_length=50)
     icon=models.ForeignKey("Icon", verbose_name=_("icon"),null=True,blank=True, on_delete=models.CASCADE)
     
-
-
 class Image(models.Model):
     title = models.CharField(
         _("عنوان تصویر"), max_length=100, null=True, blank=True)
@@ -322,12 +319,12 @@ class Link(Icon):
                 </i>
             </a>
         """
+
 class PageLink(Link):
     page=models.ForeignKey("BasicPage",related_name="links", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     class Meta:
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
-
 
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
@@ -416,7 +413,6 @@ class Document(Icon):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
 
- 
 class PageDocument(Document):
     page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     
@@ -442,8 +438,9 @@ class Parameter(models.Model):
         return self.value_origin
     def get_edit_btn(self):
         return f"""
-         <a target="_blank" title="ویرایش {self.name}" class="btn btn-info btn-link" href="{self.get_edit_url()}">
-                            <i class="material-icons"   aria-hidden="true" >settings</i>
+         <a target="_blank" title="ویرایش {self.name}" class="text-primary" 
+         href="{self.get_edit_url()}">
+                            <i class="material-icons"   aria-hidden="true" >edit</i>
                         </a>
         """
 
@@ -463,7 +460,6 @@ class Parameter(models.Model):
             self.value_origin=self.value_origin.replace('height="450"','height="400"') 
         super(Parameter,self).save()
 
-
 class PageImage(models.Model):
     page=models.ForeignKey("basicpage", verbose_name=_("page"),on_delete=models.CASCADE)
     image=models.ForeignKey("image", verbose_name=_("image"), on_delete=models.CASCADE)
@@ -479,12 +475,11 @@ class PageImage(models.Model):
     def get_absolute_url(self):
         return reverse("PageImage_detail", kwargs={"pk": self.pk})
 
-
 class Picture(models.Model):
     app_name=models.CharField(_("app_name"), max_length=50)
-    class_name="picture"
     name=models.CharField(_("name"), max_length=50)
     image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"picture/", height_field=None, width_field=None, max_length=None)
+    class_name="picture"
     
     def get_edit_btn(self):
         return f"""
@@ -511,6 +506,25 @@ class Picture(models.Model):
 
     def get_absolute_url(self):
         return reverse("Picture_detail", kwargs={"pk": self.pk})
+
+class SocialLink(Link):
+    app_name=models.CharField(_('اپلیکیشن'),max_length=50,null=True,blank=True)
+    profile = models.ForeignKey("authentication.Profile", null=True,
+                                blank=True, verbose_name=_("profile"), on_delete=models.PROTECT)
+
+    def get_link(self):
+        return f"""
+                <a href="{self.url}" class="btn btn-just-icon btn-link {self.icon_class}">
+                {self.get_icon_tag()}
+                </a>
+        """
+
+    class Meta:
+        verbose_name = _("SocialLink")
+        verbose_name_plural = _("شبکه اجتماعی")
+
+    def __str__(self):
+        return self.title
 
 
 

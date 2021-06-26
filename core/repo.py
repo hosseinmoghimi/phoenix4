@@ -126,10 +126,20 @@ class PageImageRepo:
    
 
 class ParameterRepo:
-    def __init__(self,app_name,user=None):
-        self.objects=Parameter.objects.filter(Q(app_name=None)|Q(app_name=app_name))
-        self.user=user
-        self.app_name=app_name
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        self.app_name=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'app_name' in kwargs:
+            self.app_name=kwargs['app_name']
+        self.profile=ProfileRepo(user=self.user).me
+        
+        self.objects=Parameter.objects.filter(Q(app_name=None)|Q(app_name=self.app_name))
     
     def change_parameter(self,parameter_id,parameter_value):
         if self.user.has_perm(APP_NAME+'.change_parameter'):
