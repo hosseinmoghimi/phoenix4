@@ -154,16 +154,27 @@ class ResumePortfolio(ResumePage):
 class ResumeSkill(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)
-    persentage=models.IntegerField(_("percentage"),default=10)
+    percentage=models.IntegerField(_("percentage"),default=10)
+    class_name="resumeskill"
+    def get_edit_btn(self):
+        return f"""
+          <a target="_blank" title="edit" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
 
-    
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
 
     class Meta:
         verbose_name = _("ResumeSkill")
         verbose_name_plural = _("ResumeSkills")
 
     def __str__(self):
-        return f"""{self.resume.profile.name} : {self.title} : {self.percentage}"""
+        return f"""{self.profile.name} : {self.title} : {self.percentage}"""
 
     def get_absolute_url(self):
         return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
