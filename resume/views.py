@@ -1,7 +1,7 @@
 from resume.models import ResumePortfolio
 from django.http import Http404
 from authentication.repo import ProfileRepo
-from .repo import PortfolioRepo, ResumeIndexRepo, ResumeServiceRepo
+from .repo import PortfolioRepo, ResumeIndexRepo, ResumeRepo, ResumeServiceRepo
 from . import constants
 from core.repo import ParameterRepo
 from core.views import CoreContext
@@ -34,4 +34,10 @@ class BasicViews(View):
             resume_service=ResumeServiceRepo(request=request).resume_service(*args, **kwargs)
             context['resume_service']=resume_service          
             return render(request,TEMPLATE_ROOT+"resume-service.html",context)
+    def resume(self,request,*args, **kwargs):
+        context=getContext(request=request)      
+        if 'pk' in kwargs:
+            resume=ResumeRepo(request=request).resume(*args, **kwargs)
+            context['resume']=resume          
+            return render(request,TEMPLATE_ROOT+"resume.html",context)
 # Create your views here.
