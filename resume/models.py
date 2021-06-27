@@ -155,6 +155,7 @@ class ResumeSkill(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)
     percentage=models.IntegerField(_("percentage"),default=10)
+    priority=models.IntegerField(_("priority"),default=10)
     class_name="resumeskill"
     def get_edit_btn(self):
         return f"""

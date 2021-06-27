@@ -17,15 +17,19 @@
 
         
         <div class="row skills-content">
+            {% if perms.resume.add_resumeskill %}
+            {{admin_utility.get_add_skill_btn|safe}}
+            {% endif %}
+            
             {% for skill in resume_index.profile.resumeskill_set.all %}
 
             <div class="col-lg-6">
 
                 <div class="progress">
                     <span class="skill">{{skill.title}}
-                        {% if perms.resume.change_resumefact %}
+                        {% if perms.resume.change_resumeskill %}
 
-                        {{fact.get_edit_btn|safe}}
+                        {{skill.get_edit_btn|safe}}
                         {% endif %}
                         <i class="val">{{skill.percentage}}%</i></span>
                     <div class="progress-bar-wrap">

@@ -1,3 +1,4 @@
+from resume.utils import AdminUtility
 from resume.models import ResumePortfolio
 from django.http import Http404
 from authentication.repo import ProfileRepo
@@ -11,6 +12,7 @@ from django.views import View
 TEMPLATE_ROOT="my_resume_en/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
+    context['admin_utility']=AdminUtility(request=request)
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
