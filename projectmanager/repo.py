@@ -503,7 +503,7 @@ class MaterialRepo():
     def add_material(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_material"):
             return None
-        new_material = Material(image_main_origin="core/images/Page/Image/material.png")
+        new_material = Material()
 
         if 'parent_id' in kwargs and kwargs['parent_id']>0:
             new_material.parent_id = kwargs['parent_id']

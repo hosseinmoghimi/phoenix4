@@ -132,6 +132,11 @@ class BasicPage(models.Model):
     def image(self):
         if self.image_main_origin:
             return MEDIA_URL+str(self.image_main_origin)
+        images= self.pageimage_set.all()
+        if len(images)>0:
+            return images.first().image.image()
+
+        return f'{STATIC_URL}{self.app_name}/img/pages/image/{self.class_name}.png'
     def image_header(self):
         if self.image_header_origin:
             return MEDIA_URL+str(self.image_header_origin)
@@ -158,7 +163,7 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_header_origin)
         
 
-        return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.jpg'
+        return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.png'
     
     def all_sub_pages(self):
         pages=[]
@@ -465,7 +470,6 @@ class PageImage(models.Model):
     page=models.ForeignKey("basicpage", verbose_name=_("page"),on_delete=models.CASCADE)
     image=models.ForeignKey("image", verbose_name=_("image"), on_delete=models.CASCADE)
     
-
     class Meta:
         verbose_name = _("PageImage")
         verbose_name_plural = _("PageImages")
