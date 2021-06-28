@@ -275,6 +275,7 @@ class ServiceRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Service.objects
+        self.me=ProfileRepo(user=self.user).me
 
     def service(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -373,8 +374,10 @@ class ServiceRepo():
        
         if 'title' in kwargs:
             new_service.title = kwargs['title']
-        if 'parent_id' in kwargs:
+        if 'parent_id' in kwargs and kwargs['parent_id']>0:
+            
             new_service.parent_id = kwargs['parent_id']
+        new_service.creator=self.me    
         new_service.save()
         return new_service
 
