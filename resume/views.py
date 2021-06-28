@@ -20,6 +20,11 @@ class BasicViews(View):
         if 'profile_id' in kwargs:
             resume_index=ResumeIndexRepo(request=request).resume_index(*args, **kwargs)
             context['resume_index']=resume_index
+            parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+            context['location']=parameter_repo.get(name='location')
+            context['email']=parameter_repo.get(name='email')
+            context['call']=parameter_repo.get(name='call')
+            context['resume_index']=resume_index
             portfolio_categories=PortfolioRepo(request=request).category_list()
             context['portfolio_categories']=portfolio_categories
             return render(request,TEMPLATE_ROOT+"index.html",context)

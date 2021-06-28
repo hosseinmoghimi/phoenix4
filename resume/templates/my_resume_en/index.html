@@ -1,5 +1,5 @@
 {% extends "my_resume_en/layout.html" %}
-
+{% load static %}
 {% block head %}
 
 {% endblock head %}
@@ -33,5 +33,36 @@
 
 
 {% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let contact_app = new Vue({
+        el: "#contact",
+        data: {
+            full_name: "",
+            subject: "",
+            email: "",
+            mobile: "",
+            message: "",
+        },
+        methods: {
+            add_contact_message: function () {
+                let url = "{% url 'web:add_contact_message' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    full_name: this.full_name,
+                    subject: this.subject,
+                    email: this.email,
+                    mobile: this.mobile,
+                    message: this.message,
+                    app_name:"{{APP_NAME}}",
+                }
 
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                })
+            },
+        }
+    })
+</script>
 {% endblock script %}
