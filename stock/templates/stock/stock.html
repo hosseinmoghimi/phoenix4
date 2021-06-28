@@ -15,31 +15,98 @@
     <p class="text-center">
         <img src="{{stock.profile.image}}" class="rounded-circle" width="128" alt="">
     </p>
-    <h5 class="text-center">
+    <h4 class="text-center text-primary my-4">
         {{stock.profile.name}}
+        {% if perms.stock.change_stock %}
+        {{stock.get_edit_btn|safe}}
+        {% endif %}
+    </h4>
 
-    </h5>
 
     <h4 class="text-center">
-        {{stock.stock1}}
-        {{stock1.value}}
-        و
-        {{stock.stock2}}
-        {{stock2.value}}
+        {{stock.get_stock_amount}}
     </h4>
     <h6 class="text-center">
-        نماینده :
+        <em class="small text-secondary">
+            نماینده :
+
+        </em>
         <a href="{% url 'stock:agent' stock.agent.id %}">
 
             {{stock.agent.name}}
         </a>
 
     </h6>
+    {% if stock.melli_code %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            کد ملی :
+        </em>
+        {{stock.melli_code}}
+    </p>
+    {% endif %}
+
+    
+    {% if stock.account_no %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            شماره حساب :
+        </em>
+        {{stock.account_no}}
+    </p>
+    {% endif %}
+
+
+
+    {% if stock.sh_sh %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            شماره شناسنامه :
+        </em>
+        {{stock.sh_sh}}
+    </p>
+    {% endif %}
+
+
+
+    
+    {% if stock.address %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            آدرس :
+        </em>
+        {{stock.address}}
+    </p>
+    {% endif %}
+
+
+
+
+
+
+    {% if stock.description %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            توضیحات :
+        </em>
+        {{stock.description}}
+    </p>
+    {% endif %}
 
 </div>
 <div class="">
     {% include "stock/includes/documents-app/template.html" %}
-<div class="mb-5"></div>
+    <div class="mb-5"></div>
     {% include "stock/includes/payments-app/template.html" %}
 
 </div>
@@ -49,7 +116,7 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let stock_id=parseInt("{{stock.pk}}")
+    let stock_id = parseInt("{{stock.pk}}")
 
 </script>
 {% include "stock/includes/documents-app/script.html" %}

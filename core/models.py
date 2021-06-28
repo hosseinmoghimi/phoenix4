@@ -432,6 +432,7 @@ class Parameter(models.Model):
     app_name=models.CharField(_("app_name"),choices=AppNameEnum.choices,null=True,blank=True,max_length=20)
     name = models.CharField(_("نام"), max_length=50)
     value_origin = models.CharField(_("مقدار"),null=True,blank=True, max_length=10000)
+    @property
     def value(self):
         if self.value_origin is None:
             return ''

@@ -14,15 +14,27 @@ TEMPLATE_ROOT=APP_NAME+'/'
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     parameter_repo=ParameterRepo(user=request.user,app_name=APP_NAME)
+    context['search_form']=SearchForm()
+    context['search_action']=reverse(APP_NAME+":search")
     context['app'] = {
         'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value(),
-        'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value(),
+        'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value,
+        'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value,
     }
     context['stock1']=ParameterRepo(app_name=APP_NAME,user=request.user).get(name=ParametersEnum.STOCK1)
     context['stock2']=ParameterRepo(app_name=APP_NAME,user=request.user).get(name=ParametersEnum.STOCK2)
     return context
 class BasicViews(View):
+    def search(self,request,*args, **kwargs):
+        if request.method=='POST':
+            search_form=SearchForm(request.POST,request.FILES)
+            if search_form.is_valid():
+                search_for=search_form.cleaned_data['search_for']
+                context=getContext(request)
+                stocks=StockRepo(request=request).list(search_for=search_for)
+                context['stocks']=stocks
+                return render(request,TEMPLATE_ROOT+'index.html',context)
+        return self.home(request=request,*args, **kwargs)
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         stocks=StockRepo(request=request).list()

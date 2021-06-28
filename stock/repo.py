@@ -1,6 +1,6 @@
 from .apps import APP_NAME
 from .models import Document, Payment, Stock
-
+from django.db.models import Q
 class StockRepo:
     def __init__(self,*args, **kwargs):
         self.request = None
@@ -16,6 +16,13 @@ class StockRepo:
         objects=self.objects.all()
         if 'agent_id' in kwargs:
             objects=objects.filter(agent_id=kwargs['agent_id'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(profile__user__first_name__contains=search_for)
+            |Q(profile__user__last_name__contains=search_for)
+            |Q(stock1=search_for)
+            |Q(stock2=search_for)
+            )
         return objects
         
 
