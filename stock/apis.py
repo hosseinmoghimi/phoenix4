@@ -1,9 +1,9 @@
 from stock.models import Payment
 from core.constants import FAILED,SUCCEED
-from stock.serializers import DocumentSerializer,PaymentSerializer
+from stock.serializers import DocumentSerializer,PaymentSerializer, StockSerializer
 from rest_framework.views import APIView
-from .repo import DocumentRepo, PaymentRepo
-from .forms import AddDocumentForm, AddPaymentForm
+from .repo import DocumentRepo, PaymentRepo, StockRepo
+from .forms import AddDocumentForm, AddPaymentForm, AddStockForm
 from django.http import JsonResponse
 from utility.persian import PersianCalendar
 
@@ -24,6 +24,26 @@ class DocumentApi(APIView):
                 file=request.FILES['file']      
                 document=DocumentRepo(request=request).add_document(title=title,stock_id=stock_id,file=file)
                 context['document']=DocumentSerializer(document).data
+                context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+
+        
+class StockApi(APIView):
+    def add_stock(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_stock_form=AddStockForm(request.POST)
+            if add_stock_form.is_valid():
+                log+=1
+                first_name=add_stock_form.cleaned_data['first_name']
+                last_name=add_stock_form.cleaned_data['last_name']
+                stock=StockRepo(request=request).add_stock(first_name=first_name,last_name=last_name)
+                context['stock']=StockSerializer(stock).data
                 context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

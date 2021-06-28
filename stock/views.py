@@ -1,3 +1,4 @@
+from .utils import AdminUtility
 from core.settings import SITE_URL
 from .forms import *
 from .enums import *
@@ -16,6 +17,7 @@ def getContext(request):
     parameter_repo=ParameterRepo(user=request.user,app_name=APP_NAME)
     context['search_form']=SearchForm()
     context['search_action']=reverse(APP_NAME+":search")
+    context['admin_utility']=AdminUtility()
     context['app'] = {
         'home_url': reverse(APP_NAME+":home"),
         'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value,
@@ -39,6 +41,7 @@ class BasicViews(View):
         context=getContext(request)
         stocks=StockRepo(request=request).list()
         context['stocks']=stocks
+        context['add_stock_form']=AddStockForm()
         return render(request,TEMPLATE_ROOT+'index.html',context)
 class StockViews(View):
     def stock(self,request,*args, **kwargs):

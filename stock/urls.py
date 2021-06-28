@@ -12,5 +12,6 @@ urlpatterns = [
 
     path('search/',views.BasicViews().search,name="search"),
     path('add_document/',apis.DocumentApi().add_document,name="add_document"),
+    path('add_stock/',apis.StockApi().add_stock,name="add_stock"),
     path('add_payment/',apis.PaymentApi().add_payment,name="add_payment"),
 ]

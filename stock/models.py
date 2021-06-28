@@ -12,6 +12,7 @@ IMAGE_FOLDER = APP_NAME+'/img/'
 
 
 class Stock(models.Model):
+    is_agent=models.BooleanField(_("نماینده است؟"),default=False)
     profile = models.ForeignKey("authentication.profile", related_name="stock_set", verbose_name=_(
         "profile"), on_delete=models.CASCADE)
     father_name = models.CharField(

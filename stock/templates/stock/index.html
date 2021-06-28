@@ -18,6 +18,49 @@
                 </h3>
             </div>
             <div class="card-body">
+                <div id="app">
+
+                    {% if add_stock_form %}
+                    <div class="text-center">
+
+                        <button @click="show_add_form=true" v-if="!show_add_form" class="btn btn-info">
+                            <i class="material-icons">
+                                add
+                            </i>
+                            <span class="farsi">
+
+                                افزودن سهامدار جدید
+                            </span>
+                        </button>
+                    </div>
+
+                    <form v-show="show_add_form"  @submit.prevent="add_stock()">
+                        <div class="row">
+                     
+                            <div class="col-md-4">
+                                <h6 class=" text-right farsi">
+
+نام :
+                                </h6>
+                                <input type="text" required v-model="first_name" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class=" text-right farsi">
+
+                                    نام خانوادگی :
+                                </h6>
+                                <input type="text" required v-model="last_name" class="form-control">
+                            </div>
+
+                            <div class="col-md-4 text-center">
+                                <button class="btn btn-success" type="submit">Add</button>
+                                <button class="btn btn-secondary" @click="show_add_form=false">Cancel</button>
+
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
                 <table class="table">
                     <thead>
                         <th>
@@ -40,14 +83,14 @@
                         <tr>
                             <td>
                                 <a href="{{stock.get_absolute_url}}">
-                                  <img src="{{stock.profile.image}}" class="rounded-circle" width="32" alt="">
+                                    <img src="{{stock.profile.image}}" class="rounded-circle" width="32" alt="">
                                     {{stock.profile.name}}
                                 </a>
                             </td>
 
                             <td>
                                 <a href="{% url 'stock:agent' agent_id=stock.agent.id %}">
-                                      <img src="{{stock.agent.image}}" class="rounded-circle" width="32" alt="">
+                                    <img src="{{stock.agent.image}}" class="rounded-circle" width="32" alt="">
                                     {{stock.agent.name}}
                                 </a>
                             </td>
@@ -80,5 +123,32 @@
 </script>
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
 
+    let app = new Vue(
+        {
+            el: "#app",
+            data: {
+                first_name:"",
+                last_name:"",
+                show_add_form:false,
+            },
+            methods: {
+                add_stock: function () {
+                    let url = "{% url 'stock:add_stock' %}"
+                    let payload = {
+                        csrfmiddlewaretoken: csrfmiddlewaretoken,
+                        first_name: this.first_name,
+                        last_name: this.last_name,
+                    }
+
+                    let posting = $.post(url, payload)
+                    posting.done((data) => {
+                        console.log(data)
+                    })
+                }
+            }
+        }
+    )
+</script>
 {% endblock %}
