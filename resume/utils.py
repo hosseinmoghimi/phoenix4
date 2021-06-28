@@ -1,5 +1,5 @@
 from core.settings import ADMIN_URL
-from resume.apps import APP_NAME
+from .apps import APP_NAME
 
 
 class AdminUtility():
