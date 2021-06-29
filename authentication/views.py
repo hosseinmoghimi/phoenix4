@@ -1,3 +1,4 @@
+from core.settings import SITE_URL
 from django.shortcuts import render,redirect
 from .repo import *
 from .forms import *
@@ -37,7 +38,7 @@ class AuthenticationViews(View):
                 password=login_form.cleaned_data['password']
                 back_url=login_form.cleaned_data['back_url']
                 if back_url is None or not back_url:
-                    back_url=reverse('projectmanager:home')
+                    back_url=SITE_URL
                 request1=ProfileRepo(user=None).login(request=request,username=username,password=password)
                 if request1 is not None and request1.user is not None and request1.user.is_authenticated :
                     # print(back_url)

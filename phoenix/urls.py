@@ -23,7 +23,7 @@ urlpatterns = [
     path('realestate/', include('realestate.urls')),
     path('forums/', include('phoenix_forums.urls')),
     path('admin/', admin.site.urls),
-    path('authentication/', include('authentication.urls')),
+    path('', include('authentication.urls')),
     # url(r"^forums/", include("pinax.forums.urls", namespace="pinax_forums")),
 
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
