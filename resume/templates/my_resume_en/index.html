@@ -43,10 +43,16 @@
             email: "",
             mobile: "",
             message: "",
+            waiting: false,
+            sent: false,
+            error: "",
         },
         methods: {
             add_contact_message: function () {
                 let url = "{% url 'web:add_contact_message' %}"
+                contact_app.waiting = true
+                contact_app.sent = false
+                contact_app.error = false
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     full_name: this.full_name,
@@ -54,12 +60,31 @@
                     email: this.email,
                     mobile: this.mobile,
                     message: this.message,
-                    app_name:"{{APP_NAME}}",
+                    app_name: "{{APP_NAME}}",
                 }
 
                 let posting = $.post(url, payload)
+                posting.fail((error) => {
+                    contact_app.error = "Error while sending message, Try again please"
+                    contact_app.sent = false
+                    contact_app.waiting = false
+                    setTimeout(() => {
+                        contact_app.error = false
+
+                    }, 4000);
+
+                })
                 posting.done((data) => {
                     console.log(data)
+                    contact_app.error = false
+                    contact_app.waiting = false
+                    contact_app.sent = true
+                    contact_app.message = ""
+                    contact_app.subject = ""
+                    setTimeout(() => {
+                        contact_app.sent = false
+
+                    }, 4000);
                 })
             },
         }

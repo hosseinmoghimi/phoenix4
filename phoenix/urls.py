@@ -18,6 +18,7 @@ urlpatterns = [
     path('core/', include('core.urls')),
     path('web/', include('web.urls')),
     path('resume/', include('resume.urls')),
+    path('accounting/', include('accounting.urls')),
     path('', include(HOME_APP_URLS)),
     path('stock/', include('stock.urls')),
     path('realestate/', include('realestate.urls')),

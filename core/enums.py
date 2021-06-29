@@ -26,6 +26,7 @@ class AppNameEnum(TextChoices):
     projectmanager='projectmanager',_('projectmanager')
     # market='market',_('market')
     # transport='transport',_('transport')
+    accounting='accounting',_('accounting')
     # livestock='livestock',_('livestock')
     # charirt='charirty',_('charirty')
     core='core',_('core')

@@ -9,7 +9,28 @@
   {% endblock head %}
 
 
+<style>
+ .contact-sent-message{
+    color: #fff;
+    background: #18d26e;
+    text-align: center;
+    padding: 15px;
+    font-weight: 600;
+  }
+  .contact-error-message{
+    color: #fff;
+    background: #e71919;
+    text-align: center;
+    padding: 15px;
+    font-weight: 600;
+  }
+  .contact-loading {
+    background: #fff;
+    text-align: center;
+    padding: 15px;
+}
 
+</style>
 
 </head>
 
@@ -30,6 +51,11 @@
         </li>
         <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Services</span></a></li>
         <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Contact</span></a></li>
+        {% if perms.resume.change_resumeindex %}
+        <li><a href="{{resume_index.get_edit_url}}" class="nav-link scrollto" target="_blank"><i
+              class="material-icons">edit</i> <span>Edit</span></a></li>
+
+        {% endif %}
       </ul>
     </nav><!-- .nav-menu -->
 

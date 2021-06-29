@@ -14,7 +14,7 @@ class MessengerPage(BasicPage):
 
 
 class Message(MessengerPage):
-    forum=
+    # forum=
     read=models.BooleanField(_("read?"),default=False)
     draft=models.BooleanField(_("draft?"),default=True)
     class Meta:
