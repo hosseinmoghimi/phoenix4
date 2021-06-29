@@ -42,8 +42,10 @@
         </p>
         <p>
             <small>
+                <span class="alert alert-success">
 
-                {{material_request.line_total|to_horuf}} {{CURRENCY}}
+                    {{material_request.line_total|to_horuf}} {{CURRENCY}}
+                </span>
             </small>
 
         </p>
@@ -60,83 +62,79 @@
                 </th>
             </thead>
             <tbody>
+              
+
+
+
+
                 {% for signature in material_request.materialrequestsignature_set.all %}
                 <tr>
-                    <td colspan="3">
-
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-
-                    </td>
-                </tr>
-                {% if signature.description %}
-
-                <tr>
-                    <td colspan="3">
-                        <small class="text-{{signature.get_status_color}}">
-
-                            {{signature.description}}
-                        </small>
-                    </td>
-                </tr>
-                {% endif %}
-                <tr>
                     <td>
-                        <a href="{{signature.profile.get_absolute_url}}">
-                            <img src="{{signature.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
-                            {{signature.profile.name}}
-                        </a>
-                    </td>
-                    <td>
-                        <small>
+                        <div class="media">
+                            <a href="{{signature.profile.get_absolute_url}}">
+                                <img src="{{signature.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
+                            </a>
+                            <div class="media-body">
+                                <div>
 
-                            {{signature.date_added|to_persian_datetime|safe}}
-                        </small>
-                    </td>
-                    <td>
-                        {{signature.get_status_tag|safe}}
-                        {{signature.get_edit_btn|safe}}
+                                    <a href="{{signature.profile.get_absolute_url}}">
+                                        {{signature.profile.name}}
+                                    </a>
+                                    {{signature.get_status_tag|safe}}
+                                    <small class="mx-2 text-secondary">
+
+                                        {{signature.date_added|to_persian_datetime|safe}}
+                                    </small>
+                                    {{signature.get_edit_btn|safe}}
+                                </div>
+                                <p class="text-{{signature.get_status_color}}">
+                                    <small>
+                                        {% if signature.description %}
+
+
+                                        {{signature.description}}
+                                        {% endif %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
 
                     </td>
+
+
                 </tr>
                 {% endfor %}
-                <template v-for="signature in signatures">
-                    <tr>
-                        
-                        <td colspan="3">
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-
-                        </td>
-                    </tr>
-
-                    <tr v-if="signature.description">
-                        <td colspan="3">
-                            <small :class="'text-'+signature.get_status_color" v-text="signature.description">
-                            </small>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                <tr v-for="signature in signatures">
+                    <td>
+                        <div class="media">
                             <a :href="signature.profile.get_absolute_url">
                                 <img :src="signature.profile.image" class="rounded-circle mr-3" width=48 alt="">
-                                <span v-text="signature.profile.name"></span>
                             </a>
-                        </td>
-                        <td>
-                            <small v-text="signature.persian_date_added">
-                            </small>
-                        </td>
-                        <td>
-                            <span :class="'badge badge-'+signature.get_status_color" v-text="signature.status"></span>
-                        </td>
-                    </tr>
-                </template>
+                            <div class="media-body">
+                                <div>
+                                    <a :href="signature.profile.get_absolute_url">
+                                        <span v-text="signature.profile.name"></span>
+                                    </a>
+                                    <span :class="'badge badge-'+signature.get_status_color"
+                                        v-text="signature.status"></span>
+
+                                    <small class="text-secondary" v-text="signature.persian_date_added">
+                                    </small>
+
+                                    <a target="_blank" :href="signature.get_edit_url">
+                                        <i class="material-icons">
+                                            edit
+                                        </i>
+                                    </a>
+                                </div>
+                                <div>
+                                    <small :class="'text-'+signature.get_status_color" v-text="signature.description">
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
@@ -165,7 +163,7 @@
                 </div>
 
                 <div class="col-md-2">
-                   
+
                     <button type="submit" class="btn btn-success">
                         <i class="material-icons">
                             add
