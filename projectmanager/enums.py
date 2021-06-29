@@ -14,6 +14,7 @@ class SignatureStatusEnum(TextChoices):
 
 
 class ProjectStatusEnum(TextChoices):
+    INITIAL='تعریف اولیه',_('تعریف اولیه')
     DELIVERED='تحویل شده',_('تحویل شده')
     IN_PROGRESS='در حال بررسی',_('درحال بررسی')
     DENIED='رد شده',_('ردشده')
@@ -45,7 +46,21 @@ class AssignmentStatusEnum(TextChoices):
 
 def StatusColor(status):
     color="primary"
-    if status==AssignmentStatusEnum.DEFAULT:
+    if status==ProjectStatusEnum.INITIAL:
+        color= 'primary'
+    elif status==ProjectStatusEnum.IN_PROGRESS:
+        color= 'warning'
+    elif status==ProjectStatusEnum.DENIED:
+        color= 'danger'
+    elif status==ProjectStatusEnum.DELIVERED:
+        color= 'dark'
+    elif status==ProjectStatusEnum.ACCEPTED:
+        color= 'success'
+    elif status==ProjectStatusEnum.REQUESTED:
+        color= 'primary'
+    elif status==ProjectStatusEnum.CANCELED:
+        color= 'secondary'
+    elif status==AssignmentStatusEnum.DEFAULT:
         color= 'rose'
     elif status==AssignmentStatusEnum.IN_PROGRESS:
         color= 'info'

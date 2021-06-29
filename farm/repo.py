@@ -123,18 +123,18 @@ class SaloonRepo():
         if enter_date is None:
             enter_date=PersianCalendar().date
         saloon=self.saloon(saloon_id)
-        animal=AnimalRepo(self.user).animal(animal_id=animal_id,animal_tag=animal_tag)
+        animal=AnimalRepo(user=self.user).animal(animal_id=animal_id,animal_tag=animal_tag)
         # AnimalInSaloon.objects.filter(saloon=saloon).filter(animal=animal).delete()
         for animal_in_saloon in AnimalInSaloon.objects.filter(animal=animal).filter(exit_date=None):
             from datetime import timedelta
             animal_in_saloon.exit_date=enter_date+timedelta(seconds=-1)
             animal_in_saloon.save()
-        employee=EmployeeRepo(self.user).me
+        employee=EmployeeRepo(user=self.user).me
 
         a=AnimalInSaloon(animal=animal,employee=employee,saloon=saloon,enter_date=enter_date,animal_price=animal_price,animal_weight=animal_weight)
 
         a.save()
-        employee=EmployeeRepo(self.user).me
+        employee=EmployeeRepo(user=self.user).me
         log=Log(animal=animal,saloon=saloon,farm=saloon.farm,employee=employee)
         log.save()
 

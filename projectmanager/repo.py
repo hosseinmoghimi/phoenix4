@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.http import request
-from projectmanager.enums import RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
+from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
 from authentication.models import Profile
 from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer, ServiceRequestSignatureSerializer
@@ -86,6 +86,10 @@ class ProjectRepo():
             new_project.parent_id = kwargs['parent_id']
 
         new_project.creator=self.me
+        now=timezone.now()
+        new_project.start_date=now
+        new_project.end_date=now
+        new_project.status=ProjectStatusEnum.INITIAL
         new_project.save()
         return new_project
 
@@ -312,7 +316,7 @@ class ServiceRepo():
             signature.service_request_id=service_request_id
             signature.status=status
             signature.date_added=timezone.now()
-            signature.profile=ProfileRepo(self.user).me
+            signature.profile=ProfileRepo(user=self.user).me
             signature.save()
             return signature
 
@@ -410,7 +414,7 @@ class EventRepo():
         else:
             from django.utils import timezone
             event_datetime=timezone.now()
-        new_event=Event(adder=ProfileRepo(self.user).me,event_datetime=event_datetime)
+        new_event=Event(adder=ProfileRepo(user=self.user).me,event_datetime=event_datetime)
         if 'project_id' in kwargs:
             new_event.project_related_id = kwargs['project_id']
         if 'title' in kwargs:
@@ -529,7 +533,7 @@ class MaterialRepo():
                 material_request.save()
             signature.status=status
             signature.date_added=timezone.now()
-            signature.profile=ProfileRepo(self.user).me
+            signature.profile=ProfileRepo(user=self.user).me
             signature.save()
             return signature
 

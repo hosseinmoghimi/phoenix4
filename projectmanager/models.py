@@ -62,6 +62,9 @@ class ProjectManagerPage(CoreBasicPage):
     def get_status_color(self):
         return StatusColor(self.status)
 
+    def get_status_tag(self):
+        return f"""<span class="badge badge-pill badge-{self.get_status_color()}">{self.status}</span>"""
+    
     class Meta:
         verbose_name = _("ProjectManagerPage")
         verbose_name_plural = _("ProjectManagerPage")

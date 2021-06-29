@@ -53,14 +53,14 @@ class PageCommentRepo:
             self.user=self.request.user
         self.objects=PageComment.objects
     def add_comment(self,comment,page_id,*args, **kwargs):
-        profile=ProfileRepo(self.user).me
+        profile=ProfileRepo(user=self.user).me
         page_comment=PageComment(comment=comment,page_id=page_id,profile=profile)
         
         page_comment.save()
         return page_comment
 
     def delete_comment(self,page_comment_id,*args, **kwargs):
-        profile=ProfileRepo(self.user).me
+        profile=ProfileRepo(user=self.user).me
         page_comment=PageComment.objects.filter(pk=page_comment_id).first()
 
         if page_comment is not None and page_comment.profile==profile:
