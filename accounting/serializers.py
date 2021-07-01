@@ -5,7 +5,7 @@ class FinancialAccountSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:
         model = FinancialAccount
-        fields=['id','profile']
+        fields=['id','profile','total']
 
 class BankAccountSerializer(serializers.ModelSerializer):
     pay_to=FinancialAccountSerializer()

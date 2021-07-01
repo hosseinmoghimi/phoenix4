@@ -8,5 +8,6 @@ urlpatterns = [
     path('',views.BasicViews().home,name="home"),
     path('financial_account/<int:pk>/',views.TransactionViews().financial_account,name="financial_account"),
     path('transaction/<int:pk>/',views.TransactionViews().transaction,name="transaction"),
+    path('transactions/<int:financial_account_id>/',views.TransactionViews().transactions,name="transactions"),
    
 ]

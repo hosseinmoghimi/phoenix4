@@ -1,12 +1,34 @@
 {% extends "accounting/layout.html" %}
 {% load static %}
 {% load to_price %}
-
+{% load to_transaction_color %}
+{% load to_persian_date %}
 {% block accounting_content %}
-{{financial_account.profile.name}}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center card-title">
+                    {{financial_account.profile.name}}
+                </h4>
+            </div>
+            <div class="card-body">
+                <p>
+
+                    <span class="alert alert-{{financial_account.total|to_transaction_color}}">
+                        مانده : {{financial_account.total|to_price}}
+                    </span>
+                </p>
+                {% include "accounting/includes/transactions-app/template.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 
 {% block accounting_script %}
+{% include "accounting/includes/transactions-app/script.html" %}
 
 {% endblock %}

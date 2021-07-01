@@ -1,0 +1,39 @@
+{% load to_price %}
+{% load to_persian_date %}
+<div id="transactions-app">
+    
+<table class="table">
+    {% for transaction in transactions %}
+
+    <tr>
+        <td>
+            {{transaction.title}}
+        </td>
+        <td>
+            <a href="{{transaction.pay_from.get_absolute_url}}">
+                <img src="{{transaction.pay_from.profile.image}}" class="rounded-circle" width="32"
+                    alt="">
+                {{transaction.pay_from.profile.name}}
+            </a>
+        </td>
+        <td>
+            <a href="{{transaction.pay_to.get_absolute_url}}">
+                <img src="{{transaction.pay_to.profile.image}}" class="rounded-circle" width="32"
+                    alt="">
+
+                {{transaction.pay_to.profile.name}}
+            </a>
+        </td>
+        <td>
+            {{transaction.amount|to_price}}
+        </td>
+        <td>
+            <small class="text-secondary">
+
+                {{transaction.date_paid|to_persian_datetime|safe}}
+            </small>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>

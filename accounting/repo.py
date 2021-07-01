@@ -3,7 +3,7 @@ from django.utils import translation
 from resume.apps import APP_NAME
 from accounting.models import BankAccount, FinancialAccount, Transaction
 from authentication.repo import ProfileRepo
-
+from django.db.models import Q
 class BankAccountRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -39,6 +39,9 @@ class FinancialAccountRepo:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
         self.objects=FinancialAccount.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        return objects
     def financial_account(self,*args, **kwargs):
         pk=0
         
@@ -65,6 +68,9 @@ class TransactionRepo:
         self.objects=Transaction.objects.all()
     def list(self,*args, **kwargs):
         objects=self.objects.all()
+        if 'financial_account_id' in kwargs:
+            financial_account_id=kwargs['financial_account_id']
+            objects=objects.filter(Q(pay_to_id=financial_account_id)|Q(pay_from_id=financial_account_id))
         return objects
     def transaction(self,*args, **kwargs):
         pk=0
