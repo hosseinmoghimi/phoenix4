@@ -66,7 +66,8 @@ class ResumeIndex(models.Model):
 
     birth_day=models.DateField(_("birth_day"),null=True,blank=True, auto_now=False, auto_now_add=False)
     website=models.CharField(_("website"),null=True,blank=True, max_length=500)
-    phone=models.CharField(_("phone"),null=True,blank=True, max_length=50)
+    # phone=models.CharField(_("phone"),null=True,blank=True, max_length=50)
+    # address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     city=models.CharField(_("city"),null=True,blank=True, max_length=50)
     age=models.IntegerField(_("age"),null=True,blank=True)
     degree=models.CharField(_("degree"),null=True,blank=True, max_length=100)

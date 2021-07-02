@@ -18,7 +18,8 @@ class ResumeIndexRepo:
             profile_id=kwargs['profile_id']
             resume_index= self.objects.filter(profile_id=profile_id).first()
             if resume_index is None:
-                resume_index=ResumeIndex(profile_id=profile_id)
+                profile=ProfileRepo(forced=True).profile(profile_id=profile_id)
+                resume_index=ResumeIndex(profile_id=profile_id,title=profile.name)
                 resume_index.save()
             return resume_index
         elif 'pk' in kwargs:

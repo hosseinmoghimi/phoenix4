@@ -105,6 +105,7 @@ class ProfileContact(models.Model):
     profile=models.ForeignKey("profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     name=models.CharField(_("name"), max_length=50)
     value=models.CharField(_("value"), max_length=50)
+    icon=models.TextField(_("icon"), max_length=50)
     class Meta:
         verbose_name = _("ProfileContact")
         verbose_name_plural = _("ProfileContacts")
