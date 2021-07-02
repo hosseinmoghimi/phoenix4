@@ -1,3 +1,4 @@
+from core.settings import MEDIA_URL, STATIC_URL
 from django.db import models
 from django.db.models import Q
 
@@ -12,6 +13,29 @@ from tinymce.models import HTMLField
 from .enums import *
 from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
+
+class Asset(models.Model):
+    title=models.CharField(_("title"), max_length=50)
+    price=models.IntegerField(_("price"),default=0)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    year=models.IntegerField(_("سال ساخت"))
+    image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"Property",null=True,blank=True, height_field=None, width_field=None, max_length=None)
+    description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=5000)
+
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+
+    class Meta:
+        verbose_name = _("Asset")
+        verbose_name_plural = _("Assets")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":asset", kwargs={"asset_id": self.pk})
+
 
 
 class FinancialAccount(models.Model):

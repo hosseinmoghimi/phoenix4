@@ -2,7 +2,7 @@ from core.enums import ParametersEnum
 from core.repo import ParameterRepo
 from django.utils import translation
 from accounting.models import FinancialAccount
-from accounting.repo import FinancialAccountRepo, TransactionRepo
+from accounting.repo import AssetRepo, FinancialAccountRepo, TransactionRepo
 from django.shortcuts import render,reverse
 from .apps import APP_NAME
 from django.views import View
@@ -19,6 +19,12 @@ def getContext(request,*args, **kwargs):
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
     }
     return context
+class AssetViews(View):
+    def asset(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        asset=AssetRepo(request=request).asset()
+        context['asset']=asset
+        return render(request,TEMPLATE_ROOT+"asset.html",context)
 
 
 
@@ -27,6 +33,8 @@ class BasicViews(View):
         context=getContext(request=request)
         accounts=FinancialAccountRepo(request=request).list()
         context['accounts']=accounts
+        assets=AssetRepo(request=request).list()
+        context['assets']=assets
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class TransactionViews(View):
     def transactions(self,request,*args, **kwargs):

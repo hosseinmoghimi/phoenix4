@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.utils import translation
 from resume.apps import APP_NAME
-from accounting.models import BankAccount, FinancialAccount, Transaction
+from accounting.models import Asset, BankAccount, FinancialAccount, Transaction
 from authentication.repo import ProfileRepo
 from django.db.models import Q
 class BankAccountRepo:
@@ -26,6 +26,33 @@ class BankAccountRepo:
             pk=kwargs['id']
         bank_account= self.objects.filter(pk=pk).first()
         return bank_account
+       
+class AssetRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=Asset.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        return objects
+    def asset(self,*args, **kwargs):
+        pk=0
+        
+        if 'asset_id' in kwargs:
+            pk=kwargs['asset_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        asset= self.objects.filter(pk=pk).first()
+        return asset
+
 
        
 class FinancialAccountRepo:

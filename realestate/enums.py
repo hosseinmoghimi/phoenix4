@@ -11,3 +11,7 @@ class FloorEnum(TextChoices):
 class KitchenTypeEnum(TextChoices):
     REGULAR='معمولی',_('معمولی')
     ISLAND='جزیره',_('جزیره')
+class CarBrandEnum(TextChoices):
+    PEUGEOT='پژو',_('پژو')
+    IRAN_KHODRO='ایران خودرو',_('ایران خودرو')
+    SAIPA='سایپا',_('سایپا')
