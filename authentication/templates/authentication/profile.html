@@ -213,7 +213,10 @@
                                 <h6 class="mb-0">همراه</h6>
                             </div>
                             <div class="col-sm-9 text-secondary farsi">
+                                {% if selected_profile.mobile %}
+                                  
                                 {{selected_profile.mobile}}
+                                {% endif %}
                             </div>
                         </div>
                         <hr>
@@ -222,7 +225,10 @@
                                 <h6 class="mb-0">بیو</h6>
                             </div>
                             <div class="col-sm-9 text-secondary farsi">
+                                {% if selected_profile.bio %}
+                                  
                                 {{selected_profile.bio}}
+                                {% endif %}
                             </div>
                         </div>
                         <hr>
@@ -231,15 +237,17 @@
                                 <h6 class="mb-0">آدرس</h6>
                             </div>
                             <div class="col-sm-9 text-secondary farsi">
-
+                                {% if selected_profile.address %}
+                                  
                                 {{selected_profile.address}}
+                                {% endif %}
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a class="btn btn-info " target="__blank"
-                                    href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
+                                <a class="btn btn-info btn-outline-info text-light" target="__blank"
+                                    href="{{selected_profile.get_edit_url}}">ویرایش</a>
                             </div>
                         </div>
                     </div>
@@ -255,7 +263,10 @@
 
                 </div>
 
+              {% include "realestate2/includes/agent.html" %}
+                {% block content_profile %}
 
+                {% endblock content_profile %}
 
             </div>
         </div>

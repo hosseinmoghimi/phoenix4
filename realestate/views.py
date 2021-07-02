@@ -1,3 +1,4 @@
+from authentication.views import ProfileContext
 from realestate.utils import AdminUtility
 from core.enums import ParametersEnum
 from core.repo import ParameterRepo
@@ -6,7 +7,7 @@ from django.shortcuts import render,reverse
 from .apps import APP_NAME
 from core.views import CoreContext, TEMPLATE_ROOT
 from django.views import View
-from .repo import PropertyRepo
+from .repo import CarRepo, PropertyRepo
 TEMPLATE_ROOT=APP_NAME+"2/"
 
 def getContext(request):
@@ -25,6 +26,11 @@ class BasicViews(View):
         properties=PropertyRepo(request=request).list()
         context['properties']=properties
         return render(request,TEMPLATE_ROOT+'index.html',context)
+    def agent(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        context.update(ProfileContext(request=request,profile_id=kwargs['pk']))
+        context['agent']=context['selected_profile']
+        return render(request,TEMPLATE_ROOT+'agent.html',context)
 class PropertyViews(View):
     def property_media(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -34,4 +40,10 @@ class PropertyViews(View):
         property=PropertyRepo(request=request).property(*args, **kwargs)
         context['property']=property
         return render(request,TEMPLATE_ROOT+'property.html',context)
+class CarViews(View):
+    def car(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        car=CarRepo(request=request).car(*args, **kwargs)
+        context['car']=car
+        return render(request,TEMPLATE_ROOT+'car.html',context)
 # Create your views here.

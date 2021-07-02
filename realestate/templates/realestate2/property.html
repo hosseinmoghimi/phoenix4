@@ -216,9 +216,36 @@
                                 {% endif %}
                                 <div class="listing_list rtl farsi">
                                     <ul>
-                                        <li>شناسه : {{property.id}}</li>
-                                        <li>ثبت شده در {{property.date_added|to_persian_date|safe}}</li>
-                                        <li>Off plan</li>
+                                        <li>
+                                            <em>
+
+                                                سال ساخت : 
+                                            </em>
+                                            <span class="text-primary">
+
+                                                {{property.year}}
+                                            </span>
+                                        </li>
+                                        <li>
+<em>
+
+    شناسه : 
+</em>
+                                            
+<span>
+
+    {{property.id}}
+</span>                                        
+                                        </li>
+                                        <li>
+                                            <em>
+
+                                                ثبت شده در :
+                                            </em>
+                                            
+                                            {{property.date_added|to_persian_date|safe}}</li>
+                                        <li>
+                                            Off plan</li>
                                     </ul>
                                 </div>
 
@@ -235,7 +262,7 @@
                                     </div>
 
                                     <div class="rtl farsi prop_agent_name">
-                                        <a href="{{property.agent.get_absolute_url}}" class="docs-creator">
+                                        <a href="{{property.get_agent_url}}" class="docs-creator">
                                      
                                      
                                             {{property.agent.name}}

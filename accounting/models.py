@@ -1,4 +1,4 @@
-from core.settings import MEDIA_URL, STATIC_URL
+from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from django.db.models import Q
 
@@ -15,6 +15,8 @@ from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
 
 class Asset(models.Model):
+    app_name=models.CharField(_("app_name"), max_length=50)
+    class_name=models.CharField(_("class_name"), max_length=50)
     title=models.CharField(_("title"), max_length=50)
     price=models.IntegerField(_("price"),default=0)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
@@ -32,10 +34,18 @@ class Asset(models.Model):
 
     def __str__(self):
         return self.title
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{self.app_name}/{self.class_name}/{self.pk}/change/"
     def get_absolute_url(self):
-        return reverse(APP_NAME+":asset", kwargs={"asset_id": self.pk})
-
+        return reverse(self.app_name+":"+self.class_name, kwargs={"pk": self.pk})
+    def get_edit_btn(self):
+        return f"""
+        <a href="{self.get_edit_url()}" target="_blank">
+      <i class="material-icons">
+          edit
+      </i>
+  </a>
+        """
 
 
 class FinancialAccount(models.Model):

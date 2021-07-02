@@ -21,9 +21,9 @@ class Property(Asset):
     kitchen_type=models.CharField(_("نوع آشپزخانه"),choices=KitchenTypeEnum.choices,default=KitchenTypeEnum.REGULAR, max_length=50)
     area=models.IntegerField(_("مساحت"))
     address=models.CharField(_("آدرس"),null=True,blank=True, max_length=500)
-    class_name='property'
     location=models.CharField(_("location"),null=True,blank=True, max_length=5000)
-    
+    def get_agent_url(self):
+        return reverse(APP_NAME+":agent",kwargs={'pk':self.agent.id})
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
@@ -33,6 +33,8 @@ class Property(Asset):
         verbose_name = _("Property")
         verbose_name_plural = _("Propertys")
     def save(self,*args, **kwargs):
+        self.class_name="property"
+        self.app_name=APP_NAME
         if self.location is not None:
             self.location=self.location.replace('width="600"','width="100%"')
             self.location=self.location.replace('height="450"','height="700"')
@@ -50,6 +52,10 @@ class Car(Asset):
     distance=models.IntegerField(_("کارکرد به کیلومتر"))
 
 
+    def save(self,*args, **kwargs):
+        self.class_name="car"
+        self.app_name=APP_NAME
+        return super(Car,self).save(*args, **kwargs)
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)

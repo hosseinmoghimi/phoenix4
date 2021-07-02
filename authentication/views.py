@@ -9,6 +9,16 @@ TEMPLATE_ROOT="authentication/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     return context
+def ProfileContext(request,*args, **kwargs):
+    context=getContext(request=request)
+    if 'profile' in kwargs:
+        selected_profile=kwargs['profile']
+    elif 'profile_id' in kwargs:
+        selected_profile=ProfileRepo(request=request).profile(pk=kwargs['profile_id'])
+    elif 'pk' in kwargs:
+        selected_profile=ProfileRepo(request=request).profile(pk=kwargs['pk'])
+    context['selected_profile']=selected_profile
+    return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
