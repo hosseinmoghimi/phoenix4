@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill,Resume,ResumeCategory, ResumeTestimonial
+from .models import ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill,Resume,ResumeCategory, ResumeTestimonial,ContactMessage
 # Register your models here.
 
 admin.site.register(ResumeCategory)
+admin.site.register(ContactMessage)
 admin.site.register(ResumeSkill)
 admin.site.register(Resume)
 admin.site.register(ResumeFact)

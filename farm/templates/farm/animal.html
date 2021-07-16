@@ -1,0 +1,533 @@
+{% extends "farm/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+
+{% block farm_content %}
+
+<div class="row" id="chart-app">
+    <div class="col-12">
+
+      
+    </div>
+</div>
+<div class="row" id="animal-app">
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    {{animal.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+                <h4 class="text-primary">
+                    <span class="material-icons">
+                        sell
+                    </span>
+                    {{animal.tag}}
+                </h4>
+                {% if perms.farm.change_animal %}
+                <p>
+
+                    {{animal.get_edit_btn|safe}}
+                </p>
+                {% endif %}
+                <p>
+                    {{animal.price|to_price}}
+                </p>
+                <div class="text-center">
+
+                    <img src="{{animal.image}}" width="80%" class="rounded mx-auto" alt="">
+                </div>
+
+                <div class="">
+                    {% if animal.current_in_saloon %}
+                    <p>
+
+                        <a class="btn btn-success" href="{{animal.current_in_saloon.saloon.farm.get_absolute_url}}">
+                            {{animal.current_in_saloon.saloon.farm.name}}
+                        </a>
+
+
+                        <a class="btn btn-success" href="{{animal.current_in_saloon.saloon.get_absolute_url}}">
+                            {{animal.current_in_saloon.saloon.name}}
+                        </a>
+                    </p>
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    {{animal.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+
+                <form @submit.prevent="enter_animal_to_saloon">
+                    <div class="row">
+
+                        <label class="col-sm-12 col-form-label">تاریخ ورود</label>
+
+
+                        <div class="col-sm-10">
+
+                            <date-picker v-model="enter_date"></date-picker>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label for="animal_weight" class="bmd-label-floating">
+
+                                    وزن دام
+                                </label>
+                                <input type="text" id="animal_weight" class="form-control" v-model="animal_weight">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label for="animal_price" class="bmd-label-floating">
+
+                                    قیمت دام
+                                </label>
+                                <input type="text" id="animal_price" class="form-control" v-model="animal_price">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group is-filled">
+                                <label for="saloon" class="bmd-label-floating">
+
+                                    سالن </label>
+                                <select name="" id="saloon" class="form-control" v-model="saloon_id">
+                                    <option disabled value="سالن را انتخاب کنید"></option>
+                                    {% for saloon in saloons %}
+
+                                    <option value="{{saloon.id}}">{{saloon.farm.name}} | {{saloon.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+
+                            <button class="btn btn-success" type="submit">ثبت</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-8">
+
+        <div class="card">
+            <div class="card-header card-header-icon card-header-info">
+                <div class="card-icon">
+                    <i class="material-icons">timeline</i>
+                </div>
+                <h4 class="card-title">
+                    نمودار وزن
+                </h4>
+
+            </div>
+            <div class="card-body">
+                <div id="colouredBarsChart" class="ct-chart">
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    خوراک و دان مصرفی {{animal.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            تاریخ
+                        </th>
+                        <th>
+                            سالن
+                        </th>
+                        <th>
+                            خوراک
+                        </th>
+
+
+                        <th>
+                            میزان مصرف
+                        </th>
+
+
+                        <th>
+                            قیمت واحد
+                        </th>
+
+                        <th>
+                            جمع
+                        </th>
+
+                    </thead>
+                    <tbody>
+                        {% for saloon_food in saloon_foods %}
+                        <tr>
+                            <td>
+                                {{saloon_food.food_date|to_persian_date|safe}}
+                            </td>
+                            <td>
+                                <a href="{{saloon_food.saloon.farm.get_absolute_url}}">
+                                    {{saloon_food.saloon.farm.name}}
+
+                                </a>
+                                |
+                                <a href="{{saloon_food.saloon.get_absolute_url}}">
+                                    {{saloon_food.saloon.name}}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{saloon_food.food.get_absolute_url}}">
+                                    {{saloon_food.food.title}}
+                                </a>
+
+                            </td>
+
+                            <td>
+                                {{saloon_food.food_per_animal.quantity}}
+
+                                {{saloon_food.unit_name}}
+                            </td>
+
+                            <td>
+                                {{saloon_food.unit_price|to_price}}
+
+                            </td>
+                            <td>
+                                {{saloon_food.food_per_animal.total|to_price}}
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    نگهداری {{animal.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>سالن</th>
+                        <th>
+                            وزن
+                        </th>
+                        <th>قیمت برآورد شده</th>
+                        <th>ورود</th>
+                        <th>خروج</th>
+                        <th>
+                            ثبت توسط
+                        </th>
+                    </thead>
+                    <tbody>
+
+
+
+                        {% for animal_in_saloon in animalinsaloon_set %}
+                        <tr>
+                            <td>
+
+                                <a class="mx-2" href="{{animal_in_saloon.saloon.farm.get_absolute_url}}">
+                                    {{animal_in_saloon.saloon.farm.name}}
+                                </a>
+                                |
+                                <a class="mx-2" href="{{animal_in_saloon.saloon.get_absolute_url}}">
+                                    {{animal_in_saloon.saloon.name}}
+                                </a>
+
+                            </td>
+                            <td>
+                                {{animal_in_saloon.animal_weight}}
+                                کیلوگرم
+                            </td>
+                            <td>
+                                {{animal_in_saloon.animal_price|to_price}}
+                            </td>
+                            <td>
+                                <small>
+
+                                    {{animal_in_saloon.enter_date|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+                            <td>
+                                <small>
+                                    {% if animal_in_saloon.exit_date %}
+
+                                    {{animal_in_saloon.exit_date|to_persian_datetime|safe}}
+                                    {% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                <a title="{{animal_in_saloon.employee.profile.name}}"
+                                    href="{{animal_in_saloon.employee.get_absolute_url}}">
+                                    <img src="{{animal_in_saloon.employee.profile.image}}" width="32"
+                                        class="rounded-circle">
+                                </a>
+                                {% if perms.farm.change_animalinsaloon %}
+                                {{animal_in_saloon.get_edit_btn|safe}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-none col-md-6">
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    خوراک {{animal.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+
+                    </thead>
+                    <tbody>
+                        {% for log in animal.log_set.all %}
+                        <tr>
+                            <td>
+                                {{log.title}}
+                            </td>
+                            <td>
+                                <small>
+
+                                    {{log.date_added|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="d-none col-md-6">
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    لاگ {{animal.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+
+                    </thead>
+                    <tbody>
+                        {% for log in animal.log_set.all %}
+                        <tr>
+                            <td>
+                                {{log.title}}
+                            </td>
+                            <td>
+                                <small>
+
+                                    {{log.date_added|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block farm_script %}
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let animal_tag = "{{animal.tag}}"
+    let saloon_id = 0
+    let animal_weight = 0
+    let animal_price = 0
+    try {
+        saloon_id = parseInt("{{animal.current_in_saloon.saloon.id}}")
+
+    } catch (error) {
+
+    }
+
+
+    try {
+        animal_weight = parseFloat("{{animal.current_in_saloon.animal_weight}}")
+
+    } catch (error) {
+
+    }
+
+
+    try {
+        animal_price = parseInt("{{animal.current_in_saloon.animal_price}}")
+
+    } catch (error) {
+
+    }
+    let max_weight=parseFloat("{{max_weight}}")*1.2
+    let weights = JSON.parse(`{{weights|escapejs}}`)
+    let url_enter_animal_to_saloon = "{% url 'farm:enter_animal_to_saloon' %}"
+   
+    let animal_app = new Vue({
+        el: "#animal-app",
+        data: {
+            enter_date: current_date,
+            animal_price: animal_price,
+            animal_weight: animal_weight,
+            saloon_id: saloon_id,
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+        },
+        mounted: function () {
+            this.draw_timeline()
+      
+        },
+
+        methods: {
+            draw_timeline: function () {
+                if ($('#colouredBarsChart').length != 0) {
+
+                    let optionsColouredBarsChart = {
+                        lineSmooth: Chartist.Interpolation.cardinal({
+                            tension: 10
+                        }),
+                        axisY: {
+                            showGrid: true,
+                            offset: 40
+                        },
+                        axisX: {
+                            showGrid: false,
+                        },
+                        low: 0,
+                        high: max_weight,
+                        showPoint: true,
+                        height: '300px'
+                    };
+
+                    let dataColouredBarsChart = {
+                        labels: weights.slice(1),
+                        series: [
+                            weights,
+                        ]
+                    };
+
+                    var colouredBarsChart = new Chartist.Line('#colouredBarsChart', dataColouredBarsChart, optionsColouredBarsChart);
+
+                    // md.startAnimationForLineChart(colouredBarsChart);
+
+
+                }
+            },
+      
+            to_price: function (price) {
+
+                return toPrice(price, TUMAN)
+            },
+
+
+
+            enter_animal_to_saloon: function () {
+                let payload = {
+                    animal_tag: animal_tag,
+                    saloon_id: this.saloon_id,
+                    animal_price: this.animal_price,
+                    animal_weight: this.animal_weight,
+                    enter_date: this.enter_date,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                }
+                let url = url_enter_animal_to_saloon
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    swal({
+                        title: "ثبت اطلاعات دام",
+                        text: "ورود دام به سالن با موفقیت ثبت گردید.",
+                        buttonsStyling: false,
+                        confirmButtonClass: "btn btn-success",
+                        type: "success"
+                    }).catch(swal.noop)
+                })
+            },
+
+        }
+    })
+</script>
+{% endblock %}

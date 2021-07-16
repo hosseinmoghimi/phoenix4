@@ -16,7 +16,7 @@
                 {% if perms.resume.add_resumefact %}
                 {{admin_utility.get_add_fact_btn|safe}}
                 {% endif %}
-                {% for fact in resume_index.profile.resumefact_set.all %}
+                {% for fact in resume_index.resumefact_set.all %}
                   
                 <div class="col-lg-3 col-md-6">
                     <div class="count-box">

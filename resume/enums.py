@@ -16,3 +16,9 @@ class ServiceColorEnum(TextChoices):
     yellow='yellow',_('yellow')
     red='red',_('red')
     teal='teal',_('teal')
+class LanguageEnum(TextChoices):
+    ENGLISH='english',_('english')
+    DUTCH='dutch',_('dutch')
+    FARSI='farsi',_('farsi')
+    RUSSIAN='russian',_('russian')
+    ARABIC='arabic',_('arabic')

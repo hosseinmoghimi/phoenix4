@@ -17,12 +17,17 @@
                 <img src="{{resume_index.image}}" class="img-fluid" alt="">
             </div>
             <div class="col-lg-8 pt-4 pt-lg-0 content">
+                {% if job_title %}
+
                 <h3>{{resume_index.job_title}}</h3>
+                {% endif %}
                 <div class="fst-italic">
 
                     <div class="my-3">
+                        {% if resume_index.about_middle %}
 
                         {{resume_index.about_middle|safe}}
+                        {% endif %}
                     </div>
 
                 </div>
@@ -32,7 +37,8 @@
 
                             {% if resume_index.birth_day %}
                             <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong>
-                                <span>{{resume_index.birth_day}}</span></li>
+                                <span>{{resume_index.birth_day}}</span>
+                            </li>
 
                             {% endif %}
                             {% if resume_index.website %}
@@ -46,12 +52,14 @@
                             {% endif %}
                             {% if resume_index.profile.mobile %}
                             <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong>
-                                <span>{{resume_index.profile.mobile}}</span></li>
+                                <span>{{resume_index.profile.mobile}}</span>
+                            </li>
 
                             {% endif %}
                             {% if resume_index.city %}
                             <li><i class="bi bi-chevron-right"></i> <strong>City:</strong>
-                                <span>{{resume_index.city}}</span></li>
+                                <span>{{resume_index.city}}</span>
+                            </li>
 
                             {% endif %}
                     </div>
@@ -59,12 +67,14 @@
                         <ul>
                             {% if resume_index.age %}
                             <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong>
-                                <span>{{resume_index.age}}</span></li>
+                                <span>{{resume_index.age}}</span>
+                            </li>
 
                             {% endif %}
                             {% if resume_index.degree %}
                             <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong>
-                                <span>{{resume_index.degree}}</span></li>
+                                <span>{{resume_index.degree}}</span>
+                            </li>
 
                             {% endif %}
                             {% if resume_index.email %}
@@ -83,8 +93,10 @@
                     </div>
                 </div>
                 <div>
+                    {% if resume_index.about_bottom %}
 
                     {{resume_index.about_bottom|safe}}
+                    {% endif %}
                 </div>
 
             </div>

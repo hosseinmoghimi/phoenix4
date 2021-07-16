@@ -1,17 +1,21 @@
-from .models import Resume, ResumeCategory, ResumeIndex, ResumePortfolio, ResumeService
+from resume.enums import LanguageEnum
+from .models import Resume, ResumeCategory, ResumeIndex, ResumePortfolio, ResumeService, ResumeTestimonial,ContactMessage
 from authentication.repo import ProfileRepo
 
 class ResumeIndexRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
         self.user=None
+        self.language=LanguageEnum.ENGLISH
         if 'request' in kwargs:
             self.request=kwargs['request']
             self.user=self.request.user
         if 'user' in kwargs:
             self.user=kwargs['user']
+        if 'language' in kwargs:
+            self.language=kwargs['language']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=ResumeIndex.objects.all()
+        self.objects=ResumeIndex.objects.filter(language=self.language)
     def resume_index(self,*args, **kwargs):
         pk=0
         if 'profile_id' in kwargs:
@@ -19,8 +23,11 @@ class ResumeIndexRepo:
             resume_index= self.objects.filter(profile_id=profile_id).first()
             if resume_index is None:
                 profile=ProfileRepo(forced=True).profile(profile_id=profile_id)
-                resume_index=ResumeIndex(profile_id=profile_id,title=profile.name)
+                resume_index=ResumeIndex(profile_id=profile_id,title=profile.name,language=self.language)
                 resume_index.save()
+                from django.utils import timezone
+                t1=ResumeTestimonial(resume_index=resume_index,teller="aa",body="sdsd",teller_description="aa1",title="aa2",footer="saa2",date_added=timezone.now())
+                t1.save()
             return resume_index
         elif 'pk' in kwargs:
             pk=kwargs['pk']
@@ -113,3 +120,37 @@ class ResumeRepo:
             pk=kwargs['id']
         resume_category= ResumeCategory.objects.filter(pk=pk).first()
         return resume_category
+
+
+
+class ContactMessageRepo:
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.app_name=""
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        if 'app_name' in kwargs:
+            self.app_name = kwargs['app_name']
+        self.objects = ContactMessage.objects
+        self.me=ProfileRepo(user=self.user).me
+    def add(self,*args, **kwargs):
+        contact_message=ContactMessage()
+        contact_message.app_name=self.app_name
+        if 'full_name' in kwargs:
+            contact_message.full_name=kwargs['full_name']
+        if 'resume_index_id' in kwargs:
+            contact_message.resume_index_id=kwargs['resume_index_id']
+        if 'subject' in kwargs:
+            contact_message.subject=kwargs['subject']
+        if 'email' in kwargs:
+            contact_message.email=kwargs['email']
+        if 'message' in kwargs:
+            contact_message.message=kwargs['message']
+        if 'mobile' in kwargs:
+            contact_message.mobile=kwargs['mobile']
+        contact_message.save()
+        return contact_message

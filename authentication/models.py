@@ -93,9 +93,6 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":profile", kwargs={"pk": self.pk})
 
-    def get_absolute_url2(self):
-        return reverse(APP_NAME+":profile2", kwargs={"pk": self.pk})
-
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"
 
@@ -105,7 +102,8 @@ class ProfileContact(models.Model):
     profile=models.ForeignKey("profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     name=models.CharField(_("name"), max_length=50)
     value=models.CharField(_("value"), max_length=50)
-    icon=models.TextField(_("icon"), max_length=50)
+    icon=models.CharField(_("icon"), null=True,blank=True, max_length=50)
+    bs_class=models.CharField(_("bootstrap class"), null=True,blank=True, max_length=50)
     class Meta:
         verbose_name = _("ProfileContact")
         verbose_name_plural = _("ProfileContacts")

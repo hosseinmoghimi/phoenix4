@@ -21,12 +21,21 @@ class AdminUtility():
     def get_add_skill_btn(self):
         return self.get_add_btn(class_name='resumeskill')
 
+    def get_add_resume_btn(self):
+        return self.get_add_btn(class_name='resume')
+
+    def get_add_service_btn(self):
+        return self.get_add_btn(class_name='resumeservice')
+
     def get_add_resumecategory_btn(self):
         return self.get_add_btn(class_name='resumecategory')
+
     def get_add_fact_btn(self):
         return self.get_add_btn(class_name='resumefact')
+
     def get_add_testimonial_btn(self):
         return self.get_add_btn(class_name='resumetestimonial')
+
     
     
     

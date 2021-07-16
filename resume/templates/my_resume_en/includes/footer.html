@@ -2,14 +2,19 @@
     <div class="container">
       <h3>{{resume_index.title}}</h3>
       <p>
+        {% if resume_index.profile.bio %}
+          
         {{resume_index.profile.bio}}
+        {% endif %}
       </p>
       <div class="social-links">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+        {% for contact in resume_index.profile.profilecontact_set.all %}
+            
+        <a title="{{contact.name}}" href="{{contact.value}}" target="_blank" class="{{contact.bs_class}}">
+          {{contact.icon|safe}}
+        </a>
+        {% endfor %} 
+    
       </div>
       <div class="copyright">
         &copy; Copyright <strong><span>MyResume</span></strong>. All Rights Reserved
@@ -20,6 +25,12 @@
         <!-- Licensing information: [license-url] -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/ -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+
+        | <a href="{{SITE_URL}}">
+          <i class="material-icons">
+            home
+          </i>
+          </a>
       </div>
     </div>
   </footer>

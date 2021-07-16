@@ -10,19 +10,28 @@
 
                 {{resume_index.services_top|safe}}
             </div>
+            <div class="text-center">
+
+                {% if perms.resume.add_resumefact %}
+                {{admin_utility.get_add_service_btn|safe}}
+                {% endif %}
+            </div>
+
         </div>
 
-        <div class="row">
-            {% for service in resume_index.profile.resumeservice_set.all %}
 
-            <div class="col-lg-4 col-md-6 " data-aos="zoom-in"
-                data-aos-delay="{{forloop.counter}}00">
+        <div class="row">
+            {% for service in resume_index.resumeservice_set.all %}
+
+            <div class="col-lg-4 col-md-6 " data-aos="zoom-in" data-aos-delay="{{forloop.counter}}00">
                 <div class="text-center">
                     {{service.icon.get_icon_tag|safe}}
 
                 </div>
 
-                <a href="{{service.get_absolute_url}}"><h4 class="text-center">{{service.title}}</h4></a>
+                <a href="{{service.get_absolute_url}}">
+                    <h4 class="text-center">{{service.title}}</h4>
+                </a>
                 <div class="d-block text-center">
                     {{service.short_description|safe}}
                 </div>

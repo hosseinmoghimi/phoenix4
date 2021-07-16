@@ -12,9 +12,14 @@
                 {{resume_index.resume_top|safe}}
             </div>
         </div>
+        <div class="text-center">
+            {% if perms.resume.add_resumeskill %}
+            {{admin_utility.get_add_resume_btn|safe}}
+            {% endif %}
 
+        </div>
         <div class="row">
-            {% for resume_category in resume_index.profile.resumecategory_set.all %}
+            {% for resume_category in resume_index.resumecategory_set.all %}
 
 
             <div class="col-lg-6">

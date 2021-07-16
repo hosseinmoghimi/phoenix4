@@ -1,3 +1,4 @@
+from resume.enums import LanguageEnum
 from resume.utils import AdminUtility
 from resume.models import ResumePortfolio
 from django.http import Http404
@@ -13,18 +14,26 @@ TEMPLATE_ROOT="my_resume_en/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['admin_utility']=AdminUtility(request=request)
+    context['title']='Resume'
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
-        context=getContext(request=request)      
+        context=getContext(request=request)
+        # language=LanguageEnum.ENGLISH
+        # if 'language' in kwargs:
+        #     language=kwargs['language']
         if 'profile_id' in kwargs:
-            resume_index=ResumeIndexRepo(request=request).resume_index(*args, **kwargs)
+            print(kwargs)
+            print(100*"*")
+            resume_index=ResumeIndexRepo(request=request,*args, **kwargs).resume_index(*args, **kwargs)
             context['resume_index']=resume_index
             parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
             context['location']=parameter_repo.get(name='location')
             context['email']=parameter_repo.get(name='email')
             context['call']=parameter_repo.get(name='call')
             context['resume_index']=resume_index
+            context['title']=resume_index.title
+
             portfolio_categories=PortfolioRepo(request=request).category_list()
             context['portfolio_categories']=portfolio_categories
             return render(request,TEMPLATE_ROOT+"index.html",context)

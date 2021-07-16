@@ -1,4 +1,4 @@
-from resume.enums import FilterEnum, IconEnum,ServiceColorEnum
+from resume.enums import FilterEnum, IconEnum,ServiceColorEnum,LanguageEnum
 from django.db.models.fields import DateField
 from tinymce.models import HTMLField
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
@@ -19,8 +19,9 @@ class ResumePage(BasicPage):
 
 
 
-class ResumeCategory(ResumePage):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+class ResumeCategory(models.Model):
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"), max_length=50)
 
     
 
@@ -52,6 +53,7 @@ class Resume(ResumePage):
 
 class ResumeIndex(models.Model):
     class_name="resumeindex"
+    language=models.CharField(_("language"),choices=LanguageEnum.choices,default=LanguageEnum.ENGLISH, max_length=50)
     image_header_origin =models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Resume/Header/', height_field=None, width_field=None, max_length=None)                              
   
@@ -104,7 +106,7 @@ class ResumeIndex(models.Model):
             return f'{STATIC_URL}{TEMPLATE_ROOT}/img/hero-bg.jpg'
     
     def get_absolute_url(self):
-        return reverse(APP_NAME+":resume_index", kwargs={"profile_id": self.profile.pk})
+        return reverse(APP_NAME+":resume_index_language", kwargs={"profile_id": self.profile.pk,'language':self.language})
     def get_edit_btn(self):
         return f"""
           <a target="_blank" title="edit" href="{self.get_edit_url()}">
@@ -118,7 +120,7 @@ class ResumeIndex(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 class ResumeService(ResumePage):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     # color=models.CharField(_("color"),choices=ServiceColorEnum.choices,default=ServiceColorEnum.blue, max_length=50)
     # class_name="resumeservice"
 
@@ -131,7 +133,7 @@ class ResumeService(ResumePage):
         return super(ResumeService,self).save(*args, **kwargs)
 
 class ResumePortfolio(ResumePage):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     filter=models.CharField(_("filter"),choices=FilterEnum.choices,default=FilterEnum.web, max_length=50)
     # image_main_origin =models.ImageField(_("تصویر سربرگ"), upload_to=IMAGE_FOLDER +
     #                                  'Resume/Portfolio/', height_field=None, width_field=None, max_length=None)                              
@@ -153,7 +155,7 @@ class ResumePortfolio(ResumePage):
 
 
 class ResumeSkill(models.Model):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)
     percentage=models.IntegerField(_("percentage"),default=10)
     priority=models.IntegerField(_("priority"),default=10)
@@ -176,13 +178,13 @@ class ResumeSkill(models.Model):
         verbose_name_plural = _("ResumeSkills")
 
     def __str__(self):
-        return f"""{self.profile.name} : {self.title} : {self.percentage}"""
+        return f"""{self.resume_index.profile.name} : {self.title} : {self.percentage}"""
 
     def get_absolute_url(self):
         return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
 
 class ResumeFact(models.Model):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=500)
     color=models.CharField(_("color"), max_length=50)
     icon=models.CharField(_("icon"),choices=IconEnum.choices, max_length=100)
@@ -207,7 +209,7 @@ class ResumeFact(models.Model):
         verbose_name_plural = _("ResumeFacts")
 
     def __str__(self):
-        return f"""{self.profile.name} : {self.title} : {self.count}"""
+        return f"""{self.resume_index.profile.name} : {self.title} : {self.count}"""
 
     def get_absolute_url(self):
         return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
@@ -215,7 +217,7 @@ class ResumeFact(models.Model):
 
 
 class ResumeTestimonial(models.Model):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     teller = models.CharField(_("teller"), max_length=2000)
     teller_description = models.CharField(_("teller_description"), max_length=2000)
     title = models.CharField(_("عنوان"), max_length=2000)
@@ -250,3 +252,26 @@ class ResumeTestimonial(models.Model):
 
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
+
+
+class ContactMessage(models.Model):
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
+    full_name = models.CharField(_("نام کامل"), max_length=50)
+    mobile = models.CharField(_("شماره تماس"), max_length=50)
+    email = models.EmailField(_("ایمیل"), max_length=254)
+    subject = models.CharField(_("عنوان پیام"), max_length=50)
+    message = models.CharField(_("متن پیام"), max_length=50)
+    date_added = models.DateTimeField(
+        _("افزوده شده در"), auto_now=False, auto_now_add=True)
+    app_name = APP_NAME
+    class_name="contactmessage"
+
+    class Meta:
+        verbose_name = _("ContactMessage")
+        verbose_name_plural = _("پیام های ارتباط با ما")
+
+    def __str__(self):
+        return f"""{self.resume_index.profile.name} : @{self.full_name}"""
+
