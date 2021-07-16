@@ -25,9 +25,9 @@ class ResumeIndexRepo:
                 profile=ProfileRepo(forced=True).profile(profile_id=profile_id)
                 resume_index=ResumeIndex(profile_id=profile_id,title=profile.name,language=self.language)
                 resume_index.save()
-                from django.utils import timezone
-                t1=ResumeTestimonial(resume_index=resume_index,teller="aa",body="sdsd",teller_description="aa1",title="aa2",footer="saa2",date_added=timezone.now())
-                t1.save()
+                # from django.utils import timezone
+                # t1=ResumeTestimonial(resume_index=resume_index,teller="aa",body="sdsd",teller_description="aa1",title="aa2",footer="saa2",date_added=timezone.now())
+                # t1.save()
             return resume_index
         elif 'pk' in kwargs:
             pk=kwargs['pk']
