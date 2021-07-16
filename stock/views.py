@@ -54,7 +54,7 @@ class StockViews(View):
             context['add_payment_form']=AddPaymentForm()
             context['payment_types']=(ii[0] for ii in PaymentTypeEnum.choices)
         context['documents']=stock.document_set.all()
-        context['payments']=stock.payment_set.all()
+        context['payments']=stock.payment_set.order_by('date_paid')
         return render(request,TEMPLATE_ROOT+'stock.html',context)
     def agent(self,request,*args, **kwargs):
         context=getContext(request)

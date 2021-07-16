@@ -50,9 +50,16 @@
                         </small>
                     </td>
                     <td>
+                        {% if payment.image_origin %}
+                          
                         <a class="mx-3" href="{{payment.image}}" target="_blank">
                             تصویر
                         </a>
+                        {% else %}
+                        <a class="mx-3 text-secondary" target="_blank">
+                            تصویر
+                        </a>
+                        {% endif %}
 
                         {% if perms.stock.change_payment %}
 

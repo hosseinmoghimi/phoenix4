@@ -65,8 +65,10 @@ class PaymentApi(APIView):
                 date_paid=add_payment_form.cleaned_data['date_paid']
                 payment_type=add_payment_form.cleaned_data['payment_type']
                 stock_id=add_payment_form.cleaned_data['stock_id']
-                image=request.FILES['image']
-                
+                try:
+                    image=request.FILES['image']    
+                except:
+                    image=None
                 date_paid=PersianCalendar().to_gregorian(date_paid)
                 payment=PaymentRepo(request=request).add_payment(title=title,value=value,date_paid=date_paid,payment_type=payment_type,stock_id=stock_id,image_origin=image)
                 context['payment']=PaymentSerializer(payment).data
