@@ -129,6 +129,14 @@ class BasicPage(models.Model):
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    @property
+    def full_title(self,*args, **kwargs):
+        seperator="/"
+        if 'seperator' in kwargs:
+            seperator=kwargs['seperator']
+        if self.parent is not None:
+            return self.parent.full_title+" "+seperator+" "+self.title
+        return self.title
     def image(self):
         if self.image_main_origin:
             return MEDIA_URL+str(self.image_main_origin)
@@ -149,11 +157,6 @@ class BasicPage(models.Model):
     def get_chart_url(self):
         return reverse(APP_NAME+':page_chart',kwargs={'pk':self.pk})
     
-    @property
-    def full_title(self):
-        if self.parent is not None:
-            return self.parent.full_title+" / "+self.title
-        return self.title
     def thumbnail(self):
         if self.image_thumbnail_origin:
             return MEDIA_URL+str(self.image_thumbnail_origin)

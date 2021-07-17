@@ -8,7 +8,7 @@
             پروژه :
             <a href="{{material_request.project.get_absolute_url}}">
 
-                {{material_request.project.title}}
+                {{material_request.project.full_title}}
             </a>
         </h6>
 
@@ -65,13 +65,16 @@
                             <a href="{{signature.profile.get_absolute_url}}">
                                 <img src="{{signature.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
                             </a>
-                            <div class="media-body">
+                            <div class="media-body pr-3">
                                 <div>
+                                   
+                                    {{signature.get_status_tag|safe}} 
+                                </div>
+                                <div >
 
                                     <a href="{{signature.profile.get_absolute_url}}">
                                         {{signature.profile.name}}
                                     </a>
-                                    {{signature.get_status_tag|safe}}
                                     <small class="mx-2 text-secondary">
 
                                         {{signature.date_added|to_persian_datetime|safe}}
@@ -101,17 +104,20 @@
                             <a :href="signature.profile.get_absolute_url">
                                 <img :src="signature.profile.image" class="rounded-circle mr-3" width=48 alt="">
                             </a>
-                            <div class="media-body">
+                            <div class="media-body pr-3">
+                                <div>
+                                    
+                                    <span :class="'badge badge-'+signature.get_status_color"
+                                        v-text="signature.status"></span>
+
+                                </div>
                                 <div>
                                     <a :href="signature.profile.get_absolute_url">
                                         <span v-text="signature.profile.name"></span>
                                     </a>
-                                    <span :class="'badge badge-'+signature.get_status_color"
-                                        v-text="signature.status"></span>
 
                                     <small class="text-secondary" v-text="signature.persian_date_added">
                                     </small>
-
                                     <a target="_blank" :href="signature.get_edit_url">
                                         <i class="material-icons">
                                             edit
