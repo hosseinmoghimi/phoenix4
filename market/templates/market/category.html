@@ -1,5 +1,8 @@
 {% extends "market/layout.html" %}
 {% block market_content %}
+<div>
+    {{category.get_breadcrumb|safe}}
+</div>
 <h3>
 
     {{category.title}}
@@ -12,7 +15,6 @@
 <h3>
     categories
 </h3>
-
 
 
 <ul>

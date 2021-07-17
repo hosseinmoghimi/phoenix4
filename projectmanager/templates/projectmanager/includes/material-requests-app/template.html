@@ -45,8 +45,8 @@
                     </td>
                     <td>
 
-                        <a  target="_blank" href="{{material_request.material.get_absolute_url}}">
-<img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32" alt="">
+                        <a target="_blank" href="{{material_request.material.get_absolute_url}}">
+                            <img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32" alt="">
                             {{material_request.material.title}}
                         </a>
                     </td>
@@ -68,7 +68,7 @@
                     </td>
                     <td>
                         {{material_request.get_status_tag|safe}}
-                        <a  target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
+                        <a target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
@@ -89,8 +89,10 @@
                         </small>
                     </td>
                     <td>
+                        <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32" alt="">
 
-                        <a  target="_blank" :href="material_request.material.get_absolute_url" v-text="material_request.material.title">
+                        <a target="_blank" :href="material_request.material.get_absolute_url"
+                            v-text="material_request.material.title">
 
                         </a>
                     </td>
@@ -113,13 +115,13 @@
                     <td>
                         <span v-html="material_request.get_status_tag"></span>
 
-                        <a  target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
+                        <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
                         </a>
                         {% if perms.projectmanager.change_materialrequest %}
-                        <a title="ویرایش"  target="_blank" :href="material_request.get_edit_url">
+                        <a title="ویرایش" target="_blank" :href="material_request.get_edit_url">
                             <i class="material-icons">edit</i>
                         </a>
                         {% endif %}
@@ -170,24 +172,26 @@
                                 class="farsi form-control" placeholder="قیمت واحد">
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12 text-left">
+                            <button class="btn btn-secondary" @click="show_add_material_request_form=false"
+                                type="reset">Cancel</button>
+
                             <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
 
-                            <button v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-secondary" @click="show_add_material_request_form=false"
-                                type="reset">Cancel</button>
+                            <button v-if="!waiting" class="btn btn-primary" type="submit">
+                                <i class="material-icons">
+                                    add
+                                </i>
+                                افزودن
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="col-4">
-                <div v-for="material in materials">
-                    <button class="btn btn-secondary my-2 d-block" @click="select_material(material)"
-                        v-text="material.title"></button>
-                </div>
+                <button v-for="material in materials" class="btn btn-secondary my-2 btn-block"
+                    @click="select_material(material)" v-text="material.title"></button>
             </div>
 
 
@@ -207,8 +211,8 @@
             <a title="چاپ فاکتور" class="mx-3" href="{{project.get_materials_order_url}}">
                 <i class="material-icons">print</i>
             </a>
-      
-        
+
+
         </p>
 
 

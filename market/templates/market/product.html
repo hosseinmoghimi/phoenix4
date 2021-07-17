@@ -10,6 +10,11 @@
 {% block market_content %}
 <div class="" id="product-app">
     <div class="row">
+        <div class="col-12">
+            <div>
+                {{product.get_breadcrumb|safe}}
+            </div>
+        </div>
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">

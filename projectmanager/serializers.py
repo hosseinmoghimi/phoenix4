@@ -56,9 +56,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
     employees=EmployeeSerializer(many=True)
+    employer=EmployerSerializer()
     class Meta:
         model=OrganizationUnit
-        fields=['id','title','employees','get_absolute_url','get_edit_url','short_description','thumbnail']
+        fields=['id','employer','title','employees','get_absolute_url','get_edit_url','short_description','thumbnail']
 class MaterialRequestSignatureSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:

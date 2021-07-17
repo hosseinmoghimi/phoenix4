@@ -12,7 +12,7 @@
     <div class="card-body">
         <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
-        <div v-for="organization_unit in organization_units">
+        <div class="mb-3" v-for="organization_unit in organization_units">
             <div class="media">
 
                 <i class="material-icons">
@@ -26,14 +26,24 @@
 
                         </h5>
                     </a>
+                    <a :href="organization_unit.employer.get_absolute_url">
+                        <div class="text-right">
+
+                            (
+
+                            <span v-html="organization_unit.employer.title"></span>
+                            )
+                        </div>
+                    </a>
                     <div v-html="organization_unit.short_description"></div>
-<div v-for="employee in organization_unit.employees">
-<a :href="employee.get_absolute_url">
-    <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
-    <span v-text="employee.profile.name"></span>
-</a>
-</div>
-                    <button v-if="show_select_btn()" class="btn btn-success" @click="add_organization_unit_to_project(organization_unit.id)">
+                    <div v-for="employee in organization_unit.employees">
+                        <a :href="employee.get_absolute_url">
+                            <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
+                            <span v-text="employee.profile.name"></span>
+                        </a>
+                    </div>
+                    <button v-if="show_select_btn()" class="btn btn-success"
+                        @click="add_organization_unit_to_project(organization_unit.id)">
                         <i class="material-icons">
                             add
                         </i>
