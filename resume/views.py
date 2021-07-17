@@ -11,7 +11,7 @@ from django.shortcuts import render
 from .apps import APP_NAME
 from django.views import View
 TEMPLATE_ROOT="my_resume_en/"
-def getContext(request):
+def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['admin_utility']=AdminUtility(request=request)
     context['title']='Resume'
