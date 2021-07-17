@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill,Resume,ResumeCategory, ResumeTestimonial,ContactMessage
+from .models import ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill,Resume,ResumeCategory, ResumeSocialLink, ResumeTestimonial,ContactMessage
 # Register your models here.
 
 admin.site.register(ResumeCategory)
@@ -11,6 +11,7 @@ admin.site.register(ResumeIndex)
 admin.site.register(ResumePortfolio)
 admin.site.register(ResumeService)
 admin.site.register(ResumeTestimonial)
+admin.site.register(ResumeSocialLink)
 
 
 

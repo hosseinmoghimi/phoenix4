@@ -1,4 +1,4 @@
-from resume.enums import FilterEnum, IconEnum,ServiceColorEnum,LanguageEnum
+from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum
 from django.db.models.fields import DateField
 from tinymce.models import HTMLField
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
@@ -75,7 +75,6 @@ class ResumeIndex(models.Model):
     degree=models.CharField(_("degree"),null=True,blank=True, max_length=100)
     email=models.CharField(_("email"),null=True,blank=True, max_length=100)
     freelance=models.CharField(_("freelance"),null=True,blank=True, max_length=100)
-    
     about_bottom=models.TextField(_("about_bottom"),null=True,blank=True)
 
 
@@ -85,6 +84,9 @@ class ResumeIndex(models.Model):
     resume_top=models.TextField(_("resume_top"),null=True,blank=True)
     portfolio_top=models.TextField(_("portfolio_top"),null=True,blank=True)
     services_top=models.TextField(_("services_top"),null=True,blank=True)
+
+    location=models.CharField(_("location"),null=True,blank=True, max_length=200)
+    call=models.CharField(_("call"),null=True,blank=True, max_length=50)
 
     class Meta:
         verbose_name = _("ResumeIndex")
@@ -275,3 +277,23 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"""{self.resume_index.profile.name} : @{self.full_name}"""
 
+
+class ResumeSocialLink(models.Model):
+    resume_index=models.ForeignKey("resumeindex", verbose_name=_("resumeindex"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"),choices=LinkClassEnum.choices, max_length=50)
+    href=models.CharField(_("href"), max_length=5000)
+    link_class=models.CharField(_("link_class"),choices=LinkClassEnum.choices, max_length=50)
+    icon=models.CharField(_("icon"),choices=IconEnum.choices, max_length=50)
+    class_name="resumesociallink"
+    
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    class Meta:
+        verbose_name = _("ResumeSocialLink")
+        verbose_name_plural = _("ResumeSocialLinks")
+
+    def __str__(self):
+        return f"""{self.resume_index.title} : {self.title}"""
+
+    def get_absolute_url(self):
+        return reverse("ResumeSocialLink_detail", kwargs={"pk": self.pk})

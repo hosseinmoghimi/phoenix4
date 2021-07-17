@@ -18,7 +18,7 @@ def getContext(request,*args, **kwargs):
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
-        context=getContext(request=request)
+        context=getContext(request=request,*args,**kwargs)
         # language=LanguageEnum.ENGLISH
         # if 'language' in kwargs:
         #     language=kwargs['language']

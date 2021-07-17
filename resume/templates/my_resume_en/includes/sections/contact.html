@@ -12,13 +12,13 @@
 
             <div class="col-lg-4">
                 <div class="info">
-                    {% if resume_index.profile.address %}
+                    {% if resume_index.location %}
 
                     <div class="address">
                         <i class="bi bi-geo-alt"></i>
                         <h4>Location:</h4>
                         <p>
-                            {{resume_index.profile.address}}
+                            {{resume_index.location}}
 
                         </p>
 
@@ -36,13 +36,13 @@
 
                     </div>
                     {% endif %}
-                    {% if resume_index.profile.mobile %}
+                    {% if resume_index.call %}
 
                     <div class="phone">
                         <i class="bi bi-phone"></i>
                         <h4>Call:</h4>
                         <p>
-                            {{resume_index.profile.mobile}}
+                            {{resume_index.call}}
 
 
                         </p>

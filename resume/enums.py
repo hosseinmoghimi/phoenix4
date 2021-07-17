@@ -22,3 +22,18 @@ class LanguageEnum(TextChoices):
     FARSI='farsi',_('farsi')
     RUSSIAN='russian',_('russian')
     ARABIC='arabic',_('arabic')
+
+
+class LinkClassEnum(TextChoices):
+    twitter="""twitter"""
+    facebook="""facebook"""
+    instagram="""instagram"""
+    google_plus="""skype"""
+    linkedin="""linkedin"""
+
+class IconEnum(TextChoices):
+    twitter="""<i class="bx bxl-twitter"></i>"""
+    facebook="""<i class="bx bxl-facebook"></i>"""
+    instagram="""<i class="bx bxl-instagram"></i>"""
+    google_plus="""<i class="bx bxl-skype"></i>"""
+    linkedin="""<i class="bx bxl-linkedin"></i>"""
