@@ -32,6 +32,8 @@ class AdminUtility():
 
     def get_add_fact_btn(self):
         return self.get_add_btn(class_name='resumefact')
+    def get_add_social_link_btn(self):
+        return self.get_add_btn(class_name='resumesociallink')
 
     def get_add_testimonial_btn(self):
         return self.get_add_btn(class_name='resumetestimonial')
