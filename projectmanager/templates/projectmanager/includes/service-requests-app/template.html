@@ -41,7 +41,7 @@
                     <td>
 
                         <a target="_blank" href="{{service_request.service.get_absolute_url}}">
-<!-- <img src="{{service_request.service.thumbnail}}" class="ml-2 rounded" width="32" alt=""> -->
+                            <img src="{{service_request.service.thumbnail}}" class="ml-2 rounded" width="32" alt="">
                             {{service_request.service.title}}
                         </a>
                     </td>
@@ -63,7 +63,7 @@
                     </td>
                     <td>
                         {{service_request.get_status_tag|safe}}
-                        <a  target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
+                        <a target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
@@ -84,8 +84,10 @@
                         </small>
                     </td>
                     <td>
+                        <img :src="service_request.service.thumbnail" class="ml-2 rounded" width="32" alt="">
 
-                        <a target="_blank" :href="service_request.service.get_absolute_url" v-text="service_request.service.title">
+                        <a target="_blank" :href="service_request.service.get_absolute_url"
+                            v-text="service_request.service.title">
 
                         </a>
                     </td>
@@ -108,13 +110,13 @@
                     <td>
                         <span v-html="service_request.get_status_tag"></span>
 
-                        <a  target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
+                        <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
                             <i class="material-icons">
                                 description
                             </i>
                         </a>
                         {% if perms.projectmanager.change_servicerequest %}
-                        <a title="ویرایش"  target="_blank" :href="service_request.get_edit_url">
+                        <a title="ویرایش" target="_blank" :href="service_request.get_edit_url">
                             <i class="material-icons">edit</i>
                         </a>
                         {% endif %}
@@ -152,8 +154,8 @@
                             <input required type="number" min="0" placeholder="تعداد" class="form-control"
                                 v-model="add_service_request_form_quantity">
                         </div>
-                    
-                        
+
+
                         <div class="col-4">
                             <select v-model="add_service_request_form_unit_name" class="form-control farsi" id="">
                                 <option disabled selected>نام واحد</option>
@@ -168,27 +170,31 @@
                                 class="farsi form-control" placeholder="قیمت واحد">
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
 
-                            <button v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
-                        </div>
-                        <div class="col-6">
+
                             <button class="btn btn-secondary" @click="show_add_service_request_form=false"
                                 type="reset">Cancel</button>
+                            <button v-if="!waiting" class="btn btn-primary" type="submit">
+                                <i class="material-icons">
+                                    add
+                                </i>
+                                افزودن</button>
+
                         </div>
                     </div>
                 </form>
             </div>
             <div class="col-4">
                 <div v-for="service in services">
-                    <button class="btn btn-secondary my-2" @click="select_service(service)"
+                    <button class="btn btn-secondary btn-block my-2" @click="select_service(service)"
                         v-text="service.title"></button>
-                        <a :href="service.get_absolute_url" title="نمایش کامل ">
+                    <a :href="service.get_absolute_url" title="نمایش کامل ">
 
-                            <i class="material-icons">description</i>
-                        </a>
+                        <i class="material-icons">description</i>
+                    </a>
                 </div>
             </div>
 
@@ -206,10 +212,10 @@
             <span v-text="to_price(sum_service_requests,'{{CURRENCY}}')">
 
             </span>
-            <a title="چاپ فاکتور" class="mx-3" href="{{project.get_services_order_url}}">
+            <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{project.get_services_order_url}}">
                 <i class="material-icons">print</i>
             </a>
-      
+
 
         </p>
 

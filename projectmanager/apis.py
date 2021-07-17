@@ -39,9 +39,12 @@ class ProjectApi(APIView):
                 start_date=edit_project_form.cleaned_data['start_date']
                 end_date=edit_project_form.cleaned_data['end_date']
                 status=edit_project_form.cleaned_data['status']
+                employer_id=edit_project_form.cleaned_data['employer_id']
+                contractor_id=edit_project_form.cleaned_data['contractor_id']
+                
                 start_date=PersianCalendar().to_gregorian(start_date)
                 end_date=PersianCalendar().to_gregorian(end_date)
-                project=ProjectRepo(request=request).edit_project(project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
+                project=ProjectRepo(request=request).edit_project(contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
                 context['project']=ProjectSerializer(project).data
         context['result']=SUCCEED
         context['log']=log
@@ -200,8 +203,8 @@ class ServiceApi(APIView):
                 unit_name=add_service_request_form.cleaned_data['unit_name']
                 unit_price=add_service_request_form.cleaned_data['unit_price']
                 service_request=ServiceRepo(request=request).add_service_request(unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_title=service_title,project_id=project_id)
-                print(100*"#76553456")
-                print(service_request.service.title)
+                # print(100*"#76553456")
+                # print(service_request.service.title)
                 context['service_request']=ServiceRequestSerializer(service_request).data
                 context['result']=SUCCEED
         context['log']=log

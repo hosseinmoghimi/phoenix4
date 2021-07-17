@@ -4,19 +4,36 @@
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
-    let status="{{project.status}}"
+    let status = "{{project.status}}"
     let url_edit_project = "{% url 'projectmanager:edit_project' %}"
+    let employer_id = 0
+    try {
+        employer_id = parseInt("{{project.employer.id}}")
+
+    } catch (error) {
+
+    }
+    let contractor_id = 0
+    try {
+
+        contractor_id = parseInt("{{project.contractor.id}}")
+    } catch (error) {
+
+    }
     let project_app = new Vue({
         el: "#project-app",
         data: {
 
-            start_date:project.persian_start_date,
-            end_date:project.persian_end_date,
-            percentage_completed:project.percentage_completed,
-            status:status,
+            start_date: project.persian_start_date,
+            end_date: project.persian_end_date,
+            percentage_completed: project.percentage_completed,
+            status: status,
             waiting: false,
+            employer_id: employer_id,
+            contractor_id: contractor_id,
+            SUCCEED: false,
         },
-        components:{
+        components: {
             DatePicker: VuePersianDatetimePicker
         },
         methods: {
@@ -28,7 +45,9 @@
                     percentage_completed: this.percentage_completed,
                     start_date: this.start_date,
                     end_date: this.end_date,
-                    status:this.status,
+                    status: this.status,
+                    employer_id: this.employer_id,
+                    contractor_id: this.contractor_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
                 console.log(payload)
@@ -46,8 +65,11 @@
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)
                         // project_timing_app.add_service_form_title = ""
+                        project_app.SUCCEED = true
 
-
+                        setTimeout(() => {
+                            project_app.SUCCEED = false
+                        }, 3000);
 
                     }
                     else {
@@ -55,7 +77,7 @@
                 })
 
             },
-         
+
         }
     })
 </script>

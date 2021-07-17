@@ -33,6 +33,10 @@ class ProjectRepo():
                 project.end_date=kwargs['end_date']
             if 'status' in kwargs:
                 project.status=kwargs['status']
+            if 'contractor_id' in kwargs:
+                project.contractor_id=kwargs['contractor_id']
+            if 'employer_id' in kwargs:
+                project.employer_id=kwargs['employer_id']                
             project.save()
             return project
 
@@ -356,8 +360,8 @@ class ServiceRepo():
             if service is None:
                 service=Service(title=kwargs['service_title'],unit_price=kwargs['unit_price'],unit_name=kwargs['unit_name'])
                 service.save()            
-            print(service)
-            print(100*"#2455346")
+            # print(service)
+            # print(100*"#2455346")
             new_service_request.service_id=service.id
         profile = ProfileRepo(user=self.user).me
         new_service_request.profile = profile

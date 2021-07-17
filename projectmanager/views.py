@@ -129,7 +129,7 @@ class ProjectViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
-        description = f"""مربوط به پروژه <a href="{project.get_absolute_url()}">{project.full_title}</a>"""
+        description = f"""مربوط به {project.full_title}"""
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
         order = {
@@ -170,7 +170,7 @@ class ProjectViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
-        description = f"""مربوط به پروژه <a href="{project.get_absolute_url()}">{project.full_title}</a>"""
+        description = f"""مربوط به {project.full_title}"""
         print(description)
         print(10*"#1045374346#")
         total_for_pay = tax+lines_total
@@ -217,7 +217,7 @@ class ProjectViews(View):
             ServiceSerializer(services, many=True).data)
         context['add_material_request_form'] = AddMaterialRequestForm()
         context['add_service_request_form'] = AddServiceRequestForm()
-
+        context['employers']=EmployerRepo(request=request).list()
         context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()

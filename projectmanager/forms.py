@@ -30,6 +30,8 @@ class AddMaterialRequestForm(forms.Form):
 class EditProjectForm(forms.Form):
     project_id=forms.IntegerField(required=True)
     percentage_completed=forms.IntegerField(required=True)
+    employer_id=forms.IntegerField(required=False)
+    contractor_id=forms.IntegerField(required=False)
     start_date=forms.CharField(max_length=20, required=True)
     end_date=forms.CharField(max_length=20, required=True)
     status=forms.CharField(max_length=50, required=False)

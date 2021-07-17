@@ -33,7 +33,7 @@
 
         <div class="media">
             <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
-            <div class="media-body">
+            <div class="media-body mr-2">
                 <h6>{{profile.name}}</h6>
                 <form @submit.prevent="add_comment()">
                     <input type="text" class="form-control" v-model="comment">

@@ -12,8 +12,13 @@ IMAGE_FOLDER=APP_NAME+"/images/"
 class Employer(models.Model):
     pre_title=models.CharField(_("pre_title"), null=True,blank=True,max_length=50)
     title=models.CharField(_("title"), max_length=50)
-    image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/", height_field=None, width_field=None, max_length=None)
+    image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/image/", height_field=None, width_field=None, max_length=None)
+    logo_origin=models.ImageField(_("logo"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/logo/", height_field=None, width_field=None, max_length=None)
     owner=models.ForeignKey("authentication.Profile",null=True,blank=True, verbose_name=_("owner"), on_delete=models.CASCADE)
+    def logo(self):
+        if self.logo_origin:
+            return f"{MEDIA_URL}{self.logo_origin}"
+        return f"{STATIC_URL}{APP_NAME}/img/pages/thumbnail/employer-logo.png"
     def image(self):
         if self.image_origin:
             return f"{MEDIA_URL}{self.image_origin}"
@@ -76,9 +81,9 @@ class Project(ProjectManagerPage):
     percentage_completed=models.IntegerField(_("درصد تکمیل پروژه"),default=0)
     start_date=models.DateTimeField(_("زمان شروع پروژه"),null=True,blank=True, auto_now=False, auto_now_add=False)
     end_date=models.DateTimeField(_("زمان پایان پروژه"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    organization_units=models.ManyToManyField("OrganizationUnit", verbose_name=_("organization_units"),blank=True)
-    employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("employer"), on_delete=models.CASCADE)
-    contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("contractor"), on_delete=models.CASCADE)
+    organization_units=models.ManyToManyField("OrganizationUnit", verbose_name=_("واحد های سازمانی"),blank=True)
+    employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("کارفرما"), on_delete=models.CASCADE)
+    contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("پیمانکار"), on_delete=models.CASCADE)
     def persian_start_date(self):
         return PersianCalendar().from_gregorian(self.start_date)
     def persian_end_date(self):

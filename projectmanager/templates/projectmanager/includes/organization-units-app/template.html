@@ -19,27 +19,35 @@
                     apartment
                 </i>
 
-                <div class="media-body farsi">
+                <div class="media-body farsi mr-2">
                     <a :href="organization_unit.get_absolute_url">
 
-                        <h5 v-text="organization_unit.title">
+                        <h5>
+                            <span v-text="organization_unit.title">
 
+                            </span>
+                            <small>
+                                <a :href="organization_unit.employer.get_absolute_url">
+
+                                    <small>
+                                        (
+
+                                    </small>
+                                    <span v-html="organization_unit.employer.title"></span>
+                                    <small>
+
+                                        )
+                                    </small>
+                                </a>
+                            </small>
                         </h5>
                     </a>
-                    <a :href="organization_unit.employer.get_absolute_url">
-                        <div class="text-right">
 
-                            (
-
-                            <span v-html="organization_unit.employer.title"></span>
-                            )
-                        </div>
-                    </a>
-                    <div v-html="organization_unit.short_description"></div>
+                    <!-- <div v-html="organization_unit.short_description"></div> -->
                     <div v-for="employee in organization_unit.employees">
                         <a :href="employee.get_absolute_url">
-                            <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
                             <span v-text="employee.profile.name"></span>
+                            <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
                         </a>
                     </div>
                     <button v-if="show_select_btn()" class="btn btn-success"

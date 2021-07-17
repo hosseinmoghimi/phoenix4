@@ -9,8 +9,8 @@
     <style>
         .table-header {
             text-align: right;
-            background-color: #000;
-            color: #fff;
+            background-color: #ddd;
+            color: #222;
         }
 
         .bordered>td,
@@ -24,7 +24,7 @@
 <body class="farsi rtl">
 
     <div class="container rtl">
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-lg-2">
 
             </div>
@@ -37,7 +37,10 @@
 
                         <table class="table">
                             <tr>
-                                <td colspan="5">
+                                <td colspan="5" style="border:none;text-align: center;">
+                                    <div class="text-center mb-2">
+                                        <img src="{{order.supplier.logo}}" width="96" alt="">
+                                    </div>
                                     <h3 class="text-center">
                                         {{order.supplier.title}}
                                     </h3>
@@ -102,10 +105,8 @@
                                     {{forloop.counter}}
                                 </td>
                                 <td>
-                                    <a href="{{order_line.product.get_absolute_url}}">
 
-                                        {{order_line.product.title}}
-                                    </a>
+                                    {{order_line.product.title}}
 
                                 </td>
                                 <td>
@@ -184,6 +185,7 @@
                             <tr style="background-color: #ddd;">
                                 <td colspan="4">
                                     <div class="text-left">
+                                        $
                                         <small>
                                             قابل پرداخت :
 
@@ -234,18 +236,30 @@
 
                                     <div class="row">
                                         <div class="col text-center">
-                                            <a href="{{order.customer.get_absolute_url}}">
-                                                {{order.customer.title}}
+                                            <span>
+                                                <small>
 
-                                            </a>
+                                                    خریدار
+                                                </small>
+                                            </span>
+                                            <br>
+
+                                            {{order.customer.title}}
+
                                             <br>
                                             {{order.customer.profile.name}}
                                         </div>
                                         <div class="col text-center">
-                                            <a href="{{order.supplier.get_absolute_url}}">
+                                            <span>
+                                                <small>
 
-                                                {{order.supplier.title}}
-                                            </a>
+                                                    فروشنده
+                                                </small>
+                                            </span>
+                                            <br>
+
+
+                                            {{order.supplier.title}}
 
                                             <br>
 

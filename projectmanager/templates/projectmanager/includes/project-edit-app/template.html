@@ -1,0 +1,112 @@
+<div class="card mb-5">
+    <div class="card-header">
+
+        <h5 class="card-title text-center farsi">
+            زمان بندی پروژه
+        </h5>
+
+
+    </div>
+
+    <div class="card-body" id="project-app">
+        {% if edit_project_form %}
+
+
+        <form @submit.prevent="edit_project()">
+            <div class="row">
+                <div class="col-4 text-right mb-3">
+                    <span class="farsi text-right">
+
+                        شروع پروژه
+                    </span>
+                    <date-picker v-model="start_date"></date-picker>
+
+
+                </div>
+                <div class="col-4 text-right mb-3">
+                    <span class="farsi text-right">
+
+                        پایان پروژه
+                    </span>
+                    <date-picker v-model="end_date"></date-picker>
+
+
+                </div>
+                <div class="col-4 text-right mb-3">
+                    <span class="farsi text-right">
+
+                        درصد پیشرفت پروژه
+                    </span>
+
+                    <input required type="number" class="form-control" v-model="percentage_completed">
+
+                </div>
+                <div class="col-4 text-right mb-3">
+                    <span class="farsi text-right">
+
+                        وضعیت
+                    </span>
+                    <select name="" id="" class="form-control" v-model="status">
+                        {% for project_status in project_status_enum %}
+                        <option value="{{project_status}}">{{project_status}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div class="col-4 text-right mb-3">
+                    <span class="farsi text-right">
+
+                        کارفرما
+                    </span>
+                    <select name="" id="" class="form-control" v-model="employer_id">
+                        {% for employer in employers %}
+                        <option value="{{employer.id}}">{{employer.title}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div class="col-4 text-right mb-3">
+                    <span class="farsi text-right">
+
+                        پیمانکار
+                    </span>
+                    <select name="" id="" class="form-control" v-model="contractor_id">
+                        {% for contractor in employers %}
+                        <option value="{{contractor.id}}">{{contractor.title}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-4">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="material-icons">
+                            OK
+                        </i>
+                    </button>
+
+                </div>
+                <div v-if="SUCCEED" class="col-12">
+<div class="alert alert-success my-3">
+    <p>
+
+        پروژه {{project.title}} با موفقیت ویرایش شد.
+        <br>
+        صفحه را Refresh کنید.
+    </p>
+</div>
+                </div>
+            </div>
+
+        </form>
+        {% else %}
+        {% endif %}
+    </div>
+    <div class="card-footer ">
+
+
+
+
+    </div>
+</div>
