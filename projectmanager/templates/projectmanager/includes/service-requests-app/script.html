@@ -71,7 +71,13 @@
             },
             select_service: function (service) {
                 this.add_service_request_form_unit_name = service.unit_name
+                try {
                 this.add_service_request_form_unit_price = service.unit_price
+                    
+                } catch (error) {
+                    
+                    this.add_service_request_form_unit_price = 0
+                }
                 this.add_service_request_form_title = service.title
                 console.log(service)
                 this.services = [service]
