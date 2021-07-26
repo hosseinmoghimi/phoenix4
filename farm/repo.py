@@ -11,6 +11,27 @@ class AnimalRepo():
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
+    def add_new_animal(self,saloon_id,*args, **kwargs):
+        animal=Animal()
+        if 'category' in kwargs:
+            category=kwargs['category']
+            animal.category=category
+        if 'price' in kwargs:
+            price=kwargs['price']
+            animal.price=price
+        if 'weight' in kwargs:
+            weight=kwargs['weight']
+            animal.weight=weight
+        if 'tag' in kwargs:
+            tag=kwargs['tag']
+            animal.tag=tag
+        if 'enter_date' in kwargs:
+            enter_date=kwargs['enter_date']
+            animal.enter_date=enter_date
+        animal.save()
+        return animal
+        pass
+                
     def animal(self,*args, **kwargs):
         try:
             if 'pk' in kwargs and not kwargs['pk'] is None:

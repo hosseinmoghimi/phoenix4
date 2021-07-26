@@ -6,7 +6,7 @@ from rest_framework import serializers
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
         model=Animal
-        fields=['id','name','tag','image','get_absolute_url']
+        fields=['id','name','tag','weight','price','persian_enter_date','category','image','get_absolute_url']
 
 
 

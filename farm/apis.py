@@ -27,6 +27,28 @@ class BasicApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+    def add_animal(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            add_new_animal_form=AddNewAnimalForm(request.POST)
+            if add_new_animal_form.is_valid():
+                log=3
+                category=add_new_animal_form.cleaned_data['category']
+                tag=add_new_animal_form.cleaned_data['tag']
+                saloon_id=add_new_animal_form.cleaned_data['saloon_id']
+                enter_date=add_new_animal_form.cleaned_data['enter_date']
+                price=add_new_animal_form.cleaned_data['price']
+                weight=add_new_animal_form.cleaned_data['weight']
+               
+                enter_date=PersianCalendar().to_gregorian(enter_date)
+                animal=AnimalRepo(request.user).add_new_animal(category=category,price=price,weight=weight,tag=tag,saloon_id=saloon_id,enter_date=enter_date)
+                if animal is not None:
+                    context['animal']=AnimalSerializer(animal).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
 
     def saloon_daily_report(self,request,*args, **kwargs):
         context={'result':FAILED}

@@ -1,12 +1,112 @@
 {% extends "farm/layout.html" %}
 {% load static %}
 {% load to_edit %}
-
+{% load to_price %}
 {% block farm_content %}
-<div class="row">
+<div class="row" id="add-animal-app">
+
     <div class="col-md-4">
 
 
+        <div class="card">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        pets
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    عملیات
+
+                </h3>
+            </div>
+            <div class="card-body mt-3">
+                <a @click="show_add_animal_form()" class="text-light btn btn-success">
+                    افزودن دام جدید
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4" v-if="add_animal_form_show">
+
+
+        <div class="card">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        pets
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    افزودن دام جدید
+
+                </h3>
+            </div>
+            <div class="card-body mt-3">
+                <form @submit.prevent="add_animal()">
+
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">سالن</span>
+                        </div>
+                        <input id="saloon_id" type="text" v-model="saloon_id" class="form-control">
+
+                    </div>
+
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">تگ</span>
+                        </div>
+                        <input type="text" v-model="tag" class="form-control">
+
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">دسته بندی</span>
+                        </div>
+                        <select v-model="category" class="form-control">
+                            {% for category in categories %}
+
+                            <option value="{{category}}">{{category}}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">قیمت خرید شده</span>
+                        </div>
+                        <input type="text" v-model="price" class="form-control">
+
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">وزن خرید شده</span>
+                        </div>
+                        <input type="text" v-model="weight" class="form-control">
+
+                    </div>
+
+
+                    <input type="text" v-model="enter_date" class="form-control">
+
+
+                    <button type="submit" class="btn btn-success">
+                        تایید
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
         <div class="card">
             <div class="card-header card-header-success card-header-icon">
                 <div class="card-icon">
@@ -16,235 +116,181 @@
                 </div>
                 <h3 class="card-title">
                     لیست دام ها
+
                 </h3>
             </div>
             <div class="card-body mt-3">
-                <div class="text-right">
 
-                    {{admin_farm.add_animal_btn|safe}}
-                </div>
-                {% for animal in animals %}
-                <div>
-                    <p>
-
-                        <a href="{{animal.get_absolute_url}}">
-                            <i class="material-icons">
-                                pets
-                            </i>
-                            {{animal.name}}
-                        </a>
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            دسته بندی دام
+                        </th>
 
 
-        <div class="card">
-            <div class="card-header card-header-success card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        pets
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    لیست دارو ها
-                </h3>
-            </div>
-            <div class="card-body mt-3">
-                <div class="text-right">
-
-                    {{admin_farm.add_drug_btn|safe}}
-                </div>
-                {% for drug in drugs %}
-                <div>
-                    <p>
-
-                        <a href="{{drug.get_absolute_url}}">
-                            <i class="material-icons">
-                                pets
-                            </i>
-                            {{drug.title}}
-                        </a>
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
+                        <th>
+                            تگ
+                        </th>
 
 
-        <div class="card">
-            <div class="card-header card-header-success card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        pets
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    لیست دکتر ها
-                </h3>
-            </div>
-            <div class="card-body mt-3">
-                <div class="text-right">
+                        <th>
+                            وزن
+                        </th>
 
-                    {{admin_farm.add_doctor_btn|safe}}
-                </div>
+                        <th>
+                            قیمت خرید
+                        </th>
+                        <th>
+                            تاریخ ورود به دامداری
+                        </th>
+                        <th>
 
-                <table class="table">
-                    {% for doctor in doctors %}
-                    <tr>
-                        <td>
-                            <a href="{{doctor.get_absolute_url}}">
-                                <i class="material-icons">
-                                    pets
-                                </i>
-                                {{doctor.profile.name}}
-                            </a>
-                        </td>
-                        <td>
-                            {{doctor|get_edit_btn|safe}}
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for animal in animals %}
 
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-
-                
-                
-            </div>
-        </div>
-    </div>
+                        <tr>
+                            <td>
+                                <span>
+                                    {{animal.category}}
+                                </span>
+                            </td>
 
 
+                            <td>
+                                <span>
+                                    {{animal.tag}}
+                                </span>
+                            </td>
 
-    <div class="col-md-4">
+
+                            <td>
+                                <span>
+                                    {{animal.weight}}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span>
+                                    {{animal.price|to_price}}
+                                </span>
+                            </td>
+                            <td>
+                                <span>
+                                    {{animal.persian_enter_date}}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{animal.get_absolute_url}}">
+                                    <i class="material-icons">
+                                        pets
+                                    </i>  
+                                  </a>
+
+                                  <a href="{{animal.get_edit_url}}">
+                                    <i class="material-icons text-warning">
+                                        edit
+                                    </i>  
+                                  </a>
+
+                                  
+
+                            </td>
+                        </tr>
+                        {% endfor %}
 
 
-        <div class="card">
-            <div class="card-header card-header-success card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        pets
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    لیست مزرعه ها
-                </h3>
-            </div>
-            <div class="card-body mt-3">
-                <div class="text-right">
+                        <tr v-for="animal in animals">
+                            <td>
+                                <span v-text="animal.category">
+                                </span>
+                            </td>
 
-                    {{admin_farm.add_farm_btn|safe}}
-                </div>
-                <table class="table">
-                    {% for farm in farms %}
-                    <tr>
-                        <td>
-                            <a href="{{farm.get_absolute_url}}">
-                                <i class="material-icons">
-                                    pets
-                                </i>
-                                {{farm.name}}
-                            </a>
-                        </td>
-                        <td>
-                            {{farm|get_edit_btn|safe}}
 
-                        </td>
-                    </tr>
-                    {% endfor %}
+                            <td>
+                                <span v-text="animal.tag">
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span v-text="animal.weight">
+                                </span>
+                            </td>
+
+                            <td>
+                                <span v-text="animal.price">
+                                </span>
+                            </td>
+                            <td>
+                                <span v-text="animal.persian_enter_date">
+                                </span>
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
                 </table>
 
             </div>
         </div>
     </div>
 
-
-    <div class="col-md-4">
-
-
-        <div class="card">
-            <div class="card-header card-header-success card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        pets
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    لیست سالن ها
-                </h3>
-            </div>
-            <div class="card-body mt-3">
-                <div class="text-right">
-
-                    {{admin_farm.add_saloon_btn|safe}}
-                </div>
-                {% for saloon in saloons %}
-                <div>
-                    <p>
-
-                        <a href="{{saloon.get_absolute_url}}">
-                            <i class="material-icons">
-                                pets
-                            </i>
-                            {{saloon.name}}
-                        </a>
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-8">
-
-        <div class="card">
-            <div class="card-header card-header-info card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        pets
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    دامپروری
-                </h3>
-            </div>
-            <div class="card-body mt-3">
-
-                <p><b>دامداری</b> شاخه‌ای از <a
-                        href="https://fa.wikipedia.org/wiki/%D8%AF%D8%A7%D9%85%D9%BE%D8%B1%D9%88%D8%B1%DB%8C"
-                        title="کشاورزی" class="docs-creator">کشاورزی</a> است که با پرورش <a
-                        href="https://fa.wikipedia.org/wiki/%D8%AF%D8%A7%D9%85_(%D8%AD%DB%8C%D9%88%D8%A7%D9%86)"
-                        title="دام (حیوان)" class="docs-creator">دام</a> سروکار دارد. تفاوت دامداری با <a
-                        href="https://fa.wikipedia.org/wiki/%D8%AF%D8%A7%D9%85%D9%BE%D8%B1%D9%88%D8%B1%DB%8C"
-                        title="دامپروری" class="docs-creator">دامپروری</a> این است که در دامداری بیشتر از <a
-                        href="https://fa.wikipedia.org/wiki/%DA%86%D8%B1%D8%A7%DA%AF%D8%A7%D9%87" title="چراگاه"
-                        class="docs-creator">چراگاه‌های</a>
-                    تازه و منابع آب طبیعی استفاده می‌شود و اینکه در دامپروری تلاش بر این است که با بهره‌گیری از علوم
-                    نوین <a href="https://fa.wikipedia.org/wiki/%D8%A8%D9%87%D8%B1%D9%87%E2%80%8C%D9%88%D8%B1%DB%8C"
-                        title="" class="docs-creator">بهره‌وری</a> را افزایش داد، ولی دامداری بر <a
-                        href="https://fa.wikipedia.org/wiki/%D8%B3%D9%86%D8%AA" title="سنت" class="docs-creator">سنت</a>
-                    مبتنی است.
-                </p>
-            </div>
-        </div>
-
-
-
-    </div>
 </div>
 {% endblock %}
 
 
 {% block farm_script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
     $("#nav-item-farm-index").addClass("active")
+
+
+    let add_animal_app = new Vue({
+        el: "#add-animal-app",
+        data: {
+            add_animal_form_show: false,
+
+            category: "dfdsf",
+            saloon_id: 0,
+            tag: "3A2",
+            price: 0,
+            weight: 0,
+            enter_date: current_datetime,
+            animals:[]
+        },
+        methods: {
+            show_add_animal_form: function () {
+                this.add_animal_form_show = false
+
+
+                this.add_animal_form_show = true
+
+            },
+            add_animal: function () {
+                let url = "{% url 'farm:add_animal' %}"
+                let payload = {
+                    category: add_animal_app.category,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    saloon_id: add_animal_app.saloon_id,
+                    tag: add_animal_app.tag,
+                    price: add_animal_app.price,
+                    weight: add_animal_app.weight,
+                    enter_date: add_animal_app.enter_date,
+
+                }
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data.animal)
+                    add_animal_app.animals.push(data.animal)
+                    // add_animal_app.add_animal_form_show = false
+                })
+            },
+        }
+    })
 </script>
 {% endblock %}

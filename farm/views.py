@@ -54,6 +54,9 @@ class BasicViews(View):
     def home(self, request, *args, **kwargs):
 
         context = getContext(request)
+
+        context['categories']=(i[0] for i in AnimalCategoryEnum.choices)
+
         animals = AnimalRepo(request.user).list()
         context['animals'] = animals
 

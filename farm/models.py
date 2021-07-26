@@ -1,4 +1,6 @@
 from datetime import timezone
+
+from django.db.models.fields import FloatField
 from .apps import APP_NAME
 from .constants import *
 from .enums import *
@@ -100,11 +102,15 @@ class Animal(models.Model):
     category = models.CharField(
         _("category"), choices=AnimalCategoryEnum.choices, max_length=50)
     tag = models.CharField(_("tag"), default='0000', max_length=50)
-    class_name = 'animal'
+    weight=models.FloatField(_("وزن"),default=0)
+    price=models.IntegerField(_("قیمت"),default=0)
+    enter_date=models.DateTimeField(_("enter_date"), auto_now=False, auto_now_add=False)
     image_origin = models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"animal/",
                                      null=True, blank=True, height_field=None, width_field=None, max_length=None)
+    class_name = 'animal'
     # current_saloon=models.ForeignKey("saloon", verbose_name=_("saloon"),null=True,blank=True, on_delete=models.SET_NULL)
-
+    def persian_enter_date(self):
+        return PersianCalendar().from_gregorian(self.enter_date)
     class Meta:
         verbose_name = _("Animal")
         verbose_name_plural = _("Animals")

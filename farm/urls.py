@@ -16,4 +16,5 @@ urlpatterns = [
     path('drug/<int:pk>/',views.BasicViews().drug,name="drug"),
     path('enter_animal_to_saloon/',apis.BasicApi().enter_animal_to_saloon,name="enter_animal_to_saloon"),
     path('saloon_daily_report/',apis.BasicApi().saloon_daily_report,name="saloon_daily_report"),
+    path('add_animal/',apis.BasicApi().add_animal,name="add_animal"),
 ]
