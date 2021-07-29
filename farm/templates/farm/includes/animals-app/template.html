@@ -1,0 +1,131 @@
+{% load to_price %}
+<div class="card" id="animals-app">
+    <div class="card-header card-header-success card-header-icon">
+        <div class="card-icon">
+            <i class="material-icons">
+                pets
+            </i>
+        </div>
+        <h3 class="card-title">
+            لیست دام ها
+
+        </h3>
+    </div>
+    <div class="card-body mt-3">
+
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    دسته بندی دام
+                </th>
+
+
+                <th>
+                    تگ
+                </th>
+
+
+                <th>
+                    وزن
+                </th>
+
+                <th>
+                    قیمت خرید
+                </th>
+                <th>
+                    تاریخ ورود به دامداری
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+
+                <tr>
+                    <td>
+                        <span>
+                            {{animal.category}}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span>
+                            {{animal.tag}}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span>
+                            {{animal.weight}}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span>
+                            {{animal.price|to_price}}
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            {{animal.persian_enter_date}}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{animal.get_absolute_url}}">
+                            <i class="material-icons">
+                                pets
+                            </i>  
+                          </a>
+
+                          <a href="{{animal.get_edit_url}}">
+                            <i class="material-icons text-warning">
+                                edit
+                            </i>  
+                          </a>
+
+                          
+
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                <tr v-for="animal in animals">
+                    <td>
+                        <span v-text="animal.category">
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span v-text="animal.tag">
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span v-text="animal.weight">
+                        </span>
+                    </td>
+
+                    <td>
+                        <span v-text="animal.price">
+                        </span>
+                    </td>
+                    <td>
+                        <span v-text="animal.persian_enter_date">
+                        </span>
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

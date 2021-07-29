@@ -1,0 +1,49 @@
+
+<script>
+    $("#nav-item-farm-index").addClass("active")
+
+
+    let add_animal_app = new Vue({
+        el: "#add-animal-app",
+        data: {
+            add_animal_form_show: false,
+
+            category: "گوسفند",
+            saloon_id: 0,
+            tag: "0000",
+            price: 0,
+            weight: 0,
+            enter_date: current_datetime,
+            animals:[]
+        },
+        methods: {
+            show_add_animal_form: function () {
+                this.add_animal_form_show = false
+
+
+                this.add_animal_form_show = true
+
+            },
+            add_animal: function () {
+                let url = "{% url 'farm:add_animal' %}"
+                let payload = {
+                    category: add_animal_app.category,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    saloon_id: add_animal_app.saloon_id,
+                    tag: add_animal_app.tag,
+                    price: add_animal_app.price,
+                    weight: add_animal_app.weight,
+                    enter_date: add_animal_app.enter_date,
+
+                }
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data.animal)
+                    animals_app.animals.push(data.animal)
+                    // add_animal_app.add_animal_form_show = false
+                })
+            },
+        }
+    })
+</script>

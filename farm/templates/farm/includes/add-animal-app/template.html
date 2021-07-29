@@ -1,0 +1,73 @@
+<div class="card" id="add-animal-app">
+    <div class="card-header card-header-success card-header-icon">
+        <div class="card-icon">
+            <i class="material-icons">
+                pets
+            </i>
+        </div>
+        <h3 class="card-title">
+            افزودن دام جدید
+
+        </h3>
+    </div>
+    <div class="card-body mt-3">
+        <form @submit.prevent="add_animal()">
+
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">سالن</span>
+                </div>
+                <input id="saloon_id" type="text" v-model="saloon_id" class="form-control">
+
+            </div>
+
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">تگ</span>
+                </div>
+                <input type="text" v-model="tag" class="form-control">
+
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">دسته بندی</span>
+                </div>
+                <select v-model="category" class="form-control">
+                    {% for category in categories %}
+
+                    <option value="{{category}}">{{category}}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">قیمت خرید شده</span>
+                </div>
+                <input type="text" v-model="price" class="form-control">
+
+            </div>
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">وزن خرید شده</span>
+                </div>
+                <input type="text" v-model="weight" class="form-control">
+
+            </div>
+
+
+            <input type="text" v-model="enter_date" class="form-control">
+
+
+            <button type="submit" class="btn btn-success">
+                تایید
+            </button>
+        </form>
+    </div>
+</div>
