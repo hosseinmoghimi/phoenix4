@@ -60,6 +60,7 @@
                     <td>
                         <span>
                             {{animal.weight}}
+                             کیلوگرم
                         </span>
                     </td>
 
@@ -112,7 +113,7 @@
                     </td>
 
                     <td>
-                        <span v-text="animal.price">
+                        <span v-text="to_price(animal.price)">
                         </span>
                     </td>
                     <td>
@@ -120,6 +121,17 @@
                         </span>
                     </td>
                     <td>
+                        <a :href="animal.get_absolute_url">
+                            <i class="material-icons">
+                                pets
+                            </i>  
+                          </a>
+
+                          <a :href="animal.get_edit_url">
+                            <i class="material-icons text-warning">
+                                edit
+                            </i>  
+                          </a>
 
                     </td>
                 </tr>

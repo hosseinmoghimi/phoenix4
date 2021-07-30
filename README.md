@@ -144,7 +144,7 @@ cp ./server/phoenix /etc/nginx/sites-available/phoenix
 
 test uwsgi:
 ```bash
-uwsgi --http :8000 --module /home/leo/phoenix/phoenix.wsgi
+uwsgi --http :8000 --module /home/leo/phoenix4/phoenix.wsgi
 ```
 
 

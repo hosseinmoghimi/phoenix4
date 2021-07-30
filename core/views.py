@@ -17,6 +17,7 @@ def CoreContext(request,app_name,*args, **kwargs):
     context['profile']=ProfileRepo(user=request.user).me
     context['APP_NAME']=app_name
     context['current_datetime']=PersianCalendar().from_gregorian(timezone.now())
+    context['current_date']=PersianCalendar().from_gregorian(timezone.now())[:10]
     context[app_name+'_sidebar']=True
     context['DEBUG']=DEBUG
     context['ADMIN_URL']=ADMIN_URL

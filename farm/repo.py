@@ -3,34 +3,61 @@ from django.db.models.base import Model
 from django.db import models 
 from core import repo as CoreRepo
 from .models import *
-
+from django.utils import timezone
 class AnimalRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Animal.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
-    def add_new_animal(self,saloon_id,*args, **kwargs):
-        animal=Animal()
-        if 'category' in kwargs:
-            category=kwargs['category']
+    def add_new_animal(self,*args, **kwargs):
+        
+        if self.user.has_perm(APP_NAME+".add_animal"):
+            category=AnimalCategoryEnum.SHEEP
+            price=0
+            weight=0
+            tag="0000"
+            saloon_id=0
+            enter_date=timezone.now()
+            if 'category' in kwargs:
+                category=kwargs['category']
+            if 'price' in kwargs:
+                price=kwargs['price']
+            if 'weight' in kwargs:
+                weight=kwargs['weight']
+            if 'tag' in kwargs:
+                tag=kwargs['tag']
+            if 'saloon_id' in kwargs:
+                saloon_id=kwargs['saloon_id']
+            if 'enter_date' in kwargs:
+                enter_date=kwargs['enter_date']
+
+            animal=Animal()
+            animal.buy_price=price
             animal.category=category
-        if 'price' in kwargs:
-            price=kwargs['price']
-            animal.price=price
-        if 'weight' in kwargs:
-            weight=kwargs['weight']
-            animal.weight=weight
-        if 'tag' in kwargs:
-            tag=kwargs['tag']
             animal.tag=tag
-        if 'enter_date' in kwargs:
-            enter_date=kwargs['enter_date']
             animal.enter_date=enter_date
-        animal.save()
-        return animal
-        pass
+            animal.weight=weight
+            animal.save()
+
+            employee=EmployeeRepo(user=self.user).me
+            animal_in_saloon=AnimalInSaloon()
+            animal_in_saloon.animal=animal
+            animal_in_saloon.employee=employee
+            animal_in_saloon.saloon_id=saloon_id
+            animal_in_saloon.enter_date=enter_date
+            animal_in_saloon.animal_price=price
+            animal_in_saloon.animal_weight=weight
+            animal_in_saloon.save()
+            return animal_in_saloon
                 
     def animal(self,*args, **kwargs):
         try:
@@ -58,9 +85,16 @@ class AnimalRepo():
 
 
 class FoodRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Food.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -72,10 +106,18 @@ class FoodRepo():
 
 
 
+
 class DrugRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Drug.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -87,9 +129,16 @@ class DrugRepo():
 
 
 class FarmRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Farm.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -100,9 +149,16 @@ class FarmRepo():
             return None
 
 class SaloonFoodRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=SaloonFood.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -113,9 +169,16 @@ class SaloonFoodRepo():
             return None
 
 class SaloonRepo():
-    def __init__(self,user=None):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Saloon.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -140,29 +203,52 @@ class SaloonRepo():
             animalinsaloon_set=AnimalInSaloon.objects.filter(id__in=ids)
             # animalinsaloon_set=animalinsaloon_set.filter(models.Q(exit_date=None)| models.Q(enter_date__gte=report_date))
             return animalinsaloon_set
-    def enter_animal_to_saloon(self,saloon_id,animal_id=None,animal_tag=None,enter_date=None,animal_price=None,animal_weight=None,*args, **kwargs):
-        if enter_date is None:
-            enter_date=PersianCalendar().date
+    def enter_animal_to_saloon(self,*args, **kwargs):
+        saloon_id=0
+        animal_id=0
+        animal_price=0
+        animal_weight=0
+        enter_date=timezone.now()
+        employee=EmployeeRepo(user=self.user).me
+
+        if 'animal_id' in kwargs:
+            animal_id=kwargs['animal_id']
+        if 'animal_price' in kwargs:
+            animal_price=kwargs['animal_price']
+        if 'animal_weight' in kwargs:
+            animal_weight=kwargs['animal_weight']
+        if 'saloon_id' in kwargs:
+            saloon_id=kwargs['saloon_id']
+        if 'enter_date' in kwargs:
+            enter_date=kwargs['enter_date']
+
+
         saloon=self.saloon(saloon_id)
-        animal=AnimalRepo(user=self.user).animal(animal_id=animal_id,animal_tag=animal_tag)
-        # AnimalInSaloon.objects.filter(saloon=saloon).filter(animal=animal).delete()
-        for animal_in_saloon in AnimalInSaloon.objects.filter(animal=animal).filter(exit_date=None):
+        for animal_in_saloon in AnimalInSaloon.objects.filter(animal_id=animal_id).filter(exit_date=None):
             from datetime import timedelta
             animal_in_saloon.exit_date=enter_date+timedelta(seconds=-1)
             animal_in_saloon.save()
-        employee=EmployeeRepo(user=self.user).me
 
-        a=AnimalInSaloon(animal=animal,employee=employee,saloon=saloon,enter_date=enter_date,animal_price=animal_price,animal_weight=animal_weight)
+        animal_in_saloon=AnimalInSaloon(animal_id=animal_id,employee=employee,saloon=saloon,enter_date=enter_date,animal_price=animal_price,animal_weight=animal_weight)
+        animal_in_saloon.save()
 
-        a.save()
-        employee=EmployeeRepo(user=self.user).me
-        log=Log(animal=animal,saloon=saloon,farm=saloon.farm,employee=employee)
+        animal=Animal.objects.filter(pk=animal_id).first()
+        animal.weight=animal_weight
+        animal.save()
+        log=Log(animal_id=animal_id,saloon=saloon,farm=saloon.farm,employee=employee)
         log.save()
+        return animal_in_saloon
 
 class FarmRepo():
-    def __init__(self,user):
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Farm.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -174,9 +260,16 @@ class FarmRepo():
 
 
 class DoctorRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Doctor.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -187,25 +280,44 @@ class DoctorRepo():
             return None
 
 
+
+
 class EmployeeRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Employee.objects
-        self.user=user
-        self.profile=ProfileRepo(user=user).me
-        self.me=Employee.objects.get(profile=self.profile)
+        self.profile=ProfileRepo(user=self.user).me
+        self.me=Employee.objects.filter(profile=self.profile).first()
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
-    def employee(self,pk):
-        try:
-            return self.objects.get(pk=pk)
-        except:
-            return None
+    def employee(self,*args, **kwargs):
+        if 'employee_id' in kwargs:
+            pk=kwargs['employee_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
 
 class LogRepo():
-    def __init__(self,user):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
         self.objects=Log.objects
-        self.user=user
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'animal_id' in kwargs:
@@ -226,3 +338,5 @@ class LogRepo():
             return self.objects.get(pk=pk)
         except:
             return None
+
+

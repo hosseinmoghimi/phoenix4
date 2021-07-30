@@ -22,9 +22,9 @@ class ProductRepo:
     def product(self,*args, **kwargs):
         if 'product_id' in kwargs:
             pk=kwargs['product_id']
-        if 'pk' in kwargs:
+        elif 'pk' in kwargs:
             pk=kwargs['pk']
-        if 'id' in kwargs:
+        elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
@@ -47,8 +47,8 @@ class CategoryRepo:
     def category(self,*args, **kwargs):
         if 'category_id' in kwargs:
             pk=kwargs['category_id']
-        if 'pk' in kwargs:
+        elif 'pk' in kwargs:
             pk=kwargs['pk']
-        if 'id' in kwargs:
+        elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()

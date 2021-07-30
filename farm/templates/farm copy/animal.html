@@ -451,6 +451,7 @@
             animal_price: animal_price,
             animal_weight: animal_weight,
             saloon_id: saloon_id,
+            animal_in_saloons:[],
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -517,13 +518,14 @@
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     console.log(data)
-                    swal({
-                        title: "ثبت اطلاعات دام",
-                        text: "ورود دام به سالن با موفقیت ثبت گردید.",
-                        buttonsStyling: false,
-                        confirmButtonClass: "btn btn-success",
-                        type: "success"
-                    }).catch(swal.noop)
+                    animal_app.animal_in_saloons.push(data.animal_in_saloon)
+                    // swal({
+                    //     title: "ثبت اطلاعات دام",
+                    //     text: "ورود دام به سالن با موفقیت ثبت گردید.",
+                    //     buttonsStyling: false,
+                    //     confirmButtonClass: "btn btn-success",
+                    //     type: "success"
+                    // }).catch(swal.noop)
                 })
             },
 

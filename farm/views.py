@@ -57,67 +57,70 @@ class BasicViews(View):
 
         context['categories']=(i[0] for i in AnimalCategoryEnum.choices)
 
-        animals = AnimalRepo(request.user).list()
+        animals = AnimalRepo(request=request).list()
         context['animals'] = animals
 
-        saloons = SaloonRepo(request.user).list()
+        saloons = SaloonRepo(request=request).list()
         context['saloons'] = saloons
 
-        drugs = DrugRepo(request.user).list()
+        drugs = DrugRepo(request=request).list()
         context['drugs'] = drugs
 
-        farms = FarmRepo(request.user).list()
+        farms = FarmRepo(request=request).list()
         context['farms'] = farms
 
-        doctors = DoctorRepo(request.user).list()
+        doctors = DoctorRepo(request=request).list()
         context['doctors'] = doctors
+
+        saloons = SaloonRepo(request=request).list()
+        context['saloons'] = saloons
 
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
     def drug(self, request, pk, *args, **kwargs):
 
         context = getContext(request)
-        drug = DrugRepo(request.user).drug(pk)
+        drug = DrugRepo(request=request).drug(pk)
         context['drug'] = drug
         return render(request, TEMPLATE_ROOT+"drug.html", context)
 
     def saloon(self, request, pk, *args, **kwargs):
 
         context = getContext(request)
-        saloon = SaloonRepo(request.user).saloon(pk)
+        saloon = SaloonRepo(request=request).saloon(pk)
         context['saloon'] = saloon
         return render(request, TEMPLATE_ROOT+"saloon.html", context)
 
     def farm(self, request, pk, *args, **kwargs):
 
         context = getContext(request)
-        farm = FarmRepo(request.user).farm(pk)
+        farm = FarmRepo(request=request).farm(pk)
         context['farm'] = farm
         return render(request, TEMPLATE_ROOT+"farm.html", context)
 
     def doctor(self, request, pk, *args, **kwargs):
 
         context = getContext(request)
-        doctor = DoctorRepo(request.user).doctor(pk)
+        doctor = DoctorRepo(request=request).doctor(pk)
         context['doctor'] = doctor
         return render(request, TEMPLATE_ROOT+"doctor.html", context)
 
     def employee(self, request, pk, *args, **kwargs):
 
         context = getContext(request)
-        employee = EmployeeRepo(request.user).employee(pk)
+        employee = EmployeeRepo(request=request).employee(pk)
         context['employee'] = employee
         return render(request, TEMPLATE_ROOT+"employee.html", context)
 
     def food(self, request, pk, *args, **kwargs):
         context = getContext(request)
-        food = FoodRepo(request.user).food(pk)
+        food = FoodRepo(request=request).food(pk)
         context['food'] = food
         return render(request, TEMPLATE_ROOT+"food.html", context)
 
     def animal(self, request, pk, *args, **kwargs):
         context = getContext(request)
-        animal_repo = AnimalRepo(request.user)
+        animal_repo = AnimalRepo(request=request)
         animal = animal_repo.animal(pk=pk)
         context['animal'] = animal
         saloons = SaloonRepo(user=request.user).list()
@@ -140,12 +143,12 @@ class BasicViews(View):
 
     def saloonfood(self, request, pk, *args, **kwargs):
         context = getContext(request)
-        saloon_food = SaloonFoodRepo(request.user).saloon_food(pk=pk)
+        saloon_food = SaloonFoodRepo(request=request).saloon_food(pk=pk)
         context['saloon_food'] = saloon_food
         return render(request, TEMPLATE_ROOT+"saloon-food.html", context)
 
     def animals(self, request, *args, **kwargs):
         context = getContext(request)
-        animals = AnimalRepo(request.user).list(*args, **kwargs)
+        animals = AnimalRepo(request=request).list(*args, **kwargs)
         context['animals'] = animals
         return render(request, TEMPLATE_ROOT+"animals.html", context)

@@ -8,7 +8,7 @@
 <div class="row" id="chart-app">
     <div class="col-12">
 
-      
+
     </div>
 </div>
 <div class="row" id="animal-app">
@@ -317,7 +317,50 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        <tr v-for="animal_in_saloon in animal_in_saloons">
+                            <td>
 
+                                <a class="mx-2" :href="animal_in_saloon.saloon.farm.get_absolute_url">
+                                    <span v-text="animal_in_saloon.saloon.farm.name"></span>
+                                </a>
+                                |
+                                <a class="mx-2" :href="animal_in_saloon.saloon.get_absolute_url">
+                                    <span v-text="animal_in_saloon.saloon.name"></span>
+                                </a>
+
+                            </td>
+                            <td>
+                                <span v-text="animal_in_saloon.animal_weight"></span>
+                                کیلوگرم
+                            </td>
+                            <td>
+                                <span v-text="to_price(animal_in_saloon.animal_price)"></span>
+                            </td>
+                            <td>
+                                <small>
+<span v-text="animal_in_saloon.persian_enter_date"></span>
+                                </small>
+                            </td>
+                            <td>
+                                <small>
+<span v-text="animal_in_saloon.persian_exit_date"></span>
+                                </small>
+                            </td>
+                            <td>
+                                <a :title="animal_in_saloon.employee.profile.name"
+                                    :href="animal_in_saloon.employee.get_absolute_url">
+                                    <img :src="animal_in_saloon.employee.profile.image" width="32"
+                                        class="rounded-circle">
+                                </a>
+                                {% if perms.farm.change_animalinsaloon %}
+                                <a title="ویرایش" :href="animal_in_saloon.get_edit_url" class="docs-creator"><span class="material-icons">
+                                    edit
+                                
+                            </span></a>
+
+                                {% endif %}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -415,6 +458,7 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
     let animal_tag = "{{animal.tag}}"
+    let animal_id = parseInt("{{animal.id}}")
     let saloon_id = 0
     let animal_weight = 0
     let animal_price = 0
@@ -427,7 +471,7 @@
 
 
     try {
-        animal_weight = parseFloat("{{animal.current_in_saloon.animal_weight}}")
+        animal_weight = parseFloat("{{animal.weight}}")
 
     } catch (error) {
 
@@ -435,15 +479,15 @@
 
 
     try {
-        animal_price = parseInt("{{animal.current_in_saloon.animal_price}}")
+        animal_price = parseInt("{{animal.price}}")
 
     } catch (error) {
 
     }
-    let max_weight=parseFloat("{{max_weight}}")*1.2
+    let max_weight = parseFloat("{{max_weight}}") * 1.2
     let weights = JSON.parse(`{{weights|escapejs}}`)
     let url_enter_animal_to_saloon = "{% url 'farm:enter_animal_to_saloon' %}"
-   
+
     let animal_app = new Vue({
         el: "#animal-app",
         data: {
@@ -451,16 +495,21 @@
             animal_price: animal_price,
             animal_weight: animal_weight,
             saloon_id: saloon_id,
+            
+            animal_in_saloons:[],
         },
         components: {
             DatePicker: VuePersianDatetimePicker
         },
         mounted: function () {
             this.draw_timeline()
-      
+
         },
 
         methods: {
+            to_price: function (value) {
+                return to_price(value, CURRENCY)
+            },
             draw_timeline: function () {
                 if ($('#colouredBarsChart').length != 0) {
 
@@ -495,18 +544,19 @@
 
                 }
             },
-      
+
             to_price: function (price) {
 
-                return toPrice(price, TUMAN)
+                return to_price(price, CURRENCY)
             },
 
 
 
             enter_animal_to_saloon: function () {
                 let payload = {
-                    animal_tag: animal_tag,
+                    // animal_tag: animal_tag,
                     saloon_id: this.saloon_id,
+                    animal_id: animal_id,
                     animal_price: this.animal_price,
                     animal_weight: this.animal_weight,
                     enter_date: this.enter_date,
@@ -517,13 +567,15 @@
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     console.log(data)
-                    swal({
-                        title: "ثبت اطلاعات دام",
-                        text: "ورود دام به سالن با موفقیت ثبت گردید.",
-                        buttonsStyling: false,
-                        confirmButtonClass: "btn btn-success",
-                        type: "success"
-                    }).catch(swal.noop)
+                    animal_app.animal_in_saloons.push(data.animal_in_saloon)
+                  
+                    // swal({
+                    //     title: "ثبت اطلاعات دام",
+                    //     text: "ورود دام به سالن با موفقیت ثبت گردید.",
+                    //     buttonsStyling: false,
+                    //     confirmButtonClass: "btn btn-success",
+                    //     type: "success"
+                    // }).catch(swal.noop)
                 })
             },
 

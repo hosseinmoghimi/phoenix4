@@ -5,7 +5,9 @@
  <script src="{% static 'vendor/js/popper.min.js' %}"></script>
  <script src="{% static 'utility/js/utility.js' %}"></script>
  <script>
+     let CURRENCY="{{CURRENCY}}"
      let current_datetime="{{current_datetime}}"
+     let current_date="{{current_date}}"
      var csrfmiddlewaretoken = ''
      $(document).ready(function () {
          // Javascript method's body can be found in assets/js/demos.js

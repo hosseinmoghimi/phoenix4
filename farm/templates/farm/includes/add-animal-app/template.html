@@ -18,7 +18,12 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">سالن</span>
                 </div>
-                <input id="saloon_id" type="text" v-model="saloon_id" class="form-control">
+                <select v-model="saloon_id" class="form-control">
+                    {% for saloon in saloons %}
+
+                    <option value="{{saloon.id}}">{{saloon}}</option>
+                    {% endfor %}
+                </select>
 
             </div>
 

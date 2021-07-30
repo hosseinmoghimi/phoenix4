@@ -15,15 +15,17 @@ class BasicApi(APIView):
             enter_animal_to_saloon_form=EnterAnimalToSaloonForm(request.POST)
             if enter_animal_to_saloon_form.is_valid():
                 log=3
-                animal_tag=enter_animal_to_saloon_form.cleaned_data['animal_tag']
+                animal_id=enter_animal_to_saloon_form.cleaned_data['animal_id']
                 saloon_id=enter_animal_to_saloon_form.cleaned_data['saloon_id']
                 enter_date=enter_animal_to_saloon_form.cleaned_data['enter_date']
                 animal_price=enter_animal_to_saloon_form.cleaned_data['animal_price']
                 animal_weight=enter_animal_to_saloon_form.cleaned_data['animal_weight']
                
                 enter_date=PersianCalendar().to_gregorian(enter_date)
-                res=SaloonRepo(request.user).enter_animal_to_saloon(animal_price=animal_price,animal_weight=animal_weight,animal_tag=animal_tag,saloon_id=saloon_id,enter_date=enter_date)
-                context['result']=SUCCEED
+                animal_in_saloon=SaloonRepo(request=request).enter_animal_to_saloon(animal_price=animal_price,animal_weight=animal_weight,saloon_id=saloon_id,animal_id=animal_id,enter_date=enter_date)
+                if animal_in_saloon is not None:
+                    context['animal_in_saloon']=AnimalInSaloonSerializer(animal_in_saloon).data
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
 
@@ -43,9 +45,9 @@ class BasicApi(APIView):
                 weight=add_new_animal_form.cleaned_data['weight']
                
                 enter_date=PersianCalendar().to_gregorian(enter_date)
-                animal=AnimalRepo(request.user).add_new_animal(category=category,price=price,weight=weight,tag=tag,saloon_id=saloon_id,enter_date=enter_date)
-                if animal is not None:
-                    context['animal']=AnimalSerializer(animal).data
+                animal_in_saloon=AnimalRepo(request=request).add_new_animal(category=category,price=price,weight=weight,tag=tag,saloon_id=saloon_id,enter_date=enter_date)
+                if animal_in_saloon is not None:
+                    context['animal_in_saloon']=AnimalInSaloonSerializer(animal_in_saloon).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
@@ -62,11 +64,11 @@ class BasicApi(APIView):
                 report_date=saloon_daily_report_form.cleaned_data['report_date']
                 context['report_date']=report_date
                 report_date=PersianCalendar().to_gregorian(report_date)
-                animals_in_saloon=SaloonRepo(request.user).animals_in_saloon(saloon_id=saloon_id,report_date=report_date)
+                animals_in_saloon=SaloonRepo(request=request).animals_in_saloon(saloon_id=saloon_id,report_date=report_date)
                 animals_in_saloon_s=AnimalInSaloonSerializer(animals_in_saloon,many=True).data
                 
                 context['animals_in_saloon']=animals_in_saloon_s
-                saloon_foods=SaloonRepo(request.user).saloon_foods(saloon_id=saloon_id,report_date=report_date)
+                saloon_foods=SaloonRepo(request=request).saloon_foods(saloon_id=saloon_id,report_date=report_date)
                 saloon_foods_s=SaloonFoodSerializer(saloon_foods,many=True).data
                 context['saloon_foods']=saloon_foods_s
                 context['result']=SUCCEED

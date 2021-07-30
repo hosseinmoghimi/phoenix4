@@ -60,17 +60,17 @@ class AnimalInSaloon(models.Model):
     animal = models.ForeignKey(
         "animal", verbose_name='animal', on_delete=models.CASCADE)
     saloon = models.ForeignKey(
-        "saloon", verbose_name='saloon', on_delete=models.CASCADE)
+        "saloon", verbose_name='saloon', on_delete=models.PROTECT)
     animal_price = models.IntegerField(_("price"), default=0)
     enter_date = models.DateTimeField(
         _("تاریخ ورود"), auto_now=False, auto_now_add=False)
     exit_date = models.DateTimeField(
         _("تاریخ خروج"), null=True, blank=True, auto_now=False, auto_now_add=False)
     animal_weight=models.FloatField(_("weight"),default=0)
-    class_name = "animalinsaloon"
     employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("employee"), on_delete=models.CASCADE)
+    class_name = "animalinsaloon"
     def __str__(self):
-        return f"""{self.animal.name} -> {self.saloon.name}"""
+        return f"""{self.animal} -> {self.saloon}"""
 
     class Meta:
         verbose_name = 'AnimalInSaloon'
@@ -101,19 +101,20 @@ class Animal(models.Model):
     name = models.CharField(_("name"), max_length=50)
     category = models.CharField(
         _("category"), choices=AnimalCategoryEnum.choices, max_length=50)
-    tag = models.CharField(_("tag"), default='0000', max_length=50)
+    tag = models.CharField(_("تگ"), default='0000', max_length=50)
     weight=models.FloatField(_("وزن"),default=0)
-    price=models.IntegerField(_("قیمت"),default=0)
     enter_date=models.DateTimeField(_("enter_date"), auto_now=False, auto_now_add=False)
     image_origin = models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"animal/",
                                      null=True, blank=True, height_field=None, width_field=None, max_length=None)
+    buy_price=models.IntegerField(_("قیمت خرید"),default=0)
+    description = models.TextField(_("توضیحات"), null=True,blank=True)
     class_name = 'animal'
     # current_saloon=models.ForeignKey("saloon", verbose_name=_("saloon"),null=True,blank=True, on_delete=models.SET_NULL)
     def persian_enter_date(self):
         return PersianCalendar().from_gregorian(self.enter_date)
     class Meta:
-        verbose_name = _("Animal")
-        verbose_name_plural = _("Animals")
+        verbose_name = _("دام")
+        verbose_name_plural = _("دام ها")
 
     def image(self):
         im = ""
@@ -134,7 +135,7 @@ class Animal(models.Model):
         return f'{CoreSettings.STATIC_URL}{APP_NAME}/img/animal/{im}'
 
     def __str__(self):
-        return self.name+" " + self.tag
+        return f"{self.category}/ {self.name}/{self.tag}"
 
     def current_in_saloon(self, report_date=None):
         aa = AnimalInSaloon.objects.filter(animal=self).order_by('-enter_date')
@@ -175,6 +176,7 @@ class Animal(models.Model):
                 foods.append(saloon_food)
         return foods
     def price(self):
+        # return self.buy_price
         price=0
         try:
             a=AnimalInSaloon.objects.filter(animal=self).order_by("-enter_date").first()
@@ -193,7 +195,7 @@ class Employee(models.Model):
         verbose_name_plural = _("Employees")
 
     def __str__(self):
-        return self.profile.name()
+        return self.profile.name
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":employee", kwargs={"pk": self.pk})
@@ -209,7 +211,7 @@ class Saloon(models.Model):
         verbose_name_plural = _("Saloons")
 
     def __str__(self):
-        return self.name
+        return f"{self.farm.name} ({self.name})"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":saloon", kwargs={"pk": self.pk})
@@ -332,3 +334,30 @@ class SaloonFood(models.Model):
                 </sapn>
             </a>
         """
+
+
+class Koshtar(models.Model):
+    animal = models.ForeignKey(
+        "animal", verbose_name='animal', on_delete=models.PROTECT)
+    koshtar_date=models.DateTimeField(
+        _("koshtar_date"), auto_now=False, auto_now_add=False)
+    Jegar_value=models.IntegerField(_("قیمت آلایش"),default=0)
+    Kalle_pache_value=models.IntegerField(_("قیمت کله پاچه"),default=0)
+    pust_value=models.IntegerField(_("قیمت پوست"),default=0)
+    transport_fee=models.IntegerField(_("هزینه حمل"),default=0)
+    koshtar_fee=models.IntegerField(_("هزینه کشتار"),default=0)
+    lashe_value=models.IntegerField(_("قیمت لاشه"),default=0)
+    lashe_weight=models.FloatField(_("وزن لاشه"),default=0)
+    description = models.TextField(_("توضیحات"), null=True,blank=True)
+
+    
+
+    class Meta:
+        verbose_name = _("Koshtar")
+        verbose_name_plural = _("Koshtars")
+
+    def __str__(self):
+        return f"{self.animal}"
+
+    def get_absolute_url(self):
+        return reverse("Koshtar_detail", kwargs={"pk": self.pk})
