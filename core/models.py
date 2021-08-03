@@ -93,6 +93,7 @@ class Image(models.Model):
 
 class BasicPage(models.Model):
     title = models.CharField(_("عنوان"), max_length=50)
+    sub_title=models.CharField(_("زیر عنوان"),null=True, blank=True, max_length=50)
     for_home=models.BooleanField(_("نمایش در خانه"),default=False)
     parent = models.ForeignKey("BasicPage",related_name="childs",null=True,blank=True, verbose_name=_(
         "والد"), on_delete=models.SET_NULL)

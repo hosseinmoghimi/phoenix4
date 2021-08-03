@@ -18,15 +18,17 @@
                     engineering
                 </i>
 
-                <div class="media-body farsi mx-2">
+                <div class="media-body farsi mx-2 mb-3">
 
                     <h5>
                         {{project.title}}
 
                     </h5>
-                    {% if project.short_description %}
+                    {% if project.sub_title %}
+                    <small class="text-secondary">
 
-                    {{project.short_description|safe}}
+                        {{project.sub_title}}
+                    </small>
                     {% endif %}
 
                 </div>
@@ -47,7 +49,10 @@
                         <h5 v-text="project.title" class="mx-2">
 
                         </h5>
-                        <div v-html="project.short_description"></div>
+                        <small>
+                                <div class="text-secondary" v-html="project.sub_title"></div>
+
+                        </small>
 
 
                     </div>
@@ -67,13 +72,13 @@
 
                 </div>
                 <div class="col-4">
-                        <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
-                       
+
 
                     <button v-if="!waiting" class="btn btn-primary btn-link text-light" type="submit">
 
-                        <i  class="material-icons">
+                        <i class="material-icons">
                             add
                         </i>
                     </button>

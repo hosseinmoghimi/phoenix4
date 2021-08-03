@@ -28,23 +28,52 @@
 
     <div class="row ">
 
-        <div class="col-md-4">
-            <a href="{{event.project_related.get_absolute_url}}">
-                {{event.project_related.title}}
-            </a>
-        </div>
-        <div class="col-md-4">
-            <div class="mb-3 py-3">
 
-                <img src="{{event.thumbnail}}" class="rounded w-100" alt="">
+      
+
+        <div class="col-md-4">
+            <div class="card mb-5">
+                <div class="card-body">
+                    <p>
+                        <span class="small text-secondary">
+                            مربوط به پروژه
+
+                        </span>
+                        <span>
+                            <a class="mx-3" href="{{event.project_related.get_absolute_url}}">
+                                {{event.project_related.title}}
+                            </a>
+                        </span>
+                    </p>
+                    <img src="{{event.image}}" class="rounded w-100" alt="">
+
+
+
+                </div>
             </div>
-        </div>
 
+        </div>
+        <div class="col-md-8">
+            {% include "core/includes/page-description-app/template.html" %}
+
+        </div>
 
 
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
+
+        </div>
+
+
+        <div class="col-md-4">
             {% include "core/includes/page-documents-app/template.html" %}
+
+        </div>
+
+
+
+        <div class="col-md-12">
+            {% include "core/includes/page-images-app/template.html" %}
 
         </div>
 
@@ -61,6 +90,7 @@
 {% block script %}
 <script>
     let parent_id = parseInt("{{parent_id}}")
+    let page_id = parseInt("{{page.id}}")
 
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
@@ -68,5 +98,6 @@
 
 {% include "core/includes/page-documents-app/script.html" %}
 
+{% include "core/includes/page-images-app/script.html" %}
 
 {% endblock %}
