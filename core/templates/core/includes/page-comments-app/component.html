@@ -2,8 +2,10 @@
     <img :src="page_comment.profile.image" class="rounded-circle" width="64" alt="">
     <div class="media-body">
         <div class="text-right">
+<a target="_blank" :href="page_comment.profile.get_absolute_url">
 
-            <span class="farsi text-right text-secondary" v-text="page_comment.profile.name"></span>
+    <span class="farsi text-right text-primary" v-text="page_comment.profile.name"></span>
+</a>
             <span class="farsi small text-secondary mr-2 text-right" v-text="page_comment.persian_date_added"></span>
         </div>
 
@@ -15,19 +17,28 @@
                 </span>
 
                 <a v-if="page_comment.profile.id=={{profile.id}} && !confirm_delete" style="cursor:pointer"
-                    class="small text-danger mr-auto" @click="confirm_delete=true">
+                    class="small text-danger mr-auto1 mx-2" @click="confirm_delete=true">
                     حذف
 
                 </a>
 
+                <span v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                class="small text-danger mr-auto1 mx-2">
+                این نظر حذف شود ؟
+
+            </span>
+
                 <a v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
-                    class="small text-secondary mr-auto" @click="confirm_delete=false">
+                    class="small text-secondary mr-auto1 mx-2" @click="confirm_delete=false">
                     خیر
 
                 </a>
 
                 <a v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
-                    class="small text-danger mr-auto" @click="delete_comment(page_comment.id)">
+                    class="small text-danger mr-auto1 mx-2" @click="delete_comment(page_comment.id)">
+                    <i class="material-icons">
+                        delete
+                    </i>
                     حذف کن
 
                 </a>
