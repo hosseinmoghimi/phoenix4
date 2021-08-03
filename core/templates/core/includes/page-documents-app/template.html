@@ -1,83 +1,92 @@
-<div id="page-documents-app" class="card mb-3">
-    <div class="card-header">
-        <h5 class="text-center">
+<div id="accordion">
 
-            دانلود ها
-        </h5>
-    </div>
-    <div class="card-body">
-        {% for document in page.documents.all %}
-        <div>
-
-            <h6>
-                {{document.get_icon_tag|safe}}
-                <a  class="mr-2"  target="_blank" href="{{document.get_download_url}}">
-                    {{document.title}}
-                </a>
-                {% if perms.core.change_document %}
-                {{document.get_edit_btn|safe}}
-
-                {% endif %}
-            </h6>
+    <div id="page-documents-app" class="card mb-3">
+        <div class="card-header" id="headingdocuments">
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapsedocuments"
+                    aria-expanded="true" aria-controls="collapsedocuments">
+                    دانلود ها
+                </button>
+            </h5>
         </div>
-        {% endfor %}
-        <div v-for="document in documents">
 
-            <h6>
-                <i class=" text-primary fa fa-tag"></i>
-                <a  class="mr-2"  target="_blank" :href="document.get_download_url" v-text="document.title">
+        <div id="collapsedocuments" class="collapse" aria-labelledby="headingdocuments" data-parent="#accordion">
 
-                </a>
-                {% if perms.core.change_document %}
-                <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-                {% endif %}
-            </h6>
-        </div>
-    </div>
-    <div class="card-footer">
+            <div class="card-body">
+                {% for document in page.documents.all %}
+                <div>
 
-        <p class="text-right" v-if="!show_add_document_form">
+                    <h6>
+                        {{document.get_icon_tag|safe}}
+                        <a class="mr-2" target="_blank" href="{{document.get_download_url}}">
+                            {{document.title}}
+                        </a>
+                        {% if perms.core.change_document %}
+                        {{document.get_edit_btn|safe}}
 
-            <a style="cursor: pointer;" class="farsi a" @click="show_add_document_form=true">
-                <i class="material-icons">
-                    add
-                </i>
-            </a>
-        </p>
-
-        {% if add_page_document_form %}
-
-        <form id="add-document-form" v-if="show_add_document_form" @submit.prevent="add_page_document()"
-            enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-8">
-                    <input required type="text" v-model="new_document_title" class="farsi form-control"
-                        placeholder="عنوان دانلود جدید">
-                   
-
-                    <span class="btn btn-raised btn-round btn-default btn-file">
-                        <span class="fileinput-new">انتخاب فایل</span>
-
-                        <input type="file" v-on:change="document_file=true" name="">
-                        <div class="ripple-container"></div>
-                    </span>
-
-
+                        {% endif %}
+                    </h6>
                 </div>
-                <div class="col-4">
-                    <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
-                    <button @click="show_add_document_form=false"
-                        class="farsi btn btn-secondary btn-block" type="reset">انصراف</button>
+                {% endfor %}
+                <div v-for="document in documents">
 
+                    <h6>
+                        <i class=" text-primary fa fa-tag"></i>
+                        <a class="mr-2" target="_blank" :href="document.get_download_url" v-text="document.title">
+
+                        </a>
+                        {% if perms.core.change_document %}
+                        <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+                    </h6>
                 </div>
             </div>
+            <div class="card-footer">
 
-        </form>
-        {% endif %}
+                <p class="text-right" v-if="!show_add_document_form">
 
+                    <a style="cursor: pointer;" class="farsi a" @click="show_add_document_form=true">
+                        <i class="material-icons">
+                            add
+                        </i>
+                    </a>
+                </p>
+
+                {% if add_page_document_form %}
+
+                <form id="add-document-form" v-if="show_add_document_form" @submit.prevent="add_page_document()"
+                    enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-8">
+                            <input required type="text" v-model="new_document_title" class="farsi form-control"
+                                placeholder="عنوان دانلود جدید">
+
+
+                            <span class="btn btn-raised btn-round btn-default btn-file">
+                                <span class="fileinput-new">انتخاب فایل</span>
+
+                                <input type="file" v-on:change="document_file=true" name="">
+                                <div class="ripple-container"></div>
+                            </span>
+
+
+                        </div>
+                        <div class="col-4">
+                            <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
+                            <button @click="show_add_document_form=false" class="farsi btn btn-secondary btn-block"
+                                type="reset">انصراف</button>
+
+                        </div>
+                    </div>
+
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
     </div>
 </div>

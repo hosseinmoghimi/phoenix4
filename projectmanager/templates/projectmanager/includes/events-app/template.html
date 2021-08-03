@@ -1,78 +1,92 @@
 {% load to_persian_date %}
-<div class="card mb-5" id="events-app">
-    <div class="card-header">
-        <h5 class="text-center">
-            رویداد ها
-        </h5>
+<div id="accordion">
 
-    </div>
-    <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-                <th>
-                    زمان
-                </th>
-                <th>
-                    رویداد
-                </th>
-            </thead>
-            <tbody>
-                {% for event in events %}
-                <tr>
-                    <td>
-                        <small>
+    <div class="card mb-5" id="events-app">
+        <div class="card-header" id="headingevents">
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseevents" aria-expanded="true"
+                    aria-controls="collapseevents">
+                    رویداد ها
+                </button>
 
-                            {{event.event_datetime|to_persian_datetime|safe}}
-                        </small>
-                    </td>
-                    <td>
-                        <a href="{{event.get_absolute_url}}">
-                            {{event.title}}
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-
-                <tr v-for="event in events">
-                    <td>
-                        <small v-text="event.persian_event_datetime">
-
-                        </small>
-                    </td>
-                    <td>
-                        <a :href="event.get_absolute_url">
-                            <span v-text="event.title">
-
-
-                            </span>
-                        </a>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-        <div>
-            <form @submit.prevent="add_event">
-
-                <div class="row">
-                    <div class="col-md-4">
-
-                        <date-picker v-model="event_datetime"></date-picker>
-                    </div>
-                    <div class="col-md-7">
-                        <input required type="text" placeholder="شرح رویداد" class="form-control" v-model="add_event_form_title">
-                    </div>
-                    <div class="col-1">
-                        <button class="btn btn-success" type="submit">
-                            <i class="material-icons">add</i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+            </h5>
 
         </div>
-    </div>
-    <div class="card-footer">
+        <div id="collapseevents" class="collapse" aria-labelledby="headingevents" data-parent="#accordion">
 
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            زمان
+                        </th>
+                        <th>
+                            رویداد
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                        <tr>
+                            <td>
+                                <small>
+
+                                    {{event.event_datetime|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+                            <td>
+                                <a href="{{event.get_absolute_url}}">
+                                    {{event.title}}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        <tr v-for="event in events">
+                            <td>
+                                <small v-text="event.persian_event_datetime">
+
+                                </small>
+                            </td>
+                            <td>
+                                <a :href="event.get_absolute_url">
+                                    <span v-text="event.title">
+
+
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <div>
+                    {% if add_event_form %}
+
+                    <form @submit.prevent="add_event">
+
+                        <div class="row">
+                            <div class="col-md-4">
+
+                                <date-picker v-model="event_datetime"></date-picker>
+                            </div>
+                            <div class="col-md-7">
+                                <input required type="text" placeholder="شرح رویداد" class="form-control"
+                                    v-model="add_event_form_title">
+                            </div>
+                            <div class="col-1">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
     </div>
 </div>
