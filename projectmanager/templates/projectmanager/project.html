@@ -27,7 +27,7 @@
         {{project.get_breadcrumb|safe}}
     </div>
     <div class="row ">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card mb-5">
                 <div class="card-body">
                     <p>
@@ -104,18 +104,22 @@
             </div>
 
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             {% include "projectmanager/includes/projects-app/template.html" %}
+        </div>
+        <div class="col-md-6">
+            {% include "core/includes/page-description-app/template.html" %}
+
         </div>
         <div class="col-md-4">
 
             {% include "projectmanager/includes/organization-units-app/template.html" %}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
 
             {% include "core/includes/page-links-app/template.html" %}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
 
             {% include "core/includes/page-documents-app/template.html" %}
         </div>
@@ -154,6 +158,7 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
+    let page_id = parseInt("{{page.id}}")
     let parent_id = parseInt("{{parent_id}}")
     let project_id = parseInt("{{parent_id}}")
     let project = JSON.parse(`{{project_s|escapejs}}`)

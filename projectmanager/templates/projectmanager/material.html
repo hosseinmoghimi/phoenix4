@@ -42,6 +42,10 @@
                 <img src="{{material.image}}" class="rounded w-100" alt="">
             </div>
         </div>
+        <div class="col-md-8">
+            {% include "core/includes/page-description-app/template.html" %}
+
+        </div>
         <div class="col-md-4">
 
             {% include "projectmanager/includes/materials-app/template.html" %}
@@ -51,10 +55,12 @@
 
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
-            {% include "core/includes/page-documents-app/template.html" %}
 
         </div>
+        <div class="col-md-4">
 
+            {% include "core/includes/page-documents-app/template.html" %}
+        </div>
 
         <div class="col-md-12">
             <div class="card mb-3" id="material-request-app">
@@ -161,6 +167,10 @@
             {% include "core/includes/page-images-app/template.html" %}
 
         </div>
+        <div class="col-12">
+
+            {% include "core/includes/page-comments-app/template.html" %}
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -169,6 +179,7 @@
 {% block script %}
 <script>
     let parent_id = parseInt("{{parent_id}}")
+    let page_id = parseInt("{{material.id}}")
 
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
@@ -177,6 +188,7 @@
 
 {% include "core/includes/page-documents-app/script.html" %}
 
+{% include "core/includes/page-comments-app/script.html" %}
 {% include "projectmanager/includes/materials-app/script.html" %}
 
 {% endblock %}

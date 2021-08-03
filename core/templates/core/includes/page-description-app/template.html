@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="text-center">
+
+            توضیحات
+        </h4>
+    </div>
+    <div class="card-body">
+        {% if page.short_description %}
+
+        <br>
+        <h4>
+
+            توضیحات کوتاه
+        </h4>
+        <br>
+        {{page.short_description|safe}}
+        <br>
+        {% endif %}
+
+        {% if page.description %}
+
+        <br>
+        <h4>
+
+            توضیحات کامل
+        </h4>
+        <br>
+        {{page.description|safe}}
+        {% endif %}
+    </div>
+</div>
