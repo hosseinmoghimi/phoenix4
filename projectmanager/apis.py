@@ -1,6 +1,6 @@
 from utility.persian import PersianCalendar
-from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialRequestSignatureSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceRequestSignatureSerializer, ServiceSerializer
-from core.constants import SUCCEED
+from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialRequestSignatureSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectLocationSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceRequestSignatureSerializer, ServiceSerializer
+from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .repo import EmployerRepo, EventRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
@@ -9,6 +9,25 @@ from .forms import *
 
 
 class ProjectApi(APIView):
+    def add_project_location(self,request):
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_location_form=AddLocationForm(request.POST)
+            if add_location_form.is_valid():
+                log=3
+                new_location=add_location_form.cleaned_data['new_location']
+                title=add_location_form.cleaned_data['title']
+                project_id=add_location_form.cleaned_data['page_id']
+                location=ProjectRepo(user=user).add_project_location(project_id=project_id,new_location=new_location,title=title)
+                if location is not None:
+                    log=4
+                    location_s=ProjectLocationSerializer(location).data
+                    return JsonResponse({'result':SUCCEED,'location':location_s})
+        return JsonResponse({'result':FAILED,'log':log})
+    
+
     def add_project(self,request,*args, **kwargs):
         context={}
         log=1

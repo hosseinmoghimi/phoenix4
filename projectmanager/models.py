@@ -171,6 +171,28 @@ class Event(ProjectManagerPage):
     
 
 
+class ProjectLocation(models.Model):
+    title=models.CharField(_("عنوان نقطه"),max_length=50,null=True,blank=True)
+    location=models.CharField(_("لوکیشن"),max_length=1000)
+    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
+    class_name="projectlocation"
+    class Meta:
+        verbose_name = _("موقعیت پروژه")
+        verbose_name_plural = _("موقعیت های پروژه ها")
+    def __str__(self):
+        return f'{self.project} {self.project.title} {self.title}'
+    def project_title(self):
+        return self.project.title
+    def get_project_url(self):
+        return self.project.get_absolute_url()
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+    def save(self,*args, **kwargs):
+        self.location=self.location.replace('width="600"','width="100%"')
+        self.location=self.location.replace('height="450"','height="400"')
+        super(ProjectLocation,self).save(*args, **kwargs)
+
+
 class OrganizationUnit(ProjectManagerPage):
     employer=models.ForeignKey("employer", verbose_name=_("employer"), on_delete=models.CASCADE)
     class Meta:

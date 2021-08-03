@@ -6,7 +6,7 @@ from authentication.models import Profile
 from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer, ServiceRequestSignatureSerializer
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
+from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, ProjectLocation, Service, ServiceRequest, ServiceRequestSignature
 from utility.persian import PersianCalendar
 
 class ProjectRepo():
@@ -20,6 +20,28 @@ class ProjectRepo():
             self.user = kwargs['user']
         self.objects = Project.objects
         self.me=ProfileRepo(user=self.user).me
+
+
+
+    def add_project_location(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_projectlocation"):
+            return None
+        project_id=0
+        new_location=""
+        title=""
+        if 'project_id' in kwargs:
+            project_id=kwargs['project_id']
+        if 'new_location' in kwargs:
+            new_location=kwargs['new_location']
+        if 'title' in kwargs:
+            title=kwargs['title']
+        project_location=ProjectLocation()
+        project_location.project_id=project_id
+        project_location.title=title
+        project_location.location=new_location
+        project_location.save()
+        return project_location
+
 
     # def edit_project_timing(self,project_id,percentage_completed,start_date,end_date):
     def edit_project(self,*args, **kwargs):

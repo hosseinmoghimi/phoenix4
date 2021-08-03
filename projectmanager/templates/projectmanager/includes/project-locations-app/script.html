@@ -1,0 +1,50 @@
+{% load static %}
+
+<script>
+let url_add_project_loaction="{% url 'projectmanager:add_project_location' %}"
+    let project_locations_app = new Vue({
+        el: "#project-locations-app",
+        data: {
+            waiting: false,
+            locations: [],
+            new_location_title:"",
+            new_location:"",
+        },
+
+        methods: {
+            add_location: function () {
+                project_locations_app.waiting = true
+
+                let payload = {
+                    new_location: project_locations_app.new_location,
+                    page_id: project_id,
+                    title: project_locations_app.new_location_title,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                console.log(payload)
+
+
+                var posting = $.post(url_add_project_loaction, payload);
+                posting.fail(function (xhr, status, error) {
+                    project_locations_app.waiting = false
+                    showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                })
+                // Put the results in a div
+                posting.done(function (data) {
+                    project_locations_app.waiting = false
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+
+                        project_locations_app.locations.push(data.location)
+                        project_locations_app.new_location_title=""
+                        project_locations_app.new_location=""
+                    }
+                    else {
+                    }
+                })
+
+            },
+
+        }
+    })
+</script>

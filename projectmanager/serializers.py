@@ -1,6 +1,6 @@
 from authentication.repo import ProfileRepo
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Service, ServiceRequest, ServiceRequestSignature
+from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, ProjectLocation, Service, ServiceRequest, ServiceRequestSignature
 from authentication.serilizers import ProfileSerializer
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -53,6 +53,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model=Employee
         fields=['id','get_absolute_url','profile']
+
+class ProjectLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ProjectLocation
+        fields=['id','location','title','get_edit_url','get_project_url','project_title']
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
     employees=EmployeeSerializer(many=True)

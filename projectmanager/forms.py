@@ -50,6 +50,11 @@ class AddEmployeeForm(forms.Form):
                
 class SearchForm(forms.Form):
     search_for=forms.CharField(max_length=50, required=True)
+    
+class AddLocationForm(forms.Form):
+    page_id=forms.IntegerField(required=True)
+    new_location=forms.CharField(max_length=500,required=True)
+    title=forms.CharField(max_length=500,required=False)
                
 class AddEmployerForm(forms.Form):
     title=forms.CharField(max_length=50, required=True)

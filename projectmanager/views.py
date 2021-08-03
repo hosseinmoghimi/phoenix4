@@ -198,6 +198,9 @@ class ProjectViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['project'] = project
+        
+        if request.user.has_perm(APP_NAME+'.change_project'):
+            context['add_location_form'] = AddLocationForm()
         context['edit_project_form']=EditProjectForm()
         context['events'] = project.event_set.all().order_by('event_datetime')
         organization_units = project.organization_units.all()

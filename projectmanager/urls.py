@@ -31,6 +31,8 @@ urlpatterns = [
     path('add_material/',apis.MaterialApi().add_material,name="add_material"),
     path('add_organization_unit/',apis.OrganizationUnitApi().add_organization_unit,name="add_organization_unit"),
     path('add_project/',apis.ProjectApi().add_project,name="add_project"),
+    path('add_project_location/',apis.ProjectApi().add_project_location,name="add_project_location"),
+    
     path('add_material/',apis.MaterialApi().add_material,name="add_material"),
 ]
 
