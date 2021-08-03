@@ -1,76 +1,85 @@
-<div class="card mb-3" id="links-app">
-    <div class="card-header">
-        <h5 class="text-center">
+<div id="accordion">
 
-            لینک ها
-        </h5>
-    </div>
-    <div class="card-body">
-        {% for link in page.links.all %}
-        <div>
-
-            <h6>
-                {{link.get_icon_tag|safe}}
-                <a class="mr-2" target="_blank" href="{{link.url}}">
-                    {{link.title}}
-                </a>
-                {% if perms.core.change_link %}
-                {{link.get_edit_btn|safe}}
-
-                {% endif %}
-            </h6>
+    <div class="card mb-3" id="links-app">
+        <div class="card-header"  id="headinglinks">
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapselinks" aria-expanded="true"
+                    aria-controls="collapselinks">
+                    لینک ها
+                </button>
+            </h5>
         </div>
-        {% endfor %}
-        <div v-for="link in links">
+        <div id="collapselinks" class="collapse" aria-labelledby="headinglinks" data-parent="#accordion">
 
-            <h6>
-                <i class=" text-primary fa fa-tag"></i>
-                <a class="mr-2" target="_blank" :href="link.url" v-text="link.title">
+            <div class="card-body">
+                {% for link in page.links.all %}
+                <div>
 
-                </a>
-                {% if perms.core.change_link %}
-                <a :href="link.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-                {% endif %}
-            </h6>
-        </div>
-    </div>
-    <div class="card-footer">
+                    <h6>
+                        {{link.get_icon_tag|safe}}
+                        <a class="mr-2" target="_blank" href="{{link.url}}">
+                            {{link.title}}
+                        </a>
+                        {% if perms.core.change_link %}
+                        {{link.get_edit_btn|safe}}
 
-        <p class="text-right" v-if="!show_add_link">
-
-            <a style="cursor: pointer;" class="farsi a" @click="show_add_link=true">
-                <i class="material-icons">
-                    add
-                </i>
-                افزودن لینک
-            </a>
-        </p>
-
-        {% if add_page_link_form %}
-
-        <form v-if="show_add_link" @submit.prevent="add_page_link()">
-            <div class="row">
-                <div class="col-8">
-                    <input required type="text" v-model="new_link_title" class="farsi form-control"
-                        placeholder="عنوان لینک جدید">
-                    <input required type="text" v-model="new_link_url" class="farsi form-control"
-                        placeholder="آدرس لینک جدید">
-
+                        {% endif %}
+                    </h6>
                 </div>
-                <div class="col-4">
-                    <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
-                    <button @click="show_add_link=!show_add_link" class="farsi btn btn-secondary btn-block"
-                        type="reset">انصراف</button>
+                {% endfor %}
+                <div v-for="link in links">
 
+                    <h6>
+                        <i class=" text-primary fa fa-tag"></i>
+                        <a class="mr-2" target="_blank" :href="link.url" v-text="link.title">
+
+                        </a>
+                        {% if perms.core.change_link %}
+                        <a :href="link.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+                    </h6>
                 </div>
             </div>
+            <div class="card-footer">
 
-        </form>
-        {% endif %}
+                <p class="text-right" v-if="!show_add_link">
 
+                    <a style="cursor: pointer;" class="farsi a" @click="show_add_link=true">
+                        <i class="material-icons">
+                            add
+                        </i>
+                        افزودن لینک
+                    </a>
+                </p>
+
+                {% if add_page_link_form %}
+
+                <form v-if="show_add_link" @submit.prevent="add_page_link()">
+                    <div class="row">
+                        <div class="col-8">
+                            <input required type="text" v-model="new_link_title" class="farsi form-control"
+                                placeholder="عنوان لینک جدید">
+                            <input required type="text" v-model="new_link_url" class="farsi form-control"
+                                placeholder="آدرس لینک جدید">
+
+                        </div>
+                        <div class="col-4">
+                            <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
+                            <button @click="show_add_link=!show_add_link" class="farsi btn btn-secondary btn-block"
+                                type="reset">انصراف</button>
+
+                        </div>
+                    </div>
+
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
     </div>
+
 </div>
