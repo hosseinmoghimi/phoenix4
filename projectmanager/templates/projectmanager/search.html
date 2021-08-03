@@ -1,13 +1,224 @@
-{% extends layout %}
+{% extends "projectmanager/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+<li class="nav-item my-auto mx-2">
+    <a class="nav-link farsi " href="{% url 'projectmanager:project_chart' %}">
+        مدیریت
+    </a>
+</li>
+{% endblock %}
 {% block content %}
-  <div class="row">
-      <div class="col-md-4">
-<div class="card">
-    <div class="card-header">
-        <h4 class="card-title"></h4>
+<div>
+
+</div>
+<div class="row">
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <small>
+
+                        جستجو برای :
+                    </small>
+                    <strong>
+                        {{search_for}}
+                    </strong>
+                </h4>
+            </div>
+            <div class="card-body">
+
+
+
+
+
+
+
+
+
+
+                {% if projects %}
+
+
+                <h5 class="mt-4">
+                    پروژه ها :
+                </h5>
+                {% for page in projects %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if materials %}
+
+
+
+
+
+                <h5 class="mt-4">
+                    متریال ها :
+                </h5>
+                {% for page in materials %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if services %}
+
+                <h5 class="mt-4">
+                    سرویس ها :
+                </h5>
+                {% for page in services %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if employers %}
+
+
+                <h5 class="mt-4">
+                    کارفرما ها :
+                </h5>
+                {% for page in employers %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if organization_units %}
+
+                <h5 class="mt-4">
+                    واحد های سازمانی ها :
+                </h5>
+                {% for page in organization_units %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
+
+
+                {% if events %}
+
+                <h5 class="mt-4">
+                    رویداد ها :
+                </h5>
+                {% for page in events %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+
+                        <small>
+                            {{page.persian_event_datetime}}
+                        </small>
+                        &nbsp;
+                        &nbsp;
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
+
+            </div>
+        </div>
     </div>
+
+
+
 </div>
 
-      </div>
-  </div>
-{% endblock content %}
+{% endblock %}
+{% block script %}
+<script>
+    let parent_id = 0
+</script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "projectmanager/includes/organization-units-app/script.html" %}
+{% include "projectmanager/includes/employers-app/script.html" %}
+{% include "projectmanager/includes/materials-app/script.html" %}
+{% include "projectmanager/includes/projects-app/script.html" %}
+{% include "projectmanager/includes/services-app/script.html" %}
+{% include "projectmanager/includes/events-app/script.html" %}
+
+<script>
+
+    $(".carousel-item:first").addClass('active')
+    $(".carousel-indicators:childs:first").addClass('active')
+</script>
+{% endblock %}

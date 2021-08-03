@@ -454,6 +454,10 @@ class EventRepo():
         new_event.save()
         return new_event
 
+    def search(self,search_for):
+        objects = self.objects.filter(title__contains=search_for)
+        return objects
+
 
 class MaterialRepo():
     def __init__(self, *args, **kwargs):

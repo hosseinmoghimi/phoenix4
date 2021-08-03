@@ -55,10 +55,12 @@ class BasicViews(View):
                     request=request).list(search_for=search_for)
                 context['projects'] = ProjectRepo(
                     request=request).list(search_for=search_for)
+                context['events'] = EventRepo(
+                    request=request).search(search_for=search_for)
                 context['organization_units'] = OrganizationUnitRepo(
                     request=request).list(search_for=search_for)
                 context['log'] = log
-                return render(request, TEMPLATE_ROOT+"index.html", context)
+                return render(request, TEMPLATE_ROOT+"search.html", context)
 
     def home(self, request, *args, **kwargs):
         context = getContext(request)
