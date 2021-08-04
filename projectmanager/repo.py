@@ -18,9 +18,16 @@ class ProjectRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Project.objects
-        self.me=ProfileRepo(user=self.user).me
-
+        
+        self.profile=ProfileRepo(*args, **kwargs).me
+        if self.user.has_perm(APP_NAME+".view_project"):
+            self.objects = Project.objects
+        elif self.profile is not None:
+            employees=Employee.objects.filter(profile=self.profile)
+            lisst=[]
+            self.objects=Project.objects.filter(id__in=lisst)
+        else:
+            self.objects=Project.objects.filter(id=0)
 
 
     def add_project_location(self,*args, **kwargs):
