@@ -1,4 +1,3 @@
-
 {% load static %}
 <script src="{% static 'persian/moment.js' %}"></script>
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
@@ -11,28 +10,27 @@
             events: [],
             add_event_form_title: "",
             waiting: false,
-            event_datetime:current_datetime
+            event_datetime: current_datetime
         },
-        components:{
+        components: {
             DatePicker: VuePersianDatetimePicker
-  
+
         },
         methods: {
             add_event: function () {
-                this.waiting = true
+                events_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.add_event_form_title,
-                    event_datetime:this.event_datetime,
+                    event_datetime: this.event_datetime,
                     project_id: parent_id,
                 }
                 let posting = $.post(url_add_event, payload)
                 posting.done((data) => {
-                    console.log(data)
+                    events_app.waiting = false
                     if (data.result === 'SUCCEED') {
                         events_app.events.push(data.event)
                         events_app.add_event_form_title = ""
-                        events_app.waiting = false
                     }
                 })
             },

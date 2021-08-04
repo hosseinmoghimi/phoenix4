@@ -17,8 +17,8 @@
             show_add_material_request_form: false,
         },
         methods: {
-            to_price: function (value,CURRENCY) {
-                return to_price(value,CURRENCY)
+            to_price: function (value, CURRENCY) {
+                return to_price(value, CURRENCY)
             },
             selected_material: function () {
                 if (this.add_material_request_form_title === "") {
@@ -52,7 +52,6 @@
                 // Put the results in a div
                 posting.done(function (data) {
                     material_request_app.waiting = false
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         material_request_app.material_requests.push(data.material_request)
                         // material_request_app.show_add_material_request_form = false
@@ -70,7 +69,7 @@
                 this.add_material_request_form_unit_name = material.unit_name
                 this.add_material_request_form_unit_price = material.unit_price
                 this.add_material_request_form_title = material.title
-                this.materials=[material]
+                this.materials = [material]
             },
             filter_list: function () {
                 if (this.add_material_request_form_title) {

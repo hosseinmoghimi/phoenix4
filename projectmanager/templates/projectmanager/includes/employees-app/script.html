@@ -11,8 +11,8 @@
             show_add_form: false,
             waiting: false,
             profiles: [],
-            add_employee_form_username:"",
-            add_employee_form_password:"",
+            add_employee_form_username: "",
+            add_employee_form_password: "",
 
         },
         methods: {
@@ -22,6 +22,7 @@
                 })
             },
             add_employee: function (profile_id) {
+                employees_app.waiting = true
                 if (typeof organization_unit_id == 'undefined')
                     return
 
@@ -30,14 +31,16 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     organization_unit_id: organization_unit_id,
                     profile_id: profile_id,
-                    password:this.add_employee_form_password,
-                    username:this.add_employee_form_username,
+                    password: this.add_employee_form_password,
+                    username: this.add_employee_form_username,
                     first_name: this.add_employee_form_first_name,
                     last_name: this.add_employee_form_last_name,
                 }
                 console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
+                    employees_app.waiting = false
+
                     if (data.result === 'SUCCEED') {
                         console.log(data)
                         this.employees.push(data.employee)

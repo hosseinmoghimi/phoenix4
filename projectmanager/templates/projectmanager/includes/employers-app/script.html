@@ -9,12 +9,12 @@
             new_employer_title: "",
             employers: [],
 
-            waiting:false,
+            waiting: false,
         },
         methods: {
             add_employer: function () {
-                
-                employers_app.waiting=true
+
+                employers_app.waiting = true
                 let url = "{% url 'projectmanager:add_employer' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -22,8 +22,8 @@
                 }
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    
-                employers_app.waiting=false
+
+                    employers_app.waiting = false
                     if (data.result === 'SUCCEED') {
 
                         employers_app.employers.push(data.employer)
