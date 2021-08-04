@@ -1,12 +1,22 @@
+
+
+
+<div id="accordion">
 <div class="card mb-5">
-    <div class="card-header">
+    <div class="card-header" id="headingProjectEdit">
 
         <h5 class="card-title text-center farsi">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseProjectEdit"
+            aria-expanded="true" aria-controls="collapseseProjectEdit">
             زمان بندی پروژه
+            </button>
         </h5>
 
 
     </div>
+    <div id="collapseseProjectEdit"
+     class="collapse" aria-labelledby="headingProjectEdit"
+    data-parent="#accordion">
 
     <div class="card-body" id="project-app">
         {% if edit_project_form %}
@@ -109,4 +119,6 @@
 
 
     </div>
+</div>
+</div>
 </div>

@@ -1,11 +1,21 @@
 {% load to_persian_date %}
-<div class="card mb-3" id="page-comments-app">
-    <div class="card-header">
-        <h5 class="text-center">
 
+<div id="accordion">
+
+<div class="card mb-3" id="page-comments-app">
+    <div class="card-header" id="headingComments">
+        <h5 class="text-center">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseComments"
+            aria-expanded="true" aria-controls="collapseseComments">
             نظرات
+            </button>
         </h5>
     </div>
+    <div id="collapseseComments"
+    class="collapse" aria-labelledby="headingComments"
+   data-parent="#accordion">
+
+
     <div class="card-body">
         {% for page_comment in page.pagecomment_set.all1 %}
         <div class="py-3">
@@ -43,4 +53,6 @@
 
     </div>
 
+</div>
+</div>
 </div>

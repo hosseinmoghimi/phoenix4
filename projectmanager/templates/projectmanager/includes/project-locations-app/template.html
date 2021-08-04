@@ -1,16 +1,29 @@
 <!-- موقعیت در نقشه -->
+
+
+<div id="accordion">
+
+
 <div class="card card-stats" id="project-locations-app">
-    <div class="card-header card-header-warning card-header-icon">
+    <div class="card-header card-header-warning card-header-icon" id="headingLocations">
         <div class="card-icon">
             <i class="material-icons" aria-hidden="true">place</i>
         </div>
         <p class="card-category">
             {{project.title}}
         </p>
-        <h3 class="card-title">موقعیت در نقشه</h3>
+        <h3 class="card-title">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseLocations"
+            aria-expanded="true" aria-controls="collapseseLocations">
+            موقعیت در نقشه
+            </button>    
+        
+        </h3>
     </div>
-
-
+    
+    <div id="collapseseLocations"
+    class="collapse" aria-labelledby="headingLocations"
+   data-parent="#accordion">
     <div class="card-body ">
 
 
@@ -69,4 +82,6 @@
             <i class="material-icons" aria-hidden="true">help</i>
             راهنما</a>
     </div>
+</div>
+</div>
 </div>
