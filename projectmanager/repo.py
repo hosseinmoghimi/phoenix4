@@ -45,6 +45,8 @@ class ProjectRepo():
 
     # def edit_project_timing(self,project_id,percentage_completed,start_date,end_date):
     def edit_project(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_project"):
+            return None
         project=self.project(*args, **kwargs)
         if project is not None:
             if 'percentage_completed' in kwargs:
@@ -65,6 +67,8 @@ class ProjectRepo():
 
 
     def add_organization_unit(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_project"):
+            return None
         project=self.project(*args, **kwargs)
         organization_unit=OrganizationUnitRepo(user=self.user).organization_unit(*args, **kwargs)
         if organization_unit in project.organization_units.all():
@@ -183,6 +187,8 @@ class OrganizationUnitRepo():
         return new_organization
 
     def add_employee(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_employee"):
+            return None
         profile=ProfileRepo(user=self.request.user).profile(*args, **kwargs)
         if profile is None:
             from authentication.models import Profile
@@ -332,19 +338,20 @@ class ServiceRepo():
         return self.organization_unit(*args, **kwargs)
 
     def add_signature(self,service_request_id,status,description=None):
-        if self.user.has_perm(APP_NAME+".add_servicerequestsignature"):
-            signature=ServiceRequestSignature()
-            signature.description=description
-            service_request=self.service_request(service_request_id=service_request_id)
-            if service_request is not None:
-                service_request.status=status
-                service_request.save()
-            signature.service_request_id=service_request_id
-            signature.status=status
-            signature.date_added=timezone.now()
-            signature.profile=ProfileRepo(user=self.user).me
-            signature.save()
-            return signature
+        if not self.user.has_perm(APP_NAME+".add_servicerequestsignature"):
+            return None
+        signature=ServiceRequestSignature()
+        signature.description=description
+        service_request=self.service_request(service_request_id=service_request_id)
+        if service_request is not None:
+            service_request.status=status
+            service_request.save()
+        signature.service_request_id=service_request_id
+        signature.status=status
+        signature.date_added=timezone.now()
+        signature.profile=ProfileRepo(user=self.user).me
+        signature.save()
+        return signature
 
 
                    
