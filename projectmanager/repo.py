@@ -1,9 +1,6 @@
 from django.utils import timezone
-from django.http import request
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
-from authentication.models import Profile
-from projectmanager.serializers import MaterialRequestSerializer, MaterialSerializer, ServiceRequestSignatureSerializer
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
 from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, ProjectLocation, Service, ServiceRequest, ServiceRequestSignature
@@ -25,7 +22,7 @@ class ProjectRepo():
         elif self.profile is not None:
             employees=Employee.objects.filter(profile=self.profile)
             lisst=[]
-            self.objects=Project.objects.filter(id__in=lisst)
+            self.objects=Project.objects.filter(id=0)
         else:
             self.objects=Project.objects.filter(id=0)
 
@@ -140,7 +137,13 @@ class OrganizationUnitRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = OrganizationUnit.objects
+        self.profile=ProfileRepo(*args, **kwargs).me
+        if self.user.has_perm(APP_NAME+".view_organizationunit"):
+            self.objects = OrganizationUnit.objects
+        elif self.profile is not None:
+            self.objects=OrganizationUnit.objects.filter(id=0)
+        else:
+            self.objects=OrganizationUnit.objects.filter(id=0)
 
     def organization_unit(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -228,7 +231,13 @@ class EmployeeRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Employee.objects
+        self.profile=ProfileRepo(*args, **kwargs).me
+        if self.user.has_perm(APP_NAME+".view_employee"):
+            self.objects = Employee.objects
+        elif self.profile is not None:
+            self.objects=Employee.objects.filter(id=0)
+        else:
+            self.objects=Employee.objects.filter(id=0)
 
     def employee(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -274,7 +283,14 @@ class EmployerRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Employer.objects
+        
+        self.profile=ProfileRepo(*args, **kwargs).me
+        if self.user.has_perm(APP_NAME+".view_employer"):
+            self.objects = Employer.objects
+        elif self.profile is not None:
+            self.objects=Employer.objects.filter(id=0)
+        else:
+            self.objects=Employer.objects.filter(id=0)
 
     def employer(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -435,7 +451,13 @@ class EventRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Event.objects
+        self.profile=ProfileRepo(*args, **kwargs).me
+        if self.user.has_perm(APP_NAME+".view_event"):
+            self.objects = Event.objects
+        elif self.profile is not None:
+            self.objects=Event.objects.filter(id=0)
+        else:
+            self.objects=Event.objects.filter(id=0)
 
     def event(self, *args, **kwargs):
         if 'pk' in kwargs:
