@@ -42,7 +42,7 @@ class ProjectApi(APIView):
                 project=ProjectRepo(request=request).add_project(parent_id=parent_id,title=title)
                 if project is not None:
                     context['project']=ProjectSerializer(project).data
-        context['result']=SUCCEED
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
     
