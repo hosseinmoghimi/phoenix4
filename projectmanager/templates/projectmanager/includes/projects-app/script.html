@@ -18,8 +18,8 @@
                 }
                 let posting = $.post(url, payload)
                 posting.done((data) => {
+                    projects_app.waiting=false
                     if (data.result === 'SUCCEED') {
-                        projects_app.waiting=false
 
                         projects_app.projects.push(data.project)
                         projects_app.new_project_title = ""
