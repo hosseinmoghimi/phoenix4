@@ -20,7 +20,7 @@ class ProjectRepo():
         if self.user is None:
             self.objects=Project.objects.filter(id=0)
         elif self.user.has_perm(APP_NAME+".view_project"):
-            self.objects = Project.objects
+            self.objects = Project.objects.order_by('priority')
         elif self.profile is not None:
             employees=Employee.objects.filter(profile=self.profile)
             lisst=[]

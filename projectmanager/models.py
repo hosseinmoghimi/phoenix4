@@ -124,7 +124,7 @@ class Project(ProjectManagerPage):
             sum+=service_request.quantity*service_request.unit_price
         return sum
     def sub_projects(self):
-        return Project.objects.filter(parent_id=self.id)
+        return Project.objects.filter(parent_id=self.id).order_by('priority')
     def employees(self):
         employees=[]
         for org in self.organization_units.all():
