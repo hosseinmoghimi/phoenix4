@@ -341,12 +341,12 @@ class Koshtar(models.Model):
         "animal", verbose_name='animal', on_delete=models.PROTECT)
     koshtar_date=models.DateTimeField(
         _("koshtar_date"), auto_now=False, auto_now_add=False)
-    Jegar_value=models.IntegerField(_("قیمت آلایش"),default=0)
-    Kalle_pache_value=models.IntegerField(_("قیمت کله پاچه"),default=0)
-    pust_value=models.IntegerField(_("قیمت پوست"),default=0)
+    Jegar_price=models.IntegerField(_("قیمت آلایش"),default=0)
+    Kalle_pache_price=models.IntegerField(_("قیمت کله پاچه"),default=0)
+    pust_price=models.IntegerField(_("قیمت پوست"),default=0)
     transport_fee=models.IntegerField(_("هزینه حمل"),default=0)
     koshtar_fee=models.IntegerField(_("هزینه کشتار"),default=0)
-    lashe_value=models.IntegerField(_("قیمت لاشه"),default=0)
+    lashe_price=models.IntegerField(_("قیمت لاشه"),default=0)
     lashe_weight=models.FloatField(_("وزن لاشه"),default=0)
     description = models.TextField(_("توضیحات"), null=True,blank=True)
 
@@ -361,3 +361,28 @@ class Koshtar(models.Model):
 
     def get_absolute_url(self):
         return reverse("Koshtar_detail", kwargs={"pk": self.pk})
+
+
+
+
+class Cost(models.Model):
+    title=models.CharField(_("عنوان هزینه"), max_length=50)
+    value=models.IntegerField(_("هزینه"))
+    saloon=models.ForeignKey("saloon", verbose_name=_("سالن"), on_delete=models.PROTECT)
+    cost_date=models.DateTimeField(_("date_time"), auto_now=False, auto_now_add=False)
+    category=models.CharField(_("category"),choices=CostCategoryEnum.choices,default=CostCategoryEnum.DEFAULT, max_length=50)
+    employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
+    documents=models.ManyToManyField("core.document",blank=True, verbose_name=_("documents"))
+    def persian_cost_date(self):
+        return PersianCalendar().from_gregorian(self.cost_date)
+    
+
+    class Meta:
+        verbose_name = _("Cost")
+        verbose_name_plural = _("Costs")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":cost", kwargs={"pk": self.pk})

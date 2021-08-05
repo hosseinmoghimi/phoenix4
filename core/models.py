@@ -350,11 +350,14 @@ class Link(Icon):
             </a>
         """
 
+
 class PageLink(Link):
     page=models.ForeignKey("BasicPage",related_name="links", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
+    
     class Meta:
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
+
 
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)

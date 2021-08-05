@@ -7,6 +7,33 @@ from utility.persian import PersianCalendar
 from core.constants import SUCCEED,FAILED
 
 class BasicApi(APIView):
+    def add_cost(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            add_cost_form=AddCostForm(request.POST)
+            if add_cost_form.is_valid():
+                log=3
+                value=add_cost_form.cleaned_data['value']
+                saloon_id=add_cost_form.cleaned_data['saloon_id']
+                cost_date=add_cost_form.cleaned_data['cost_date']
+                category=add_cost_form.cleaned_data['category']
+                employee_id=add_cost_form.cleaned_data['employee_id']
+               
+                cost_date=PersianCalendar().to_gregorian(cost_date)
+                cost=CostRepo(request=request).add_cost(
+                    value=value,
+                    employee_id=employee_id,
+                    saloon_id=saloon_id,
+                    category=category,
+                    cost_date=cost_date)
+                if cost is not None:
+                    context['cost']=CostSerializer(cost).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
     def enter_animal_to_saloon(self,request,*args, **kwargs):
         context={'result':FAILED}
         log=1

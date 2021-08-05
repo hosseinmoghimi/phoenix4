@@ -6,3 +6,12 @@ class AnimalCategoryEnum(CoreEnums.TextChoices):
     SHEEP='گوسفند',_("گوسفند")
     OSTRICH='شترمرغ',_("شترمرغ")
     TURKEY='بوقلمون',_("بوقلمون")
+class CostCategoryEnum(CoreEnums.TextChoices):
+    DEFAULT='هزینه',_("هزینه")
+    AB='آب',_("آب")
+    BARGH='برق',_("برق")
+    GAZ='گاز',_("گاز")
+    TELEPHONE='تلفن',_("تلفن")
+    RENT='اجاره',_("اجاره")
+    GUARD="نگهبان",_("نگهبان")
+    BUILDING="ساختمانی",_("ساختمانی")

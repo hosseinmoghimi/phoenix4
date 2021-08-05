@@ -1,0 +1,65 @@
+{% extends "farm/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+
+
+{% block farm_content %}
+<div class="row">
+    <div class="col-3">
+
+    </div>
+
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="title text-center">
+
+                    {{cost.title}}
+                </h3>
+            </div>
+            <div class="card-body text-right">
+                <div>
+
+                    <div class=" alert alert-danger mb-5 d-inline farsi ">
+                        {{cost.value|to_price}}
+                    </div>
+                </div>
+                <div class="mt-5">
+
+
+                    <p>
+                        {{cost.persian_cost_date}}
+                    </p>
+
+
+                    <p>
+                        {{cost.category}}
+                    </p>
+
+
+                    <p>
+                        <a href="{{cost.saloon.get_absolute_url}}">
+
+
+                            {{cost.saloon}}
+
+                        </a>
+                    </p>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block farm_script %}
+
+{% endblock %}

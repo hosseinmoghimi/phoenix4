@@ -148,6 +148,26 @@ class FarmRepo():
         except:
             return None
 
+class CostRepo():
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects=Cost.objects
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        return objects
+    def cost(self,pk):
+        try:
+            return self.objects.get(pk=pk)
+        except:
+            return None
+    
 class SaloonFoodRepo():
     
     def __init__(self,*args, **kwargs):

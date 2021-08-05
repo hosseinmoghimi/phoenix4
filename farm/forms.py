@@ -16,3 +16,10 @@ class EnterAnimalToSaloonForm(forms.Form):
 class SaloonDailyReportForm(forms.Form):
     saloon_id=forms.IntegerField(required=True)
     report_date=forms.CharField(max_length=50,required=False)
+class AddCostForm(forms.Form):
+    employee_id=forms.IntegerField(required=True)
+    saloon_id=forms.IntegerField(required=True)
+    value=forms.IntegerField(required=True)
+    cost_date=forms.CharField(max_length=50,required=False)
+    title=forms.CharField(max_length=50,required=False)
+    category=forms.CharField(max_length=50,required=False)

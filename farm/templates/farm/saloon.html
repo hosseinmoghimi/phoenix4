@@ -200,7 +200,7 @@
                     <table class="table table-striped">
                         <thead>
                             <th>
-                                زمان 
+                                زمان
                             </th>
                             <th>
                                 خوراک
@@ -254,15 +254,15 @@
 
                                 </td>
                                 <td>
-                                    <a title="{{saloon_food.employee.profile.name}}" 
-                                    href="{{saloon_food.employee.get_absolute_url}}">
-                                        <img src="{{saloon_food.employee.profile.image}}"
-                                        width="32" class="rounded-circle">
+                                    <a title="{{saloon_food.employee.profile.name}}"
+                                        href="{{saloon_food.employee.get_absolute_url}}">
+                                        <img src="{{saloon_food.employee.profile.image}}" width="32"
+                                            class="rounded-circle">
                                     </a>
                                     {% if perms.farm.change_saloonfood %}
                                     {{saloon_food.get_edit_btn|safe}}
                                     {% endif %}
-                                    
+
                                 </td>
 
                             </tr>
@@ -308,7 +308,7 @@
                                 تاریخ خروج
                             </th>
                             <th>
-ثبت توسط
+                                ثبت توسط
                             </th>
                         </thead>
                         <tbody>
@@ -354,9 +354,10 @@
                                     </small>
                                 </td>
                                 <td>
-                                    <a title="{{animal_in_saloon.employee.profile.name}}" href="{{animal_in_saloon.employee.get_absolute_url}}">
-                                        <img src="{{animal_in_saloon.employee.profile.image}}"
-                                        width="32" class="rounded-circle">
+                                    <a title="{{animal_in_saloon.employee.profile.name}}"
+                                        href="{{animal_in_saloon.employee.get_absolute_url}}">
+                                        <img src="{{animal_in_saloon.employee.profile.image}}" width="32"
+                                            class="rounded-circle">
                                     </a>
 
                                     {% if perms.farm.change_animalinsaloon %}
@@ -377,6 +378,9 @@
                     </span>
                 </div>
             </div>
+        </div>
+        <div class="col-md-12">
+           {% include "farm/includes/costs-app/template.html" %}
         </div>
     </div>
 
@@ -419,8 +423,8 @@
                 let payload = {
                     animal_tag: saloon_app.animal_tag,
                     saloon_id: saloon_id,
-                    animal_price:this.animal_price,
-                    animal_weight:this.animal_weight,
+                    animal_price: this.animal_price,
+                    animal_weight: this.animal_weight,
                     enter_date: saloon_app.enter_date,
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
@@ -469,4 +473,8 @@
         },
     })
 </script>
+
+{% include "farm/includes/costs-app/script.html" %}
+
+
 {% endblock %}

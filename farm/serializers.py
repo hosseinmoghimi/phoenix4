@@ -44,6 +44,13 @@ class FoodSerializer(serializers.ModelSerializer):
         model=Food
         fields=['id','title','unit_name','unit_price','get_absolute_url']
 
+class CostSerializer(serializers.ModelSerializer):
+    saloon=SaloonSerializer()
+    employee=EmployeeSerializer()
+    class Meta:
+        model=Cost
+        fields=['id','saloon','title','persian_cost_date','category','employee','value','get_absolute_url']
+
 class SaloonFoodSerializer(serializers.ModelSerializer):
     food=FoodSerializer()
     saloon=SaloonSerializer()

@@ -4,6 +4,7 @@ from .models import *
 
 admin.site.register(Animal)
 admin.site.register(Log)
+admin.site.register(Cost)
 admin.site.register(AnimalInSaloon)
 admin.site.register(Food)
 admin.site.register(Drug)

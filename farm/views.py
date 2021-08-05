@@ -89,6 +89,8 @@ class BasicViews(View):
         context = getContext(request)
         saloon = SaloonRepo(request=request).saloon(pk)
         context['saloon'] = saloon
+        costs=saloon.cost_set.all()
+        context['costs'] = costs
         return render(request, TEMPLATE_ROOT+"saloon.html", context)
 
     def farm(self, request, pk, *args, **kwargs):
@@ -152,3 +154,8 @@ class BasicViews(View):
         animals = AnimalRepo(request=request).list(*args, **kwargs)
         context['animals'] = animals
         return render(request, TEMPLATE_ROOT+"animals.html", context)
+class CostViews(View):
+    def cost(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        context['cost']=CostRepo(request=request).cost(*args, **kwargs)
+        return render(request,TEMPLATE_ROOT+"cost.html",context)

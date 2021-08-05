@@ -27,7 +27,7 @@
         {{project.get_breadcrumb|safe}}
     </div>
     <div class="row ">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card mb-5">
                 <div class="card-body">
                     <p>
@@ -102,27 +102,23 @@
                     </p>
                 </div>
             </div>
-
+            
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             {% include "projectmanager/includes/projects-app/template.html" %}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            {% include "projectmanager/includes/organization-units-app/template.html" %}
+            {% include "core/includes/page-links-app/template.html" %}
+            {% include "core/includes/page-documents-app/template.html" %}
+            
+        </div>
+        <div class="col-md-12">
             {% include "core/includes/page-description-app/template.html" %}
 
         </div>
-        <div class="col-md-4">
-
-            {% include "projectmanager/includes/organization-units-app/template.html" %}
-        </div>
-        <div class="col-md-4">
-
-            {% include "core/includes/page-links-app/template.html" %}
-        </div>
-        <div class="col-md-4">
-
-            {% include "core/includes/page-documents-app/template.html" %}
-        </div>
+     
+        
         <div class="col-md-12">
 
             {% include "projectmanager/includes/project-edit-app/template.html" %}
