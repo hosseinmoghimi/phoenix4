@@ -1,14 +1,23 @@
 {% load static %}
+
+
+<div id="accordion">
+
+
 <div class="card mb-3" id="employers-app">
-    <div class="card-header">
+    <div class="card-header" id="headingEmployers">
 
         <h5 class="card-title text-center farsi">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEmployers"
+            aria-expanded="true" aria-controls="collapseEmployers">
             لیست کارفرما ها
+        </button>
         </h5>
 
 
     </div>
-
+    <div id="collapseEmployers" class="collapse" aria-labelledby="headingEmployers" data-parent="#accordion">
+      
     <div class="card-body">
         {% for employer in employers %}
         <a href="{{employer.get_absolute_url}}">
@@ -89,4 +98,6 @@
 
 
     </div>
+</div>
+</div>
 </div>

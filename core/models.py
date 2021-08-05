@@ -50,6 +50,27 @@ class Icon(models.Model):
             return f'<span  style="{icon_style}" class="{text_color}">{self.icon_svg}</span>'
         return ''
 
+    def get_icon_tag_pure(self, icon_style='', color=None,no_color=False):
+        
+        if color is not None:
+            self.color = color
+        text_color=''
+        if not no_color and self.color is not None:
+            text_color='text-'+self.color
+
+        if self.image_origin is not None and self.image_origin:
+            return f'<img src="{MEDIA_URL}{str(self.image_origin)}" alt="{self.title}" height="{self.height}" width="{self.width}">'
+
+        if self.icon_material is not None and len(self.icon_material) > 0:
+            return f'<i style="{icon_style}" class="{text_color} material-icons">{self.icon_material}</i>'
+
+        if self.icon_fa is not None and len(self.icon_fa) > 0:
+            return f'<i style="{icon_style}" class="{text_color} {self.icon_fa}"></i>'
+
+        if self.icon_svg is not None and len(self.icon_svg) > 0:
+            return f'<span  style="{icon_style}" class="{text_color}">{self.icon_svg}</span>'
+        return ''
+
 class Tag(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     title = models.CharField(_("عنوان"), max_length=50)
@@ -285,7 +306,7 @@ class Link(Icon):
         target='target="_blank"' if self.new_tab else ''
         return f"""
 
-            <a {target} class="btn btn-{self.icon_color} " href="{self.url}">
+            <a {target} class="btn btn-{self.color} " href="{self.url}">
             <span class="ml-2">
             {self.get_icon_tag_pure()}
             </span>

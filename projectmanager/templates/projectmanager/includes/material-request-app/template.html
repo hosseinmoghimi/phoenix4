@@ -1,3 +1,4 @@
+{% load static %}
 {% load to_persian_date %}
 {% load to_price %}
 <div class="card mb-3" id="material-request-app">
@@ -160,8 +161,11 @@
                 </div>
 
                 <div class="col-md-2">
+                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
-                    <button type="submit" class="btn btn-success">
+
+
+                    <button v-if="!waiting"  type="submit" class="btn btn-success">
                         <i class="material-icons">
                             add
                         </i>

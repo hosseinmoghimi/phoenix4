@@ -1,95 +1,106 @@
 {% load static %}
-<div class="card mb-3" id="projects-app">
-    <div class="card-header">
-
-        <h5 class="card-title text-center farsi">
-            پروژه ها
-        </h5>
 
 
-    </div>
+<div id="accordion">
 
-    <div class="card-body">
-        {% for project in projects %}
-        <a title="جزئیات" href="{{project.get_absolute_url}}">
-            <div class="media">
 
-                <i class="material-icons">
-                    engineering
-                </i>
+    <div class="card mb-3" id="projects-app">
+        <div class="card-header"  id="headingProjectsApp">
 
-                <div class="media-body farsi mx-2 mb-3">
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseProjectsApp"
+                aria-expanded="true" aria-controls="collapseseProjectsApp">
+                پروژه ها
+            </button>
+            </h5>
 
-                    <h5>
-                        {{project.title}}
 
-                    </h5>
-                    {% if project.sub_title %}
-                    <small class="text-secondary">
+        </div>
+        <div id="collapseseProjectsApp" class="collapse" aria-labelledby="headingProjectsApp" data-parent="#accordion">
 
-                        {{project.sub_title}}
-                    </small>
-                    {% endif %}
-
-                </div>
-            </div>
-        </a>
-
-        {% endfor %}
-        <div v-for="project in projects">
-            <a title="جزئیات" :href="project.get_absolute_url">
+        <div class="card-body">
+            {% for project in projects %}
+            <a title="جزئیات" href="{{project.get_absolute_url}}">
                 <div class="media">
 
                     <i class="material-icons">
                         engineering
                     </i>
 
-                    <div class="media-body farsi">
+                    <div class="media-body farsi mx-2 mb-3">
 
-                        <h5 v-text="project.title" class="mx-2">
+                        <h5>
+                            {{project.title}}
 
                         </h5>
-                        <small>
-                                <div class="text-secondary" v-html="project.sub_title"></div>
+                        {% if project.sub_title %}
+                        <small class="text-secondary">
 
+                            {{project.sub_title}}
                         </small>
-
+                        {% endif %}
 
                     </div>
                 </div>
             </a>
-        </div>
-    </div>
-    <div class="card-footer ">
 
-        {% if add_project_form %}
-
-        <form v-cloak @submit.prevent="add_project()">
-            <div class="row">
-                <div class="col-8">
-                    <input required type="text" v-model="new_project_title" class="farsi form-control"
-                        placeholder="پروژه جدید">
-
-                </div>
-                <div class="col-4">
-                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-
-                    <button v-if="!waiting" class="btn btn-primary btn-link text-light" type="submit">
+            {% endfor %}
+            <div v-for="project in projects">
+                <a title="جزئیات" :href="project.get_absolute_url">
+                    <div class="media">
 
                         <i class="material-icons">
-                            add
+                            engineering
                         </i>
-                    </button>
+
+                        <div class="media-body farsi">
+
+                            <h5 v-text="project.title" class="mx-2">
+
+                            </h5>
+                            <small>
+                                <div class="text-secondary" v-html="project.sub_title"></div>
+
+                            </small>
 
 
-                </div>
+                        </div>
+                    </div>
+                </a>
             </div>
+        </div>
+        <div class="card-footer ">
 
-        </form>
-        {% endif %}
+            {% if add_project_form %}
+
+            <form v-cloak @submit.prevent="add_project()">
+                <div class="row">
+                    <div class="col-8">
+                        <input required type="text" v-model="new_project_title" class="farsi form-control"
+                            placeholder="پروژه جدید">
+
+                    </div>
+                    <div class="col-4">
+                        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
 
+
+                        <button v-if="!waiting" class="btn btn-primary btn-link text-light" type="submit">
+
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </form>
+            {% endif %}
+
+
+        </div>
     </div>
+</div>
 </div>

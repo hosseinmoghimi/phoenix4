@@ -1,14 +1,23 @@
 {% load static %}
+
+
+<div id="accordion">
+
 <div class="card mb-3" id="organization-unit-app">
-    <div class="card-header">
+    <div class="card-header" id="headingOrgUnits">
 
         <h5 class="card-title text-center farsi">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOrgUnits"
+            aria-expanded="true" aria-controls="collapseOrgUnits">
             واحد های سازمانی
+        </button>
+
         </h5>
 
 
     </div>
-
+    <div id="collapseOrgUnits" class="collapse" aria-labelledby="headingOrgUnits" data-parent="#accordion">
+    
     <div class="card-body">
         <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
@@ -93,4 +102,6 @@
 
 
     </div>
+</div>
+</div>
 </div>

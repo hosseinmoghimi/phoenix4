@@ -1,13 +1,22 @@
+{% load static %}
+
+<div id="accordion">
 <div class="card mb-3" id="services-app">
-    <div class="card-header card-header-success">
+    <div class="card-header card-header-success" id="headingServices">
 
         <h5 class="card-title text-center farsi">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseServices"
+            aria-expanded="true" aria-controls="collapseServices">
             سرویس ها
+            </button>  
+
         </h5>
 
 
     </div>
-
+    <div id="collapseServices"
+    class="collapse" aria-labelledby="headingServices"
+   data-parent="#accordion">
     <div class="card-body">
         {% for service in services %}
         <a href="{{service.get_absolute_url}}">
@@ -58,7 +67,11 @@
 
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-outline-primary" type="submit">
+                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+
+                    <button v-if="!waiting"  class="btn btn-outline-primary" type="submit">
                         <i class="material-icons">
                             add
                         </i>
@@ -72,4 +85,6 @@
 
 
     </div>
+</div>
+</div>
 </div>

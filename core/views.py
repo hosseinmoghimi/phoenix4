@@ -11,8 +11,11 @@ from .utils import AdminUtility
 from .constants import *
 from django.views import View
 TEMPLATE_ROOT="core/"
-def CoreContext(request,app_name,*args, **kwargs):
+def CoreContext(request,*args, **kwargs):
     context={}
+    app_name='core'
+    if 'app_name' in kwargs:
+        app_name=kwargs['app_name']
     context['user']=request.user
     context['profile']=ProfileRepo(user=request.user).me
     context['APP_NAME']=app_name
@@ -54,8 +57,11 @@ def DefaultContext(request,app_name='core',*args, **kwargs):
 
 
 class MessageView(View):
-    def __init__(response):
+    def __init__(response,*args, **kwargs):
         response.links=[]
+        response.message_text_html=None
+        if 'message_html' in kwargs:
+            response.message_html=kwargs['message_html']
         response.message_color='warning'
         response.has_home_link=True
         response.header_color="rose"
@@ -66,13 +72,16 @@ class MessageView(View):
     def response(self,request,*args, **kwargs):
         return self.show(request=request)
     def show(self,request,*args, **kwargs):
-        context=CoreContext(request)
+        context=CoreContext(request,*args, **kwargs)
         if self.header_text is None:
             self.header_text='خطا'
         if self.message_text is None:
             self.message_text='متاسفانه خطایی رخ داده است.'
         if self.has_home_link:
-            btn_home=Link(url=reverse('web:home'),icon_color=ColorEnum.SUCCESS+' btn-round',icon_material=IconsEnum.home,title='خانه',icon_title='ssss',new_tab=False)
+            btn_home=Link(url=(SITE_URL),
+            color=ColorEnum.SUCCESS+' btn-round',
+            icon_material=IconsEnum.home,
+            title='خانه',name='ssss',new_tab=False)
             self.links.append(btn_home)
         context['links']=self.links
 
@@ -83,6 +92,7 @@ class MessageView(View):
         context['message_color']=self.message_color
         context['message_icon']=self.message_icon
         context['message_text']=self.message_text
+        context['message_html']=self.message_html
 
         context['search_form']=None
         return render(request,TEMPLATE_ROOT+'error.html',context)

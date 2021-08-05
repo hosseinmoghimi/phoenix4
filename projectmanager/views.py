@@ -14,7 +14,7 @@ from django.shortcuts import render
 from .forms import *
 import json
 from .apps import APP_NAME
-from core.views import DefaultContext, PageContext
+from core.views import DefaultContext, MessageView, PageContext
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
 from django.views import View
 from .utils import AdminUtility
@@ -72,11 +72,16 @@ class BasicViews(View):
         carousels=carousel_repo.list()
         if len(carousels)>0:
             context['carousels']=carousels
-        context['add_service_form'] = AddServiceForm()
-        context['add_organization_unit_form'] = AddOrganizationUnitForm()
-        context['add_employer_form'] = AddEmployerForm()
-        context['add_material_form'] = AddMaterialForm()
-        context['add_project_form'] = AddProjectForm()
+        if request.user.has_perm(APP_NAME+".add_service"):
+            context['add_service_form'] = AddServiceForm()
+        if request.user.has_perm(APP_NAME+".add_organizationunit"):
+            context['add_organization_unit_form'] = AddOrganizationUnitForm()
+        if request.user.has_perm(APP_NAME+".add_employer"):
+            context['add_employer_form'] = AddEmployerForm()
+        if request.user.has_perm(APP_NAME+".add_material"):
+            context['add_material_form'] = AddMaterialForm()
+        if request.user.has_perm(APP_NAME+".add_project"):
+            context['add_project_form'] = AddProjectForm()
         context['services'] = ServiceRepo(request=request).list(for_home=True)
         context['projects'] = ProjectRepo(request=request).list(for_home=True)
         context['materials'] = MaterialRepo(
@@ -113,7 +118,7 @@ class ProjectViews(View):
     def project_materials_order(self, request, *args, **kwargs):
         context = getContext(request)
         TAX_PERCENT = 0
-        project = ProjectRepo(request).project(*args, **kwargs)
+        project = ProjectRepo(request=request).project(*args, **kwargs)
         lines = []
         lines_total = 0
         for material_request in project.materialrequest_set.all():
@@ -154,7 +159,7 @@ class ProjectViews(View):
     def project_services_order(self, request, *args, **kwargs):
         context = getContext(request)
         TAX_PERCENT = 0
-        project = ProjectRepo(request).project(*args, **kwargs)
+        project = ProjectRepo(request=request).project(*args, **kwargs)
         lines = []
         lines_total = 0
         for service_request in project.servicerequest_set.all():
@@ -195,7 +200,19 @@ class ProjectViews(View):
         return render(request, TEMPLATE_ROOT+"order.html", context)
 
     def project(self, request, *args, **kwargs):
-        project = ProjectRepo(request).project(*args, **kwargs)
+        project = ProjectRepo(request=request).project(*args, **kwargs)
+
+        if project is None:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین پروژه ای وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
         page = project
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
@@ -258,7 +275,7 @@ class OrganizationUnitViews(View):
         return render(request, TEMPLATE_ROOT+"organization-unit.html", context)
 
     def employer(self, request, *args, **kwargs):
-        employer = EmployerRepo(request).employer(*args, **kwargs)
+        employer = EmployerRepo(request=request).employer(*args, **kwargs)
         context = getContext(request)
         context['employer'] = employer
         if request.user.has_perms(APP_NAME+".add_organizationunit"):
@@ -270,7 +287,7 @@ class OrganizationUnitViews(View):
 
 class EmployeeViews(View):
     def employee(self, request, *args, **kwargs):
-        employee = EmployeeRepo(request).employee(*args, **kwargs)
+        employee = EmployeeRepo(request=request).employee(*args, **kwargs)
         context = getContext(request)
         context['employee'] = employee
 
@@ -281,14 +298,14 @@ class EmployeeViews(View):
 
 class MaterialViews(View):
     def material_request(self, request, *args, **kwargs):
-        material_request = MaterialRepo(request).material_request(*args, **kwargs)
+        material_request = MaterialRepo(request=request).material_request(*args, **kwargs)
         context = getContext(request)
         context['material_request'] = material_request
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
 
     def material(self, request, *args, **kwargs):
-        material = MaterialRepo(request).material(*args, **kwargs)
+        material = MaterialRepo(request=request).material(*args, **kwargs)
         context = getContext(request)
         context['material'] = material
         context['materials'] = material.childs()
@@ -299,7 +316,7 @@ class MaterialViews(View):
 
 class EventViews(View):
     def event(self, request, *args, **kwargs):
-        event = EventRepo(request).event(*args, **kwargs)
+        event = EventRepo(request=request).event(*args, **kwargs)
         context = getContext(request)
         context.update(PageContext(request=request, page=event))
         context['event'] = event
@@ -308,14 +325,14 @@ class EventViews(View):
 
 class ServiceViews(View):
     def service_request(self, request, *args, **kwargs):
-        service_request = ServiceRepo(request).service_request(*args, **kwargs)
+        service_request = ServiceRepo(request=request).service_request(*args, **kwargs)
         context = getContext(request)
         context['service_request'] = service_request
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         return render(request, TEMPLATE_ROOT+"service-request.html", context)
 
     def service(self, request, *args, **kwargs):
-        service = ServiceRepo(request).service(*args, **kwargs)
+        service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)
         context['service'] = service
         context['services'] = service.childs()

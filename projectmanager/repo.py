@@ -17,7 +17,9 @@ class ProjectRepo():
             self.user = kwargs['user']
         
         self.profile=ProfileRepo(*args, **kwargs).me
-        if self.user.has_perm(APP_NAME+".view_project"):
+        if self.user is None:
+            self.objects=Project.objects.filter(id=0)
+        elif self.user.has_perm(APP_NAME+".view_project"):
             self.objects = Project.objects
         elif self.profile is not None:
             employees=Employee.objects.filter(profile=self.profile)
@@ -86,6 +88,7 @@ class ProjectRepo():
              
 
     def project(self, *args, **kwargs):
+        
         if 'project_id' in kwargs:
             pk=kwargs['project_id']
         elif 'pk' in kwargs:
@@ -119,7 +122,7 @@ class ProjectRepo():
         if 'parent_id' in kwargs and kwargs['parent_id']>0:
             new_project.parent_id = kwargs['parent_id']
 
-        new_project.creator=self.me
+        new_project.creator=self.profile
         now=timezone.now()
         new_project.start_date=now
         new_project.end_date=now
@@ -138,7 +141,9 @@ class OrganizationUnitRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
-        if self.user.has_perm(APP_NAME+".view_organizationunit"):
+        if self.user is None:
+            self.objects=OrganizationUnit.objects.filter(id=0)
+        elif self.user.has_perm(APP_NAME+".view_organizationunit"):
             self.objects = OrganizationUnit.objects
         elif self.profile is not None:
             self.objects=OrganizationUnit.objects.filter(id=0)
@@ -232,7 +237,9 @@ class EmployeeRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
-        if self.user.has_perm(APP_NAME+".view_employee"):
+        if self.user is None:
+            self.objects=Employee.objects.filter(id=0)
+        elif self.user.has_perm(APP_NAME+".view_employee"):
             self.objects = Employee.objects
         elif self.profile is not None:
             self.objects=Employee.objects.filter(id=0)
@@ -285,7 +292,9 @@ class EmployerRepo():
             self.user = kwargs['user']
         
         self.profile=ProfileRepo(*args, **kwargs).me
-        if self.user.has_perm(APP_NAME+".view_employer"):
+        if self.user is None:
+            self.objects=Employee.objects.filter(id=0)
+        elif self.user.has_perm(APP_NAME+".view_employer"):
             self.objects = Employer.objects
         elif self.profile is not None:
             self.objects=Employer.objects.filter(id=0)
@@ -452,7 +461,9 @@ class EventRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
-        if self.user.has_perm(APP_NAME+".view_event"):
+        if self.user is None:
+            self.objects=Employee.objects.filter(id=0)
+        elif self.user.has_perm(APP_NAME+".view_event"):
             self.objects = Event.objects
         elif self.profile is not None:
             self.objects=Event.objects.filter(id=0)
