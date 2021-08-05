@@ -114,7 +114,10 @@ class Project(ProjectManagerPage):
             sum+=material_request.quantity*material_request.unit_price
         return sum
     def sum_total(self):
-        return self.sum_material_requests()+self.sum_service_requests()
+        sum= self.sum_material_requests()+self.sum_service_requests()
+        for proj in self.sub_projects():
+            sum+=proj.sum_total()
+        return sum
     def sum_service_requests(self):
         sum=0
         for service_request in self.servicerequest_set.all():
