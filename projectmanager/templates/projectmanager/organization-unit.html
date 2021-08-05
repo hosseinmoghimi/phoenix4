@@ -27,27 +27,32 @@
     </div>
     <div class="row ">
         <div class="col-md-4">
-            <h6>
-                <span class="material-icons">
-                    corporate_fare
-                </span>
-                <a href="{{page.get_chart_url}}" target="_blank">
+            <div class="card">
+                <div class="card-body">
 
-                    نمودار</a>
-            </h6>
+                    <h6>
+                        <span class="material-icons">
+                            corporate_fare
+                        </span>
+                        <a href="{{page.get_chart_url}}" target="_blank">
 
-            <p>
-                کارفرما :
-                <a href="{{organization_unit.employer.get_absolute_url}}">
-                    {% if organization_unit.employer.pre_title %}
+                            نمودار</a>
+                    </h6>
 
-                    <small>
-                        {{organization_unit.employer.pre_title}}
-                    </small>
-                    {% endif %}
-                    {{organization_unit.employer.title}}
-                </a>
-            </p>
+                    <p>
+                        کارفرما :
+                        <a href="{{organization_unit.employer.get_absolute_url}}">
+                            {% if organization_unit.employer.pre_title %}
+
+                            <small>
+                                {{organization_unit.employer.pre_title}}
+                            </small>
+                            {% endif %}
+                            {{organization_unit.employer.title}}
+                        </a>
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-4">
@@ -72,6 +77,9 @@
 
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
+
+        </div>
+        <div class="col-md-4">
             {% include "core/includes/page-documents-app/template.html" %}
 
         </div>
