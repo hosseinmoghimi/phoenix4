@@ -72,7 +72,7 @@
         <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb" style="direction: rtl;">
                 <li class="breadcrumb-item"><a href="{% url 'projectmanager:home' %}">خانه</a></li>
-                <li class="breadcrumb-item"><a href="javascript:void(0)" class="mr-2">{{profile.name}}</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)" class="mr-2">{{employer.title}}</a></li>
             </ol>
         </nav>
         <!-- /Breadcrumb -->
@@ -303,8 +303,8 @@
                                 {% for employee in organization_unit.employee_set.all %}
                                 <h6 class="mb-0 text-left">
                                     <a href="{{employee.get_absolute_url}}">
-                                        <img src="{{employee.profile.image}}" class="rounded-circle" width="48" alt="">
                                         {{employee.profile.name}}
+                                        <img src="{{employee.profile.image}}" class="rounded-circle" width="48" alt="">
                                     </a>
                                 </h6>
                                 {% endfor %}
@@ -330,8 +330,8 @@
                                 <div class="col-sm-6">
                                     <h6 class="mb-0 text-left" v-for="employee in organization_unit.employees">
                                         <a :href="employee.get_absolute_url">
-                                            <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
                                             <span v-text="employee.profile.name"></span>
+                                            <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
                                         </a>
                                     </h6>
                                 </div>

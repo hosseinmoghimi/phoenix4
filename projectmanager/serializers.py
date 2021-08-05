@@ -1,4 +1,3 @@
-from authentication.repo import ProfileRepo
 from rest_framework import serializers
 from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, ProjectLocation, Service, ServiceRequest, ServiceRequestSignature
 from authentication.serilizers import ProfileSerializer
@@ -22,6 +21,10 @@ class EmployerSerializer(serializers.ModelSerializer):
         fields=['id','title','image','pre_title','get_edit_url','get_absolute_url']
 
 
+
+
+
+
 class ServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -37,23 +40,24 @@ class MaterialRequestSerializer(serializers.ModelSerializer):
         model=MaterialRequest
         fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
 
-class ServiceRequestSerializer(serializers.ModelSerializer):
-    service=ServiceSerializer()
-    project=ProjectSerializer()
-    profile=ProfileSerializer()
-    class Meta:
-        model=ServiceRequest
-        fields=['id','service','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
-class EventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Event
-        fields=['id','title','get_absolute_url','persian_event_datetime']
 class EmployeeSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:
         model=Employee
         fields=['id','get_absolute_url','profile']
 
+class ServiceRequestSerializer(serializers.ModelSerializer):
+    service=ServiceSerializer()
+    employee=EmployeeSerializer()
+    project=ProjectSerializer()
+    profile=ProfileSerializer()
+    class Meta:
+        model=ServiceRequest
+        fields=['id','service','employee','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Event
+        fields=['id','title','get_absolute_url','persian_event_datetime']
 class ProjectLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model=ProjectLocation

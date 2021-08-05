@@ -31,6 +31,8 @@ def CoreContext(request,*args, **kwargs):
 
     return context
 def PageContext(request,page):
+    if page is None:
+        return {}
     context={}
     context['page']=page
     context['parent_id']=page.id

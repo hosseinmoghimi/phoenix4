@@ -402,6 +402,10 @@ class ServiceRepo():
         new_service_request = ServiceRequest(status=RequestStatusEnum.REQUESTED)
         if 'project_id' in kwargs:
             new_service_request.project_id = kwargs['project_id']
+        if 'employee_id' in kwargs:
+            employee_id = kwargs['employee_id']
+            if not employee_id==0:
+                new_service_request.employee_id=employee_id
         if 'service_id' in kwargs:
             new_service_request.service_id = kwargs['service_id']
         if 'quantity' in kwargs:

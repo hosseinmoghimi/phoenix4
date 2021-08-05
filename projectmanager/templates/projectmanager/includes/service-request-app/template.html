@@ -4,15 +4,6 @@
 <div class="card mb-3" id="service-request-app">
     <div class="card-body">
 
-
-        <h6 class="text-secondary">
-            پروژه :
-            <a href="{{service_request.project.get_absolute_url}}">
-
-                {{service_request.project.title}}
-            </a>
-        </h6>
-
         <h5 class="text-right">
             سرویس :
             <a href="{{service_request.service.get_absolute_url}}">
@@ -24,16 +15,63 @@
 
         </h5>
 
+        <h6 class="text-secondary">
+            پروژه :
+            <a href="{{service_request.project.get_absolute_url}}">
+
+                {{service_request.project.title}}
+            </a>
+        </h6>
+
+
 
 
 
         <p>
 
 
-            تعداد : {{service_request.quantity}}
+            پرسنل :
+            <a target="_blank" href="{{service_request.employee.get_absolute_url}}">
+                <img src="{{service_request.employee.profile.image}}" class="ml-2 rounded" width="32" alt="">
+                {{service_request.employee.profile.name}}
+            </a>
+            <small class="mr-3 text-secondary">
+                شاغل در
+
+            </small>
+            <small class="mr-4">
+
+                <a target="_blank" href="{{service_request.employee.organization_unit.employer.get_absolute_url}}">
+
+                    {{service_request.employee.organization_unit.employer.title}}
+                </a>
+            </small>
+            /
+            <small>
+
+                <a target="_blank" href="{{service_request.employee.organization_unit.get_absolute_url}}">
+
+                    {{service_request.employee.organization_unit.title}}
+                </a>
+            </small>
+
+
+
+
+        </p>
+
+
+
+
+
+        <p class="px-4 py-3 alert alert-success rtl ">
+
+
+            {{service_request.quantity}}
             <small>
                 {{service_request.unit_name}}
             </small>
+
             *
 
 
@@ -42,15 +80,20 @@
                 {{service_request.line_total|to_price}}
             </strong>
 
-        </p>
-        <p>
-            <small>
-                <span class="alert alert-success">
-                    {{service_request.line_total|to_horuf}} {{CURRENCY}}
-                </span>
-            </small>
+            <span class=" mx-4 ">
+                {{service_request.line_total|to_horuf}} {{CURRENCY}}
+            </span>
 
         </p>
+
+
+
+
+        <div class="mt-5">
+            <h5>
+                امضا های مربوط به این درخواست سرویس
+            </h5>
+        </div>
         <table class="table">
 
             <tbody>
@@ -63,7 +106,7 @@
                             </a>
                             <div class="media-body pr-3">
                                 <div>
-                                    
+
                                     {{signature.get_status_tag|safe}}
                                 </div>
                                 <div>
@@ -102,7 +145,7 @@
                             </a>
                             <div class="media-body pr-3">
                                 <div>
-                                    
+
                                     <span :class="'badge badge-'+signature.get_status_color"
                                         v-text="signature.status"></span>
                                 </div>
@@ -145,13 +188,28 @@
         <form @submit.prevent="add_signature()">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="text" v-model="add_signature_form_description" placeholder="پاراف"
-                        class="form-control farsi">
+                    <div class="row">
+                        <div class="col-3">
+
+                            <span class="farsi">
+                                پاراف :
+                            </span>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" required v-model="add_signature_form_description" placeholder="پاراف"
+                                class="d-inline form-control farsi">
+                        </div>
+                    </div>
+
                 </div>
 
 
 
                 <div class="col-md-4">
+                    <span class="farsi">
+
+                        وضعیت درخواست :
+                    </span>
                     <select v-model="add_signature_form_status" id="">
                         {% for signature_status in signature_statuses %}
                         <option value="{{signature_status}}" class="farsi">{{signature_status}}</option>

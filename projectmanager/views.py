@@ -6,10 +6,8 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo
-from projectmanager.serializers import MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
-from projectmanager.models import Material, OrganizationUnit
+from projectmanager.serializers import EmployeeSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
-from typing import ContextManager
 from django.shortcuts import render
 from .forms import *
 import json
@@ -216,6 +214,9 @@ class ProjectViews(View):
         page = project
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
+        employees=project.employees()
+        context['employees']=employees
+        context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         
         if request.user.has_perm(APP_NAME+'.change_project'):
@@ -253,7 +254,7 @@ class ProjectViews(View):
 class OrganizationUnitViews(View):
     def organization_unit(self, request, *args, **kwargs):
         organization_unit = OrganizationUnitRepo(
-            request).organization_unit(*args, **kwargs)
+            request=request).organization_unit(*args, **kwargs)
         page = organization_unit
         context = getContext(request)
         context.update(PageContext(request=request, page=page))

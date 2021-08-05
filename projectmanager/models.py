@@ -125,6 +125,12 @@ class Project(ProjectManagerPage):
         return sum
     def sub_projects(self):
         return Project.objects.filter(parent_id=self.id)
+    def employees(self):
+        employees=[]
+        for org in self.organization_units.all():
+            for emp in org.employee_set.all():
+                employees.append(emp.id)
+        return Employee.objects.filter(id__in=employees)
 class Material(ProjectManagerPage):
     unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     unit_price=models.IntegerField(_("unit_price"),default=0)
@@ -308,7 +314,7 @@ class ServiceRequest(models.Model):
     date_added=models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
     date_delivered=models.DateTimeField(_("تاریخ درخواست"),null=True,blank=True, auto_now=False, auto_now_add=False)
     status=models.CharField(_("وضعیت"),choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
-
+    employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("employee"), on_delete=models.CASCADE)
     class_name='servicerequest'
     def can_be_edited(self):
         return self.project.can_be_edited
