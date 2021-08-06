@@ -1,0 +1,60 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-3">
+
+        <div class="card">
+            <div class="card-header card-header-icon">
+
+                <h4 class="title">
+                    <i class="material-icons" aria-hidden="true">help</i>
+
+                    راهنما
+                </h4>
+            </div>
+
+            <div class="card-body">
+
+                <ul class="nav flex-column" style="padding-right:10px">
+                
+                    {% if sidebar_links %}
+
+                    {% for sidebar_link in sidebar_links %}
+                    <li class="nav-item">
+                        <a class="nav-link farsi"
+                            href="{% url 'help:help' app_name=sidebar_link.app_name template=sidebar_link.template %}">
+                            {{sidebar_link.title}}</a>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% block sidebar_content %}
+
+                    {% endblock %}
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-md-9">
+
+        {% block main_content %}
+
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+{% block help_script %}
+
+{% endblock %}
+{% endblock %}

@@ -16,6 +16,7 @@ urlpatterns = [
     # path('dashboard/', include('dashboard.urls')),
     path('farm/', include('farm.urls')),
     path('core/', include('core.urls')),
+    path('help/', include('help.urls')),
     path('web/', include('web.urls')),
     path('resume/', include('resume.urls')),
     path('accounting/', include('accounting.urls')),

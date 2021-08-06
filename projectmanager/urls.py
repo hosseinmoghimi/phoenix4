@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .apps import APP_NAME
 from . import views,apis
-from django.urls import path
+from django.urls import path,include
 app_name=APP_NAME
 urlpatterns = [
     path('',views.BasicViews().home,name="home"),

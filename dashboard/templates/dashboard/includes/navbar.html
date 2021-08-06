@@ -14,10 +14,21 @@
             {% block navbar %}
 
             {% endblock %}
+
+            <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi " href="{% url 'help:home' app_name=APP_NAME %}">
+                    <i class="material-icons" aria-hidden="true">help</i>
+                    
+                    راهنما
+                </a>
+            </li>
+
             {% if perms.core.change_parameter %}
 
             <li class="nav-item my-auto mx-2">
                 <a class="nav-link farsi " href="{{ADMIN_URL}}{{APP_NAME}}/">
+                    <i class="material-icons" aria-hidden="true">settings</i>
+                    
                     مدیریت
                 </a>
             </li>
@@ -29,6 +40,8 @@
             <li class="nav-item dropdown  my-auto farsi mx-2">
                 <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons" aria-hidden="true">edit</i>
+
                     برنامه ها
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">

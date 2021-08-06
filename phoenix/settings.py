@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'tinymce',
     'accounting',
     'resume',
+    'help',
     'stock',
     'authentication',
     'core',
