@@ -351,8 +351,9 @@ class Koshtar(models.Model):
     lashe_price=models.IntegerField(_("قیمت لاشه"),default=0)
     lashe_weight=models.FloatField(_("وزن لاشه"),default=0)
     description = models.TextField(_("توضیحات"), null=True,blank=True)
-
-    
+    class_name="koshtar"
+    def get_edit_url(self):
+        return f"{CoreSettings.ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
     class Meta:
         verbose_name = _("Koshtar")
@@ -362,7 +363,7 @@ class Koshtar(models.Model):
         return f"{self.animal}"
 
     def get_absolute_url(self):
-        return reverse("Koshtar_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":koshtar", kwargs={"pk": self.pk})
 
 
 

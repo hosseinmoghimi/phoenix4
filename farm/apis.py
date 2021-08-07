@@ -7,6 +7,49 @@ from utility.persian import PersianCalendar
 from core.constants import SUCCEED,FAILED
 
 class BasicApi(APIView):
+    def do_koshtar(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            do_koshtar_form=DoKoshtarForm(request.POST)
+            if do_koshtar_form.is_valid():
+                log=3
+                tag=do_koshtar_form.cleaned_data['tag']
+                koshtar_date=do_koshtar_form.cleaned_data['koshtar_date']
+                # price=forms.IntegerField(required=False)
+                weight=do_koshtar_form.cleaned_data['weight']
+                Jegar_price=do_koshtar_form.cleaned_data['Jegar_price']
+                Kalle_pache_price=do_koshtar_form.cleaned_data['Kalle_pache_price']
+                pust_price=do_koshtar_form.cleaned_data['pust_price']
+                transport_fee=do_koshtar_form.cleaned_data['transport_fee']
+                koshtar_fee=do_koshtar_form.cleaned_data['koshtar_fee']
+                lashe_price=do_koshtar_form.cleaned_data['lashe_price']
+                lashe_weight=do_koshtar_form.cleaned_data['lashe_weight']
+                description = do_koshtar_form.cleaned_data['description']
+
+               
+
+                koshtar_date=PersianCalendar().to_gregorian(koshtar_date)
+                koshtar=KoshtarRepo(request=request).do_koshtar(
+                    tag=tag,
+                    koshtar_date=koshtar_date,
+                    weight=weight,
+                    Jegar_price=Jegar_price,
+                    Kalle_pache_price=Kalle_pache_price,
+                    pust_price=pust_price,
+                    transport_fee=transport_fee,
+                    koshtar_fee=koshtar_fee,
+                    lashe_price=lashe_price,
+                    lashe_weight=lashe_weight,
+                    description=description,
+                    )
+                if koshtar is not None:
+                    context['koshtar']=KoshtarSerializer(koshtar).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
     def add_cost(self,request,*args, **kwargs):
         context={'result':FAILED}
         log=1

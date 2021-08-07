@@ -338,12 +338,12 @@
                             </td>
                             <td>
                                 <small>
-<span v-text="animal_in_saloon.persian_enter_date"></span>
+                                    <span v-text="animal_in_saloon.persian_enter_date"></span>
                                 </small>
                             </td>
                             <td>
                                 <small>
-<span v-text="animal_in_saloon.persian_exit_date"></span>
+                                    <span v-text="animal_in_saloon.persian_exit_date"></span>
                                 </small>
                             </td>
                             <td>
@@ -353,10 +353,11 @@
                                         class="rounded-circle">
                                 </a>
                                 {% if perms.farm.change_animalinsaloon %}
-                                <a title="ویرایش" :href="animal_in_saloon.get_edit_url" class="docs-creator"><span class="material-icons">
-                                    edit
-                                
-                            </span></a>
+                                <a title="ویرایش" :href="animal_in_saloon.get_edit_url" class="docs-creator"><span
+                                        class="material-icons">
+                                        edit
+
+                                    </span></a>
 
                                 {% endif %}
                             </td>
@@ -367,7 +368,10 @@
         </div>
 
     </div>
+    <div class="col-md-12">
+        {% include "farm/includes/koshtar-app/template.html" %}
 
+    </div>
     <div class="d-none col-md-6">
         <div class="card">
             <div class="card-header card-header-info card-header-icon">
@@ -456,130 +460,8 @@
 
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-<script>
-    let animal_tag = "{{animal.tag}}"
-    let animal_id = parseInt("{{animal.id}}")
-    let saloon_id = 0
-    let animal_weight = 0
-    let animal_price = 0
-    try {
-        saloon_id = parseInt("{{animal.current_in_saloon.saloon.id}}")
-
-    } catch (error) {
-
-    }
 
 
-    try {
-        animal_weight = parseFloat("{{animal.weight}}")
-
-    } catch (error) {
-
-    }
-
-
-    try {
-        animal_price = parseInt("{{animal.price}}")
-
-    } catch (error) {
-
-    }
-    let max_weight = parseFloat("{{max_weight}}") * 1.2
-    let weights = JSON.parse(`{{weights|escapejs}}`)
-    let url_enter_animal_to_saloon = "{% url 'farm:enter_animal_to_saloon' %}"
-
-    let animal_app = new Vue({
-        el: "#animal-app",
-        data: {
-            enter_date: current_date,
-            animal_price: animal_price,
-            animal_weight: animal_weight,
-            saloon_id: saloon_id,
-            
-            animal_in_saloons:[],
-        },
-        components: {
-            DatePicker: VuePersianDatetimePicker
-        },
-        mounted: function () {
-            this.draw_timeline()
-
-        },
-
-        methods: {
-            to_price: function (value) {
-                return to_price(value, CURRENCY)
-            },
-            draw_timeline: function () {
-                if ($('#colouredBarsChart').length != 0) {
-
-                    let optionsColouredBarsChart = {
-                        lineSmooth: Chartist.Interpolation.cardinal({
-                            tension: 10
-                        }),
-                        axisY: {
-                            showGrid: true,
-                            offset: 40
-                        },
-                        axisX: {
-                            showGrid: false,
-                        },
-                        low: 0,
-                        high: max_weight,
-                        showPoint: true,
-                        height: '300px'
-                    };
-
-                    let dataColouredBarsChart = {
-                        labels: weights.slice(1),
-                        series: [
-                            weights,
-                        ]
-                    };
-
-                    var colouredBarsChart = new Chartist.Line('#colouredBarsChart', dataColouredBarsChart, optionsColouredBarsChart);
-
-                    // md.startAnimationForLineChart(colouredBarsChart);
-
-
-                }
-            },
-
-            to_price: function (price) {
-
-                return to_price(price, CURRENCY)
-            },
-
-
-
-            enter_animal_to_saloon: function () {
-                let payload = {
-                    // animal_tag: animal_tag,
-                    saloon_id: this.saloon_id,
-                    animal_id: animal_id,
-                    animal_price: this.animal_price,
-                    animal_weight: this.animal_weight,
-                    enter_date: this.enter_date,
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                }
-                let url = url_enter_animal_to_saloon
-                console.log(payload)
-                let posting = $.post(url, payload)
-                posting.done((data) => {
-                    console.log(data)
-                    animal_app.animal_in_saloons.push(data.animal_in_saloon)
-                  
-                    // swal({
-                    //     title: "ثبت اطلاعات دام",
-                    //     text: "ورود دام به سالن با موفقیت ثبت گردید.",
-                    //     buttonsStyling: false,
-                    //     confirmButtonClass: "btn btn-success",
-                    //     type: "success"
-                    // }).catch(swal.noop)
-                })
-            },
-
-        }
-    })
-</script>
+{% include "farm/includes/animal-app/script.html" %}
+{% include "farm/includes/koshtar-app/script.html" %}
 {% endblock %}

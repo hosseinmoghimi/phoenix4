@@ -1,5 +1,18 @@
 from django import forms
 
+class DoKoshtarForm(forms.Form):
+    tag=forms.CharField(max_length=50, required=True)
+    koshtar_date=forms.CharField(max_length=50,required=False)
+    # price=forms.IntegerField(required=False)
+    weight=forms.FloatField(required=False)
+    Jegar_price=forms.IntegerField(required=False)
+    Kalle_pache_price=forms.IntegerField(required=False)
+    pust_price=forms.IntegerField(required=False)
+    transport_fee=forms.IntegerField(required=False)
+    koshtar_fee=forms.IntegerField(required=False)
+    lashe_price=forms.IntegerField(required=False)
+    lashe_weight=forms.FloatField(required=False)
+    description = forms.CharField(required=False,max_length=500)
 
 class SearchForm(forms.Form):
     search_for=forms.CharField(max_length=50, required=True)

@@ -16,8 +16,12 @@ urlpatterns = [
     path('farm/<int:pk>/',views.BasicViews().farm,name="farm"),
     path('food/<int:pk>/',views.BasicViews().food,name="food"),
     path('drug/<int:pk>/',views.BasicViews().drug,name="drug"),
+    path('koshtar/<int:pk>/',views.BasicViews().koshtar,name="koshtar"),
+
+    
     path('enter_animal_to_saloon/',apis.BasicApi().enter_animal_to_saloon,name="enter_animal_to_saloon"),
     path('saloon_daily_report/',apis.BasicApi().saloon_daily_report,name="saloon_daily_report"),
     path('add_animal/',apis.BasicApi().add_animal,name="add_animal"),
     path('add_cost/',apis.BasicApi().add_cost,name="add_cost"),
+    path('do_koshtar/',apis.BasicApi().do_koshtar,name="do_koshtar"),
 ]

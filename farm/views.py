@@ -40,7 +40,7 @@ def getContext(request):
         'favicon': picture_repo.get(name=MainPicEnum.FAVICON),
         'loading': picture_repo.get(name=MainPicEnum.LOADING),
         'pretitle': parameter_repo.get(ParametersEnum.PRE_TILTE),
-        'title': parameter_repo.get(ParametersEnum.TITLE),
+        'title': parameter_repo.get(ParametersEnum.TITLE).value,
         'address': parameter_repo.get(ParametersEnum.ADDRESS),
         'mobile': parameter_repo.get(ParametersEnum.MOBILE),
         'email': parameter_repo.get(ParametersEnum.EMAIL),
@@ -86,6 +86,13 @@ class BasicViews(View):
         drug = DrugRepo(request=request).drug(pk)
         context['drug'] = drug
         return render(request, TEMPLATE_ROOT+"drug.html", context)
+
+    def koshtar(self, request, *args, **kwargs):
+
+        context = getContext(request)
+        koshtar = KoshtarRepo(request=request).koshtar(*args, **kwargs)
+        context['koshtar'] = koshtar
+        return render(request, TEMPLATE_ROOT+"koshtar.html", context)
 
     def search(self, request, *args, **kwargs):
         context = getContext(request)
@@ -138,10 +145,10 @@ class BasicViews(View):
         context['food'] = food
         return render(request, TEMPLATE_ROOT+"food.html", context)
 
-    def animal(self, request, pk, *args, **kwargs):
+    def animal(self, request, *args, **kwargs):
         context = getContext(request)
         animal_repo = AnimalRepo(request=request)
-        animal = animal_repo.animal(pk=pk)
+        animal = animal_repo.animal(*args, **kwargs)
         context['animal'] = animal
         saloons = SaloonRepo(user=request.user).list()
         context['saloons'] = saloons

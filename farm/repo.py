@@ -63,25 +63,23 @@ class AnimalRepo():
             animal_in_saloon.save()
             return animal_in_saloon
                 
+    
+
     def animal(self,*args, **kwargs):
-        try:
-            if 'pk' in kwargs and not kwargs['pk'] is None:
-                return self.objects.get(pk=kwargs['pk'])
+        if 'animal_tag' in kwargs and not kwargs['animal_tag'] is None:
+            return self.objects.get(tag=kwargs['animal_tag'])
 
-            if 'animal_id' in kwargs and not kwargs['animal_id'] is None:
-                return self.objects.get(pk=kwargs['animal_id'])
+        if 'tag' in kwargs and not kwargs['tag'] is None:
+            return self.objects.get(tag=kwargs['tag'])
 
-            if 'animal_tag' in kwargs and not kwargs['animal_tag'] is None:
-                return self.objects.get(tag=kwargs['animal_tag'])
-
-            if 'tag' in kwargs and not kwargs['tag'] is None:
-                return self.objects.get(tag=kwargs['tag'])
-
-        except:
-            pass
-        return None
-
-
+        pk=0
+        if 'animal_id' in kwargs:
+            pk=kwargs['animal_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
     def add(self,name,saloon_id,category,tag):
         if self.user.has_perm(APP_NAME+".add_animal"):
             animal=Animal(name=name,category=category,tag=tag)
@@ -191,6 +189,92 @@ class SaloonFoodRepo():
             return self.objects.get(pk=pk)
         except:
             return None
+
+class KoshtarRepo():
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects=Koshtar.objects
+    def do_koshtar(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_koshtar"):
+            return None
+        from django.utils import timezone
+        koshtar_date=timezone.now()
+        weight=0
+        Jegar_price=0
+        Kalle_pache_price=0
+        pust_price=0
+        transport_fee=0
+        koshtar_fee=0
+        lashe_price=0
+        lashe_weight=0
+        description=""
+        animal=None
+        if 'tag' in kwargs:
+            tag=kwargs['tag']
+            animal=Animal.objects.filter(tag=tag).first()            
+        if 'animal_id' in kwargs:
+            animal_id=kwargs['animal_id']
+            animal=Animal.objects.filter(pk=animal_id).first()
+        if 'koshtar_date' in kwargs:
+            koshtar_date=kwargs['koshtar_date']
+        if 'koshtar_date' in kwargs:
+            koshtar_date=kwargs['koshtar_date']
+        if 'weight' in kwargs:
+            weight=kwargs['weight']
+        if 'Jegar_price' in kwargs:
+            Jegar_price=kwargs['Jegar_price']
+        if 'Kalle_pache_price' in kwargs:
+            Kalle_pache_price=kwargs['Kalle_pache_price']
+        if 'pust_price' in kwargs:
+            pust_price=kwargs['pust_price']
+        if 'transport_fee' in kwargs:
+            transport_fee=kwargs['transport_fee']
+        if 'koshtar_fee' in kwargs:
+            koshtar_fee=kwargs['koshtar_fee']
+        if 'lashe_price' in kwargs:
+            lashe_price=kwargs['lashe_price']
+        if 'lashe_weight' in kwargs:
+            lashe_weight=kwargs['lashe_weight']
+        if 'description' in kwargs:
+            description=kwargs['description']
+        koshtar=Koshtar()
+        koshtar.animal=animal
+        koshtar.koshtar_date=koshtar_date
+        koshtar.weight=weight
+        koshtar.Jegar_price=Jegar_price
+        koshtar.Kalle_pache_price=Kalle_pache_price
+        koshtar.pust_price=pust_price
+        koshtar.transport_fee=transport_fee
+        koshtar.koshtar_fee=koshtar_fee
+        koshtar.lashe_price=lashe_price
+        koshtar.lashe_weight=lashe_weight
+        koshtar.description=description
+        koshtar.save()
+        return koshtar
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(name__contains=search_for)|Q(farm__name__contains=search_for))
+        return objects
+    def koshtar(self,*args, **kwargs):
+        pk=0
+        if 'koshtar_id' in kwargs:
+            pk=kwargs['koshtar_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+
 
 class SaloonRepo():
     
