@@ -110,6 +110,8 @@ class Animal(models.Model):
     description = models.TextField(_("توضیحات"), null=True,blank=True)
     class_name = 'animal'
     # current_saloon=models.ForeignKey("saloon", verbose_name=_("saloon"),null=True,blank=True, on_delete=models.SET_NULL)
+    def full_name(self):
+        return f""" {self.category if self.category else ""} {self.name if self.name else ""}({self.tag})"""
     def persian_enter_date(self):
         return PersianCalendar().from_gregorian(self.enter_date)
     class Meta:

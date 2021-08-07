@@ -1,6 +1,7 @@
 from authentication.repo import ProfileRepo
 from django.db.models.base import Model
 from django.db import models 
+from django.db.models import Q 
 from core import repo as CoreRepo
 from .models import *
 from django.utils import timezone
@@ -17,6 +18,9 @@ class AnimalRepo():
         self.objects=Animal.objects
     def list(self,*args, **kwargs):
         objects=self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(tag__contains=search_for)
         return objects
     def add_new_animal(self,*args, **kwargs):
         
@@ -201,6 +205,9 @@ class SaloonRepo():
         self.objects=Saloon.objects
     def list(self,*args, **kwargs):
         objects=self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(name__contains=search_for)|Q(farm__name__contains=search_for))
         return objects
     def saloon(self,pk):
         try:

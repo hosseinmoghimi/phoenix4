@@ -5,6 +5,7 @@ from . import views,apis
 app_name=APP_NAME
 urlpatterns = [
     path('',views.BasicViews().home,name="home"),
+    path('search/',views.BasicViews().search,name="search"),
     path('animal/<int:pk>/',views.BasicViews().animal,name="animal"),
     path('animals/',views.BasicViews().animals,name="animals"),
     path('saloonfood/<int:pk>/',views.BasicViews().saloonfood,name="saloonfood"),

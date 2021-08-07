@@ -5,6 +5,7 @@ from django.views import View
 from .apps import APP_NAME
 from .repo import *
 from .enums import *
+from .forms import *
 from .serializers import *
 from core.enums import ParametersEnum, MainPicEnum
 # from web.repo import NavBarLinkRepo
@@ -21,6 +22,8 @@ def getContext(request):
         user=request.user, app_name=APP_NAME)
     picture_repo = CoreRepo.PictureRepo(user=request.user, app_name=APP_NAME)
     link_repo = CoreRepo.LinkRepo(user=request.user)
+    context['search_action'] = reverse(APP_NAME+":search")
+    context['search_form'] = SearchForm()
     # navbar_links_repo = NavBarLinkRepo()
     # # navbar_links = navbar_links_repo.list_roots(app_name=APP_NAME)
     # navbar_buttons = navbar_links_repo.buttons(app_name=APP_NAME)
@@ -83,6 +86,21 @@ class BasicViews(View):
         drug = DrugRepo(request=request).drug(pk)
         context['drug'] = drug
         return render(request, TEMPLATE_ROOT+"drug.html", context)
+
+    def search(self, request, *args, **kwargs):
+        context = getContext(request)
+        log = 1
+        if request.method == 'POST':
+            log += 1
+            search_form = SearchForm(request.POST)
+            if search_form.is_valid():
+                log += 1
+                search_for = search_form.cleaned_data['search_for']
+                context['search_for'] = search_for
+                context['animals'] = AnimalRepo(request=request).list(search_for=search_for)
+                context['saloons'] = SaloonRepo(request=request).list(search_for=search_for)
+                context['log'] = log
+                return render(request, TEMPLATE_ROOT+"search.html", context)
 
     def saloon(self, request, pk, *args, **kwargs):
 
