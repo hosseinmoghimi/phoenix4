@@ -142,6 +142,12 @@
         </div>
     </div>
     <div class="card-footer">
+   <p class="alert alert-info">
+            <small>
+
+                ابتدا یک پاراف اضافه کرده و سپس نوع امضا را انتخاب و در آخر دکمه امضا می کنم را بزنید.
+            </small>
+        </p>
         <form @submit.prevent="add_signature()">
             <div class="row">
                 <div class="col-md-5">
@@ -152,7 +158,11 @@
 
 
                 <div class="col-md-4">
-                    <select v-model="add_signature_form_status" id="">
+                    <span class="farsi">
+                        نوع امضای درخواست
+
+                    </span>
+                    <select required v-model="add_signature_form_status" id="">
                         {% for signature_status in signature_statuses %}
                         <option class="farsi" value="{{signature_status}}">{{signature_status}}</option>
 
@@ -167,8 +177,9 @@
 
                     <button v-if="!waiting"  type="submit" class="btn btn-success">
                         <i class="material-icons">
-                            add
+                            assignment_turned_in
                         </i>
+                        امضا می کنم
                     </button>
                 </div>
 

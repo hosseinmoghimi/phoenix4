@@ -3,7 +3,7 @@
 {% load to_persian_date %}
 <div id="accordion">
 
-    <div class="card mb-5" id="events-app">
+    <div class="card" id="events-app">
         <div class="card-header" id="headingevents">
             <h5 class="text-center">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseevents" aria-expanded="true"
@@ -14,7 +14,7 @@
             </h5>
 
         </div>
-        <div id="collapseevents" class="collapse" aria-labelledby="headingevents" data-parent="#accordion">
+        <div id="collapseevents" class="collapse  {% if events %}show{% endif %}" aria-labelledby="headingevents" data-parent="#accordion">
 
             <div class="card-body">
                 <table class="table table-striped">

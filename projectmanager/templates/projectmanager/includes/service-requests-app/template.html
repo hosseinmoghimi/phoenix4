@@ -3,7 +3,7 @@
 {% load to_price %}
 
 <div id="accordion">
-    <div class="card mb-5" id="service-requests-app">
+    <div class="card" id="service-requests-app">
         <div class="card-header" id="headingservicerequests">
             <h5 class="card-title text-center farsi">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapsservicerequests"
@@ -13,7 +13,7 @@
             </h5>
         </div>
 
-        <div id="collapsservicerequests" class="collapse" aria-labelledby="headingservicerequests"
+        <div id="collapsservicerequests" class="collapse {% if service_requests %}show{% endif %}" aria-labelledby="headingservicerequests"
             data-parent="#accordion">
 
             <div class="card-body">
@@ -44,7 +44,7 @@
                         </th>
                     </thead>
                     <tbody>
-                        {% for service_request in project.servicerequest_set.all %}
+                        {% for service_request in service_requests %}
                         <tr>
                             <td>
                                 <small>

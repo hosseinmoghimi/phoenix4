@@ -216,6 +216,9 @@ class ProjectViews(View):
         context.update(PageContext(request=request, page=page))
         employees=project.employees()
         context['employees']=employees
+        context['project_locations']=project.projectlocation_set.all()
+        context['material_requests']=project.materialrequest_set.all()
+        context['service_requests']=project.servicerequest_set.all()
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         

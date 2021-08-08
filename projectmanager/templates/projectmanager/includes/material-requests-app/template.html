@@ -4,7 +4,7 @@
 <div id="accordion">
     
 
-    <div class="card mb-5" id="material-request-app">
+    <div class="card" id="material-request-app">
         <div class="card-header" id="headingmaterialrequests">
 
             <h5 class="card-title text-center farsi">
@@ -16,7 +16,7 @@
 
 
         </div>
-        <div id="collapsematerialrequests" class="collapse" aria-labelledby="headingmaterialrequests"
+        <div id="collapsematerialrequests" class="collapse {% if material_requests %}show{% endif %}" aria-labelledby="headingmaterialrequests"
             data-parent="#accordion">
 
             <div class="card-body">
@@ -43,7 +43,7 @@
                         </th>
                     </thead>
                     <tbody>
-                        {% for material_request in project.materialrequest_set.all %}
+                        {% for material_request in material_requests %}
                         <tr>
                             <td>
                                 <small>

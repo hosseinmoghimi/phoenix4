@@ -23,13 +23,13 @@
     </div>
     
     <div id="collapseseLocations"
-    class="collapse" aria-labelledby="headingLocations"
+    class="collapse {% if project_locations %}show{% endif %}" aria-labelledby="headingLocations"
    data-parent="#accordion">
     <div class="card-body ">
 
 
 
-        {% for project_location in project.projectlocation_set.all %}
+        {% for project_location in project_locations %}
         <div class="mb-5">
             <h4 class="mb-1">
 
