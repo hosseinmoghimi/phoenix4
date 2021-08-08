@@ -5,102 +5,118 @@
 
 
     <div class="card mb-3" id="projects-app">
-        <div class="card-header"  id="headingProjectsApp">
+        <div class="card-header" id="headingProjectsApp">
 
             <h5 class="card-title text-center farsi">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseProjectsApp"
-                aria-expanded="true" aria-controls="collapseProjectsApp">
-                پروژه ها
-            </button>
+                    aria-expanded="true" aria-controls="collapseProjectsApp">
+                    پروژه ها
+                </button>
             </h5>
 
 
         </div>
-        <div id="collapseProjectsApp" class="collapse show" aria-labelledby="headingProjectsApp" data-parent="#accordion">
+        <div id="collapseProjectsApp" class="collapse show" aria-labelledby="headingProjectsApp"
+            data-parent="#accordion">
 
-        <div class="card-body">
-            {% for project in projects %}
-            <a title="جزئیات" href="{{project.get_absolute_url}}">
+            <div class="card-body">
+                {% for project in projects %}
                 <div class="media">
 
-                    <i class="material-icons">
+                    <i class="material-icons text-primary">
                         engineering
                     </i>
 
                     <div class="media-body farsi mx-2 mb-3">
 
-                        <h5>
-                            {{project.title}}
+                        <a title="جزئیات" href="{{project.get_absolute_url}}">
+                            <h5>
+                                {{project.title}}
 
-                        </h5>
+                            </h5>
+                        </a>
                         {% if project.sub_title %}
-                        <small class="text-secondary">
+                        <h6 class="text-secondary">
 
                             {{project.sub_title}}
-                        </small>
+                        </h6>
                         {% endif %}
+                        <h6 class="text-secondary">
+                            <small>
+
+                                <span class="mx-3">{{project.weight}}X</span>
+                                <span class="mx-3">{{project.auto_percentage_completed}}%</span>
+
+                            </small>
+
+                        </h6>
+
+                        <div class="progress mb-3" style="height: 5px;">
+                            <div role="progressbar" aria-valuenow="{{project.auto_percentage_completed}}"
+                                aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-primary"
+                                style="width: {{project.auto_percentage_completed}}%;"></div>
+                        </div>
 
                     </div>
                 </div>
-            </a>
 
-            {% endfor %}
-            <div v-for="project in projects">
-                <a title="جزئیات" :href="project.get_absolute_url">
-                    <div class="media">
+                {% endfor %}
+                <div v-for="project in projects">
+                    <a title="جزئیات" :href="project.get_absolute_url">
+                        <div class="media">
 
-                        <i class="material-icons">
-                            engineering
-                        </i>
+                            <i class="material-icons">
+                                engineering
+                            </i>
 
-                        <div class="media-body farsi">
+                            <div class="media-body farsi">
 
-                            <h5 v-text="project.title" class="mx-2">
+                                <h5 v-text="project.title" class="mx-2">
 
-                            </h5>
-                            <small>
-                                <div class="text-secondary" v-html="project.sub_title"></div>
+                                </h5>
+                                <small>
+                                    <div class="text-secondary" v-html="project.sub_title"></div>
 
-                            </small>
+                                </small>
+
+
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer ">
+
+                {% if add_project_form %}
+
+                <form v-cloak @submit.prevent="add_project()">
+                    <div class="row">
+                        <div class="col-8">
+                            <input required type="text" v-model="new_project_title" class="farsi form-control"
+                                placeholder="پروژه جدید">
+
+                        </div>
+                        <div class="col-4">
+                            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+
+                            <button v-if="!waiting" class="btn btn-primary btn-link text-light" type="submit">
+
+                                <i class="material-icons">
+                                    add
+                                </i>
+                            </button>
 
 
                         </div>
                     </div>
-                </a>
+
+                </form>
+                {% endif %}
+
+
             </div>
         </div>
-        <div class="card-footer ">
-
-            {% if add_project_form %}
-
-            <form v-cloak @submit.prevent="add_project()">
-                <div class="row">
-                    <div class="col-8">
-                        <input required type="text" v-model="new_project_title" class="farsi form-control"
-                            placeholder="پروژه جدید">
-
-                    </div>
-                    <div class="col-4">
-                        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-
-                        <button v-if="!waiting" class="btn btn-primary btn-link text-light" type="submit">
-
-                            <i class="material-icons">
-                                add
-                            </i>
-                        </button>
-
-
-                    </div>
-                </div>
-
-            </form>
-            {% endif %}
-
-
-        </div>
     </div>
-</div>
 </div>

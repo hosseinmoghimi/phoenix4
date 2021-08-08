@@ -16,7 +16,7 @@ class SignatureStatusEnum(TextChoices):
 class ProjectStatusEnum(TextChoices):
     INITIAL='تعریف اولیه',_('تعریف اولیه')
     DELIVERED='تحویل شده',_('تحویل شده')
-    IN_PROGRESS='در حال بررسی',_('درحال بررسی')
+    IN_PROGRESS='در حال اجرا',_('درحال اجرا')
     DENIED='رد شده',_('ردشده')
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     REQUESTED='درخواست شده',_('درخواست شده')

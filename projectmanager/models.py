@@ -84,6 +84,8 @@ class Project(ProjectManagerPage):
     organization_units=models.ManyToManyField("OrganizationUnit", verbose_name=_("واحد های سازمانی"),blank=True)
     employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("کارفرما"), on_delete=models.CASCADE)
     contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("پیمانکار"), on_delete=models.CASCADE)
+    weight=models.IntegerField(_("ضریب و وزن پروژه"),default=10)
+    # auto_percentage_completed=models.IntegerField(_("درصد تکمیل خودکار پروژه"),default=0)
     def persian_start_date(self):
         return PersianCalendar().from_gregorian(self.start_date)
     def persian_end_date(self):
@@ -92,6 +94,27 @@ class Project(ProjectManagerPage):
         return reverse(APP_NAME+':project_services_order',kwargs={'pk':self.pk})
     def get_materials_order_url(self):
         return reverse(APP_NAME+':project_materials_order',kwargs={'pk':self.pk})
+    def auto_percentage_completed(self):
+        sub_projects=self.sub_projects()
+        if len(sub_projects)==0:
+            return self.percentage_completed
+        auto_percentage_completed=0
+        sum_weight=0
+        for sub_project in sub_projects:
+            auto_percentage_completed=sub_project.weight*(sub_project.auto_percentage_completed())
+            sum_weight+=sub_project.weight
+        auto_percentage_completed=auto_percentage_completed/sum_weight
+               
+        return auto_percentage_completed*10
+
+    def sum_weight(self):   
+        sum_weight=0
+        sub_projects=self.sub_projects()
+        if len(sub_projects)==0:
+            return 0   
+        for sub_project in sub_projects:
+            sum_weight+=sub_project.weight               
+        return sum_weight
     def get_chart_url(self):
         return reverse(APP_NAME+':projects_chart',kwargs={'pk':self.pk})
     class Meta:

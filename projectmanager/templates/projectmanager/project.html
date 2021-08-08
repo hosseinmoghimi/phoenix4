@@ -87,6 +87,39 @@
                             {{project.percentage_completed}} %
 
                         </span>
+                        <br>
+                        <span class="small text-secondary">
+                            پیشرفت خودکار پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.auto_percentage_completed}} %
+
+                        </span>
+
+
+                        <br>
+                        <span class="small text-secondary">
+                            وزن پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.weight}} 
+
+                        </span>
+                        <br>
+                        <span class="small text-secondary">
+                            وزن کل زیر پروژه ها :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.sum_weight}} 
+                        </span>
+
+
                     <div class="progress mb-3" style="height: 5px;">
                         <div role="progressbar" aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
                             aria-valuemax="100" class="progress-bar bg-primary"
@@ -102,7 +135,7 @@
                     </p>
                 </div>
             </div>
-            
+
         </div>
         <div class="col-md-4">
             {% include "projectmanager/includes/projects-app/template.html" %}
@@ -111,14 +144,14 @@
             {% include "projectmanager/includes/organization-units-app/template.html" %}
             {% include "core/includes/page-links-app/template.html" %}
             {% include "core/includes/page-documents-app/template.html" %}
-            
+
         </div>
         <div class="col-md-12">
             {% include "core/includes/page-description-app/template.html" %}
 
         </div>
-     
-        
+
+
         <div class="col-md-12">
 
             {% include "projectmanager/includes/project-edit-app/template.html" %}
