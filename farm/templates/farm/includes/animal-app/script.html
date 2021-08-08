@@ -1,34 +1,10 @@
 <script>
-    let animal_tag = "{{animal.tag}}"
-    let saloon_id = 0
-    let animal_weight = 0
-    let animal_price = 0
-    try {
-        saloon_id = parseInt("{{animal.current_in_saloon.saloon.id}}")
 
-    } catch (error) {
-
-    }
-
-
-    try {
-        animal_weight = parseFloat("{{animal.current_in_saloon.animal_weight}}")
-
-    } catch (error) {
-
-    }
-
-
-    try {
-        animal_price = parseInt("{{animal.current_in_saloon.animal_price}}")
-
-    } catch (error) {
-
-    }
-    let max_weight=parseFloat("{{max_weight}}")*1.2
+    
+    let max_weight = parseFloat("{{max_weight}}") * 1.2
     let weights = JSON.parse(`{{weights|escapejs}}`)
     let url_enter_animal_to_saloon = "{% url 'farm:enter_animal_to_saloon' %}"
-   
+
     let animal_app = new Vue({
         el: "#animal-app",
         data: {
@@ -36,14 +12,14 @@
             animal_price: animal_price,
             animal_weight: animal_weight,
             saloon_id: saloon_id,
-            animal_in_saloons:[],
+            animal_in_saloons: [],
         },
         components: {
             DatePicker: VuePersianDatetimePicker
         },
         mounted: function () {
             this.draw_timeline()
-      
+
         },
 
         methods: {
@@ -81,7 +57,7 @@
 
                 }
             },
-      
+
             to_price: function (price) {
 
                 return toPrice(price, TUMAN)

@@ -15,38 +15,52 @@
             <div class="card-header">
                 <h3 class="title text-center">
 
-                    {{cost.title}}
+                    هزینه
                 </h3>
             </div>
             <div class="card-body text-right">
-                <div>
+                <p class="alert alert-success">
+                    <span class="h4">
+                        {{cost.title}}
+                    </span>
+<br>
+<span title=" دسته بندی" class="material-icons">
+    category
+    </span>
+                   
+                    {{cost.category}}
+                    <br>
 
-                    <div class=" alert alert-danger mb-5 d-inline farsi ">
-                        {{cost.value|to_price}}
-                    </div>
-                </div>
-                <div class="mt-5">
-
-
-                    <p>
-                        {{cost.persian_cost_date}}
-                    </p>
-
-
-                    <p>
-                        {{cost.category}}
-                    </p>
+                    هزینه شده در :
+                    <a href="{{cost.saloon.get_absolute_url}}">
 
 
-                    <p>
-                        <a href="{{cost.saloon.get_absolute_url}}">
+                        {{cost.saloon}}
+
+                    </a>
+                </p>
 
 
-                            {{cost.saloon}}
 
-                        </a>
-                    </p>
-                </div>
+
+                <p class=" alert alert-danger farsi ">
+
+                    {{cost.value|to_price}}
+                    <br>
+                    {{cost.value|to_horuf}} {{CURRENCY}}
+                </p>
+
+
+                <p class="alert alert-warning">
+                    تاریخ هزینه :
+                    {{cost.persian_cost_date}}
+                </p>
+
+
+
+
+
+
 
 
             </div>

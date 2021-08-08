@@ -109,13 +109,14 @@ class BasicViews(View):
                 context['log'] = log
                 return render(request, TEMPLATE_ROOT+"search.html", context)
 
-    def saloon(self, request, pk, *args, **kwargs):
+    def saloon(self, request, *args, **kwargs):
 
         context = getContext(request)
-        saloon = SaloonRepo(request=request).saloon(pk)
+        saloon = SaloonRepo(request=request).saloon(*args, **kwargs)
         context['saloon'] = saloon
         costs=saloon.cost_set.all()
         context['costs'] = costs
+        context['cost_categories']=(i[0] for i in CostCategoryEnum.choices)
         return render(request, TEMPLATE_ROOT+"saloon.html", context)
 
     def farm(self, request, pk, *args, **kwargs):

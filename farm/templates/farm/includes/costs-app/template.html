@@ -2,7 +2,15 @@
 {% load static %}
 <div class="card">
     <div class="card-header">
-        هزینه ها
+        <div class="card-header-icon">
+            <i class="material-icons">
+                money
+            </i>
+        </div>
+        <h4 class="title">
+
+            هزینه ها
+        </h4>
     </div>
     <div class="card-body">
         <table class="table">
@@ -78,5 +86,14 @@
 
             </tbody>
         </table>
+    </div>
+    <div class="card-footer">
+        <select name="" class="form-control" id="">
+            <option value=""></option>
+            {% for category in cost_categories %}
+            <option value="{{category}}">{{category}}</option>
+              
+            {% endfor %}
+        </select>
     </div>
 </div>

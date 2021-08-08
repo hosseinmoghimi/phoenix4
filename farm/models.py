@@ -137,19 +137,22 @@ class Animal(models.Model):
         return f'{CoreSettings.STATIC_URL}{APP_NAME}/img/animal/{im}'
 
     def __str__(self):
-        return f"{self.category}/ {self.name}/{self.tag}"
+        return self.full_name()
 
-    def current_in_saloon(self, report_date=None):
-        aa = AnimalInSaloon.objects.filter(animal=self).order_by('-enter_date')
-        if report_date is None:
-            from django.utils import timezone as tz
-            report_date = tz.now()
-        aa = aa.filter(enter_date__lte=report_date)
+    def current_in_saloon(self, *args, **kwargs):
+        from django.utils import timezone as tz
+        report_date=tz.now()
+        animal_in_saloon = AnimalInSaloon.objects.filter(animal=self).order_by('-enter_date')
+        if 'report_date' is kwargs:
+            report_date = kwargs['report_date']
+        animal_in_saloon = animal_in_saloon.filter(enter_date__lte=report_date)
+        # saloon = saloon.filter(enter_date__lte=report_date)
         # aa = aa.filter(models.Q(exit_date=None) |
         #                models.Q(exit_date__gte=report_date))
-        aa = aa.first()
-        return aa
 
+        animal_in_saloon = animal_in_saloon.first()
+        if animal_in_saloon is not None:
+            return animal_in_saloon.saloon
     def get_absolute_url(self):
         return reverse(APP_NAME+":animal", kwargs={"pk": self.pk})
 
@@ -214,7 +217,12 @@ class Saloon(models.Model):
 
     def __str__(self):
         return f"{self.farm.name} ({self.name})"
-
+    def get_link(self):
+        # return 'fsdfsdfsdf'
+        return f"""
+            <a href="{self.get_absolute_url()}">{self.name}</a> | 
+            <a href="{self.farm.get_absolute_url()}">{self.farm.name}</a>
+        """
     def get_absolute_url(self):
         return reverse(APP_NAME+":saloon", kwargs={"pk": self.pk})
     def sum_animal_price(self):

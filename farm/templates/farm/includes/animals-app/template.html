@@ -15,14 +15,18 @@
 
         <table class="table table-striped">
             <thead>
+              
+
+
                 <th>
-                    دسته بندی دام
+                    دام
                 </th>
 
 
                 <th>
-                    تگ
+                    سالن
                 </th>
+
 
 
                 <th>
@@ -44,15 +48,27 @@
 
                 <tr>
                     <td>
-                        <span>
-                            {{animal.category}}
-                        </span>
-                    </td>
+                        <a href="">
 
+                            <img src="{{animal.image}}" class="rounded-circle"
+                            width="48" alt="">
+                            {{animal.category}}
+                            {{animal.tag}}
+                        </a>
+
+                    </td>
+                  
+
+
+                  
 
                     <td>
                         <span>
-                            {{animal.tag}}
+                            
+                            {% if animal.current_in_saloon %}
+                            {{animal.current_in_saloon.get_link|safe}}
+                     
+                            {% endif %}
                         </span>
                     </td>
 
@@ -60,7 +76,7 @@
                     <td>
                         <span>
                             {{animal.weight}}
-                             کیلوگرم
+                            کیلوگرم
                         </span>
                     </td>
 
@@ -78,16 +94,16 @@
                         <a href="{{animal.get_absolute_url}}">
                             <i class="material-icons">
                                 pets
-                            </i>  
-                          </a>
+                            </i>
+                        </a>
 
-                          <a href="{{animal.get_edit_url}}">
+                        <a href="{{animal.get_edit_url}}">
                             <i class="material-icons text-warning">
                                 edit
-                            </i>  
-                          </a>
+                            </i>
+                        </a>
 
-                          
+
 
                     </td>
                 </tr>
@@ -108,6 +124,25 @@
 
 
                     <td>
+                        <div v-if="animal.current_in_saloon">
+
+                            <a :href="animal.current_in_saloon.farm.get_absolute_url">
+                                <span v-text="animal.current_in_saloon.name">
+
+                                </span>
+                            </a> |
+                            <a :href="animal.current_in_saloon.farm.get_absolute_url">
+                                <span v-text="animal.current_in_saloon.farm.name">
+
+                                </span>
+                            </a>
+                        </div>
+
+                    </td>
+
+
+
+                    <td>
                         <span v-text="animal.weight">
                         </span>
                     </td>
@@ -124,14 +159,14 @@
                         <a :href="animal.get_absolute_url">
                             <i class="material-icons">
                                 pets
-                            </i>  
-                          </a>
+                            </i>
+                        </a>
 
-                          <a :href="animal.get_edit_url">
+                        <a :href="animal.get_edit_url">
                             <i class="material-icons text-warning">
                                 edit
-                            </i>  
-                          </a>
+                            </i>
+                        </a>
 
                     </td>
                 </tr>

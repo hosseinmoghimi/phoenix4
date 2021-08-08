@@ -3,14 +3,6 @@ from core import enums as CoreEnums
 from rest_framework import serializers
 from authentication.serilizers import ProfileSerializer
         
-class AnimalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Animal
-        fields=['id','name','tag','weight','price','persian_enter_date','category','image','get_absolute_url','get_edit_url']
-
-
-
-        
 class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model=Farm
@@ -23,6 +15,15 @@ class SaloonSerializer(serializers.ModelSerializer):
         model=Saloon
         fields=['id','farm','name','get_absolute_url']
 
+class AnimalSerializer(serializers.ModelSerializer):
+    current_in_saloon=SaloonSerializer()
+    class Meta:
+        model=Animal
+        fields=['id','current_in_saloon','name','tag','weight','price','persian_enter_date','category','image','get_absolute_url','get_edit_url']
+
+
+
+        
    
 class EmployeeSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()

@@ -257,6 +257,10 @@ class KoshtarRepo():
         koshtar.lashe_weight=lashe_weight
         koshtar.description=description
         koshtar.save()
+
+        animal_in_saloon=AnimalInSaloon.objects.filter(animal=animal).order_by("-enter_date").first()
+        animal_in_saloon.exit_date=timezone.now()
+        animal_in_saloon.save()
         return koshtar
     def list(self,*args, **kwargs):
         objects=self.objects.all()
@@ -293,11 +297,15 @@ class SaloonRepo():
             search_for=kwargs['search_for']
             objects=objects.filter(Q(name__contains=search_for)|Q(farm__name__contains=search_for))
         return objects
-    def saloon(self,pk):
-        try:
-            return self.objects.get(pk=pk)
-        except:
-            return None
+    def saloon(self,*args, **kwargs):
+        pk=0
+        if 'saloon_id' in kwargs:
+            pk=kwargs['saloon_id']
+        if 'id' in kwargs:
+            pk=kwargs['id']
+        if 'pk' in kwargs:
+            pk=kwargs['pk']
+        return self.objects.filter(pk=pk).first()
     def saloon_foods(self,saloon_id,report_date):
         saloon_foods= SaloonFood.objects.filter(saloon_id=saloon_id).filter(food_date__date=report_date.date())
         return saloon_foods

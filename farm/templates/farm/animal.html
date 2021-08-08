@@ -11,51 +11,48 @@
 
     </div>
 </div>
-<div class="row" id="animal-app">
+<div class="row">
     <div class="col-md-4">
 
         <div class="card">
             <div class="card-header card-header-info card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        settings
-                    </i>
-                </div>
+
                 <h3 class="card-title">
-                    {{animal.name}}
+                    {{animal}}
                 </h3>
             </div>
             <div class="card-body">
-                <h4 class="text-primary">
+                <div class="text-center">
+
+                    <img src="{{animal.image}}" width="80%" class="rounded mx-auto" alt="">
+                </div>
+
+                <h4 class="text-primary text-center">
                     <span class="material-icons">
                         sell
                     </span>
                     {{animal.tag}}
                 </h4>
                 {% if perms.farm.change_animal %}
-                <p>
+                <p class="text-center">
 
                     {{animal.get_edit_btn|safe}}
                 </p>
                 {% endif %}
-                <p>
+                <p class="text-center">
                     {{animal.price|to_price}}
                 </p>
+
                 <div class="text-center">
-
-                    <img src="{{animal.image}}" width="80%" class="rounded mx-auto" alt="">
-                </div>
-
-                <div class="">
                     {% if animal.current_in_saloon %}
-                    <p>
+                    <p class=" text-center">
 
-                        <a class="btn btn-success" href="{{animal.current_in_saloon.saloon.farm.get_absolute_url}}">
+                        <a class="" href="{{animal.current_in_saloon.saloon.farm.get_absolute_url}}">
                             {{animal.current_in_saloon.saloon.farm.name}}
                         </a>
 
 
-                        <a class="btn btn-success" href="{{animal.current_in_saloon.saloon.get_absolute_url}}">
+                        <a class="" href="{{animal.current_in_saloon.saloon.get_absolute_url}}">
                             {{animal.current_in_saloon.saloon.name}}
                         </a>
                     </p>
@@ -66,73 +63,7 @@
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header card-header-info card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        settings
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    {{animal.name}}
-                </h3>
-            </div>
-            <div class="card-body">
 
-                <form @submit.prevent="enter_animal_to_saloon">
-                    <div class="row">
-
-                        <label class="col-sm-12 col-form-label">تاریخ ورود</label>
-
-
-                        <div class="col-sm-10">
-
-                            <date-picker v-model="enter_date"></date-picker>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <div class="form-group bmd-form-group is-filled">
-                                <label for="animal_weight" class="bmd-label-floating">
-
-                                    وزن دام
-                                </label>
-                                <input type="text" id="animal_weight" class="form-control" v-model="animal_weight">
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group bmd-form-group is-filled">
-                                <label for="animal_price" class="bmd-label-floating">
-
-                                    قیمت دام
-                                </label>
-                                <input type="text" id="animal_price" class="form-control" v-model="animal_price">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group bmd-form-group is-filled">
-                                <label for="saloon" class="bmd-label-floating">
-
-                                    سالن </label>
-                                <select name="" id="saloon" class="form-control" v-model="saloon_id">
-                                    <option disabled value="سالن را انتخاب کنید"></option>
-                                    {% for saloon in saloons %}
-
-                                    <option value="{{saloon.id}}">{{saloon.farm.name}} | {{saloon.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-
-                            <button class="btn btn-success" type="submit">ثبت</button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-        </div>
     </div>
 
 
@@ -240,134 +171,11 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header card-header-info card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        settings
-                    </i>
-                </div>
-                <h3 class="card-title">
-                    نگهداری {{animal.name}}
-                </h3>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <th>سالن</th>
-                        <th>
-                            وزن
-                        </th>
-                        <th>قیمت برآورد شده</th>
-                        <th>ورود</th>
-                        <th>خروج</th>
-                        <th>
-                            ثبت توسط
-                        </th>
-                    </thead>
-                    <tbody>
 
-
-
-                        {% for animal_in_saloon in animalinsaloon_set %}
-                        <tr>
-                            <td>
-
-                                <a class="mx-2" href="{{animal_in_saloon.saloon.farm.get_absolute_url}}">
-                                    {{animal_in_saloon.saloon.farm.name}}
-                                </a>
-                                |
-                                <a class="mx-2" href="{{animal_in_saloon.saloon.get_absolute_url}}">
-                                    {{animal_in_saloon.saloon.name}}
-                                </a>
-
-                            </td>
-                            <td>
-                                {{animal_in_saloon.animal_weight}}
-                                کیلوگرم
-                            </td>
-                            <td>
-                                {{animal_in_saloon.animal_price|to_price}}
-                            </td>
-                            <td>
-                                <small>
-
-                                    {{animal_in_saloon.enter_date|to_persian_datetime|safe}}
-                                </small>
-                            </td>
-                            <td>
-                                <small>
-                                    {% if animal_in_saloon.exit_date %}
-
-                                    {{animal_in_saloon.exit_date|to_persian_datetime|safe}}
-                                    {% endif %}
-                                </small>
-                            </td>
-                            <td>
-                                <a title="{{animal_in_saloon.employee.profile.name}}"
-                                    href="{{animal_in_saloon.employee.get_absolute_url}}">
-                                    <img src="{{animal_in_saloon.employee.profile.image}}" width="32"
-                                        class="rounded-circle">
-                                </a>
-                                {% if perms.farm.change_animalinsaloon %}
-                                {{animal_in_saloon.get_edit_btn|safe}}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        <tr v-for="animal_in_saloon in animal_in_saloons">
-                            <td>
-
-                                <a class="mx-2" :href="animal_in_saloon.saloon.farm.get_absolute_url">
-                                    <span v-text="animal_in_saloon.saloon.farm.name"></span>
-                                </a>
-                                |
-                                <a class="mx-2" :href="animal_in_saloon.saloon.get_absolute_url">
-                                    <span v-text="animal_in_saloon.saloon.name"></span>
-                                </a>
-
-                            </td>
-                            <td>
-                                <span v-text="animal_in_saloon.animal_weight"></span>
-                                کیلوگرم
-                            </td>
-                            <td>
-                                <span v-text="to_price(animal_in_saloon.animal_price)"></span>
-                            </td>
-                            <td>
-                                <small>
-                                    <span v-text="animal_in_saloon.persian_enter_date"></span>
-                                </small>
-                            </td>
-                            <td>
-                                <small>
-                                    <span v-text="animal_in_saloon.persian_exit_date"></span>
-                                </small>
-                            </td>
-                            <td>
-                                <a :title="animal_in_saloon.employee.profile.name"
-                                    :href="animal_in_saloon.employee.get_absolute_url">
-                                    <img :src="animal_in_saloon.employee.profile.image" width="32"
-                                        class="rounded-circle">
-                                </a>
-                                {% if perms.farm.change_animalinsaloon %}
-                                <a title="ویرایش" :href="animal_in_saloon.get_edit_url" class="docs-creator"><span
-                                        class="material-icons">
-                                        edit
-
-                                    </span></a>
-
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        {% include "farm/includes/animal-app/template.html" %}
 
     </div>
+
     <div class="col-md-12">
         {% include "farm/includes/koshtar-app/template.html" %}
 
@@ -461,7 +269,37 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 
+<script>
+    let animal_tag = "{{animal.tag}}"
+    let saloon_id = 0
+    let animal_weight = parseFloat("{{animal.weight}}")
+    let animal_price = parseInt("{{animal.buy_price}}")
 
+    if (false) {
+        try {
+            saloon_id = parseInt("{{animal.current_in_saloon.saloon.id}}")
+
+        } catch (error) {
+
+        }
+
+
+        try {
+            animal_weight = parseFloat("{{animal.current_in_saloon.animal_weight}}")
+
+        } catch (error) {
+
+        }
+
+
+        try {
+            animal_price = parseInt("{{animal.current_in_saloon.animal_price}}")
+
+        } catch (error) {
+
+        }
+    }
+</script>
 {% include "farm/includes/animal-app/script.html" %}
 {% include "farm/includes/koshtar-app/script.html" %}
 {% endblock %}
