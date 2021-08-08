@@ -101,11 +101,11 @@ class Project(ProjectManagerPage):
         auto_percentage_completed=0
         sum_weight=0
         for sub_project in sub_projects:
-            auto_percentage_completed=sub_project.weight*(sub_project.auto_percentage_completed())
+            auto_percentage_completed+=sub_project.weight*(sub_project.auto_percentage_completed())
             sum_weight+=sub_project.weight
         auto_percentage_completed=auto_percentage_completed/sum_weight
                
-        return auto_percentage_completed*10
+        return auto_percentage_completed
 
     def sum_weight(self):   
         sum_weight=0
