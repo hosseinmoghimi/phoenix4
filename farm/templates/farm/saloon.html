@@ -10,13 +10,15 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header card-header-danger card-header-icon">
-                    <div class="card-icon">
-                        <i class="material-icons">
-                            settings
-                        </i>
-                    </div>
+                    
+                    
+                    <h6 class="card-title">
+                        
+                        {{saloon.farm.name}}
+                    </h6>
                     <h3 class="card-title">
                         {{saloon.name}}
+
                     </h3>
                 </div>
                 <div class="card-body">
@@ -319,12 +321,12 @@
                                     <a href="{{animal_in_saloon.animal.get_absolute_url}}">
                                         <div class="media">
                                             <img src="{{animal_in_saloon.animal.image}}" class="rounded-circle"
-                                                width="64" alt="">
+                                                width="48" alt="">
                                             <div class="media-body mr-2">
                                                 <div>
                                                     {{animal_in_saloon.animal.name}}
                                                 </div>
-                                                <div class="text-secondary mt-2">
+                                                <div class="text-primary mt-2">
                                                     {{animal_in_saloon.animal.tag}}
                                                 </div>
                                             </div>
