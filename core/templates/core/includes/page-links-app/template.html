@@ -9,7 +9,7 @@
                 </button>
             </h5>
         </div>
-        <div id="collapselinks" class="collapse" aria-labelledby="headinglinks" data-parent="#accordion">
+        <div id="collapselinks" class="collapse {% if page.links.all %}show{% endif %}" aria-labelledby="headinglinks" data-parent="#accordion">
 
             <div class="card-body">
                 {% for link in page.links.all %}

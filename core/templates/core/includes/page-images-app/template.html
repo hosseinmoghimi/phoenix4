@@ -10,7 +10,7 @@
             </h6>
         </div>
 
-        <div id="collapsesepageimages" class="collapse" aria-labelledby="headingpageimages" data-parent="#accordion">
+        <div id="collapsesepageimages" class="collapse {% if page.pageimage_set.all %}show{% endif %}" aria-labelledby="headingpageimages" data-parent="#accordion">
             <div class="card-body">
                 <div class="row">
                     {% for page_image in page.pageimage_set.all %}

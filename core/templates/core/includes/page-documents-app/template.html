@@ -10,7 +10,7 @@
             </h5>
         </div>
 
-        <div id="collapsedocuments" class="collapse" aria-labelledby="headingdocuments" data-parent="#accordion">
+        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}" aria-labelledby="headingdocuments" data-parent="#accordion">
 
             <div class="card-body">
                 {% for document in page.documents.all %}
