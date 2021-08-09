@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, ProjectLocation, Service, ServiceRequest, ServiceRequestSignature
+from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, ServiceRequestSignature
 from authentication.serilizers import ProfileSerializer
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -58,10 +58,10 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model=Event
         fields=['id','title','get_absolute_url','persian_event_datetime']
-class ProjectLocationSerializer(serializers.ModelSerializer):
+class LocationSerializer(serializers.ModelSerializer):
     class Meta:
-        model=ProjectLocation
-        fields=['id','location','title','get_edit_url','get_project_url','project_title']
+        model=Location
+        fields=['id','location','title','get_edit_url']
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
     employees=EmployeeSerializer(many=True)

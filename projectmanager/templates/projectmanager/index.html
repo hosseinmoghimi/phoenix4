@@ -37,17 +37,23 @@
 <div id="home-app">
     <div class="row ">
         <div class="col-md-4">
+            {% include "projectmanager/includes/employers-app/template.html" %}
             {% include "projectmanager/includes/projects-app/template.html" %}
+
         </div>
         <div class="col-md-4">
             {% include "projectmanager/includes/services-app/template.html" %}
+            {% include "projectmanager/includes/locations-app/template-list.html" %}
+
         </div>
 
         <div class="col-md-4">
             {% include "projectmanager/includes/materials-app/template.html" %}
         </div>
         <div class="col-md-4">
-            {% include "projectmanager/includes/employers-app/template.html" %}
+
+        </div>
+        <div class="col-md-4">
         </div>
     </div>
 </div>
@@ -63,6 +69,7 @@
 {% include "projectmanager/includes/materials-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "projectmanager/includes/services-app/script.html" %}
+{% include "projectmanager/includes/locations-app/script.html" %}
 <script>
 
     $(".carousel-item:first").addClass('active')

@@ -18,6 +18,7 @@ urlpatterns = [
     path('service/<int:pk>/',views.ServiceViews().service,name="service"),
     path('servicerequest/<int:pk>/',views.ServiceViews().service_request,name="servicerequest"),
     path('event/<int:pk>/',views.EventViews().event,name="event"),
+    path('location/<int:pk>/',views.LoactionViews().location,name="location"),
     
     
     path('add_event/',apis.EventApi().add_event,name="add_event"),
@@ -31,7 +32,8 @@ urlpatterns = [
     path('add_material/',apis.MaterialApi().add_material,name="add_material"),
     path('add_organization_unit/',apis.OrganizationUnitApi().add_organization_unit,name="add_organization_unit"),
     path('add_project/',apis.ProjectApi().add_project,name="add_project"),
-    path('add_project_location/',apis.ProjectApi().add_project_location,name="add_project_location"),
+    path('add_location/',apis.LocationApi().add_location,name="add_location"),
+    path('add_existing_location/',apis.LocationApi().add_existing_location,name="add_existing_location"),
     
     path('add_material/',apis.MaterialApi().add_material,name="add_material"),
 ]

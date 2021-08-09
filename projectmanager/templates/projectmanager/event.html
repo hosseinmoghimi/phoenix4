@@ -68,14 +68,18 @@
             </div>
 
         </div>
-        <div class="col-md-8">
-            {% include "core/includes/page-description-app/template.html" %}
+        <div class="col-md-8 mb-5">
+            {% include "core/includes/page-description-app/short-description.html" %}
+            <div class="mb-5"></div>
+            {% include "core/includes/page-description-app/full-description.html" %}
+            <div class="mb-5"></div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-6 mb-5">
                     {% include "core/includes/page-links-app/template.html" %}
 
                 </div>
-                <div class="col-6">
+
+                <div class="col-6 mb-5">
                     {% include "core/includes/page-documents-app/template.html" %}
 
                 </div>
@@ -87,14 +91,18 @@
 
 
 
-        <div class="col-md-12">
+        <div class="col-md-12 mb-5">
             {% include "core/includes/page-images-app/template.html" %}
 
         </div>
 
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-comments-app/template.html" %}
+        </div>
 
-
-
+        <div class="col-md-12 mb-5">
+            {% include "projectmanager/includes/locations-app/template.html" %}
+        </div>
 
 
     </div>
@@ -114,5 +122,6 @@
 {% include "core/includes/page-documents-app/script.html" %}
 
 {% include "core/includes/page-images-app/script.html" %}
+{% include "projectmanager/includes/locations-app/script.html" %}
 
 {% endblock %}

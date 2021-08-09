@@ -20,26 +20,28 @@
                 <table class="table table-striped">
                     <thead>
                         <th>
-                            زمان
+                            رویداد
                         </th>
                         <th>
-                            رویداد
+                            زمان
                         </th>
                     </thead>
                     <tbody>
                         {% for event in events %}
                         <tr>
+                          
+                            <td>
+                                <a href="{{event.get_absolute_url}}">
+                                    {{event.title}}
+                                </a>
+                            </td>
                             <td>
                                 <small>
 
                                     {{event.event_datetime|to_persian_datetime|safe}}
                                 </small>
                             </td>
-                            <td>
-                                <a href="{{event.get_absolute_url}}">
-                                    {{event.title}}
-                                </a>
-                            </td>
+                            
                         </tr>
                         {% endfor %}
 

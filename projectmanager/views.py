@@ -13,7 +13,7 @@ from .forms import *
 import json
 from .apps import APP_NAME
 from core.views import DefaultContext, MessageView, PageContext
-from .repo import EmployeeRepo, EmployerRepo, EventRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
 from django.views import View
 from .utils import AdminUtility
 TEMPLATE_ROOT = APP_NAME+"/"
@@ -32,7 +32,15 @@ def getContext(request):
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
     }
     return context
-
+class LoactionViews(View):
+    def location(self, request, *args, **kwargs):
+        context = getContext(request)
+        repo=LocationRepo(request=request)
+        location=repo.location(*args, **kwargs)
+        context['location']=location
+        pages=repo.pages(location)
+        context['pages']=pages
+        return render(request, TEMPLATE_ROOT+"location.html", context)
 
 class BasicViews(View):
     def search(self, request, *args, **kwargs):
@@ -67,6 +75,7 @@ class BasicViews(View):
         carousel_repo=CarouselRepo(request=request,app_name=APP_NAME)
         splash=picture_repo.get(name="index.splash")
         context['splash']=splash
+        context['locations']=LocationRepo(request=request).list()
         carousels=carousel_repo.list()
         if len(carousels)>0:
             context['carousels']=carousels
@@ -80,6 +89,8 @@ class BasicViews(View):
             context['add_material_form'] = AddMaterialForm()
         if request.user.has_perm(APP_NAME+".add_project"):
             context['add_project_form'] = AddProjectForm()
+        if request.user.has_perm(APP_NAME+".add_location"):
+            context['add_location_form'] = AddLocationForm()
         context['services'] = ServiceRepo(request=request).list(for_home=True)
         context['projects'] = ProjectRepo(request=request).list(for_home=True)
         context['materials'] = MaterialRepo(
@@ -212,15 +223,17 @@ class ProjectViews(View):
         context.update(PageContext(request=request, page=page))
         employees=project.employees()
         context['employees']=employees
-        context['project_locations']=project.projectlocation_set.all()
+        context['locations']=project.locations.all()
         context['material_requests']=project.materialrequest_set.all()
         context['service_requests']=project.servicerequest_set.all()
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
-        
+        context['all_locations']=LocationRepo(request=request).list().order_by('title')
         if request.user.has_perm(APP_NAME+'.change_project'):
             context['add_location_form'] = AddLocationForm()
         
+        if request.user.has_perm(APP_NAME+'.change_project'):
+            context['add_existing_location_form'] = AddExistingLocationForm()
         if request.user.has_perm(APP_NAME+'.add_event'):
             context['add_event_form'] = AddEventForm()
         context['edit_project_form']=EditProjectForm()
@@ -320,6 +333,13 @@ class EventViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=event))
         context['event'] = event
+        context['locations']=event.locations.all()
+        context['all_locations']=LocationRepo(request=request).list().order_by('title')
+        if request.user.has_perm(APP_NAME+'.change_project'):
+            context['add_location_form'] = AddLocationForm()
+        
+        if request.user.has_perm(APP_NAME+'.change_project'):
+            context['add_existing_location_form'] = AddExistingLocationForm()
         return render(request, TEMPLATE_ROOT+"event.html", context)
 
 

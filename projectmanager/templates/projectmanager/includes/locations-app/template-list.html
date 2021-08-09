@@ -1,0 +1,85 @@
+<!-- موقعیت در نقشه -->
+
+{% load static %}
+
+<div id="accordion">
+
+
+    <div class="card card-stats" id="locations-app">
+        <div class="card-header card-header-warning card-header-icon" id="headingLocations">
+         
+            <h3 class="card-title text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseLocations"
+                    aria-expanded="true" aria-controls="collapseseLocations">
+                    موقعیت در نقشه
+                </button>
+
+            </h3>
+        </div>
+
+        <div id="collapseseLocations" class="collapse" aria-labelledby="headingLocations" data-parent="#accordion">
+            <div class="card-body ">
+                
+                <ul class="nav flex-column">
+                    {% for location in locations %}
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="{{location.get_absolute_url}}">{{location.title}}</a>
+                    </li>
+
+                    {% endfor %}
+                    <li class="nav-item" v-for="location in locations">
+                        <a class="nav-link" :href="location.get_absolute_url">
+
+                            <span v-text="location.title">
+
+                            </span>
+                        </a>
+                    </li>
+
+                </ul>
+
+
+
+
+                {% if add_location_form %}
+                <p>
+
+                    <button @click="show_add_location_form=true" v-if="!show_add_location_form" class="btn btn-success">
+                        <i class="material-icons">
+                            add
+                        </i>
+                    </button>
+                </p>
+                <form v-if="show_add_location_form" @submit.prevent="add_location">
+
+                    <input placeholder="عنوان نقطه" required type="text" class="form-control"
+                        v-model="new_location_title">
+                    <input placeholder="موقعیت" required type="text" class="form-control" v-model="new_location">
+
+                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                    <button @click="show_add_location_form=false" v-if="show_add_location_form"
+                        class="btn btn-secondary">
+                        انصراف
+                    </button>
+
+                    <button v-if="!waiting" v-if="new_location" class="btn btn-success btn-round"
+                        type="submit">افزودن</button>
+                    <br>
+
+                    <a target="_blank" href="https://www.google.com/maps" class="farsi">استفاده از نقشه</a>
+
+                </form>
+                {% endif %}
+
+
+            </div>
+            <div class="card-footer">
+                <a target="_blank" href="{% url 'help:help' app_name='projectmanager' template='add_location' %}">
+                    <i class="material-icons" aria-hidden="true">help</i>
+                    راهنما</a>
+            </div>
+        </div>
+    </div>
+</div>

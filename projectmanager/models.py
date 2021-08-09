@@ -85,6 +85,7 @@ class Project(ProjectManagerPage):
     employer=models.ForeignKey("employer",null=True,blank=True, related_name="projects_out",verbose_name=_("کارفرما"), on_delete=models.CASCADE)
     contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("پیمانکار"), on_delete=models.CASCADE)
     weight=models.IntegerField(_("ضریب و وزن پروژه"),default=10)
+    locations=models.ManyToManyField("location",blank=True, verbose_name=_("locations"))
     # auto_percentage_completed=models.IntegerField(_("درصد تکمیل خودکار پروژه"),default=0)
     def persian_start_date(self):
         return PersianCalendar().from_gregorian(self.start_date)
@@ -190,6 +191,7 @@ class Service(ProjectManagerPage):
 class Event(ProjectManagerPage):
     project_related=models.ForeignKey("project", verbose_name=_("project"), on_delete=models.CASCADE)
     event_datetime=models.DateTimeField(_("event_datetime"), auto_now=False, auto_now_add=False)
+    locations=models.ManyToManyField("location",blank=True, verbose_name=_("locations"))
     # adder=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     def save(self,*args, **kwargs):
         self.class_name="event"
@@ -203,27 +205,26 @@ class Event(ProjectManagerPage):
     
 
 
-class ProjectLocation(models.Model):
+class Location(models.Model):
     title=models.CharField(_("عنوان نقطه"),max_length=50,null=True,blank=True)
     location=models.CharField(_("لوکیشن"),max_length=1000)
-    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
-    class_name="projectlocation"
+    creator=models.ForeignKey("authentication.profile",null=True ,blank=True,verbose_name=_("profile"), on_delete=models.CASCADE)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    class_name="location"
     class Meta:
-        verbose_name = _("موقعیت پروژه")
-        verbose_name_plural = _("موقعیت های پروژه ها")
+        verbose_name = _("لوکیشن")
+        verbose_name_plural = _("لوکیشن ها")
     def __str__(self):
-        return f'{self.project} {self.project.title} {self.title}'
-    def project_title(self):
-        return self.project.title
-    def get_project_url(self):
-        return self.project.get_absolute_url()
+        return f'{self.title}'
+    
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
     def save(self,*args, **kwargs):
         self.location=self.location.replace('width="600"','width="100%"')
         self.location=self.location.replace('height="450"','height="400"')
-        super(ProjectLocation,self).save(*args, **kwargs)
-
+        super(Location,self).save(*args, **kwargs)
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":location",kwargs={'pk':self.pk})
 
 class OrganizationUnit(ProjectManagerPage):
     employer=models.ForeignKey("employer", verbose_name=_("employer"), on_delete=models.CASCADE)

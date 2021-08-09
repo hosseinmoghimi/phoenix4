@@ -61,10 +61,14 @@ class SearchForm(forms.Form):
     search_for=forms.CharField(max_length=50, required=True)
     
 class AddLocationForm(forms.Form):
-    page_id=forms.IntegerField(required=True)
-    new_location=forms.CharField(max_length=500,required=True)
+    page_id=forms.IntegerField(required=False)
+    location=forms.CharField(max_length=500,required=True)
     title=forms.CharField(max_length=500,required=False)
                
+class AddExistingLocationForm(forms.Form):
+    page_id=forms.IntegerField(required=True)
+    location_id=forms.IntegerField(required=True)
+           
 class AddEmployerForm(forms.Form):
     title=forms.CharField(max_length=50, required=True)
                   

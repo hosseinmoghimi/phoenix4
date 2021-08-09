@@ -1,9 +1,10 @@
+from django.http import request
 from django.utils import timezone
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, ProjectLocation, Service, ServiceRequest, ServiceRequestSignature
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Location, ProjectManagerPage, Service, ServiceRequest, ServiceRequestSignature
 from utility.persian import PersianCalendar
 
 class ProjectRepo():
@@ -29,24 +30,17 @@ class ProjectRepo():
             self.objects=Project.objects.filter(id=0)
 
 
-    def add_project_location(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_projectlocation"):
+    def add_location(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_location"):
             return None
         project_id=0
-        new_location=""
-        title=""
         if 'project_id' in kwargs:
             project_id=kwargs['project_id']
-        if 'new_location' in kwargs:
-            new_location=kwargs['new_location']
-        if 'title' in kwargs:
-            title=kwargs['title']
-        project_location=ProjectLocation()
-        project_location.project_id=project_id
-        project_location.title=title
-        project_location.location=new_location
-        project_location.save()
-        return project_location
+        location=LocationRepo(request=self.request,user=self.user).add_location(*args, **kwargs)
+        project=self.project(project_id=project_id)
+        project.locations.add(location)
+        project.save()
+        return location
 
 
     # def edit_project_timing(self,project_id,percentage_completed,start_date,end_date):
@@ -509,6 +503,93 @@ class EventRepo():
     def search(self,search_for):
         objects = self.objects.filter(title__contains=search_for)
         return objects
+
+
+class LocationRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        if self.user is None:
+            self.objects=Employee.objects.filter(id=0)
+        elif self.user.has_perm(APP_NAME+".view_location"):
+            self.objects = Location.objects
+        elif self.profile is not None:
+            self.objects=Event.objects.filter(id=0)
+        else:
+            self.objects=Event.objects.filter(id=0)
+    def pages(self,location):
+        pages=[]
+        for project in Project.objects.all():
+            if location in project.locations.all():
+                pages.append(project)
+        for event in Event.objects.all():
+            if location in event.locations.all():
+                pages.append(event)
+        return pages
+    def location(self, *args, **kwargs):
+        if 'location_id' in kwargs:
+            return self.objects.filter(pk=kwargs['location_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(pk=kwargs['title']).first()
+    def add_existing_location(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_location"):
+            return None
+        location_id=0
+        if 'location_id' in kwargs:
+            location_id=kwargs['location_id']
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        location=self.location(location_id=location_id)
+        page=ProjectManagerPage.objects.filter(pk=page_id).first()
+        if page is not None:
+            if page.class_name=='project':
+                Project.objects.filter(pk=page_id).first().locations.add(location)
+            if page.class_name=='event':
+                Event.objects.filter(pk=page_id).first().locations.add(location)
+
+        return location
+
+    def add_location(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_location"):
+            return None
+        location1=""
+        title=""
+        if 'location' in kwargs:
+            location1=kwargs['location']
+        if 'title' in kwargs:
+            title=kwargs['title']
+        location=Location()
+        location.title=title
+        location.creator=self.profile
+        location.location=location1
+        location.save()
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+            page=ProjectManagerPage.objects.filter(pk=page_id).first()
+            if page is not None:
+                if page.class_name=='project':
+                    Project.objects.filter(pk=page_id).first().locations.add(location)
+                if page.class_name=='event':
+                    Event.objects.filter(pk=page_id).first().locations.add(location)
+
+        return location
+    def search(self,search_for):
+        objects = self.objects.filter(title__contains=search_for)
+        return objects
+    def list(self,*args, **kwargs):
+        objects = self.objects.order_by('title')
+        return objects
+
 
 
 class MaterialRepo():
