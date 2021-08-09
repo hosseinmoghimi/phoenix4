@@ -61,7 +61,7 @@ class EventSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model=Location
-        fields=['id','location','title','get_edit_url']
+        fields=['id','location','title','get_edit_url','get_absolute_url']
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
     employees=EmployeeSerializer(many=True)
