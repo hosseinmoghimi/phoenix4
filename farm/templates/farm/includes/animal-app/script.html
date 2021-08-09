@@ -75,10 +75,10 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
                 let url = url_enter_animal_to_saloon
-                console.log(payload)
+                //console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
+                    //console.log(data)
                     animal_app.animal_in_saloons.push(data.animal_in_saloon)
                     // swal({
                     //     title: "ثبت اطلاعات دام",

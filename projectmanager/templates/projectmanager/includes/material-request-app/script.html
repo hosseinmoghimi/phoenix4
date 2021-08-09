@@ -27,7 +27,7 @@
                     status: this.add_signature_form_status,
                     description: this.add_signature_form_description,
                 }
-                console.log(payload)
+                //console.log(payload)
                 let posting = $.post(url_add_signature, payload)
                 posting.done((data) => {
                     material_request_app.waiting = false

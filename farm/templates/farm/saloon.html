@@ -431,12 +431,12 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
                 let url = url_enter_animal_to_saloon
-                console.log(saloon_app.animal_tag)
-                console.log(url)
-                console.log(payload)
+                //console.log(saloon_app.animal_tag)
+                //console.log(url)
+                //console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
+                    //console.log(data)
                     swal({
                         title: "ثبت ورود دام",
                         text: "ورود دام به سالن با موفقیت ثبت گردید.",
@@ -453,7 +453,7 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
                 let url = url_saloon_daily_report
-                console.log(payload)
+                //console.log(payload)
                 let posting = $.post(url, payload)
                 let aaaa = swal({
                     title: "گزارش روزانه",
@@ -463,7 +463,7 @@
                     type: "success"
                 }).catch(swal.noop)
                 posting.done((data) => {
-                    console.log(data)
+                    //console.log(data)
                     saloon_app.animals_in_saloon = data.animals_in_saloon
                     saloon_app.saloon_foods = data.saloon_foods
                     aaaa.dismiss()

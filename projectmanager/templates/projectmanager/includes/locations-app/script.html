@@ -24,7 +24,7 @@ let url_add_existing_loaction="{% url 'projectmanager:add_existing_location' %}"
                     page_id: page_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                // //console.log(payload)
 
 
                 var posting = $.post(url_add_existing_loaction, payload);
@@ -35,7 +35,7 @@ let url_add_existing_loaction="{% url 'projectmanager:add_existing_location' %}"
                 // Put the results in a div
                 posting.done(function (data) {
                     locations_app.waiting = false
-                    console.log(data)
+                    // //console.log(data)
                     if (data.result === 'SUCCEED') {
 
                         locations_app.locations.push(data.location)
@@ -56,7 +56,7 @@ let url_add_existing_loaction="{% url 'projectmanager:add_existing_location' %}"
                     title: locations_app.new_location_title,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                // //console.log(payload)
 
 
                 var posting = $.post(url_add_loaction, payload);
@@ -67,7 +67,7 @@ let url_add_existing_loaction="{% url 'projectmanager:add_existing_location' %}"
                 // Put the results in a div
                 posting.done(function (data) {
                     locations_app.waiting = false
-                    console.log(data)
+                    // //console.log(data)
                     if (data.result === 'SUCCEED') {
 
                         locations_app.locations.push(data.location)

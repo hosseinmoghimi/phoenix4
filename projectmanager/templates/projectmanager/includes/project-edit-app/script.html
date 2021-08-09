@@ -50,7 +50,7 @@
                     contractor_id: this.contractor_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                //console.log(payload)
 
 
                 var posting = $.post(url_edit_project, payload);
@@ -61,7 +61,7 @@
                 // Put the results in a div
                 posting.done(function (data) {
                     project_app.waiting = false
-                    console.log(data)
+                    //console.log(data)
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)
                         // project_timing_app.add_service_form_title = ""

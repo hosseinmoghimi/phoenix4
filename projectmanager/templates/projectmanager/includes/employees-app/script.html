@@ -36,13 +36,13 @@
                     first_name: this.add_employee_form_first_name,
                     last_name: this.add_employee_form_last_name,
                 }
-                console.log(payload)
+                // //console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     employees_app.waiting = false
 
                     if (data.result === 'SUCCEED') {
-                        console.log(data)
+                        // //console.log(data)
                         this.employees.push(data.employee)
                     }
                 })

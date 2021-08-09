@@ -33,10 +33,10 @@
                     enter_date: add_animal_app.enter_date,
 
                 }
-                console.log(payload)
+                //console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
+                    //console.log(data)
                     animals_app.animals.push(data.animal_in_saloon.animal)
                     // add_animal_app.add_animal_form_show = false
                 })

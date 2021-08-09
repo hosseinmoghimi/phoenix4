@@ -372,7 +372,7 @@
                     employer_id: employer_id,
                     title: this.new_organization_unit_title,
                 }
-                console.log(payload)
+                // //console.log(payload)
                 let posting = $.post(url_add_organization_unit, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {

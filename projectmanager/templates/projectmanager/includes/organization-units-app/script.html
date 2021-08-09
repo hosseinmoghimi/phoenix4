@@ -40,7 +40,7 @@
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
-                        console.log(data)
+                        //console.log(data)
                         organization_units.push(data.organization_unit)
                         organization_unit_app.new_organization_unit_title = ""
                     }
@@ -57,7 +57,7 @@
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
-                        console.log(data)
+                        //console.log(data)
                         organization_units.push(data.organization_unit)
                         organization_unit_app.organization_units = organization_units
                         organization_unit_app.new_organization_unit_title = ""
