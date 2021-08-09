@@ -190,7 +190,7 @@ class Service(ProjectManagerPage):
 class Event(ProjectManagerPage):
     project_related=models.ForeignKey("project", verbose_name=_("project"), on_delete=models.CASCADE)
     event_datetime=models.DateTimeField(_("event_datetime"), auto_now=False, auto_now_add=False)
-    adder=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    # adder=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     def save(self,*args, **kwargs):
         self.class_name="event"
         return super(Event,self).save(*args, **kwargs)

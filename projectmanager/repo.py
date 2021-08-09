@@ -501,6 +501,7 @@ class EventRepo():
 
             event_datetime=PersianCalendar().to_gregorian(event_datetime)
             new_event.event_datetime=event_datetime
+            new_event.creator=self.profile
             
         new_event.save()
         return new_event

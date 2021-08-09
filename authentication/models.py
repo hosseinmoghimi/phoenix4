@@ -55,6 +55,31 @@ class Profile(models.Model):
     @property
     def first_name(self):
         return self.user.first_name
+    def full_tag(self,*args, **kwargs):
+        return f"""
+        <a href="{self.get_absolute_url()}" title="{self.name}">
+               <img src="{self.image}" class="rounded-circle" width="48" alt="">
+               {self.name}
+        </a>
+
+        """
+    def media_tag(self):
+        return f"""
+            <div class="media">
+                <img src="{self.image}" class="rounded-circle" width="48" alt="">
+
+                <div class="media-body farsi text-right mr-2">
+
+                    <div class="">
+                        <a href="{self.get_absolute_url()}" title="{self.name}">
+                            {self.name}
+                        </a>
+
+                    </div>
+                    <div class="small text-secondary">{self.bio if self.bio is not None else ""}</div>
+                </div>
+            </div>
+        """
     @property
     def image(self):
         if self.image_origin:

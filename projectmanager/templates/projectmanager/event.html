@@ -29,7 +29,7 @@
     <div class="row ">
 
 
-      
+
 
         <div class="col-md-4">
             <div class="card mb-5">
@@ -45,9 +45,24 @@
                             </a>
                         </span>
                     </p>
+
+                    <p>
+                        <small class="text-secondary">
+                            افزوده شده توسط :
+
+                        </small>
+                        {{event.creator.media_tag|safe}}
+                    </p>
+                    <p>
+                        <small class="text-secondary">
+
+                            تاریخ :
+                        </small>
+
+                        {{event.event_datetime|to_persian_datetime|safe}}
+                    </p>
+
                     <img src="{{event.image}}" class="rounded w-100" alt="">
-
-
 
                 </div>
             </div>
@@ -55,20 +70,20 @@
         </div>
         <div class="col-md-8">
             {% include "core/includes/page-description-app/template.html" %}
+            <div class="row">
+                <div class="col-6">
+                    {% include "core/includes/page-links-app/template.html" %}
 
+                </div>
+                <div class="col-6">
+                    {% include "core/includes/page-documents-app/template.html" %}
+
+                </div>
+            </div>
         </div>
 
 
-        <div class="col-md-4">
-            {% include "core/includes/page-links-app/template.html" %}
 
-        </div>
-
-
-        <div class="col-md-4">
-            {% include "core/includes/page-documents-app/template.html" %}
-
-        </div>
 
 
 

@@ -117,14 +117,14 @@ class ProjectViews(View):
         context = getContext(request)
         TAX_PERCENT = 0
         project = ProjectRepo(request=request).project(*args, **kwargs)
-        lines = []
+        order_lines = []
         lines_total = 0
         for material_request in project.materialrequest_set.all():
             quantity = material_request.quantity
             unit_name = material_request.unit_name
             unit_price = material_request.unit_price
             lines_total += (quantity*unit_price)
-            lines.append({
+            order_lines.append({
                 'quantity': quantity,
                 'unit_name': unit_name,
                 'unit_price': unit_price,
@@ -140,9 +140,6 @@ class ProjectViews(View):
         order = {
             'customer': project.employer,
             'supplier': project.contractor,
-            'orderline_set': {
-                'all': lines,
-            },
             'tax': tax,
             'lines_total': lines_total,
             'ship_fee': ship_fee,
@@ -150,6 +147,7 @@ class ProjectViews(View):
             'print_date': print_date,
             'description': description,
         }
+        context['order_lines'] = order_lines
         context['order'] = order
         context['project'] = project
         return render(request, TEMPLATE_ROOT+"order.html", context)
@@ -158,14 +156,14 @@ class ProjectViews(View):
         context = getContext(request)
         TAX_PERCENT = 0
         project = ProjectRepo(request=request).project(*args, **kwargs)
-        lines = []
+        order_lines = []
         lines_total = 0
         for service_request in project.servicerequest_set.all():
             quantity = service_request.quantity
             unit_name = service_request.unit_name
             unit_price = service_request.unit_price
             lines_total += (quantity*unit_price)
-            lines.append({
+            order_lines.append({
                 'quantity': quantity,
                 'unit_name': unit_name,
                 'unit_price': unit_price,
@@ -183,9 +181,6 @@ class ProjectViews(View):
         order = {
             'customer': project.employer,
             'supplier': project.contractor,
-            'orderline_set': {
-                'all': lines,
-            },
             'tax': tax,
             'lines_total': lines_total,
             'ship_fee': ship_fee,
@@ -194,6 +189,7 @@ class ProjectViews(View):
             'description': description,
         }
         context['order'] = order
+        context['order_lines'] = order_lines
         context['project'] = project
         return render(request, TEMPLATE_ROOT+"order.html", context)
 

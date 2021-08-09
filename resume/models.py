@@ -23,7 +23,8 @@ class ResumeCategory(models.Model):
     resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)
 
-    
+    def __str__(self):
+        return f"""{self.resume_index}  {self.title} """
 
     class Meta:
         verbose_name = _("ResumeCategory")
