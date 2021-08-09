@@ -44,7 +44,7 @@
 
                 <div v-for="location in locations" class="mb-5">
                     <h4 class="mb-2">
-                        <a href="location.get_absolute_url">
+                        <a :href="location.get_absolute_url">
 
                             <span v-text="location.title"></span>
                         </a>
