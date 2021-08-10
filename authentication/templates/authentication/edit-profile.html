@@ -73,7 +73,6 @@
             <ol class="breadcrumb" style="direction: rtl;">
                 <li class="breadcrumb-item"><a href="{% url 'projectmanager:home' %}">خانه</a></li>
                 <li class="breadcrumb-item"><a href="{{selected_profile.get_absolute_url}}" class="mr-2">{{selected_profile.name}}</a></li>
-                <li class="breadcrumb-item"><a href="{{selected_profile.get_edit_url_panel}}" class="mr-2">ویرایش</a></li>
             </ol>
         </nav>
         <!-- /Breadcrumb -->
@@ -91,7 +90,26 @@
                                     {% if selected_profile.bio %}
                                     {{selected_profile.bio}}
                                     {%endif %}</p>
+                                <div>
+                                    {% if upload_profile_image_form %}
+                                    <form enctype="multipart/form-data" method="POST"
+                                        action="{% url 'authentication:upload_profile_image' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="profile_id" value="{{profile.id}}">
+                                     <div class="row">
+                                         <div class="col-12">
+                                             <input type="file" name="image">
 
+                                         </div>
+                                         <div class="col-12 text-center farsi mb-3">
+                                              <button type="submit" class="btn btn-success ">تغییر تصویر
+                                            </button>
+                                         </div>
+                                     </div>
+                                       
+                                    </form>
+                                    {% endif %}
+                                </div>
                                 <button class="btn btn-outline-primary">Follow</button>
                                 <a class="btn btn-outline-danger" href="{{selected_profile.get_edit_url}}">
 
@@ -112,86 +130,14 @@
                         </div>
                     </div>
                 </div>
+                
                 {% include "authentication/includes/profile-contact.html" %}
-               
+                
             </div>
             <div class="col-md-8">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">نام</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary farsi">
-                                {{selected_profile.first_name}}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">نام خانوادگی</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary farsi">
+                {% include "authentication/includes/edit-profile-app/template.html" %}
 
-                                {{selected_profile.last_name}}
-                            </div>
-                        </div>
-                        <hr>
 
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">ایمیل</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary farsi">
-
-                                {{selected_profile.user.email}}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">همراه</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary farsi">
-                                {% if selected_profile.mobile %}
-                                  
-                                {{selected_profile.mobile}}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">بیو</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary farsi">
-                                {% if selected_profile.bio %}
-                                  
-                                {{selected_profile.bio}}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">آدرس</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary farsi">
-                                {% if selected_profile.address %}
-                                  
-                                {{selected_profile.address}}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <a class="btn btn-info btn-outline-info text-light" 
-                                    href="{{selected_profile.get_edit_url_panel}}">ویرایش</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="row gutters-sm">
 
@@ -203,7 +149,7 @@
 
                 </div>
 
-           
+
                 {% block content_profile %}
 
                 {% endblock content_profile %}
@@ -217,5 +163,6 @@
 
 
 {% block script %}
-
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "authentication/includes/edit-profile-app/script.html" %}
 {% endblock %}

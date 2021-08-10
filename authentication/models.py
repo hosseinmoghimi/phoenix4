@@ -52,9 +52,14 @@ class Profile(models.Model):
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
     enabled=models.BooleanField(_("enabled"),default=True)
+    def get_edit_url_panel(self):
+        return reverse(APP_NAME+":edit_profile_view",kwargs={'pk':self.pk})
     @property
     def first_name(self):
         return self.user.first_name
+    @property
+    def email(self):
+        return self.user.email
     def full_tag(self,*args, **kwargs):
         return f"""
         <a href="{self.get_absolute_url()}" title="{self.name}">

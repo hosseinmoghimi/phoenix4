@@ -1,6 +1,8 @@
+from authentication.serilizers import ProfileSerializer
 from core.settings import SITE_URL
 from django.shortcuts import render,redirect
 from .repo import *
+import json
 from .forms import *
 from django.views import View
 from core.views import CoreContext
@@ -24,6 +26,20 @@ class BasicViews(View):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class ProfileViews(View):
+    def upload_profile_image(self,request):
+        upload_profile_image_form=UploadProfileImageForm(request.POST,request.FILES)
+        if upload_profile_image_form.is_valid():
+            image=request.FILES['image']
+            profile_id=upload_profile_image_form.cleaned_data['profile_id']
+            ProfileRepo(request=request).change_profile_image(profile_id=profile_id,image=image)                    
+        return redirect(reverse(APP_NAME+":edit_profile_view",kwargs={'pk':profile_id}))
+    def edit_profile(self,request,*args, **kwargs):
+        context=getContext(request)
+        selected_profile=ProfileRepo(user=request.user).profile(*args, **kwargs)
+        context['selected_profile']=selected_profile
+        context['upload_profile_image_form']=UploadProfileImageForm()
+        context['selected_profile_s']=json.dumps(ProfileSerializer(selected_profile).data)
+        return render(request,TEMPLATE_ROOT+"edit-profile.html",context)
     def profile(self,request,*args, **kwargs):
         context=getContext(request)
         context['layout']="base-layout.html"

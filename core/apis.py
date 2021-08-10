@@ -19,7 +19,7 @@ class BasicApi(APIView):
                 page=BasicPageRepo(request).add_page(title=title,parent_id=parent_id)
                 if page is not None:
                     context['page']=BasicPageSerializer(page).data
-        context['result']=SUCCEED
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
     def add_page_comment(self,request,*args, **kwargs):
