@@ -53,7 +53,7 @@ class Profile(models.Model):
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
     enabled=models.BooleanField(_("enabled"),default=True)
     def get_edit_url_panel(self):
-        return reverse(APP_NAME+":edit_profile_view",kwargs={'pk':self.pk})
+        return reverse(APP_NAME+":edit_profile_view",kwargs={'profile_id':self.pk})
     @property
     def first_name(self):
         return self.user.first_name
