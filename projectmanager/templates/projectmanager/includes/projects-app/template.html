@@ -1,4 +1,5 @@
 {% load static %}
+{% load to_price %}
 
 
 <div id="accordion">
@@ -6,13 +7,27 @@
 
     <div class="card mb-3" id="projects-app">
         <div class="card-header" id="headingProjectsApp">
-
-            <h5 class="card-title text-center farsi">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseProjectsApp"
-                    aria-expanded="true" aria-controls="collapseProjectsApp">
-                    پروژه ها
-                </button>
-            </h5>
+<div class="row">
+    <div class="col-3">
+        
+    </div>
+    
+    <div class="col-6">
+        <h5 class="card-title text-center farsi">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseProjectsApp"
+                aria-expanded="true" aria-controls="collapseProjectsApp">
+                پروژه ها
+            </button>
+        </h5>
+    </div>
+    
+    <div class="col-3">
+        <span title="نمایش جزئیات" class="material-icons" style="cursor: pointer;" @click="show_detail=!show_detail">
+            loupe
+            </span>
+    </div>
+</div>
+          
 
 
         </div>
@@ -37,23 +52,47 @@
                         </a>
                         {% if project.sub_title %}
                         <h6 class="text-secondary">
-<small>
-
-    {{project.sub_title}}
-</small>
-                        </h6>
-                        {% endif %}
-                        <h6 class="text-secondary">
                             <small>
 
-                                <span class="mx-3">{{project.weight}}X</span>
-                                <span class="mx-3">{{project.auto_percentage_completed}}%</span>
+                                {{project.sub_title}}
+                            </small>
+                        </h6>
+                        {% endif %}
+                        <h6 class="text-secondary ltr" v-show="show_detail">
+                            <small>
+                                <div class="row rtl">
+                                    <div class="col-3">
+                                        <span title="وزن زیرپروژه">
+
+                                            {{project.weight}}
+                                            <small class="ml-1">
+                                                X
+                                            </small>
+                                        </span>
+
+                                    </div>
+                                    <div class="col-3">
+
+                                        <span title="پیشرفت زیرپروژه">
+
+                                            {{project.auto_percentage_completed}}%
+                                        </span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span title="ارزش زیرپروژه">
+                                            {{project.sum_total|to_price_pure}}
+<small>
+    {{CURRENCY}}
+</small>
+                                        </span>
+                                    </div>
+                                </div>
 
                             </small>
 
                         </h6>
 
-                        <div class="progress mb-3" style="height: 5px;">
+                        <div class="progress mb-3" v-show="show_detail" style="height: 5px;">
                             <div role="progressbar" aria-valuenow="{{project.auto_percentage_completed}}"
                                 aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-primary"
                                 style="width: {{project.auto_percentage_completed}}%;"></div>
