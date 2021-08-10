@@ -53,7 +53,10 @@ class ProfileRepo():
         return None
 
         
-    
+    def list(self,*args, **kwargs):
+        if self.user.has_perm(APP_NAME+".view_profile"):
+            return Profile.objects.all()
+        return Profile.objects.filter(pk=0)
     
 
     def edit_profile(self,*args, **kwargs):

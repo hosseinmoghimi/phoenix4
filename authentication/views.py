@@ -55,6 +55,11 @@ class ProfileViews(View):
         context['layout']="base-layout.html"
         return render(request,TEMPLATE_ROOT+"profile2.html",context)
 class AuthenticationViews(View):
+    def profiles(self,request,*args, **kwargs):
+        context=getContext(request)
+        profiles=ProfileRepo(request=request).list()
+        context['profiles']=profiles
+        return render(request,TEMPLATE_ROOT+"profiles.html",context)
     def login(self,request,*args, **kwargs):
         if request.method=='POST':
             login_form=LoginForm(request.POST)
