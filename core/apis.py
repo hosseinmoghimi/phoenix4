@@ -36,7 +36,7 @@ class BasicApi(APIView):
                 page_comment=PageCommentRepo(request=request).add_comment(comment=comment,page_id=page_id)
                 if page_comment is not None:
                     context['page_comment']=PageCommentSerializer(page_comment).data
-        context['result']=SUCCEED
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
     def delete_page_comment(self,request,*args, **kwargs):
@@ -69,7 +69,7 @@ class BasicApi(APIView):
                 page_link=PageLinkRepo(request=request).add_page_link(title=title,url=url,page_id=page_id)
                 if page_link is not None:
                     context['page_link']=PageLinkSerializer(page_link).data
-        context['result']=SUCCEED
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
     def add_page_document(self,request,*args, **kwargs):
@@ -87,7 +87,7 @@ class BasicApi(APIView):
                 page_document=DocumentRepo(request=request).add_page_document(title=title,file=file,page_id=page_id)
                 if page_document is not None:
                     context['page_document']=PageDocumentSerializer(page_document,context={'request':request}).data
-        context['result']=SUCCEED
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
     
@@ -106,6 +106,6 @@ class BasicApi(APIView):
                 page_image=PageImageRepo(request=request).add_page_image(title=title,image=image,page_id=page_id)
                 if page_image is not None:
                     context['page_image']=PageImageSerializer(page_image,context={'request':request}).data
-        context['result']=SUCCEED
+                    context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
