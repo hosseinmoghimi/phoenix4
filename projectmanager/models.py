@@ -15,6 +15,14 @@ class Employer(models.Model):
     image_origin=models.ImageField(_("image"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/image/", height_field=None, width_field=None, max_length=None)
     logo_origin=models.ImageField(_("logo"), null=True,blank=True,upload_to=IMAGE_FOLDER+"employer/logo/", height_field=None, width_field=None, max_length=None)
     owner=models.ForeignKey("authentication.Profile",null=True,blank=True, verbose_name=_("owner"), on_delete=models.CASCADE)
+    home_page=models.CharField(_("home page"),null=True,blank=True, max_length=100)
+    address=models.CharField(_("Address"),null=True,blank=True, max_length=200)
+    postal_code=models.CharField(_("postal_code"),null=True,blank=True, max_length=50)
+    email=models.CharField(_("email"),null=True,blank=True, max_length=80)
+    tel=models.CharField(_("tel"),null=True,blank=True, max_length=50)
+    fax=models.CharField(_("fax"),null=True,blank=True, max_length=50)
+    description=models.TextField(_("description"),null=True,blank=True)
+    
     def logo(self):
         if self.logo_origin:
             return f"{MEDIA_URL}{self.logo_origin}"

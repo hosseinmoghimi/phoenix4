@@ -78,11 +78,11 @@
         <!-- /Breadcrumb -->
 
         <div class="row gutters-sm" style="direction: rtl;">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img src="{{employer.image}}" alt="Admin" class="rounded-circle" width="150">
+                            <img src="{{employer.image}}" alt="{{employer.title}}" width="150">
                             <div class="mt-3">
                                 {% if employer.pre_title %}
                                 <h6 class="text-center">
@@ -90,17 +90,11 @@
                                     {{employer.pre_title}}
                                 </h6>
                                 {%endif %}
-                                <h4 class="text-center">{{employer.title}}</h4>
+                                <h4 class="text-center mb-3">{{employer.title}}</h4>
 
-                                {% if employer.address %}
-                                <p class="text-muted mb-1">
-                                    {{employer.address}}
-                                </p>
-                                {%endif %}
-
-                                {% if employer.tel %}
-                                <p class="text-secondary mb-1">
-                                    {{employer.tel}}
+                                {% if employer.description %}
+                                <p class="text-muted my-3 small">
+                                    {{employer.description}}
                                 </p>
                                 {%endif %}
 
@@ -114,7 +108,8 @@
                     </div>
                 </div>
                 <div class="card mt-3">
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush px-0">
+                        {% if employer.home_page %}
                         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                             <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -125,9 +120,93 @@
                                     <path
                                         d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                                     </path>
-                                </svg>Website</h6>
-                            <span class="text-secondary">https://bootdey.com</span>
+                                </svg>وب سایت</h6>
+                            <span class="text-secondary ltr">
+                                <a href="{{employer.home_page}}" target="_blank">{{employer.home_page}}</a>
+                            </span>
                         </li>
+                        {% endif %}
+
+
+                        {% if employer.email %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <h6 class="mb-0">
+                                <span class="material-icons">
+                                    alternate_email
+                                </span>
+                                ایمیل
+                            </h6>
+                            <span class="text-secondary">
+                                {{employer.email}}
+                            </span>
+                        </li>
+                        {% endif %}
+
+
+                        {% if employer.tel %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <h6 class="mb-0">
+                                <span class="material-icons">
+                                    local_phone
+                                </span>
+                                تلفن تماس
+                            </h6>
+                            <span class="text-secondary">
+                                {{employer.tel}}
+                            </span>
+                        </li>
+                        {% endif %}
+
+
+
+
+
+                        {% if employer.fax %}
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <h6 class="mb-0">
+                                <span class="material-icons">
+                                    print
+                                </span>
+                                فکس
+                            </h6>
+                            <span class="text-secondary">
+                                {{employer.fax}}
+                            </span>
+                        </li>
+                        {% endif %}
+
+                        {% if employer.address %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <h6 class="mb-0">
+                                <span class="material-icons">
+                                    map
+                                </span>
+                                آدرس
+                            </h6>
+                            <span class="text-secondary farsi">
+                                {{employer.address}}
+                            </span>
+                        </li>
+                        {% endif %}
+
+                        {% if employer.postal_code %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <h6 class="mb-0">
+                                <span class="material-icons">
+                                    local_post_office
+                                </span>
+                                کد پستی
+                            </h6>
+                            <span class="text-secondary">
+                                {{employer.postal_code}}
+                            </span>
+                        </li>
+                        {% endif %}
+
+                 
+
+
                         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                             <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -171,22 +250,10 @@
                             <span class="text-secondary">bootdey</span>
                         </li>
 
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                <span class="material-icons">
-                                    local_phone
-                                </span>
-                                موبایل
-                            </h6>
-                            <span class="text-secondary">
-                                {{selected_profile.mobile}}
-                            </span>
-                        </li>
-
                     </ul>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="row gutters-sm">
                     <div class="col-sm-6 mb-3">
                         <div class="card h-100">
@@ -200,13 +267,22 @@
 
                                 <div class="text-right">
                                     <small>
-                                        <a href="{{project.get_absolute_url}}">
+                                        <div class="row">
+                                            <div class="col-6"> <a href="{{project.get_absolute_url}}">
 
-                                            {{project.title}}
-                                        </a>
-                                        <small class="text-secondary">
-                                            {{project.percentage_completed}} %
-                                        </small>
+                                                {{project.title}}
+                                            </a></div>
+
+                                            <div class="col-6 text-left ltr">
+
+                                                <small class="text-secondary">
+                                                    {{project.percentage_completed}} %
+                                                </small>
+
+                                            </div>
+                                        </div>
+                                       
+                                        
                                     </small>
                                 </div>
                                 <div class="progress mb-3" style="height: 5px">
