@@ -95,7 +95,7 @@
                                     <form enctype="multipart/form-data" method="POST"
                                         action="{% url 'authentication:upload_profile_image' %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="profile_id" value="{{profile.id}}">
+                                        <input type="hidden" name="profile_id" value="{{selected_profile.id}}">
                                      <div class="row">
                                          <div class="col-12">
                                              <input type="file" name="image">
