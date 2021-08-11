@@ -231,7 +231,7 @@
 
 
 
-                                    <button class="btn btn-secondary" @click="show_add_service_request_form=false"
+                                    <button class="btn btn-outline-secondary" @click="show_add_service_request_form=false"
                                         type="reset">Cancel</button>
                                     <button v-if="!waiting" class="btn btn-primary" type="submit">
                                         <i class="material-icons">
@@ -263,7 +263,7 @@
                 <p>
 
                     <span class="small text-secondary">
-                        مجموع سرویس ها :
+                        مجموع هزینه سرویس های ارائه شده :
                     </span>
                     <span v-text="to_price(sum_service_requests,'{{CURRENCY}}')">
 

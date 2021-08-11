@@ -315,6 +315,8 @@ class MaterialViews(View):
         context = getContext(request)
         context['materials'] = materials
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_material"):
+            context['add_material_form'] = AddMaterialForm()
         return render(request, TEMPLATE_ROOT+"materials.html", context)
     def material_request(self, request, *args, **kwargs):
         material_request = MaterialRepo(request=request).material_request(*args, **kwargs)
@@ -327,9 +329,13 @@ class MaterialViews(View):
         material = MaterialRepo(request=request).material(*args, **kwargs)
         context = getContext(request)
         context['material'] = material
-        context['materials'] = material.childs()
+        materials= material.childs()
+        context['materials'] =materials
+        context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
+        
         context.update(PageContext(request=request, page=material))
-        context['add_material_form'] = AddMaterialForm()
+        if request.user.has_perm(APP_NAME+".add_material"):
+            context['add_material_form'] = AddMaterialForm()
         return render(request, TEMPLATE_ROOT+"material.html", context)
 
 

@@ -97,7 +97,7 @@
         <form class="form-inline my-2 " action="{{search_action}}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="app_name" value="{{APP_NAME}}">
-            <input required class="d-inline form-control mr-sm-2" type="search" name="search_for" placeholder="Search"
+            <input required class="d-inline form-control mr-sm-2" type="search" name="search_for" placeholder="جستجو ..."
                 aria-label="Search">
             <button class="d-inline btn btn-outline-success my-2 my-sm-0" type="submit">
                 <i class="fa fa-search"></i>

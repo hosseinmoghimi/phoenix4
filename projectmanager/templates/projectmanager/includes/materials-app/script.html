@@ -1,16 +1,26 @@
 <script>
 
-
+    let materials = JSON.parse("{{materials_s|escapejs}}")
 
     let materials_app = new Vue({
         el: "#materials-app",
         data: {
             new_material_title: "",
-            materials: [],
-
+            materials: materials,
+            search_for: "",
             waiting: false,
         },
         methods: {
+            search: function () {
+                if (materials_app.search_for === "") {
+                    materials_app.materials = []
+                }
+                else {
+                    materials_app.materials = materials.filter(
+                        item => item.title.toUpperCase().includes(materials_app.search_for.toUpperCase())
+                    )
+                }
+            },
             add_material: function () {
                 materials_app.waiting = true
                 let url = "{% url 'projectmanager:add_material' %}"

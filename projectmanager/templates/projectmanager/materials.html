@@ -11,35 +11,10 @@
 
 
     <div class="row">
-        <div class="col-md-12 mb-5">
-
-            <div class="card" id="materials-app">
-                <div class="card-header">
-                    <h3 class="text-center">
-                        متریال ها
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <input type="text" placeholder="جستجو ... " class="form-control" @input="search()"
-                        v-model="search_for">
-                    <hr>
-                    <div v-for="material in materials">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link active" :href="material.get_absolute_url">
-                                    <span v-text="material.title">
-
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-
-
+        <div class="col-md-12">
+            {% include "projectmanager/includes/materials-app/template.html" %}
         </div>
+      
     </div>
 </div>
 {% endblock %}
@@ -47,30 +22,14 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+
+
+{% include "projectmanager/includes/materials-app/script.html" %}
 <script>
-    let materials = JSON.parse("{{materials_s|escapejs}}")
+    $(document).ready(()=>{
+        $("#collapseMaterials").addClass("show")
 
-
-    let materials_app = new Vue({
-        el: "#materials-app",
-        data: {
-            materials: [],
-            search_for: "",
-        },
-        methods: {
-            search: function () {
-                // if(materials_app.search_for===""){
-                //     materials_app.materials=[]
-                // }
-                // else{
-                materials_app.materials = materials.filter(
-                    item => item.title.toUpperCase().includes(materials_app.search_for.toUpperCase())
-                )
-                // }
-            },
-        }
     })
 </script>
-
-
 {% endblock %}
