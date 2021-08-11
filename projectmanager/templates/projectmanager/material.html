@@ -63,101 +63,132 @@
         </div>
 
         <div class="col-md-12">
-            <div class="card mb-3" id="material-request-app">
-                <div class="card-header">
+            <div id="accordion">
 
-                    <h5 class="card-title text-center farsi">
-                        درخواست های مربوط به این متریال
-                    </h5>
+                <div class="card mb-3" id="material-request-app">
+                    <div class="card-header" id="heading-material-request-app">
+                        <h5 class="card-title text-center farsi">
+                            <button class="btn btn-link" data-toggle="collapse"
+                                data-target="#collapse-material-request-app" aria-expanded="true"
+                                aria-controls="collapse-material-request-app">
+                                درخواست های مربوط به این متریال
+                            </button>
+                        </h5>
+
+                    </div>
+                    <div id="collapse-material-request-app" class="collapse show"
+                        aria-labelledby="heading-material-request-app" data-parent="#accordion">
+
+                        <div class="card-body">
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <th>
+                                        تاریخ درخواست
+                                    </th>
+                                    <th>
+                                        پروژه
+                                    </th>
+                                    <th>
+                                        تعداد
+                                    </th>
+                                    <th>
+                                        قیمت واحد
+                                    </th>
+                                    <th>
+                                        جمع
+                                    </th>
+                                    <th>
+                                        وضعیت
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    {% for material_request in material.materialrequest_set.all %}
+                                    <tr>
+                                        <td>
+                                            <small>
+                                                {{material_request.date_added|to_persian_date|safe}}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <a href="{{material_request.project.get_absolute_url}}">
+
+                                                {{material_request.project.full_title}}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{material_request.quantity}}
+                                            <small>
+
+                                                {{material_request.unit_name}}
+                                            </small>
+                                        </td>
+
+                                        <td>
+                                            {{material_request.unit_price|to_price_pure}}
+
+                                        </td>
+
+                                        <td>
+                                            {{material_request.line_total|to_price}}
+
+                                        </td>
+                                        <td>
+
+                                            {{material_request.get_status_tag|safe}}
+                                            <a title="جزئیات" href="{{material_request.get_absolute_url}}">
+                                                <i class="material-icons">
+                                                    description
+                                                </i>
+                                            </a>
+                                            {% if perms.projectmanager.change_materialrequest %}
+                                            <a title="ویرایش" href="{{material_request.get_edit_url}}">
+                                                <i class="material-icons">
+                                                    edit
+                                                </i>
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
 
 
+                        </div>
+                        <div class="card-footer ">
+                            <p>
+
+                                <span>
+                                    <span class="text-secondary">
+
+                                        تعداد کل درخواست شده :
+                                    </span>
+                                    <span>
+                                        {{material.count_requested|to_price_pure}}
+                                    </span>
+                                </span>
+
+
+
+                                <span class="mr-4">
+                                    <span class="text-secondary">
+
+                                        مبلغ کل درخواست شده :
+                                    </span>
+                                    <span>
+                                        {{material.sum_price_requested|to_price}}
+                                    </span>
+                                </span>
+
+                            </p>
+
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card-body">
 
-                    <table class="table table-striped">
-                        <thead>
-                            <th>
-                                تاریخ درخواست
-                            </th>
-                            <th>
-                                پروژه
-                            </th>
-                            <th>
-                                تعداد
-                            </th>
-                            <th>
-                                قیمت واحد
-                            </th>
-                            <th>
-                                جمع
-                            </th>
-                            <th>
-                                وضعیت
-                            </th>
-                        </thead>
-                        <tbody>
-                            {% for material_request in material.materialrequest_set.all %}
-                            <tr>
-                                <td>
-                                    <small>
-                                        {{material_request.date_added|to_persian_date|safe}}
-                                    </small>
-                                </td>
-                                <td>
-                                    <a href="{{material_request.project.get_absolute_url}}">
-
-                                        {{material_request.project.full_title}}
-                                    </a>
-                                </td>
-                                <td>
-                                    {{material_request.quantity}}
-                                    <small>
-
-                                        {{material_request.unit_name}}
-                                    </small>
-                                </td>
-
-                                <td>
-                                    {{material_request.unit_price|to_price_pure}}
-
-                                </td>
-
-                                <td>
-                                    {{material_request.line_total|to_price}}
-
-                                </td>
-                                <td>
-
-                                    {{material_request.get_status_tag|safe}}
-                                    <a title="جزئیات" href="{{material_request.get_absolute_url}}">
-                                        <i class="material-icons">
-                                            description
-                                        </i>
-                                    </a>
-                                    {% if perms.projectmanager.change_materialrequest %}
-                                    <a title="ویرایش" href="{{material_request.get_edit_url}}">
-                                        <i class="material-icons">
-                                            edit
-                                        </i>
-                                    </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-
-
-                </div>
-                <div class="card-footer ">
-
-
-
-                </div>
             </div>
-
-
         </div>
 
 
@@ -170,6 +201,10 @@
         <div class="col-12">
 
             {% include "core/includes/page-comments-app/template.html" %}
+        </div>
+        <div class="col-12">
+
+            {% include "core/includes/page-related-app/template.html" %}
         </div>
     </div>
 </div>
@@ -188,6 +223,7 @@
 
 {% include "core/includes/page-documents-app/script.html" %}
 
+{% include "core/includes/page-related-app/script.html" %}
 {% include "core/includes/page-comments-app/script.html" %}
 {% include "projectmanager/includes/materials-app/script.html" %}
 

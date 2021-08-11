@@ -1,0 +1,30 @@
+<script>
+    let related_pages_app = new Vue({
+        el: "#related-pages-app",
+        data: {
+            bidirectional: true,
+            related_page_id: "",
+            related_pages: [],
+            show_add_form:false,
+        },
+        methods: {
+            add_related_page: function () {
+                let url = "{% url 'core:add_related_page' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    page_id: page_id,
+                    bidirectional: related_pages_app.bidirectional,
+                    related_page_id: related_pages_app.related_page_id,
+                }
+                console.log(payload)
+                $.post(url, payload).done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED'){
+                        related_pages_app.related_page_id=""
+                        related_pages_app.related_pages.push(data.related_page)
+                    }
+                })
+            }
+        }
+    })
+</script>

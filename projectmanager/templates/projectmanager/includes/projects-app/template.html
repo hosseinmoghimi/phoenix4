@@ -7,27 +7,28 @@
 
     <div class="card mb-3" id="projects-app">
         <div class="card-header" id="headingProjectsApp">
-<div class="row">
-    <div class="col-3">
-        
-    </div>
-    
-    <div class="col-6">
-        <h5 class="card-title text-center farsi">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseProjectsApp"
-                aria-expanded="true" aria-controls="collapseProjectsApp">
-                پروژه ها
-            </button>
-        </h5>
-    </div>
-    
-    <div class="col-3">
-        <span title="نمایش جزئیات" class="material-icons" style="cursor: pointer;" @click="show_detail=!show_detail">
-            loupe
-            </span>
-    </div>
-</div>
-          
+            <div class="row">
+                <div class="col-3">
+
+                </div>
+
+                <div class="col-6">
+                    <h5 class="card-title text-center farsi">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseProjectsApp"
+                            aria-expanded="true" aria-controls="collapseProjectsApp">
+                            پروژه ها
+                        </button>
+                    </h5>
+                </div>
+
+                <div class="col-3">
+                    <span title="نمایش جزئیات" class="material-icons" style="cursor: pointer;"
+                        @click="show_detail=!show_detail">
+                        loupe
+                    </span>
+                </div>
+            </div>
+
 
 
         </div>
@@ -81,9 +82,9 @@
                                     <div class="col-6">
                                         <span title="ارزش زیرپروژه">
                                             {{project.sum_total|to_price_pure}}
-<small>
-    {{CURRENCY}}
-</small>
+                                            <small>
+                                                {{CURRENCY}}
+                                            </small>
                                         </span>
                                     </div>
                                 </div>

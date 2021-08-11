@@ -24,14 +24,40 @@ class BasicPageRepo:
         new_page.class_name=new_page.parent.class_name
         new_page.save()
         return new_page
+    def add_related_page(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_page"):
+            return None
+        page_id=0
+        related_page_id=0
+        bidirectional=True
+         
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        if 'related_page_id' in kwargs:
+            related_page_id=kwargs['related_page_id']
+        if 'bidirectional' in kwargs:
+            bidirectional=kwargs['bidirectional']
+        print(kwargs)
+        print(10*"##")
+        page=self.page(page_id=page_id)
+        related_page=self.page(page_id=related_page_id)
+        if page is None or related_page is None:
+            return None
+        page.related_pages.add(related_page)
+        if bidirectional:
+            related_page.related_pages.add(page)
+
+        return related_page
+
+
 
     def page(self,*args, **kwargs):
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
-        if 'project_id' in kwargs:
-            return self.objects.filter(pk=kwargs['project_id']).first()
+        if 'page_id' in kwargs:
+            return self.objects.filter(pk=kwargs['page_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 

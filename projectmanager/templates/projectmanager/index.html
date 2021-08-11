@@ -7,6 +7,7 @@
         مدیریت
     </a>
 </li>
+
 {% endblock %}
 {% block content %}
 <div>
@@ -42,13 +43,39 @@
 
         </div>
         <div class="col-md-4">
-            {% include "projectmanager/includes/services-app/template.html" %}
+            <div class="card mb-3" id="services-app">
+                <div class="card-header card-header-success" id="headingServices">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:services' %}" class="btn btn-link">
+                            سرویس ها
+                        </a>
+                    </h5>
+                </div>
+
+
+
+            </div>
+
+
+
+
             {% include "projectmanager/includes/locations-app/template-list.html" %}
 
         </div>
 
         <div class="col-md-4">
-            {% include "projectmanager/includes/materials-app/template.html" %}
+            <div class="card mb-3" id="services-app">
+                <div class="card-header card-header-success">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:materials' %}" class="btn btn-link">
+                            متریال ها
+                        </a>
+                    </h5>
+                </div>
+
+
+
+            </div>
         </div>
         <div class="col-md-4">
 

@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, reset_queries
 from django.db.models.base import Model
 from django.db.models.fields import BooleanField
 from .apps import APP_NAME
@@ -151,6 +151,7 @@ class BasicPage(models.Model):
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط از"))
     @property
     def full_title(self,*args, **kwargs):
         seperator="/"
@@ -189,7 +190,25 @@ class BasicPage(models.Model):
         
 
         return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.png'
-    
+    def class_name_farsi(self):
+        t=""
+        if self.class_name=="project":
+            t="پروژه"
+        elif self.class_name=="blog":
+            t="مقاله"
+        elif self.class_name=="event":
+            t="رویداد"
+        elif self.class_name=="material":
+            t="متریال"
+        elif self.class_name=="service":
+            t="سرویس"
+        elif self.class_name=="organizationunit":
+            t="واحد سازمانی"
+        elif self.class_name=="employeespeciality":
+            t="تخصص حرفه ای"
+        elif self.class_name=="project":
+            t="پروژه"
+        return t
     def all_sub_pages(self):
         pages=[]
         pages.append(self)

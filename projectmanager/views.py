@@ -310,6 +310,12 @@ class EmployeeViews(View):
 
 
 class MaterialViews(View):
+    def materials(self, request, *args, **kwargs):
+        materials = MaterialRepo(request=request).list(*args, **kwargs)
+        context = getContext(request)
+        context['materials'] = materials
+        context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
+        return render(request, TEMPLATE_ROOT+"materials.html", context)
     def material_request(self, request, *args, **kwargs):
         material_request = MaterialRepo(request=request).material_request(*args, **kwargs)
         context = getContext(request)
@@ -359,3 +365,10 @@ class ServiceViews(View):
         context.update(PageContext(request=request, page=service))
         context['add_service_form'] = AddServiceForm()
         return render(request, TEMPLATE_ROOT+"service.html", context)
+
+    def services(self, request, *args, **kwargs):
+        services = ServiceRepo(request=request).list(*args, **kwargs)
+        context = getContext(request)
+        context['services'] = services
+        context['services_s'] = json.dumps(ServiceSerializer(services,many=True).data)
+        return render(request, TEMPLATE_ROOT+"services.html", context)

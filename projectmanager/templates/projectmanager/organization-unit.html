@@ -29,21 +29,17 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-
                     <h6>
                         <span class="material-icons">
                             corporate_fare
                         </span>
                         <a href="{{page.get_chart_url}}" target="_blank">
-
                             نمودار</a>
                     </h6>
-
                     <p>
                         کارفرما :
                         <a href="{{organization_unit.employer.get_absolute_url}}">
                             {% if organization_unit.employer.pre_title %}
-
                             <small>
                                 {{organization_unit.employer.pre_title}}
                             </small>
@@ -54,57 +50,43 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4">
             {% include "projectmanager/includes/organization-units-app/template.html" %}
-
-
-
-
         </div>
-
         <div class="col-md-4">
-
             {% include "projectmanager/includes/employees-app/template.html" %}
-
         </div>
-
         <div class="col-md-4">
-
             {% include "projectmanager/includes/projects-app/template.html" %}
-
         </div>
-
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
-
         </div>
         <div class="col-md-4">
             {% include "core/includes/page-documents-app/template.html" %}
-
         </div>
         <div class="col-12">
             {% include "core/includes/page-images-app/template.html" %}
-
+        </div>
+        <div class="col-12">
+            {% include "core/includes/page-related-app/template.html" %}
         </div>
     </div>
 </div>
 {% endblock %}
-
-
 {% block script %}
 <script>
+    let page_id = parseInt("{{organization_unit.id}}")
     let parent_id = parseInt("{{organization_unit.id}}")
     let organization_unit_id = parseInt("{{organization_unit.id}}")
 </script>
-
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
-
 {% include "projectmanager/includes/employees-app/script.html" %}
 {% include "projectmanager/includes/organization-units-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
 
 {% endblock %}

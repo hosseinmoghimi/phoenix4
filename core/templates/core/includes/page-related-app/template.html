@@ -1,0 +1,98 @@
+<div id="accordion">
+
+    <div class="card" id="related-pages-app">
+        <div class="card-header" id="headingRelatedPages">
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseRelatedPages"
+                    aria-expanded="true" aria-controls="collapseRelatedPages">
+                    صفحات مرتبط
+                </button>
+            </h5>
+
+
+        </div>
+
+        <div id="collapseRelatedPages" class="collapse" aria-labelledby="headingRelatedPages" data-parent="#accordion">
+
+
+            <div class="card-body">
+                <div class="row">
+                    {% for related_page in related_pages %}
+                    <div class="col-md-4 mb-3">
+
+                        <h6 class="text-muted text-center">
+                            {{related_page.class_name_farsi}}
+                        </h6>
+                        <a href="{{related_page.get_absolute_url}}">
+
+                            <h4 class="text-center">
+                                {{related_page.title}}
+                            </h4>
+                            {% if related_page.sub_title %}
+
+                            <h6 class="text-muted">
+                                {{related_page.sub_title}}
+                            </h6>
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                    <div class="col-md-4 mb-3" v-for="related_page in related_pages">
+
+                        <h6 class="text-muted text-center">
+                            <span v-text="related_page.class_name_farsi"></span>
+                        </h6>
+                        <a :href="related_page.get_absolute_url">
+
+                            <h5 class="text-center">
+                                <span v-text="related_page.title"></span>
+                            </h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% if add_related_page_form %}
+            <div class="card-footer">
+                <span  v-show="!show_add_form" @click="show_add_form=true"  title="افزودن صفحه مرتبط"
+                 class="material-icons text-primary" style="cursor: pointer;">
+                    loupe
+                    </span>
+
+                <form v-show="show_add_form" @submit.prevent="add_related_page()">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">شناسه صفحه مرتبط</label>
+                                <input  min="0" required type="number" v-model="related_page_id" class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="شناسه صفحه">
+                                <small id="emailHelp" class="form-text farsi text-muted">
+                                    شناسه صفحه مرتبط را وارد کنید.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input type="checkbox" v-model="bidirectional" class="form-check-input"
+                                    id="exampleCheck1">
+                                <label class="form-check-label pr-3" for="exampleCheck1">ارتباط دو طرفه</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <button @click="show_add_form=false" class="btn btn-outline-secondary">انصراف</button>
+                            <button type="submit" class="btn btn-primary">تایید</button>
+
+                        </div>
+                    </div>
+
+
+                </form>
+
+            </div>
+            {% endif %}
+
+        </div>
+    </div>

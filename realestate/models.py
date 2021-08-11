@@ -1,13 +1,12 @@
-
+from .apps import APP_NAME
+from accounting.models import Asset
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
+from django.utils.translation import gettext as _
 from django.db.models.fields.files import FileField
-from realestate.enums import CarBrandEnum, FloorEnum,KitchenTypeEnum
 from django.db import models
 from django.shortcuts import reverse
-from .apps import APP_NAME
+from realestate.enums import CarBrandEnum, FloorEnum,KitchenTypeEnum
 from tinymce.models import HTMLField
-from django.utils.translation import gettext as _
-from accounting.models import Asset
 IMAGE_FOLDER=APP_NAME+"/media/"
 
 

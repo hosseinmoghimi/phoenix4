@@ -1,7 +1,5 @@
 {% extends "authentication/profile.html" %}
-
 {% block card %}
-
 <p class="text-secondary my-3">
     <a href="{{employee.organization_unit.get_absolute_url}}">
         {{employee.organization_unit.title}}
@@ -13,19 +11,10 @@
 </p>
 <button class="btn btn-outline-primary">Follow</button>
 <a class="btn btn-outline-danger" href="{{employee.get_edit_url}}">
-
-
-    ویرایش</a>
-
-
-
-
+    ویرایش
+</a>
 {% endblock %}
-
-
-
 {% block table %}
-
 <div class="col-sm-6 mb-3">
     <div class="card h-100">
         <div class="card-body">

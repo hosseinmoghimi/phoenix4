@@ -179,7 +179,16 @@ class Material(ProjectManagerPage):
         if self.image_thumbnail_origin:
             return super(Material,self).thumbnail()
         return STATIC_URL+"projectmanager/img/pages/thumbnail/material.png"
-
+    def count_requested(self):
+        count=0
+        for req in self.materialrequest_set.all():
+            count+=req.quantity
+        return count
+    def sum_price_requested(self):
+        sum=0
+        for req in self.materialrequest_set.all():
+            sum+=(req.quantity*req.unit_price)
+        return sum
 
 class Service(ProjectManagerPage):
     # service_date=models.DateTimeField(_("تاریخ ارائه خدمات"), auto_now=False, auto_now_add=False)
@@ -260,7 +269,9 @@ class EmployeeSpeciality(ProjectManagerPage):
     class Meta:
         verbose_name = _("EmployeeSpeciality")
         verbose_name_plural = _("EmployeeSpecialitys")
-
+    def save(self,*args, **kwargs):
+        self.class_name="employeespeciality"
+        return super(OrganizationUnit,self).save(*args, **kwargs)
     def __str__(self):
         return f"""{self.employee} {self.title}"""
 
