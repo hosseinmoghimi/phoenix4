@@ -1,0 +1,16 @@
+{% extends "mafia/layout.html" %}
+{% load static %}
+{% block mafia_content %}
+<div class="row">
+    <div class="col-md-5">
+        {% include "mafia/includes/select-player-app/template.html" %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block mafia_script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "mafia/includes/select-player-app/script.html" %}
+
+{% endblock %}

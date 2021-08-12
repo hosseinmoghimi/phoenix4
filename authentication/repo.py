@@ -124,3 +124,39 @@ class ProfileRepo():
                     return edited_profile
         return None
     
+
+    def register(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_profile"):
+            return None
+        profile=Profile()
+        from django.contrib.auth.models import User
+        username=""
+        password=""
+        email=""
+        last_name=""
+        first_name=""
+        if 'username' in kwargs:
+            username=kwargs['username']
+        if 'password' in kwargs:
+            password=kwargs['password']
+        if 'email' in kwargs:
+            email=kwargs['email']
+        if 'last_name' in kwargs:
+            last_name=kwargs['last_name']
+        if 'first_name' in kwargs:
+            first_name=kwargs['first_name']
+
+        user=User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email)
+        user.set_password(password)
+        user.save()
+        profile=Profile.objects.filter(user=user).first()
+        if profile is None:
+            profile=Profile(user=user)
+        if 'bio' in kwargs:
+            profile.bio=kwargs['bio']
+        if 'mobile' in kwargs:
+            profile.mobile=kwargs['mobile']
+        if 'address' in kwargs:
+            profile.address=kwargs['address']
+        profile.save()
+        return profile

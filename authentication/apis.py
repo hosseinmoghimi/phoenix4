@@ -1,4 +1,5 @@
-from authentication.forms import EditProfileForm,UploadProfileImageForm
+import re
+from authentication.forms import EditProfileForm, RegisterForm,UploadProfileImageForm
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 from .repo import *
@@ -36,5 +37,34 @@ class ProfileApi(APIView):
                 if result:
                     context['result']=SUCCEED
 
+        context['log']=log
+        return JsonResponse(context)    
+
+
+    def register_profile(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            register_form=RegisterForm(request.POST)
+            if register_form.is_valid():
+                log=3
+                first_name=register_form.cleaned_data['first_name']
+                last_name=register_form.cleaned_data['last_name']
+                bio=register_form.cleaned_data['bio']
+                mobile=register_form.cleaned_data['mobile']
+                email=register_form.cleaned_data['email']
+                address=register_form.cleaned_data['address']
+                (profile,result,message)=ProfileRepo(request=request).register(
+                    first_name=first_name,
+                    last_name=last_name,
+                    bio=bio,
+                    mobile=mobile,
+                    address=address,
+                    email=email,
+                )
+                context['result']=result
+                context['message']=message
+                
         context['log']=log
         return JsonResponse(context)

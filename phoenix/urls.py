@@ -15,6 +15,7 @@ urlpatterns = [
     # path('projectmanager/', include('projectmanager.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('farm/', include('farm.urls')),
+    path('mafia/', include('mafia.urls')),
     path('core/', include('core.urls')),
     path('help/', include('help.urls')),
     path('web/', include('web.urls')),

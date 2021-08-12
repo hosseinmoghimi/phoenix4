@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djecrety',
+    'django_cleanup.apps.CleanupConfig',
     # 'tinymce',
     'django.contrib.sites',   # <--
     # 'social_app',   # <--
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', 
 
 #    "pinax.forums",  
+    'mafia',
     'realestate',
     'tinymce',
     'accounting',
