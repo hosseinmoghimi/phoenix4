@@ -87,8 +87,13 @@
 
             {% else %}
             <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi" href="{% url 'authentication:register' %}">ثبت نام</a>
+            </li>
+
+            <li class="nav-item my-auto mx-2">
                 <a class="nav-link farsi" href="{% url 'authentication:login' %}">ورود</a>
             </li>
+
 
             {% endif %}
         </ul>
