@@ -1,3 +1,4 @@
+from core.constants import FAILED, SUCCEED
 from .models import *
 from django.contrib.auth import login, logout, authenticate
 
@@ -126,9 +127,9 @@ class ProfileRepo():
     
 
     def register(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_profile"):
-            return None
-        profile=Profile()
+        # if not self.user.has_perm(APP_NAME+".add_profile"):
+        #     return (FAILED,None,"")
+
         from django.contrib.auth.models import User
         username=""
         password=""
@@ -145,7 +146,9 @@ class ProfileRepo():
             last_name=kwargs['last_name']
         if 'first_name' in kwargs:
             first_name=kwargs['first_name']
-
+        if len(User.objects.filter(username=username))>0:
+            return (FAILED,None,"نام کاربری تکراری")
+        profile=Profile()
         user=User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email)
         user.set_password(password)
         user.save()
@@ -159,4 +162,6 @@ class ProfileRepo():
         if 'address' in kwargs:
             profile.address=kwargs['address']
         profile.save()
-        return profile
+        result=SUCCEED
+        message="successfully!"
+        return (result,profile,message)

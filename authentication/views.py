@@ -1,3 +1,4 @@
+from core.constants import FAILED, SUCCEED
 from django.http.response import Http404
 from authentication.serilizers import ProfileSerializer
 from core.settings import SITE_URL
@@ -89,13 +90,39 @@ class AuthenticationViews(View):
                     context['message']='نام کاربری و کلمه عبور صحیح نمی باشد.'
                     context['login_form']=LoginForm()
                     context['search_form']=None
-                    context['register_form']=RegisterForm()
                     context['back_url']=back_url
-                    context['reset_password_form']=ResetPasswordForm()
                     return render(request,TEMPLATE_ROOT+'login.html',context)
         else:
             context=getContext(request)
             return render(request,TEMPLATE_ROOT+"login.html",context)
+    def register(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        if request.method=='POST':
+            register_form=RegisterForm(request.POST)
+            if register_form.is_valid():
+                username=register_form.cleaned_data['username']
+                first_name=register_form.cleaned_data['first_name']
+                last_name=register_form.cleaned_data['last_name']
+                # email=register_form.cleaned_data['email']
+                email=""
+                # address=register_form.cleaned_data['address']
+                address=""
+                mobile=register_form.cleaned_data['mobile']
+                # bio=register_form.cleaned_data['bio']
+                bio=""
+                password=register_form.cleaned_data['password']
+                (result,profile,message)=ProfileRepo(user=None).register(request=request,email=email,username=username,password=password,first_name=first_name,last_name=last_name,mobile=mobile,bio=bio,address=address)
+                context['message']=message
+                if result==FAILED :
+                    context['search_form']=None
+                    context['register_form']=RegisterForm()
+                    return render(request,TEMPLATE_ROOT+'register.html',context)
+                if result==SUCCEED:
+                    ProfileRepo(user=None).login(request=request,username=username,password=password)
+                    return redirect(profile.get_absolute_url())
+        else:   
+            context=getContext(request)
+            return render(request,TEMPLATE_ROOT+"register.html",context)
     def logout(self,request):
         ProfileRepo.logout(request)
         return redirect(reverse('authentication:login'))
