@@ -18,10 +18,15 @@ class MessengerPage(BasicPage):
         return super(MessengerPage,self).save(*args, **kwargs)
 
 
-class Message(MessengerPage):
-    # forum=
-    read=models.BooleanField(_("read?"),default=False)
-    draft=models.BooleanField(_("draft?"),default=True)
+class Message(models.Model):
+    title=models.CharField(_("title"), max_length=50)
+    body=models.CharField(_("body"), max_length=50)
+    channel=models.ForeignKey("channel", verbose_name=_(""), on_delete=models.CASCADE)
+    event=models.CharField(_("event"), max_length=50)
+    # read=models.BooleanField(_("read?"),default=False)
+    # draft=models.BooleanField(_("draft?"),default=True)
+    date_send=models.DateTimeField(_("date send"), auto_now=False, auto_now_add=True)
+    sender=models.ForeignKey("authentication.profile", verbose_name=_("sender"), on_delete=models.CASCADE)
     class_name="message"
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
@@ -31,9 +36,9 @@ class Message(MessengerPage):
 
     # def __str__(self):
     #     return self.title
-    def save(self,*args, **kwargs):
-        self.class_name='message'
-        return super(Message,self).save(*args, **kwargs)
+    # def save(self,*args, **kwargs):
+    #     self.class_name='message'
+    #     return super(Message,self).save(*args, **kwargs)
     # def get_absolute_url(self):
     #     return reverse(APP_NAME+":message", kwargs={"pk": self.pk})
 
@@ -43,6 +48,7 @@ class Message(MessengerPage):
 
 
 class Channel(models.Model):
+    title=models.CharField(_("title"), max_length=100)
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"channel/", height_field=None, width_field=None, max_length=None)
     description=CharField(_("description"),null=True,blank=True,max_length=500)
     channel_name=models.CharField(verbose_name='channel_name',max_length=20) 
@@ -83,24 +89,6 @@ class Channel(models.Model):
 
     def __str__(self):
         return self.channel_name
-
-class Event(models.Model):
-    name=models.CharField(_("name"), max_length=50)
-    channel=models.ForeignKey("channel", verbose_name=_("channel"), on_delete=models.CASCADE)
-    
-    class_name="event"
-    def get_edit_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
-
-    class Meta:
-        verbose_name = _("Event")
-        verbose_name_plural = _("Events")
-
-    def __str__(self):
-        return f"""{self.channel.name} : @{self.name}"""
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":event", kwargs={"pk": self.pk})
 
 
 class Member(models.Model):

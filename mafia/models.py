@@ -4,10 +4,33 @@ from django.utils.translation import gettext as _
 from .enums import *
 from django.shortcuts import reverse
 
+
+class Action(models.Model):
+    game=models.ForeignKey("game", verbose_name=_("game"), on_delete=models.CASCADE)
+    role=models.ForeignKey("gamerole",related_name="action_doer_set", verbose_name=_("role1"), on_delete=models.CASCADE)
+    action_target=models.ForeignKey("gamerole",related_name="action_target_set", verbose_name=_("role2"), on_delete=models.CASCADE)
+    
+
+    class Meta:
+        verbose_name = _("Event")
+        verbose_name_plural = _("Events")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Event_detail", kwargs={"pk": self.pk})
+
+
+
 class Game(models.Model):
     start_date=models.DateTimeField(_("start_date"), auto_now=False, auto_now_add=False)
     scenario=models.CharField(_("scenario"),choices=GameScenarioEnum.choices,max_length=50)
     god=models.ForeignKey("player", verbose_name=_(""), on_delete=models.CASCADE)
+    roles=models.ManyToManyField("gamerole",blank=True, verbose_name=_(""))
+
+
+
 
     class Meta:
         verbose_name = _("Game")
@@ -48,7 +71,7 @@ class God(models.Model):
         verbose_name_plural = _("Gods")
 
     def __str__(self):
-        return self.name
+        return self.profile.name
     @property
     def name(self):
         return self.profile.name
@@ -57,3 +80,19 @@ class God(models.Model):
         return self.profile.image
     def get_absolute_url(self):
         return reverse(APP_NAME+":god", kwargs={"pk": self.pk})
+
+class GameRole(models.Model):
+    role=models.CharField(_("role"),choices=GameRoleEnum.choices, max_length=50)
+    player=models.ForeignKey("player", verbose_name=_("player"), on_delete=models.CASCADE)
+    turn=models.IntegerField(_("نوبت"))
+    description=models.CharField(_("description"),null=True,blank=True, max_length=50)
+    
+    class Meta:
+        verbose_name = _("GameRole")
+        verbose_name_plural = _("GameRoles")
+
+    def __str__(self):
+        return f"{self.player.profile.name} ({self.role})"
+
+    def get_absolute_url(self):
+        return reverse("GameRole_detail", kwargs={"pk": self.pk})

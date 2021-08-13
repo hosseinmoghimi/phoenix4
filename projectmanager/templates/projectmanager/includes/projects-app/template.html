@@ -52,7 +52,7 @@
                             </h5>
                         </a>
                         {% if project.sub_title %}
-                        <h6 class="text-secondary">
+                        <h6 v-show="show_detail" class="text-secondary">
                             <small>
 
                                 {{project.sub_title}}

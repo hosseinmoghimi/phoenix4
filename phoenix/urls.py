@@ -19,6 +19,7 @@ urlpatterns = [
     path('core/', include('core.urls')),
     path('help/', include('help.urls')),
     path('web/', include('web.urls')),
+    path('accounts/', include('authentication.urls')),
     path('resume/', include('resume.urls')),
     path('messenger/', include('messenger.urls')),
     path('accounting/', include('accounting.urls')),

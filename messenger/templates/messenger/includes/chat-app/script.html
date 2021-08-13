@@ -24,19 +24,22 @@
         el: '#chat-app',
         data: {
             messages: [],
-            message_text:""
+            message_title:"",
+            message_body:"",
         },
         methods: {
             send_message: function () {
                 let url = "{% url 'messenger:send_message' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    message_text: this.message_text,
+                    message_title:this.message_title,
+                    message_body:this.message_body,
                     channel_id:channel_id,
                     event:member.event,
                 }
                 $.post(url,payload).done((data)=>{
-                    chat_app.message_text=""
+                    chat_app.message_title=""
+                    chat_app.message_body=""
                 })
             }
         }

@@ -17,11 +17,13 @@ class ChannelApi(APIView):
             send_message_form=SendMessageForm(request.POST)
             if send_message_form.is_valid():
                 log+=1
-                message_text=send_message_form.cleaned_data['message_text']
+                message_title=send_message_form.cleaned_data['message_title']
+                message_body=send_message_form.cleaned_data['message_body']
                 channel_id=send_message_form.cleaned_data['channel_id']
                 event=send_message_form.cleaned_data['event']
                 message=MessageRepo(request=request).send_message(
-                        message_text=message_text,
+                        message_title=message_title,
+                        message_body=message_body,
                         channel_id=channel_id,
                         event=event)
                 if message is not None:

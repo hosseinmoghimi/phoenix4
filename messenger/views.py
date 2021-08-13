@@ -1,6 +1,6 @@
 from authentication.repo import ProfileRepo
 from .serializers import MemberSerializer
-from .repo import MessageRepo,ChannelRepo,EventRepo
+from .repo import MessageRepo,ChannelRepo
 from django.shortcuts import render
 from .apps import APP_NAME
 from django.views import View
@@ -22,8 +22,8 @@ class BasicViews(View):
         context['channels']=channels
 
         
-        events=EventRepo(request=request).list(for_home=True,*args, **kwargs)
-        context['events']=events
+        # events=EventRepo(request=request).list(for_home=True,*args, **kwargs)
+        # context['events']=events
 
         
         messages=MessageRepo(request=request).list(for_home=True,*args, **kwargs)
@@ -59,11 +59,11 @@ class ChannelViews(View):
         return render(request,TEMPLATE_ROOT+"member.html",context)
 
   
-class EventViews(View):
-    def event(self,request,*args, **kwargs):
-        context=getContext(request=request)
-        event=EventRepo(request=request).event(*args, **kwargs)
-        context['event']=event
-        return render(request,TEMPLATE_ROOT+"event.html",context)
+# class EventViews(View):
+#     def event(self,request,*args, **kwargs):
+#         context=getContext(request=request)
+#         event=EventRepo(request=request).event(*args, **kwargs)
+#         context['event']=event
+#         return render(request,TEMPLATE_ROOT+"event.html",context)
 
   

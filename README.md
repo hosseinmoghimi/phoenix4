@@ -134,6 +134,9 @@ collectstatic :
 python manage.py collectstatic
 ```
 
+https://tonyteaches.tech/django-nginx-uwsgi-tutorial/
+
+
 
 ```bash
 cp ./server/phoenix.ini /etc/uwsgi/sites/phoenix.ini

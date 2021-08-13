@@ -1,7 +1,18 @@
 {% extends "dashboard/layout.html" %}
 
 {% block content %}
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'mafia:home' %}">خانه</a>
+      </li>
 
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'mafia:new_game' %}">بازی جدید</a>
+      </li>
+
+</ul>
+  
 {% block mafia_content %}
 
 {% endblock %}
