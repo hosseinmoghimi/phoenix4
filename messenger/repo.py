@@ -1,3 +1,4 @@
+from authentication.serilizers import ProfileSerializer
 import pusher
 from django.db.models.query_utils import Q
 from pusher.http import request_method
@@ -49,7 +50,9 @@ class MessageRepo:
             cluster=channel.cluster,
             ssl=True
             )
-        message_object={'sender':message.sender.name,'title':message.title,'body':message.body}
+        import json
+        sender=(ProfileSerializer(message.sender).data)
+        message_object={'sender':sender,'title':message.title,'body':message.body}
         pusher_client.trigger(channel.name, event, message_object)
         return None
 

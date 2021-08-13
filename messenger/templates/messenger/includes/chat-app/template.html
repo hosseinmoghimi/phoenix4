@@ -1,35 +1,48 @@
 <div class="card" id="chat-app">
     <div class="card-body">
         <div v-for="message in messages" class="mb-2">
-<h5>
-    
-    <span v-text="message.sender"> </span>:
-    <span v-text="message.title"></span>
-</h5>
-<h6>
-    <span v-text="message.body" class="text-muted mb-4"></span>
-</h6>
-            
-            
+
+
+            <div class="media">
+                <a :href="message.sender.get_absolute_url" :title="message.sender.name">
+
+                    <img :src="message.sender.image" width="48" class="rounded-circle" alt="">
+                </a>
+                <div class="media-body mr-3">
+
+                    <h5>
+                        <span v-text="message.title"></span>
+
+                    </h5>
+                    <p>
+
+                        <span v-text="message.body" class="text-muted mb-4"></span>
+                    </p>
+
+                </div>
+            </div>
+
+
+
         </div>
     </div>
     <div class="card-footer">
         <form @submit.prevent="send_message()">
-<div class="row">
-    <div class="col-10">
+            <div class="row">
+                <div class="col-10">
 
-        <input required type="text" class="form-control" v-model="message_title">
-        <input required type="text" class="form-control" v-model="message_body">
-    </div>
-    <div class="col-2">
-        <button type="submit" class="btn btn-success">
-            <i class="material-icons">
-                send
-            </i>
-        </button>
+                    <input required type="text" class="form-control" v-model="message_title">
+                    <input required type="text" class="form-control" v-model="message_body">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="material-icons">
+                            send
+                        </i>
+                    </button>
 
-    </div>
-</div>
+                </div>
+            </div>
         </form>
     </div>
 </div>
