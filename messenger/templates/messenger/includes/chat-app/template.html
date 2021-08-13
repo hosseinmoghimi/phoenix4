@@ -1,0 +1,16 @@
+<div class="card" id="chat-app">
+    <div class="card-body">
+        <ul>
+            <li v-for="message in messages">
+                <span v-text="message.message"></span>
+            </li>
+        </ul>
+    </div>
+    <div class="card-footer">
+        <form @submit.prevent="send_message()">
+
+            <input type="text" class="form-control" v-model="message_text">
+            <button type="submit" class="btn btn-success">send</button>
+        </form>
+    </div>
+</div>

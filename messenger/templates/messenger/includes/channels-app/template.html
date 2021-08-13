@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="text-center">
+            کانال های پیام رسانی
+        </h5>
+    </div>
+    <div class="card-body">
+        {% for channel in channels %}
+<style>
+    .media-body{
+        text-align: right;
+        font-family: "HMFONT";
+    }
+</style>
+        <div class="media">
+            <img src="{{channel.image}}" class="rounded-circle" width="64" alt="">
+            <div class="media-body">
+                <div>
+
+                    <a href="{{channel.get_absolute_url}}">
+                        {{channel.name}}
+                    </a>
+                </div>
+                {% if channel.description %}
+                  
+                <div>
+                    <span class="farsi">
+                        <small class="text-muted">
+                            {{channel.description}}
+                        </small>
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

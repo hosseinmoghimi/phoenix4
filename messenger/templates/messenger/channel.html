@@ -1,0 +1,43 @@
+{% extends "messenger/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+
+{% block messenger_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="title">
+                    {{channel.name}}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-muted">
+
+                    <i class="material-icons">
+                        user
+                    </i>
+                    {{channel.member_count}}
+                </div>
+            </div>
+        </div>
+        <p>
+
+            <a href="{{channel.get_edit_url}}" target="_blank">ویرایش کانال {{channel.name}}</a>
+        </p>
+
+
+    </div>
+    <div class="col-12">
+        {% include "messenger/includes/chat-app/template.html" %}
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block messenger_script %}
+{% include "messenger/includes/chat-app/script.html" %}
+{% endblock %}

@@ -20,6 +20,7 @@ urlpatterns = [
     path('help/', include('help.urls')),
     path('web/', include('web.urls')),
     path('resume/', include('resume.urls')),
+    path('messenger/', include('messenger.urls')),
     path('accounting/', include('accounting.urls')),
     path('', include(HOME_APP_URLS)),
     path('stock/', include('stock.urls')),

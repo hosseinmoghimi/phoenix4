@@ -70,10 +70,17 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-6">
+        {% include "messenger/includes/channels-app/template.html" %}
+    </div>
 </div>
 {% endblock %}
 
 
 {% block messenger_script %}
+<script src="{% static 'vendor/js/vue.min.s' %}"></script>
+
+{% include "messenger/includes/channels-app/script.html" %}
 
 {% endblock %}

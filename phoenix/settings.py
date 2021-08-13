@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
 #    "pinax.forums",  
     'mafia',
+    'messenger',
     'realestate',
     'tinymce',
     'accounting',

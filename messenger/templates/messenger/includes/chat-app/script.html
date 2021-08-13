@@ -1,0 +1,44 @@
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    let channel_id=parseInt("{{channel.id}}")
+    let member = JSON.parse("{{member_s|escapejs}}")
+    console.log(member)
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher(member.channel.key, {
+        cluster: member.channel.cluster
+    });
+
+    var channel = pusher.subscribe(member.channel.name);
+    channel.bind(member.event, function (data) {
+        let message=JSON.stringify(data)
+        message=JSON.parse(message)
+        console.log(message)
+        chat_app.messages.push(message);
+    });
+
+    // Vue application
+    const chat_app = new Vue({
+        el: '#chat-app',
+        data: {
+            messages: [],
+            message_text:""
+        },
+        methods: {
+            send_message: function () {
+                let url = "{% url 'messenger:send_message' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    message_text: this.message_text,
+                    channel_id:channel_id,
+                    event:member.event,
+                }
+                $.post(url,payload).done((data)=>{
+                    console.log(data)
+                })
+            }
+        }
+    });
+</script>
