@@ -238,6 +238,13 @@ class Event(ProjectManagerPage):
     
     def persian_end_datetime(self):
         return PersianCalendar().from_gregorian(self.end_datetime)
+    
+    def start_datetime2(self):
+        return self.start_datetime.strftime("%Y-%m-%d %H:%M")
+    
+    
+    def end_datetime2(self):
+        return self.end_datetime.strftime("%Y-%m-%d %H:%M")
     class Meta:
         verbose_name = _("رویداد")
         verbose_name_plural = _("رویداد ها")

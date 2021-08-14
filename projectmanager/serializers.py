@@ -47,6 +47,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model=Employee
         fields=['id','get_absolute_url','profile']
+class EventSerializerForChart(serializers.ModelSerializer):
+    class Meta:
+        model=Event
+        fields=['id','title','get_absolute_url','start_datetime2','end_datetime2']
 
 class ServiceRequestSerializer(serializers.ModelSerializer):
     service=ServiceSerializer()

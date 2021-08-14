@@ -6,7 +6,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo
-from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from django.shortcuts import render
 from .forms import *
@@ -373,7 +373,7 @@ class EventViews(View):
         context = getContext(request)
         events=project.event_set.all()
         context['events'] = events
-        context['events_s'] = json.dumps(EventSerializer(events,many=True).data)
+        context['events_s'] = json.dumps(EventSerializerForChart(events,many=True).data)
         return render(request, TEMPLATE_ROOT+"project-events-chart.html", context)
 
 

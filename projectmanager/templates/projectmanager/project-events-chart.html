@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'leo/css/font-farsi.css' %}">
+    <style>
+        tspan{
+         font-family: "HMFONT";   
+        }
+    </style>
 </head>
 
 <body>
@@ -30,8 +36,8 @@
         // Using default theme
         am4core.useTheme(am4themes_animated);
         // Themes end
-        let events = JSON.parse("{{events_s|escapejs}}")
-        let data2 = [{
+        let all_events = JSON.parse("{{events_s|escapejs}}")
+        let data22 = [{
             "category": "",
             "start": "2019-01-10 06:00",
             "end": "2019-01-10 07:00",
@@ -134,12 +140,12 @@
             "textDisabled": false,
             "icon": "https://www.amcharts.com/wp-content/uploads/assets/timeline/timeline7.svg"
         }]
-        let data = []
-        events.forEach(event => {
-            data.push({
+        let events = []
+        all_events.forEach(event => {
+            events.push({
                 "category": "",
-                "start": event.start_datatime,
-                "end": event.end_datatime,
+                "start": event.start_datetime2,
+                "end": event.end_datetime2,
                 "color": "#7ddc67",
                 "text": event.title,
                 "textDisabled": false,
@@ -329,7 +335,7 @@
             }],
 
             // Data
-            "data": data2,
+            "data": events,
 
         }, "chartdiv", am4plugins_timeline.SerpentineChart);
 
