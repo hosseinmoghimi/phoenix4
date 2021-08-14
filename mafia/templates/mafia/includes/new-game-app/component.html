@@ -1,0 +1,7 @@
+<div :class="'p-2 bg-'+(role.side==='مافیا'?'danger':'success')" >
+
+    <button class="btn btn-sm btn-light" v-text="role.role_name"></button>
+    <button class="btn btn-sm btn-danger" @click="count--">-</button>
+    <button class="btn btn-sm btn-light" v-text="count"></button>
+    <button class="btn btn-sm btn-success" @click="count++">+</button>
+</div>

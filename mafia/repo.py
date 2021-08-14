@@ -4,7 +4,7 @@ from .enums import *
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Player,Game,God
+from .models import Action, GameRole, Player,Game,God, Role
 from utility.persian import PersianCalendar
 
 class PlayerRepo():
@@ -50,10 +50,6 @@ class PlayerRepo():
         if 'search_for' in kwargs:
             objects = objects.filter(profile__first_name__contains=kwargs['search_for'])
         return objects.all()
-
-    
-
-
     
 class GameRepo():
     def __init__(self, *args, **kwargs):
@@ -87,10 +83,87 @@ class GameRepo():
             objects = objects.filter(profile__first_name__contains=kwargs['search_for'])
         return objects.all()
 
+class GameRoleRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=GameRole.objects
+
+
+    def game_role(self, *args, **kwargs):
+        
+        if 'game_role_id' in kwargs:
+            pk=kwargs['game_role_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+    
     
 
+    def list(self, *args, **kwargs):
+        objects = self.objects
+        if 'search_for' in kwargs:
+            objects = objects.filter(profile__first_name__contains=kwargs['search_for'])
+        return objects.all()
 
+class RoleRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=Role.objects
+        if len(self.objects.all())==0:
+            self.init_roles()
 
+    def init_roles(self):
+        Role.objects.all().delete()
+        Role(side=SideEnums.MAFIA,default_count=1,role_name="پدرخوانده").save()
+        Role(side=SideEnums.MAFIA,default_count=1,role_name="مافیای ساده").save()
+        Role(side=SideEnums.MAFIA,default_count=1,role_name="گروگان گیر").save()
+        Role(side=SideEnums.MAFIA,default_count=0,role_name="مذاکره کننده").save()
+        Role(side=SideEnums.MAFIA,default_count=0,role_name="ناتو").save()
+        Role(side=SideEnums.MAFIA,default_count=0,role_name="تروریست").save()
+        Role(side=SideEnums.CITIZEN,default_count=1,role_name="پزشک").save()
+        Role(side=SideEnums.CITIZEN,default_count=1,role_name="کاراگاه").save()
+        Role(side=SideEnums.CITIZEN,default_count=1,role_name="نگهبان").save()
+        Role(side=SideEnums.CITIZEN,default_count=1,role_name="تک تیر انداز").save()
+        Role(side=SideEnums.CITIZEN,default_count=2,role_name="شهروند ساده").save()
+        Role(side=SideEnums.CITIZEN,default_count=1,role_name="زره پوش").save()
+        Role(side=SideEnums.CITIZEN,default_count=0,role_name="نانوا").save()
+        Role(side=SideEnums.CITIZEN,default_count=0,role_name="کابوی").save()
+        Role(side=SideEnums.CITIZEN,default_count=0,role_name="ساقی").save()
+    def role(self, *args, **kwargs):
+        
+        if 'role_id' in kwargs:
+            pk=kwargs['role_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+    
+    
+
+    def list(self, *args, **kwargs):
+        objects = self.objects
+        if 'search_for' in kwargs:
+            objects = objects.filter(profile__first_name__contains=kwargs['search_for'])
+        return objects.all()
     
 class GodRepo():
     def __init__(self, *args, **kwargs):
@@ -121,6 +194,41 @@ class GodRepo():
 
     def list(self, *args, **kwargs):
         objects = self.objects
+        return objects.all()
+
+    
+class ActionRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=Action.objects
+        
+
+
+    def action(self, *args, **kwargs):
+        
+        if 'action_id' in kwargs:
+            pk=kwargs['action_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+    
+    
+
+    def list(self, *args, **kwargs):
+        objects = self.objects
+        if 'game_id' in kwargs:
+            game_id=kwargs['game_id']
+            objects=objects.filter()
         return objects.all()
 
     

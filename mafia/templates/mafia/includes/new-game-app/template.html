@@ -1,0 +1,11 @@
+<div class="card" id="select-roles-app">
+    <div class="card-header">
+        انتخاب نقش ها
+    </div>
+    <div class="card-body">
+        <template v-for="role in roles" class="mb-2">
+
+            <add-role-component :role="role" :count="role.default_count"></add-role-component>
+        </template>
+    </div>
+</div>

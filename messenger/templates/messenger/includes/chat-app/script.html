@@ -16,7 +16,9 @@
         let message = JSON.stringify(data)
         message = JSON.parse(message)
         console.log(message)
+        chat_app.messages=chat_app.messages.reverse()
         chat_app.messages.push(message);
+        chat_app.messages=chat_app.messages.reverse()
     });
 
     // Vue application

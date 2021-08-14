@@ -1,0 +1,69 @@
+
+<script>
+    let roles=JSON.parse("{{roles_s|escapejs}}")
+    let add_role_component_template = `{% include "mafia/includes/new-game-app/component.html" %}`
+    let add_role_component = Vue.component('add-role-component', {
+        data: function () {
+            return {
+                // count: this.role.default_count,
+            }
+        },
+        methods: {
+            delete_comment: function (page_comment_id) {
+                this.confirm_delete=false
+
+                let url = url_delete_page_comment
+                let payload = {
+                    page_comment_id: page_comment_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                //console.log(payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        page_comments_app.page_comments = page_comments_app.page_comments.filter((page_comment) => {
+                            return (page_comment.id != page_comment_id)
+                        })
+                        page_comment_component.confirm_delete=false
+                    }
+                })
+            },
+
+
+        },
+        props: ['role','count'],
+        template: add_role_component_template,
+    })
+
+
+    let select_roles_app = new Vue({
+        el: "#select-roles-app",
+        components: {
+            add_role_component
+        },
+        data: {
+            roles: roles,
+        },
+        methods: {
+            add_comment: function () {
+                let url = url_add_page_comment
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    page_id: page_id,
+                    comment: this.comment,
+                }
+                //console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    //console.log(data)
+
+                    if (data.result === 'SUCCEED') {
+
+                        page_comments_app.page_comments.push(data.page_comment)
+                        page_comments_app.comment = ""
+                    }
+                })
+            },
+        }
+    })
+</script>

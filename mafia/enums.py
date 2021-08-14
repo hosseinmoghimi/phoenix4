@@ -7,6 +7,10 @@ class GameScenarioEnum(TextChoices):
     GROGAN_GIR='GROGAN_GIR',_('GROGAN_GIR')
     RUH='RUH',_('RUH')
 
+
+class SideEnums(TextChoices):
+    MAFIA='مافیا',_('مافیا')
+    CITIZEN='شهروند',_('شهروند')
 class GameRoleEnum(TextChoices):
     GOD_FATHER='GOD_FATHER',_('GOD_FATHER')
     MAFIA='MAFIA',_('MAFIA')

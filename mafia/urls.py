@@ -5,6 +5,7 @@ app_name=APP_NAME
 urlpatterns = [
     path('',views.BasicViews().home,name='home'),
     path('player/<int:pk>/',views.BasicViews().player,name='player'),
+    path('new_game/',views.BasicViews().new_game,name='new_game'),
     path('god/<int:pk>/',views.BasicViews().god,name='god'),
     path('game/<int:pk>/',views.BasicViews().game,name='game'),
 

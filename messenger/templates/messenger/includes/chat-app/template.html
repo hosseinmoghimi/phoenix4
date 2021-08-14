@@ -1,6 +1,45 @@
 {% load static %}
 <div class="card" id="chat-app">
     <div class="card-body">
+
+        <form @submit.prevent="send_message()" class="mb-3">
+            <div class="row">
+                <div class="col-10">
+
+                    <input required type="text" class="form-control" placeholder="عنوان پیام" v-model="message_title">
+                    <input type="text" class="form-control" placeholder="متن پیام" v-model="message_body">
+                </div>
+                <div class="col-2">
+                    <button v-if="!waiting" type="submit" class="btn btn-success">
+                        <i class="material-icons">
+                            send
+                        </i>
+                    </button>
+                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                </div>
+            </div>
+        </form>
+
+        <div v-for="message in messages" class="media" class="mb-2">
+            <a :href="message.sender.get_absolute_url" :title="message.sender.name">
+
+                <img :src="message.sender.image" width="48" class="rounded-circle" alt="">
+            </a>
+            <div class="media-body mr-3">
+
+                <h5>
+                    <span v-text="message.title"></span>
+
+                </h5>
+                <p>
+
+                    <span v-text="message.body" class="text-muted mb-4"></span>
+                </p>
+
+            </div>
+        </div>
+
         {% for message in messages %}
 
         <div class="media mb-2">
@@ -26,46 +65,10 @@
         {% endfor %}
 
 
-        <div v-for="message in messages" class="media" class="mb-2">
-            <a :href="message.sender.get_absolute_url" :title="message.sender.name">
-
-                <img :src="message.sender.image" width="48" class="rounded-circle" alt="">
-            </a>
-            <div class="media-body mr-3">
-
-                <h5>
-                    <span v-text="message.title"></span>
-
-                </h5>
-                <p>
-
-                    <span v-text="message.body" class="text-muted mb-4"></span>
-                </p>
-
-            </div>
-        </div>
-
 
 
     </div>
     <div class="card-footer">
-        <form @submit.prevent="send_message()">
-            <div class="row">
-                <div class="col-10">
 
-                    <input required type="text" class="form-control" placeholder="عنوان پیام" v-model="message_title">
-                    <input type="text" class="form-control" placeholder="متن پیام" v-model="message_body">
-                </div>
-                <div class="col-2">
-                    <button  v-if="!waiting" type="submit" class="btn btn-success">
-                        <i class="material-icons">
-                            send
-                        </i>
-                    </button>
-                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-                </div>
-            </div>
-        </form>
     </div>
 </div>

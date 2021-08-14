@@ -10,22 +10,36 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="title">
-                    {{channel.name}}
+                    {{channel.title}}
                 </h5>
             </div>
             <div class="card-body">
+                <h5>
+                    اعضای کانال
+                </h5>
                 <p class="text-muted">
 
                     <i class="material-icons">
                         person
                     </i>
                     {{channel.member_count}}
+
+                    {% for member in channel.member_set.all %}
+                    <a href="{{member.profile.get_absolute_url}}">
+                        <img src="{{member.profile.image}}" class="rounded-circle" width="48" alt="">
+                        {{member.profile.name}}
+                    </a>
+                    {% endfor %}
+
                 </p>
             </div>
         </div>
         <p>
 
-            <a href="{{channel.get_edit_url}}" target="_blank">ویرایش کانال {{channel.name}}</a>
+            {% if perms.messenger.change_channel %}
+
+            <a href="{{channel.get_edit_url}}" target="_blank">ویرایش کانال {{channel.title}}</a>
+            {% endif %}
         </p>
 
 

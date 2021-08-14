@@ -43,7 +43,7 @@ class ChannelViews(View):
         context['channel']=channel
         profile=ProfileRepo(request=request).me
         
-        messages=MessageRepo(request=request).list(channel_id=channel.id,*args, **kwargs)
+        messages=MessageRepo(request=request).list(channel_id=channel.id,*args, **kwargs).order_by("-id")
         context['messages']=messages
 
         member=profile.member_set.filter(channel=channel).first()
