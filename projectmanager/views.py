@@ -6,7 +6,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo
-from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from django.shortcuts import render
 from .forms import *
@@ -124,6 +124,17 @@ class ProjectViews(View):
 
     
 
+    def guantt(self, request, *args, **kwargs):
+        context = getContext(request=request)
+        
+        project = ProjectRepo(request=request).project(*args, **kwargs)
+        context['project'] = project
+        context['projects_s'] = json.dumps(
+            ProjectSerializerForGuantt(project.sub_projects().all(), many=True).data)
+
+        return render(request, TEMPLATE_ROOT+"guantt.html", context)
+
+    
     def project_materials_order(self, request, *args, **kwargs):
         context = getContext(request)
         TAX_PERCENT = 0

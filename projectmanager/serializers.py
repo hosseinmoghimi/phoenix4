@@ -17,6 +17,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         model=Project
         fields=['id','title','get_status_color','employer','contractor','full_title','status','sum_total','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
 
+class ProjectSerializerForGuantt(serializers.ModelSerializer):
+    class Meta:
+        model=Project
+        fields=['id','title','get_status_color','start_date','end_date','status','sum_total','get_absolute_url','short_description','thumbnail','percentage_completed']
+
 
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:

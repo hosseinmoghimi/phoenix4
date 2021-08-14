@@ -109,6 +109,8 @@ class Project(ProjectManagerPage):
         return PersianCalendar().from_gregorian(self.end_date)
     def get_services_order_url(self):
         return reverse(APP_NAME+':project_services_order',kwargs={'pk':self.pk})
+    def get_guantt_chart_url(self):
+        return reverse(APP_NAME+':guantt',kwargs={'project_id':self.pk})
     def get_materials_order_url(self):
         return reverse(APP_NAME+':project_materials_order',kwargs={'pk':self.pk})
     def auto_percentage_completed(self):
