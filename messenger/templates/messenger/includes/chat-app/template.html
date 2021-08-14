@@ -1,30 +1,51 @@
 <div class="card" id="chat-app">
     <div class="card-body">
-        <div v-for="message in messages" class="mb-2">
+        {% for message in messages %}
 
+        <div class="media mb-2">
+            <a href="{{message.sender.get_absolute_url}}" title="{{message.sender.name}}">
 
-            <div class="media">
-                <a :href="message.sender.get_absolute_url" :title="message.sender.name">
+                <img src="{{message.sender.image}}" width="48" class="rounded-circle" alt="">
+            </a>
+            <div class="media-body mr-3">
 
-                    <img :src="message.sender.image" width="48" class="rounded-circle" alt="">
-                </a>
-                <div class="media-body mr-3">
+                <h5>
+                    <span>{{message.title}}</span>
 
-                    <h5>
-                        <span v-text="message.title"></span>
+                </h5>
+                <p>
 
-                    </h5>
-                    <p>
+                    <span class="text-muted mb-4">{{message.body}}</span>
+                </p>
 
-                        <span v-text="message.body" class="text-muted mb-4"></span>
-                    </p>
-
-                </div>
             </div>
-
-
-
         </div>
+
+
+        {% endfor %}
+
+
+        <div v-for="message in messages" class="media" class="mb-2">
+            <a :href="message.sender.get_absolute_url" :title="message.sender.name">
+
+                <img :src="message.sender.image" width="48" class="rounded-circle" alt="">
+            </a>
+            <div class="media-body mr-3">
+
+                <h5>
+                    <span v-text="message.title"></span>
+
+                </h5>
+                <p>
+
+                    <span v-text="message.body" class="text-muted mb-4"></span>
+                </p>
+
+            </div>
+        </div>
+
+
+
     </div>
     <div class="card-footer">
         <form @submit.prevent="send_message()">

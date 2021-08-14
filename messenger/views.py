@@ -26,10 +26,6 @@ class BasicViews(View):
         # context['events']=events
 
         
-        messages=MessageRepo(request=request).list(for_home=True,*args, **kwargs)
-        context['messages']=messages
-
-        context['messages']=MessageRepo(request=request).objects.all()
         return render(request,TEMPLATE_ROOT+"index.html",context)
 class MessageViews(View):
     def message(self,request,*args, **kwargs):
@@ -46,6 +42,10 @@ class ChannelViews(View):
         channel=ChannelRepo(request=request).channel(*args, **kwargs)
         context['channel']=channel
         profile=ProfileRepo(request=request).me
+        
+        messages=MessageRepo(request=request).list(channel_id=channel.id,*args, **kwargs)
+        context['messages']=messages
+
         member=profile.member_set.filter(channel=channel).first()
         if member is not None:
             context['member']=member

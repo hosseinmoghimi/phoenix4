@@ -19,6 +19,8 @@ class MessageRepo:
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
         objects=self.objects.all()
+        if 'channel_id' in kwargs:
+            objects=objects.filter(channel_id=kwargs['channel_id'])
         if 'for_home' in kwargs:
             objects=objects.all()
         return objects
