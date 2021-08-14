@@ -10,7 +10,10 @@
             events: [],
             add_event_form_title: "",
             waiting: false,
-            event_datetime: current_datetime
+            event_datetime: current_datetime,
+            start_datetime: current_datetime,
+            end_datetime: current_datetime,
+
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -23,8 +26,11 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.add_event_form_title,
                     event_datetime: this.event_datetime,
+                    start_datetime: this.start_datetime,
+                    end_datetime: this.end_datetime,
                     project_id: parent_id,
                 }
+                console.log(payload)
                 let posting = $.post(url_add_event, payload)
                 posting.done((data) => {
                     events_app.waiting = false

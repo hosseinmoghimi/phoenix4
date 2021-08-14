@@ -22,6 +22,8 @@ class AddMaterialForm(forms.Form):
 class AddEventForm(forms.Form):
     project_id=forms.IntegerField(required=True)
     event_datetime=forms.CharField( max_length=20, required=False)
+    start_datetime=forms.CharField( max_length=20, required=False)
+    end_datetime=forms.CharField( max_length=20, required=False)
     title=forms.CharField(max_length=50, required=True)
 
 

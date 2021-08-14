@@ -482,6 +482,10 @@ class EventRepo():
             return None
         if 'event_datetime' in kwargs:
             event_datetime=kwargs['event_datetime']
+        if 'start_datetime' in kwargs:
+            start_datetime=kwargs['start_datetime']
+        if 'end_datetime' in kwargs:
+            end_datetime=kwargs['end_datetime']
         else:
             from django.utils import timezone
             event_datetime=timezone.now()
@@ -493,10 +497,15 @@ class EventRepo():
         if 'event_datetime' in kwargs:
             event_datetime = kwargs['event_datetime']
 
-            event_datetime=PersianCalendar().to_gregorian(event_datetime)
-            new_event.event_datetime=event_datetime
-            new_event.creator=self.profile
-            
+        # event_datetime=PersianCalendar().to_gregorian(event_datetime)
+        new_event.event_datetime=event_datetime
+        new_event.end_datetime=end_datetime
+        new_event.start_datetime=start_datetime
+        new_event.creator=self.profile
+        print(kwargs)
+        print(100*"#")
+        print(new_event)
+        print(100*"#")
         new_event.save()
         return new_event
 

@@ -144,8 +144,13 @@ class EventApi(APIView):
                 log+=1
                 title=add_event_form.cleaned_data['title']
                 event_datetime=add_event_form.cleaned_data['event_datetime']
+                start_datetime=add_event_form.cleaned_data['start_datetime']
+                end_datetime=add_event_form.cleaned_data['end_datetime']
                 project_id=add_event_form.cleaned_data['project_id']
-                event=EventRepo(request=request).add_event(event_datetime=event_datetime,project_id=project_id,title=title)
+                event_datetime=PersianCalendar().to_gregorian(event_datetime)
+                start_datetime=PersianCalendar().to_gregorian(start_datetime)
+                end_datetime=PersianCalendar().to_gregorian(end_datetime)
+                event=EventRepo(request=request).add_event(start_datetime=start_datetime,end_datetime=end_datetime,event_datetime=event_datetime,project_id=project_id,title=title)
                 if event is not None:
                     context['event']=EventSerializer(event).data
                     context['result']=SUCCEED

@@ -175,17 +175,29 @@
                     رویداد ها :
                 </h5>
                 {% for page in events %}
+                <table class="table">
+                    <tr>
+                        <td>
+                            <small>
+                                {{page.persian_event_datetime}}
+                            </small>
+                        </td>
+                        <td>
+                            <a href="{{page.project_related.get_absolute_url}}">
+                                {{page.project_related.title}}
+
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{page.get_absolute_url}}">
+                                {{page.title}}
+
+                            </a>
+                        </td>
+                    </tr>
+                </table>
                 <p class="mr-5">
-                    <a href="{{page.get_absolute_url}}">
 
-
-                        <small>
-                            {{page.persian_event_datetime}}
-                        </small>
-                        &nbsp;
-                        &nbsp;
-                        {{page.title}}
-                    </a>
                 </p>
                 {% endfor %}
 

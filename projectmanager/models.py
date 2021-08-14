@@ -220,6 +220,8 @@ class Service(ProjectManagerPage):
 class Event(ProjectManagerPage):
     project_related=models.ForeignKey("project", verbose_name=_("project"), on_delete=models.CASCADE)
     event_datetime=models.DateTimeField(_("event_datetime"), auto_now=False, auto_now_add=False)
+    start_datetime=models.DateTimeField(_("start_datetime"), auto_now=False, auto_now_add=False)
+    end_datetime=models.DateTimeField(_("end_datetime"), auto_now=False, auto_now_add=False)
     locations=models.ManyToManyField("location",blank=True, verbose_name=_("locations"))
     # adder=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     def save(self,*args, **kwargs):
@@ -228,6 +230,14 @@ class Event(ProjectManagerPage):
 
     def persian_event_datetime(self):
         return PersianCalendar().from_gregorian(self.event_datetime)
+    
+    
+    def persian_start_datetime(self):
+        return PersianCalendar().from_gregorian(self.start_datetime)
+    
+    
+    def persian_end_datetime(self):
+        return PersianCalendar().from_gregorian(self.end_datetime)
     class Meta:
         verbose_name = _("رویداد")
         verbose_name_plural = _("رویداد ها")
