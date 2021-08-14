@@ -4,7 +4,7 @@
 {% load to_persian_date %}
 {% load to_price %}
 {% block content %}
-<div id="projects-list-app">
+<div>
     <h3 class="text-center">
         <i class="material-icons">engineering</i>
         <small class="text-secondary">
@@ -13,102 +13,13 @@
     </h3>
     <div class="row">
         <div class="col-md-12">
-            <div class="card mb-5">
-                <div class="card-body">
-                    <input type="text" placeholder="جستجو ..." class="form-control" v-model="search_for"
-                        @input="filter()">
-                    <table class="table table-striped">
-                        <thead>
-                            <th>
-                                عنوان پروژه
-                            </th>
-                            <th>
-
-                            </th>
-                            <th>
-
-                            </th>
-                            <th>
-                                کارفرما
-                            </th>
-
-                            <th>
-                                پیمانکار
-                            </th>
-
-                            <th>
-                                ارزش پروژه
-                            </th>
-
-                            <th>
-                                شروع / پایان
-                            </th>
-                        </thead>
-                        <tbody>
-                            <tr v-for="project in projects">
-                                <td>
-                                    <a :href="project.get_absolute_url">
-                                        <span v-text="project.title"></span>
-                                    </a>
-                                </td>
-                                <td>
-                                    <span :class="'badge badge-'+project.get_status_color">
-                                        <span v-text="project.status"></span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <small class="mx-2">
-
-                                        <span v-text="project.percentage_completed"></span>%
-                                    </small>
-                                </td>
-                                <td>
-                                    <a v-if="project.employer" :href="project.employer.get_absolute_url">
-                                        <span v-text="project.employer.title"></span>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a v-if="project.contractor" :href="project.contractor.get_absolute_url">
-                                        <span v-text="project.contractor.title"></span>
-                                    </a>
-                                </td>
-                                <td>
-                                    <span v-text="to_price(project.sum_total)"></span>
-                                </td>
-                                <td>
-                                    <small v-text="project.persian_start_date.slice(0,10)"></small>
-                                    <small class="text-muted">
-                                        ~
-                                    </small>
-                                    <small v-text="project.persian_end_date.slice(0,10)"></small>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+          {% include "projectmanager/includes/all-projects-app/template.html" %}
         </div>
     </div>
 </div>
 {% endblock %}
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-<script>
-    let projects = JSON.parse("{{projects_s|escapejs}}")
-    let projects_list_app = new Vue({
-        el: "#projects-list-app",
-        data: {
-            projetcs: projects,
-            search_for: "",
-        },
-        methods: {
-            to_price: function (value) {
-                return to_price(value, "{{CURRENCY}}")
-            },
-            filter: function () {
-                projects_list_app.projects = projects.filter(item => item.title.includes(projects_list_app.search_for))
-            },
-        }
-    })
-</script>
+{% include "projectmanager/includes/all-projects-app/script.html" %}
+
 {% endblock %}

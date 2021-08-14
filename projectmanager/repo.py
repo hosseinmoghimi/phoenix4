@@ -485,7 +485,7 @@ class EventRepo():
         else:
             from django.utils import timezone
             event_datetime=timezone.now()
-        new_event=Event(adder=ProfileRepo(user=self.user).me,event_datetime=event_datetime)
+        new_event=Event(creator=ProfileRepo(user=self.user).me,event_datetime=event_datetime)
         if 'project_id' in kwargs:
             new_event.project_related_id = kwargs['project_id']
         if 'title' in kwargs:
