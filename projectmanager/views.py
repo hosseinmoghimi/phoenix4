@@ -368,6 +368,14 @@ class EventViews(View):
         return render(request, TEMPLATE_ROOT+"event.html", context)
 
 
+    def project_events_chart(self, request, *args, **kwargs):
+        project = ProjectRepo(request=request).project(*args, **kwargs)
+        context = getContext(request)
+        events=project.event_set.all()
+        context['events'] = events
+        return render(request, TEMPLATE_ROOT+"project-events-chart.html", context)
+
+
 class ServiceViews(View):
     def service_request(self, request, *args, **kwargs):
         service_request = ServiceRepo(request=request).service_request(*args, **kwargs)

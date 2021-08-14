@@ -8,6 +8,7 @@ urlpatterns = [
     path('search/',views.BasicViews().search,name="search"),
     path('projects/',views.ProjectViews().projects,name="projects"),
     path('project/<int:pk>/',views.ProjectViews().project,name="project"),
+    path('project_events_chart/<int:project_id>/',views.EventViews().project_events_chart,name="project_events_chart"),
     path('project-materials-order/<int:pk>/',views.ProjectViews().project_materials_order,name="project_materials_order"),
     path('project-services-order/<int:pk>/',views.ProjectViews().project_services_order,name="project_services_order"),
     path('projects-chart/<int:pk>/',views.ProjectViews().projects_chart,name="projects_chart"),

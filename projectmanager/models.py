@@ -100,6 +100,8 @@ class Project(ProjectManagerPage):
     contractor=models.ForeignKey("employer",null=True,blank=True, related_name="projects_in",verbose_name=_("پیمانکار"), on_delete=models.CASCADE)
     weight=models.IntegerField(_("ضریب و وزن پروژه"),default=10)
     locations=models.ManyToManyField("location",blank=True, verbose_name=_("locations"))
+    def get_event_chart_url(self):
+        return reverse(APP_NAME+":project_events_chart",kwargs={'project_id':self.pk})
     # auto_percentage_completed=models.IntegerField(_("درصد تکمیل خودکار پروژه"),default=0)
     def persian_start_date(self):
         return PersianCalendar().from_gregorian(self.start_date)
