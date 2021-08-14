@@ -7,7 +7,7 @@ from rest_framework import serializers
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields=['id','title','get_absolute_url']
+        fields=['id','title','body']
         
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:

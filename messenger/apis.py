@@ -13,10 +13,10 @@ class ChannelApi(APIView):
         context['result']=FAILED
         log=1
         if request.method=='POST':
-            log+=1
+            log=2
             send_message_form=SendMessageForm(request.POST)
             if send_message_form.is_valid():
-                log+=1
+                log=3
                 message_title=send_message_form.cleaned_data['message_title']
                 message_body=send_message_form.cleaned_data['message_body']
                 channel_id=send_message_form.cleaned_data['channel_id']

@@ -56,7 +56,7 @@ class MessageRepo:
         sender=(ProfileSerializer(message.sender).data)
         message_object={'sender':sender,'title':message.title,'body':message.body}
         pusher_client.trigger(channel.name, event, message_object)
-        return None
+        return message
 
 # class EventRepo:
 #     def __init__(self,*args, **kwargs):        

@@ -41,6 +41,7 @@
                 }
                 $.post(url, payload).done((data) => {
                     chat_app.waiting = false
+                    console.log(data)
                     if (data.result === "SUCCEED") {
 
 
