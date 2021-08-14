@@ -1,7 +1,7 @@
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-    let channel_id=parseInt("{{channel.id}}")
+    let channel_id = parseInt("{{channel.id}}")
     let member = JSON.parse("{{member_s|escapejs}}")
     console.log(member)
     // Enable pusher logging - don't include this in production
@@ -13,8 +13,8 @@
 
     var channel = pusher.subscribe(member.channel.name);
     channel.bind(member.event, function (data) {
-        let message=JSON.stringify(data)
-        message=JSON.parse(message)
+        let message = JSON.stringify(data)
+        message = JSON.parse(message)
         console.log(message)
         chat_app.messages.push(message);
     });
@@ -24,22 +24,28 @@
         el: '#chat-app',
         data: {
             messages: [],
-            message_title:"",
-            message_body:"",
+            message_title: "",
+            message_body: "",
+            waiting: false,
         },
         methods: {
             send_message: function () {
+                chat_app.waiting = true
                 let url = "{% url 'messenger:send_message' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    message_title:this.message_title,
-                    message_body:this.message_body,
-                    channel_id:channel_id,
-                    event:member.event,
+                    message_title: this.message_title,
+                    message_body: this.message_body,
+                    channel_id: channel_id,
+                    event: member.event,
                 }
-                $.post(url,payload).done((data)=>{
-                    chat_app.message_title=""
-                    chat_app.message_body=""
+                $.post(url, payload).done((data) => {
+                    chat_app.waiting = false
+                    if (data.result === 'SUCCEED') {
+
+                        chat_app.message_title = ""
+                        chat_app.message_body = ""
+                    }
                 })
             }
         }
