@@ -41,7 +41,8 @@
                 }
                 $.post(url, payload).done((data) => {
                     chat_app.waiting = false
-                    if (data.result === 'SUCCEED') {
+                    if (data.result === "SUCCEED") {
+
 
                         chat_app.message_title = ""
                         chat_app.message_body = ""
