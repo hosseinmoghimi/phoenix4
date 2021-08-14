@@ -6,7 +6,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo
-from projectmanager.serializers import EmployeeSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ServiceSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from django.shortcuts import render
 from .forms import *
@@ -261,6 +261,19 @@ class ProjectViews(View):
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)
         return render(request, TEMPLATE_ROOT+"project.html", context)
+
+
+    def projects(self, request, *args, **kwargs):
+        projects = ProjectRepo(request=request).list(*args, **kwargs)
+
+        context = getContext(request)
+        context['statuses']=(i[0] for i in ProjectStatusEnum.choices)
+        employers=EmployerRepo(request=request).list()
+        context['employers']=employers
+        context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
+        context['projects'] = projects
+        context['projects_s'] = json.dumps(ProjectSerializer(projects,many=True).data)
+        return render(request, TEMPLATE_ROOT+"projects.html", context)
 
 
 class OrganizationUnitViews(View):

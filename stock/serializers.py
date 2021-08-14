@@ -3,11 +3,13 @@ from rest_framework import serializers
 from .models import Document, Payment, Stock
 from authentication.serilizers import ProfileSerializer
 
+
 class StockSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
+    agent=ProfileSerializer
     class Meta:
         model =Stock
-        fields = ['id','profile','stock1','stock2']
+        fields = ['id','profile','stock1','stock2','get_absolute_url','get_edit_url','get_stock_amount','agent']
 class DocumentSerializer(serializers.ModelSerializer):
     stock=StockSerializer()
     class Meta:

@@ -17,8 +17,8 @@
                     مدیریت سهام
                 </h3>
             </div>
-            <div class="card-body">
-                <div id="app">
+            <div class="card-body" id="app">
+                <div>
 
                     {% if add_stock_form %}
                     <div class="text-center">
@@ -34,13 +34,13 @@
                         </button>
                     </div>
 
-                    <form v-show="show_add_form"  @submit.prevent="add_stock()">
+                    <form v-show="show_add_form" @submit.prevent="add_stock()">
                         <div class="row">
-                     
+
                             <div class="col-md-4">
                                 <h6 class=" text-right farsi">
 
-نام :
+                                    نام :
                                 </h6>
                                 <input type="text" required v-model="first_name" class="form-control">
                             </div>
@@ -78,6 +78,36 @@
                         </th>
                     </thead>
                     <tbody>
+                        <tr v-for="stock in stocks">
+                            <td>
+                                <a :href="stock.get_absolute_url">
+                                    <img :src="stock.profile.image" class="rounded-circle" width="32" alt="">
+                                    <span v-text="stock.profile.name"></span>
+                                </a>
+                            </td>
+
+                            <td>
+                                <a :href="stock.agent.get_absolute_url">
+                                    <img :src="stock.agent.image" class="rounded-circle" width="32" alt="">
+                                    <span v-text="stock.agent.name"></span>
+                                </a>
+                            </td>
+
+
+
+                            <td>
+                                <span v-text="stock.get_stock_amount"></span>
+
+                            </td>
+                            <td>
+                                <a target="_blank" :href="stock.get_edit_url">
+                                    <i class="material-icons">
+                                        edit
+                                    </i>
+                                </a>
+                            </td>
+                        </tr>
+
                         {% for stock in stocks %}
 
                         <tr>
@@ -125,30 +155,30 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
 
-    let app = new Vue(
-        {
-            el: "#app",
-            data: {
-                first_name:"",
-                last_name:"",
-                show_add_form:false,
-            },
-            methods: {
-                add_stock: function () {
-                    let url = "{% url 'stock:add_stock' %}"
-                    let payload = {
-                        csrfmiddlewaretoken: csrfmiddlewaretoken,
-                        first_name: this.first_name,
-                        last_name: this.last_name,
-                    }
-
-                    let posting = $.post(url, payload)
-                    posting.done((data) => {
-                        //console.log(data)
-                    })
+    let stock_app = new Vue({
+        el: "#app",
+        data: {
+            first_name: "",
+            last_name: "",
+            show_add_form: false,
+            stocks: [],
+        },
+        methods: {
+            add_stock: function () {
+                let url = "{% url 'stock:add_stock' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    first_name: this.first_name,
+                    last_name: this.last_name,
                 }
-            }
-        }
-    )
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED')
+                        stock_app.stocks.push(data.stock)
+                })
+            },
+        },
+    })
 </script>
 {% endblock %}

@@ -2,17 +2,6 @@ from rest_framework import serializers
 from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, ServiceRequestSignature
 from authentication.serilizers import ProfileSerializer
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Project
-        fields=['id','title','full_title','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
-
-
-class MaterialSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Material
-        fields=['id','title','full_title','get_absolute_url','unit_price','unit_name','get_edit_url','short_description','thumbnail']
-
 
 class EmployerSerializer(serializers.ModelSerializer):
 
@@ -20,6 +9,19 @@ class EmployerSerializer(serializers.ModelSerializer):
         model=Employer
         fields=['id','title','image','pre_title','get_edit_url','get_absolute_url']
 
+
+class ProjectSerializer(serializers.ModelSerializer):
+    employer=EmployerSerializer()
+    contractor=EmployerSerializer()
+    class Meta:
+        model=Project
+        fields=['id','title','get_status_color','employer','contractor','full_title','status','sum_total','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
+
+
+class MaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Material
+        fields=['id','title','full_title','get_absolute_url','unit_price','unit_name','get_edit_url','short_description','thumbnail']
 
 
 

@@ -69,7 +69,12 @@ class Employee(models.Model):
             </i>
         </a>
         """
-
+    def my_projects(self):
+        ids=[]
+        for org in self.organizationunit_set.all():
+            for proj in org.project_set.all():
+                ids.append(proj.id)
+        return Project.objects.filter(id__in=ids)
 
 class ProjectManagerPage(CoreBasicPage):
     def get_status_color(self):
@@ -85,6 +90,7 @@ class ProjectManagerPage(CoreBasicPage):
         self.app_name=APP_NAME
         return super(ProjectManagerPage,self).save(*args, **kwargs)
   
+
 class Project(ProjectManagerPage):
     percentage_completed=models.IntegerField(_("درصد تکمیل پروژه"),default=0)
     start_date=models.DateTimeField(_("زمان شروع پروژه"),null=True,blank=True, auto_now=False, auto_now_add=False)
@@ -163,6 +169,8 @@ class Project(ProjectManagerPage):
             for emp in org.employee_set.all():
                 employees.append(emp.id)
         return Employee.objects.filter(id__in=employees)
+        
+
 class Material(ProjectManagerPage):
     unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     unit_price=models.IntegerField(_("unit_price"),default=0)
@@ -190,6 +198,7 @@ class Material(ProjectManagerPage):
             sum+=(req.quantity*req.unit_price)
         return sum
 
+
 class Service(ProjectManagerPage):
     # service_date=models.DateTimeField(_("تاریخ ارائه خدمات"), auto_now=False, auto_now_add=False)
     # project_for=models.ForeignKey("Project",related_name='workservices', verbose_name=_("پروژه مرتبط"), on_delete=models.CASCADE)
@@ -205,6 +214,7 @@ class Service(ProjectManagerPage):
         verbose_name = _("خدمات")
         verbose_name_plural = _("خدمات")
     
+
 class Event(ProjectManagerPage):
     project_related=models.ForeignKey("project", verbose_name=_("project"), on_delete=models.CASCADE)
     event_datetime=models.DateTimeField(_("event_datetime"), auto_now=False, auto_now_add=False)
@@ -219,9 +229,8 @@ class Event(ProjectManagerPage):
     class Meta:
         verbose_name = _("رویداد")
         verbose_name_plural = _("رویداد ها")
-    
-
-
+   
+   
 class Location(models.Model):
     title=models.CharField(_("عنوان نقطه"),max_length=50,null=True,blank=True)
     location=models.CharField(_("لوکیشن"),max_length=1000)
@@ -243,6 +252,7 @@ class Location(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":location",kwargs={'pk':self.pk})
 
+
 class OrganizationUnit(ProjectManagerPage):
     employer=models.ForeignKey("employer", verbose_name=_("employer"), on_delete=models.CASCADE)
     class Meta:
@@ -260,6 +270,7 @@ class OrganizationUnit(ProjectManagerPage):
         return self.title+" " +OrganizationUnit.objects.get(pk=self.parent.id).full_title
     def childs(self):
         return OrganizationUnit.objects.filter(parent_id=self.id)
+
 class EmployeeSpeciality(ProjectManagerPage):
     employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     max=models.IntegerField(_("max"))
@@ -277,7 +288,6 @@ class EmployeeSpeciality(ProjectManagerPage):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":employee_speciality", kwargs={"pk": self.pk})
-
 
 
 class MaterialRequest(models.Model):
@@ -449,6 +459,7 @@ class ServiceRequestSignature(models.Model):
 
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/servicerequestsignature/{self.pk}/change/"
+
 
 class MaterialRequestSignature(models.Model):
     material_request=models.ForeignKey("materialrequest", verbose_name=_("درخواست"), on_delete=models.CASCADE)

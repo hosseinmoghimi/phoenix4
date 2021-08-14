@@ -6,6 +6,7 @@ app_name=APP_NAME
 urlpatterns = [
     path('',views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),
+    path('projects/',views.ProjectViews().projects,name="projects"),
     path('project/<int:pk>/',views.ProjectViews().project,name="project"),
     path('project-materials-order/<int:pk>/',views.ProjectViews().project_materials_order,name="project_materials_order"),
     path('project-services-order/<int:pk>/',views.ProjectViews().project_services_order,name="project_services_order"),
