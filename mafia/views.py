@@ -21,11 +21,41 @@ class BasicViews(View):
         context['gods']=GodRepo(request=request).list()
         roles=RoleRepo(request=request).list()
         context['roles']=roles
+        context['create_game_by_roles_form']=CreateGameByRolesForm()
         context['roles_s']=json.dumps(RoleSerializer(roles,many=True).data)
         if request.user.has_perm(APP_NAME+".add_player"):
             context['add_player_form']=AddPlayerForm()
         return render(request,TEMPLATE_ROOT+"new-game.html",context)
 
+    def create_game_by_roles(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            create_game_by_roles_form=CreateGameByRolesForm(request.POST)
+            if create_game_by_roles_form.is_valid():
+                log=30
+                game_roles=create_game_by_roles_form.cleaned_data['game_roles']
+                roles=json.loads(game_roles)
+
+                context=getContext(request=request)
+                game=GameRepo(request=request).new_game()
+                game_roles=[]
+                turn=0
+                for role in roles:
+                    turn+=1
+                    game_role=GameRoleRepo(request=request).create(
+                        role=RoleRepo(request=request).role(pk=role.id),
+                        player=None,
+                        game=game,
+                        turn=turn,
+                        description=""
+                    )
+                
+                context['game_roles']=game.gamerole_set.all()
+
+
+        context['log']=log
+        return render(request,TEMPLATE_ROOT+"game.html",context)
 
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
