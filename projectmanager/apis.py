@@ -281,8 +281,6 @@ class ServiceApi(APIView):
                 unit_name=add_service_request_form.cleaned_data['unit_name']
                 unit_price=add_service_request_form.cleaned_data['unit_price']
                 service_request=ServiceRepo(request=request).add_service_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_title=service_title,project_id=project_id)
-                # print(100*"#76553456")
-                # print(service_request.service.title)
                 if service_request is not None:
                     context['service_request']=ServiceRequestSerializer(service_request).data
                     context['result']=SUCCEED

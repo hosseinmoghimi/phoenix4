@@ -197,7 +197,6 @@ class ProjectViews(View):
         ship_fee = 0
         description = f"""مربوط به {project.full_title}"""
         print(description)
-        print(10*"#1045374346#")
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
         order = {

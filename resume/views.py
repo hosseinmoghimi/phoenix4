@@ -23,8 +23,6 @@ class BasicViews(View):
         # if 'language' in kwargs:
         #     language=kwargs['language']
         if 'profile_id' in kwargs:
-            print(kwargs)
-            print(100*"*")
             resume_index=ResumeIndexRepo(request=request,*args, **kwargs).resume_index(*args, **kwargs)
             context['resume_index']=resume_index
             parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)

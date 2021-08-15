@@ -1,6 +1,6 @@
 <script>
     let roles = JSON.parse("{{roles_s|escapejs}}")
-    let add_role_component_template = `{% include "mafia/includes/new-game-app/component.html" %}`
+    let add_role_component_template = `{% include "mafia/game/new-game-app/component.html" %}`
     let add_role_component = Vue.component('add-role-component', {
         data: function () {
             return {
@@ -53,6 +53,8 @@
             roles: roles,
             game_roles: [],
             game_roles_str:"",
+            players:[],
+            players_str:""
         },
         methods: {
             select_roles: function () {

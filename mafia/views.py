@@ -25,7 +25,7 @@ class BasicViews(View):
         context['roles_s']=json.dumps(RoleSerializer(roles,many=True).data)
         if request.user.has_perm(APP_NAME+".add_player"):
             context['add_player_form']=AddPlayerForm()
-        return render(request,TEMPLATE_ROOT+"new-game.html",context)
+        return render(request,TEMPLATE_ROOT+"game/game1.html",context)
 
     def create_game_by_roles(self,request,*args, **kwargs):
         log=1
@@ -39,26 +39,25 @@ class BasicViews(View):
 
                 context=getContext(request=request)
                 game=GameRepo(request=request).new_game()
-                print(game.id)
-                print(10*"####")
                 game_roles=[]
                 turn=0
-                for role in roles:
-                    print(role)
-                    turn+=1
-                    GameRoleRepo(request=request).create(
-                        role_id=role['role_id'],
-                        player_id=0,
-                        game_id=game.id,
-                        turn=turn,
-                        description=""
-                    )
                 
+                for role in roles:
+                    for i in range(role["count"]):
+                        turn+=1
+                        GameRoleRepo(request=request).create(
+                            role_id=role['role_id'],
+                            player_id=0,
+                            game_id=game.id,
+                            turn=turn,
+                            description=""
+                        )
+                    
                 context['game_roles']=game.gamerole_set.all()
 
 
         context['log']=log
-        return render(request,TEMPLATE_ROOT+"game.html",context)
+        return render(request,TEMPLATE_ROOT+"game/game2.html",context)
 
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)

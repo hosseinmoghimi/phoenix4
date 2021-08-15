@@ -161,7 +161,6 @@ class BasicViews(View):
             if max_weight<lll.animal_weight:
                 max_weight=lll.animal_weight
         print(weights)
-        print(10*"#45745#")
         context['weights']=json.dumps(weights)
         context['max_weight']=max_weight
         context['animalinsaloon_set'] = animal.animalinsaloon_set.order_by(

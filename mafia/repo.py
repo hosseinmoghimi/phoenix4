@@ -112,7 +112,10 @@ class GameRoleRepo():
 
         game_role=GameRole()
         game_role.role_id=role_id
-        game_role.player_id=player_id
+        if player_id==0:
+            game_role.player=None
+        else:
+            game_role.player_id=player_id
         game_role.game_id=game_id
         game_role.turn=turn
         game_role.description=description

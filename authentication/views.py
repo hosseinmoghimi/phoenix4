@@ -80,10 +80,6 @@ class AuthenticationViews(View):
                     back_url=SITE_URL
                 request1=ProfileRepo(user=None).login(request=request,username=username,password=password)
                 if request1 is not None and request1.user is not None and request1.user.is_authenticated :
-                    # print(back_url)
-                    # print(100*'#')
-                    # Token.objects.filter(user=request1.user).delete()
-                    # Token.objects.create(user=request1.user)
                     return redirect(back_url)
                 else:   
                     context=getContext(request=request)

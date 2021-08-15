@@ -37,8 +37,6 @@ class BasicPageRepo:
             related_page_id=kwargs['related_page_id']
         if 'bidirectional' in kwargs:
             bidirectional=kwargs['bidirectional']
-        print(kwargs)
-        print(10*"##")
         page=self.page(page_id=page_id)
         related_page=self.page(page_id=related_page_id)
         if page is None or related_page is None:

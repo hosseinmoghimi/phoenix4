@@ -75,9 +75,6 @@ class ProjectRepo():
             return None
         if project is not None and organization_unit is not None:
             project.organization_units.add(organization_unit)
-            # project.save()
-            # print(organization_unit)
-            # print(10*"#35366647535")
             return organization_unit
              
 
@@ -419,8 +416,6 @@ class ServiceRepo():
             if service is None:
                 service=Service(title=kwargs['service_title'],unit_price=kwargs['unit_price'],unit_name=kwargs['unit_name'])
                 service.save()            
-            # print(service)
-            # print(100*"#2455346")
             new_service_request.service_id=service.id
         profile = ProfileRepo(user=self.user).me
         new_service_request.profile = profile
@@ -502,10 +497,6 @@ class EventRepo():
         new_event.end_datetime=end_datetime
         new_event.start_datetime=start_datetime
         new_event.creator=self.profile
-        print(kwargs)
-        print(100*"#")
-        print(new_event)
-        print(100*"#")
         new_event.save()
         return new_event
 
