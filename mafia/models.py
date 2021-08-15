@@ -24,7 +24,7 @@ class Action(models.Model):
 class Game(models.Model):
     start_date=models.DateTimeField(_("start_date"), auto_now=False, auto_now_add=False)
     scenario=models.CharField(_("scenario"),choices=GameScenarioEnum.choices,max_length=50)
-    god=models.ForeignKey("player", verbose_name=_("god"), on_delete=models.CASCADE)
+    god=models.ForeignKey("god",null=True,blank=True, verbose_name=_("god"), on_delete=models.CASCADE)
 
 
 
@@ -81,8 +81,8 @@ class God(models.Model):
 class GameRole(models.Model):
     game=models.ForeignKey("Game", verbose_name=_("Game"), on_delete=models.CASCADE)
     role=models.ForeignKey("role", verbose_name=_("role"), on_delete=models.CASCADE)
-    player=models.ForeignKey("player", verbose_name=_("player"), on_delete=models.CASCADE)
-    turn=models.IntegerField(_("نوبت"))
+    player=models.ForeignKey("player",null=True,blank=True, verbose_name=_("player"), on_delete=models.CASCADE)
+    turn=models.IntegerField(_("نوبت"),default=20)
     description=models.CharField(_("description"),null=True,blank=True, max_length=50)
     
     class Meta:

@@ -8,9 +8,14 @@
             }
         },
         methods: {
-            add: function(value) {
+            add: function (value) {
                 if (value == -1 && this.count > 0) { this.count-- }
                 if (value == 1 && this.count < 12) { this.count++ }
+                select_roles_app.game_roles = select_roles_app.game_roles.filter(item => item.role_id != this.role.id)
+                select_roles_app.game_roles.push({
+                    role_id:this.role.id,
+                    count: this.count
+                })
             },
             delete_comment: function (page_comment_id) {
                 this.confirm_delete = false
@@ -46,8 +51,13 @@
         },
         data: {
             roles: roles,
+            game_roles: [],
+            game_roles_str:"",
         },
         methods: {
+            select_roles: function () {
+                this.game_roles_str=JSON.stringify(this.game_roles)
+            },            
             add_comment: function () {
                 let url = url_add_page_comment
                 let payload = {

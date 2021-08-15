@@ -1,0 +1,19 @@
+{% extends "mafia/layout.html" %}
+{% load static %}
+{% block mafia_content %}
+
+{{log}}
+<br>
+{% for game_role in game_roles %}
+<p>{{game_role.player}}</p>
+<p>{{game_role.role}}</p>
+<p>{{game_role.turn}}</p>
+<p>{{game_role.description}}</p>
+<hr>
+{% endfor %}
+{% endblock %}
+
+
+{% block mafia_script %}
+
+{% endblock %}

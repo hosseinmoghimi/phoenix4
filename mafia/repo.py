@@ -63,7 +63,13 @@ class GameRepo():
         
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=Game.objects
-
+    def new_game(self):
+        game=Game()
+        game.scenario=GameScenarioEnum.TOFANG_DAR
+        game.start_date=timezone.now()
+        game.god=God.objects.first()
+        game.save()
+        return game
 
     def game(self, *args, **kwargs):
         
@@ -95,6 +101,24 @@ class GameRoleRepo():
         
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=GameRole.objects
+
+    def create(self,*args, **kwargs):
+
+        game_id=kwargs['game_id'] if 'game_id' in kwargs else 0
+        role_id=kwargs['role_id'] if 'role_id' in kwargs else 0
+        turn=kwargs['turn'] if 'turn' in kwargs else 1
+        description=kwargs['description'] if 'description' in kwargs else ""
+        player_id=kwargs['player_id'] if 'player_id' in kwargs else 0
+
+        game_role=GameRole()
+        game_role.role_id=role_id
+        game_role.player_id=player_id
+        game_role.game_id=game_id
+        game_role.turn=turn
+        game_role.description=description
+        game_role.save()
+
+        return game_role
 
 
     def game_role(self, *args, **kwargs):

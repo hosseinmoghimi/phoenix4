@@ -39,14 +39,17 @@ class BasicViews(View):
 
                 context=getContext(request=request)
                 game=GameRepo(request=request).new_game()
+                print(game.id)
+                print(10*"####")
                 game_roles=[]
                 turn=0
                 for role in roles:
+                    print(role)
                     turn+=1
-                    game_role=GameRoleRepo(request=request).create(
-                        role=RoleRepo(request=request).role(pk=role.id),
-                        player=None,
-                        game=game,
+                    GameRoleRepo(request=request).create(
+                        role_id=role['role_id'],
+                        player_id=0,
+                        game_id=game.id,
                         turn=turn,
                         description=""
                     )
