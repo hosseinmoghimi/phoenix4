@@ -12,7 +12,14 @@
             </div>
             <div class="card-body">
                 {{player.profile.media_tag|safe}}
+                {% if perms.mafia.change_player %}
+                <p class="my-3">
 
+                    {{player.get_edit_btn|safe}}
+                </p>
+
+
+                {% endif %}
             </div>
             <div class="card-footer">
 

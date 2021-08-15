@@ -84,7 +84,7 @@ class GameRepo():
     
 
     def list(self, *args, **kwargs):
-        objects = self.objects
+        objects = self.objects.order_by("-id")
         if 'search_for' in kwargs:
             objects = objects.filter(profile__first_name__contains=kwargs['search_for'])
         return objects.all()
@@ -166,7 +166,7 @@ class RoleRepo():
         Role(priority=50,side=SideEnums.MAFIA,default_count=0,role_name="ناتو").save()
         Role(priority=60,side=SideEnums.MAFIA,default_count=0,role_name="تروریست").save()
         Role(priority=70,side=SideEnums.CITIZEN,default_count=1,role_name="پزشک").save()
-        Role(priority=80,side=SideEnums.CITIZEN,default_count=1,role_name="کاراگاه").save()
+        Role(priority=80,side=SideEnums.CITIZEN,default_count=1,role_name="کارآگاه").save()
         Role(priority=90,side=SideEnums.CITIZEN,default_count=1,role_name="نگهبان").save()
         Role(priority=100,side=SideEnums.CITIZEN,default_count=1,role_name="تک تیر انداز").save()
         Role(priority=110,side=SideEnums.CITIZEN,default_count=2,role_name="شهروند ساده").save()

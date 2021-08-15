@@ -13,8 +13,8 @@
             add: function (value) {
                 if (value == -1 && this.count > 0) { this.count-- }
                 if (value == 1 && this.count < 12) { this.count++ }
-                select_roles_app.game_roles = select_roles_app.game_roles.filter(item => item.role_id != this.role.id)
-                select_roles_app.game_roles.push({
+                game1_app.selected_roles = game1_app.selected_roles.filter(item => item.role_id != this.role.id)
+                game1_app.selected_roles.push({
                     role_id:this.role.id,
                     count: this.count
                 })
@@ -54,50 +54,50 @@
         methods: {
             select: function () {
                 this.selected=!this.selected
-                
-            },
+                game1_app.selected_players = game1_app.selected_players.filter(item => item.player_id != this.player.id)
+                if(this.selected){
+                    game1_app.selected_players.push({
+                    player_id:this.player.id,
+                })
+            }
+        },
            
 
 
         },
-        props: ['player', 'selected'],
+        props: ['player'],
         template: add_player_component_template,
     })
 
 
-    let select_roles_app = new Vue({
-        el: "#select-roles-app",
+
+    let game1_app = new Vue({
+        el: "#game1-app",
         components: {
+            add_player_component,
             add_role_component,
+
         },
         data: {
             roles: roles,
-            game_roles: [],
-            game_roles_str:"",
-        },
-        methods: {
-            select_roles: function () {
-                this.game_roles_str=JSON.stringify(this.game_roles)
-            },            
-            
-        }
-    })
+            selected_roles: [],
+            selected_roles_str:"",
 
-    let select_players_app = new Vue({
-        el: "#select-players-app",
-        components: {
-            add_player_component,
-        },
-        data: {
             players: players,
             selected_players:[],
-            players_str:""
+            selected_players_str:"",
+
+            show_submit:false,
+
+
         },
         methods: {
-            select_players: function () {
-                this.players_str=JSON.stringify(this.selected_players)
+            normalizer: function () {
+                this.selected_roles_str=JSON.stringify(this.selected_roles)
+                this.selected_players_str=JSON.stringify(this.selected_players)
+                this.show_submit=true
             },            
-           
+             
         }
     })
 </script>

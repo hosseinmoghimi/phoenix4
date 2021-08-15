@@ -1,9 +1,10 @@
 from django import forms
 
 
-class CreateGameByRolesForm(forms.Form):
+class CreateGameForm(forms.Form):
     # profile_id=forms.IntegerField(required=False)
-    game_roles=forms.CharField(max_length=500,required=False)
+    roles=forms.CharField(max_length=500,required=True)
+    players=forms.CharField(max_length=500,required=True)
 
 class AddPlayerForm(forms.Form):
     # profile_id=forms.IntegerField(required=False)

@@ -9,6 +9,7 @@ urlpatterns = [
     path('game2/',views.BasicViews().game2,name='game2'),
     path('god/<int:pk>/',views.BasicViews().god,name='god'),
     path('game/<int:pk>/',views.BasicViews().game,name='game'),
+    path('role/<int:pk>/',views.BasicViews().role,name='role'),
 
     
     path('add_player/',apis.BasicApi().add_player,name='add_player'),

@@ -1,14 +1,23 @@
 <div class="my-2 p-2 ">
     <div class="row">
         <div class="col-8 farsi">
-            <div :class="'text-center bg-'+(!selected?'light':'success')">
+            <div :class="'btn text-center btn-'+(!selected?'light':'success')">
+                <a :href="player.get_absolute_url">
 
-                <span v-text="player.profile.name" :class="'text-'+(!selected?'primary':'light')"></span>
+                    <span :class="'text-'+(!selected?'dark':'light')" v-text="player.profile.name"></span>
+                </a>
             </div>
         </div>
-      
+
+        
+
         <div class="col-4">
-            <button class="btn btn-sm btn-success" @click="select()">انتخاب</button>
+            <button :class="'btn btn-sm btn-'+(!selected?'light':'success')" @click="select()">
+                
+                <span v-if="selected" class="text-light">بازی</span>
+                <span v-if="!selected" class="'text-primary">خارج</span>
+
+            </button>
 
         </div>
     </div>

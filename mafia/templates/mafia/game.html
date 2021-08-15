@@ -1,0 +1,51 @@
+{% extends "mafia/layout.html" %}
+{% load static %}
+{% block mafia_content %}
+<div class="row">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+
+                {% for game_role in game.game_roles %}
+                <div class="media mb-4">
+                    <div>
+
+
+
+                        <img src="{{game_role.role.image}}" class="rounded-circle" width="48" alt="">
+                        <img src="{{game_role.player.profile.image}}" class="rounded-circle" width="48" alt="">
+
+                    </div>
+                    <div class="media-body mr-2">
+
+                        <div>
+                            <a href="{{game_role.role.get_absolute_url}}">
+                                {{game_role.role.role_name}} ({{game_role.role.side}})
+                            </a>
+                            {{game_role.get_edit_btn|safe}}
+                        </div>
+                        <div>
+                            <a href="{{game_role.player.get_absolute_url}}">
+                                {{game_role.player.profile.name}}
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block mafia_script %}
+
+{% endblock %}

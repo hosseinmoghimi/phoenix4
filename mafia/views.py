@@ -25,7 +25,7 @@ class BasicViews(View):
         players=PlayerRepo(request=request).list()
         context['players']=players
         context['players_s']=json.dumps(PlayerSerializer(players,many=True).data)
-        context['create_game_by_roles_form']=CreateGameByRolesForm()
+        context['create_game_form']=CreateGameForm()
         if request.user.has_perm(APP_NAME+".add_player"):
             context['add_player_form']=AddPlayerForm()
         return render(request,TEMPLATE_ROOT+"game/game1.html",context)
@@ -34,17 +34,25 @@ class BasicViews(View):
         log=1
         if request.method=='POST':
             log=2
-            create_game_by_roles_form=CreateGameByRolesForm(request.POST)
-            if create_game_by_roles_form.is_valid():
+            create_game_form=CreateGameForm(request.POST)
+            if create_game_form.is_valid():
                 log=30
-                game_roles=create_game_by_roles_form.cleaned_data['game_roles']
-                roles=json.loads(game_roles)
+                roles=create_game_form.cleaned_data['roles']
+                players=create_game_form.cleaned_data['players']
+                roles=json.loads(roles)
+                players=json.loads(players)
 
                 context=getContext(request=request)
                 game=GameRepo(request=request).new_game()
-                game_roles=[]
                 turn=0
-
+                print(players)
+                print(10*"###*#")
+                players_ids=[]
+                for player in players:
+                    players_ids.append(player['player_id'])
+                print(players_ids)
+                print(10*"#$$$##*#")
+                players=PlayerRepo(request=request).list().filter(id__in=players_ids)
                 for role in roles:
                     for i in range(role["count"]):
                         turn+=1
@@ -57,16 +65,41 @@ class BasicViews(View):
                         )
                     
                 context['game_roles']=game.gamerole_set.all()
-
-
-        context['log']=log
-        return render(request,TEMPLATE_ROOT+"game/game2.html",context)
-
+                context['players']=players
+                context['log']=log
+                return render(request,TEMPLATE_ROOT+"game/game2.html",context)
+    def game(self,request,*args, **kwargs):
+        game=GameRepo(request=request).game(*args, **kwargs)
+        context=getContext(request=request)
+        context['game']=game
+        return render(request,TEMPLATE_ROOT+"game.html",context)
+    def role(self,request,*args, **kwargs):
+        role=RoleRepo(request=request).role(*args, **kwargs)
+        context=getContext(request=request)
+        context['role']=role
+        return render(request,TEMPLATE_ROOT+"role.html",context)
+    def games(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        games=GameRepo(request=request).list(*args, **kwargs)
+        context['games']=games
+        return render(request,TEMPLATE_ROOT+"games.html",context)
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
-        context['players']=PlayerRepo(request=request).list()
-        context['gods']=GodRepo(request=request).list()
-        context['games']=GameRepo(request=request).list()
+
+        roles=RoleRepo(request=request).list()
+        context['roles']=roles
+
+        players=PlayerRepo(request=request).list()
+        context['players']=players
+
+        games=GameRepo(request=request).list(*args, **kwargs)
+        context['games']=games
+
+        
+        gods=GodRepo(request=request).list(*args, **kwargs)
+        context['gods']=gods
+       
+
         if request.user.has_perm(APP_NAME+".add_player"):
             context['add_player_form']=AddPlayerForm()
         return render(request,TEMPLATE_ROOT+"index.html",context)
@@ -80,7 +113,4 @@ class BasicViews(View):
         context=getContext(request=request)
         context['god']=GodRepo(request=request).god(*args, **kwargs)
         return render(request,TEMPLATE_ROOT+"god.html",context)
-    def game(self,request,*args, **kwargs):
-        context=getContext(request=request)
-        context['game']=GameRepo(request=request).game(*args, **kwargs)
-        return render(request,TEMPLATE_ROOT+"game.html",context)
+   
