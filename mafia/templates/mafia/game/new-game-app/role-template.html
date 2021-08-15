@@ -1,7 +1,6 @@
 <div class="card" id="select-roles-app">
     <div class="card-header">
         <h5 class="text-center">
-
             انتخاب نقش ها
         </h5>
     </div>
@@ -16,7 +15,7 @@
         {% if create_game_by_roles_form %}
         <button @click="select_roles()" class="btn btn-info"> انتخاب بازیکن ها</button>
           
-        <form action="{% url 'mafia:create_game_by_roles' %}" method="POST">
+        <form action="{% url 'mafia:game2' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" :value="game_roles_str" name="game_roles">
             <button class="btn btn-info" type="submit">شروع نقش دهی به بازیکن ها</button>

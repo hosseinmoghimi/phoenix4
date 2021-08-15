@@ -1,6 +1,8 @@
 <script>
     let roles = JSON.parse("{{roles_s|escapejs}}")
-    let add_role_component_template = `{% include "mafia/game/new-game-app/component.html" %}`
+    let players = JSON.parse("{{players_s|escapejs}}")
+    let add_role_component_template = `{% include "mafia/game/new-game-app/role-component.html" %}`
+    let add_player_component_template = `{% include "mafia/game/new-game-app/player-component.html" %}`
     let add_role_component = Vue.component('add-role-component', {
         data: function () {
             return {
@@ -43,42 +45,59 @@
         template: add_role_component_template,
     })
 
+    let add_player_component = Vue.component('add-player-component', {
+        data: function () {
+            return {
+                selected: false,
+            }
+        },
+        methods: {
+            select: function () {
+                this.selected=!this.selected
+                
+            },
+           
+
+
+        },
+        props: ['player', 'selected'],
+        template: add_player_component_template,
+    })
+
 
     let select_roles_app = new Vue({
         el: "#select-roles-app",
         components: {
-            add_role_component
+            add_role_component,
         },
         data: {
             roles: roles,
             game_roles: [],
             game_roles_str:"",
-            players:[],
-            players_str:""
         },
         methods: {
             select_roles: function () {
                 this.game_roles_str=JSON.stringify(this.game_roles)
             },            
-            add_comment: function () {
-                let url = url_add_page_comment
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    page_id: page_id,
-                    comment: this.comment,
-                }
-                //console.log(payload)
-                let posting = $.post(url, payload)
-                posting.done((data) => {
-                    //console.log(data)
+            
+        }
+    })
 
-                    if (data.result === 'SUCCEED') {
-
-                        page_comments_app.page_comments.push(data.page_comment)
-                        page_comments_app.comment = ""
-                    }
-                })
-            },
+    let select_players_app = new Vue({
+        el: "#select-players-app",
+        components: {
+            add_player_component,
+        },
+        data: {
+            players: players,
+            selected_players:[],
+            players_str:""
+        },
+        methods: {
+            select_players: function () {
+                this.players_str=JSON.stringify(this.selected_players)
+            },            
+           
         }
     })
 </script>

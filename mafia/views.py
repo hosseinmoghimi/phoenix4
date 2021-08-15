@@ -14,20 +14,23 @@ def getContext(request,*args, **kwargs):
     return context
 
 class BasicViews(View):
-    def new_game(self,request,*args, **kwargs):
+    def game1(self,request,*args, **kwargs):
         
         context=getContext(request=request)
         context['players']=PlayerRepo(request=request).list()
         context['gods']=GodRepo(request=request).list()
         roles=RoleRepo(request=request).list()
         context['roles']=roles
-        context['create_game_by_roles_form']=CreateGameByRolesForm()
         context['roles_s']=json.dumps(RoleSerializer(roles,many=True).data)
+        players=PlayerRepo(request=request).list()
+        context['players']=players
+        context['players_s']=json.dumps(PlayerSerializer(players,many=True).data)
+        context['create_game_by_roles_form']=CreateGameByRolesForm()
         if request.user.has_perm(APP_NAME+".add_player"):
             context['add_player_form']=AddPlayerForm()
         return render(request,TEMPLATE_ROOT+"game/game1.html",context)
 
-    def create_game_by_roles(self,request,*args, **kwargs):
+    def game2(self,request,*args, **kwargs):
         log=1
         if request.method=='POST':
             log=2
@@ -41,7 +44,7 @@ class BasicViews(View):
                 game=GameRepo(request=request).new_game()
                 game_roles=[]
                 turn=0
-                
+
                 for role in roles:
                     for i in range(role["count"]):
                         turn+=1

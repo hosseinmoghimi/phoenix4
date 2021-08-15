@@ -1,0 +1,26 @@
+<div class="card" id="select-players-app">
+    <div class="card-header">
+        <h5 class="text-center">
+
+            انتخاب بازیکن ها
+        </h5>
+    </div>
+    <div class="card-body">
+        <template v-for="player in players" class="mb-2">
+
+            <add-player-component :player="player" ></add-player-component>
+        </template>
+        <div class="text-center">
+
+        </div>
+        {% if create_game_by_roles_form %}
+        <button @click="select_roles()" class="btn btn-info"> انتخاب بازیکن ها</button>
+          
+        <form action="{% url 'mafia:game2' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" :value="players_str" name="players">
+            <button class="btn btn-info" type="submit">شروع نقش دهی به بازیکن ها</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
