@@ -1,6 +1,5 @@
-
 <script>
-    let roles=JSON.parse("{{roles_s|escapejs}}")
+    let roles = JSON.parse("{{roles_s|escapejs}}")
     let add_role_component_template = `{% include "mafia/includes/new-game-app/component.html" %}`
     let add_role_component = Vue.component('add-role-component', {
         data: function () {
@@ -9,8 +8,12 @@
             }
         },
         methods: {
+            add: function(value) {
+                if (value == -1 && this.count > 0) { this.count-- }
+                if (value == 1 && this.count < 12) { this.count++ }
+            },
             delete_comment: function (page_comment_id) {
-                this.confirm_delete=false
+                this.confirm_delete = false
 
                 let url = url_delete_page_comment
                 let payload = {
@@ -24,14 +27,14 @@
                         page_comments_app.page_comments = page_comments_app.page_comments.filter((page_comment) => {
                             return (page_comment.id != page_comment_id)
                         })
-                        page_comment_component.confirm_delete=false
+                        page_comment_component.confirm_delete = false
                     }
                 })
             },
 
 
         },
-        props: ['role','count'],
+        props: ['role', 'count'],
         template: add_role_component_template,
     })
 

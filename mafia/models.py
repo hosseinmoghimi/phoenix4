@@ -96,6 +96,7 @@ class GameRole(models.Model):
         return reverse(APP_NAME+":game_role", kwargs={"game_role_id": self.pk})
 
 class Role(models.Model):
+    priority=models.IntegerField(_("ترتیب"),default=100)
     side=models.CharField(_("side"),choices=SideEnums.choices, max_length=50)
     role_name=models.CharField(_("role"), max_length=50)
     default_count=models.IntegerField(_("default"),default=0)
