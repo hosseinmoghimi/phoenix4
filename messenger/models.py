@@ -33,7 +33,8 @@ class Message(models.Model):
     class Meta:
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
-
+    def perisan_date_send(self):
+        return PersianCalendar().from_gregorian(self.date_send)
     # def __str__(self):
     #     return self.title
     # def save(self,*args, **kwargs):

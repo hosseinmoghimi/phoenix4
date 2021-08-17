@@ -9,13 +9,24 @@
 
         <div class="media">
             <img src="{{channel.image}}" class="rounded-circle" width="64" alt="">
-            <div class="media-body">
+            <div class="media-body mr-3">
                 <div>
 
                     <a href="{{channel.get_absolute_url}}">
-                        {{channel.name}}
+                        {{channel.title}}
                     </a>
                 </div>
+
+                <div>
+
+                    <a href="{{channel.get_absolute_url}}">
+                      <small class="text-secondary">
+
+                          {{channel.name}}
+                        </small>
+                    </a>
+                </div>
+
                 {% if channel.description %}
                   
                 <div>

@@ -1,7 +1,7 @@
 from mafia.models import Player
 from django.shortcuts import render
 from django.views import View
-from .serializers import RoleSerializer,PlayerSerializer
+from .serializers import GameRoleSerializer, RoleSerializer,PlayerSerializer
 from .repo import * 
 from .forms import * 
 from core.views import CoreContext
@@ -45,13 +45,9 @@ class BasicViews(View):
                 context=getContext(request=request)
                 game=GameRepo(request=request).new_game()
                 turn=0
-                print(players)
-                print(10*"###*#")
                 players_ids=[]
                 for player in players:
                     players_ids.append(player['player_id'])
-                print(players_ids)
-                print(10*"#$$$##*#")
                 players=PlayerRepo(request=request).list().filter(id__in=players_ids)
                 for role in roles:
                     for i in range(role["count"]):
@@ -65,9 +61,16 @@ class BasicViews(View):
                         )
                     
                 context['game_roles']=game.gamerole_set.all()
+                context['game_roles_s']=json.dumps(GameRoleSerializer(game.game_roles(),many=True).data)
                 context['players']=players
+                context['players_s']=json.dumps(PlayerSerializer(players,many=True).data)
                 context['log']=log
                 return render(request,TEMPLATE_ROOT+"game/game2.html",context)
+    def game_role(self,request,*args, **kwargs):
+        game_role=GameRoleRepo(request=request).game_role(*args, **kwargs)
+        context=getContext(request=request)
+        context['game_role']=game_role
+        return render(request,TEMPLATE_ROOT+"game-role.html",context)
     def game(self,request,*args, **kwargs):
         game=GameRepo(request=request).game(*args, **kwargs)
         context=getContext(request=request)

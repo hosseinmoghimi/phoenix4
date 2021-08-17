@@ -1,3 +1,4 @@
+from messenger.serializers import MessageSerializer
 from authentication.serilizers import ProfileSerializer
 import pusher
 from django.db.models.query_utils import Q
@@ -54,7 +55,8 @@ class MessageRepo:
             )
         import json
         sender=(ProfileSerializer(message.sender).data)
-        message_object={'sender':sender,'title':message.title,'body':message.body}
+        # message_object={'sender':sender,'title':message.title,'body':message.body}
+        message_object=MessageSerializer(message).data
         pusher_client.trigger(channel.name, event, message_object)
         return message
 

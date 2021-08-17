@@ -7,41 +7,70 @@
 {% block messenger_content %}
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="title">
-                    {{channel.title}}
-                </h5>
+
+
+
+        <div id="accordion">
+
+            <div class="card">
+                <div class="card-header" id="headingchannel">
+                    <h5 class="text-center">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapsechannel"
+                            aria-expanded="true" aria-controls="collapsechannel">
+                            {{channel.title}}
+                        </button>
+
+                    </h5>
+                </div>
+                <div id="collapsechannel" class="collapse  " aria-labelledby="headingchannel" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="media">
+                            <img src="{{channel.image}}" class="rounded-circle" width="96" alt="">
+                            <div class="media-body mr-3">
+                                <p>
+
+                                    {% if perms.messenger.change_channel %}
+
+                                    <a href="{{channel.get_edit_url}}" target="_blank">
+
+                                        ویرایش کانال
+
+                                    </a>
+                                    {% endif %}
+                                </p>
+
+                                <h5>
+                                    اعضای کانال 
+                                    <i class="material-icons">
+                                        person
+                                    </i>
+                                    {{channel.member_count}}
+                                </h5>
+                                <p class="text-muted">
+
+
+
+                                </p>
+                                {% for member in channel.member_set.all %}
+                                <div class="mb-3">
+
+                                    <a href="{{member.profile.get_absolute_url}}">
+                                        <img src="{{member.profile.image}}" class="rounded-circle" width="48" alt="">
+                                        {{member.profile.name}}
+                                    </a>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5>
-                    اعضای کانال
-                </h5>
-                <p class="text-muted">
 
-                    <i class="material-icons">
-                        person
-                    </i>
-                    {{channel.member_count}}
-
-                    {% for member in channel.member_set.all %}
-                    <a href="{{member.profile.get_absolute_url}}">
-                        <img src="{{member.profile.image}}" class="rounded-circle" width="48" alt="">
-                        {{member.profile.name}}
-                    </a>
-                    {% endfor %}
-
-                </p>
-            </div>
         </div>
-        <p>
-
-            {% if perms.messenger.change_channel %}
-
-            <a href="{{channel.get_edit_url}}" target="_blank">ویرایش کانال {{channel.title}}</a>
-            {% endif %}
-        </p>
-
 
     </div>
     <div class="col-12">

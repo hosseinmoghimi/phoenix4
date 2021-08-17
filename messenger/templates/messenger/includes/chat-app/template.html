@@ -20,32 +20,43 @@
                 </div>
             </div>
         </form>
+        <div class="mb-5"></div>
+        <div v-for="message in messages" class="mb-5">
 
-        <div v-for="message in messages" class="media" class="mb-2">
-            <a :href="message.sender.get_absolute_url" :title="message.sender.name">
+            <div class="media" class="mb-5">
+                <a :href="message.sender.get_absolute_url" :title="message.sender.name">
 
-                <img :src="message.sender.image" width="48" class="rounded-circle" alt="">
-            </a>
-            <div class="media-body mr-3">
+                    <img :src="message.sender.image" width="96" class="rounded-circle" alt="">
+                </a>
+                <div class="media-body mr-3">
 
-                <h5>
-                    <span v-text="message.title"></span>
+                    <h5>
+                        <span v-text="message.title"></span>
 
-                </h5>
-                <p>
+                    </h5>
+                    <p>
 
-                    <span v-text="message.body" class="text-muted mb-4"></span>
-                </p>
+                        <span v-text="message.body" class="text-muted mb-4"></span>
+                    </p>
+                    <h6 class="text-muted">
+                        <a :href="message.sender.get_absolute_url">
+                            <span v-text="message.sender.name"></span>
+                        </a>
+                        <small class="mr-2">
 
+                            <span v-text="message.perisan_date_send"></span>
+                        </small>
+                    </h6>
+                </div>
             </div>
-        </div>
 
+        </div>
         {% for message in messages %}
 
-        <div class="media mb-2">
+        <div class="media mb-5">
             <a href="{{message.sender.get_absolute_url}}" title="{{message.sender.name}}">
 
-                <img src="{{message.sender.image}}" width="48" class="rounded-circle" alt="">
+                <img src="{{message.sender.image}}" width="96" class="rounded-circle" alt="">
             </a>
             <div class="media-body mr-3">
 
@@ -57,7 +68,15 @@
 
                     <span class="text-muted mb-4">{{message.body}}</span>
                 </p>
+                <h6 class="text-muted">
+                    <a href="{{message.sender.get_absolute_url}}">
+                        {{message.sender.name}}
+                    </a>
+                    <small class="mr-2">
 
+                        {{message.perisan_date_send}}
+                    </small>
+                </h6>
             </div>
         </div>
 
