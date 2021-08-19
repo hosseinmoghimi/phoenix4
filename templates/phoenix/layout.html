@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    {% include "dashboard/includes/head.html" %}
+    {% include "phoenix/includes/head.html" %}
 
     {% block head %}
 
@@ -13,7 +13,7 @@
 <body>
     <div class="container" style="margin-bottom: 75px;">
 
-        {% include "dashboard/includes/navbar.html" %}
+        {% include "phoenix/includes/navbar.html" %}
 
         <div class="pt-5" style="margin-top:50px;">
 
@@ -25,12 +25,12 @@
 
 
     </div>
-    {% include "dashboard/includes/footer.html" %}
+    {% include "phoenix/includes/footer.html" %}
    
     <!-- Optional JavaScript; choose one of the two! -->
 
     {% csrf_token %}
-    {% include "dashboard/includes/layout-scripts.html" %}
+    {% include "phoenix/includes/layout-scripts.html" %}
 
 
     {% block script %}
