@@ -1,5 +1,26 @@
 from django import forms
 
+class StartGameForm(forms.Form):
+    game_id=forms.IntegerField(required=True)
+
+class NewVoteForm(forms.Form):
+    day_id=forms.IntegerField(required=True)
+    accused_id=forms.IntegerField(required=True)
+    level=forms.IntegerField(required=True)
+    
+class StartGameDayForm(forms.Form):
+    game_id=forms.IntegerField(required=True)
+    # counter=forms.IntegerField(required=True)
+    
+class EndGameDayForm(forms.Form):
+    game_day_id=forms.IntegerField(required=True)
+    
+class EndGameNightForm(forms.Form):
+    game_night_id=forms.IntegerField(required=True)
+    
+class StartGameNightForm(forms.Form):
+    game_id=forms.IntegerField(required=True)
+    # counter=forms.IntegerField(required=True)
 
 class ShuffleGameForm(forms.Form):
     game_id=forms.IntegerField(required=True)

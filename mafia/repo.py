@@ -65,6 +65,7 @@ class GameRepo():
         self.objects=Game.objects
     def new_game(self,*args, **kwargs):
         game=Game()
+        game.status=GameStatusEnums.ROLING
         game.start_date=timezone.now()
         game.scenario=GameScenarioEnum.TOFANG_DAR
         if 'god_id' in kwargs:

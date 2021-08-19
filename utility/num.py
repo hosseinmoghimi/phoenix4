@@ -89,3 +89,17 @@ def separate(price):
         return str(price)
     else:
         return separate(price/1000)+','+str(price)[-3:]
+
+
+
+
+def to_tartib(value):
+    a=['اول',
+        'دوم',
+        'سوم',
+        'چهارم',
+        'پنجم',
+        'ششم',
+        'هفتم',
+        ]
+    return a[value]

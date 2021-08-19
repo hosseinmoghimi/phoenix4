@@ -57,6 +57,34 @@ class BasicViews(View):
 
                     return redirect(game.get_absolute_url())
 
+    def start_game(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            start_game_form=StartGameForm(request.POST)
+            if start_game_form.is_valid():
+                log=3
+                game_id=start_game_form.cleaned_data['game_id']
+                game=GameRepo(request=request).game(game_id=game_id)
+                if game is not None:
+                    game.status=GameStatusEnums.STARTED
+                    game.save()
+                    return redirect(game.get_absolute_url())
+
+    def new_vote(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            start_game_form=StartGameForm(request.POST)
+            if start_game_form.is_valid():
+                log=3
+                game_id=start_game_form.cleaned_data['game_id']
+                game=GameRepo(request=request).game(game_id=game_id)
+                if game is not None:
+                    game.status=GameStatusEnums.STARTED
+                    game.save()
+                    return redirect(game.get_absolute_url())
+
     def game2(self,request,*args, **kwargs):
         log=1
         if request.method=='POST':
@@ -114,7 +142,21 @@ class BasicViews(View):
         game=GameRepo(request=request).game(*args, **kwargs)
         context=getContext(request=request)
         context['game']=game
+        context['new_vote_form']=NewVoteForm()
+        if game.status==GameStatusEnums.ROLING:
+            context['shuffle_game_form']=ShuffleGameForm()
+            context['start_game_form']=StartGameForm()
         return render(request,TEMPLATE_ROOT+"game.html",context)
+    def game_day(self,request,*args, **kwargs):
+        game_day=GameRepo(request=request).game_day(*args, **kwargs)
+        context=getContext(request=request)
+        context['game_day']=game_day
+        return render(request,TEMPLATE_ROOT+"game-day.html",context)
+    def game_night(self,request,*args, **kwargs):
+        game_night=GameRepo(request=request).game_night(*args, **kwargs)
+        context=getContext(request=request)
+        context['game_night']=game_night
+        return render(request,TEMPLATE_ROOT+"game-night.html",context)
     def role(self,request,*args, **kwargs):
         role=RoleRepo(request=request).role(*args, **kwargs)
         context=getContext(request=request)
