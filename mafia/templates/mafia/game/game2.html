@@ -3,7 +3,25 @@
 {% block mafia_content %}
 <div class="row">
     <div class="col-4"></div>
-    <div class="col-4">title game 2</div>
+    <div class="col-4">
+        <h4 class="text-center">
+            <small class="text-muted">
+
+                سناریوی بازی :
+            </small>
+            <span>
+                {{game.scenario}}
+            </span>
+        </h4>
+        <h5 class="text-center">
+            <small class="text-muted">
+
+                گاد : 
+            </small>
+            <a href="{{game.god.get_absolute_url}}">{{game.god.profile.name}}</a>
+        </h5>
+        
+    </div>
     <div class="col-4"></div>
 </div>
 <div class="row" id="game2-app">
@@ -11,7 +29,7 @@
         <div class="card">
             <div class="card-body">
                 {% for game_role in game_roles %}
-                <select name="form-control" id="">
+                <select class="form-control" name="god_id">
                     {% for player in players %}
                     <option value="{{player.id}}">
                         {{player.profile.name}}
@@ -21,7 +39,7 @@
                 <p>{{game_role.role}}</p>
                 <p>{{game_role.turn}}</p>
                 <p>{{game_role.description}}</p>
-                <p v-if="!loading" v-text="pl({{forloop.counter}}).profile.name"></p>
+                <p v-if="!loading" v-text="players[{{forloop.counter0}}].profile.name"></p>
                 <hr>
                 {% endfor %}
             </div>
@@ -31,6 +49,34 @@
         <div class="card">
             <div class="card-body">
                 <button class="btn btn-info" @click="randomize()">درهم ریزی</button>
+
+                <div v-for="game_role in game_roles">
+                    <div class="media mb-4">
+                        <div>
+                            <img :src="game_role.role.image" class="rounded-circle" width="48" alt="">
+                            <img v-if="game_role.player" :src="game_role.player.profile.image" class="rounded-circle" width="48" alt="">
+                        </div>
+                        <div class="media-body mr-2">
+                            <div>
+                                <a :href="game_role.role.get_absolute_url">
+                                    <span v-text="game_role.role.role_name">
+                                    </span>
+                                    <span :class="'badge badge-'+game_role.role.role_color"
+                                        v-text="game_role.role.side">
+                                    </span>
+                                </a>
+                            </div>
+                            <div>
+                                <a v-if="game_role.player" :href="game_role.player.get_absolute_url">
+                                    <span v-text="game_role.player.profile.name">
+                                    </span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -45,37 +91,52 @@
 <script>
     let game_roles = JSON.parse("{{game_roles_s|escapejs}}")
     let players = JSON.parse("{{players_s|escapejs}}")
-    let game_app = new Vue({
+    let game_app2 = new Vue({
         el: "#game2-app",
         data: {
-            players: players,
+            players: [],
+            players1: players,
             game_roles: game_roles,
-            loading:false
+            loading: false,
+
+        },
+        mounted: function () {
+            this.randomize()
         },
         methods: {
-            pl: (index) => {
-                return this.players[index]
-            },
-            randomize: () => {
-                this.loading=true
-                var currentIndex = game_app.players.length, randomIndex;
-                
-                // While there remain elements to shuffle...
-                while (currentIndex != 0) {
-                    
-                    // Pick a remaining element...
-                    randomIndex = Math.floor(Math.random() * currentIndex);
-                    currentIndex--;
-                    
-                    // And swap it with the current element.
-                    [game_app.players[currentIndex], game_app.players[randomIndex]] = [
-                        game_app.players[randomIndex], game_app.players[currentIndex]];
+
+            randomize: function () {
+                console.log("--------------------------")
+                let indexes = []
+                let a = false
+                while (indexes.length < players.length) {
+                    let rand = Math.random() * (players.length)
+                    var j = Math.floor(rand);
+                    // console.log(j)
+                    a = true
+                    if (j < 0)
+                        a = false
+                    for (var ii = 0; ii < indexes.length; ii++) {
+                        if (indexes[ii] == j) {
+                            a = false
+                        }
                     }
+                    if (a) {
+                        console.log(j)
+                        indexes.push(j)
+                        this.players.push(players[j])
+                        
+                    }
+                }
+
+
+                for (let index = 0; index < this.players.length; index++) {
+                    this.game_roles[index].player=this.players[index]
                     
-                    console.log(players[0].profile.name)
-                    this.loading=false
-                },
+                }
             },
+
+        },
     })
 </script>
 {% endblock %}

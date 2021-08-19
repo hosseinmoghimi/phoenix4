@@ -1,8 +1,11 @@
 from django import forms
 
 
+class ShuffleGameForm(forms.Form):
+    game_id=forms.IntegerField(required=True)
 class CreateGameForm(forms.Form):
-    # profile_id=forms.IntegerField(required=False)
+    god_id=forms.IntegerField(required=True)
+    scenario=forms.CharField(max_length=50,required=False)
     roles=forms.CharField(max_length=500,required=True)
     players=forms.CharField(max_length=500,required=True)
 

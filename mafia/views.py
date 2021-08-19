@@ -1,5 +1,4 @@
-from mafia.models import Player
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 from .serializers import GameRoleSerializer, RoleSerializer,PlayerSerializer
 from .repo import * 
@@ -21,6 +20,7 @@ class BasicViews(View):
         context['gods']=GodRepo(request=request).list()
         roles=RoleRepo(request=request).list()
         context['roles']=roles
+        context['scenarioes']=(i[0] for i in GameScenarioEnum.choices)
         context['roles_s']=json.dumps(RoleSerializer(roles,many=True).data)
         players=PlayerRepo(request=request).list()
         context['players']=players
@@ -30,31 +30,68 @@ class BasicViews(View):
             context['add_player_form']=AddPlayerForm()
         return render(request,TEMPLATE_ROOT+"game/game1.html",context)
 
+    def shuffle_game(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            print(10*"#222#")
+            log=2
+            shuffle_game_form=ShuffleGameForm(request.POST)
+            if shuffle_game_form.is_valid():
+                log=3
+                game_id=shuffle_game_form.cleaned_data['game_id']
+                game=GameRepo(request=request).game(game_id=game_id)
+                if game is not None:
+                    game_roles=game.game_roles()
+                    players_ids=[]
+                    for game_role in game_roles:
+                        player_id=game_role.player.id
+                        players_ids.append(player_id)
+                    from utility.random import shuffle_array
+                    players_ids=shuffle_array(players_ids)
+
+                    i=0
+                    for game_role in game_roles:
+                        game_role.player_id=players_ids[i]
+                        i+=1
+                        game_role.save()
+
+                    return redirect(game.get_absolute_url())
+
     def game2(self,request,*args, **kwargs):
         log=1
         if request.method=='POST':
+            print(10*"#222#")
             log=2
             create_game_form=CreateGameForm(request.POST)
             if create_game_form.is_valid():
+                print(10*"#333#")
                 log=30
+                scenario=create_game_form.cleaned_data['scenario']
+                god_id=create_game_form.cleaned_data['god_id']
                 roles=create_game_form.cleaned_data['roles']
                 players=create_game_form.cleaned_data['players']
                 roles=json.loads(roles)
                 players=json.loads(players)
-
                 context=getContext(request=request)
-                game=GameRepo(request=request).new_game()
+                print(god_id)
+                print(100*"#")
+                game=GameRepo(request=request).new_game(god_id=god_id,scenario=scenario)
                 turn=0
                 players_ids=[]
                 for player in players:
                     players_ids.append(player['player_id'])
                 players=PlayerRepo(request=request).list().filter(id__in=players_ids)
+                players_ids_2=[]
+                a=-1
+                from utility.random import shuffle_array
+                players_ids_2=shuffle_array(players_ids)
                 for role in roles:
+                    a+=1
                     for i in range(role["count"]):
                         turn+=1
                         GameRoleRepo(request=request).create(
                             role_id=role['role_id'],
-                            player_id=0,
+                            player_id=players_ids_2[a],
                             game_id=game.id,
                             turn=turn,
                             description=""
@@ -65,7 +102,9 @@ class BasicViews(View):
                 context['players']=players
                 context['players_s']=json.dumps(PlayerSerializer(players,many=True).data)
                 context['log']=log
-                return render(request,TEMPLATE_ROOT+"game/game2.html",context)
+                context['game']=game
+                # return render(request,TEMPLATE_ROOT+"game/game2.html",context)
+                return redirect(game.get_absolute_url())
     def game_role(self,request,*args, **kwargs):
         game_role=GameRoleRepo(request=request).game_role(*args, **kwargs)
         context=getContext(request=request)
@@ -96,7 +135,7 @@ class BasicViews(View):
         context['players']=players
 
         games=GameRepo(request=request).list(*args, **kwargs)
-        context['games']=games
+        context['games']=games[:10]
 
         
         gods=GodRepo(request=request).list(*args, **kwargs)

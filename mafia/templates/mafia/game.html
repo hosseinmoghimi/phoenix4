@@ -2,21 +2,67 @@
 {% load static %}
 {% block mafia_content %}
 <div class="row">
-    <div class="col-5">
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-
+<h4 class="text-center">
+    بازی شماره {{game.id}}
+</h4>
             </div>
             <div class="card-body">
+                <h4 class="text-center1">
+                    <small class="text-muted">
 
+                        سناریوی بازی :
+                    </small>
+                    <span>
+                        {{game.scenario}}
+                    </span>
+                </h4>
+                <h5 class="text-center1">
+                    <small class="text-muted">
+
+                        گاد :
+                    </small>
+
+
+                    <div class="media mb-4">
+                        <div>
+                            <img src="{{game.god.profile.image}}" class="rounded-circle" width="96" alt="">
+                        </div>
+                        <div class="media-body mr-2">
+
+                            <div>
+                                <a href="{{game.god.get_absolute_url}}">
+                                    {{game.god.profile.name}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </h5>
+                <hr>
+                <form action="{% url 'mafia:shuffle_game' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" value="{{game.id}}">
+                    <div class="text-center">
+
+                        <button class="btn btn-info text-center" type="submit">
+                            <span class="material-icons">
+                                shuffle
+                            </span>
+                            انتخاب مجدد نقش برای بازیکن ها
+                        </button>
+                    </div>
+                </form>
+                <hr>
                 {% for game_role in game.game_roles %}
                 <div class="media mb-4">
                     <div>
 
 
 
-                        <img src="{{game_role.role.image}}" class="rounded-circle" width="48" alt="">
-                        <img src="{{game_role.player.profile.image}}" class="rounded-circle" width="48" alt="">
+                        <img src="{{game_role.role.image}}" class="rounded-circle" width="96" alt="">
+                        <img src="{{game_role.player.profile.image}}" class="rounded-circle" width="96" alt="">
 
                     </div>
                     <div class="media-body mr-2">

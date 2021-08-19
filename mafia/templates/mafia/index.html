@@ -8,7 +8,9 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-
+<h5 class="text-center">
+    لیست آخرین بازی ها
+</h5>
             </div>
             <div class="card-body">
                 <ul class="nav flex-column pr-0">
@@ -28,31 +30,34 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-                نقش های بازی
+                <h5 class="text-center">
+
+                    نقش های بازی
+                </h5>
             </div>
             <div class="card-body">
 
-                    {% for role in roles %}
-                        <div class="media mb-4">
-                            <img src="{{role.image}}" class="rounded-circle" width="48" alt="">
-                            <div class="media-body mr-2">
-                                <div>
-                                    <a href="{{role.get_absolute_url}}">
-                                        {{role.role_name}}
-                                    </a>
-                                </div>
-                                <div class="small">
-                                    ساید :
-                                    <span class="badge badge-{{role.role_color}}">
-                                        {{role.side}}
-                
-                                    </span>
-                                </div>
-                            </div>
+                {% for role in roles %}
+                <div class="media mb-4">
+                    <img src="{{role.image}}" class="rounded-circle" width="48" alt="">
+                    <div class="media-body mr-2">
+                        <div>
+                            <a href="{{role.get_absolute_url}}">
+                                {{role.role_name}}
+                            </a>
                         </div>
+                        <div class="small">
+                            ساید :
+                            <span class="badge badge-{{role.role_color}}">
+                                {{role.side}}
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
 
-                    {% endfor %}
+                {% endfor %}
 
             </div>
         </div>

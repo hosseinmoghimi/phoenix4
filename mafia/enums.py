@@ -3,9 +3,11 @@ from django.utils.translation import gettext as _
 from django.db.models import TextChoices
 
 class GameScenarioEnum(TextChoices):
-    TOFANG_DAR='TOFANG_DAR',_('TOFANG_DAR')
-    GROGAN_GIR='GROGAN_GIR',_('GROGAN_GIR')
-    RUH='RUH',_('RUH')
+    TOFANG_DAR='تفنگ دار',_('تفنگ دار')
+    GROGAN_GIR='گروگان گیر',_('گروگان گیر')
+    MOZAKERE='مذاکره',_('مذاکره')
+    DANESH_AMUZ='دانش آموز',_('دانش آموز')
+    RUH='روح',_('روح')
 
 
 class SideEnums(TextChoices):

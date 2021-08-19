@@ -11,7 +11,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields=['id','role_name','description','default_count','side']
+        fields=['id','role_name','image','description','get_absolute_url','default_count','side','role_color']
 
 class GameRoleSerializer(serializers.ModelSerializer):
     role=RoleSerializer()

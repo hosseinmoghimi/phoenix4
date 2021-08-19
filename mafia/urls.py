@@ -7,6 +7,7 @@ urlpatterns = [
     path('player/<int:pk>/',views.BasicViews().player,name='player'),
     path('game1/',views.BasicViews().game1,name='game1'),
     path('game2/',views.BasicViews().game2,name='game2'),
+    path('shuffle_game/',views.BasicViews().shuffle_game,name='shuffle_game'),
     path('god/<int:pk>/',views.BasicViews().god,name='god'),
     path('game/<int:pk>/',views.BasicViews().game,name='game'),
     path('role/<int:pk>/',views.BasicViews().role,name='role'),

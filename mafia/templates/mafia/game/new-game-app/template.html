@@ -1,5 +1,57 @@
 <div class="row" id="game1-app">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="cord-body">
+                <p>
 
+                    <button class="btn btn-success" @click="normalizer()">normalize</button>
+                </p>
+                {% if create_game_form %}
+
+                <form v-show="show_submit" action="{% url 'mafia:game2' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label for="god_id" class="text-right pr-2 farsi">
+
+                                انتخاب گاد بازی
+                            </label>
+                            <select class="form-control" id="god_id" name="god_id">
+                                {% for god in gods %}
+                                <option value="{{god.id}}">
+                                    {{god.profile.name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="god_id" class="text-right pr-2 farsi">
+
+                                انتخاب سناریوی بازی
+                            </label>
+                            <select class="form-control" id="scenario" name="scenario">
+                                {% for scenario in scenarioes %}
+                                <option value="{{scenario}}">
+                                    {{scenario}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+
+                            <button class="btn btn-info" type="submit">شروع نقش دهی به بازیکن ها</button>
+                        </div>
+                    </div>
+
+
+                    <input type="hidden" :value="selected_players_str" name="players">
+                    <input type="hidden" :value="selected_roles_str" name="roles">
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
     <div class="col-md-6">
 
         <div class="card">
@@ -35,20 +87,5 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="cord-body">
-                <button class="btn btn-success" @click="normalizer()">normalize</button>
-                {% if create_game_form %}
 
-                <form v-show="show_submit" action="{% url 'mafia:game2' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" :value="selected_players_str" name="players">
-                    <input type="hidden" :value="selected_roles_str" name="roles">
-                    <button class="btn btn-info" type="submit">شروع نقش دهی به بازیکن ها</button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-    </div>
 </div>
