@@ -23,6 +23,9 @@ class ResumeCategoryRepo:
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+
+
 class ResumeRepo:
     def __init__(self,*args, **kwargs):
         self.request = None

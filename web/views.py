@@ -16,6 +16,18 @@ class BasicViews(View):
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
+class BlogViews(View):
+    def blog(self,request,*args, **kwargs):
+        context=getContext(request)
+        parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        return render(request,TEMPLATE_ROOT+"index.html",context)
+
+class OurworkViews(View):
+    def ourwork(self,request,*args, **kwargs):
+        context=getContext(request)
+        parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        return render(request,TEMPLATE_ROOT+"index.html",context)
+
 class ResumeViews(View):
     def resume_category(self,request,*args, **kwargs):
         context=getContext(request)
