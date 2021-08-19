@@ -203,7 +203,7 @@ class Employee(models.Model):
         return self.profile.name
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":employee", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":employee", kwargs={"employee_id": self.pk})
 
 
 class Saloon(models.Model):

@@ -119,6 +119,38 @@ class AuthenticationViews(View):
         else:   
             context=getContext(request)
             return render(request,TEMPLATE_ROOT+"register.html",context)
+    def reset_password(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+            selected_profile=ProfileRepo(request=request).profile(profile_id=profile_id)
+        else:
+            selected_profile=ProfileRepo(request=request).me
+        context['selected_profile']=selected_profile
+        if request.method=='GET':
+            context['reset_password_form']=ResetPasswordForm()
+            return render(request,TEMPLATE_ROOT+"reset-password.html",context)
+
+        if request.method=='POST':
+            reset_password_form=ResetPasswordForm(request.POST)
+            if reset_password_form.is_valid():
+                username=reset_password_form.cleaned_data['username']
+                old_password=reset_password_form.cleaned_data['old_password']
+                new_password=reset_password_form.cleaned_data['new_password']
+                
+                (result,profile,request1,message)=ProfileRepo(request=request).reset_password(request=request,
+                        username=username,
+                        new_password=new_password,
+                        old_password=old_password,
+                        )
+                if result==FAILED :
+                    context['message']=message
+                    context['search_form']=None
+                    context['reset_password_form']=ResetPasswordForm()
+                if result==SUCCEED:
+                    # ProfileRepo(request=request).profile(username=username)
+                    return redirect(profile.get_absolute_url())
+        return render(request,TEMPLATE_ROOT+"reset-password.html",context)
     def logout(self,request):
         ProfileRepo.logout(request)
         return redirect(reverse('authentication:login'))

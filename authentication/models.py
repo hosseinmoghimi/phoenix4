@@ -122,6 +122,8 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":profile", kwargs={"pk": self.pk})
+    def get_reset_password_url(self):
+        return reverse(APP_NAME+":reset_password_view", kwargs={"profile_id": self.pk})
 
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"

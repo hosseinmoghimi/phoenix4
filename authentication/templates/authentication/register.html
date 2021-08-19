@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<form class="form-signin text-center" action="{% url 'authentication:register' %}" method="POST">
+<form id="register-app" class="form-signin text-center" action="{% url 'authentication:register' %}" method="POST">
     {% csrf_token %}
 
 

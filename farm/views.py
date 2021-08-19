@@ -133,10 +133,10 @@ class BasicViews(View):
         context['doctor'] = doctor
         return render(request, TEMPLATE_ROOT+"doctor.html", context)
 
-    def employee(self, request, pk, *args, **kwargs):
+    def employee(self, request, *args, **kwargs):
 
         context = getContext(request)
-        employee = EmployeeRepo(request=request).employee(pk)
+        employee = EmployeeRepo(request=request).employee(*args, **kwargs)
         context['employee'] = employee
         return render(request, TEMPLATE_ROOT+"employee.html", context)
 
