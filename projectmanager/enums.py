@@ -23,10 +23,11 @@ class ProjectStatusEnum(TextChoices):
     CANCELED='کنسل شده',_('کنسل شده')
 
 class RequestStatusEnum(TextChoices):
+
     DEFAULT='DEFAULT',_('DEFAULT')
     INITIAL='تعریف اولیه در سیستم',_('تعریف اولیه در سیستم')
     DELIVERED='تحویل شده',_('تحویل شده')
-    IN_PROGRESS='در حال بررسی',_('در حال بررسی')
+    IN_PROGRESS='در حال انجام',_('در حال انجام')
     DENIED='رد شده',_('رد شده')
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     REQUESTED='درخواست شده',_('درخواست شده')

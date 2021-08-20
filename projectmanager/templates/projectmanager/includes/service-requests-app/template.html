@@ -13,8 +13,8 @@
             </h5>
         </div>
 
-        <div id="collapsservicerequests" class="collapse {% if service_requests %}show{% endif %}" aria-labelledby="headingservicerequests"
-            data-parent="#accordion">
+        <div id="collapsservicerequests" class="collapse {% if service_requests %}show{% endif %}"
+            aria-labelledby="headingservicerequests" data-parent="#accordion">
 
             <div class="card-body">
                 <table class="table table-striped">
@@ -28,7 +28,7 @@
                         <th>
                             سرویس
                         </th>
-                        
+
 
                         <th>
                             تعداد
@@ -52,18 +52,18 @@
                                     {{service_request.date_added|to_persian_date|safe}}
                                 </small>
                             </td>
-                            
+
                             <td>
 
                                 <a target="_blank" href="{{service_request.employee.get_absolute_url}}">
-                                    <img src="{{service_request.employee.profile.image}}" class="ml-2 rounded" width="32"
-                                        alt="">
+                                    <img src="{{service_request.employee.profile.image}}" class="ml-2 rounded"
+                                        width="32" alt="">
                                     {{service_request.employee.profile.name}}
                                 </a>
                             </td>
-                            
-                            
-                            
+
+
+
                             <td>
 
                                 <a target="_blank" href="{{service_request.service.get_absolute_url}}">
@@ -72,7 +72,7 @@
                                     {{service_request.service.title}}
                                 </a>
                             </td>
-                            
+
                             <td>
                                 {{service_request.quantity}}
                                 <small>
@@ -104,6 +104,7 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% if add_service_request_form %}
 
                         <tr v-for="service_request in service_requests">
                             <td>
@@ -112,11 +113,12 @@
                                 </small>
                             </td>
                             <td>
-                                
+
                                 <a target="_blank" :href="service_request.employee.get_absolute_url">
-                                <img :src="service_request.employee.profile.image" class="ml-2 rounded" width="32" alt="">
-                                   <span v-text="service_request.employee.profile.name">
-</span>
+                                    <img :src="service_request.employee.profile.image" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    <span v-text="service_request.employee.profile.name">
+                                    </span>
                                 </a>
                             </td>
 
@@ -160,6 +162,8 @@
                                 {% endif %}
                             </td>
                         </tr>
+
+                        {% endif %}
                     </tbody>
                 </table>
 
@@ -193,7 +197,7 @@
                             </p>
                             <div class="row">
 
-                                
+
                                 <div class="col-lg-4">
                                     <select v-model="add_service_request_form_employee_id" class="form-control farsi"
                                         id="">
@@ -231,8 +235,8 @@
 
 
 
-                                    <button class="btn btn-outline-secondary" @click="show_add_service_request_form=false"
-                                        type="reset">Cancel</button>
+                                    <button class="btn btn-outline-secondary"
+                                        @click="show_add_service_request_form=false" type="reset">Cancel</button>
                                     <button v-if="!waiting" class="btn btn-primary" type="submit">
                                         <i class="material-icons">
                                             add
@@ -259,7 +263,9 @@
 
                 {% endif %}
             </div>
+            {% if add_service_request_form %}
             <div class="card-footer ">
+
                 <p>
 
                     <span class="small text-secondary">
@@ -277,6 +283,7 @@
 
 
 
+                {% endif %}
             </div>
         </div>
     </div>

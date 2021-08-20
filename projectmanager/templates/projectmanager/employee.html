@@ -8,6 +8,10 @@
     <a href="{{employee.organization_unit.employer.get_absolute_url}}">
         {{employee.organization_unit.employer.title}}
     </a>
+    <span class="mx-2 text-muted">|</span>
+    <a href="{{employee.get_dashboard_url}}">
+        دشبورد
+    </a>
 </p>
 <button class="btn btn-outline-primary">Follow</button>
 <a class="btn btn-outline-danger" href="{{employee.get_edit_url}}">

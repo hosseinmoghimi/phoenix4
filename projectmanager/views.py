@@ -1,6 +1,7 @@
 from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
+from authentication.views import ProfileContext
 from authentication.serilizers import ProfileSerializer
 from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
@@ -120,7 +121,7 @@ class ProjectViews(View):
         pages=page.all_sub_pages()
         pages_s = BasicPageSerializer(pages, many=True).data
         context['pages_s'] = json.dumps(pages_s)
-        return render(request, "dashboard/pages-chart.html", context)
+        return render(request, "phoenix/pages-chart.html", context)
 
     
 
@@ -325,12 +326,24 @@ class EmployeeViews(View):
     def employee(self, request, *args, **kwargs):
         employee = EmployeeRepo(request=request).employee(*args, **kwargs)
         context = getContext(request)
+        context.update(ProfileContext(request=request,profile=employee.profile))
         context['employee'] = employee
 
         context['layout'] = "base-layout.html"
-        context['selected_profile'] = employee.profile
+        # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"employee.html", context)
+    def dashboard(self, request, *args, **kwargs):
+        employee = EmployeeRepo(request=request).employee(*args, **kwargs)
+        context = getContext(request)
+        context.update(ProfileContext(request=request,profile=employee.profile))
+        context['employee'] = employee
+        service_requests=employee.service_requests(undone=True)
+        context['service_requests']=service_requests
+        context['layout'] = "base-layout.html"
+        # context['selected_profile'] = employee.profile
+        return render(request, TEMPLATE_ROOT+"dashboard.html", context)
 
+ 
 
 class MaterialViews(View):
     def materials(self, request, *args, **kwargs):

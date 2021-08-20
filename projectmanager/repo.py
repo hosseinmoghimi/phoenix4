@@ -137,7 +137,12 @@ class OrganizationUnitRepo():
         elif self.user.has_perm(APP_NAME+".view_organizationunit"):
             self.objects = OrganizationUnit.objects
         elif self.profile is not None:
-            self.objects=OrganizationUnit.objects.filter(id=0)
+            employees=self.profile.employee_set.all()
+            ids=[]
+            for employee in employees:
+                for org in employee.organizationunit_set.all():
+                    ids.append(org.id)
+            self.objects=OrganizationUnit.objects.filter(id__in=ids)
         else:
             self.objects=OrganizationUnit.objects.filter(id=0)
 
@@ -234,6 +239,7 @@ class EmployeeRepo():
             self.objects = Employee.objects
         elif self.profile is not None:
             self.objects=Employee.objects.filter(id=0)
+            self.me=Employee.objects.filter(profile=self.profile).first()
         else:
             self.objects=Employee.objects.filter(id=0)
 

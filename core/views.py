@@ -137,7 +137,7 @@ class PageViews(View):
         pages = page.all_sub_pages()
         pages_s = BasicPageSerializer(pages, many=True).data
         context['pages_s'] = json.dumps(pages_s)
-        return render(request, "dashboard/pages-chart.html", context)
+        return render(request, "phoenix/pages-chart.html", context)
 
     def download(self, request, pk):
         if request.user.is_authenticated and request.user.has_perm("core.change_document"):

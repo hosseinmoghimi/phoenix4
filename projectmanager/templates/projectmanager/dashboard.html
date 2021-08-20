@@ -1,0 +1,65 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="text-center">
+            <h3 class="text-center">
+                دشبورد
+
+            </h3>
+
+            <div class="media">
+                <img src="{{employee.profile.image}}" class="rounded-circle" width="96" alt="">
+                <div class="media-body mr-3">
+                    <div>
+                        <a href="{{employee.get_absolute_url}}">
+
+                            {{employee.profile.name}}
+                        </a>
+                    </div>
+                    <div>
+                        <a href="{{employee.organization_unit.get_absolute_url}}">
+
+                            {{employee.organization_unit.title}}
+                        </a>
+                    </div>
+
+                    <div>
+                        <a href="{{employee.organization_unit.employer.get_absolute_url}}">
+
+                            {{employee.organization_unit.employer.title}}
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+  
+    
+<div class="col-md-12">
+    {% include "projectmanager/includes/service-requests-app/template.html" %}
+</div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+
+
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% include "projectmanager/includes/service-requests-app/script.html" %}
+
+
+{% endblock %}
