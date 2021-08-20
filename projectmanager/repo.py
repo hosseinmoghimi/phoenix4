@@ -1,3 +1,4 @@
+from projectmanager.serializers import ServiceRequestSerializer
 from django.http import request
 from django.utils import timezone
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
@@ -382,6 +383,9 @@ class ServiceRepo():
         signature.save()
         return signature
 
+    def service_requests(self,*args, **kwargs):
+        objects=ServiceRequest.objects.all()
+        return objects
 
                    
     def list(self, *args, **kwargs):
@@ -706,3 +710,6 @@ class MaterialRepo():
             signature.save()
             return signature
 
+    def material_requests(self,*args, **kwargs):
+        objects=MaterialRequest.objects.all()
+        return objects

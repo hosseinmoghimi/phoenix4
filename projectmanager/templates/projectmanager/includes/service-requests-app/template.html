@@ -25,6 +25,14 @@
                         <th>
                             پرسنل
                         </th>
+                        {% if not project %}
+
+                        <th>
+
+                            پروژه
+                        </th>
+                        {% endif %}
+
                         <th>
                             سرویس
                         </th>
@@ -62,6 +70,17 @@
                                 </a>
                             </td>
 
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" href="{{service_request.project.get_absolute_url}}">
+                                    <img src="{{service_request.project.thumbnail}}" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    {{service_request.project.title}}
+                                </a>
+                            </td>
+                            {% endif %}
 
 
                             <td>
@@ -72,6 +91,7 @@
                                     {{service_request.service.title}}
                                 </a>
                             </td>
+
 
                             <td>
                                 {{service_request.quantity}}
@@ -283,8 +303,8 @@
 
 
 
-                {% endif %}
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

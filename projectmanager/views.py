@@ -7,7 +7,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo
-from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from django.shortcuts import render
 from .forms import *
@@ -361,12 +361,23 @@ class MaterialViews(View):
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
 
+    def material_requests(self, request, *args, **kwargs):
+        material_requests = MaterialRepo(request=request).material_requests(*args, **kwargs)
+        context = getContext(request)
+        context['material_requests'] = material_requests
+        # context['material_requests_s'] ="[]"
+        context['material_requests_s'] =json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        return render(request, TEMPLATE_ROOT+"material-requests.html", context)
+
     def material(self, request, *args, **kwargs):
         material = MaterialRepo(request=request).material(*args, **kwargs)
         context = getContext(request)
         context['material'] = material
         materials= material.childs()
         context['materials'] =materials
+        material_requests=material.materialrequest_set.all()
+        context['material_requests'] = material_requests
+      
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
         
         context.update(PageContext(request=request, page=material))
@@ -408,10 +419,18 @@ class ServiceViews(View):
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         return render(request, TEMPLATE_ROOT+"service-request.html", context)
 
+    def service_requests(self, request, *args, **kwargs):
+        service_requests = ServiceRepo(request=request).service_requests(*args, **kwargs)
+        context = getContext(request)
+        context['service_requests'] = service_requests
+        context['service_requests_s'] = json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
+        return render(request, TEMPLATE_ROOT+"service-requests.html", context)
+
     def service(self, request, *args, **kwargs):
         service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)
         context['service'] = service
+        context['service_requests'] = service.servicerequest_set.all()
         context['services'] = service.childs()
         context.update(PageContext(request=request, page=service))
         context['add_service_form'] = AddServiceForm()

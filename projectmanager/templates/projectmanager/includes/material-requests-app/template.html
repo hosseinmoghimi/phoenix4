@@ -2,7 +2,7 @@
 {% load to_persian_date %}
 {% load to_price %}
 <div id="accordion">
-    
+
 
     <div class="card" id="material-request-app">
         <div class="card-header" id="headingmaterialrequests">
@@ -16,8 +16,8 @@
 
 
         </div>
-        <div id="collapsematerialrequests" class="collapse {% if material_requests %}show{% endif %}" aria-labelledby="headingmaterialrequests"
-            data-parent="#accordion">
+        <div id="collapsematerialrequests" class="collapse {% if material_requests %}show{% endif %}"
+            aria-labelledby="headingmaterialrequests" data-parent="#accordion">
 
             <div class="card-body">
 
@@ -26,6 +26,12 @@
                         <th>
                             تاریخ درخواست
                         </th>
+                        {% if not project %}
+
+                        <th>
+                            پروژه
+                        </th>
+                        {% endif %}
                         <th>
                             متریال
                         </th>
@@ -51,6 +57,18 @@
                                     {{material_request.date_added|to_persian_date|safe}}
                                 </small>
                             </td>
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" href="{{material_request.project.get_absolute_url}}">
+
+
+                                    {{material_request.project.title}}
+                                </a>
+                            </td>
+                            {% endif %}
+
                             <td>
 
                                 <a target="_blank" href="{{material_request.material.get_absolute_url}}">
@@ -59,6 +77,7 @@
                                     {{material_request.material.title}}
                                 </a>
                             </td>
+
                             <td>
                                 {{material_request.quantity}}
                                 <small>

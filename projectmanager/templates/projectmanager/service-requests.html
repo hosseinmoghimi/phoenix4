@@ -1,0 +1,167 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<div>
+
+
+    <h3 class="text-center">
+
+        <i class="material-icons">engineering</i>
+        <small class="text-secondary">
+            درخواست های سرویس
+
+        </small>
+
+    </h3>
+
+    <div class="row " id="service-requests-app">
+        <div class="col-md-4">
+            <input type="text" placeholder="جستجو ..." v-model="search_for" @input="filter" class="form-control" id="">
+        </div>
+        <div class="col-12">
+
+
+
+            <div class="card" id="service-request-app">
+                <div class="card-header">
+
+                    <h5 class="card-title text-center farsi">
+
+                        درخواست های سرویس
+                    </h5>
+
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <th>
+                                تاریخ درخواست
+                            </th>
+                            {% if not project %}
+
+                            <th>
+                                پروژه
+                            </th>
+                            {% endif %}
+                            <th>
+                                سرویس
+                            </th>
+                            <th>
+                                تعداد
+                            </th>
+                            <th>
+                                قیمت واحد
+                            </th>
+                            <th>
+                                جمع
+                            </th>
+                            <th>
+                                وضعیت
+                            </th>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr v-for="service_request in service_requests">
+                                <td>
+                                    <small v-text="service_request.persian_date_added">
+
+                                    </small>
+                                </td>
+                                <td>
+                                    <img :src="service_request.service.thumbnail" class="ml-2 rounded" width="32"
+                                        alt="">
+
+                                    <a target="_blank" :href="service_request.service.get_absolute_url"
+                                        v-text="service_request.service.title">
+
+                                    </a>
+                                </td>
+                                <td>
+                                    <span v-text="service_request.quantity"></span>
+                                    <small v-text="service_request.unit_name">
+
+                                    </small>
+
+                                </td>
+                                <td>
+                                    <span v-text="to_price(service_request.unit_price,'')"></span>
+
+                                </td>
+                                <td>
+                                    <span
+                                        v-text="to_price(service_request.unit_price*service_request.quantity,'{{CURRENCY}}')"></span>
+
+                                </td>
+                                <td>
+                                    <span v-html="service_request.get_status_tag"></span>
+
+                                    <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
+                                        <i class="material-icons">
+                                            description
+                                        </i>
+                                    </a>
+                                    {% if perms.projectmanager.change_servicerequest %}
+                                    <a title="ویرایش" target="_blank" :href="service_request.get_edit_url">
+                                        <i class="material-icons">edit</i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                
+                </div>
+                <div class="card-footer ">
+                    <p>
+                        <span class="small text-secondary">
+                            مجموع قیمت متریال ها :
+                        </span>
+                        <span v-text="to_price(sum_service_requests)">
+
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let service_requests = JSON.parse("{{service_requests_s|escapejs}}")
+
+    let service_requests_app = new Vue({
+        el: "#service-requests-app",
+        data: {
+            service_requests: service_requests,
+            search_for: "",
+            sum_service_requests: 152000,
+        },
+        methods: {
+            filter: function () {
+                service_requests_app.service_requests = service_requests.filter(item => item.service.title.toUpperCase().includes(service_requests_app.search_for.toUpperCase()))
+            },
+            sum_service_requests1: function () {
+                return 10000
+            },
+            to_price: function (value) {
+                return to_price(value, "{{CURRENCY}}")
+            }
+        }
+    })
+</script>
+
+
+{% endblock %}

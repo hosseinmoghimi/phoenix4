@@ -64,7 +64,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card mb-3" id="services-app">
+            <div class="card mb-3">
                 <div class="card-header card-header-success">
                     <h5 class="card-title text-center farsi">
                         <a href="{% url 'projectmanager:materials' %}" class="btn btn-link">
@@ -72,17 +72,36 @@
                         </a>
                     </h5>
                 </div>
-
-
-
             </div>
+
+            <div class="card mb-3">
+                <div class="card-header card-header-success">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:material_requests' %}" class="btn btn-link">
+                            درخواست های متریال
+                        </a>
+                    </h5>
+                </div>
+            </div>
+
+
+            <div class="card mb-3">
+                <div class="card-header card-header-success">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:service_requests' %}" class="btn btn-link">
+                            درخواست های سرویس
+                        </a>
+                    </h5>
+                </div>
+            </div>
+
         </div>
         <div class="col-md-4">
             <div class="card mb-3" id="services-app">
                 <div class="card-header card-header-success" id="headingServices">
                     <h5 class="card-title text-center farsi">
                         <a href="{% url 'projectmanager:projects' %}" class="btn btn-link">
-                        لیست همه پروژه ها
+                            لیست همه پروژه ها
                         </a>
                     </h5>
                 </div>

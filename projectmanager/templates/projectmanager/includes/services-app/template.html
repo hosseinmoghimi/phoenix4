@@ -11,7 +11,8 @@
         </h5>
     </div>
     <div id="collapseServices"
-    class="collapse" aria-labelledby="headingServices"
+    
+    class="collapse {% if service %}show{% endif %} " aria-labelledby="headingServices"
    data-parent="#accordion">
     <div class="card-body">
         {% for service in services %}
