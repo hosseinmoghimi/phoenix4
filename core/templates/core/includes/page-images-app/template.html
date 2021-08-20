@@ -10,7 +10,8 @@
             </h6>
         </div>
 
-        <div id="collapsesepageimages" class="collapse {% if page.pageimage_set.all %}show{% endif %}" aria-labelledby="headingpageimages" data-parent="#accordion">
+        <div id="collapsesepageimages" class="collapse {% if page.pageimage_set.all %}show{% endif %}"
+            aria-labelledby="headingpageimages" data-parent="#accordion">
             <div class="card-body">
                 <div class="row">
                     {% for page_image in page.pageimage_set.all %}
@@ -24,13 +25,14 @@
                                     edit
                                 </i>
                             </a>
-                        {% endif %}
+                            {% endif %}
                         </h6>
                         <a target="_blank" href="{{page_image.image.image}}">
 
-                            <img class="rounded" src="{{page_image.image.image}}" width="100%" alt="{{page_image.image.title}}">
+                            <img class="rounded" src="{{page_image.image.image}}" width="100%"
+                                alt="{{page_image.image.title}}">
                         </a>
-                       
+
                     </div>
                     {% endfor %}
 
@@ -39,9 +41,9 @@
 
 
                     <div class="col-md-4" v-for="page_image in page_images">
-                      
-                      
-                        <h6 class="text-center mt-4 mb-2" >
+
+
+                        <h6 class="text-center mt-4 mb-2">
                             <span v-text="page_image.image.title"></span>
                             {% if perms.core.change_pageimage %}
 
@@ -50,15 +52,16 @@
                                     edit
                                 </i>
                             </a>
-                        {% endif %}
+                            {% endif %}
 
                         </h6>
                         <a target="_blank" :href="page_image.image.image">
 
-                            <img :src="page_image.image.image" width="100%" :alt="page_image.image.title" class="rounded">
+                            <img :src="page_image.image.image" width="100%" :alt="page_image.image.title"
+                                class="rounded">
                         </a>
 
-                       
+
                     </div>
 
 
