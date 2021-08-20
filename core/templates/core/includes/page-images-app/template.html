@@ -64,6 +64,7 @@
 
 
                 </div>
+                {% if add_page_document_form %}
                 <p>
 
                     <button @click="show_add_page_image_form=true" v-if="!show_add_page_image_form"
@@ -71,7 +72,6 @@
                         افزودن تصویر
                     </button>
                 </p>
-                {% if add_page_document_form %}
 
                 <form id="add-page-image-form" v-if="show_add_page_image_form" @submit.prevent="add_page_image()"
                     enctype="multipart/form-data">

@@ -43,12 +43,10 @@
                             <th>
                                 تاریخ درخواست
                             </th>
-                            {% if not project %}
 
                             <th>
                                 پروژه
                             </th>
-                            {% endif %}
                             <th>
                                 متریال
                             </th>
@@ -76,6 +74,15 @@
                                     </small>
                                 </td>
                                 <td>
+                                    
+
+                                    <a target="_blank" :href="material_request.project.get_absolute_url"
+                                        v-text="material_request.project.title">
+
+                                    </a>
+                                </td>
+
+                                <td>
                                     <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32"
                                         alt="">
 
@@ -84,6 +91,7 @@
 
                                     </a>
                                 </td>
+
                                 <td>
                                     <span v-text="material_request.quantity"></span>
                                     <small v-text="material_request.unit_name">
