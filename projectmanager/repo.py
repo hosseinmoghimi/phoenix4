@@ -26,7 +26,10 @@ class ProjectRepo():
         elif self.profile is not None:
             employees=Employee.objects.filter(profile=self.profile)
             lisst=[]
-            self.objects=Project.objects.filter(id=0)
+            for employee in employees:
+                for proj in employee.my_projects():
+                    lisst.append(proj.id)
+            self.objects=Project.objects.filter(id__in=lisst)
         else:
             self.objects=Project.objects.filter(id=0)
 
@@ -141,8 +144,7 @@ class OrganizationUnitRepo():
             employees=self.profile.employee_set.all()
             ids=[]
             for employee in employees:
-                for org in employee.organizationunit_set.all():
-                    ids.append(org.id)
+                ids.append(employee.organization_unit.id)
             self.objects=OrganizationUnit.objects.filter(id__in=ids)
         else:
             self.objects=OrganizationUnit.objects.filter(id=0)

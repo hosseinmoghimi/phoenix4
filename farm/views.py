@@ -13,6 +13,7 @@ from core.views import CoreContext
 
 TEMPLATE_ROOT = APP_NAME+"/"
 
+# TEMPLATE_ROOT = "material-dashboard-5/"
 
 def getContext(request):
     context = CoreContext(request=request, app_name=APP_NAME)

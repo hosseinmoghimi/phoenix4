@@ -84,9 +84,9 @@ class Employee(models.Model):
         return reverse(APP_NAME+":dashboard",kwargs={'employee_id':self.pk})
     def my_projects(self):
         ids=[]
-        for org in self.organizationunit_set.all():
-            for proj in org.project_set.all():
-                ids.append(proj.id)
+        # for org in self.organization_unit_set.all():
+        for proj in self.organization_unit.project_set.all():
+            ids.append(proj.id)
         return Project.objects.filter(id__in=ids)
     
 class ProjectManagerPage(CoreBasicPage):

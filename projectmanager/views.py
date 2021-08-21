@@ -313,6 +313,11 @@ class OrganizationUnitViews(View):
 
     def employer(self, request, *args, **kwargs):
         employer = EmployerRepo(request=request).employer(*args, **kwargs)
+        if employer is None:
+            mv=MessageView()
+            mv.message_text = "اصلاعات ناصحیح"
+            mv.header_text = "خطای 452"
+            return mv.response(request=request)
         context = getContext(request)
         context['employer'] = employer
         if request.user.has_perms(APP_NAME+".add_organizationunit"):
