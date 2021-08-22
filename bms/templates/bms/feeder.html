@@ -1,0 +1,235 @@
+{% extends "bms/layout.html" %}
+{% load static %}
+
+
+
+{% block content_bms %}
+<div class="row" id="feeder_app">
+
+    <div class="col-md-4">
+        {% include "bms/includes/feeder.html" %}
+    </div>
+
+    <div class="col-md-8" id="">
+        <div class="card">
+            <div class="card-header card-header-icon card-header-info">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    رله های فیدر {{feeder.name}}
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>
+                            name
+                        </th>
+                        <th>
+                            reg
+                        </th>
+                        <th>
+
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for relay in feeder.relay_set.all %}
+                        <tr>
+                            <td>
+                                <a href="{{relay.get_absolute_url}}">
+                                    {{relay.name}}
+                                </a>
+                                {% if perms.bms.change_relay %}
+                                {{relay.get_edit_btn|safe}}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{relay.register}}
+                            </td>
+                            <td>
+                                {% if relay.current_state %}
+                                <span class="material-icons text-danger mx-2" title="power on">
+                                    power
+                                </span>
+                                {% else %}
+                                <span class="material-icons text-secondary mx-2" title="power off">
+                                    power_off
+                                </span>
+                                {% endif %}
+
+
+                                {% if relay.is_protected %}
+                                <span class="material-icons text-primary mx-2" title="locked">
+                                    lock
+                                </span>
+                                {% endif %}
+
+                           
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header card-header-icon card-header-warning">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h4 class="card-title">
+                    فرمان های مربوط به این فیدر
+                </h4>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>
+
+
+                            فرمان
+                        </th>
+                        <th>
+                            رله
+                        </th>
+                        <th>
+                            دسترسی ها
+                        </th>
+                        <th>
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for relay in feeder.relay_set.all%}
+
+                        {% for command in relay.command_set.all%}
+                        <tr>
+                            <td>
+                                {% if profile in command.profiles.all %}
+                                <button @click="execute_command({{command.id}})"
+                                    class="btn btn-link btn-{{command.color}}" type="submit">
+                                    <span class="material-icons text-light">
+                                        play_circle
+                                    </span>
+                                </button>
+                                {% endif %}
+
+
+
+                                <a href="{{command.get_absolute_url}}">
+
+                                    {{command.name}}
+                                </a>
+
+                            </td>
+                            <td>
+                                <a href="{{command.relay.get_absolute_url}}">
+
+                                    {{command.relay.name}}
+                                </a>
+                            </td>
+                            <td>
+                                {% for po in command.profiles.all %}
+                                <a title="{{po.name}}" href="{{po.get_absolute_url}}">
+
+                                    <img src="{{po.image}}" width="32" class="rounded-circle" alt="">
+                                    <!-- <small>
+                                        {{po.name}}
+                                    </small> -->
+                                </a>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if profile in command.profiles.all %}
+                                <button @click="execute_command({{command.id}})"
+                                    class="btn btn-link btn-{{command.color}}" type="submit">
+                                    <span class="material-icons text-light">
+                                        play_circle
+                                    </span>
+                                </button>
+                                {% endif %}
+                                {% if perms.bms.change_command %}
+                                {{command.get_edit_btn|safe}}
+
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% block script_bms %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    $("#nav-item-bms-index").addClass("active")
+
+    let url_run_scenario = "{% url 'bms:run_scenario' %}"
+    let url_execute_command = "{% url 'bms:execute_command' %}"
+    let app = new Vue({
+        el: "#feeder_app",
+        data: {
+            pin: "",
+
+        },
+        methods: {
+            run_scenario: function (scenario_id) {
+                let url = url_run_scenario
+                let payload = {
+                    scenario_id: scenario_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                })
+            },
+            execute_command: function (command_id) {
+                let url = url_execute_command
+                let payload = {
+                    command_id: command_id,
+                    pin: this.pin,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+
+                    }
+                    else {
+                        swal
+                    }
+                })
+            },
+
+        }
+    })
+</script>
+{% endblock %}
