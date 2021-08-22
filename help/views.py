@@ -19,6 +19,8 @@ def get_sidebar_links(app_name):
         from farm.help import sidebar_links
     if app_name=='mafia':
         from mafia.help import sidebar_links
+    if app_name=='messenger':
+        from messenger.help import sidebar_links
     return sidebar_links
 
 class HelpView(View):

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',   # <--
     'allauth.socialaccount.providers.google', 
 
-#    "pinax.forums",  
+    'bms',  
     'mafia',
     'messenger',
     'realestate',

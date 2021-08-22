@@ -22,6 +22,8 @@ TEMPLATE_ROOT = APP_NAME+"/"
 
 def getContext(request):
     context = DefaultContext(request=request, app_name=APP_NAME)
+    context['layout_parent']="material-dashboard-5-rtl/layout.html"
+    context['layout_parent']="phoenix/layout.html"
     context["layout"] = TEMPLATE_ROOT+"layout.html"
     context["admin_utility"] = AdminUtility(request=request)
     context['search_action'] = reverse(APP_NAME+":search")
@@ -68,6 +70,7 @@ class BasicViews(View):
                     request=request).list(search_for=search_for)
                 context['log'] = log
                 return render(request, TEMPLATE_ROOT+"search.html", context)
+        return BasicViews().home(request=request)
 
     def home(self, request, *args, **kwargs):
         context = getContext(request)

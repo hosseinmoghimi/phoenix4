@@ -37,11 +37,22 @@
 <div id="home-app">
     <div class="row ">
         <div class="col-md-4">
-            {% include "projectmanager/includes/employers-app/template.html" %}
-            {% include "projectmanager/includes/projects-app/template.html" %}
+            <div class="card mb-3" id="services-app">
+                <div class="card-header card-header-success" id="headingServices">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:projects' %}" class="btn btn-link">
+                            لیست همه پروژه ها
+                        </a>
+                    </h5>
+                </div>
 
+
+
+            </div>
+            {% include "projectmanager/includes/projects-app/template.html" %}
         </div>
         <div class="col-md-4">
+            {% include "projectmanager/includes/employers-app/template.html" %}
             <div class="card mb-3" id="services-app">
                 <div class="card-header card-header-success" id="headingServices">
                     <h5 class="card-title text-center farsi">
@@ -95,20 +106,7 @@
             </div>
 
         </div>
-        <div class="col-md-4">
-            <div class="card mb-3" id="services-app">
-                <div class="card-header card-header-success" id="headingServices">
-                    <h5 class="card-title text-center farsi">
-                        <a href="{% url 'projectmanager:projects' %}" class="btn btn-link">
-                            لیست همه پروژه ها
-                        </a>
-                    </h5>
-                </div>
 
-
-
-            </div>
-        </div>
         <div class="col-md-4">
         </div>
     </div>

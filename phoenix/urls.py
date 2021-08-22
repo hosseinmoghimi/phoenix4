@@ -10,6 +10,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('market/', include('market.urls')),
+    path('bms/', include('bms.urls')),
     path('projectmanager/', include('projectmanager.urls')),
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),
