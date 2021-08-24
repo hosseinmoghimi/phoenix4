@@ -1,5 +1,6 @@
 {% extends "mafia/layout.html" %}
 {% load static %}
+{% load to_ %}
 {% block mafia_content %}
 <div class="row">
     <div class="col-md-6">
@@ -171,6 +172,28 @@
 
                     {% endfor %}
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                {% if start_game_day_form %}
+                <form action="{% url 'mafia:start_game_day' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" id="" value="{{game.id}}">
+                    <button class="btn btn-success" type="submit">شروع روز {{game.next_day_no|to_tartib}}</button>
+                </form>
+                {% endif %}
+
+                {% if start_game_night_form %}
+                <form action="{% url 'mafia:start_game_night' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" id="" value="{{game.id}}">
+                    <button class="btn btn-success" type="submit">شروع شب {{game.next_night_no|to_tartib}}</button>
+                </form>
+                {% endif %}
+
             </div>
         </div>
     </div>

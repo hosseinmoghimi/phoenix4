@@ -1,4 +1,5 @@
-from resume.enums import LanguageEnum
+from resume.forms import AddResumeFactForm, AddResumeSkillForm
+from resume.enums import LanguageEnum, ResumeItemEnum
 from resume.utils import AdminUtility
 from resume.models import ResumePortfolio
 from django.http import Http404
@@ -13,6 +14,10 @@ from django.views import View
 TEMPLATE_ROOT="my_resume_en/"
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
+    language=LanguageEnum.ENGLISH
+    if 'language' in kwargs:
+        language=kwargs['language']
+    context['language']=language
     context['admin_utility']=AdminUtility(request=request)
     context['title']='Resume'
     return context
@@ -23,7 +28,8 @@ class BasicViews(View):
         # if 'language' in kwargs:
         #     language=kwargs['language']
         if 'profile_id' in kwargs:
-            resume_index=ResumeIndexRepo(request=request,*args, **kwargs).resume_index(*args, **kwargs)
+            profile_id=kwargs['profile_id']
+            resume_index=ResumeIndexRepo(request=request,*args, **kwargs).resume_index(profile_id=profile_id)
             context['resume_index']=resume_index
             parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
             context['location']=parameter_repo.get(name='location')
@@ -32,8 +38,15 @@ class BasicViews(View):
             context['resume_index']=resume_index
             context['title']=resume_index.title
 
+
             portfolio_categories=PortfolioRepo(request=request).category_list()
             context['portfolio_categories']=portfolio_categories
+            profile=ProfileRepo(request=request).me
+            if profile.id==profile_id or request.user.has_perm(APP_NAME+"change_resumeindex"):
+                #user can change resume
+                context['add_resume_fact_form']=AddResumeFactForm()
+                context['add_resume_skill_form']=AddResumeSkillForm()
+                # context['resume_item_enums']=(i[0] for i in ResumeItemEnum.choices)
             return render(request,TEMPLATE_ROOT+"index.html",context)
         raise Http404
     def portfolio(self,request,*args, **kwargs):

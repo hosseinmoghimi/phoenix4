@@ -33,6 +33,10 @@ class Game(models.Model):
     status=models.CharField(_("وضعیت بازی"),choices=GameStatusEnums.choices, max_length=50)
     
     class_name="game"
+    def next_night_no(self):
+        return len(GameNight.objects.filter(game=self))+1
+    def next_day_no(self):
+        return len(GameDay.objects.filter(game=self))+1
     def live_gameroles(self):
         return self.gamerole_set.filter(status=GameRoleStateEnum.ALIVE)
     def get_edit_url(self):

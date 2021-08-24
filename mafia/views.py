@@ -146,6 +146,8 @@ class BasicViews(View):
         if game.status==GameStatusEnums.ROLING:
             context['shuffle_game_form']=ShuffleGameForm()
             context['start_game_form']=StartGameForm()
+        context['start_game_day_form']=StartGameDayForm()
+        context['start_game_night_form']=StartGameNightForm()
         return render(request,TEMPLATE_ROOT+"game.html",context)
     def game_day(self,request,*args, **kwargs):
         game_day=GameRepo(request=request).game_day(*args, **kwargs)

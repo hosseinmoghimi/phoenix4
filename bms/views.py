@@ -47,7 +47,6 @@ class BasicViews(View):
         context['relays'] = [1, 2, 3, 4]
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
-# Create your views here.
 
     def scenario(self, request, pk, *args, **kwargs):
         context = getContext(request)

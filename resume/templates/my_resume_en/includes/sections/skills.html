@@ -15,12 +15,36 @@
             </div>
         </div>
 
-        
+
         <div class="row skills-content">
             {% if perms.resume.add_resumeskill %}
-            {{admin_utility.get_add_skill_btn|safe}}
+            <div class="text-center">
+                <a target="_blank" href="{{admin_utility.get_add_skill_link}}?resume_index={{resume_index.id}}">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>  
             {% endif %}
-            
+            {% if add_resume_skill_form %}
+            <form method="POST" action="{% url 'resume:add_resume_skill' %}">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="{{language}}">
+                <input type="hidden" name="resume_index_id" value="{{resume_index.id}}">
+                <div class="row">
+                    <div class="col-4">
+                        <input type="text" name="title" required placeholder="title" class="form-control">
+
+                    </div>
+                    <div class="col-4">
+                        <input type="number" required name="percentage" min="0" max="100" placeholder="percentage" class="form-control">
+
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-success" type="submit">Add</button>
+                    </div>
+                </div>
+
+            </form>
+            {% endif %}
             {% for skill in resume_index.resumeskill_set.all %}
 
             <div class="col-lg-6">

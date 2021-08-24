@@ -8,6 +8,8 @@ from core.views import CoreContext, PageContext
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['title']="Market"
+    context['layout_parent']="phoenix/layout.html"
+    context['layout_parent']="Adminlte/layout.html"
     return context
 # Create your views here.
 class BasicViews(View):

@@ -47,6 +47,8 @@ class Icon(models.Model):
             return f'<i style="{icon_style}" class="{text_color} {self.icon_fa}"></i>'
 
         if self.icon_svg is not None and len(self.icon_svg) > 0:
+            return f'{self.icon_svg}'
+        if self.icon_svg is not None and len(self.icon_svg) > 0:
             return f'<span  style="{icon_style}" class="{text_color}">{self.icon_svg}</span>'
         return ''
 

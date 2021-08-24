@@ -1,5 +1,6 @@
-from resume.enums import LanguageEnum
-from .models import Resume, ResumeCategory, ResumeIndex, ResumePortfolio, ResumeService, ResumeTestimonial,ContactMessage
+from mafia.apps import APP_NAME
+from resume.enums import IconEnum, LanguageEnum
+from .models import Resume, ResumeCategory, ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill, ResumeTestimonial,ContactMessage
 from authentication.repo import ProfileRepo
 
 class ResumeIndexRepo:
@@ -121,7 +122,107 @@ class ResumeRepo:
         resume_category= ResumeCategory.objects.filter(pk=pk).first()
         return resume_category
 
+class ResumeFactRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        self.language=LanguageEnum.ENGLISH
+        
+        if 'language' in kwargs:
+            self.language=kwargs['language']        
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=ResumeFact.objects.all()#.filter(language=self.language)
+    
+    def resume_fact(self,*args, **kwargs):
+        pk=0
+        if 'resume_fact_id' in kwargs:
+            pk=kwargs['resume_fact_id']           
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        resume_fact= self.objects.filter(pk=pk).first()
+        return resume_fact
+    def add(self,*args, **kwargs):
+        if 'resume_index_id' in kwargs:
+            resume_index_id=kwargs['resume_index_id']
+            resume_index=ResumeIndex.objects.filter(language=self.language).filter(pk=resume_index_id).first()
+            if resume_index is None:
+                return None
+            if self.user.has_perm(APP_NAME+".add_resumefact") or self.profile==resume_index.profile:
+                pass
+            else:
+                return None
+            resume_fact=ResumeFact()
+            resume_fact.icon=IconEnum.award
+            resume_fact.color="#0563bb"
+            resume_fact.resume_index=resume_index
+            if 'title' in kwargs:
+                resume_fact.title=kwargs['title']
+            if 'count' in kwargs:
+                resume_fact.count=kwargs['count']
+            if 'color' in kwargs:
+                resume_fact.color=kwargs['color']
+            if 'icon' in kwargs:
+                resume_fact.icon=kwargs['icon']
+            resume_fact.save()
+            return resume_fact
 
+ 
+class ResumeSkillRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        self.language=LanguageEnum.ENGLISH
+        
+        if 'language' in kwargs:
+            self.language=kwargs['language']        
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=ResumeSkill.objects.all()#.filter(language=self.language)
+    
+    def resume_skill(self,*args, **kwargs):
+        pk=0
+        if 'resume_skill_id' in kwargs:
+            pk=kwargs['resume_skill_id']           
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        resume_skill= self.objects.filter(pk=pk).first()
+        return resume_skill
+    def add(self,*args, **kwargs):
+        if 'resume_index_id' in kwargs:
+            resume_index_id=kwargs['resume_index_id']
+            resume_index=ResumeIndex.objects.filter(language=self.language).filter(pk=resume_index_id).first()
+            if resume_index is None:
+                return None
+            if self.user.has_perm(APP_NAME+".add_resumeskill") or self.profile==resume_index.profile:
+                pass
+            else:
+                return None
+            resume_skill=ResumeSkill()
+            resume_skill.priority=100
+            resume_skill.resume_index=resume_index
+            if 'title' in kwargs:
+                resume_skill.title=kwargs['title']
+            if 'percentage' in kwargs:
+                resume_skill.percentage=kwargs['percentage']
+            if 'priority' in kwargs:
+                resume_skill.priority=kwargs['priority']
+            resume_skill.save()
+            return resume_skill
+
+            
 
 class ContactMessageRepo:
     def __init__(self,*args, **kwargs):
