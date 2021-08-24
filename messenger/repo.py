@@ -1,5 +1,5 @@
 from messenger.serializers import MessageSerializer
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 import pusher
 from django.db.models.query_utils import Q
 from pusher.http import request_method

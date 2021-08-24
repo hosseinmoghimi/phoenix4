@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import GameRole, Player,Game,God, Role
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 
 class PlayerSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()

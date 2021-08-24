@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 from .models import BasicPage, Image, PageComment, PageDocument, PageImage, PageLink
 
 class BasicPageSerializer(serializers.ModelSerializer):

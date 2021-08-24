@@ -1,7 +1,7 @@
 from authentication.repo import ProfileRepo
 from rest_framework import serializers
 from .models import Document, Payment, Stock
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 
 
 class StockSerializer(serializers.ModelSerializer):

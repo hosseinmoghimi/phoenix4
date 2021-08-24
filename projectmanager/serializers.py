@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, ServiceRequestSignature
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 
 
 class EmployerSerializer(serializers.ModelSerializer):

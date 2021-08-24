@@ -2,7 +2,7 @@ from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
