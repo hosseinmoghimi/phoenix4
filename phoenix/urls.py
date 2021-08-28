@@ -18,6 +18,7 @@ urlpatterns = [
     path('farm/', include('farm.urls')),
     path('mafia/', include('mafia.urls')),
     path('core/', include('core.urls')),
+    path('calendar/',include('todocalendar.urls')),
     path('help/', include('help.urls')),
     path('web/', include('web.urls')),
     path('accounts/', include('authentication.urls')),

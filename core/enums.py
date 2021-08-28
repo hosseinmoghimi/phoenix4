@@ -21,6 +21,7 @@ class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
     web='web',_('web')
     stock='stock',_('stock')
+    calendar='calendar',_('calendar')
     resume='resume',_('resume')
     realestate='realestate',_('realestate')
     projectmanager='projectmanager',_('projectmanager')
@@ -170,6 +171,12 @@ my_apps=[
             'title':'خیریه',
             'color':'primary',
             'url':'/charity/'
+        },
+        {
+            'name':'todocalendar',
+            'title':'سررسید',
+            'color':'primary',
+            'url':'/calendar/'
         },
         {
             'name':'drassistant',

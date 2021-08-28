@@ -1,0 +1,61 @@
+{% load static %}
+<div id="accordion">
+
+    <div class="card" id="page-tags-app">
+        <div class="card-header" id="headingPageTags">
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapsePageTags" aria-expanded="true"
+                    aria-controls="collapsePageTags">
+                    برچسب ها </button>
+            </h5>
+
+
+        </div>
+
+        <div id="collapsePageTags" class="collapse" aria-labelledby="headingPageTags" data-parent="#accordion">
+
+
+            <div class="card-body">
+                <div class="rtl text-right">
+
+                    {% for tag in page_tags %}
+
+                    <a class="btn btn-primary btn-sm mx-1 my-1 farsi" href="{{tag.get_absolute_url}}">
+                        <span class="material-icons">
+                            local_offer
+                            </span>
+                        {{tag.title}}
+
+                    </a>
+                    {% endfor %}
+
+
+                    <a class="btn btn-primary btn-sm mx-1 my-1 farsi" v-for="tag in tags" :href="tag.get_absolute_url">
+                        <span class="material-icons">
+                            local_offer
+                            </span>
+                        <span v-text="tag.title"></span>
+                    </a>
+
+                    {% if add_page_tag_form %}
+
+
+                    <img src="{% static 'img/ha-loader.gif' %}" v-if="waiting" alt="">
+                    <form @submit.prevent="add_page_tag()">
+                        <input required type="text" v-model="tag_title" class="form-control" style="width: 8em;"
+                            placeholder="تگ جدید">
+
+
+
+
+
+                    </form>
+
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<script>
+    let page_tags_app = new Vue({
+        el: "#page-tags-app",
+        data: {
+            tag_title: "",
+            tags: [],
+            waiting:false,
+            
+        },
+        methods: {
+            add_page_tag: function () {
+                page_tags_app.waiting=true
+                let url = "{% url 'core:add_page_tag' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    page_id: page_id,
+                    title: page_tags_app.tag_title,
+                }
+                console.log(payload)
+                $.post(url, payload).done((data) => {
+                    
+                page_tags_app.waiting=false
+                    console.log(data)
+                    if (data.result === 'SUCCEED'){
+                        page_tags_app.tag_title=""
+                        page_tags_app.tags.push(data.tag)
+                    }
+                })
+            }
+        }
+    })
+</script>

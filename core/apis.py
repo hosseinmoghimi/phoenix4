@@ -1,8 +1,8 @@
-from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer
+from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer, TagSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *
-from .repo import BasicPageRepo, DocumentRepo, PageCommentRepo, PageImageRepo, PageLinkRepo
+from .repo import BasicPageRepo, DocumentRepo, PageCommentRepo, PageImageRepo, PageLinkRepo, TagRepo
 from .constants import SUCCEED, FAILED
 
 
@@ -42,6 +42,25 @@ class BasicApi(APIView):
                 if related_page is not None:
                     log = 4
                     context['related_page'] = BasicPageSerializer(related_page).data
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
+
+    def add_page_tag(self, request, *args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log = 2
+            add_page_tag_form = AddPageTagForm(request.POST)
+            if add_page_tag_form.is_valid():
+                log = 3
+                page_id = add_page_tag_form.cleaned_data['page_id']
+                title = add_page_tag_form.cleaned_data['title']
+                tag = TagRepo(request=request).add_page_tag(page_id=page_id, title=title)
+                if tag is not None:
+                    log = 4
+                    context['tag'] = TagSerializer(tag).data
                     context['result'] = SUCCEED
         context['log'] = log
         return JsonResponse(context)

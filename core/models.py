@@ -1,6 +1,6 @@
 from django.db import models, reset_queries
 from django.db.models.base import Model
-from django.db.models.fields import BooleanField
+from django.db.models.fields import BooleanField, CharField
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
 from .settings import *
@@ -77,7 +77,16 @@ class Tag(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     title = models.CharField(_("عنوان"), max_length=50)
     icon=models.ForeignKey("Icon", verbose_name=_("icon"),null=True,blank=True, on_delete=models.CASCADE)
-    
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":tag", kwargs={"pk": self.pk})
+
 class Image(models.Model):
     title = models.CharField(
         _("عنوان تصویر"), max_length=100, null=True, blank=True)
@@ -136,7 +145,7 @@ class BasicPage(models.Model):
     
     archive = models.BooleanField(_("بایگانی شود؟"), default=False)
     
-    priority = models.IntegerField(_('ترتیب'), default=100)
+    priority = models.IntegerField(_('اولویت / ترتیب'), default=100)
 
     creator = models.ForeignKey("authentication.profile", verbose_name=_(
         "ایجاد شده توسط"), null=True, blank=True, on_delete=models.SET_NULL)
@@ -370,6 +379,21 @@ class Link(Icon):
                 </i>
             </a>
         """
+
+# class PageTag(models.Model):
+#     page=models.ForeignKey("BasicPage", verbose_name=_("page"), on_delete=models.CASCADE)
+#     keyword=models.CharField(_("KeyWord"), max_length=50)
+
+#     class Meta:
+#         verbose_name = _("PageTag")
+#         verbose_name_plural = _("PageTags")
+
+#     def __str__(self):
+#         return f"{self.page.title} : {self.keyword}"
+
+#     def get_absolute_url(self):
+#         return reverse(APP_NAME+":tag", kwargs={"pk": self.pk})
+
 
 
 class PageLink(Link):

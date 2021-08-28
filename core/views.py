@@ -45,6 +45,8 @@ def PageContext(request, page):
     context['related_pages'] = page.related_pages.all()
     if request.user.has_perm(APP_NAME+".add_pagelink"):
         context['add_page_link_form'] = AddPageLinkForm()
+    if request.user.has_perm(APP_NAME+".change_page"):
+        context['add_page_tag_form'] = AddPageTagForm()
     if ProfileRepo(request=request).me is not None:
         context['add_page_comment_form'] = AddPageCommentForm()
 
@@ -58,6 +60,7 @@ def PageContext(request, page):
     page_comments_s = json.dumps(
         PageCommentSerializer(page_comments, many=True).data)
     context['page_comments_s'] = page_comments_s
+    context['page_tags']=page.tags.all()
     return context
 
 
@@ -200,3 +203,13 @@ class PageViews(View):
         context['add_child_form'] = AddPageForm()
         context['childs'] = page.childs.all()
         return render(request, TEMPLATE_ROOT+"page.html", context)
+
+    def tag(self, request, *args, **kwargs):
+        tag_repo=TagRepo(request=request)
+        tag = tag_repo.tag(*args, **kwargs)
+        context = getContext(request)
+        pages=tag.basicpage_set.all()
+        context['tag'] = tag
+        context['pages'] = pages
+        context['title'] = tag.title
+        return render(request, TEMPLATE_ROOT+"pages.html", context)

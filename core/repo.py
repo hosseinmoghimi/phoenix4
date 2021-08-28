@@ -4,6 +4,57 @@ from authentication.repo import ProfileRepo
 from django.db.models import Q
 from .enums import ParametersEnum
 from authentication.repo import ProfileRepo
+class TagRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        self.objects=Tag.objects
+    def tag(self,*args, **kwargs):
+        pk=0
+        if 'tag_id' in kwargs:
+            pk=kwargs['tag_id']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'title' in kwargs:
+            return self.objects.filter(title=kwargs['title']).first()
+        return self.objects.filter(pk=pk).first()
+    
+    def add_page_tag(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_tag"):
+            return None
+        title=None
+        page_id=None
+        tag=None
+        page=None
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        if 'title' in kwargs:
+            title=kwargs['title']
+        if title is not None:
+            # tag=Tag.objects.get_or_create(title=title).tag
+            tag=Tag.objects.filter(title=title).first()
+            if tag is None:
+                tag=Tag(title=title)
+                tag.save()
+        if page_id is not None:
+            page=BasicPage.objects.filter(pk=page_id).first()
+
+        if tag in page.tags.all():
+            return None
+        # print(tag)
+        # print(10*"####5555")
+        page.tags.add(tag)
+        return tag
+        
+        
+
 class BasicPageRepo:
     def __init__(self,*args, **kwargs):
         self.request=None

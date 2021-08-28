@@ -44,6 +44,7 @@
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
             {% include "core/includes/page-documents-app/template.html" %}
+            {% include "core/includes/page-tags-app/template.html" %}
 
         </div>
 
@@ -82,6 +83,8 @@
 {% include "projectmanager/includes/services-app/script.html" %}
 {% include "core/includes/page-related-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+
 <script>
     $(document).ready(()=>{
         $("#collapseMaterials").addClass("show")
