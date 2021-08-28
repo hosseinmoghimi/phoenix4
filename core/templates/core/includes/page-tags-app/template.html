@@ -17,30 +17,43 @@
 
             <div class="card-body">
                 <div class="rtl text-right">
+                    {% if not add_page_tag_form %}
+                    {% for tag in page_tags1 %}
 
-                    {% for tag in page_tags %}
-
-                    <a class="btn btn-primary btn-sm mx-1 my-1 farsi" href="{{tag.get_absolute_url}}">
-                        <span class="material-icons">
-                            local_offer
+                        <a class="mx-1 my-1 farsi" href="{{tag.get_absolute_url}}">
+                            <span class="material-icons">
+                                local_offer
                             </span>
-                        {{tag.title}}
 
-                    </a>
+                            {{tag.title}}
+
+                        </a>
+
+
+
+
+
                     {% endfor %}
 
+                    {% endif %}
 
-                    <a class="btn btn-primary btn-sm mx-1 my-1 farsi" v-for="tag in tags" :href="tag.get_absolute_url">
-                        <span class="material-icons">
-                            local_offer
-                            </span>
-                        <span v-text="tag.title"></span>
-                    </a>
+                    <template v-for="tag in tags" class=" mx-2 my-2 farsi">
+
+                        <a :href="tag.get_absolute_url" class=" mx-1 farsi">
+                            <span class="material-icons">
+                                local_offer
+                            </span>&nbsp;<span v-text="tag.title"></span>
+                        </a>&nbsp;{% if remove_page_tag_form %}<span style="cursor: pointer;" title="حذف برچسب" class="material-icons text-secondary"
+                            @click="remove_tag(tag.id)">
+                            clear
+                        </span>
+                        {% endif %}
+                    </template>
 
                     {% if add_page_tag_form %}
 
 
-                    <img src="{% static 'img/ha-loader.gif' %}" v-if="waiting" alt="">
+                    <img src="{% static 'leo/img/loading.gif' %}" v-if="waiting" alt="">
                     <form @submit.prevent="add_page_tag()">
                         <input required type="text" v-model="tag_title" class="form-control" style="width: 8em;"
                             placeholder="تگ جدید">

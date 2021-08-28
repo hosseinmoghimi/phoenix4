@@ -14,6 +14,10 @@ class AddPageTagForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100,required=True)
     
+class RemovePageTagForm(forms.Form):
+    page_id=forms.IntegerField(required=True)
+    tag_id=forms.IntegerField(required=True)
+    
 class AddPageLinkForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100, required=True)

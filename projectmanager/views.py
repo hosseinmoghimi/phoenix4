@@ -6,7 +6,7 @@ from authentication.serializers import ProfileSerializer
 from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
-from core.repo import ParameterRepo, PictureRepo
+from core.repo import ParameterRepo, PictureRepo, TagRepo
 from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from django.shortcuts import render
@@ -63,6 +63,8 @@ class BasicViews(View):
                 context['employers'] = EmployerRepo(
                     request=request).list(search_for=search_for)
                 context['projects'] = ProjectRepo(
+                    request=request).list(search_for=search_for)
+                context['tags'] = TagRepo(
                     request=request).list(search_for=search_for)
                 context['events'] = EventRepo(
                     request=request).search(search_for=search_for)

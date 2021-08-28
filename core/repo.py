@@ -13,7 +13,13 @@ class TagRepo:
         if 'request' in kwargs:
             self.request=kwargs['request']
             self.user=self.request.user
-        self.objects=Tag.objects
+        self.objects=Tag.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(title__contains=search_for))
+        return objects
     def tag(self,*args, **kwargs):
         pk=0
         if 'tag_id' in kwargs:
@@ -27,7 +33,7 @@ class TagRepo:
         return self.objects.filter(pk=pk).first()
     
     def add_page_tag(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_tag"):
+        if not self.user.has_perm(APP_NAME+".change_basicpage"):
             return None
         title=None
         page_id=None
@@ -55,6 +61,33 @@ class TagRepo:
         
         
 
+    def remove_page_tag(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_basicpage"):
+            return None
+        tag_id=None
+        page_id=None
+        tag=None
+        page=None
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        if 'tag_id' in kwargs:
+            tag_id=kwargs['tag_id']
+        if tag_id is not None:
+            # tag=Tag.objects.get_or_create(title=title).tag
+            tag=Tag.objects.filter(pk=tag_id).first()
+            if tag is None:
+                return False
+        if page_id is not None:
+            page=BasicPage.objects.filter(pk=page_id).first()
+
+        if page is None or not tag in page.tags.all():
+            return False
+        # print(tag)
+        # print(10*"####5555")
+        page.tags.remove(tag)
+        return True
+        
+        
 class BasicPageRepo:
     def __init__(self,*args, **kwargs):
         self.request=None

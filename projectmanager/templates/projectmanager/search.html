@@ -28,7 +28,31 @@
                 </h4>
             </div>
             <div class="card-body">
+                {% if tags %}
 
+
+
+
+
+                <h5 class="mt-4">
+                    برچسب ها :
+                </h5>
+                {% for tag in tags %}
+                <p class="mr-5">
+                    <a href="{{tag.get_absolute_url}}">
+
+                        {{tag.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+
+
+                {% endif %}
 
 
 
@@ -174,32 +198,44 @@
                 <h5 class="mt-4">
                     رویداد ها :
                 </h5>
-                {% for page in events %}
-                <table class="table">
-                    <tr>
-                        <td>
-                            <small>
-                                {{page.persian_event_datetime}}
-                            </small>
-                        </td>
-                        <td>
-                            <a href="{{page.project_related.get_absolute_url}}">
-                                {{page.project_related.title}}
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            زمان
+                        </th>
+                        <th>
+                            پروژه
+                        </th>
+                        <th>
+                            رویداد
+                        </th>
+                    </thead>
+                    <tbody>
 
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{page.get_absolute_url}}">
-                                {{page.title}}
+                        {% for page in events %}
+                        <tr>
+                            <td>
+                                <small>
+                                    {{page.persian_event_datetime}}
+                                </small>
+                            </td>
+                            <td>
+                                <a href="{{page.project_related.get_absolute_url}}">
+                                    {{page.project_related.title}}
 
-                            </a>
-                        </td>
-                    </tr>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{page.get_absolute_url}}">
+                                    {{page.title}}
+
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
-                <p class="mr-5">
 
-                </p>
-                {% endfor %}
 
                 {% endif %}
 

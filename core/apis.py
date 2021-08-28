@@ -65,6 +65,23 @@ class BasicApi(APIView):
         context['log'] = log
         return JsonResponse(context)
 
+    def remove_page_tag(self, request, *args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log = 2
+            remove_page_tag_form = RemovePageTagForm(request.POST)
+            if remove_page_tag_form.is_valid():
+                log = 3
+                page_id = remove_page_tag_form.cleaned_data['page_id']
+                tag_id = remove_page_tag_form.cleaned_data['tag_id']
+                res= TagRepo(request=request).remove_page_tag(page_id=page_id, tag_id=tag_id)
+                if res:
+                    log = 4
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
     def add_page_comment(self, request, *args, **kwargs):
         log = 1
         context = {}

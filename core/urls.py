@@ -12,6 +12,7 @@ urlpatterns = [
     path("add_page_image/",apis.BasicApi().add_page_image,name='add_page_image'),
     path("add_related_page/",apis.BasicApi().add_related_page,name='add_related_page'),
     path("add_page_tag/",apis.BasicApi().add_page_tag,name='add_page_tag'),
+    path("remove_page_tag/",apis.BasicApi().remove_page_tag,name='remove_page_tag'),
     
     path("add_page_link",apis.BasicApi().add_page_link,name='add_page_link'),
     path("page/<int:pk>/",views.PageViews().page,name='page'),

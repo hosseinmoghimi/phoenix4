@@ -1,5 +1,5 @@
 import json
-from core.serializers import BasicPageSerializer, PageCommentSerializer
+from core.serializers import BasicPageSerializer, PageCommentSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -47,6 +47,7 @@ def PageContext(request, page):
         context['add_page_link_form'] = AddPageLinkForm()
     if request.user.has_perm(APP_NAME+".change_page"):
         context['add_page_tag_form'] = AddPageTagForm()
+        context['remove_page_tag_form'] = RemovePageTagForm()
     if ProfileRepo(request=request).me is not None:
         context['add_page_comment_form'] = AddPageCommentForm()
 
@@ -61,6 +62,7 @@ def PageContext(request, page):
         PageCommentSerializer(page_comments, many=True).data)
     context['page_comments_s'] = page_comments_s
     context['page_tags']=page.tags.all()
+    context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
     return context
 
 
@@ -211,5 +213,7 @@ class PageViews(View):
         pages=tag.basicpage_set.all()
         context['tag'] = tag
         context['pages'] = pages
-        context['title'] = tag.title
+        context['pretitle'] = "صفحات دارای برچسب " 
+        context['title'] =  tag.title
+        context['subtitle2'] = "صفحات دارای برچسب "+tag.title
         return render(request, TEMPLATE_ROOT+"pages.html", context)
