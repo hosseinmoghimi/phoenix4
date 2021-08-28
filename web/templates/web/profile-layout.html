@@ -109,8 +109,6 @@
                     {{selected_profile.bio}}
                 </p>
                 {% endif %}
-
-
                 {% if perms.auth.change_user and selected_profile.user.id %}
                 <p class="text-center">
                     <a class="btn btn-primary my-3"
@@ -120,22 +118,14 @@
                     </a>
                 </p>
                 {% endif %}
-
-
-
-
-
-
             </div>
             <div>
             </div>
             {% block content_employee %}
-
             {% endblock %}
+
             {% block content_employer %}
-
             {% endblock %}
-
 
             {% block market %}
             {% endblock %}
@@ -150,7 +140,6 @@
             {% endblock %}
 
             {% block content_main %}
-                  
             {% endblock %}
 
         </div>
