@@ -17,8 +17,14 @@ class GameRoleStateEnum(TextChoices):
 class GameStatusEnums(TextChoices):
     CREATING='در حال ساخت',_('در حال ساخت')
     ROLING='در حال نقش دهی',_('در حال نقش دهی')
+    INTRODUCING="معارفه",_("معارفه")
     STARTED='در حال اجرا',_('در حال اجرا')
+    DAY_IN_PROGRESS="بازی در فاز روز",_("بازی در فاز روز")
+    COURT_VOTING="رای گیری برای ورود به دادگاه",_("رای گیری برای ورود به دادگاه")
+    ACCUSE_VOTING="رای گیری برای خروج از شهر",_("رای گیری برای خروج از شهر")
+    NIGHT_IN_PROGRESS="بازی در فاز شب",_("بازی در فاز شب")
     FINISHED='تمام شده',_('تمام شده')
+
 
 class GameScenarioEnum(TextChoices):
     TOFANG_DAR='تفنگ دار',_('تفنگ دار')
@@ -26,6 +32,10 @@ class GameScenarioEnum(TextChoices):
     MOZAKERE='مذاکره',_('مذاکره')
     DANESH_AMUZ='دانش آموز',_('دانش آموز')
     RUH='روح',_('روح')
+
+class VoteLevelEnum(TextChoices):
+    COURT='ورود به دادگاه',_('ورود به دادگاه')
+    ACCUSE='خروج از شهر',_('خروج از شهر')
 
 
 class SideEnums(TextChoices):

@@ -1,6 +1,6 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,reverse
 from django.views import View
-from .serializers import GameRoleSerializer, RoleSerializer,PlayerSerializer
+from .serializers import GameDaySerializer, GameRoleSerializer, RoleSerializer,PlayerSerializer
 from .repo import * 
 from .forms import * 
 from core.views import CoreContext
@@ -9,10 +9,38 @@ import json
 TEMPLATE_ROOT='mafia/'
 
 def getContext(request,*args, **kwargs):
-    context=CoreContext(request=request,app_name=APP_NAME)    
+    context=CoreContext(request=request,app_name=APP_NAME)
+    context['template_root']="phoenix/layout.html"
     return context
 
 class BasicViews(View):
+    def change_game_state(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            next_game_state_form=NextGameStateForm(request.POST)
+            if next_game_state_form.is_valid():
+                log=3
+                game_id=next_game_state_form.cleaned_data['game_id']
+                game=GameRepo(request=request).change_game_state(game_id=game_id)
+                if game is not None:
+                    return redirect(game.get_absolute_url())
+
+    def day_accuse(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            day_accuse_form=DayAccuseForm(request.POST)
+            if day_accuse_form.is_valid():
+                log=3
+                game_role_id=day_accuse_form.cleaned_data['game_role_id']
+                count=day_accuse_form.cleaned_data['count']
+                day_id=day_accuse_form.cleaned_data['day_id']
+                accuse=GameRepo(request=request).accuse(day_id=day_id,game_role_id=game_role_id,count=count)
+                if accuse is not None:
+                    # game.status=GameStatusEnums.STARTED
+                    # game.save()
+                    return redirect(reverse(APP_NAME+":game",kwargs={'pk':game_id}))
     def game1(self,request,*args, **kwargs):
         
         context=getContext(request=request)
@@ -143,10 +171,22 @@ class BasicViews(View):
         context=getContext(request=request)
         context['game']=game
         context['new_vote_form']=NewVoteForm()
+        profile=ProfileRepo(request=request).me
+        if game.god.profile==profile:
+            context['next_game_state_form']=NextGameStateForm()
+
         if game.status==GameStatusEnums.ROLING:
             context['shuffle_game_form']=ShuffleGameForm()
             context['start_game_form']=StartGameForm()
+        if game.status==GameStatusEnums.COURT_VOTING or game.status==GameStatusEnums.ACCUSE_VOTING:
+            context['day_accuse_form']=DayAccuseForm()
+            context['game_day_s']=json.dumps(GameDaySerializer(game.current_day()).data)
+            context['game_roles_s']=json.dumps(GameRoleSerializer(game.live_gameroles(),many=True).data)
         context['start_game_day_form']=StartGameDayForm()
+        if game.status==GameStatusEnums.COURT_VOTING:
+            context['level']=VoteLevelEnum.COURT
+        if game.status==GameStatusEnums.ACCUSE_VOTING:
+            context['level']=VoteLevelEnum.ACCUSE
         context['start_game_night_form']=StartGameNightForm()
         return render(request,TEMPLATE_ROOT+"game.html",context)
     def game_day(self,request,*args, **kwargs):

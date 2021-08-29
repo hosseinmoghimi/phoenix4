@@ -1,4 +1,5 @@
 from datetime import datetime
+import math
 from django.db.models.base import Model
 from tinymce.models import HTMLField
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
@@ -27,12 +28,42 @@ class Action(models.Model):
         return reverse("Event_detail", kwargs={"pk": self.pk})
 
 class Game(models.Model):
+
     start_date=models.DateTimeField(_("start_date"), auto_now=False, auto_now_add=False)
     scenario=models.CharField(_("scenario"),choices=GameScenarioEnum.choices,max_length=50)
     god=models.ForeignKey("god",null=True,blank=True, verbose_name=_("god"), on_delete=models.CASCADE)
     status=models.CharField(_("وضعیت بازی"),choices=GameStatusEnums.choices, max_length=50)
-    
+    def current_day(self):
+        if self.status==GameStatusEnums.DAY_IN_PROGRESS:
+            return GameDay.objects.filter(game=self).order_by("-counter").first()
+        if self.status==GameStatusEnums.COURT_VOTING:
+            return GameDay.objects.filter(game=self).order_by("-counter").first()
+        if self.status==GameStatusEnums.ACCUSE_VOTING:
+            return GameDay.objects.filter(game=self).order_by("-counter").first()
+
     class_name="game"
+    def next_state(self):
+        state=GameStatusEnums.CREATING
+        if self.status==GameStatusEnums.CREATING:
+            state=GameStatusEnums.ROLING
+        if self.status==GameStatusEnums.ROLING:
+            state=GameStatusEnums.INTRODUCING
+        if self.status==GameStatusEnums.INTRODUCING:
+            state=GameStatusEnums.DAY_IN_PROGRESS
+        if self.status==GameStatusEnums.DAY_IN_PROGRESS:
+            state=GameStatusEnums.COURT_VOTING
+        if self.status==GameStatusEnums.COURT_VOTING:
+            state=GameStatusEnums.ACCUSE_VOTING
+        if self.status==GameStatusEnums.ACCUSE_VOTING:
+            state=GameStatusEnums.NIGHT_IN_PROGRESS
+        if self.status==GameStatusEnums.NIGHT_IN_PROGRESS:
+            state=GameStatusEnums.DAY_IN_PROGRESS
+        return state
+    def votes_to_act(self):
+        n=len(self.live_gameroles())
+        n=n/2
+        n=math.floor(n)
+        return n
     def next_night_no(self):
         return len(GameNight.objects.filter(game=self))+1
     def next_day_no(self):
@@ -177,9 +208,9 @@ class Role(models.Model):
         return STATIC_URL+APP_NAME+"/images/role.jpg"
 
 class GameNight(models.Model):
-    game=models.ForeignKey("game", verbose_name=_("game"), on_delete=models.CASCADE)
-    counter=models.IntegerField(_("counter"))
-    status=models.CharField(_("status"),choices=GameDayNightStatusEnum.choices, max_length=50)
+    game=models.ForeignKey("game", verbose_name=_("بازی"), on_delete=models.CASCADE)
+    counter=models.IntegerField(_("شماره شب"))
+    status=models.CharField(_("وضعیت"),choices=GameDayNightStatusEnum.choices, max_length=50)
 
 
     
@@ -195,12 +226,13 @@ class GameNight(models.Model):
         return reverse(APP_NAME+":game_night", kwargs={"pk": self.pk})
 
 class GameDay(models.Model):
-    game=models.ForeignKey("game", verbose_name=_("game"), on_delete=models.CASCADE)
-    counter=models.IntegerField(_("counter"))
+    game=models.ForeignKey("game", verbose_name=_("بازی"), on_delete=models.CASCADE)
+    counter=models.IntegerField(_("شماره روز"))
     status=models.CharField(_("status"),choices=GameDayNightStatusEnum.choices, max_length=50)
 
     
-
+    def title(self):
+        return f'روز {to_tartib(self.counter)}  از  {str(self.game)}'
     class Meta:
         verbose_name = _("GameDay")
         verbose_name_plural = _("روزهای بازی")
@@ -230,30 +262,32 @@ class NightAct(models.Model):
         return reverse("NightShot_detail", kwargs={"pk": self.pk})
 
 class Vote(models.Model):
-    day=models.ForeignKey("gameday", verbose_name=_("gameday"), on_delete=models.CASCADE)
-    voter=models.ForeignKey("gamerole",related_name="voter_set", verbose_name=_("رای دهنده"), on_delete=models.CASCADE)
-    accused=models.ForeignKey("gamerole",related_name="accused_set", verbose_name=_("متهم"), on_delete=models.CASCADE)
+    day=models.ForeignKey("gameday", verbose_name=_("روز بازی"), on_delete=models.CASCADE)
+    voter=models.ForeignKey("gamerole",null=True,blank=True,related_name="voter_set", verbose_name=_("رای دهنده"), on_delete=models.CASCADE)
+    accused=models.ForeignKey("gamerole",related_name="voteaccused_set", verbose_name=_("متهم"), on_delete=models.CASCADE)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-
+    level=models.CharField(_("مرحله"), choices=VoteLevelEnum.choices,default=VoteLevelEnum.COURT,max_length=50)
     class Meta:
         verbose_name = _("Vote")
         verbose_name_plural = _("Votes")
 
     def __str__(self):
-        return f"رای {self.voter.name} به {self.accused.name} در {str(self.day)}"
+        voter="" if self.voter is None else self.voter.player.profile.name
+        return f"رای {voter} به {self.accused.name} در {str(self.day)} ({self.level})"
 
     def get_absolute_url(self):
         return reverse("Vote_detail", kwargs={"pk": self.pk})
 
 class Accused(models.Model):
-    day=models.ForeignKey("gameday", verbose_name=_("gameday"), on_delete=models.CASCADE)
-
+    day=models.ForeignKey("gameday", verbose_name=_("روز بازی"), on_delete=models.CASCADE)
+    game_role=models.ForeignKey("GameRole", verbose_name=_("بازیکن"), on_delete=models.CASCADE)
+    votes_count=models.IntegerField(_("تعداد رای های خروج"))
     class Meta:
         verbose_name = _("Accused")
         verbose_name_plural = _("Accuseds")
 
     def __str__(self):
-        return self.name
+        return f"{self.game_role.player.profile.name} @ {str(self.day.game)}"
 
     def get_absolute_url(self):
         return reverse("accused", kwargs={"pk": self.pk})

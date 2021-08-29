@@ -7,6 +7,20 @@ class NewVoteForm(forms.Form):
     day_id=forms.IntegerField(required=True)
     accused_id=forms.IntegerField(required=True)
     level=forms.IntegerField(required=True)
+
+class NextGameStateForm(forms.Form):
+    game_id=forms.IntegerField(required=True)
+    
+class AddAllVoteForm(forms.Form):
+    game_day_id=forms.IntegerField(required=True)
+    game_role_id=forms.IntegerField(required=True)
+    count=forms.IntegerField(required=True)
+    level=forms.CharField(max_length=100,required=True)
+
+class DayAccuseForm(forms.Form):
+    day_id=forms.IntegerField(required=True)
+    game_role_id=forms.IntegerField(required=True)
+    count=forms.IntegerField(required=True)
     
 class StartGameDayForm(forms.Form):
     game_id=forms.IntegerField(required=True)

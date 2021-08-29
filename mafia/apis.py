@@ -1,3 +1,4 @@
+import rest_framework
 from utility.persian import PersianCalendar
 from .serializers import PlayerSerializer
 from core.constants import SUCCEED,FAILED
@@ -8,6 +9,32 @@ from .forms import *
 
 
 class BasicApi(APIView):
+    def start_game_day(self,request,*args, **kwargs):
+        pass
+    def start_game_night(self,request,*args, **kwargs):
+        pass
+    def add_all_vote(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            add_all_vote_form=AddAllVoteForm(request.POST)
+            if add_all_vote_form.is_valid():
+                log=3
+                game_role_id=add_all_vote_form.cleaned_data['game_role_id']
+                game_day_id=add_all_vote_form.cleaned_data['game_day_id']
+                count=add_all_vote_form.cleaned_data['count']
+                level=add_all_vote_form.cleaned_data['level']
+                # profile_id=add_player_form.cleaned_data['profile_id']
+                vote_repo=VoteRepo(request=request)
+                result=SUCCEED
+                vote_repo.clear(game_role_id=game_role_id,game_day_id=game_day_id,level=level)
+                for i in range(count):
+                    vote=vote_repo.add_vote(game_role_id=game_role_id,game_day_id=game_day_id,level=level)
+                    if vote is None:
+                        result=FAILED
+                return JsonResponse({'result':result})
+        return JsonResponse({'result':FAILED,'log':log})
+    
     def new_game(self,request,*args, **kwargs):
         log=1
         if request.method=='POST':

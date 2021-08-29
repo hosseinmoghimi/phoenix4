@@ -4,8 +4,73 @@ from .enums import *
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Action, GameRole, Player,Game,God, Role
+from .models import Action, GameDay, GameNight, GameRole, Player,Game,God, Role, Vote
 from utility.persian import PersianCalendar
+class VoteRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=Vote.objects
+    def add_vote(self,*args, **kwargs):
+        game_day_id=0
+        game_role_id=0
+        level=None
+        if 'game_day_id' in kwargs:
+            game_day_id=kwargs['game_day_id']
+        else:
+            return None
+        if 'game_role_id' in kwargs:
+            game_role_id=kwargs['game_role_id']
+        else:
+            return None
+        if 'level' in kwargs:
+            level=kwargs['level']
+        else:
+            return None
+        game_day=GameDay.objects.filter(pk=game_day_id).first()
+        if game_day is None:
+            return None
+        game=game_day.game
+        god=game.god
+        if god.profile==self.profile:
+            vote=Vote()
+            vote.day=game_day
+            vote.accused_id=game_role_id
+            vote.level=level
+            vote.save()
+            return vote
+
+    def clear(self,*args, **kwargs):
+        game_day_id=0
+        game_role_id=0
+        level=None
+        if 'game_day_id' in kwargs:
+            game_day_id=kwargs['game_day_id']
+        else:
+            return None
+        if 'game_role_id' in kwargs:
+            game_role_id=kwargs['game_role_id']
+        else:
+            return None
+        if 'level' in kwargs:
+            level=kwargs['level']
+        else:
+            return None
+        game_day=GameDay.objects.filter(pk=game_day_id).first()
+        if game_day is None:
+            return None
+        game=game_day.game
+        god=game.god
+        if god.profile==self.profile:
+            Vote.objects.filter(accused_id=game_role_id).filter(day_id=game_day_id).filter(level=level).delete()
+            
 
 class PlayerRepo():
     def __init__(self, *args, **kwargs):
@@ -78,6 +143,33 @@ class GameRepo():
         print(game)
         return game
 
+    def change_game_state(self,*args, **kwargs):
+        # game_id=0
+        # if 'game_id' in kwargs:
+        #     game_id=kwargs['game_id']
+        game=self.game(*args, **kwargs)
+        if game is None:
+            return None
+        status=game.next_state()
+        game.status=status
+        game.save()
+        if status==GameStatusEnums.DAY_IN_PROGRESS:
+            game_day=GameDay()
+            game_day.game=game
+            game_day.counter=len(GameDay.objects.filter(game=game))+1
+            game_day.status=GameDayNightStatusEnum.RUNNING
+            game_day.save()
+        if status==GameStatusEnums.COURT_VOTING:
+            game_day=game.current_day()
+            game_day.status=GameDayNightStatusEnum.FINISHED
+            game_day.save()
+        if status==GameStatusEnums.NIGHT_IN_PROGRESS:
+            game_night=GameNight()
+            game_night.game=game
+            game_night.counter=len(GameNight.objects.filter(game=game))+1
+            game_night.status=GameDayNightStatusEnum.RUNNING
+            game_night.save()
+        return game
     def game(self, *args, **kwargs):
         
         if 'game_id' in kwargs:

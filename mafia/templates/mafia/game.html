@@ -1,9 +1,9 @@
 {% extends "mafia/layout.html" %}
 {% load static %}
-{% load to_ %}
+{% load to_price %}
 {% block mafia_content %}
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card">
             <div class="card-header">
                 <h4 class="text-center">
@@ -16,6 +16,9 @@
                     </a>
                     {% endif %}
                 </h4>
+                <h6  class="text-center">
+                    {{game.status}}
+                </h6>
             </div>
             <div class="card-body">
                 <h4 class="text-center1">
@@ -28,11 +31,7 @@
                     </span>
                 </h4>
                 <h5 class="text-center1">
-                    <small class="text-muted">
-
-                        گاد :
-                    </small>
-
+                   
 
                     <div class="media mb-4">
                         <div>
@@ -45,6 +44,13 @@
                                     {{game.god.profile.name}}
                                 </a>
                             </div>
+                            <h6>
+                                <small class="text-muted">
+
+                                    گاد بازی
+                                </small>
+            
+                            </h6>
                         </div>
                     </div>
                 </h5>
@@ -84,12 +90,23 @@
                 </form>
                 <hr>
                 {% endif %}
+                {% if next_game_state_form %}
+
+                <form action="{% url 'mafia:change_game_state' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" value="{{game.id}}">
+                    <button class="btn btn-success" type="submit">
+                        {{game.next_state}}
+                    </button>
+                </form>
+                <hr>
+                {% endif %}
             </div>
         </div>
     </div>
 
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">
                 <h4 class="text-center">
@@ -98,32 +115,9 @@
                 </h4>
             </div>
             <div class="card-body">
-                {% for game_day in game.gameday_set.all %}
-                {% if new_vote_form %}
+                {% include "mafia/includes/vote-app/template.html" %}
 
-                <form action="{% url 'mafia:new_vote' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="game_day_id" value="{{game_day.id}}">
-                    <select class="form-control" name="accused_id" id="">
-                        {% for game_role in game.live_gameroles %}
-                        <option value="{{game_role.id}}">{{game_role.player.profile.name}}</option>
-                        {% endfor %}
-                    </select>
-
-                    <div class="text-center">
-
-                        <button class="btn btn-danger text-center" type="submit">
-                            <span class="material-icons">
-                                shuffle
-                            </span>
-                            رای دادن </button>
-                    </div>
-                </form>
-                <hr>
-                {% endif %}
-                {% endfor %}
-
-
+            
             </div>
         </div>
     </div>
@@ -202,5 +196,8 @@
 
 
 {% block mafia_script %}
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "mafia/includes/vote-app/script.html" %}
 
 {% endblock %}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import GameRole, Player,Game,God, Role
+from .models import GameDay, GameRole, Player,Game,God, Role
 from authentication.serializers import ProfileSerializer
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -19,3 +19,8 @@ class GameRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameRole
         fields=['id','role','player','turn','get_absolute_url']
+
+class GameDaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameDay
+        fields=['id','title']

@@ -1,0 +1,19 @@
+{% if day_accuse_form %}
+<div id="vote-app">
+    <h4 class="mb-5">
+        <small>
+            رای گیری برای 
+        </small>
+        {{level}}
+        <small class="mx-3 text-secondary"> 
+            {{game.votes_to_act}} رای برای اجماع
+        </small>
+    </h4>
+    <div v-for="game_role in game_roles" class="mb-3">
+        <all-vote-component :game_role="game_role" :game_day="game_day">
+
+        </all-vote-component>
+    </div>
+  
+</div>
+{% endif %}
