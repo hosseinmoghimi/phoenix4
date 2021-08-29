@@ -418,7 +418,8 @@ class EventViews(View):
         events=project.event_set.all()
         context['events'] = events
         context['events_s'] = json.dumps(EventSerializerForChart(events,many=True).data)
-        return render(request, TEMPLATE_ROOT+"project-events-chart.html", context)
+        return render(request, TEMPLATE_ROOT+"events.html", context)
+        # return render(request, TEMPLATE_ROOT+"project-events-chart.html", context)
 
 
 class ServiceViews(View):
