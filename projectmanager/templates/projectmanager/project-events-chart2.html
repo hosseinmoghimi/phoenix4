@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
-
+{% load to_persian_date %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'leo/css/font-farsi.css' %}">
+    <link rel="stylesheet" href="{% static 'leo/css/leo.css' %}">
     <style>
         body {
             background-color: #f7f7f7;
@@ -283,95 +285,35 @@
 <body>
     <div class="container">
         <div class="main-timeline">
+            {% for event in events %}
 
             <!-- start experience section-->
-            <div class="timeline">
+            <div class="timeline mb-5">
                 <div class="icon"></div>
                 <div class="date-content">
                     <div class="date-outer">
                         <span class="date">
-                            <span class="month">2 Years</span>
-                            <span class="year">2013</span>
+                            <span class="month">{{event.event_datetime|to_persian_date|safe}}</span>
+                            <span class="year farsi">{{event.event_datetime|to_week_day_name}}</span>
                         </span>
                     </div>
                 </div>
                 <div class="timeline-content">
-                    <h5 class="title">Visual Art &amp; Design</h5>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur ex sit amet massa
-                        scelerisque scelerisque. Aliquam erat volutpat. Aenean interdum finibus efficitur. Praesent
-                        dapibus dolor felis, eu ultrices elit molestie.
+                    <a href="{{event.get_absolute_url}}">
+
+                        <h5 class="title text-center farsi">{{event.title}}</h5>
+                    </a>
+                    <p class="description text-center text-muted farsi">
+                        {% if event.short_description %}
+                          
+                        {{event.short_description|safe}}
+                        {% endif %}
                     </p>
                 </div>
             </div>
             <!-- end experience section-->
 
-            <!-- start experience section-->
-            <div class="timeline">
-                <div class="icon"></div>
-                <div class="date-content">
-                    <div class="date-outer">
-                        <span class="date">
-                            <span class="month">1 Years</span>
-                            <span class="year">2015</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="timeline-content">
-                    <h5 class="title">Product Designer</h5>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur ex sit amet massa
-                        scelerisque scelerisque. Aliquam erat volutpat. Aenean interdum finibus efficitur. Praesent
-                        dapibus dolor felis, eu ultrices elit molestie.
-                    </p>
-                </div>
-            </div>
-            <!-- end experience section-->
-
-            <!-- start experience section-->
-            <div class="timeline">
-                <div class="icon"></div>
-                <div class="date-content">
-                    <div class="date-outer">
-                        <span class="date">
-                            <span class="month">2 Years</span>
-                            <span class="year">2016</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="timeline-content">
-                    <h5 class="title">Web Designer</h5>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur ex sit amet massa
-                        scelerisque scelerisque. Aliquam erat volutpat. Aenean interdum finibus efficitur. Praesent
-                        dapibus dolor felis, eu ultrices elit molestie.
-                    </p>
-                </div>
-            </div>
-            <!-- end experience section-->
-
-            <!-- start experience section-->
-            <div class="timeline">
-                <div class="icon"></div>
-                <div class="date-content">
-                    <div class="date-outer">
-                        <span class="date">
-                            <span class="month">2 Years</span>
-                            <span class="year">2018</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="timeline-content">
-                    <h5 class="title">Graphic Designer</h5>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur ex sit amet massa
-                        scelerisque scelerisque. Aliquam erat volutpat. Aenean interdum finibus efficitur. Praesent
-                        dapibus dolor felis, eu ultrices elit molestie.
-                    </p>
-                </div>
-            </div>
-            <!-- end experience section-->
-
+            {% endfor %}
         </div>
     </div>
 </body>

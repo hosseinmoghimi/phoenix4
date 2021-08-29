@@ -1,3 +1,4 @@
+import re
 from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
@@ -397,7 +398,15 @@ class MaterialViews(View):
 
 
 class EventViews(View):
+    def eventsContext(self,request,*args, **kwargs):
+        project = ProjectRepo(request=request).project(*args, **kwargs)
+        context = getContext(request)
+        events=project.event_set.all().order_by("event_datetime")
+        context['events'] = events
+        context['events_s'] = json.dumps(EventSerializerForChart(events,many=True).data)
+        return context
     def event(self, request, *args, **kwargs):
+
         event = EventRepo(request=request).event(*args, **kwargs)
         context = getContext(request)
         context.update(PageContext(request=request, page=event))
@@ -413,13 +422,16 @@ class EventViews(View):
 
 
     def project_events_chart(self, request, *args, **kwargs):
-        project = ProjectRepo(request=request).project(*args, **kwargs)
-        context = getContext(request)
-        events=project.event_set.all()
-        context['events'] = events
-        context['events_s'] = json.dumps(EventSerializerForChart(events,many=True).data)
-        return render(request, TEMPLATE_ROOT+"events.html", context)
-        # return render(request, TEMPLATE_ROOT+"project-events-chart.html", context)
+        context=self.eventsContext(request=request,*args, **kwargs)
+        return render(request, TEMPLATE_ROOT+"project-events-chart.html", context)
+    
+    def project_events_chart2(self, request, *args, **kwargs):
+        context=self.eventsContext(request=request,*args, **kwargs)
+        return render(request, TEMPLATE_ROOT+"project-events-chart2.html", context)
+    
+    def project_events_chart3(self, request, *args, **kwargs):
+        context=self.eventsContext(request=request,*args, **kwargs)
+        return render(request, TEMPLATE_ROOT+"project-events-chart3.html", context)
 
 
 class ServiceViews(View):

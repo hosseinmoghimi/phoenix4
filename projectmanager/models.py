@@ -115,6 +115,10 @@ class Project(ProjectManagerPage):
     locations=models.ManyToManyField("location",blank=True, verbose_name=_("locations"))
     def get_event_chart_url(self):
         return reverse(APP_NAME+":project_events_chart",kwargs={'project_id':self.pk})
+    def get_event_chart_url2(self):
+        return reverse(APP_NAME+":project_events_chart2",kwargs={'project_id':self.pk})
+    def get_event_chart_url3(self):
+        return reverse(APP_NAME+":project_events_chart3",kwargs={'project_id':self.pk})
     # auto_percentage_completed=models.IntegerField(_("درصد تکمیل خودکار پروژه"),default=0)
     def persian_start_date(self):
         return PersianCalendar().from_gregorian(self.start_date)
