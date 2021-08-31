@@ -2,12 +2,7 @@
 {% load to_price %}
 {% load static %}
 
-{% block head %}
-<style>
-
-</style>
-{% endblock %}
-{% block market_content %}
+{% block content %}
 <div class="" id="product-app">
     <div class="row">
         <div class="col-12">
@@ -25,6 +20,14 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    {% if perms.market.change_product %}
+                    <a target="_blank" title="ویرایش" href="{{product.get_edit_url}}">
+                        <i class="material-icons">
+                            settings
+                        </i>
+                    </a>
+
+                    {% endif %}
                     <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
 
                     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
@@ -47,13 +50,13 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
-    
+
 </div>
 {% endblock %}
 
 {% block modal %}
 {% endblock %}
-{% block market_script %}
+{% block script %}
 {% endblock %}
