@@ -7,14 +7,13 @@
 <div>
 
 
-    
 
 
     <div class="row">
         <div class="col-md-12">
             {% include "projectmanager/includes/materials-app/template.html" %}
         </div>
-      
+
     </div>
 </div>
 {% endblock %}
@@ -25,11 +24,12 @@
 
 
 
-{% include "projectmanager/includes/materials-app/script.html" %}
 <script>
-    $(document).ready(()=>{
+    let parent_id = 0
+    $(document).ready(() => {
         $("#collapseMaterials").addClass("show")
 
     })
 </script>
+{% include "projectmanager/includes/materials-app/script.html" %}
 {% endblock %}

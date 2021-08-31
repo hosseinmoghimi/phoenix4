@@ -1,14 +1,16 @@
 <script>
 
     let materials = JSON.parse("{{materials_s|escapejs}}")
-
     let materials_app = new Vue({
         el: "#materials-app",
         data: {
             new_material_title: "",
-            materials: materials,
+            materials: [],
             search_for: "",
             waiting: false,
+        },
+        mounted:function(){
+// this.materials=materials.filter(material=>material.p
         },
         methods: {
             search: function () {
