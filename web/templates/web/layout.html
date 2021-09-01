@@ -1,1 +1,33 @@
 {% extends layout_parent %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'leo/css/font-farsi.css' %}">
+<style>
+    label,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    .form-check {
+        direction: rtl !important;
+        text-align: right;
+        font-family: "HMFONT" !important;
+    }
+
+    .form-check-sign {
+        direction: ltr !important;
+    }
+
+    .rtl {
+        direction: rtl;
+    }
+
+    .ltr {
+        direction: ltr;
+    }
+</style>
+{% endblock %}
