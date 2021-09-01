@@ -12,14 +12,21 @@
     h5,
     h6,
     p,
-    .form-check {
+    .form-check,
+    .cd-label {
         direction: rtl !important;
         text-align: right;
         font-family: "HMFONT" !important;
     }
-
+.row{
+    direction: rtl;
+}
     .form-check-sign {
         direction: ltr !important;
+    }
+
+    .info-title {
+        text-align: center;
     }
 
     .rtl {
@@ -28,6 +35,24 @@
 
     .ltr {
         direction: ltr;
+    }
+
+    .nav-item>a {
+        direction: ltr;
+    }
+
+    .dropdown-item {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .dropdown-menu.dropdown-with-icons .dropdown-item .material-icons {
+
+        margin-right: 0;
+    }
+
+    .dropdown-item>i.material-icons {
+        margin-left: 0.3em;
     }
 </style>
 {% endblock %}
