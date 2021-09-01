@@ -1,14 +1,16 @@
 from django import forms
-from .constants import *
 from core import forms as CoreForms
+
 class CheckoutCartForm(forms.Form):
     cart_lines=forms.CharField(max_length=1000,required=True)
     customer_id=forms.IntegerField(required=True)
+
 class AddOrderInWareHouseForm(forms.Form):
     direction=forms.CharField(max_length=20,required=True)
     order_id=forms.IntegerField(required=True)
     ware_house_id=forms.IntegerField(required=True)
     description=forms.CharField( max_length=100, required=False)
+
 class DeleteProductCommentForm(forms.Form):
     comment_id=forms.IntegerField(required=True)
 
@@ -143,6 +145,7 @@ class AddAddressForm(forms.Form):
 
 class AddProductLikeForm(forms.Form):
     product_id=forms.IntegerField(required=True)
+
 class RegisterForm(forms.Form):
     region=forms.CharField(max_length=20,required=True)
     username=forms.CharField(max_length=50, required=True)

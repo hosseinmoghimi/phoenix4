@@ -1,0 +1,32 @@
+<div class="card" id="products-app">
+    <div class="card-header">
+        <h4 class="title">
+            محصولات
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                {% include "market/includes/products-app/item.html" %}
+            </div>
+            {% endfor %}
+
+            <div class="col-md-4 mb-4" v-for="product in products">
+                {% include "market/includes/products-app/item_s.html" %}
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="card-footer">
+        {% if add_product_form %}
+          
+        <form @submit.prevent="add_product()">
+            <input class="form-control" placeholder="نام محصول جدید" v-model="title">
+        </form> 
+        {% endif %}
+    </div>
+
+</div>

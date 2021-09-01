@@ -5,10 +5,13 @@ from .repo import *
 from django.views import View
 from core.views import CoreContext, PageContext
 
-TEMPLATE_ROOT="material-dashboard-5/"
+# TEMPLATE_ROOT="material-dashboard-5/"
+LAYOUT_PARENT='material-kit-pro/layout.html'
+TEMPLATE_ROOT="web/"
 # TEMPLATE_ROOT="my_resume_en/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
+    context['layout_parent']=LAYOUT_PARENT
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):

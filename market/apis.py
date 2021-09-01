@@ -1,27 +1,55 @@
-from market.serializers import ProductSerializer
+from market.forms import *
+from market.serializers import CategorySerializer, ProductSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
-from .repo import ProductRepo
+from .repo import CategoryRepo, ProductRepo
 from .apps import APP_NAME
-from django.urls import path,include
 
-
+class categoryApi(APIView):
+    def add_category(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_category_form=AddCategoryForm(request.POST)
+            if add_category_form.is_valid():
+                log=3
+                title=add_category_form.cleaned_data['title']
+                parent_id=add_category_form.cleaned_data['parent_id']
+                category=CategoryRepo(request=request).add_category(title=title,parent_id=parent_id)
+                if category is not None:
+                    context['category']=CategorySerializer(category).data
+                    context['result']=SUCCEED
+        return JsonResponse(context)
 
 class ProductApi(APIView):
+    def add_product(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_product_form=AddProductForm(request.POST)
+            if add_product_form.is_valid():
+                log=3
+                title=add_product_form.cleaned_data['title']
+                unit_name=add_product_form.cleaned_data['unit_name']
+                category_id=add_product_form.cleaned_data['category_id']
+                product=ProductRepo(request=request).add_product(
+                    title=title,
+                    unit_name=unit_name,
+                    category_id=category_id)
+                if product is not None:
+                    context['product']=ProductSerializer(product).data
+                    context['result']=SUCCEED
+        return JsonResponse(context)
+        
     def products(self,request,category_id,*args, **kwargs):
         context={}
         context['result']=SUCCEED
         products=ProductRepo(request=request).list(category_id=category_id)
         context['products']=ProductSerializer(products,many=True).data
         return JsonResponse(context)
-        
-
-
-app_name=APP_NAME
-urlpatterns = [
-
-    path("products/<int:category_id>/",ProductApi().products,name="products"),
-
-    
-]
+   

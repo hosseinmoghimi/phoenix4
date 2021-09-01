@@ -1,44 +1,39 @@
 {% extends "market/layout.html" %}
-{% block market_content %}
+{% load static %}
+
+{% block content %}
 <div>
     {{category.get_breadcrumb|safe}}
 </div>
-<h3>
-
-    {{category.title}}
-</h3>
-<div>
-
-    <a href="{{category.get_edit_url}}">ویرایش</a>
-</div>
-
-<h3>
-    categories
-</h3>
-
-
-<ul>
-    {% for category in categories %}
-    <li>
-        <a href="{{category.get_absolute_url}}">
+<div class="row">
+    <div class="col-md-4">
+        <h3>
             {{category.title}}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+        </h3>
+        {% if perms.market.change_category %}
+        <a href="{{category.get_edit_url}}">ویرایش</a>
+        {% endif %}
+        <ul>
+            {% for category in categories %}
+            <li>
+                <a href="{{category.get_absolute_url}}">
+                    {{category.title}}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-8">
+        {% include "market/includes/products-app/template.html" %}
+    </div>
+</div>
+{% endblock %}
 
-<h3>
-    products
-</h3>
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let category_id = parseInt("{{category.id}}")
+</script>
+{% include "market/includes/products-app/script.html" %}
 
-<ul>
-    {% for product in products %}
-    <li>
-        <a href="{{product.get_absolute_url}}">
-            {{product.title}}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
-
-{% endblock market_content %}
+{% endblock %}
