@@ -112,6 +112,8 @@ class Image(models.Model):
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
     def image(self):
         return MEDIA_URL+str(self.image_main_origin)
+    def thumbnail(self):
+        return MEDIA_URL+str(self.thumbnail_origin)
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/image/{self.pk}/change/"
     class Meta:

@@ -17,13 +17,28 @@ class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        context['body_class']="sections-page"        
+        blogs=BlogRepo(request=request).list(for_home=True,*args, **kwargs)
+        context['blogs']=blogs
+
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class BlogViews(View):
     def blog(self,request,*args, **kwargs):
         context=getContext(request)
+        context['body_class']="blog-post"
+        context['main_class']='main-raised'
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
-        return render(request,TEMPLATE_ROOT+"index.html",context)
+        blog=BlogRepo(request=request).blog(*args, **kwargs)
+        context.update(PageContext(request=request,page=blog))
+        context['blog']=blog
+        return render(request,TEMPLATE_ROOT+"blog.html",context)
+    def blogs(self,request,*args, **kwargs):
+        context=getContext(request)
+        parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        blogs=BlogRepo(request=request).list(*args, **kwargs)
+        context['blogs']=blogs
+        return render(request,TEMPLATE_ROOT+"blogs.html",context)
 
 class OurworkViews(View):
     def ourwork(self,request,*args, **kwargs):

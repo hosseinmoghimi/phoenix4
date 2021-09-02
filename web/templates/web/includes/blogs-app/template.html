@@ -1,0 +1,48 @@
+<div class="cd-section" id="blogs">
+    <!--     *********     BLOGS 2      *********      -->
+    <div class="blogs-2" id="blogs-2">
+        <div class="container" id="blogs-app">
+            <div class="row">
+                <div class="col-md-10 ml-auto mr-auto">
+                    <h2 class="title text-center">مقالات</h2>
+                    <br>
+                    <div class="row">
+                        {% for blog in blogs %}
+
+                        <div class="col-md-4">
+                            <div class="card card-plain card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="{{blog.get_absolute_url}}">
+                                        <img class="img img-raised" src="{{blog.thumbnail}}">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-category text-info">Enterprise</h6>
+                                    <h4 class="card-title">
+                                        <a href="{{blog.get_absolute_url}}">
+                                            {{blog.title}}
+                                        </a>
+                                    </h4>
+                                    {% if blog.get_absolute_url %}
+
+                                    <div class="card-description">
+
+                                        {{blog.short_description|safe}}
+                                    </div>
+                                    {% endif %}
+                                    <p>
+
+                                        <a href="{{blog.get_absolute_url}}"> ادامه مطلب </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--     *********    END BLOGS 2      *********      -->
+</div>

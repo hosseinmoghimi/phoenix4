@@ -62,8 +62,12 @@ class BlogRepo:
         self.objects = Blog.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
-    def resume_category(self,*args, **kwargs):
+        objects= self.objects.all()
+        if 'for_home' in kwargs:
+            objects=objects.filter(for_home=kwargs['for_home'])
+        return objects
+    def blog(self,*args, **kwargs):
+        pk=0
         if 'blog_id' in kwargs:
             pk=kwargs['blog_id']
         elif 'pk' in kwargs:

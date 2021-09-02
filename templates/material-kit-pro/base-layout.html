@@ -24,7 +24,7 @@
     {% endblock %}
 </head>
 
-<body class="sections-page sidebar-collapse">
+<body class="{{body_class}} sidebar-collapse">
     <!-- Extra details for Live View on GitHub Pages -->
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
@@ -33,13 +33,26 @@
 
     {% include "material-kit-pro/includes/nav-bar.html" %}
 
-    <div class="main">
-        
-        <div class="section-space"></div>
+    {% block page_header %}
+
+    {% endblock %}
+    <div class="main {{main_class}}">
         {% block content %}
 
         {% endblock %}
+
+        
+        {% block main %}
+
+        {% endblock %}
     </div>
+
+    
+        
+    {% block after_main %}
+
+    {% endblock %}
+
     {% include "material-kit-pro/includes/footer.html" %}
 
     {% include "material-kit-pro/includes/script.html" %}
