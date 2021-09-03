@@ -1,0 +1,30 @@
+<div class="media" >
+    <a class="float-left" :href="page_comment.profile.get_absolute_url">
+        <div class="avatar">
+            <img class="media-object" :src="page_comment.profile.image" alt="...">
+        </div>
+    </a>
+    <div class="media-body">
+        <h4 class="media-heading">
+            <a :href="page_comment.profile.get_absolute_url">
+
+                <span v-text="page_comment.profile.name"></span>
+            </a>
+            <small>&#xB7; 
+                
+                <span v-text="page_comment.persian_date_added"></span>
+            </small></h4>
+        <h6 class="text-muted"></h6>
+        <p v-html="page_comment.comment">
+            
+        </p>
+        <div class="media-footer">
+            <a href="#pablo" class="btn btn-primary btn-link float-right" rel="tooltip" title="Reply to Comment">
+                <i class="material-icons">reply</i> Reply
+            </a>
+            <a href="#pablo" class="btn btn-danger btn-link float-right">
+                <i class="material-icons">favorite</i> 243
+            </a>
+        </div>
+    </div>
+</div>
