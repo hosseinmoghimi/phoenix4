@@ -93,6 +93,10 @@ class BasicApi(APIView):
                 log += 1
                 comment = add_page_comment_form.cleaned_data['comment']
                 page_id = add_page_comment_form.cleaned_data['page_id']
+                comment1=comment.splitlines()
+                comment=""
+                for line in comment1:
+                    comment=comment+line+"<br>"
                 page_comment = PageCommentRepo(request=request).add_comment(
                     comment=comment, page_id=page_id)
                 if page_comment is not None:

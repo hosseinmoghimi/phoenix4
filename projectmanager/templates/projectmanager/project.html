@@ -208,6 +208,8 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
+
     let page_id = parseInt("{{page.id}}")
     let parent_id = parseInt("{{parent_id}}")
     let project_id = parseInt("{{parent_id}}")
