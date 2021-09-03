@@ -9,7 +9,8 @@
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto">
                 <h3 class="title text-center">{{blog.title}}</h3>
-                <p class="text-center">This is the paragraph where you can write more details about your product. Keep you user engaged by
+                <p class="text-center">This is the paragraph where you can write more details about your product. Keep
+                    you user engaged by
                     providing meaningful information. Remember that by this time, the user is curious, otherwise he
                     wouldn&apos;t scroll to get here. Add a button if you want the user to see more. We are here to make
                     life better.
@@ -31,7 +32,8 @@
                 <div class="row rtl">
                     {% for page_image in page.pageimage_set.all %}
                     <div class="col-md-4">
-                        <img class="img-raised rounded img-fluid" alt="Raised Image" src="{{page_image.image.thumbnail}}">
+                        <img class="img-raised rounded img-fluid" alt="Raised Image"
+                            src="{{page_image.image.thumbnail}}">
                     </div>
 
                     {% endfor %}
@@ -299,18 +301,24 @@
 {% endblock %}
 
 {% block page_header %}
-<div class="page-header header-filter" data-parallax="true" style="background-image: url('../assets/img/bg5.jpg');">
+<div class="page-header header-filter" data-parallax="true" style="background-image: url('{{blog.image_header}}');">
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
                 <h2 class="title text-center">{{blog.title}}</h2>
                 {% if blog.panel %}
-                  {{blog.panel|safe}}
+                {{blog.panel|safe}}
                 {% endif %}
                 <br>
-                <a href="#pablo" class="btn btn-rose btn-round btn-lg">
-                    <i class="material-icons">format_align_left</i> Read Article
+                {% if perms.web.change_blog %}
+
+                <a href="{{blog.get_edit_url}}" target="_blank" class="btn btn-rose btn-round btn-lg">
+                    <i class="material-icons">edit</i>
+                    <span class="farsi">
+                        ویرایش
+                    </span>
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>

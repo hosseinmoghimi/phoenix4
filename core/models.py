@@ -189,7 +189,7 @@ class BasicPage(models.Model):
         if self.image_thumbnail_origin:
             return MEDIA_URL+str(self.image_thumbnail_origin)
         else:
-            return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.child_class}.jpg'
+            return f'{STATIC_URL}{self.app_name}/img/pages/header/{self.class_name}.jpg'
     def get_chart_url(self):
         return reverse(APP_NAME+':page_chart',kwargs={'pk':self.pk})
     
