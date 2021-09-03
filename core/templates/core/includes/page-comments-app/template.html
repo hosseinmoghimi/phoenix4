@@ -44,9 +44,16 @@
                     <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
                     <div class="media-body mr-2">
                         <h6>{{profile.name}}</h6>
-                        <form @submit.prevent="add_comment()">
-                            <input type="text" class="form-control" v-model="comment">
-                        </form>
+   
+                            <textarea 
+                            id="comment_inputed" 
+                            v-model="comment" 
+                            class="farsi form-control" 
+                            rows="5"
+                            ></textarea>
+                            <button @click="add_comment"
+                             class="btn btn-primary farsi btn-round btn-wd float-right">ثبت نظر</button>
+         
                     </div>
                 </div>
                 {% endif %}
