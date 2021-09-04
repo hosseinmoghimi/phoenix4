@@ -35,13 +35,16 @@ class Product(MarketPage):
     def old_price(self):
         old_price= Shop.objects.filter(product=self).order_by('-old_price').first()
         if old_price is None:
-            return 0
-        else:
-            return old_price.old_price
+            return None
+        if old_price.old_price==0:
+            return None
+        
+        return old_price.old_price
     def unit_price(self):
         unit_price= Shop.objects.filter(product=self).order_by('-unit_price').first()
         if unit_price is None:
-            return 0
+            return None
+            
         else:
             return unit_price.unit_price
 
@@ -146,10 +149,41 @@ class CartLine(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":cart_line", kwargs={"pk": self.pk})
 
+class Offer(MarketPage):
+    shops=models.ManyToManyField("shop", verbose_name=_("shops"))
+    col=models.IntegerField(_("col"),default=4)
+    
+
+    class Meta:
+        verbose_name = _("Offer")
+        verbose_name_plural = _("Offers")
+
+    def save(self,*args, **kwargs):
+        self.class_name='offer'
+        super(Offer,self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":offer", kwargs={"pk": self.pk})
+
+
+class Blog(MarketPage):
+
+    
+
+    class Meta:
+        verbose_name = _("Blog")
+        verbose_name_plural = _("Blogs")
+
+
+    def save(self,*args, **kwargs):
+        self.class_name="blog"
+        return super(Blog,self).save(*args, **kwargs)
+
+
 class Shop(models.Model):
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
     unit_name=models.CharField(_("unit_name"), max_length=50)
-    old_price=models.IntegerField(_("قیمت قبلی"))
+    old_price=models.IntegerField(_("قیمت قبلی"),default=0)
     unit_price=models.IntegerField(_("قیمت فروش"))
     available=models.IntegerField(_("تعداد موجودی"),default=10)
     date_added=models.DateTimeField(_("date-added"), auto_now=False, auto_now_add=True)

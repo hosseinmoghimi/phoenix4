@@ -34,7 +34,8 @@ def to_price_pure(value):
         a=separate(value)
         return sign+a
     except:
-        return LEO_ERRORS.error_to_price_template_tag
+        # return LEO_ERRORS.error_to_price_template_tag
+        return ""
 
 
 def separate(price):
