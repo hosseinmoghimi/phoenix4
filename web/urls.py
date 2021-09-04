@@ -14,4 +14,7 @@ urlpatterns = [
     path("ourworks/",views.BasicViews().home,name="ourworks"),
     path("about/",views.BasicViews().home,name="about"),
     path("contact/",views.BasicViews().home,name="contact"),
+
+
+    path("add_blog/",apis.BasicApi().add_blog,name="add_blog"),
 ]

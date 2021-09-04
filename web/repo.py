@@ -75,6 +75,18 @@ class BlogRepo:
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
+    def add_blog(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_blog"):
+            return
+        
+        blog=Blog()
+        if 'title' in kwargs:
+            blog.title=kwargs['title']
+        if 'for_home' in kwargs:
+            blog.for_home=kwargs['for_home']
+        
+        blog.save()
+        return blog
 
 
 

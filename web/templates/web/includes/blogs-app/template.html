@@ -7,8 +7,14 @@
                     <h2 class="title text-center">مقالات</h2>
                     <br>
                     <div class="row">
-                        {% for blog in blogs %}
+                        {% if perms.web.add_blog %}
+                        <div class="col-md-12 text-center my-3">
 
+                            <input type="text" style="width: 5em;" placeholder="عنوان مقاله جدید" v-model="title" class="form-control">
+                            <button @click="add_blog()" class="btn btn-success">افزودن</button>
+                        </div>
+                        {% endif %}
+                        {% for blog in blogs %}
                         <div class="col-md-4">
                             <div class="card card-plain card-blog">
                                 <div class="card-header card-header-image">
@@ -24,20 +30,19 @@
                                         </a>
                                     </h4>
                                     {% if blog.get_absolute_url %}
-
                                     <div class="card-description">
-
                                         {{blog.short_description|safe}}
                                     </div>
                                     {% endif %}
                                     <p>
-
-                                        <a href="{{blog.get_absolute_url}}"> ادامه مطلب </a>
+                                        <a href="{{blog.get_absolute_url}}">
+                                            ادامه مطلب
+                                            <i class="material-icons">reply</i>
+                                        </a>
                                     </p>
                                 </div>
                             </div>
                         </div>
-
                         {% endfor %}
                     </div>
                 </div>
