@@ -31,7 +31,19 @@ class UnitName(models.Model):
       
 class Product(MarketPage):
     unit_names=models.ManyToManyField("unitname", verbose_name=_("unit_names"))
-    
+    for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
+    def old_price(self):
+        old_price= Shop.objects.filter(product=self).order_by('-old_price').first()
+        if old_price is None:
+            return 0
+        else:
+            return old_price.old_price
+    def unit_price(self):
+        unit_price= Shop.objects.filter(product=self).order_by('-unit_price').first()
+        if unit_price is None:
+            return 0
+        else:
+            return unit_price.unit_price
 
     class Meta:
         verbose_name = _("Product")
@@ -137,8 +149,9 @@ class CartLine(models.Model):
 class Shop(models.Model):
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
     unit_name=models.CharField(_("unit_name"), max_length=50)
-    unit_price=models.IntegerField(_("unit_price"))
-    available=models.IntegerField(_("available"),default=10)
+    old_price=models.IntegerField(_("قیمت قبلی"))
+    unit_price=models.IntegerField(_("قیمت فروش"))
+    available=models.IntegerField(_("تعداد موجودی"),default=10)
     date_added=models.DateTimeField(_("date-added"), auto_now=False, auto_now_add=True)
     supplier=models.ForeignKey("supplier", verbose_name=_("supplier"), on_delete=models.CASCADE)
 

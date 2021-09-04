@@ -16,7 +16,7 @@ class ProductRepo:
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'for_home' in kwargs:
-            objects=objects.filter(Q(for_home=True)|Q(parent=None))
+            objects=objects.filter(for_home=kwargs['for_home'])
         if 'category_id' in kwargs:
             return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
         return objects

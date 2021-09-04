@@ -42,9 +42,12 @@
             <div class="section col-md-10 ml-auto mr-auto">
                 <div class="row rtl">
                     {% for page_image in page.pageimage_set.all %}
-                    <div class="col-md-4">
+                    <div class="col-md-4  ml-auto mr-auto">
+                    <a target="_blank" href="{{page_image.image.get_absolute_url}}">
+
                         <img class="img-raised rounded img-fluid" alt="Raised Image"
-                            src="{{page_image.image.thumbnail}}">
+                        src="{{page_image.image.thumbnail}}">
+                    </a>
                     </div>
 
                     {% endfor %}

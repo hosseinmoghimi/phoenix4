@@ -273,6 +273,8 @@ class ParameterRepo:
         Parameter(name=name,value_origin=value,app_name=self.app_name).save()
     
     
+    def parameter(self,*args, **kwargs):
+        return self.get(*args, **kwargs)
 
     def get(self,name):
         try:
@@ -343,7 +345,8 @@ class PictureRepo:
             picture= self.objects.filter(app_name=self.app_name).filter(pk=pk).first()
         return picture
 
-
+    def picture(self,*args, **kwargs):
+        return self.get(*args, **kwargs)
 class LinkRepo:
     
     def __init__(self,*args, **kwargs):

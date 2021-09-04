@@ -563,7 +563,7 @@ class Picture(models.Model):
     
     def get_edit_btn(self):
         return f"""
-            <a target="_blank" class="text-info" href="{self.get_edit_url()}">
+            <a target="_blank" class="text-info farsi" href="{self.get_edit_url()}">
             <i class="material-icons"   aria-hidden="true" >settings</i>
             ویرایش تصویر
             </a>

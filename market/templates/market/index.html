@@ -1,6 +1,7 @@
 {% extends "market/layout.html" %}
+{% load to_price %}
 
-{% block content %}
+{% block content3 %}
 <div class="row">
     <div class="col-md-6">
         <div class="car d">
@@ -653,6 +654,760 @@
     <!-- right col -->
 </div>
 <!-- /.row (main row) -->
+{% endblock %}
+{% block page_header %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{shop_header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <div class="brand">
+                    <h1 class="title text-center">{{shop_header_title.value}}
+                        {% if perms.core.change_parameter %}
+                        {{shop_header_title.get_edit_btn|safe}}
+                        {% endif %}
+                    </h1>
+                    <h4 class="text-center">{{shop_header_slogan.value}}
+                        {% if perms.core.change_parameter %}
+
+                        {{shop_header_slogan.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% if perms.core.change_picture %}
+                    <div class="text-center">
+                        {{shop_header_image.get_edit_btn|safe}}
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block main %}
+<div class="section">
+    <div class="container">
+        <h2 class="section-title text-center">محصولات برتر</h2>
+        <div class="row">
+            {% for product in products %}
+
+            <div class="col-md-4">
+                <div class="card card-product card-plain">
+                    <div class="card-header card-header-image">
+                        <a href="{{product.get_absolute_url}}">
+                            <img src="{{product.thumbnail}}" alt="">
+                        </a>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title">
+                            <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                        </h4>
+
+                        <div class="card-description">
+
+                            {% if product.short_description %}
+
+                            {{product.short_description|safe}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="price-container">
+                            <span class="price price-old mx-2 farsi"> {{product.old_price|to_price_pure}}</span>
+                            <span class="price price-new mx-2 farsi"> {{product.unit_price|to_price}}</span>
+                        </div>
+                        <div class="stats mr-auto">
+                            <button type="button" rel="tooltip" title="" class="btn btn-just-icon btn-link btn-rose"
+                                data-original-title="Saved to Wishlist">
+                                <i class="material-icons">favorite</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+</div><!-- section -->
+<div class="section">
+    <div class="container">
+        <h2 class="section-title">Find what you need</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card card-refine card-plain card-rose">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            Refine
+                            <button class="btn btn-default btn-fab btn-fab-mini btn-link pull-right" rel="tooltip"
+                                title="" data-original-title="Reset Filter">
+                                <i class="material-icons">cached</i>
+                            </button>
+                        </h4>
+                        <div id="accordion" role="tablist">
+                            <div class="card card-collapse">
+                                <div class="card-header" role="tab" id="headingCategory">
+                                    <h5 class="mb-0">
+                                        <a data-toggle="collapse" href="#collapseCategory" aria-expanded="true"
+                                            aria-controls="collapseCategory">
+
+                                            دسته بندی ها
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div id="collapseCategory" class="collapse" role="tabpanel"
+                                    aria-labelledby="headingCategory">
+                                    <div class="card-body card-refine">
+
+
+                                        {% for category in categories %}
+
+
+
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+
+
+                                                <a href="{{category.get_absolute_url}}">
+                                                    {{category.title}}
+                                                </a>
+
+
+                                            </label>
+                                        </div>
+
+                                        {% endfor %}
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-collapse">
+                                <div class="card-header" role="tab" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                            Price Range
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="card-body card-refine">
+                                        <span id="price-left" class="price-left pull-left" data-currency="€">€42</span>
+                                        <span id="price-right" class="price-right pull-right"
+                                            data-currency="€">€880</span>
+                                        <div class="clearfix"></div>
+                                        <div id="sliderRefine"
+                                            class="slider slider-rose noUi-target noUi-ltr noUi-horizontal"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-collapse">
+                                <div class="card-header" role="tab" id="headingTwo">
+                                    <h5 class="mb-0">
+                                        <a class="collapsed" data-toggle="collapse" href="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo">
+                                            Clothing
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                Blazers
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Casual Shirts
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Formal Shirts
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Jeans
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Polos
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Pyjamas
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Shorts
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Trousers
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-collapse">
+                                <div class="card-header" role="tab" id="headingThree">
+                                    <h5 class="mb-0">
+                                        <a class="collapsed" data-toggle="collapse" href="#collapseThree"
+                                            aria-expanded="false" aria-controls="collapseThree">
+                                            Designer
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                All
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Polo Ralph Lauren
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Wooyoungmi
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Alexander McQueen
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Tom Ford
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                AMI
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Berena
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Thom Sweeney
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Burberry Prorsum
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Calvin Klein
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Kingsman
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Club Monaco
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Dolce &amp; Gabbana
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Gucci
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Biglioli
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Lanvin
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Loro Piana
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Massimo Alba
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-collapse">
+                                <div class="card-header" role="tab" id="headingFour">
+                                    <h5 class="mb-0">
+                                        <a class="collapsed" data-toggle="collapse" href="#collapseFour"
+                                            aria-expanded="false" aria-controls="collapseFour">
+                                            Colour
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </a>
+                                    </h5>
+                                </div>
+                                <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="" checked>
+                                                All
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Black
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Blue
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Brown
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Gray
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Green
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Neutrals
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                Purple
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    {% for product in products %}
+
+                    <div class="col-md-4">
+                        <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+                            <div class="card-header card-header-image">
+                                <a href="{{product.get_absolute_url}}">
+                                    <img src="{{product.thumbnail}}" alt="">
+                                </a>
+                            </div>
+                            <div class="card-body text-center">
+                                <h4 class="card-title">
+                                    <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                                </h4>
+
+                                <div class="card-description">
+
+                                    {% if product.short_description %}
+
+                                    {{product.short_description|safe}}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price-container">
+                                    <span class="price price-old mx-2 farsi"> {{product.old_price|to_price_pure}}</span>
+                                    <span class="price price-new mx-2 farsi"> {{product.unit_price|to_price}}</span>
+                                </div>
+                                <div class="stats mr-auto">
+                                    <button type="button" rel="tooltip" title=""
+                                        class="btn btn-just-icon btn-link btn-rose"
+                                        data-original-title="Saved to Wishlist">
+                                        <i class="material-icons">favorite</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div> <!-- end card -->
+                    </div>
+                    {% endfor %}
+                    <div class="col-md-12"></div>
+                    <div class="col-md-3 ml-auto mr-auto">
+                        <button rel="tooltip" class="btn btn-rose btn-round" data-original-title="" title="">Load
+                            more...</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <h2 class="section-title">News in fashion</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-background" style="background-image: url(../assets/img/examples/color1.jpg)">
+                    <div class="card-body">
+                        <h6 class="card-category text-info">Productivy Apps</h6>
+                        <a href="#pablo">
+                            <h3 class="card-title">The best trends in fashion 2017</h3>
+                        </a>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                        <a href="#pablo" class="btn btn-white btn-round">
+                            <i class="material-icons">subject</i> Read
+                        </a>
+                    </div>
+                </div> <!-- end card -->
+            </div>
+            <div class="col-md-4">
+                <div class="card card-background" style="background-image: url(../assets/img/examples/color3.jpg)">
+                    <div class="card-body">
+                        <h6 class="card-category text-info">Fashion News</h6>
+                        <h3 class="card-title">Kanye joins the Yeezy team at Adidas</h3>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                        <a href="#pablo" class="btn btn-white btn-round">
+                            <i class="material-icons">subject</i> Read
+                        </a>
+                    </div>
+                </div> <!-- end card -->
+            </div>
+            <div class="col-md-4">
+                <div class="card card-background" style="background-image: url(../assets/img/examples/color2.jpg)">
+                    <div class="card-body">
+                        <h6 class="card-category text-info">Productivy Apps</h6>
+                        <a href="#pablo">
+                            <h3 class="card-title">Learn how to use the new colors of 2017</h3>
+                        </a>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                        <a href="#pablo" class="btn btn-white btn-round">
+                            <i class="material-icons">subject</i> Read
+                        </a>
+                    </div>
+                </div> <!-- end card -->
+            </div>
+            <div class="col-md-6">
+                <div class="card card-background" style="background-image: url(../assets/img/dg3.jpg)">
+                    <div class="card-body">
+                        <h6 class="card-category text-info">Tutorials</h6>
+                        <a href="#pablo">
+                            <h3 class="card-title">Trending colors of 2017</h3>
+                        </a>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                        <a href="#pablo" class="btn btn-white btn-round">
+                            <i class="material-icons">subject</i> Read
+                        </a>
+                    </div>
+                </div> <!-- end card -->
+            </div>
+            <div class="col-md-6">
+                <div class="card card-background" style="background-image: url(../assets/img/dg1.jpg)">
+                    <div class="card-body">
+                        <h6 class="card-category text-info">Productivy Style</h6>
+                        <a href="#pablo">
+                            <h3 class="card-title">Fashion &amp; Style 2017</h3>
+                        </a>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                        <a href="#pablo" class="btn btn-white btn-round">
+                            <i class="material-icons">subject</i> read
+                        </a>
+                    </div>
+                </div> <!-- end card -->
+            </div>
+        </div>
+    </div>
+</div><!-- section -->
+
+
+{% endblock %}
+{% block after_main %}
+<div class="section section-blog">
+    <div class="container">
+        <h2 class="section-title">Latest Articles</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-blog">
+                    <div class="card-header card-header-image">
+                        <a href="#pablo">
+                            <img src="../assets/img/dg6.jpg" alt="">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-category text-rose">Trends</h6>
+                        <h4 class="card-title">
+                            <a href="#pablo">Learn how to wear your scarf with a floral print shirt</a>
+                        </h4>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-blog">
+                    <div class="card-header card-header-image">
+                        <a href="#pablo">
+                            <img src="../assets/img/dg10.jpg" alt="">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-category text-rose">Fashion week</h6>
+                        <h4 class="card-title">
+                            <a href="#pablo">Katy Perry was wearing a Dolce &amp; Gabanna arc dress</a>
+                        </h4>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-blog">
+                    <div class="card-header card-header-image">
+                        <a href="#pablo">
+                            <img src="../assets/img/dg9.jpg" alt="">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-category text-rose">Fashion week</h6>
+                        <h4 class="card-title">
+                            <a href="#pablo">Check the latest fashion events and which are the trends</a>
+                        </h4>
+                        <p class="card-description">
+                            Don't be scared of the truth because we need to restart the human foundation in truth And I
+                            love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- section -->
+<div class="subscribe-line subscribe-line-image" data-parallax="true"
+    style="background-image: url(&apos;../assets/img/examples/ecommerce-header.jpg&apos;);">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 ml-auto mr-auto">
+                <div class="text-center">
+                    <h3 class="title">Subscribe to our Newsletter</h3>
+                    <p class="description">
+                        Join our newsletter and get news in your inbox every week! We hate spam too, so no worries about
+                        this.
+                    </p>
+                </div>
+                <div class="card card-raised card-form-horizontal">
+                    <div class="card-body">
+                        <form method="" action="">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="material-icons">mail</i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Your Email...">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-rose btn-block">Subscribe</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 {% block script %}
 
