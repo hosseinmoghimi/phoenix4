@@ -10,7 +10,8 @@
                         {% if perms.web.add_blog %}
                         <div class="col-md-12 text-center my-3">
 
-                            <input type="text" style="width: 5em;" placeholder="عنوان مقاله جدید" v-model="title" class="form-control">
+                            <input type="text" style="width: 25em;" placeholder="عنوان مقاله جدید" v-model="title"
+                                class="form-control">
                             <button @click="add_blog()" class="btn btn-success">افزودن</button>
                         </div>
                         {% endif %}
@@ -23,7 +24,12 @@
                                     </a>
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="card-category text-info">Enterprise</h6>
+                                    <h6 class="card-category text-info">
+                                        {% if blog.sub_title %}
+
+                                        {{blog.sub_title}}
+                                        {% endif %}
+                                    </h6>
                                     <h4 class="card-title">
                                         <a href="{{blog.get_absolute_url}}">
                                             {{blog.title}}

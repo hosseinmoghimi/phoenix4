@@ -1,0 +1,203 @@
+{% extends "web/layout.html" %}
+{% load static %}
+
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" style="background-image: url('{{page.image_header}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <h2 class="title text-center">{{page.title}}</h2>
+                {% if page.panel %}
+                {{page.panel|safe}}
+                {% endif %}
+                <br>
+                {% if perms.web.change_webpage %}
+
+                <a href="{{page.get_edit_url}}" target="_blank" class="btn btn-rose btn-round btn-lg">
+                    <i class="material-icons">edit</i>
+                    <span class="farsi">
+                        ویرایش
+                    </span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="main {{main_class}}">
+
+
+    <div class="container">
+        <div class="section section-text">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    <h3 class="title text-center">{{page.title}}</h3>
+
+                    {% if page.panel %}
+                    {{page.panel|safe}}
+                    {% endif %}
+                </div>
+                <div class="section col-md-10 ml-auto mr-auto">
+                    <div class="row rtl">
+                        {% for page_image in page.pageimage_set.all %}
+                        <div class="col-md-4  ml-auto mr-auto">
+                            <a target="_blank" href="{{page_image.image.get_absolute_url}}">
+
+                                <img class="img-raised rounded img-fluid" alt="Raised Image"
+                                    src="{{page_image.image.thumbnail}}">
+                            </a>
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="col-md-8 ml-auto mr-auto">
+
+                    {% if page.description %}
+                    {{page.description|safe}}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        <div class="section section-blog-info">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="blog-tags farsi text-right">
+                                برچسب ها :
+                                {% for tag in page.tags.all %}
+                                <a href="{{tag.get_absolute_url}}">
+
+                                    <span class="badge badge-primary badge-pill">
+                                        {{tag.title}}
+                                    </span>
+                                </a>
+
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr>
+                    {% if page.creator %}
+
+                    <div class="card card-profile card-plain">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="card-avatar">
+                                    <a href="{{page.creator.get_absolute_url}}">
+                                        <img class="img" src="{{page.creator.image}}">
+                                    </a>
+                                    <div class="ripple-container"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <a href="{{page.creator.get_absolute_url}}">
+                                    <h4 class="card-title">{{page.creator.name}}</h4>
+                                </a>
+                                <p class="description">
+                                    {{page.creator.bio}}
+
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-default pull-right btn-round">Follow</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="section section-comments">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    {% include "web/includes/page-comments-app/template.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="my-5">
+    {% if related_pages %}
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="title text-center">صفحات مرتبط</h2>
+                    <br>
+                    <div class="row">
+                        {% for related_page in related_pages %}
+
+                        <div class="col-md-4">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="{{related_page.get_absolute_url}}">
+                                        <img class="img img-raised" src="{{related_page.thumbnail}}">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="category text-info">Enterprise</h6>
+                                    <h4 class="card-title">
+                                        <a href="{{related_page.get_absolute_url}}">{{related_page.title}}</a>
+                                    </h4>
+                                    <div class="card-description">
+                                        {% if related_page.short_description %}
+                                        {{related_page.short_description}}
+                                        {% endif %}
+
+                                        <a href="{{related_page.get_absolute_url}}">
+                                            <span class="farsi">
+                                                ادامه مطلب
+                                                <i class="material-icons">reply</i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+    let page_id = parseInt("{{page.id}}")
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+
+    let page_comment_component_template = `{% include "web/includes/page-comments-app/component.html" %}`
+</script>
+{% include "core/includes/page-comments-app/script.html" %}
+{% endblock %}
+
+
+{% block vertical_nav %}
+
+{% endblock %}
+
+{% block nav_bar %}
+
+{% endblock %}

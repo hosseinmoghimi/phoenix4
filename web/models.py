@@ -236,6 +236,9 @@ class OurTeam(models.Model):
         verbose_name = 'OurTeam'
         verbose_name_plural = 'تیم ما'
 
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":ourteam",kwargs={'pk':self.pk})
+
 
 
 class ContactMessage(models.Model):
