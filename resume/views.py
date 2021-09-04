@@ -42,7 +42,7 @@ class BasicViews(View):
             portfolio_categories=PortfolioRepo(request=request).category_list()
             context['portfolio_categories']=portfolio_categories
             profile=ProfileRepo(request=request).me
-            if profile.id==profile_id or request.user.has_perm(APP_NAME+"change_resumeindex"):
+            if profile is not None and (profile.id==profile_id or request.user.has_perm(APP_NAME+"change_resumeindex")):
                 #user can change resume
                 context['add_resume_fact_form']=AddResumeFactForm()
                 context['add_resume_skill_form']=AddResumeSkillForm()

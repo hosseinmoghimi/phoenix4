@@ -37,22 +37,15 @@
     {% block page_header %}
 
     {% endblock %}
+    {% block content %}
     <div class="main {{main_class}}">
-        {% block content %}
-
+        
+    </div>
         {% endblock %}
 
         
-        {% block main %}
-
-        {% endblock %}
-    </div>
 
     
-        
-    {% block after_main %}
-
-    {% endblock %}
 
     {% include "material-kit-pro/includes/footer.html" %}
 

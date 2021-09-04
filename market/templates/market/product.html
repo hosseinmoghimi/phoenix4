@@ -3,57 +3,7 @@
 {% load static %}
 
 {% block content %}
-<div class="" id="product-app">
-    <div class="row">
-        <div class="col-12">
-            <div>
-                {{product.get_breadcrumb|safe}}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <h3>
-                            {{product.title}}
-                        </h3>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% if perms.market.change_product %}
-                    <a target="_blank" title="ویرایش" href="{{product.get_edit_url}}">
-                        <i class="material-icons">
-                            settings
-                        </i>
-                    </a>
 
-                    {% endif %}
-                    <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
-
-                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-                        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header">
-                                <img src="..." class="rounded me-2" alt="...">
-                                <strong class="me-auto">Bootstrap</strong>
-                                <small>11 mins ago</small>
-                                <button type="button" class="btn-close" data-bs-dismiss="toast"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="toast-body">
-                                Hello, world! This is a toast message.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    sdsdfsd
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-</div>
 {% endblock %}
 
 {% block modal %}

@@ -20,6 +20,7 @@ class ProfileRepo():
         elif self.user is not None and self.user and self.user.is_authenticated:
             self.objects = Profile.objects.filter(enabled=True)
             self.me = self.objects.filter(user=self.user).first()         
+        self.objects = Profile.objects.filter(enabled=True)
 
     def reset_password(self,*args, **kwargs):
         result=FAILED
