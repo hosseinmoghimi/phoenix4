@@ -37,6 +37,7 @@ class Carousel(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     archive = models.BooleanField(_("بایگانی شود؟"), default=False)
     tag_number = models.IntegerField(_("عدد برچسب"), default=100)
+    links=models.ManyToManyField("core.link",blank=True, verbose_name=_("links"))
     tag_text = models.CharField(
         _("متن برچسب"), max_length=100, blank=True, null=True)
     class_name="carousel"

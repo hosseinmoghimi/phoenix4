@@ -19,14 +19,24 @@ class BasicViews(View):
         context=getContext(request)
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
         context['body_class']="sections-page"
+
         blogs=BlogRepo(request=request).list(for_home=True,*args, **kwargs)
         context['blogs']=blogs
+
         our_works=OurWorkRepo(request=request).list(for_home=True,*args, **kwargs)
         context['blogs']=blogs
+
         teams=OurTeamRepo(request=request).list(for_home=True,*args, **kwargs)
         context['teams']=teams
+
+        sliders=CarouselRepo(request=request).list(for_home=True,app_name=APP_NAME,*args, **kwargs)
+        context['sliders']=sliders
+        print(sliders)
+        print(10*"#@")
+
         features=FeatureRepo(request=request).list(for_home=True,*args, **kwargs)
         context['features']=features
+
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class OurWorkViews(View):

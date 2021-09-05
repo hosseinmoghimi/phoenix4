@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="main {{main_class}}">
-    {% include "web/includes/index-sections/headers.html" %}
+    {% include "web/includes/index-sections/sliders.html" %}
     {% include "web/includes/index-sections/features.html" %}
     {% include "web/includes/blogs-app/template.html" %}
     {% include "web/includes/index-sections/our-teams.html" %}
@@ -17,7 +17,13 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "web/includes/blogs-app/script.html" %}
+<script>
+    $(document).ready(() => {
+        $("#slider_link0").addClass("active")
 
+        $(".carousel-item").first().addClass("active")
+    })
+</script>
 {% endblock %}
 
 
