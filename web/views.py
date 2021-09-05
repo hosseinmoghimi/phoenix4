@@ -31,8 +31,7 @@ class BasicViews(View):
 
         sliders=CarouselRepo(request=request).list(for_home=True,app_name=APP_NAME,*args, **kwargs)
         context['sliders']=sliders
-        print(sliders)
-        print(10*"#@")
+
 
         features=FeatureRepo(request=request).list(for_home=True,*args, **kwargs)
         context['features']=features
