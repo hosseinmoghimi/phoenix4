@@ -1,0 +1,23 @@
+<li class="dropdown nav-item">
+    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+        <i class="material-icons">apps</i>
+        <span class="farsi">
+
+          محصولات
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-with-icons">
+        
+      
+        {% for category in root_categories %}
+          <a href="{{category.get_absolute_url}}"
+            class="dropdown-item">
+            <i class="material-icons">line_style</i>
+            <span class="farsi">
+
+                {{category.title}}
+            </span>
+        </a>
+        {% endfor %}
+    </div>
+</li>

@@ -45,16 +45,11 @@
                     برنامه ها
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{% url 'messenger:home' %}">پیام رسان</a>
-                    <a class="dropdown-item" href="{% url 'stock:home' %}">سهام</a>
-                    <a class="dropdown-item" href="{% url 'realestate:home' %}">املاک</a>
-                    <a class="dropdown-item" href="{% url 'bms:home' %}">ساختمان هوشمند</a>
-                    <a class="dropdown-item" href="{% url 'market:home' %}">مارکت</a>
-                    <a class="dropdown-item" href="{% url 'mafia:home' %}">مافیا</a>
-                    <a class="dropdown-item" href="{% url 'calendar:home' %}">سررسید</a>
-                    <a class="dropdown-item" href="{% url 'farm:home' %}">دامداری</a>
-                    <a class="dropdown-item" href="{% url 'accounting:home' %}">حسابداری</a>
-                    <a class="dropdown-item" href="{% url 'projectmanager:home' %}">مدیریت پروژه</a>
+                    {% for app in apps %}
+                      
+                    <a class="dropdown-item" href="{{app.home_url}}">{{app.title}}</a>
+                    {% endfor %}
+                  
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Something else here</a>
                 </div>

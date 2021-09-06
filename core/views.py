@@ -11,7 +11,7 @@ from .utils import AdminUtility
 from .constants import *
 from django.views import View
 TEMPLATE_ROOT = "core/"
-
+from phoenix.server_settings import apps
 
 def CoreContext(request, *args, **kwargs):
     context = {}
@@ -19,6 +19,7 @@ def CoreContext(request, *args, **kwargs):
     if 'app_name' in kwargs:
         app_name = kwargs['app_name']
     context['user'] = request.user
+    context['apps']=apps
     context['profile'] = ProfileRepo(user=request.user).me
     context['APP_NAME'] = app_name
     context['current_datetime'] = PersianCalendar(

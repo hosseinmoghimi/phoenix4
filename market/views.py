@@ -16,6 +16,7 @@ LAYOUT_PARENT="material-kit-pro/layout.html"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     context['title'] = "Market"
+    context['navbar']=APP_NAME+"/includes/nav-bar.html"
     context['layout_parent'] = LAYOUT_PARENT
     context['root_categories'] = CategoryRepo(
             request=request).list(for_home=True)
