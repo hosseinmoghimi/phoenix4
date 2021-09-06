@@ -19,40 +19,20 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6">
                     <div class="tab-content">
-                        <div class="tab-pane" id="product-page1">
-                            <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product1.jpg">
+                        {% for product_image in product.pageimage_set.all %}
+                        <div class="tab-pane" id="product-page{{forloop.counter}}">
+                            <img src="{{product_image.image.image}}">
                         </div>
-                        <div class="tab-pane active" id="product-page2">
-                            <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product2.jpg">
-                        </div>
-                        <div class="tab-pane" id="product-page3">
-                            <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product3.jpg">
-                        </div>
-                        <div class="tab-pane" id="product-page4">
-                            <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product4.jpg">
-                        </div>
+                        {% endfor %}
                     </div>
                     <ul class="nav flexi-nav" data-tabs="tabs" id="flexiselDemo1">
+                        {% for product_image in product.pageimage_set.all %}
                         <li class="nav-item">
-                            <a href="#product-page1" class="nav-link" data-toggle="tab">
-                                <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product1.jpg">
+                            <a href="#product-page{{forloop.counter}}" class="nav-link" data-toggle="tab">
+                                <img src="{{product_image.image.thumbnail}}">
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#product-page2" class="nav-link" data-toggle="tab">
-                                <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product2.jpg">
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#product-page3" class="nav-link" data-toggle="tab">
-                                <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product3.jpg">
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#product-page4" class="nav-link" data-toggle="tab">
-                                <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/product4.jpg">
-                            </a>
-                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="col-md-6 col-sm-6">
@@ -113,7 +93,7 @@
 
 
 
-                        
+
                     </div>
                     <div class="row pick-size">
                         <div class="col-md-6 col-sm-6">
@@ -178,7 +158,7 @@
             <h3 class="title text-center">محصولات مرتبط</h3>
             <div class="row">
                 {% for related_product in related_pages %}
-                  
+
                 <div class="col-lg-3 col-md-6 mr-auto ml-auto">
                     <div class="card card-product">
                         <div class="card-header card-header-image">
@@ -193,7 +173,7 @@
                             </h4>
                             <div class="card-description">
                                 {% if related_product.short_description %}
-                                  
+
                                 {{related_product.short_description|safe}}
                                 {% endif %}
                             </div>
@@ -211,7 +191,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 {% endfor %}
             </div>
         </div>

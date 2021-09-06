@@ -111,9 +111,13 @@ class Image(models.Model):
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
     def image(self):
-        return MEDIA_URL+str(self.image_main_origin)
+        if self.image_main_origin:
+            return MEDIA_URL+str(self.image_main_origin)
     def thumbnail(self):
-        return MEDIA_URL+str(self.thumbnail_origin)
+        if(self.thumbnail_origin):
+            return MEDIA_URL+str(self.thumbnail_origin)
+        return self.image()
+
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/image/{self.pk}/change/"
     class Meta:
