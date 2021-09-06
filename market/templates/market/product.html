@@ -8,7 +8,14 @@
     <div class="container">
         <div class="row title-row">
             <div class="col-md-4 mr-auto">
-                <button class="btn btn-white float-left"><i class="material-icons">shopping_cart</i> 0 Items</button>
+                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
+                    <span class="farsi">
+
+                        0 در سبد خرید
+                    </span>
+                    <i class="material-icons mx-2">shopping_cart</i>
+
+                </a>
             </div>
         </div>
     </div>
@@ -34,7 +41,7 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    
+
                 </div>
                 <div class="col-md-6 col-sm-6">
                     <h2 class="title">{{product.title}}

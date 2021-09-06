@@ -9,6 +9,7 @@ urlpatterns = [
     path("category/<int:pk>/",views.CategoryViews().category,name="category"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
+    path("cart/",views.CartViews().cart,name="cart"),
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),

@@ -37,8 +37,20 @@ class BasicViews(View):
         context['products'] = ProductRepo(request=request).list(for_home=True)
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
+class CartViews(View):
+    def cart(self, request, *args, **kwargs):
 
-class ProductViews():
+        product = ProductRepo(request).product(*args, **kwargs)
+        page = product
+        context = getContext(request)
+        context.update(PageContext(request=request, page=page))
+        context['product'] = product
+        context['body_class']="product-page"
+        if request.user.has_perm(APP_NAME+".add_product"):
+            context['add_product_form'] = AddProductForm()
+        return render(request, TEMPLATE_ROOT+"product.html", context)
+
+class ProductViews(View):
     def product(self, request, *args, **kwargs):
 
         product = ProductRepo(request).product(*args, **kwargs)
@@ -52,7 +64,7 @@ class ProductViews():
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
 
-class OfferViews():
+class OfferViews(View):
     def offer(self, request, *args, **kwargs):
 
         offer = OfferRepo(request).offer(*args, **kwargs)
@@ -65,7 +77,7 @@ class OfferViews():
         return render(request, TEMPLATE_ROOT+"offer.html", context)
 
 
-class BlogViews():
+class BlogViews(View):
     def blog(self, request, *args, **kwargs):
 
         blog = BlogRepo(request).blog(*args, **kwargs)
@@ -77,7 +89,7 @@ class BlogViews():
             context['add_blog_form'] = AddProductForm()
         return render(request, TEMPLATE_ROOT+"blog.html", context)
 
-class CategoryViews():
+class CategoryViews(View):
     def category(self, request, *args, **kwargs):
         category = CategoryRepo(request).category(*args, **kwargs)
         page = category
