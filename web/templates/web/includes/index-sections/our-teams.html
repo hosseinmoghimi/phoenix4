@@ -5,11 +5,18 @@
             <div class="row">
                 <div class="col-md-8 ml-auto mr-auto text-center">
                     <h2 class="title text-center">
-                        متخصصین و همکاران
+                        {{ourteam_title_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{ourteam_title_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
                     </h2>
                     <h5 class="description text-center">
-
-                        متخصصین و همکاران ما
+                        {{ourteam_description_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{ourteam_description_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
 
                     </h5>
                 </div>

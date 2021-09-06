@@ -8,10 +8,19 @@
             <div class="row">
                 <div class="col-md-8 ml-auto mr-auto text-center">
                     <h6 class="category text-muted text-center">
-                        برترین و شاخص ترین
+                        {{ourwork_pretitle_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{ourwork_pretitle_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
                     </h6>
                     <h2 class="title text-center">
-                        کارها و پروژه های انجام شده
+                   {{ourwork_title_param.value}}
+                   
+                   {% if perms.core.change_parameter %}
+                   {{ourwork_title_param.get_edit_btn|safe}}
+                     
+                   {% endif %}
                     </h2>
                 </div>
             </div>

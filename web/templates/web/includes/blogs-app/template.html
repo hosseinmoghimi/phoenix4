@@ -4,7 +4,13 @@
         <div class="container" id="blogs-app">
             <div class="row">
                 <div class="col-md-10 ml-auto mr-auto">
-                    <h2 class="title text-center">مقالات</h2>
+                    <h2 class="title text-center">
+                        {{blog_title_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{blog_title_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+                    </h2>
                     <br>
                     <div class="row">
                         {% if perms.web.add_blog %}

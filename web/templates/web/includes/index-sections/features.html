@@ -4,14 +4,21 @@
         <div class="features-1">
             <div class="row">
                 <div class="col-md-8 ml-auto mr-auto">
-                    <h2 class="title text-center">خدمات قابل ارائه</h2>
-                    <h5 class="description">This is the paragraph where you can write more details about your
-                        product.
-                        Keep you user engaged by providing meaningful information. Remember that by this time, the
-                        user
-                        is curious, otherwise he wouldn&apos;t scroll to get here. Add a button if you want the user
-                        to
-                        see more.</h5>
+                    <h2 class="title text-center">
+                        {{feature_title_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{feature_title_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+
+                    </h2>
+                    <h5 class="description text-center">
+                        {{feature_description_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{feature_description_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+                    </h5>
                 </div>
             </div>
             <div class="row">

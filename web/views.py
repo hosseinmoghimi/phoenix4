@@ -5,6 +5,8 @@ from django.shortcuts import render
 from .repo import *
 from django.views import View
 from core.views import CoreContext, PageContext
+from .enums import ParameterEnum
+
 
 LAYOUT_PARENT='material-kit-pro/layout.html'
 TEMPLATE_ROOT="web/"
@@ -36,6 +38,23 @@ class BasicViews(View):
         features=FeatureRepo(request=request).list(for_home=True,*args, **kwargs)
         context['features']=features
 
+
+        our_works=OurWorkRepo(request=request).list(for_home=True,*args, **kwargs)
+        context['our_works']=our_works
+
+        parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        context['blog_title_param']=parameter_repo.parameter(name=ParameterEnum.BlogsTitle)
+        context['blog_description_param']=parameter_repo.parameter(name=ParameterEnum.BlogsDescription)
+
+        context['feature_title_param']=parameter_repo.parameter(name=ParameterEnum.FeatureTitle)
+        context['feature_description_param']=parameter_repo.parameter(name=ParameterEnum.FeatureDescription)
+        
+        context['ourwork_pretitle_param']=parameter_repo.parameter(name=ParameterEnum.OurWorksPreTitle)
+        context['ourwork_title_param']=parameter_repo.parameter(name=ParameterEnum.OurWorksTitle)
+        context['ourwork_description_param']=parameter_repo.parameter(name=ParameterEnum.OurWorksDescription)
+
+        context['ourteam_title_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamTitle)
+        context['ourteam_description_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamDescription)
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class OurWorkViews(View):
