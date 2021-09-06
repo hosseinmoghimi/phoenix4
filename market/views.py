@@ -3,7 +3,7 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
 from django.views import View
 from market.forms import AddProductForm
-from .repo import BlogRepo, CategoryRepo, OfferRepo, ProductRepo
+from .repo import BlogRepo, CategoryRepo, OfferRepo, ProductRepo, SupplierRepo
 from .apps import APP_NAME
 
 from django.shortcuts import render
@@ -59,9 +59,19 @@ class ProductViews(View):
         context.update(PageContext(request=request, page=page))
         context['product'] = product
         context['body_class']="product-page"
-        if request.user.has_perm(APP_NAME+".add_product"):
-            context['add_product_form'] = AddProductForm()
         return render(request, TEMPLATE_ROOT+"product.html", context)
+
+
+class SupplierViews(View):
+    def supplier(self, request, *args, **kwargs):
+
+        supplier = SupplierRepo(request).supplier(*args, **kwargs)
+        page = supplier
+        context = getContext(request)
+        context.update(PageContext(request=request, page=page))
+        context['supplier'] = supplier
+        context['body_class']="product-page"
+        return render(request, TEMPLATE_ROOT+"supplier.html", context)
 
 
 class OfferViews(View):

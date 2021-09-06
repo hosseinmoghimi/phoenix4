@@ -1,6 +1,6 @@
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Offer, Product,Category, UnitName
+from .models import Blog, Offer, Product,Category, Supplier, UnitName
 from django.db.models import Q,F
 class ProductRepo:
     def __init__(self, *args, **kwargs):
@@ -104,6 +104,35 @@ class BlogRepo:
         pk=0
         if 'blog_id' in kwargs:
             pk=kwargs['blog_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+   
+    
+class SupplierRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Supplier.objects
+        self.me=ProfileRepo(user=self.user).me
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        if 'for_home' in kwargs:
+            objects=objects.filter(for_home=kwargs['for_home'])
+        if 'category_id' in kwargs:
+            return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
+        return objects
+    def supplier(self,*args, **kwargs):
+        pk=0
+        if 'supplier_id' in kwargs:
+            pk=kwargs['supplier_id']
         elif 'pk' in kwargs:
             pk=kwargs['pk']
         elif 'id' in kwargs:
