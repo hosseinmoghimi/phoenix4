@@ -46,6 +46,7 @@ class ProductViews():
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['product'] = product
+        context['body_class']="product-page"
         if request.user.has_perm(APP_NAME+".add_product"):
             context['add_product_form'] = AddProductForm()
         return render(request, TEMPLATE_ROOT+"product.html", context)
