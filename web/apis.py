@@ -22,6 +22,7 @@ class BasicApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+    
     def add_contact_message(self,request,*args, **kwargs):
         context={}
         log=1

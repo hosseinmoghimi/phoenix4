@@ -1,0 +1,36 @@
+<script>
+    let url = "{% url 'web:add_contact_message' %}"
+    let contact_us_app = new Vue({
+        el: "#contact-form",
+        data: {
+            first_name: "",
+            last_name: "",
+            email: "",
+            mobile: "",
+            title: "",
+            message: "",
+            subject:"",
+            full_name:"",
+        },
+        methods: {
+            send_message: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    subject: this.subject,
+                    full_name: this.full_name,
+                    first_name: this.first_name,
+                    last_name: this.last_name,
+                    email: this.email,
+                    mobile: this.mobile,
+                    title: this.title,
+                    message: this.message,
+                    app_name:"{{APP_NAME}}",
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                })
+            }
+        }
+    })
+</script>

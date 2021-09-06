@@ -17,6 +17,9 @@ def getContext(request):
     return context
 
 class BasicViews(View):
+    def contact(self,request,*args, **kwargs):
+        context=getContext(request)
+        return render(request,TEMPLATE_ROOT+"contact.html",context)
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)

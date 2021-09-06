@@ -11,12 +11,16 @@
     {% include "web/includes/index-sections/our-works.html" %}
     {% include "web/includes/index-sections/testimonials.html" %}
     {% include "web/includes/index-sections/contactus.html" %}
+
 </div>
 {% endblock %}
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "web/includes/blogs-app/script.html" %}
+
+{% include "web/includes/contact-us-app/script.html" %}
+
 <script>
     $(document).ready(() => {
         $("#slider_link0").addClass("active")
