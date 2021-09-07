@@ -1,3 +1,6 @@
+from core.serializers import ImageSerializer
+import json
+from market.enums import ParameterEnum
 from core.models import Parameter
 from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
@@ -29,9 +32,9 @@ class BasicViews(View):
         context = getContext(request)
         context['body_class']="ecommerce-page"
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
-        context['shop_header_title']=parameter_repo.parameter(name="shop_header_title")
-        context['shop_header_slogan']=parameter_repo.parameter(name="shop_header_slogan")
-        context['shop_header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name="shop_header_image")
+        context['shop_header_title']=parameter_repo.parameter(name=ParameterEnum.SHOP_HEADER_TITLE)
+        context['shop_header_slogan']=parameter_repo.parameter(name=ParameterEnum.SHOP_HEADER_SLOGAN)
+        context['shop_header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name=ParameterEnum.SHOP_HEADER_IMAGE)
         context['categories'] = CategoryRepo(request=request).list(for_home=True)
         context['offers'] = OfferRepo(request=request).list(for_home=True)
         context['blogs'] = BlogRepo(request=request).list(for_home=True)
@@ -59,6 +62,7 @@ class ProductViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['product'] = product
+        # context['images_s']=json.dumps(ImageSerializer(product.images(),many=True).data)
         context['body_class']="product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 

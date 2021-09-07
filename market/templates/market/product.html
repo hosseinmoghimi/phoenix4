@@ -25,23 +25,7 @@
         <div class="main main-raised main-product">
             <div class="row">
                 <div class="col-md-6 col-sm-6">
-                    <div class="tab-content">
-                        {% for product_image in product.pageimage_set.all %}
-                        <div class="tab-pane" id="product-page{{forloop.counter}}">
-                            <img src="{{product_image.image.image}}">
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <ul class="nav flexi-nav" data-tabs="tabs" id="flexiselDemo1">
-                        {% for product_image in product.pageimage_set.all %}
-                        <li class="nav-item">
-                            <a href="#product-page{{forloop.counter}}" class="nav-link" data-toggle="tab">
-                                <img src="{{product_image.image.thumbnail}}">
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-
+                    {% include "market/includes/product-images-app/template.html" %}
                 </div>
                 <div class="col-md-6 col-sm-6">
                     <h2 class="title">{{product.title}}
@@ -214,4 +198,7 @@
 {% block modal %}
 {% endblock %}
 {% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "market/includes/product-images-app/script.html" %}
+
 {% endblock %}

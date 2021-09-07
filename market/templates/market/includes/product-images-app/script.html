@@ -1,0 +1,21 @@
+<script>
+    let images = JSON.parse(`{{images_s|escapejs}}`)
+    let selected_image = {}
+    if (images.length > 0)
+        selected_image = images[0]
+    let product_images_app = new Vue({
+        el: "#product-images-app",
+        mounted: function () {
+            this.select_image(images[0])
+        },
+        data: {
+            selected_image: selected_image,
+            images: images,
+        },
+        methods: {
+            select_image: function (image) {
+                this.selected_image = image
+            },
+        }
+    })
+</script>

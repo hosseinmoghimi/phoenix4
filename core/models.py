@@ -300,6 +300,14 @@ class BasicPage(models.Model):
                 page.save()
         return super(BasicPage,self).delete(*args, **kwargs)
 
+    def images(self,*args, **kwargs):
+        images=self.pageimage_set.all()
+        ids=[]
+        for image in images:
+            ids.append(image.image.id)
+        return Image.objects.filter(id__in=ids)
+
+    
 class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)
@@ -567,7 +575,7 @@ class Picture(models.Model):
     
     def get_edit_btn(self):
         return f"""
-            <a target="_blank" class="text-info farsi" href="{self.get_edit_url()}">
+            <a target="_blank" class="text-info farsi" title="ویرایش {self.name}" href="{self.get_edit_url()}">
             <i class="material-icons"   aria-hidden="true" >settings</i>
             ویرایش تصویر
             </a>

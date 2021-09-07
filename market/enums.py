@@ -7,3 +7,8 @@ class OrderStatusEnum(TextChoices):
     SHIPPED="حمل شده",_("حمل شده")
     PACKED="بسته بندی شده",_("بسته بندی شده")
     DELIVERED="تحویل شده",_("تحویل شده")
+
+class ParameterEnum(TextChoices):
+    SHOP_HEADER_TITLE='عنوان فروشگاه'
+    SHOP_HEADER_SLOGAN='شعار فروشگاه'
+    SHOP_HEADER_IMAGE='تصویر بنر فروشگاه'
