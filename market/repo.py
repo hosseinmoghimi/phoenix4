@@ -1,6 +1,6 @@
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Offer, Product, Category, Shop, Supplier, UnitName
+from .models import Blog, CartLine, Offer, Product, Category, Shop, Supplier, UnitName
 from django.db.models import Q, F
 
 
@@ -14,7 +14,7 @@ class ProductRepo:
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Product.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -55,6 +55,18 @@ class ProductRepo:
             return product
 
 
+class CartRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = CartLine.objects
+        self.profile = ProfileRepo(user=self.user).me
+
 class OfferRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -65,7 +77,7 @@ class OfferRepo:
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Offer.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -216,7 +228,7 @@ class CategoryRepo:
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Category.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
