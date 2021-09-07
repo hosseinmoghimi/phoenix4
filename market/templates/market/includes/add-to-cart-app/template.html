@@ -1,0 +1,30 @@
+{% load to_price %}
+<div id="add-to-cart-app">
+    <h4>
+
+        {{me_customer.profile.name}}
+    </h4>
+    <div>
+        <button class="btn btn-danger" @click="quantity--">-</button>
+        <input type="number" v-model="quantity" class="form-control farsi" placeholder="تعداد" id="">
+        <button class="btn btn-success" @click="quantity++">+</button>
+    </div>
+    {% for shop in product.shop_set.all %}
+      <div class="mb-3 farsi">
+        {{shop.unit_name}}
+        <br>
+        {{shop.supplier.title}}
+        <br>
+        {{shop.unit_price|to_price}} 
+        <br>
+        {{shop.available}}
+
+        
+        <div>
+            <button class="btn btn-block farsi" @click="add_to_cart({{shop.id}})">
+                افزودن به سبد خرید
+            </button>
+        </div>
+      </div>
+    {% endfor %}
+</div>

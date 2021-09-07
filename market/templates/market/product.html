@@ -89,12 +89,20 @@
                     </div>
 
                     {% if me_supplier %}
-                    
-{% include "market/includes/shop-app/template.html" %}
-                   
+
+                    {% include "market/includes/shop-app/template.html" %}
+
 
                     {% endif %}
 
+
+                    
+
+
+                    {% if me_customer %}
+
+                    {% include "market/includes/add-to-cart-app/template.html" %}
+                    {% endif %}
 
                     <div class="row pick-size">
                         <div class="col-md-6 col-sm-6">
@@ -210,8 +218,12 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "market/includes/product-images-app/script.html" %}
 {% if me_supplier %}
-  
+
 {% include "market/includes/shop-app/script.html" %}
 {% endif %}
 
+{% if me_customer %}
+
+{% include "market/includes/add-to-cart-app/script.html" %}
+{% endif %}
 {% endblock %}

@@ -1,6 +1,7 @@
+from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, CartLine, Offer, Product, Category, Shop, Supplier, UnitName
+from .models import Blog, CartLine, Customer, Offer, Product, Category, Shop, Supplier, UnitName
 from django.db.models import Q, F
 
 
@@ -66,7 +67,16 @@ class CartRepo:
             self.user = kwargs['user']
         self.objects = CartLine.objects
         self.profile = ProfileRepo(user=self.user).me
-
+    def add_to_cart(self,*args, **kwargs):
+        customer=CustomerRepo(request=self.request).me
+        if customer is not None:
+            shop_id=kwargs['shop_id']
+            quantity=kwargs['quantity']
+            lines=CartLine.objects.filter(customer=customer).filter(shop_id=shop_id)
+            lines.delete()
+            cart_line=CartLine(shop_id=shop_id,quantity=quantity,customer=customer)
+            cart_line.save()
+            return cart_line
 class OfferRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -154,6 +164,38 @@ class SupplierRepo:
         pk = 0
         if 'supplier_id' in kwargs:
             pk = kwargs['supplier_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+
+class CustomerRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Customer.objects
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = Customer.objects.filter(profile=self.profile).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'category_id' in kwargs:
+            return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
+        return objects
+
+    def customer(self, *args, **kwargs):
+        pk = 0
+        if 'customer_id' in kwargs:
+            pk = kwargs['customer_id']
         elif 'pk' in kwargs:
             pk = kwargs['pk']
         elif 'id' in kwargs:

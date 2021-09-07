@@ -1,0 +1,27 @@
+<script>
+    let url_add_to_cart = "{% url 'market:add_to_cart' %}"
+    let add_to_cart_app = new Vue({
+        el: "#add-to-cart-app",
+        mounted: function () {
+
+        },
+        data: {
+            quantity:1,
+        },
+        methods: {
+            add_to_cart: function (shop_id) {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    quantity: this.quantity,
+                    shop_id: shop_id,
+                }
+                console.log(payload)
+
+                let posting = $.post(url_add_to_cart, payload)
+                posting.done((data)=>{
+                    console.log(data)
+                })
+            },
+        }
+    })
+</script>

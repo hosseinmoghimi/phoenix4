@@ -1,9 +1,9 @@
 from market.forms import *
-from market.serializers import CategorySerializer, ProductSerializer, ShopSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ShopSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
-from .repo import CategoryRepo, ProductRepo, ShopRepo
+from .repo import CartRepo, CategoryRepo, ProductRepo, ShopRepo
 from .apps import APP_NAME
 
 class categoryApi(APIView):
@@ -48,6 +48,28 @@ class ShopApi(APIView):
                     )
                 if shop is not None:
                     context['shop']=ShopSerializer(shop).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+      
+class CartApi(APIView):
+    def add_to_cart(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_to_cart_form=AddToCartForm(request.POST)
+            if add_to_cart_form.is_valid():
+                log=3
+                shop_id=add_to_cart_form.cleaned_data['shop_id']
+                quantity=add_to_cart_form.cleaned_data['quantity']
+                cart_line=CartRepo(request=request).add_to_cart(
+                    shop_id=shop_id,
+                    quantity=quantity,
+                    )
+                if cart_line is not None:
+                    context['cart_line']=CartLineSerializer(cart_line).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

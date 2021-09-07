@@ -6,7 +6,7 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
 from django.views import View
 from market.forms import AddProductForm
-from .repo import BlogRepo, CategoryRepo, OfferRepo, ProductRepo, SupplierRepo
+from .repo import BlogRepo, CategoryRepo, CustomerRepo, OfferRepo, ProductRepo, SupplierRepo
 from .apps import APP_NAME
 
 from django.shortcuts import render
@@ -63,6 +63,9 @@ class ProductViews(View):
         context.update(PageContext(request=request, page=page))
         context['product'] = product
         context['me_supplier']=SupplierRepo(request=request).me
+        me_customer=CustomerRepo(request=request).me
+        print(me_customer)
+        context['me_customer']=CustomerRepo(request=request).me
         # context['images_s']=json.dumps(ImageSerializer(product.images(),many=True).data)
         context['body_class']="product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)

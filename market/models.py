@@ -144,7 +144,7 @@ class CartLine(models.Model):
         verbose_name_plural = _("CartLines")
 
     def __str__(self):
-        return str(self.customer)
+        return f"{str(self.customer)} : {self.quantity} {self.shop.unit_name} {self.shop.product.title} از {self.shop.supplier.title}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":cart_line", kwargs={"pk": self.pk})
