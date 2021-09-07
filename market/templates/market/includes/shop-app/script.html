@@ -1,0 +1,32 @@
+<script>
+    let url_add_shop = "{% url 'market:add_shop' %}"
+    let shop_app = new Vue({
+        el: "#shop-app",
+        mounted: function () {
+
+        },
+        data: {
+            unit_name: "",
+            unit_price: "",
+            available:15,
+        },
+        methods: {
+            add_shop: function (product_id,supplier_id) {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    product_id: product_id,
+                    unit_name: this.unit_name,
+                    supplier_id:supplier_id,
+                    unit_price: this.unit_price,
+                    available:this.available,
+                }
+                console.log(payload)
+
+                let posting = $.post(url_add_shop, payload)
+                posting.done((data)=>{
+                    console.log(data)
+                })
+            },
+        }
+    })
+</script>

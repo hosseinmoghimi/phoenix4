@@ -1,9 +1,9 @@
 from market.forms import *
-from market.serializers import CategorySerializer, ProductSerializer
+from market.serializers import CategorySerializer, ProductSerializer, ShopSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
-from .repo import CategoryRepo, ProductRepo
+from .repo import CategoryRepo, ProductRepo, ShopRepo
 from .apps import APP_NAME
 
 class categoryApi(APIView):
@@ -24,6 +24,34 @@ class categoryApi(APIView):
                     context['result']=SUCCEED
         return JsonResponse(context)
 
+class ShopApi(APIView):
+    def add_shop(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_shop_form=AddShopForm(request.POST)
+            if add_shop_form.is_valid():
+                log=3
+                unit_price=add_shop_form.cleaned_data['unit_price']
+                unit_name=add_shop_form.cleaned_data['unit_name']
+                available=add_shop_form.cleaned_data['available']
+                product_id=add_shop_form.cleaned_data['product_id']
+                supplier_id=add_shop_form.cleaned_data['supplier_id']
+                shop=ShopRepo(request=request).add_shop(
+                    unit_price=unit_price,
+                    unit_name=unit_name,
+                    available=available,
+                    product_id=product_id,
+                    supplier_id=supplier_id,
+                    )
+                if shop is not None:
+                    context['shop']=ShopSerializer(shop).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+      
 class ProductApi(APIView):
     def add_product(self,request,*args, **kwargs):
         context={}

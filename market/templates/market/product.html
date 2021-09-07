@@ -87,6 +87,15 @@
 
 
                     </div>
+
+                    {% if me_supplier %}
+                    
+{% include "market/includes/shop-app/template.html" %}
+                   
+
+                    {% endif %}
+
+
                     <div class="row pick-size">
                         <div class="col-md-6 col-sm-6">
                             <label>Select color</label>
@@ -200,5 +209,9 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "market/includes/product-images-app/script.html" %}
+{% if me_supplier %}
+  
+{% include "market/includes/shop-app/script.html" %}
+{% endif %}
 
 {% endblock %}

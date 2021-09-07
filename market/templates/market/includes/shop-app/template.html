@@ -1,0 +1,34 @@
+<div class="row pick-size" id="shop-app">
+    <div class="col-md-12 col-sm-12">
+        <h4>
+            <small class="text-muted">
+                فروش در
+            </small>
+            {{me_supplier.title}}
+        </h4>
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <label>واحد فروش</label>
+        <select v-model="unit_name" required class="selectpicker farsi" data-style="select-with-transition" data-size="4">
+            {% for unit_name in product.unit_names.all %}
+            <option value="{{unit_name.name}}" class="farsi">
+
+                {{unit_name.name}}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6 col-sm-6 ltr">
+        <div class="form-group bmd-form-group">
+            <label for="exampleInputq1" class="bmd-label-floating">قیمت واحد</label>
+            <input v-model="unit_price" required type="number" class="form-control" id="exampleInputq1">
+            <span class="bmd-help farsi">قیمت را به {{CURRENCY}} وارد کنید.</span>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-sm-12">
+        <button class="btn btn-block btn-info farsi" @click="add_shop({{product.id}},{{me_supplier.id}})">
+            تایید و فروش
+        </button>
+    </div>
+</div>

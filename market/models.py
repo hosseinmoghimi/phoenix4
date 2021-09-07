@@ -194,12 +194,13 @@ class Shop(models.Model):
         verbose_name_plural = _("Shops")
 
     def __str__(self):
-        return f"{self.product.title} هر {self.unit_name} : {self.unit_price} {CURRENCY}"
+        return f"{self.product.title} هر {self.unit_name} : {self.unit_price} {CURRENCY} فروش توسط {self.supplier.title}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":shop", kwargs={"pk": self.pk})
 
 class Supplier(MarketPage):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
