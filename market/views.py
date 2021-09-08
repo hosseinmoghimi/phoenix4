@@ -1,3 +1,4 @@
+from market.serializers import ShopSerializer
 from core.serializers import ImageSerializer
 import json
 from market.enums import ParameterEnum
@@ -19,6 +20,9 @@ LAYOUT_PARENT="material-kit-pro/layout.html"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     context['title'] = "Market"
+    
+    context['me_supplier']=SupplierRepo(request=request).me
+    context['me_customer']=CustomerRepo(request=request).me
     context['navbar']=APP_NAME+"/includes/nav-bar.html"
     context['layout_parent'] = LAYOUT_PARENT
     context['root_categories'] = CategoryRepo(
@@ -62,10 +66,7 @@ class ProductViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['product'] = product
-        context['me_supplier']=SupplierRepo(request=request).me
-        me_customer=CustomerRepo(request=request).me
-        context['me_customer']=CustomerRepo(request=request).me
-        # context['images_s']=json.dumps(ImageSerializer(product.images(),many=True).data)
+        context['shops_s']=json.dumps(ShopSerializer(product.shop_set.all(),many=True).data)
         context['body_class']="product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 

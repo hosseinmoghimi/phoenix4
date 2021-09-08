@@ -1,45 +1,83 @@
 <script>
+    let add_to_cart_component_template = `{% include "market/includes/add-to-cart-app/component.html" %}`
     let url_add_to_cart = "{% url 'market:add_to_cart' %}"
-    let add_to_cart_app = new Vue({
-        el: "#add-to-cart-app",
-        mounted: function () {
+    let shops = JSON.parse(`{{shops_s|escapejs}}`)
 
-        },
-        data: {
-            quantity: 1,
-            done: false,
+    let add_to_cart_component = Vue.component('add-to-cart-component', {
+        data: function () {
+            return {
+                quantity: 1,
+                done: false,
+                message: ""
+            }
         },
         methods: {
-            add_quantity: function (a, max) {
-                if ((this.quantity + a) < 1) {
-                    this.quantity = 1
+            add_quantity: function (a) {
+                console.log(this.shop.available)
+                if ((this.quantity + a) < 0) {
+                    this.quantity = 0
                 }
-                else if ((this.quantity + a) > max) {
-                    this.quantity = max
+                else if ((this.quantity + a) > this.shop.available) {
+                    this.quantity = this.shop.available
                 }
                 else {
                     this.quantity = this.quantity + a
                 }
             },
-            add_to_cart: function (shop_id) {
+
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            add_to_cart: function () {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     quantity: this.quantity,
-                    shop_id: shop_id,
+                    shop_id: this.shop.id,
                 }
                 console.log(payload)
 
+                let aa = this
                 let posting = $.post(url_add_to_cart, payload)
                 posting.done((data) => {
                     console.log(data)
                     if (data.result === 'SUCCEED') {
-                        add_to_cart_app.done = true
+                        let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        console.log(message)
+                        aa.message = message
+                        aa.done = true
                         setTimeout(() => {
-                            add_to_cart_app.done = false
+                            aa.done = false
                         }, 1800);
                     }
                 })
             },
+
+
+        },
+        props: ['shop'],
+        template: add_to_cart_component_template,
+    })
+    let add_to_cart_app = new Vue({
+        el: "#add-to-cart-app",
+        mounted: function () {
+
+        },
+        components: {
+            add_to_cart_component,
+        },
+        data: {
+            done: false,
+            shops: shops,
+            message: "",
+        },
+        methods: {
+            show_message: function (color, timeout, message) {
+                add_to_cart_app.done = true
+                add_to_cart_app.message = ""
+                setTimeout(() => {
+                    add_to_cart_app.done = false
+                }, 1800);
+            }
         }
     })
 </script>

@@ -1,4 +1,4 @@
-from .models import CartLine, Category, Product, Shop
+from .models import CartLine, Category, Product, Shop, Supplier
 from rest_framework import serializers
 
 
@@ -14,13 +14,27 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'get_absolute_url', 'thumbnail']
 
 
+class SupplierSerializerForShop(serializers.ModelSerializer):
+    class Meta:
+        model = Supplier
+        fields = ['id', 'title','get_absolute_url']
+
+
+class ProductSerializerForShop(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title','get_absolute_url']
+
+
 class ShopSerializer(serializers.ModelSerializer):
+    supplier=SupplierSerializerForShop()
+    product=ProductSerializerForShop()
     class Meta:
         model = Shop
-        fields = ['id', 'supplier_id','product_id', 'unit_name', 'available', 'unit_price']
-
+        fields = ['id', 'supplier','product', 'unit_name', 'available', 'unit_price']
 
 class CartLineSerializer(serializers.ModelSerializer):
+    shop=ShopSerializer()
     class Meta:
         model = CartLine
-        fields = ['id','quantity']
+        fields = ['id','quantity','shop']

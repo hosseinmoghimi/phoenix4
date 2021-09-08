@@ -90,6 +90,7 @@
 
                     {% if me_supplier %}
 
+                    <div class="mb-4"></div>
                     {% include "market/includes/shop-app/template.html" %}
 
 
@@ -100,27 +101,12 @@
 
 
                     {% if me_customer %}
-
+<div class="mb-4"></div>
                     {% include "market/includes/add-to-cart-app/template.html" %}
                     {% endif %}
 
                     <div class="row pick-size">
-                        <div class="col-md-6 col-sm-6">
-                            <label>Select color</label>
-                            <select class="selectpicker" data-style="select-with-transition" data-size="7">
-                                <option value="1">Rose </option>
-                                <option value="2">Gray</option>
-                                <option value="3">White</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <label>Select size</label>
-                            <select class="selectpicker" data-style="select-with-transition" data-size="7">
-                                <option value="1">Small </option>
-                                <option value="2">Medium</option>
-                                <option value="3">Large</option>
-                            </select>
-                        </div>
+                       
                     </div>
                     <div class="row pull-right">
                         <button class="btn btn-rose btn-round">Add to Cart &#xA0;<i
