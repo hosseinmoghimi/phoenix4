@@ -6,9 +6,21 @@
 
         },
         data: {
-            quantity:1,
+            quantity: 1,
+            done: false,
         },
         methods: {
+            add_quantity: function (a, max) {
+                if ((this.quantity + a) < 1) {
+                    this.quantity = 1
+                }
+                else if ((this.quantity + a) > max) {
+                    this.quantity = max
+                }
+                else {
+                    this.quantity = this.quantity + a
+                }
+            },
             add_to_cart: function (shop_id) {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -18,8 +30,14 @@
                 console.log(payload)
 
                 let posting = $.post(url_add_to_cart, payload)
-                posting.done((data)=>{
+                posting.done((data) => {
                     console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        add_to_cart_app.done = true
+                        setTimeout(() => {
+                            add_to_cart_app.done = false
+                        }, 1800);
+                    }
                 })
             },
         }

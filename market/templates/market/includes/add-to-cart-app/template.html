@@ -1,30 +1,74 @@
 {% load to_price %}
 <div id="add-to-cart-app">
-    <h4>
 
-        {{me_customer.profile.name}}
-    </h4>
-    <div>
-        <button class="btn btn-danger" @click="quantity--">-</button>
-        <input type="number" v-model="quantity" class="form-control farsi" placeholder="تعداد" id="">
-        <button class="btn btn-success" @click="quantity++">+</button>
-    </div>
+
+
     {% for shop in product.shop_set.all %}
-      <div class="mb-3 farsi">
-        {{shop.unit_name}}
-        <br>
-        {{shop.supplier.title}}
-        <br>
-        {{shop.unit_price|to_price}} 
-        <br>
-        {{shop.available}}
-
-        
-        <div>
-            <button class="btn btn-block farsi" @click="add_to_cart({{shop.id}})">
-                افزودن به سبد خرید
+    <div class="mb-3 farsi">
+        <div class="btn-group ltr text-right">
+            <button class="btn btn-round btn-danger btn-sm" @click="add_quantity(-1,{{shop.available}})">
+                <i class="material-icons">remove</i>
+                <div class="ripple-container"></div>
+            </button>
+            <button class="btn btn-primary btn-link btn-sm">
+                <span v-text="quantity"></span> {{shop.unit_name}} </button>
+            <button class="btn btn-round btn-success btn-sm" @click="add_quantity(1,{{shop.available}})">
+                <i class="material-icons">add</i>
+                <div class="ripple-container"></div>
             </button>
         </div>
-      </div>
-    {% endfor %}
+        <div class="text-right">
+
+            خرید از
+            <a href="{{shop.supplier.get_absolute_url}}" target="_blank">
+                {{shop.supplier.title}}
+            </a>
+
+
+            هر {{shop.unit_name}}
+
+            {{shop.unit_price|to_price}}
+            <small class="text-muted">
+                موجودی :
+                {{shop.available}}
+            </small>
+
+        </div>
+
+        <div class="text-right">
+            <button class="btn btn-danger btn-block farsi" @click="add_to_cart({{shop.id}})">
+                <div class="media">
+                    <i class="material-icons">settings</i>
+
+                    <div class="media-body">
+                        <h4>
+
+                            هر {{shop.unit_name}}
+
+                            {{shop.unit_price|to_price}}
+                        </h4>
+                        <h5>
+                            {{shop.supplier.title}}
+                        </h5>
+                    </div>
+                </div>
+
+            </button>
+        </div>
+        
+    </div>
+
+
+    {% endfor %}<div class="alert alert-success farsi rtl text-right" v-if="done">
+            <div class="container">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+              
+                
+                <strong>افزودن به سبد خرید</strong> 
+                
+                با موفقیت انجام شد.
+            </div>
+        </div>
 </div>
