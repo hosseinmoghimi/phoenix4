@@ -1,0 +1,20 @@
+<div id="add-list-app">
+    {% if add_category_form %}
+    <form @submit.prevent="add_category()" v-if="can_add_category">
+
+        <input type="text" required v-model="new_category_title" placeholder="نام دسته بندی جدید" class="farsi form-control">
+    </form>
+
+
+
+    {% endif %}
+    {% if add_product_form %}
+    <form @submit.prevent="add_product()" v-if="can_add_product">
+
+        <input type="text" required v-model="new_product_title" placeholder="نام محصول جدید" class="farsi form-control">
+    </form>
+
+
+
+    {% endif %}
+</div>

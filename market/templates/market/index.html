@@ -101,7 +101,7 @@
                 </div>
                 <div class="col-md-9">
 
-                    {% include "market/includes/products-app/list.html" %}
+                    {% include "market/includes/list-app/template.html" %}
 
                 </div>
                 <br>
@@ -235,9 +235,7 @@
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% if add_product_form or add_category_form %}
-{% include "market/includes/add-product-app/script.html" %}
-{% include "market/includes/products-app/script.html" %}
-{% include "market/includes/categories-app/script.html" %}
+{% include "market/includes/list-app/script.html" %}
 
 {% endif %}
 {% endblock %}

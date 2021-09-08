@@ -1,7 +1,7 @@
 {% load to_price %}
 
 {% if add_product_form or add_category_form %}
-{% include "market/includes/add-product-app/template.html" %}
+{% include "market/includes/list-app/add-list.html" %}
 
 {% endif %}
 
@@ -81,8 +81,7 @@
 
 </div>
 {% if add_product_form or add_category_form %}
-{% include "market/includes/products-app/template.html" %}
-{% include "market/includes/categories-app/template.html" %}
+{% include "market/includes/list-app/show-list.html" %}
 
 {% endif %}
 <div class="row">
