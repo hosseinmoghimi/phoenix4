@@ -6,7 +6,7 @@ from core.models import Parameter
 from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
 from django.views import View
-from market.forms import AddProductForm
+from market.forms import AddCategoryForm, AddProductForm
 from .repo import BlogRepo, CategoryRepo, CustomerRepo, OfferRepo, ProductRepo, SupplierRepo
 from .apps import APP_NAME
 
@@ -39,10 +39,17 @@ class BasicViews(View):
         context['shop_header_title']=parameter_repo.parameter(name=ParameterEnum.SHOP_HEADER_TITLE)
         context['shop_header_slogan']=parameter_repo.parameter(name=ParameterEnum.SHOP_HEADER_SLOGAN)
         context['shop_header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name=ParameterEnum.SHOP_HEADER_IMAGE)
-        context['categories'] = CategoryRepo(request=request).list(for_home=True)
+        categories= CategoryRepo(request=request).list(for_home=True)
+        context['categories'] = categories
         context['offers'] = OfferRepo(request=request).list(for_home=True)
         context['blogs'] = BlogRepo(request=request).list(for_home=True)
-        context['products'] = ProductRepo(request=request).list(for_home=True)
+        products = ProductRepo(request=request).list(for_home=True)
+        context['products'] = products
+        context['top_products'] = products.order_by('-priority')[:3]
+        if request.user.has_perm(APP_NAME+".add_product") and len(categories)==0:
+            context['add_product_form'] = AddProductForm()
+        if request.user.has_perm(APP_NAME+".add_category") and len(products)==0:
+            context['add_category_form'] = AddCategoryForm()
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
 class CartViews(View):
@@ -115,8 +122,13 @@ class CategoryViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['category'] = category
-        context['categories'] = category.childs()
-        context['products'] = category.products.all()
-        if request.user.has_perm(APP_NAME+".add_product"):
+        categories= category.childs()
+        context['categories'] =categories
+        products= category.products.all()
+        context['products'] = products
+        context['top_products'] = products.filter(for_category=True)[:3]
+        if request.user.has_perm(APP_NAME+".add_product") and len(categories)==0:
             context['add_product_form'] = AddProductForm()
+        if request.user.has_perm(APP_NAME+".add_category") and len(products)==0:
+            context['add_category_form'] = AddCategoryForm()
         return render(request, TEMPLATE_ROOT+"category.html", context)

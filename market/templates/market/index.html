@@ -1,5 +1,6 @@
 {% extends "market/layout.html" %}
 {% load to_price %}
+{% load static %}
 
 
 {% block page_header %}
@@ -40,18 +41,13 @@
 {% block content %}
 <div class="main {{main_class}}">
 
-
-
-
-
-
-
+    {% if top_products %}
 
     <div class="section">
         <div class="container">
             <h2 class="section-title text-center">محصولات برتر</h2>
             <div class="row">
-                {% for product in products %}
+                {% for product in top_products %}
 
                 <div class="col-md-4">
                     <div class="card card-product card-plain">
@@ -93,64 +89,23 @@
             </div>
         </div>
     </div><!-- section -->
+
+    {% endif %}
     <div class="section">
         <div class="container">
             <h2 class="section-title text-center">{{category.title}}</h2>
             <div class="row">
                 <div class="col-md-3">
-                   
+
                     {% include "market/includes/sidebar.html" %}
                 </div>
                 <div class="col-md-9">
-                    <div class="row">
-                        {% for product in products %}
 
-                        <div class="col-md-4">
-                            <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-                                <div class="card-header card-header-image">
-                                    <a href="{{product.get_absolute_url}}">
-                                        <img src="{{product.thumbnail}}" alt="">
-                                    </a>
-                                </div>
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">
-                                        <a href="{{product.get_absolute_url}}">{{product.title}}</a>
-                                    </h4>
+                    {% include "market/includes/products-app/list.html" %}
 
-                                    <div class="card-description">
-
-                                        {% if product.short_description %}
-
-                                        {{product.short_description|safe}}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-container">
-                                        <span class="price price-old mx-2 farsi">
-                                            {{product.old_price|to_price_pure}}</span>
-                                        <span class="price price-new mx-2 farsi"> {{product.unit_price|to_price}}</span>
-                                    </div>
-                                    <div class="stats mr-auto">
-                                        <button type="button" rel="tooltip" title=""
-                                            class="btn btn-just-icon btn-link btn-rose"
-                                            data-original-title="Saved to Wishlist">
-                                            <i class="material-icons">favorite</i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div> <!-- end card -->
-                        </div>
-                        {% endfor %}
-                        <div class="col-md-12"></div>
-                        <div class="col-md-3 ml-auto mr-auto">
-                            <button rel="tooltip" class="btn btn-rose btn-round" data-original-title="" title="">Load
-                                more...</button>
-                        </div>
-                    </div>
                 </div>
+                <br>
             </div>
-            <br>
 
             {% if offers %}
 
@@ -275,4 +230,14 @@
 {% endblock %}
 {% block script %}
 
+<script>
+    let category_id = 0
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% if add_product_form or add_category_form %}
+{% include "market/includes/add-product-app/script.html" %}
+{% include "market/includes/products-app/script.html" %}
+{% include "market/includes/categories-app/script.html" %}
+
+{% endif %}
 {% endblock %}

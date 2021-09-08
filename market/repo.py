@@ -48,6 +48,7 @@ class ProductRepo:
                 unit_name_ = UnitName()
                 unit_name_.name = unit_name
                 unit_name_.save()
+            product.for_category=False
             product.save()
             product.unit_names.add(unit_name_)
             category = Category.objects.filter(pk=category_id).first()

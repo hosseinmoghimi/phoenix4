@@ -1,4 +1,5 @@
-from market.enums import OrderStatusEnum
+from django.db.models.fields import CharField
+from market.enums import OrderStatusEnum, ShopLevelEnum
 from django.db import models
 from core.models import BasicPage
 from .apps import APP_NAME
@@ -71,7 +72,23 @@ class Category(MarketPage):
         self.class_name='category'
         super(Category,self).save(*args, **kwargs)
 
+class ShopRegion(models.Model):
+    name=models.CharField(_("name"), max_length=50)
+
+    
+
+    class Meta:
+        verbose_name = _("ShopRegion")
+        verbose_name_plural = _("ShopRegions")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("ShopRegion_detail", kwargs={"pk": self.pk})
+
 class Customer(models.Model):
+    region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
 
 
@@ -181,6 +198,7 @@ class Blog(MarketPage):
 
 
 class Shop(models.Model):
+    level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
     unit_name=models.CharField(_("unit_name"), max_length=50)
     old_price=models.IntegerField(_("قیمت قبلی"),default=0)
@@ -200,6 +218,7 @@ class Shop(models.Model):
         return reverse(APP_NAME+":shop", kwargs={"pk": self.pk})
 
 class Supplier(MarketPage):
+    region=models.ForeignKey("shopregion", verbose_name=_("shop_region"), on_delete=models.CASCADE)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     
     def __str__(self):

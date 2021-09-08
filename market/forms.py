@@ -105,7 +105,7 @@ class AddCustomerForm(forms.Form):
 
 class AddCategoryForm(forms.Form):
     parent_id=forms.IntegerField(required=False)
-    title=forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'دسته بندی جدید'}), max_length=50, required=True)
+    title=forms.CharField(max_length=50, required=True)
 
 class AddProductForm(forms.Form):
     unit_name=forms.CharField(max_length=50, required=False)

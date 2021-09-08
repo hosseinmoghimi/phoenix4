@@ -73,6 +73,27 @@ class CartApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+class CategoryApi(APIView):
+    def add_category(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_category_form=AddCategoryForm(request.POST)
+            if add_category_form.is_valid():
+                log=3
+                title=add_category_form.cleaned_data['title']
+                parent_id=add_category_form.cleaned_data['parent_id']
+                category=CategoryRepo(request=request).add_category(
+                    title=title,
+                    parent_id=parent_id)
+                if category is not None:
+                    context['category']=CategorySerializer(category).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+        
       
 class ProductApi(APIView):
     def add_product(self,request,*args, **kwargs):
@@ -94,6 +115,7 @@ class ProductApi(APIView):
                 if product is not None:
                     context['product']=ProductSerializer(product).data
                     context['result']=SUCCEED
+        context['log']=log
         return JsonResponse(context)
         
     def products(self,request,category_id,*args, **kwargs):

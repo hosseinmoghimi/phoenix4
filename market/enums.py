@@ -12,3 +12,9 @@ class ParameterEnum(TextChoices):
     SHOP_HEADER_TITLE='عنوان فروشگاه'
     SHOP_HEADER_SLOGAN='شعار فروشگاه'
     SHOP_HEADER_IMAGE='تصویر بنر فروشگاه'
+
+class ShopLevelEnum(TextChoices):
+    REGULAR='مشتری عادی'
+    CO_WORKER='همکار'
+    WHOLE_SALE='توزیع کننده عمده'
+    RETAIL='توزیع کننده خرد'
