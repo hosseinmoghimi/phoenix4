@@ -140,7 +140,6 @@ class GameRepo():
         if 'scenario' in kwargs:
             game.scenario=kwargs['scenario']
         game.save()
-        print(game)
         return game
 
     def change_game_state(self,*args, **kwargs):

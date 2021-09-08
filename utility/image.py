@@ -39,7 +39,6 @@ def ResizeImage(image_origin,pk,save_path,*args, **kwargs):
 #     def __init__(self,image_path,user=None):
 #         image_path=os.path.join(MEDIA_ROOT,str(image_path))
 #         self.image_path=image_path
-#         # print(self.image_path)
 #     def save(self,width,height,save_path):
 #         with open(self.image_path, 'r+b') as f:
 #             with Image.open(f) as image:

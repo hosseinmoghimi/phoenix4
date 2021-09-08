@@ -71,14 +71,11 @@ class PersianCalendar:
             minutes=30
         # hours=0
         # minutes=0
-        # print(hours)
-        # print(minutes)
         delta=datetime.timedelta(hours=hours,minutes=minutes)
         from dateutil.relativedelta import relativedelta # $ pip install python-dateutil
         b=relativedelta(years=+YEAR_ADDED)
         greg_date_time=greg_date_time+b
         # delta=datetime.timedelta(hours=hours,minutes=minutes)
-        # print(str(delta)+100*'*')
         a=JalaliDateTime.to_jalali(greg_date_time+delta)
         # a.year=1300+a.year
         return a.strftime("%Y/%m/%d %H:%M:%S")

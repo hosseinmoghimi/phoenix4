@@ -65,7 +65,6 @@ class DocumentViews(View):
     def get_download_response(self,request,*args, **kwargs):
         document=DocumentRepo(request=request).document(*args, **kwargs)
         file_path = str(document.file.path)
-        # print(file_path)
         # return JsonResponse({'download:':str(file_path)})
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:

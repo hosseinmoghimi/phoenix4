@@ -203,7 +203,6 @@ class ProjectViews(View):
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
         description = f"""مربوط به {project.full_title}"""
-        print(description)
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
         order = {

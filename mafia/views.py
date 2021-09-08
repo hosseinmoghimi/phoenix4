@@ -61,7 +61,6 @@ class BasicViews(View):
     def shuffle_game(self,request,*args, **kwargs):
         log=1
         if request.method=='POST':
-            print(10*"#222#")
             log=2
             shuffle_game_form=ShuffleGameForm(request.POST)
             if shuffle_game_form.is_valid():
@@ -116,11 +115,9 @@ class BasicViews(View):
     def game2(self,request,*args, **kwargs):
         log=1
         if request.method=='POST':
-            print(10*"#222#")
             log=2
             create_game_form=CreateGameForm(request.POST)
             if create_game_form.is_valid():
-                print(10*"#333#")
                 log=30
                 scenario=create_game_form.cleaned_data['scenario']
                 god_id=create_game_form.cleaned_data['god_id']
@@ -129,8 +126,6 @@ class BasicViews(View):
                 roles=json.loads(roles)
                 players=json.loads(players)
                 context=getContext(request=request)
-                print(god_id)
-                print(100*"#")
                 game=GameRepo(request=request).new_game(god_id=god_id,scenario=scenario)
                 turn=0
                 players_ids=[]

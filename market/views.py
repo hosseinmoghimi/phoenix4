@@ -64,7 +64,6 @@ class ProductViews(View):
         context['product'] = product
         context['me_supplier']=SupplierRepo(request=request).me
         me_customer=CustomerRepo(request=request).me
-        print(me_customer)
         context['me_customer']=CustomerRepo(request=request).me
         # context['images_s']=json.dumps(ImageSerializer(product.images(),many=True).data)
         context['body_class']="product-page"

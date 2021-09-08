@@ -481,7 +481,6 @@ class Document(Icon):
     def download_response(self):
         #STATIC_ROOT2 = os.path.join(BASE_DIR, STATIC_ROOT)
         file_path = str(self.file.path)
-        # print(file_path)
         # return JsonResponse({'download:':str(file_path)})
         import os
         from django.http import HttpResponse

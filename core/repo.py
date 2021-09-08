@@ -54,8 +54,6 @@ class TagRepo:
 
         if tag in page.tags.all():
             return None
-        # print(tag)
-        # print(10*"####5555")
         page.tags.add(tag)
         return tag
         
@@ -82,8 +80,6 @@ class TagRepo:
 
         if page is None or not tag in page.tags.all():
             return False
-        # print(tag)
-        # print(10*"####5555")
         page.tags.remove(tag)
         return True
         

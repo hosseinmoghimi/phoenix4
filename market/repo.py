@@ -252,7 +252,6 @@ class ShopRepo:
             return shop
         else:
             shops=Shop.objects.filter(supplier_id=supplier_id).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
-            # print(shops)
             shops.delete()
             shop.available = available
             shop.unit_price = unit_price
