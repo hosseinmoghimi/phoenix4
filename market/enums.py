@@ -8,6 +8,8 @@ class OrderStatusEnum(TextChoices):
     PACKED="بسته بندی شده",_("بسته بندی شده")
     DELIVERED="تحویل شده",_("تحویل شده")
 
+class PictureEnum(TextChoices):
+    CART_HEADER='تصویر '+'سربرگ سبد خرید'
 class ParameterEnum(TextChoices):
     SHOP_HEADER_TITLE='عنوان فروشگاه'
     SHOP_HEADER_SLOGAN='شعار فروشگاه'

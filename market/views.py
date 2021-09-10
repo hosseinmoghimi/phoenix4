@@ -1,7 +1,7 @@
 from market.serializers import ShopSerializer
 from core.serializers import ImageSerializer
 import json
-from market.enums import ParameterEnum, ShopLevelEnum
+from market.enums import ParameterEnum, PictureEnum, ShopLevelEnum
 from core.models import Parameter
 from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
@@ -54,16 +54,14 @@ class BasicViews(View):
 
 class CartViews(View):
     def cart(self, request, *args, **kwargs):
-
-        product = ProductRepo(request).product(*args, **kwargs)
-        page = product
+        customer = CustomerRepo(request).customer(*args, **kwargs)
         context = getContext(request)
-        context.update(PageContext(request=request, page=page))
-        context['product'] = product
-        context['body_class']="product-page"
+        context['customer'] = customer
+        context['header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureEnum.CART_HEADER)
+        context['body_class']="shopping-cart"
         if request.user.has_perm(APP_NAME+".add_product"):
             context['add_product_form'] = AddProductForm()
-        return render(request, TEMPLATE_ROOT+"product.html", context)
+        return render(request, TEMPLATE_ROOT+"cart.html", context)
 
 class ProductViews(View):
     def product(self, request, *args, **kwargs):
