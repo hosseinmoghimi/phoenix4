@@ -1,5 +1,5 @@
-from market.serializers import ShopSerializer
-from core.serializers import ImageSerializer
+from django.http.response import Http404
+from market.serializers import CartLineSerializer, ShopSerializer
 import json
 from market.enums import ParameterEnum, PictureEnum, ShopLevelEnum
 from core.models import Parameter
@@ -7,7 +7,7 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
 from django.views import View
 from market.forms import AddCategoryForm, AddProductForm
-from .repo import BlogRepo, CategoryRepo, CustomerRepo, OfferRepo, ProductRepo, SupplierRepo
+from .repo import BlogRepo, CartLineRepo, CategoryRepo, CustomerRepo, OfferRepo, ProductRepo, SupplierRepo
 from .apps import APP_NAME
 
 from django.shortcuts import render
@@ -54,8 +54,17 @@ class BasicViews(View):
 
 class CartViews(View):
     def cart(self, request, *args, **kwargs):
-        customer = CustomerRepo(request).customer(*args, **kwargs)
+        if 'customer_id' in kwargs:
+            customer_id=kwargs['customer_id']
+            customer = CustomerRepo(request).customer(customer_id=kwargs['customer_id'])
+        else:
+            customer=CustomerRepo(request=request).me
+        if customer is None:
+            raise Http404
         context = getContext(request)
+        cart= CartLineRepo(request=request).cart(customer=customer)
+        context['cart'] =cart
+        context['cart_lines_s']=json.dumps(CartLineSerializer(cart['lines'],many=True).data)
         context['customer'] = customer
         context['header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureEnum.CART_HEADER)
         context['body_class']="shopping-cart"

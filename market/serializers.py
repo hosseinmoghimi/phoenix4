@@ -23,7 +23,7 @@ class SupplierSerializerForShop(serializers.ModelSerializer):
 class ProductSerializerForShop(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title','get_absolute_url']
+        fields = ['id', 'title','get_absolute_url','thumbnail']
 
 
 class ShopSerializer(serializers.ModelSerializer):
@@ -37,4 +37,4 @@ class CartLineSerializer(serializers.ModelSerializer):
     shop=ShopSerializer()
     class Meta:
         model = CartLine
-        fields = ['id','quantity','shop']
+        fields = ['id','quantity','shop','line_total']

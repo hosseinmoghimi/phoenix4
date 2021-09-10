@@ -1,0 +1,52 @@
+<div id="cart-app">
+
+    <div class="table-responsive rtl">
+        <table class="table table-shopping">
+            <thead>
+                <tr>
+                    <th class="text-center"></th>
+                    <th class=" text-right">Product</th>
+                    <th class="th-description text-right">Color</th>
+                    <th class="th-description text-right">Size</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <template v-for="cart_line in cart_lines">
+
+                    <cart-line-component :cart_line="cart_line"></cart-line-component>
+                </template>
+
+
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="td-total farsi text-muted">
+                        جمع کل
+                    </td>
+                    <td colspan="1" class="td-price farsi">
+                        <span v-text="to_price(total)">
+
+                        </span>
+                        <small class="text-muted">{{CURRENCY}}</small>
+                    </td>
+                    <td colspan="1"></td>
+                    <td colspan="2" class="text-right">
+                        <button type="button" class="btn btn-info btn-round">Complete Purchase <i
+                                class="material-icons">keyboard_arrow_right</i></button>
+                    </td>
+                </tr>
+                <!-- <tr>
+<td colspan="6"></td>
+<td colspan="2" class="text-right">
+  <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
+</td>
+</tr> -->
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -93,6 +93,9 @@ class Customer(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
 
 
+    def get_cart_url(self):
+        return reverse(APP_NAME+":customer_cart",kwargs={'customer_id':self.customer.id})
+
     class Meta:
         verbose_name = _("Customer")
         verbose_name_plural = _("Customers")
@@ -166,7 +169,8 @@ class CartLine(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":cart_line", kwargs={"pk": self.pk})
-
+    def line_total(self):
+        return self.shop.unit_price*self.quantity
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))
     col=models.IntegerField(_("col"),default=4)

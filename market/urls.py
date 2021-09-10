@@ -11,6 +11,7 @@ urlpatterns = [
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
     path("supplier/<int:pk>/",views.SupplierViews().supplier,name="supplier"),
     path("cart/",views.CartViews().cart,name="cart"),
+    path("cart/<int:customer_id>/",views.CartViews().cart,name="customer_cart"),
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),

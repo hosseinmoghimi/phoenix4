@@ -1,0 +1,78 @@
+<script>
+    let cart_line_component_template = `{% include 'market/includes/cart-app/component.html' %}`
+    let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
+    let add_to_cart_component = Vue.component('cart-line-component', {
+        data: function () {
+            return {
+
+            }
+        },
+        methods: {
+            add_quantity: function (a) {
+                if ((this.cart_line.quantity + a) < 0) {
+                    this.cart_line.quantity = 0
+                }
+                else if ((this.cart_line.quantity + a) > this.cart_line.shop.available) {
+                    this.cart_line.quantity = this.cart_line.shop.available
+                }
+                else {
+                    this.cart_line.quantity = this.cart_line.quantity + a
+                }
+            },
+
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            add_to_cart: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    quantity: this.quantity,
+                    shop_id: this.shop.id,
+                }
+                console.log(payload)
+
+                let aa = this
+                let posting = $.post(url_add_to_cart, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        aa.message = message
+                        aa.done = true
+                        setTimeout(() => {
+                            aa.done = false
+                        }, 1800);
+                    }
+                })
+            },
+
+
+        },
+        props: ['cart_line'],
+        template: cart_line_component_template,
+    })
+
+
+    let cart_app = new Vue({
+        el: "#cart-app",
+        data: {
+            cart_lines: cart_lines,
+            total: 0
+        },
+        mounted: function () {
+            this.total = 0
+            cart_lines.forEach(line => {
+                this.total += (line.quantity * line.shop.unit_price)
+            });
+        },
+        methods: {
+
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+        },
+        components: {
+            add_to_cart_component,
+        }
+    })
+</script>

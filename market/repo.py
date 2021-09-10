@@ -270,6 +270,70 @@ class ShopRepo:
             shop.save()
             return shop
 
+class CartLineRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = CartLine.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def cart(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'customer' in kwargs:
+            customer = kwargs['customer']
+        elif 'customer_id' in kwargs:
+            customer_id = kwargs['customer_id']
+            customer=Customer.objects.filter(pk=customer_id)
+        cart={}
+        cart['lines']=objects.filter(customer=customer)
+
+        return cart
+
+    def add_shop(self, *args, **kwargs):
+        product_id = 0
+        supplier_id = 0
+        unit_name = ""
+        unit_price = 0
+        available = 100
+        level=ShopLevelEnum.REGULAR
+        if 'level' in kwargs:
+            level = kwargs['level']
+        if 'product_id' in kwargs:
+            product_id = kwargs['product_id']
+        if 'supplier_id' in kwargs:
+            supplier_id = kwargs['supplier_id']
+        if 'unit_name' in kwargs:
+            unit_name = kwargs['unit_name']
+        if 'unit_price' in kwargs:
+            unit_price = kwargs['unit_price']
+        if 'available' in kwargs:
+            available = kwargs['available']
+        shop = Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).first()
+        if shop is None:
+            shop = Shop(
+                supplier_id=supplier_id,
+                product_id=product_id,
+                level=level,
+                unit_name=unit_name,
+                unit_price=unit_price,
+                available=available
+            )
+            shop.save()
+            return shop
+        else:
+            shops=Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
+            shops.delete()
+            shop.available = available
+            shop.unit_price = unit_price
+            shop.level = level
+            shop.save()
+            return shop
+
 
 class CategoryRepo:
     def __init__(self, *args, **kwargs):
