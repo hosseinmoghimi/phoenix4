@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
-                <h2 class="title text-center">سبد خرید</h2>
+                <h2 class="title text-center">سفارش شماره {{order.pk}}</h2>
                 {% if perms.core.change_picture %}
                 <div class="text-center">
                     {{header_image.get_edit_btn|safe}}
@@ -21,17 +21,10 @@
     <div class="container">
         <div class="card card-plain">
             <div class="card-body">
-                <h3 class="card-title text-center">سبد خرید</h3>
+                <h3 class="card-title text-center">سفارش شماره {{order.pk}}</h3>
                 <br />
-                {% include "market/includes/cart-app/template.html" %}
-
-
-
-               
+               {% include "market/includes/order-app/template.html" %}
             </div>
-
-          
-
         </div>
     </div>
 </div>
@@ -40,6 +33,6 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "market/includes/cart-app/script.html" %}
+{% include "market/includes/order-app/script.html" %}
 
 {% endblock %}

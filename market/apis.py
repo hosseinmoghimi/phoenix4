@@ -1,3 +1,4 @@
+import json
 from market.forms import *
 from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ShopSerializer
 from django.http import JsonResponse
@@ -73,6 +74,27 @@ class CartApi(APIView):
                     )
                 if cart_line is not None:
                     context['cart_line']=CartLineSerializer(cart_line).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    def checkout_cart(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            checkout_cart_form=CheckoutCartForm(request.POST)
+            if checkout_cart_form.is_valid():
+                log=3
+                cart_lines=checkout_cart_form.cleaned_data['cart_lines']
+                customer_id=checkout_cart_form.cleaned_data['customer_id']
+                cart_lines=json.loads(cart_lines)
+                cart_lines=CartRepo(user=request.user).checkout(
+                    cart_lines=cart_lines,customer_id=customer_id)
+                if cart_lines is not None:
+                    level=4
+                    cart_lines_s=CartLineSerializer(cart_lines,many=True).data
+                    context['cart_lines']=cart_lines_s
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

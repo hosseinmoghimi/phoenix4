@@ -1,4 +1,4 @@
-from .models import CartLine, Category, Product, Shop, Supplier
+from .models import CartLine, Category, OrderLine, Product, Shop, Supplier
 from rest_framework import serializers
 
 
@@ -38,3 +38,9 @@ class CartLineSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartLine
         fields = ['id','quantity','shop','line_total']
+
+class OrderLineSerializer(serializers.ModelSerializer):
+    product=ProductSerializer()
+    class Meta:
+        model = OrderLine
+        fields = ['id','quantity','unit_name','unit_price','product']

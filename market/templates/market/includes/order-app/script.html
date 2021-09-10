@@ -1,8 +1,8 @@
 <script>
     let url_checkout_cart = "{% url 'market:checkout_cart' %}"
-    let cart_line_component_template = `{% include 'market/includes/cart-app/component.html' %}`
-    let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
-    let add_to_cart_component = Vue.component('cart-line-component', {
+    let order_line_component_template = `{% include 'market/includes/order-app/component.html' %}`
+    let order_lines = JSON.parse(`{{order_lines_s|escapejs}}`)
+    let order_line_component = Vue.component('order-line-component', {
         data: function () {
             return {
 
@@ -10,14 +10,14 @@
         },
         methods: {
             add_quantity: function (a) {
-                if ((this.cart_line.quantity + a) < 0) {
-                    this.cart_line.quantity = 0
+                if ((this.order_line.quantity + a) < 0) {
+                    this.order_line.quantity = 0
                 }
-                else if ((this.cart_line.quantity + a) > this.cart_line.shop.available) {
-                    this.cart_line.quantity = this.cart_line.shop.available
+                else if ((this.order_line.quantity + a) > this.order_line.shop.available) {
+                    this.order_line.quantity = this.order_line.shop.available
                 }
                 else {
-                    this.cart_line.quantity = this.cart_line.quantity + a
+                    this.order_line.quantity = this.order_line.quantity + a
                 }
             },
 
@@ -37,7 +37,7 @@
                 posting.done((data) => {
                     console.log(data)
                     if (data.result === 'SUCCEED') {
-                        let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        let message = data.order_line.quantity + " " + data.order_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
                         aa.message = message
                         aa.done = true
                         setTimeout(() => {
@@ -49,42 +49,42 @@
 
 
         },
-        props: ['cart_line'],
-        template: cart_line_component_template,
+        props: ['order_line'],
+        template: order_line_component_template,
     })
 
 
-    let cart_app = new Vue({
-        el: "#cart-app",
+    let order_app = new Vue({
+        el: "#order-app",
         data: {
-            cart_lines: cart_lines,
+            order_lines: order_lines,
             total: 0,
             checkout_done:false,
         },
         mounted: function () {
             this.total = 0
-            cart_lines.forEach(line => {
-                this.total += (line.quantity * line.shop.unit_price)
+            order_lines.forEach(line => {
+                this.total += (line.quantity * line.unit_price)
             });
         },
         methods: {
             fff: function () {
-                console.log(this.cart_lines)
+                console.log(this.order_lines)
             },
             checkout: function () {
                 let url = url_checkout_cart
-                let cart_lines = []
-                this.cart_lines.forEach(cart_line => {
-                    cart_lines.push({
-                        shop_id: cart_line.shop.id,
-                        quantity: cart_line.quantity,
+                let order_lines = []
+                this.order_lines.forEach(order_line => {
+                    order_lines.push({
+                        shop_id: order_line.shop.id,
+                        quantity: order_line.quantity,
                     })
                 });
-                cart_lines = JSON.stringify(cart_lines)
+                order_lines = JSON.stringify(order_lines)
                 let customer_id = 1
                 let payload = {
                     customer_id: customer_id,
-                    cart_lines: cart_lines,
+                    order_lines: order_lines,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
                 console.log(payload)
@@ -93,8 +93,8 @@
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         console.log(data)
-                        cart_app.cart_lines = data.cart_lines
-                        cart_app.checkout_done = true
+                        order_app.order_lines = data.order_lines
+                        order_app.checkout_done = true
                     }
                 })
             },
@@ -103,7 +103,7 @@
             },
         },
         components: {
-            add_to_cart_component,
+            order_line_component,
         }
     })
 </script>

@@ -1,5 +1,4 @@
 from authentication.serializers import ProfileSerializer
-from django.db.models import fields
 from messenger.models import Channel, Member, Message
 from rest_framework import serializers
 from authentication.models import Profile

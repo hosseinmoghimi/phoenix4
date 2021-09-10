@@ -6,6 +6,7 @@ from .apps import APP_NAME
 from django.utils.translation import gettext as _
 from django.shortcuts import reverse
 from core.constants import CURRENCY
+from utility.currency import to_price
 
 class MarketPage(BasicPage):
 
@@ -116,6 +117,9 @@ class Order(models.Model):
     date_delivered=models.DateTimeField(_("date_delivered"),null=True,blank=True, auto_now=False, auto_now_add=False)
     shipper=models.ForeignKey("shipper", verbose_name=_("shipper"),null=True,blank=True, on_delete=models.CASCADE)
     ship_fee=models.IntegerField(_("ship_fee"),default=0)
+    description=models.CharField(_("description"),max_length=500,null=True,blank=True)
+    address=models.CharField(_("description"),max_length=500,null=True,blank=True)
+    no_ship=models.BooleanField(_("خود مشتری مراجعه و تحویل میگیرد؟"))
     def sum_total(self):
         return self.lines_total()+self.ship_fee
     def lines_total(self):
@@ -126,12 +130,13 @@ class Order(models.Model):
     class Meta:
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
-
+    def total(self):
+        return self.lines_total()+self.ship_fee
     def __str__(self):
-        return f"{str(self.supplier)} / {str(self.customer)} "
+        return f"سفارش شماره {str(self.pk)} /{str(self.supplier)} / {str(self.customer)} "
 
     def get_absolute_url(self):
-        return reverse("Order_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
 
 class OrderLine(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
@@ -141,6 +146,7 @@ class OrderLine(models.Model):
     unit_price=models.IntegerField(_("unit_price"))
     description=models.TextField(_("description"),blank=True)
 
+
     def total(self):
         return self.unit_price*self.quantity
 
@@ -149,7 +155,7 @@ class OrderLine(models.Model):
         verbose_name_plural = _("OrderLines")
 
     def __str__(self):
-        return str(self.order)
+        return f"{str(self.order)} : {self.product.title} : {self.quantity} {self.unit_name} {to_price(self.unit_price)}ی/ {to_price(self.unit_price*self.quantity)}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":orderLine", kwargs={"pk": self.pk})
@@ -225,7 +231,7 @@ class Shop(models.Model):
 class Supplier(MarketPage):
     region=models.ForeignKey("shopregion", verbose_name=_("shop_region"), on_delete=models.CASCADE)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-    
+    ship_fee=models.IntegerField(_("ship_fee"),default=0)
     def __str__(self):
         return self.title
 

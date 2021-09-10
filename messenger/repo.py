@@ -4,7 +4,44 @@ import pusher
 from django.db.models.query_utils import Q
 from pusher.http import request_method
 from authentication.repo import ProfileRepo
-from messenger.models import Message,Channel
+from messenger.models import Message,Channel, Notification
+
+
+class NotificationRepo():
+    def __init__(self,*args, **kwargs):        
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Notification.objects
+        self.me=ProfileRepo(user=self.user).me
+
+    def add(self,*args, **kwargs):
+        title=""
+        body=''
+        url=""
+        icon=""
+        profile_id=""
+        color=""
+        priority=""
+        if 'title' in kwargs:
+            title=kwargs['title']
+        if 'body' in kwargs:
+            body=kwargs['body']
+        if 'url' in kwargs:
+            url=kwargs['url']
+        if 'icon' in kwargs:
+            icon=kwargs['icon']
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+        if 'color' in kwargs:
+            color=kwargs['color']
+        if 'priority' in kwargs:
+            priority=kwargs['priority']
+
 
 
 class MessageRepo:

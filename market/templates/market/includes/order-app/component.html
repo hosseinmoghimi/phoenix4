@@ -1,0 +1,56 @@
+<tr class="farsi">
+    <td>
+        <div class="img-container">
+            <img class="rounded" :src="order_line.product.thumbnail" alt="...">
+        </div>
+    </td>
+    <td class="td-name">
+        <a :href="order_line.product.get_absolute_url">
+            <div class="text-right">
+
+                <span v-text="order_line.product.title"></span>
+            </div>
+        </a>
+        <br />
+       
+    </td>
+    <td>
+        Red
+    </td>
+    <td>
+        M
+    </td>
+    <td class="td-number text-right">
+        <span v-text="to_price(order_line.unit_price)"></span>
+        <small class="text-muted">{{CURRENCY}}</small>
+    </td>
+    <td class="td-number">
+
+        <div class="btn-group btn-group-sm ltr">
+            <button class="btn btn-round btn-success" @click="add_quantity(1)"> <i class="material-icons">add</i>
+            </button>
+
+            <button class="btn btn-round btn-light">
+                <span v-text="to_price(order_line.quantity)"></span>
+
+            </button>
+
+            <button class="btn btn-round btn-danger" @click="add_quantity(-1)"> <i class="material-icons">remove</i>
+            </button>
+        </div>
+        <div class="text-center">
+            <span class="farsi" v-text="order_line.unit_name">
+
+            </span>
+        </div>
+    </td>
+    <td class="td-number">
+        <span v-text="to_price(order_line.unit_price*order_line.quantity)"></span>
+        <small class="text-muted">{{CURRENCY}}</small>
+    </td>
+    <td class="td-actions farsi">
+        <button type="button" rel="tooltip" data-placement="left" title="حذف" class="btn btn-link">
+            <i class="material-icons">close</i>
+        </button>
+    </td>
+</tr>

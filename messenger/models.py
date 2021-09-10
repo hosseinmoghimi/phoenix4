@@ -1,4 +1,3 @@
-from django.db.models.base import Model
 from django.db.models.fields import CharField
 from core.models import BasicPage
 from .apps import APP_NAME
@@ -11,12 +10,10 @@ from utility.persian import PersianCalendar
 from .enums import *
 IMAGE_FOLDER=APP_NAME+"/images/"
 
-
 class MessengerPage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(MessengerPage,self).save(*args, **kwargs)
-
 
 class Message(models.Model):
     title=models.CharField(_("title"), max_length=50)
@@ -45,8 +42,6 @@ class Message(models.Model):
 
     # def get_edit_url(self):
     #     return f"{ADMIN_URL}{APP_NAME}/message/{self.pk}/change/"
-
-
 
 class Channel(models.Model):
     title=models.CharField(_("title"), max_length=100)
@@ -91,7 +86,6 @@ class Channel(models.Model):
     def __str__(self):
         return self.channel_name
 
-
 class Member(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     channel=models.ForeignKey("channel", verbose_name=_("channel"), on_delete=models.CASCADE)
@@ -110,3 +104,6 @@ class Member(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":member", kwargs={"pk": self.pk})
+
+class Notification(Message):
+    pass
