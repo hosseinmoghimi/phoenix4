@@ -36,18 +36,21 @@ class ShopApi(APIView):
                 log=3
                 unit_price=add_shop_form.cleaned_data['unit_price']
                 unit_name=add_shop_form.cleaned_data['unit_name']
+                level=add_shop_form.cleaned_data['level']
                 available=add_shop_form.cleaned_data['available']
                 product_id=add_shop_form.cleaned_data['product_id']
                 supplier_id=add_shop_form.cleaned_data['supplier_id']
                 shop=ShopRepo(request=request).add_shop(
                     unit_price=unit_price,
                     unit_name=unit_name,
+                    level=level,
                     available=available,
                     product_id=product_id,
                     supplier_id=supplier_id,
                     )
                 if shop is not None:
-                    context['shop']=ShopSerializer(shop).data
+                    shops=ProductRepo(request=request).product(pk=product_id).shop_set.all()
+                    context['shops']=ShopSerializer(shops,many=True).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

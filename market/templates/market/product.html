@@ -88,14 +88,6 @@
 
                     </div>
 
-                    {% if me_supplier %}
-
-                    <div class="mb-4"></div>
-                    {% include "market/includes/shop-app/template.html" %}
-
-
-                    {% endif %}
-
 
                     
 
@@ -105,13 +97,15 @@
                     {% include "market/includes/add-to-cart-app/template.html" %}
                     {% endif %}
 
-                    <div class="row pick-size">
-                       
-                    </div>
-                    <div class="row pull-right">
-                        <button class="btn btn-rose btn-round">Add to Cart &#xA0;<i
-                                class="material-icons">shopping_cart</i></button>
-                    </div>
+                    {% if me_supplier %}
+
+                    <div class="mb-4"></div>
+                    {% include "market/includes/shop-app/template.html" %}
+
+
+                    {% endif %}
+
+                   
                 </div>
             </div>
         </div>

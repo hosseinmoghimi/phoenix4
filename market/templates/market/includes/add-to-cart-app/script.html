@@ -42,7 +42,6 @@
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
-                        console.log(message)
                         aa.message = message
                         aa.done = true
                         setTimeout(() => {

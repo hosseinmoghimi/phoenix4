@@ -9,6 +9,7 @@
             unit_name: "",
             unit_price: "",
             available:15,
+            level:"",
         },
         methods: {
             add_shop: function (product_id,supplier_id) {
@@ -17,6 +18,7 @@
                     product_id: product_id,
                     unit_name: this.unit_name,
                     supplier_id:supplier_id,
+                    level:this.level,
                     unit_price: this.unit_price,
                     available:this.available,
                 }
@@ -25,6 +27,7 @@
                 let posting = $.post(url_add_shop, payload)
                 posting.done((data)=>{
                     console.log(data)
+                    add_to_cart_app.shops=data.shops
                 })
             },
         }

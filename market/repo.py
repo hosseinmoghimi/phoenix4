@@ -1,3 +1,4 @@
+from market.enums import ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
@@ -38,6 +39,11 @@ class ProductRepo:
 
         title = kwargs['title'] if 'title' in kwargs else None
         unit_name = kwargs['unit_name'] if 'unit_name' in kwargs else "عدد"
+        if unit_name=="":
+            unit_name="عدد"
+        print(unit_name=="")
+        print(unit_name is None)
+        print(10*"#")
         category_id = kwargs['category_id'] if 'category_id' in kwargs else None
         if self.user.has_perm(APP_NAME+".add_product"):
             product = Product()
@@ -230,6 +236,9 @@ class ShopRepo:
         unit_name = ""
         unit_price = 0
         available = 100
+        level=ShopLevelEnum.REGULAR
+        if 'level' in kwargs:
+            level = kwargs['level']
         if 'product_id' in kwargs:
             product_id = kwargs['product_id']
         if 'supplier_id' in kwargs:
@@ -240,11 +249,12 @@ class ShopRepo:
             unit_price = kwargs['unit_price']
         if 'available' in kwargs:
             available = kwargs['available']
-        shop = Shop.objects.filter(supplier_id=supplier_id).filter(product_id=product_id).filter(unit_name=unit_name).first()
+        shop = Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).first()
         if shop is None:
             shop = Shop(
                 supplier_id=supplier_id,
                 product_id=product_id,
+                level=level,
                 unit_name=unit_name,
                 unit_price=unit_price,
                 available=available
@@ -252,10 +262,11 @@ class ShopRepo:
             shop.save()
             return shop
         else:
-            shops=Shop.objects.filter(supplier_id=supplier_id).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
+            shops=Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
             shops.delete()
             shop.available = available
             shop.unit_price = unit_price
+            shop.level = level
             shop.save()
             return shop
 

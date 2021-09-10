@@ -89,6 +89,7 @@ class ShopRegion(models.Model):
 
 class Customer(models.Model):
     region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
+    level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
 
 
@@ -212,7 +213,7 @@ class Shop(models.Model):
         verbose_name_plural = _("Shops")
 
     def __str__(self):
-        return f"{self.product.title} هر {self.unit_name} : {self.unit_price} {CURRENCY} فروش توسط {self.supplier.title}"
+        return f"{self.product.title} برای {self.level} هر {self.unit_name} : {self.unit_price} {CURRENCY} فروش توسط {self.supplier.title}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":shop", kwargs={"pk": self.pk})

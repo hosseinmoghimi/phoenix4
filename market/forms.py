@@ -116,6 +116,7 @@ class AddShopForm(forms.Form):
     supplier_id=forms.IntegerField(required=True)
     product_id=forms.IntegerField( required=True)
     unit_name=forms.CharField(required=True)
+    level=forms.CharField(required=False)
     unit_price=forms.IntegerField(required=True)
     available=forms.IntegerField(required=False)
     

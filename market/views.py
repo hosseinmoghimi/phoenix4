@@ -1,7 +1,7 @@
 from market.serializers import ShopSerializer
 from core.serializers import ImageSerializer
 import json
-from market.enums import ParameterEnum
+from market.enums import ParameterEnum, ShopLevelEnum
 from core.models import Parameter
 from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
@@ -73,7 +73,9 @@ class ProductViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['product'] = product
-        context['shops_s']=json.dumps(ShopSerializer(product.shop_set.all(),many=True).data)
+        context['shop_levels']=(i[0] for i in ShopLevelEnum.choices)
+        if context['me_customer'] is not None:
+            context['shops_s']=json.dumps(ShopSerializer(product.shop_set.filter(level=context['me_customer'].level),many=True).data)
         context['body_class']="product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
