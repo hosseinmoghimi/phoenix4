@@ -181,7 +181,9 @@ YEAR_ADDED=server_settings.YEAR_ADDED
 ALLOWED_HOSTS=server_settings.ALLOWED_HOSTS
 PUSHER_IS_ENABLE=server_settings.PUSHER_IS_ENABLE
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
-
+QRCODE_ROOT=os.path.join(MEDIA_ROOT,'qr_code')
+SITE_FULL_BASE_ADDRESS=server_settings.SITE_FULL_BASE_ADDRESS
+QRCODE_URL=SITE_URL+"qrcode/"
 if SERVER_ON_HEROKU:
     import django_heroku
     django_heroku.settings(locals())

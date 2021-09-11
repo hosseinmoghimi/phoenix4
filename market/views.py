@@ -7,10 +7,10 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
 from django.views import View
 from market.forms import *
-from .repo import BlogRepo, CartRepo, CategoryRepo, CustomerRepo, OfferRepo, OrderRepo, ProductRepo, SupplierRepo
+from .repo import BlogRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, SupplierRepo
 from .apps import APP_NAME
 
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,reverse
 TEMPLATE_ROOT = "market/"
 LAYOUT_PARENT = "Adminlte/layout.html"
 LAYOUT_PARENT="Adminlte/layout.html"
@@ -101,6 +101,20 @@ class ProductViews(View):
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
 
+
+class GuaranteeView(View):
+    def guarantee_qrcode(self,request,*args, **kwargs):
+        context=getContext(request)
+        guarantee=GuaranteeRepo(user=request.user).guarantee(*args, **kwargs)
+        return guarantee.get_qrcode_response(context=context)
+    def guarantee(self,request,*args, **kwargs):
+        context=getContext(request)
+        context['header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureEnum.GUARANTEE_HEADER)
+        guarantee=GuaranteeRepo(user=request.user).guarantee(*args, **kwargs)
+        context['guarantee']=guarantee
+        return render(request,TEMPLATE_ROOT+'guarantee.html',context)
+
+
 class SupplierViews(View):
     def supplier(self, request, *args, **kwargs):
 
@@ -133,6 +147,62 @@ class OrderViews(View):
         return render(request, TEMPLATE_ROOT+"orders.html", context)
 
 
+    def do_deliver_order(self,request):
+        if request.method=='POST':
+            do_deliver_form=DoDeliverForm(request.POST)
+            if do_deliver_form.is_valid():
+                ware_house_id=do_deliver_form.cleaned_data['ware_house_id']
+                order_id=do_deliver_form.cleaned_data['order_id']
+                description=do_deliver_form.cleaned_data['description']
+                order=OrderRepo(user=request.user).do_deliver(order_id=order_id,description=description)
+                if ware_house_id>0:
+                    WareHouseRepo(user=request.user).add_order_in_ware_house(order_id=order.id,ware_house_id=ware_house_id,direction=True,description=description)
+                
+                if order is not None:
+                    return redirect(order.get_absolute_url())
+        return redirect(reverse('market:orders',kwargs={'profile_id':0}))
+    def do_pack_order(self,request):
+        if request.method=='POST':
+            do_pack_form=DoPackForm(request.POST)
+            if do_pack_form.is_valid():
+                order_id=do_pack_form.cleaned_data['order_id']
+                count_of_packs=do_pack_form.cleaned_data['count_of_packs']
+                description=do_pack_form.cleaned_data['description']
+                ware_house_id=do_pack_form.cleaned_data['ware_house_id']
+                if count_of_packs is None:
+                    count_of_packs=1
+                order=OrderRepo(user=request.user).do_pack(order_id=order_id,count_of_packs=count_of_packs,description=description)
+                WareHouseRepo(user=request.user).add_order_in_ware_house(order_id=order.id,ware_house_id=ware_house_id,direction=False,description=description)
+                if order is not None:
+                    return redirect(order.get_absolute_url())
+        # return redirect(reverse('market:orders_supplier',kwargs={'supplier_id':0}))
+        return redirect(order.get_absolute_url())
+    
+    
+    def do_ship_order(self,request):
+        if request.method=='POST':
+            do_ship_form=DoShipForm(request.POST)
+            if do_ship_form.is_valid():
+                order_id=do_ship_form.cleaned_data['order_id']
+                description=do_ship_form.cleaned_data['description']
+                order=OrderRepo(user=request.user).do_ship(order_id=order_id,description=description)
+                
+                if order is not None:
+                    return redirect(order.get_absolute_url())
+        return redirect(reverse('market:orders_shipper',kwargs={'shipper_id':0}))
+    
+    def do_cancel_order(self,request):
+        if request.method=='POST':
+            cancel_order_form=CancelOrderForm(request.POST)
+            if cancel_order_form.is_valid():
+                order_id=cancel_order_form.cleaned_data['order_id']
+                description=cancel_order_form.cleaned_data['description']
+                order=OrderRepo(user=request.user).do_cancel(order_id=order_id,description=description)
+                
+                if order is not None:
+                    return redirect(order.get_absolute_url())
+        return redirect(reverse('market:orders',kwargs={'customer_id':0}))
+    
 class OfferViews(View):
     def offer(self, request, *args, **kwargs):
 

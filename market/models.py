@@ -1,5 +1,7 @@
+from utility.qrcode import generate_qrcode
+from core.settings import ADMIN_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS
 from django.db.models.fields import CharField
-from market.enums import OrderStatusEnum, ShopLevelEnum
+from market.enums import DegreeLevelEnum, EmployeeEnum, OrderStatusEnum, ShopLevelEnum
 from django.db import models
 from core.models import BasicPage
 from .apps import APP_NAME
@@ -177,6 +179,7 @@ class CartLine(models.Model):
         return reverse(APP_NAME+":cart_line", kwargs={"pk": self.pk})
     def line_total(self):
         return self.shop.unit_price*self.quantity
+
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))
     col=models.IntegerField(_("col"),default=4)
@@ -192,7 +195,6 @@ class Offer(MarketPage):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":offer", kwargs={"pk": self.pk})
-
 
 class Blog(MarketPage):
 
@@ -253,3 +255,214 @@ class Shipper(MarketPage):
     def save(self,*args, **kwargs):
         self.class_name="shipper"
         return super(Shipper,self).save(*args, **kwargs)
+
+class WareHouse(models.Model):
+    name=models.CharField(_("نام انبار"), max_length=50)
+    address=models.CharField(_("آدرس"), max_length=100)
+    employees=models.ManyToManyField("Employee", verbose_name=_("کارکنان"),blank=True)
+    def products_in_stock(self):
+        products_in_stock=[]
+        for orderinwarehouse in self.orderinwarehouse_set.all():
+            for line in orderinwarehouse.order.orderline_set.all():
+
+                if not line.product in (p.product for p in products_in_stock):
+                    product_in_stock=ProductInStock(unit_name="",product=line.product,description="",adder=orderinwarehouse.adder,ware_house=self,quantity=0,date_added=orderinwarehouse.date_added)
+                    products_in_stock.append(product_in_stock)
+        return products_in_stock
+    class Meta:
+        verbose_name = _("WareHouse")
+        verbose_name_plural = _("انبار های کالا")
+
+    def __str__(self):
+        return self.name
+
+        
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":ware_house", kwargs={"pk": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/warehouse/{self.pk}/change/'
+
+class Guarantee(models.Model):
+    orderline=models.ForeignKey("OrderLine", verbose_name=_("سفارش"), on_delete=models.CASCADE)
+    barcode=models.CharField(_("بارکد"), max_length=50,null=True,blank=True)
+    serial_no=models.CharField(_("شماره سریال"), max_length=50,null=True,blank=True)
+    start_date=models.DateTimeField(_("شروع گارانتی"), auto_now=False, auto_now_add=False)
+    end_date=models.DateTimeField(_("اتمام گارانتی"), auto_now=False, auto_now_add=False)
+    class_name="guarantee"
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/guarantee/{self.pk}/change/'
+    def get_qrcode_url(self):
+        
+        file_name=self.class_name+str(self.pk)+".svg"       
+        return f"{QRCODE_URL}{file_name}"
+
+    def generate_qrcode(self):
+        if self.pk is None:
+            super(Guarantee,self).save()
+        import os
+        file_path = QRCODE_ROOT
+        file_name=self.class_name+str(self.pk)+".svg"
+        # file_address=os.path.join(file_path,file_name)
+        file_address=os.path.join(QRCODE_ROOT,file_name)
+   
+        content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
+    def save(self):
+
+        self.generate_qrcode()
+        super(Guarantee,self).save()
+
+    class Meta:
+        verbose_name = _("Guarantee")
+        verbose_name_plural = _("خدمات پس از فروش و گارانتی")
+
+    def __str__(self):
+        return self.barcode
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":guarantee", kwargs={"pk": self.pk})
+
+class Brand(MarketPage):
+    prefix=models.CharField(_("پیش تعریف"), max_length=200,default='',null=True,blank=True)
+    rate=models.IntegerField(_("امتیاز"),default=0)
+    url=models.CharField(_("آدرس اینترتی"),null=True,blank=True,max_length=100)
+    persian_title=models.CharField(_("نام فارسی"),null=True,blank=True, max_length=50)
+     
+    def get_logo_link(self):
+        return f"""
+         <a title="{self.title}" target="_blank"
+                                    href="{self.get_absolute_url()}">
+                                    <img src="{self.image()}" height="32" alt="{self.title}">
+
+                                </a>
+        """
+    class Meta:
+        verbose_name = _("برند")
+        verbose_name_plural = _("برند ها")
+    
+
+    def save(self,*args, **kwargs):
+        self.child_class='brand'
+        super(ProductFeature,self).save(*args, **kwargs)
+   
+
+
+class ProductInStock(models.Model):
+    adder=models.ForeignKey("Employee",null=True,blank=True, verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
+    ware_house=models.ForeignKey("WareHouse", verbose_name=_("انبار"), on_delete=models.PROTECT)
+    product=models.ForeignKey("Product", verbose_name=_("کالا"), on_delete=models.PROTECT)
+    quantity=models.IntegerField(_("تعداد"))
+    unit_name=models.CharField(_("واحد"),max_length=50)
+    date_added=models.DateTimeField(_("تاریخ ثبت"), auto_now=False, auto_now_add=True)
+    description=models.CharField(_("توضیحات"), max_length=500,null=True,blank=True)
+    def lines(self):
+        lines=[]
+        orderinwarehouses=self.ware_house.orderinwarehouse_set.all()
+        for orderinwarehouse in orderinwarehouses:
+            for line in orderinwarehouse.order.orderline_set.all():
+                if line.product==self.product:
+                    lines.append({'direction':orderinwarehouse.direction,'order':orderinwarehouse.order,'quantity':line.quantity,'unit_name':line.unit_name})
+        return lines
+    @property
+    def available(self):
+        available=0
+        for line in self.lines():
+            if line['direction']:
+                available+=line['quantity']
+            else:
+                available-=line['quantity']
+        return available
+        
+    class Meta:
+        verbose_name = _("ProductInStock")
+        verbose_name_plural = _("کالاهای موجود در انبار")
+
+    def __str__(self):
+        return f'{self.ware_house.name} => {self.product.title} : {self.quantity} {self.unit_name} ({self.available})'
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":product_in_stock", kwargs={"pk": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/productinstock/{self.pk}/change/'
+
+class ProductFeature(MarketPage):
+    # product=models.ForeignKey("Product",related_name="productfeature_sett", verbose_name=_("product"), on_delete=models.CASCADE)
+    class Meta:
+        verbose_name = _("ProductFeature")
+        verbose_name_plural = _("فیچر های کالا ها و محصولات")
+
+
+    def save(self,*args, **kwargs):
+        self.child_class='productfeature'
+        super(ProductFeature,self).save(*args, **kwargs)
+   
+
+class Employee(models.Model):
+
+    
+    profile = models.ForeignKey("authentication.Profile", related_name='profile_employees', verbose_name=_(
+        "profile"), null=True, blank=True, on_delete=models.PROTECT)
+    
+    role = models.CharField(_("نقش"), choices=EmployeeEnum.choices,
+                            default=EmployeeEnum.DEFAULT, max_length=50)
+    degree = models.CharField(_("مدرک"), choices=DegreeLevelEnum.choices,
+                              default=DegreeLevelEnum.KARSHENASI, max_length=50)
+    major = models.CharField(
+        _("رشته تحصیلی"), null=True, blank=True, max_length=50)
+    
+    def __str__(self):
+        return f"""{self.profile.name()} {self.role}"""
+
+    def get_link(self):
+        return f"""<a href="{self.get_absolute_url()}">
+                <i class="fa fa-user"></i>
+                {self.profile.name()}
+            </a>"""
+
+    
+    def save(self):
+        return super(Employee, self).save()
+    def image(self):
+        return self.profile.image()
+    def name(self):
+        if self.profile is not None:
+            return f'{self.profile.name()}'
+        return '_'
+
+    class Meta:
+        verbose_name = _("Employee")
+        verbose_name_plural = _("Employees - کارکنان")
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+':employee',kwargs={'pk':self.pk})
+
+    def get_edit_url(self):
+        if self.profile is not None:
+            return self.profile.get_edit_url()
+
+
+
+class OrderInWareHouse(models.Model):
+    direction=models.BooleanField(_("ورود به انبار ؟"),default=True)
+    adder=models.ForeignKey("Employee",null=True,blank=True, verbose_name=_("ثبت کننده"), on_delete=models.CASCADE)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    order=models.ForeignKey("Order", verbose_name=_("سفارش"), on_delete=models.CASCADE)
+    ware_house=models.ForeignKey("warehouse", verbose_name=_("انبار"), on_delete=models.CASCADE)
+    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=50)
+    
+    class Meta:
+        verbose_name = _("ثبت سفارش در دفتر انبار")
+        verbose_name_plural = _("OrderInWareHouses")
+
+    def __str__(self):
+        return f"""سفارش شماره {self.order.id} {("ورود به" if self.direction else "خروج از")} {self.ware_house.name}"""
+    def save(self,*args, **kwargs):
+        list1=OrderInWareHouse.objects.filter(order=self.order).filter(direction=self.direction)
+        if not len(list1)==1:
+            return super(OrderInWareHouse,self).save(*args, **kwargs)
+        else:
+            list1.delete()
+            return super(OrderInWareHouse,self).save(*args, **kwargs)
+    def get_absolute_url(self):
+        return reverse("OrderInWareHouse_detail", kwargs={"pk": self.pk})

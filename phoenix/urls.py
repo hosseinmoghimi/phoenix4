@@ -1,4 +1,5 @@
 
+from core.settings import QRCODE_ROOT
 from phoenix.server_settings import HOME_APP_URLS
 from django.contrib import admin
 from django.urls import path,include
@@ -33,11 +34,9 @@ urlpatterns = [
     path('', include('authentication.urls')),
     # url(r"^forums/", include("pinax.forums.urls", namespace="pinax_forums")),
 
+    url(r'^qrcode/(?P<path>.*)$', serve, {'document_root': QRCODE_ROOT}),
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
-    url('favicon.ico/', serve, {'document_root': STATIC_ROOT}),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
-
-    url('favicon.ico', serve, {'document_root': MEDIA_ROOT}),
 ]
 
 

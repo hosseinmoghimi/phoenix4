@@ -1,0 +1,148 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+
+{% block head %}
+
+{% endblock %}
+{% block content %}
+
+
+
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{header_image.image}}')">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <h2 class="title text-center farsi">گارانتی {{guarantee.barcode}}</h2>
+                {% if perms.core.change_picture %}
+                  {{header_image.get_edit_btn|safe}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="main main-raised" id="order-app">
+    <div class="container">
+        <div class="card card-plain">
+            <div class="card-body">
+                <div class="row rtl">
+                    <div class="col-6">
+                        <h4 class="card-title farsi text-right text-primary">
+                            <a class="text-primary" href="{{guarantee.orderline.order.get_absolute_url}}">
+                                سفارش شماره {{guarantee.orderline.order.id}}
+                            </a>
+                            {{guarantee.orderline.order.get_status_tag|safe}}
+                        </h4>
+                        <h4 class="card-title farsi text-right">
+                            <span>بارکد : </span>
+                            <span>{{guarantee.barcode}}</span>
+                        </h4>
+                        <h4 class="card-title farsi text-right">
+                            <span>سریال : </span>
+                            <span>{{guarantee.serial_no}}</span>
+                        </h4>
+
+                        <h4 class="card-title farsi text-right">
+                            <span>قیمت : </span>
+                            <span>{{guarantee.orderline.unit_price|to_horuf}} {{CURRENCY}}</span>
+                        </h4>
+                    </div>
+                    <div class="col-6">
+                        <img src="{{guarantee.get_qrcode_url}}" width="200" alt="">
+                    </div>
+                </div>
+
+                <div class="table-responsive ">
+                    <table class="table table-shopping rtl">
+                        <thead class="farsi">
+                            
+                                <th class="text-center farsi"></th>
+                                <th class="text-right farsi">کالا</th>
+                                <!-- <th class="th-description text-right farsi">رنگ</th>
+                                <th class="th-description text-right farsi">سایز</th> -->
+                                <th class="text-right farsi">قیمت</th>
+                                <th class="text-right farsi">شروع گارانتی</th>
+                                <th class="text-right farsi">اتمام کارانتی</th>
+                           
+                                
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="img-container">
+                                        <a href="{{guarantee.orderline.product.get_absolute_url}}">
+
+                                            <img src="{{guarantee.orderline.product.thumbnail}}" alt="...">
+
+                                        </a>
+
+                                    </div>
+                                </td>
+                                <td class="td-name text-right farsi">
+                                    <a href="{{guarantee.product.get_absolute_url}}">
+                                        {{guarantee.orderline.product.title}}
+                                    </a>
+
+                                </td>
+                                <!-- <td>
+                                    Red
+                                </td>
+                                <td>
+                                    M
+                                </td> -->
+                                <td class="td-number text-right farsi">
+                                    {{guarantee.orderline.unit_price|to_price}}
+
+
+                                </td>
+
+
+                                <td class="td-number">
+                                    <span>{{guarantee.start_date|to_persian_date|safe}}</span>
+                                </td>
+                                <td class="td-number">
+                                    <span>{{guarantee.end_date|to_persian_date|safe}}</span>
+                                </td>
+
+                            </tr>
+
+
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+    let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
+    var cart_line_template = `{1% include 'market/includes/cart-line.html' %}`
+    let checkout_cart_url = "{% url 'market:checkout_cart' %}"
+    let delete_cart_line_url = "{1% url 'market:delete_cart_line' %}"
+</script>
+{% if DEBUG %}
+<script src="{% static 'vendor/js/vue.js' %}"></script>
+{% else %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% endif %}
+
+{% endblock %}

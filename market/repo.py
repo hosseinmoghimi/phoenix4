@@ -4,7 +4,7 @@ from market.enums import OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, CartLine, Customer, Offer, Order, OrderLine, Product, Category, Shop, Supplier, UnitName
+from .models import Blog, CartLine, Customer, Guarantee, Offer, Order, OrderLine, Product, Category, Shop, Supplier, UnitName
 from django.db.models import Q, F
 
 
@@ -230,6 +230,24 @@ class OrderRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+class GuaranteeRepo():
+    def __init__(self,user=None):
+        self.user=user
+        self.objects=Guarantee.objects
+        self.profile=ProfileRepo(user=user).me
+        
+    def guarantee(self,*args, **kwargs):
+        pk = 0
+        if 'guarantee_id' in kwargs:
+            pk = kwargs['guarantee_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+
 
 
 class ShopRepo:

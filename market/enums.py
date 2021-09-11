@@ -11,6 +11,24 @@ class OrderStatusEnum(TextChoices):
 
 
 
+class DegreeLevelEnum(TextChoices):
+    DIPLOM = 'دیپلم', _('دیپلم')
+    KARDANI = 'کاردانی', _('کاردانی')
+    KARSHENASI = 'کارشناسی', _('کارشناسی')
+    KARSHENASI_ARSHAD = 'کارشناسی ارشد', _('کارشناسی ارشد')
+    PHD = 'دکتری', _('دکتری')
+
+
+class EmployeeEnum(TextChoices):
+    CEO='سرپرست',_('سرپرست')  
+    GUARD='نگهبان',_('نگهبان')      
+    MANAGER='مدیر',_('مدیر')      
+    TECHNICAL='فنی',_('فنی')    
+    DEFAULT='تایید نشده',_('تایید نشده')
+    ACCOUNTANT='حسابدار',_('حسابدار')
+    CASHIER='صندوقدار',_('صندوقدار')
+    
+
 class OrderStatusEnum(TextChoices):
     PROCESSING = 'درحال پردازش', _('درحال پردازش')
     COMPLETED = 'کامل شده', _('کامل شده')
@@ -27,13 +45,14 @@ class OrderStatusEnum(TextChoices):
 
 
 class PictureEnum(TextChoices):
-    CART_HEADER='تصویر '+'سربرگ سبد خرید'
-    ORDER_HEADER='تصویر '+'سربرگ سبد سفارش'
-    ORDERS_HEADER='تصویر '+'سربرگ سفارشات'
+    CART_HEADER='تصویر سربرگ سبد خرید',_('تصویر سربرگ سبد خرید')
+    ORDER_HEADER='تصویر سربرگ سبد سفارش' ,_('تصویر سربرگ سبد سفارش')
+    ORDERS_HEADER='تصویر سربرگ سفارشات',_('تصویر سربرگ سفارشات')
+    GUARANTEE_HEADER="تصویر سربرگ گارانتی",_("تصویر سربرگ گارانتی")
 class ParameterEnum(TextChoices):
-    SHOP_HEADER_TITLE='عنوان فروشگاه'
-    SHOP_HEADER_SLOGAN='شعار فروشگاه'
-    SHOP_HEADER_IMAGE='تصویر بنر فروشگاه'
+    SHOP_HEADER_TITLE='عنوان فروشگاه',_('عنوان فروشگاه')
+    SHOP_HEADER_SLOGAN='شعار فروشگاه',_('شعار فروشگاه')
+    SHOP_HEADER_IMAGE='تصویر بنر فروشگاه',_('تصویر بنر فروشگاه')
 
 class ShopLevelEnum(TextChoices):
     REGULAR='مشتری عادی'

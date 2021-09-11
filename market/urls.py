@@ -11,7 +11,12 @@ urlpatterns = [
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
     path("order/<int:pk>/",views.OrderViews().order,name="order"),
     path("supplier/<int:pk>/",views.SupplierViews().supplier,name="supplier"),
+    path("guarantee/<int:pk>/",views.GuaranteeView().guarantee,name="guarantee"),
     path("cart/",views.CartViews().cart,name="cart"),
+    path('do_pack_order/',views.OrderViews().do_pack_order,name='do_pack_order'),
+    path('do_deliver_order/',views.OrderViews().do_deliver_order,name='do_deliver_order'),
+    path('do_cancel_order/',views.OrderViews().do_cancel_order,name='do_cancel_order'),
+    path('do_ship_order/',views.OrderViews().do_ship_order,name='do_ship_order'),
     path("confirm_cart/",views.CartViews().confirm,name="confirm_cart"),
     path("cart/<int:customer_id>/",views.CartViews().cart,name="customer_cart"),
 
