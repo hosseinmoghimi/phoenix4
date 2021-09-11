@@ -1,3 +1,4 @@
+from utility.persian2 import PersianCalendar
 from utility.qrcode import generate_qrcode
 from core.settings import ADMIN_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS
 from django.db.models.fields import CharField
@@ -148,6 +149,8 @@ class OrderLine(models.Model):
     unit_price=models.IntegerField(_("unit_price"))
     description=models.TextField(_("description"),blank=True)
 
+    def guarantees(self):
+        return Guarantee.objects.filter(orderline=self)
 
     def total(self):
         return self.unit_price*self.quantity
@@ -290,6 +293,11 @@ class Guarantee(models.Model):
     start_date=models.DateTimeField(_("شروع گارانتی"), auto_now=False, auto_now_add=False)
     end_date=models.DateTimeField(_("اتمام گارانتی"), auto_now=False, auto_now_add=False)
     class_name="guarantee"
+
+    def persian_start_date(self):
+        return PersianCalendar().from_gregorian(self.start_date)
+    def persian_end_date(self):
+        return PersianCalendar().from_gregorian(self.end_date)
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/guarantee/{self.pk}/change/'
     def get_qrcode_url(self):

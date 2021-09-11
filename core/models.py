@@ -295,7 +295,7 @@ class BasicPage(models.Model):
             for page in self.childs.all():
                 page.delete()
         else:
-            for page in self.childs.all():
+            for page in self.childs():
                 page.parent=self.parent
                 page.save()
         return super(BasicPage,self).delete(*args, **kwargs)

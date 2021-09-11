@@ -5,13 +5,11 @@
         <table class="table table-shopping">
             <thead>
                 <tr>
-                    <th class="text-center"></th>
-                    <th class=" text-right">Product</th>
-                    <th class="th-description text-right">Color</th>
-                    <th class="th-description text-right">Size</th>
-                    <th class="text-right">Price</th>
-                    <th class="text-right">Qty</th>
-                    <th class="text-right">Amount</th>
+                    <th class="text-center farsi"></th>
+                    <th class=" text-right farsi">محصول</th>
+                    <th class="text-right farsi">قیمت جزء</th>
+                    <th class="text-right farsi">تعداد</th>
+                    <th class="text-right farsi">مبلغ</th>
                     <th></th>
                 </tr>
             </thead>
@@ -25,7 +23,7 @@
 
 
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="2"></td>
                     <td class="td-total farsi text-muted">
                         جمع کل
                     </td>
@@ -35,8 +33,7 @@
                         </span>
                         <small class="text-muted">{{CURRENCY}}</small>
                     </td>
-                    <td colspan="1"></td>
-                    <td colspan="2" class="text-right">
+                    <td colspan="2" class="text-left">
                         <button type="button" @click="checkout()" class="btn btn-info btn-round">Complete Purchase <i
                                 class="material-icons">keyboard_arrow_right</i></button>
                     </td>
