@@ -28,6 +28,9 @@
                     {% include "market/includes/product-images-app/template.html" %}
                 </div>
                 <div class="col-md-6 col-sm-6">
+                    <span class="farsi">
+                        {{product.category.get_breadcrumb|safe}}
+                    </span>
                     <h2 class="title">{{product.title}}
                         {% if perms.market.change_product %}
                         {{product.get_edit_btn|safe}}

@@ -70,15 +70,5 @@
     {% endfor %}
 
 
-    <div v-if="cart_lines.length==0" class="text-center">
-        <img src="{% static 'market/img/empty-cart.png' %}" alt="">
-        <h4 class="text-center">
-            سبد خرید شما خالی می باشد.
-        </h4>
-        <div class="text-center">
-            <a href="{% url 'market:home' %}" class="btn btn-primary">
-                <i class="material-icons">store</i>
-                فروشگاه</a>
-        </div>
-    </div>
+  
 </div>

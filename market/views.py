@@ -65,6 +65,7 @@ class CartViews(View):
         context = getContext(request)
         cart= CartRepo(request=request).cart(customer=customer)
         context['cart'] =cart
+        context['is_empty']=len(cart['lines'])==0
         context['cart_lines_s']=json.dumps(CartLineSerializer(cart['lines'],many=True).data)
         context['customer'] = customer
         context['header_image']=PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureEnum.CART_HEADER)

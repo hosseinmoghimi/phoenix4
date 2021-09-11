@@ -60,7 +60,8 @@ class Product(MarketPage):
     def save(self,*args, **kwargs):
         self.class_name='product'
         super(Product,self).save(*args, **kwargs)
-
+    def category(self):
+        return self.category_set.first()
 class Category(MarketPage):
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))
     def childs(self):
