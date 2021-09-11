@@ -55,8 +55,12 @@ def PageContext(request, page):
     if request.user.has_perm(APP_NAME+".add_pagedocument"):
         context['add_page_document_form'] = AddPageDocumentForm()
 
+    if request.user.has_perm(APP_NAME+".add_pageimage"):
+        context['add_page_image_form'] = AddPageImageForm()
+
     if request.user.has_perm(APP_NAME+".change_page"):
         context['add_related_page_form'] = AddRelatedPageForm()
+        
     page_comments = page.pagecomment_set.all()
     context['page_comments'] = page_comments
     page_comments_s = json.dumps(

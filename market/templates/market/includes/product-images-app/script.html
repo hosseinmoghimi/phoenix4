@@ -1,4 +1,6 @@
 <script>
+    let url_add_page_image="{% url 'core:add_page_image' %}"
+    let product_id=parseInt("{{product.id}}")
     let images = JSON.parse(`{{images_s|escapejs}}`)
     let selected_image = {}
     if (images.length > 0)
@@ -11,11 +13,47 @@
         data: {
             selected_image: selected_image,
             images: images,
+            show_add_page_image_form :false,
+            add_page_image_form_title:"",
+            add_page_image_form_file:"",
         },
         methods: {
             select_image: function (image) {
                 this.selected_image = image
             },
+            add_page_image: function () {
+                let title = this.add_page_image_form_title
+                let formData = new FormData();
+                let image = $('#add-page-image-form')[0].elements[1].files[0]
+                formData.append("image", image);
+                formData.append("title", title);
+                formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+                formData.append("page_id", product_id);
+
+                $.ajax({
+                    url: url_add_page_image,
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data != 0) {
+                            console.log(data)
+                            if (data.result === 'SUCCEED') {
+                                product_images_app.images.push(data.page_image.image)
+                                product_images_app.add_page_image_form_title = ''
+                                product_images_app.add_page_image_form_file = ''
+                                product_images_app.show_add_page_image_form = false
+
+                            }
+                        }
+                        else {
+                        }
+                    },
+                });
+
+            },
+
         }
     })
 </script>

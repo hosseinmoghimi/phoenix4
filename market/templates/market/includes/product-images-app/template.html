@@ -10,4 +10,43 @@
             <!-- </div> -->
         </div>
     </div>
+
+
+{% if add_page_image_form %}
+<p>
+
+    <button @click="show_add_page_image_form=true" v-if="!show_add_page_image_form"
+        class="btn btn-success mt-4">
+        افزودن تصویر
+    </button>
+</p>
+
+<form id="add-page-image-form" v-if="show_add_page_image_form" @submit.prevent="add_page_image()"
+    enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-8">
+            <input required type="text" v-model="add_page_image_form_title" class="farsi form-control"
+                placeholder="عنوان تصویر جدید">
+
+
+            <span class="btn btn-raised btn-round btn-default btn-file">
+                <span class="fileinput-new farsi">انتخاب تصویر</span>
+
+                <input type="file" v-on:change="document_file=true" name="">
+                <div class="ripple-container"></div>
+            </span>
+
+
+        </div>
+        <div class="col-4">
+            <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
+            <button @click="show_add_page_image_form=false" class="farsi btn btn-secondary btn-block"
+                type="reset">انصراف</button>
+
+        </div>
+    </div>
+
+</form>
+{% endif %}
+
 </div>

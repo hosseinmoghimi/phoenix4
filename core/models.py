@@ -183,6 +183,8 @@ class BasicPage(models.Model):
         images= self.pageimage_set.all()
         if len(images)>0:
             return images.first().image.image()
+        elif len(self.pageimage_set.all())>0:
+            return self.pageimage_set.all().first().image.image()
 
         return f'{STATIC_URL}{self.app_name}/img/pages/image/{self.class_name}.png'
     def image_header(self):
@@ -204,7 +206,8 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_main_origin)
         elif self.image_header_origin:
             return MEDIA_URL+str(self.image_header_origin)
-        
+        elif len(self.pageimage_set.all())>0:
+            return self.pageimage_set.all().first().image.thumbnail()
 
         return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.png'
     def class_name_farsi(self):

@@ -162,26 +162,31 @@
                         </a>
                     </div>
                 </li>
+                {% if profile %}
+
                 <li class="button-container nav-item iframe-extern">
-                    <a href="https://www.creative-tim.com/product/material-kit-pro?ref=presentation" target="_blank"
-                        class="btn  btn-primary   btn-round btn-block">
-                        <i class="material-icons">shopping_cart</i> Buy Now
+                    <a href="{{profile.get_absolute_url}}" target="_blank"
+                        class="btn  btn-primary   btn-round btn-block farsi">
+                        <i class="material-icons">shopping_cart</i> 
+                        <span class="farsi">
+                            {{profile.name}}
+                        </span>
                     </a>
                 </li>
+                {% endif %}
                 {% if perms.core.change_basicpage %}
-                  
-                <li class="button-container nav-item iframe-extern">
-                    <a href="{{ADMIN_URL}}" target="_blank"
-                    class="btn  btn-info   btn-round btn-block">
-                    <i class="material-icons">settings</i>
-                    <span class="farsi">
 
-                        مدیریت
-                    </span>
-                </a>
-            </li>
-            {% endif %}
-            
+                <li class="button-container nav-item iframe-extern">
+                    <a href="{{ADMIN_URL}}" target="_blank" class="btn  btn-info   btn-round btn-block">
+                        <i class="material-icons">settings</i>
+                        <span class="farsi">
+
+                            مدیریت
+                        </span>
+                    </a>
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </div>
