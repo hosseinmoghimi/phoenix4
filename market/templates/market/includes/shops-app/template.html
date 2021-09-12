@@ -1,6 +1,86 @@
 {% load to_price %}
-<div id="shop-app">
- 
+<div id="shops-app">
+    {% if supplier_shops %}
+
+    <div class="col-md-12">
+            <table class="table farsi">
+                {% for shop in supplier_shops %}
+                <tr>
+                    <td>
+                        {{shop.supplier.region}}
+                    </td>
+
+                    <td>
+                        <a href="{{shop.supplier.get_absolute_url}}">
+
+                            {{shop.supplier.title}}
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <span class="badge badge-primary">
+
+                            {{shop.level}}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-danger">
+
+                            {{shop.unit_name}}
+                        </span>
+                    </td>
+
+
+
+                    <td>
+                        {{shop.unit_price|to_price}}
+                    </td>
+
+
+
+                </tr>
+                {% endfor %}
+                <tr v-for="shop in shops">
+                    <td>
+                        <span v-text="shop.supplier.region">
+
+                        </span>
+                    </td>
+
+                    <td>
+                        <a href="{{shop.supplier.get_absolute_url}}" v-text="shop.supplier.title">
+
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <span class="badge badge-primary" v-text="shop.level">
+
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-danger" v-text="shop.unit_name">
+
+                        </span>
+                    </td>
+
+
+
+                    <td>
+                        <span v-text="to_price(shop.unit_price)">
+
+                        </span>
+                    </td>
+
+
+
+                </tr>
+
+            </table>
+    </div>
+    {% endif %}
     <form @submit.prevent="add_shop({{product.id}},{{me_supplier.id}})">
         <div class="row pick-size">
             <div class="col-md-12">

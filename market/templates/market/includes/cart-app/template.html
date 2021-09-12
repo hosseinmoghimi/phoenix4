@@ -34,16 +34,12 @@
                         <small class="text-muted">{{CURRENCY}}</small>
                     </td>
                     <td colspan="2" class="text-left">
-                        <button type="button" @click="checkout()" class="btn btn-info btn-round">Complete Purchase <i
+                        <button type="button" @click="checkout()" class="btn btn-info btn-round farsi"
+                            v-if="!checkout_done">تایید و ادامه فرآیند خرید<i
                                 class="material-icons">keyboard_arrow_right</i></button>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="4"></td>
-                    <td colspan="2" class="text-right">
-                    <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
-                    </td>
-                </tr>
+
             </tbody>
         </table>
     </div>
@@ -51,14 +47,19 @@
     {% for order in cart.orders %}
 
     <form v-if="checkout_done" action="{% url 'market:confirm_cart' %}" method="POST">
+        <h4>
+            آدرس تحویل بسته را برای سفارش از
+            {{order.supplier.title}}
+            وارد کنید
+        </h4>
         {% csrf_token %}
-        <input type="hidden" name="supplier_id" value="{{order.supplier.id}}">
+        <input type="hidden"  name="supplier_id" value="{{order.supplier.id}}">
 
 
 
         <div class="form-group bmd-form-group">
             <label for="address{{order.id}}" class="bmd-label-floating">آدرس تحویل</label>
-            <input type="text" name="address" required id="address{{order.id}}" class="form-control">
+            <input type="text" name="address" required id="address{{order.id}}" class="form-control text-right farsi" >
         </div>
 
 
@@ -70,5 +71,5 @@
     {% endfor %}
 
 
-  
+
 </div>

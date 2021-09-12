@@ -50,8 +50,8 @@ class ShopApi(APIView):
                     supplier_id=supplier_id,
                     )
                 if shop is not None:
-                    shops=ProductRepo(request=request).product(pk=product_id).shop_set.all()
-                    context['shops']=ShopSerializer(shops,many=True).data
+                    # shops=ProductRepo(request=request).product(pk=product_id).shop_set.all()
+                    context['shop']=ShopSerializer(shop).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
