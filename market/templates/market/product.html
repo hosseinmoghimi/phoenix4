@@ -100,16 +100,65 @@
                     {% include "market/includes/add-to-cart-app/template.html" %}
                     {% endif %}
 
-                    {% if me_supplier %}
-
-                    <div class="mb-4"></div>
-                    {% include "market/includes/shop-app/template.html" %}
-
-
-                    {% endif %}
 
 
                 </div>
+                {% if supplier_shops %}
+
+                <div class="col-md-12">
+                    <div>
+                        <table class="table farsi">
+                            {% for shop in supplier_shops %}
+                            <tr>
+                                <td>
+                                    {{shop.supplier.region}}
+                                </td>
+
+                                <td>
+                                    <a href="{{shop.supplier.get_absolute_url}}">
+
+                                        {{shop.supplier.title}}
+                                    </a>
+                                </td>
+
+
+                                <td>
+                                    <span class="badge badge-primary">
+
+                                        {{shop.level}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-danger">
+
+                                        {{shop.unit_name}}
+                                    </span>
+                                </td>
+
+
+
+                                <td>
+                                    {{shop.unit_price|to_price}}
+                                </td>
+
+
+
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+
+                {% if me_supplier %}
+
+                <div class="col-md-12">
+
+                    {% include "market/includes/shop-app/template.html" %}
+                </div>
+                {% endif %}
+
             </div>
         </div>
         <div class="features text-center">

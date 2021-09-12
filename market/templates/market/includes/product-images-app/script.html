@@ -1,4 +1,5 @@
 <script>
+    let image={image:"{{product.image}}"}
     let url_add_page_image="{% url 'core:add_page_image' %}"
     let product_id=parseInt("{{product.id}}")
     let images = JSON.parse(`{{images_s|escapejs}}`)
@@ -8,7 +9,7 @@
     let product_images_app = new Vue({
         el: "#product-images-app",
         mounted: function () {
-            this.select_image(selected_image)
+            this.select_image(image)
         },
         data: {
             selected_image: selected_image,

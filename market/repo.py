@@ -266,10 +266,17 @@ class ShopRepo:
         objects = self.objects.all()
         if 'cart_lines' in kwargs:
             return self.objects.filter(id__in=kwargs['cart_lines'].values('shop_id'))
-        if 'for_home' in kwargs:
-            objects = objects.filter(for_home=kwargs['for_home'])
-        if 'category_id' in kwargs:
-            return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
+        if 'product' in kwargs:
+            objects = objects.filter(product=kwargs['product'])
+        if 'product_id' in kwargs:
+            objects = objects.filter(product_id=kwargs['product_id'])
+        if 'supplier' in kwargs:
+            objects = objects.filter(supplier=kwargs['supplier'])
+        if 'supplier_id' in kwargs:
+            objects = objects.filter(supplier_id=kwargs['supplier_id'])
+        if 'region' in kwargs:
+            # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
+            objects = objects.filter(supplier__region=kwargs['region'])
         return objects
 
     def add_shop(self, *args, **kwargs):
@@ -291,6 +298,9 @@ class ShopRepo:
             unit_price = kwargs['unit_price']
         if 'available' in kwargs:
             available = kwargs['available']
+        if available==0 or unit_price==0:
+            Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).delete()
+            return {'result':'deleted'}
         shop = Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).first()
         if shop is None:
             shop = Shop(

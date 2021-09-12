@@ -7,7 +7,7 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, PageContext
 from django.views import View
 from market.forms import *
-from .repo import BlogRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, SupplierRepo
+from .repo import BlogRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo
 from .apps import APP_NAME
 
 from django.shortcuts import render,redirect,reverse
@@ -87,6 +87,7 @@ class CartViews(View):
                 orders=CartRepo(request=request).confirm(customer_id=customer_id,address=address,description=description,no_ship=no_ship,supplier_id=supplier_id)
                 if orders is not None and len(orders)==1:
                     return redirect(orders[0].get_absolute_url())
+
 class ProductViews(View):
     def product(self, request, *args, **kwargs):
 
@@ -96,8 +97,12 @@ class ProductViews(View):
         context.update(PageContext(request=request, page=page))
         context['product'] = product
         context['shop_levels']=(i[0] for i in ShopLevelEnum.choices)
+        if context['me_supplier'] is not None:
+            context['supplier_shops']=ShopRepo(request=request).list(product=product).order_by('unit_name','unit_price')
         if context['me_customer'] is not None:
-            context['shops_s']=json.dumps(ShopSerializer(product.shop_set.filter(level=context['me_customer'].level),many=True).data)
+            shops=ShopRepo(request=request).list(product=product,region=context['me_customer'].region,level=context['me_customer'].level)
+            context['shops']=shops
+            context['shops_s']=json.dumps(ShopSerializer(shops,many=True).data)
         context['body_class']="product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 

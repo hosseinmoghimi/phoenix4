@@ -1,8 +1,9 @@
+{% load to_price %}
 <div id="shop-app">
-
+ 
     <form @submit.prevent="add_shop({{product.id}},{{me_supplier.id}})">
         <div class="row pick-size">
-            <div class="col-md-12 col-sm-12">
+            <div class="col-md-12">
                 <h4>
                     <small class="text-muted">
                         فروش در
@@ -10,7 +11,7 @@
                     {{me_supplier.title}}
                 </h4>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-4">
                 <label>واحد فروش</label>
                 <select v-model="unit_name" required class="selectpicker farsi" data-style="select-with-transition"
                     data-size="4">
@@ -22,7 +23,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-4">
                 <label>سطح فروش</label>
                 <select v-model="level" required class="selectpicker farsi" data-style="select-with-transition"
                     data-size="4">
@@ -34,7 +35,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-12 ltr">
+            <div class="col-md-4 ltr">
                 <div class="form-group bmd-form-group">
                     <label for="exampleInputq1" class="bmd-label-floating">قیمت واحد به {{CURRENCY}}</label>
                     <input v-model="unit_price" required type="number" class="form-control" id="exampleInputq1">
@@ -42,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="col-md-12 col-sm-12">
+            <div class="col-md-4">
                 <button class="btn btn-block btn-info farsi" type="submit">
                     تایید و فروش
                 </button>

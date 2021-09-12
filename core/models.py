@@ -186,7 +186,7 @@ class BasicPage(models.Model):
         elif len(self.pageimage_set.all())>0:
             return self.pageimage_set.all().first().image.image()
 
-        return f'{STATIC_URL}{self.app_name}/img/pages/image/{self.class_name}.png'
+        return f'{STATIC_URL}{self.app_name}/img/pages/image/{self.class_name}.jpg'
     def image_header(self):
         if self.image_header_origin:
             return MEDIA_URL+str(self.image_header_origin)
