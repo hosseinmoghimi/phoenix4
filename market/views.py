@@ -1,3 +1,4 @@
+from utility.persian2 import PersianCalendar
 from django.http.response import Http404
 from market.serializers import CartLineSerializer, OrderLineSerializer, ShopSerializer
 import json
@@ -9,7 +10,7 @@ from django.views import View
 from market.forms import *
 from .repo import BlogRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo
 from .apps import APP_NAME
-
+from authentication.views import ProfileContext
 from django.shortcuts import render,redirect,reverse
 TEMPLATE_ROOT = "market/"
 LAYOUT_PARENT = "Adminlte/layout.html"
@@ -106,6 +107,20 @@ class ProductViews(View):
         context['body_class']="product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
+
+
+class CustomerViews(View):
+    def customer(self, request, *args, **kwargs):
+
+        customer = CustomerRepo(request).customer(*args, **kwargs)
+        profile = customer.profile
+        context = getContext(request)
+        context.update(ProfileContext(request=request, profile=profile))
+        context['customer'] = customer
+        
+        
+        context['body_class']="product-page"
+        return render(request, TEMPLATE_ROOT+"customer.html", context)
 
 
 class GuaranteeView(View):
@@ -209,6 +224,45 @@ class OrderViews(View):
                     return redirect(order.get_absolute_url())
         return redirect(reverse('market:orders',kwargs={'customer_id':0}))
     
+    def order_invoice(self, request, *args, **kwargs):
+        context = getContext(request)
+        TAX_PERCENT = 0
+        order = OrderRepo(request).order(*args, **kwargs)
+        order_lines = []
+        lines_total = 0
+        for order_line in order.orderline_set.all():
+            quantity = order_line.quantity
+            unit_name = order_line.unit_name
+            unit_price = order_line.unit_price
+            lines_total += (quantity*unit_price)
+            order_lines.append({
+                'quantity': quantity,
+                'unit_name': unit_name,
+                'unit_price': unit_price,
+                'line_total': quantity*unit_price,
+                'product': order_line.product.title,
+            })
+
+        tax = int(TAX_PERCENT*(lines_total)/100)
+        ship_fee = 0
+        description = f"""آدرس تحویل : {order.address}"""
+        total_for_pay = tax+lines_total
+        print_date = PersianCalendar().date
+        order = {
+            'customer': order.customer.profile.name,
+            'supplier': order.supplier,
+            'tax': tax,
+            'lines_total': lines_total,
+            'ship_fee': ship_fee,
+            'total_for_pay': total_for_pay,
+            'print_date': print_date,
+            'description': description,
+        }
+        context['order_lines'] = order_lines
+        context['order'] = order
+        context['project'] = {}
+        return render(request, TEMPLATE_ROOT+"order-invoice.html", context)
+
 class OfferViews(View):
     def offer(self, request, *args, **kwargs):
 

@@ -1,5 +1,6 @@
 {% extends "market/layout.html" %}
 {% load to_price %}
+{% load to_persian_date %}
 {% load static %}
 {% block content %}
 <div class="page-header header-filter header-small" data-parallax="true"
@@ -22,8 +23,220 @@
         <div class="card card-plain">
             <div class="card-body">
                 <h3 class="card-title text-center">سفارش شماره {{order.pk}}</h3>
+                   
+
+                 
+               
+                <div id="order-header" class="row rtl text-right mb-5 farsi">
+                    <div class="col-md-4">
+                        <h3 class="card-title farsi text-right">
+                            سفارش شماره {{order.id}} {{order.get_status_tag|safe}}
+
+                            {% if perms.core.change_order %}
+
+                            <a target="_blank" title="ویرایش" href="{{order.get_edit_url}}">
+                                <i class="material-icons">
+                                    settings
+                                </i>
+                            </a>
+                            {% endif %}
+   <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{order.get_invoice_url}}">
+                        <i class="material-icons">print</i>
+                    </a>
+
+
+                        </h3>
+                        <h5 class="text-primary">
+                            {{order.total|to_price}}
+                        </h5>
+
+                        <!-- <span class="badge badge-success"> -->
+                        <h4 class="title farsi text-primary">{{order.count_of_packs}} بسته</h4>
+                        <!-- </span> -->
+
+
+
+
+                        {% for orderinwarehouse in order.orderinwarehouse_set.all %}
+                        <div class="mb-3">
+                            {% if orderinwarehouse.direction %}
+                            <span class="text-success">
+
+                                <i class="material-icons">
+                                    input
+                                </i>
+                                ورود به
+                            </span>
+                            {% else %}
+                            <span class="text-danger">
+                                <i class="material-icons">
+                                    logout
+                                </i>
+                                خروج از
+                            </span>
+                            {% endif %}
+                            <a href="{{orderinwarehouse.ware_house.get_absolute_url}}">
+                                {{orderinwarehouse.ware_house.name}}
+
+                            </a>
+                            <small class="text-secondary">
+
+                                در {{orderinwarehouse.date_added|to_persian_datetime|safe}}
+                            </small>
+                        </div>
+                        {% endfor %}
+
+
+
+
+
+                        <div class="farsi mr-3 mb-3">آدرس تحویل :
+                            <i>
+
+                                <span class="title farsi mx-3">
+                                    {{order.address}}
+
+                                </span>
+                            </i>
+                        </div>
+
+
+
+
+
+
+
+                        <div class="farsi mr-3">
+                            توضیحات : <i>
+
+                                <span class="title farsi mx-3">
+                                    {{order.description|safe}}
+
+                                </span>
+                            </i>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <table class="table">
+                            <tr>
+                                <td class="text-left">
+                                    خریدار :
+                                </td>
+                                <td>
+                                    <a href="{{order.customer.get_absolute_url}}">
+                                        <img src="{{order.customer.profile.image}}" width="32" class="rounded-circle"
+                                            alt="">
+                                        {{order.customer.title}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">
+                                    فروشنده :
+                                </td>
+                                <td>
+                                    <a href="{{order.supplier.get_absolute_url}}">
+                                        <img src="{{order.supplier.image}}" width="32" class="rounded-circle" alt="">
+
+                                        {{order.supplier.title}}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% if order.shipper %}
+                            <tr>
+                                <td class="text-left">
+                                    پیک تحویل :
+                                </td>
+                                <td>
+                                    <a href="{{order.shipper.get_absolute_url}}">
+                                        <img src="{{order.shipper.image}}" width="32" class="rounded-circle" alt="">
+
+                                        {{order.shipper.title}}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% for project in order.project_set.all %}
+                            <tr>
+                                <td class="text-left">
+                                    پروژه
+                                </td>
+                                <td>
+                                    <a href="{{project.get_absolute_url}}">
+
+                                        {{project.title}}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if order.order_date %}
+                            <tr>
+                                <td class="text-left">
+                                    تاریخ سفارش :
+                                </td>
+                                <td>
+                                    <div class="small text-warning">
+                                        {{order.order_date|to_persian_datetime|safe}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% endif %}
+
+                            {% if order.pack_date %}
+                            <tr>
+                                <td class="text-left">
+                                    تاریخ بسته بندی :
+                                </td>
+                                <td>
+                                    <div class="small text-warning">
+
+                                        {{order.pack_date|to_persian_datetime|safe}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% endif %}
+
+                            {% if order.ship_date %}
+                            <tr>
+                                <td class="text-left">
+                                    تاریخ ارسال :
+                                </td>
+                                <td>
+                                    <div class="small text-warning">
+                                        {{order.ship_date|to_persian_datetime|safe}}
+                                    </div>
+
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            {% if order.deliver_date %}
+                            <tr>
+                                <td class="text-left">
+                                    تاریخ تحویل :
+                                </td>
+                                <td>
+                                    <div class="small text-warning">
+
+                                        {{order.deliver_date|to_persian_datetime|safe}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="{{order.get_qrcode_url}}" width="200" alt="">
+
+                    </div>
+                </div>
                 <br />
-               {% include "market/includes/order-app/template.html" %}
+                {% include "market/includes/order-app/template.html" %}
             </div>
         </div>
     </div>

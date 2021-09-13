@@ -1,6 +1,6 @@
 from utility.persian2 import PersianCalendar
 from utility.qrcode import generate_qrcode
-from core.settings import ADMIN_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS
+from core.settings import ADMIN_URL, MEDIA_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL
 from django.db.models.fields import CharField
 from market.enums import DegreeLevelEnum, EmployeeEnum, OrderStatusEnum, ShopLevelEnum
 from django.db import models
@@ -10,6 +10,8 @@ from django.utils.translation import gettext as _
 from django.shortcuts import reverse
 from core.constants import CURRENCY
 from utility.currency import to_price
+
+IMAGE_FOLDER=APP_NAME+"/imags/"
 
 class MarketPage(BasicPage):
 
@@ -94,6 +96,7 @@ class ShopRegion(models.Model):
         return reverse("ShopRegion_detail", kwargs={"pk": self.pk})
 
 class Customer(models.Model):
+    title=models.CharField(_("title"), max_length=50)
     region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
@@ -110,7 +113,7 @@ class Customer(models.Model):
         return self.profile.name
 
     def get_absolute_url(self):
-        return reverse("Customer_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":customer", kwargs={"pk": self.pk})
 
 class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
@@ -142,6 +145,9 @@ class Order(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
+
+    def get_invoice_url(self):
+        return reverse(APP_NAME+":order_invoice", kwargs={"pk": self.pk})
 
 class OrderLine(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
@@ -235,9 +241,16 @@ class Shop(models.Model):
         return reverse(APP_NAME+":shop", kwargs={"pk": self.pk})
 
 class Supplier(MarketPage):
+
     region=models.ForeignKey("shopregion", verbose_name=_("shop_region"), on_delete=models.CASCADE)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     ship_fee=models.IntegerField(_("ship_fee"),default=0)
+    logo_origin=models.ImageField(_("logo"), null=True,blank=True,upload_to=IMAGE_FOLDER+"suppier/logo/", height_field=None, width_field=None, max_length=None)
+   
+    def logo(self):
+        if self.logo_origin:
+            return f"{MEDIA_URL}{self.logo_origin}"
+        return f"{STATIC_URL}{APP_NAME}/img/pages/thumbnail/supplier-logo.png"
     def __str__(self):
         return self.title
 

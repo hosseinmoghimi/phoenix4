@@ -1,6 +1,6 @@
 {% load to_price %}
 <div id="shops-app">
-    {% if supplier_shops %}
+    
 
     <div class="col-md-12">
             <table class="table farsi">
@@ -80,7 +80,7 @@
 
             </table>
     </div>
-    {% endif %}
+    
     <form @submit.prevent="add_shop({{product.id}},{{me_supplier.id}})">
         <div class="row pick-size">
             <div class="col-md-12">
