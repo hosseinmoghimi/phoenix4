@@ -23,10 +23,10 @@
         <div class="card card-plain">
             <div class="card-body">
                 <h3 class="card-title text-center">سفارش شماره {{order.pk}}</h3>
-                   
 
-                 
-               
+
+
+
                 <div id="order-header" class="row rtl text-right mb-5 farsi">
                     <div class="col-md-4">
                         <h3 class="card-title farsi text-right">
@@ -40,9 +40,9 @@
                                 </i>
                             </a>
                             {% endif %}
-   <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{order.get_invoice_url}}">
-                        <i class="material-icons">print</i>
-                    </a>
+                            <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{order.get_invoice_url}}">
+                                <i class="material-icons">print</i>
+                            </a>
 
 
                         </h3>
@@ -237,6 +237,144 @@
                 </div>
                 <br />
                 {% include "market/includes/order-app/template.html" %}
+                {% if do_pack_form %}
+                <form action="{% url 'market:do_pack_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <h3>
+                        بسته بندی کردن سفارش
+                    </h3>
+                    <div class="row rtl">
+                        <div class="col-4">
+
+                            <select name="ware_house_id" required id="" class="form-control">
+                                <option value="" disabled selected>انبار را برای خروج سفارش انتخاب کنید</option>
+                                {% for ware_house in ware_houses %}
+                                <option value="{{ware_house.id}}">{{ware_house.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group label-floating is-empty bmd-form-group">
+                                <label class="bmd-label-floating">تعداد بسته</label>
+                                <input type="number" name="count_of_packs" value="1" class="form-control">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-8">
+
+                            <div class="form-group label-floating is-empty bmd-form-group">
+                                <label class="bmd-label-floating">توضیحات</label>
+                                <input type="text" name="description" class="form-control">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-success">سفارش را بسته بندی کردم</button>
+                        </div>
+                    </div>
+
+
+                </form>
+                {% endif %}
+
+
+                {% if do_ship_form %}
+                <form action="{% url 'market:do_ship_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <h3>
+                        ارسال کردن سفارش
+                    </h3>
+                    <div class="row rtl">
+
+                        <div class="col-12">
+
+                            <div class="form-group label-floating is-empty bmd-form-group">
+                                <label class="bmd-label-floating">توضیحات</label>
+                                <input type="text" name="description" class="form-control">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-success">سفارش را ارسال کردم</button>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                {% endif %}
+
+
+                {% if do_deliver_form %}
+                <form action="{% url 'market:do_deliver_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <h3>
+                        تحویل گرفتن سفارش
+                    </h3>
+                    <div class="row rtl">
+                        {% if ware_houses %}
+
+                        <div class="col-4">
+
+                            <select name="ware_house_id" id="" class="form-control">
+                                <option value="" disabled selected>انبار را برای ورود سفارش انتخاب کنید</option>
+                                {% for ware_house in ware_houses %}
+                                <option value="{{ware_house.id}}">{{ware_house.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% else %}
+                        <input value="0" name="ware_house_id" type="hidden">
+                        {% endif %}
+
+                        <div class="col-12">
+
+                            <div class="form-group label-floating is-empty bmd-form-group">
+                                <label class="bmd-label-floating">توضیحات</label>
+                                <input type="text" name="description" class="form-control">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-success">سفارش را دریافت کردم</button>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                {% endif %}
+
+                {% if do_cancel_form %}
+                <form action="{% url 'market:do_cancel_order' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{order.id}}">
+                    <h3>
+                        کنسل کردن سفارش
+                    </h3>
+                    <div class="row rtl">
+
+                        <div class="col-12">
+
+                            <div class="form-group label-floating is-empty bmd-form-group">
+                                <label class="bmd-label-floating">توضیحات</label>
+                                <input type="text" name="description" class="form-control">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-success">سفارش را کنسل کردم</button>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                {% endif %}
             </div>
         </div>
     </div>

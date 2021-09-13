@@ -35,8 +35,10 @@ class UnitName(models.Model):
 
     def __str__(self):
         return self.name
-      
+
 class Product(MarketPage):
+    brand=models.ForeignKey("brand",null=True,blank=True, verbose_name=_("brand"),on_delete=models.CASCADE)
+    model_name=models.CharField(_("model"),null=True,blank=True, max_length=50)
     unit_names=models.ManyToManyField("unitname", verbose_name=_("unit_names"))
     for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
     def old_price(self):
@@ -119,9 +121,12 @@ class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
     supplier=models.ForeignKey("supplier", verbose_name=_("supplier"), on_delete=models.CASCADE)
     status=models.CharField(_("status"),choices=OrderStatusEnum.choices, max_length=50)
+    count_of_packs=models.IntegerField(_("تعداد پاکت"),default=1)
     date_ordered=models.DateTimeField(_("date_ordered"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_accepted=models.DateTimeField(_("date_accepted"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_packed=models.DateTimeField(_("date_packed"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_shipped=models.DateTimeField(_("date_shipped"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_cancelled=models.DateTimeField(_("date_cancelled"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_delivered=models.DateTimeField(_("date_delivered"),null=True,blank=True, auto_now=False, auto_now_add=False)
     shipper=models.ForeignKey("shipper", verbose_name=_("shipper"),null=True,blank=True, on_delete=models.CASCADE)
     ship_fee=models.IntegerField(_("ship_fee"),default=0)
@@ -148,7 +153,30 @@ class Order(models.Model):
 
     def get_invoice_url(self):
         return reverse(APP_NAME+":order_invoice", kwargs={"pk": self.pk})
-
+    def get_status_color(self):
+        status_color='primary'
+        if self.status==OrderStatusEnum.ACCEPTED:
+            status_color='info'
+        if self.status==OrderStatusEnum.CANCELED:
+            status_color='secondary'
+        if self.status==OrderStatusEnum.CONFIRMED:
+            status_color='success'
+        if self.status==OrderStatusEnum.SHIPPED:
+            status_color='warning'
+        if self.status==OrderStatusEnum.PACKING:
+            status_color='danger'
+        if self.status==OrderStatusEnum.PACKED:
+            status_color='success'
+        if self.status==OrderStatusEnum.DELIVERED:
+            status_color='dark'
+        return status_color
+    def get_status_tag(self):
+        status_color=self.get_status_color()
+        return f"""
+        <span class="badge badge-{status_color}">{self.status}</span>
+        """
+    def get_edit_url(self):
+        return ADMIN_URL+APP_NAME+"/order/"+str(self.pk)+"/change/"
 class OrderLine(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
@@ -246,7 +274,8 @@ class Supplier(MarketPage):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     ship_fee=models.IntegerField(_("ship_fee"),default=0)
     logo_origin=models.ImageField(_("logo"), null=True,blank=True,upload_to=IMAGE_FOLDER+"suppier/logo/", height_field=None, width_field=None, max_length=None)
-   
+    warehouses=models.ManyToManyField("market.WareHouse", verbose_name=_("warehouses"),blank=True)
+    employees=models.ManyToManyField("Employee", verbose_name=_("کارکنان"),blank=True)
     def logo(self):
         if self.logo_origin:
             return f"{MEDIA_URL}{self.logo_origin}"
@@ -263,6 +292,7 @@ class Supplier(MarketPage):
         return super(Supplier,self).save(*args, **kwargs)
 
 class Shipper(MarketPage):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     
 
     class Meta:
@@ -345,29 +375,54 @@ class Guarantee(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":guarantee", kwargs={"pk": self.pk})
 
-class Brand(MarketPage):
+class Brand(models.Model):
     prefix=models.CharField(_("پیش تعریف"), max_length=200,default='',null=True,blank=True)
+    title=models.CharField(_("نام برند"), max_length=50)
+    description=models.CharField(_("توضیحات"), max_length=500,default='',null=True,blank=True)
+    image_origin=models.ImageField(_("تصویر"), upload_to=IMAGE_FOLDER+'Brand/', height_field=None, width_field=None, max_length=None,blank=True,null=True)
+    header_image_origin=models.ImageField(_("تصویر سربرگ"), upload_to=IMAGE_FOLDER+'Brand/Header/', height_field=None, width_field=None, max_length=None,blank=True,null=True)
     rate=models.IntegerField(_("امتیاز"),default=0)
+    priority=models.IntegerField(_("ترتیب"),default=1000)
     url=models.CharField(_("آدرس اینترتی"),null=True,blank=True,max_length=100)
     persian_title=models.CharField(_("نام فارسی"),null=True,blank=True, max_length=50)
-     
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+        else:
+            return STATIC_URL+"market/img/pages/image/brand.png"
+
+    def header_image(self):
+        return MEDIA_URL+str(self.header_image_origin)
+    def get_edit_btn(self):
+        return f"""
+        <a class="text-info google-drive-opener" href="{self.get_edit_url()}">
+            <i class="material-icons" aria-hidden="true">settings</i>
+            ویرایش 
+            </a>
+        """
+
     def get_logo_link(self):
         return f"""
          <a title="{self.title}" target="_blank"
-                                    href="{self.get_absolute_url()}">
-                                    <img src="{self.image()}" height="32" alt="{self.title}">
+            href="{self.get_absolute_url()}">
+            <img src="{self.image()}" height="64" alt="{self.title}">
 
-                                </a>
+        </a>
         """
     class Meta:
         verbose_name = _("برند")
         verbose_name_plural = _("برند ها")
-    
 
-    def save(self,*args, **kwargs):
-        self.child_class='brand'
-        super(ProductFeature,self).save(*args, **kwargs)
-   
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("market:brand", kwargs={"pk": self.pk})
+        # return self.url
+    def get_edit_url(self):
+        return ADMIN_URL+APP_NAME+'/brand/'+str(self.pk)+'/change/'
+  
+ 
 
 
 class ProductInStock(models.Model):
@@ -434,7 +489,7 @@ class Employee(models.Model):
         _("رشته تحصیلی"), null=True, blank=True, max_length=50)
     
     def __str__(self):
-        return f"""{self.profile.name()} {self.role}"""
+        return f"""{self.profile.name} {self.role}"""
 
     def get_link(self):
         return f"""<a href="{self.get_absolute_url()}">

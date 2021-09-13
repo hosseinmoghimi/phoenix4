@@ -36,7 +36,21 @@
                         {{product.get_edit_btn|safe}}
                         {% endif %}
                     </h2>
-                    <h3 class="main-price">$335</h3>
+                    {% if product.brand %}
+                    <div class="text-right farsi">
+                        برند :
+                    {{product.brand.get_logo_link|safe}}
+                    </div>
+                        {% endif %}
+
+                        {% if product.model_name %}
+                        <div class="text-right farsi">
+
+                           مدل :  {{product.model_name}}
+                        </div>
+                        {% endif %}
+
+                    <!-- <h3 class="main-price">$335</h3> -->
                     <div id="accordion" role="tablist">
                         {% if product.short_description %}
                         <div class="card card-collapse">
@@ -103,7 +117,7 @@
 
 
                 </div>
-               
+
 
 
                 {% if me_supplier %}

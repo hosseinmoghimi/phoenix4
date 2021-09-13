@@ -1,11 +1,45 @@
+from utility.persian2 import PersianCalendar
+from django.utils import timezone
 from core import repo as CoreRepo
 from messenger.repo import NotificationRepo
 from market.enums import OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, CartLine, Customer, Guarantee, Offer, Order, OrderLine, Product, Category, Shop, Supplier, UnitName
+from .models import Blog, Brand, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderLine, Product, Category, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
+
+class ShipperRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Shipper.objects
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = Shipper.objects.filter(profile=self.profile).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'category_id' in kwargs:
+            return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
+        return objects
+
+    def shipper(self, *args, **kwargs):
+        pk = 0
+        if 'shipper_id' in kwargs:
+            pk = kwargs['shipper_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
 
 
 class ProductRepo:
@@ -229,7 +263,114 @@ class OrderRepo:
             pk = kwargs['pk']
         elif 'id' in kwargs:
             pk = kwargs['id']
-        return self.objects.filter(pk=pk).first()
+        order= self.objects.filter(pk=pk).first() 
+        if order.supplier.profile == self.profile:
+            if order.status == OrderStatusEnum.CONFIRMED:
+                order.date_accepted = timezone.now()
+                order.status = OrderStatusEnum.ACCEPTED
+                order.save()
+        return order
+
+    def do_pack(self, order_id, description, count_of_packs=1):
+        profile = self.profile
+        if profile is None:
+            return None
+        order = self.objects.get(pk=order_id)
+        if order.supplier.profile == profile and (order.status == OrderStatusEnum.PACKING or order.status==OrderStatusEnum.ACCEPTED):
+
+            order.count_of_packs = count_of_packs
+            if order.description is None:
+                order.description = ''
+            if description is not None and not description=="":
+                order.description+='<br>   & ' + \
+                    order.supplier.title+' : '+str(description)
+            order.date_packed = timezone.now()
+            order.status = OrderStatusEnum.PACKED
+            order.save()
+            if not order.no_ship :
+                if order.customer.profile is not None:
+                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} بسته بندی شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.supplier.title} در {order.count_of_packs} بسته آماده ارسال می باشد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
+                    
+            if order is not None:
+                return order
+
+    def do_cancel(self, order_id, description):
+        profile = self.profile
+        if profile is None:
+            return None
+        order = Order.objects.get(pk=order_id)
+        if order.customer.profile == profile and order.status == OrderStatusEnum.CONFIRMED:
+            order.status = OrderStatusEnum.CANCELED
+            if order.description is None:
+                order.description = ''
+            order.date_cancelled = timezone.now()
+            if description is not None:
+                order.description = order.description+'   @ ' + \
+                    order.customer.profile.name()+' # انصراف '+PersianCalendar().from_gregorian(order.date_cancelled)+' : '+str(description)
+            order.save()
+            if order is not None:
+                return order
+    
+    def confirm_order(self, order_id, description):
+        profile = ProfileRepo(user=self.user).me
+        if profile is None:
+            return None
+        order = Order.objects.get(pk=order_id)
+        if order.profile == profile and order.status == OrderStatusEnum.CANCELED:
+            order.status = OrderStatusEnum.CONFIRMED
+            if order.description is None:
+                order.description = ''
+            if description is not None:
+                order.description = order.description+'   @ ' + \
+                    order.profile.full_name()+' # تایید مجدد '+PersianCalendar().from_gregorian(timezone.now())+' : '+str(description)
+            order.save()
+            if order is not None:
+                return order
+    
+    def do_ship(self, order_id, description=''):
+        shipper = ShipperRepo(user=self.user).me
+        
+        if shipper is None:
+            return None
+        order = self.order(order_id=order_id)
+        if order.status == OrderStatusEnum.PACKED:
+            if description is not None and not description=="":
+                order.description += '<br>   & ' + \
+                    shipper.title+' : '+description
+            order.date_shipped = timezone.now()
+            order.status = OrderStatusEnum.SHIPPED
+            order.shipper = shipper
+            order.save()
+            if order is not None:
+                if order.customer.profile is not None:
+                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
+                if order.supplier.profile is not None:
+                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
+                 
+                return order
+        
+
+    def do_deliver(self, order_id, description=''):
+        customer = CustomerRepo(user=self.user).me
+        if customer is None:
+            return None 
+        order = self.order(order_id=order_id)
+        if order.description is None:
+            order.description=""
+        if order.status == OrderStatusEnum.SHIPPED or (order.status == OrderStatusEnum.PACKED and order.no_ship==True):
+            if description is not None and not description=="":
+                order.description +='<br>   & '+customer.profile.name+' : '+description
+            order.date_delivered = timezone.now()
+            order.status = OrderStatusEnum.DELIVERED
+            order.save()
+            if order is not None:
+                if order.supplier.profile is not None:
+                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
+                if order.customer.profile is not None:
+                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
+                
+                return order
+
 
 class GuaranteeRepo():
     def __init__(self,user=None):
@@ -247,6 +388,109 @@ class GuaranteeRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+
+
+class EmployeeRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Employee.objects
+        self.profile = ProfileRepo(user=self.user).me
+    def list(self):
+        return self.objects.all()
+        
+    def get(self,employee_id):
+        try:
+            return self.objects.get(pk=employee_id)
+        except :
+            return None
+
+
+
+class WareHouseRepo:
+    def get(self,ware_house_id):
+        try:
+            return self.objects.get(pk=ware_house_id)
+        except:
+            return None
+
+    def ware_house(self,pk):
+        try:
+            return self.objects.get(pk=pk)
+        except:
+            return None
+
+    def __init__(self,user=None):
+        self.user=user  
+        self.profile=CoreRepo.ProfileRepo(user).me
+        objects=WareHouse.objects
+        self.objects=objects.filter(id__lte=0)
+
+        if user.is_superuser:
+            self.objects=objects
+        else:
+            employee=EmployeeRepo(user=user).me
+            if employee is not None:
+                self.objects=employee.warehouse_set.all()
+    def product_in_stock(self,pk):
+        try:
+            return ProductInStock.objects.get(pk=pk)
+        except:
+            pass
+    def list(self):
+        return self.objects.all()
+    def add_order_in_ware_house(self,order_id,ware_house_id,direction,description=None):
+        order=Order.objects.get(pk=order_id)
+        ware_house=WareHouse.objects.get(pk=ware_house_id)
+        employee=Employee.objects.filter(profile=self.profile).first()
+        if order is not None and ware_house is not None and employee is not None:
+            order_in_warehouse=OrderInWareHouse(direction=direction,description=description,adder=employee,order=order,ware_house=ware_house)
+            order_in_warehouse.save()
+            return order_in_warehouse
+
+
+class BrandRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Brand.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def brand(self, *args, **kwargs):
+        if 'brand_id' in kwargs:
+            pk = kwargs['brand_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'cart_lines' in kwargs:
+            return self.objects.filter(id__in=kwargs['cart_lines'].values('shop_id'))
+        if 'product' in kwargs:
+            objects = objects.filter(product=kwargs['product'])
+        if 'product_id' in kwargs:
+            objects = objects.filter(product_id=kwargs['product_id'])
+        if 'supplier' in kwargs:
+            objects = objects.filter(supplier=kwargs['supplier'])
+        if 'supplier_id' in kwargs:
+            objects = objects.filter(supplier_id=kwargs['supplier_id'])
+        if 'region' in kwargs:
+            # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
+            objects = objects.filter(supplier__region=kwargs['region'])
+        return objects
 
 
 

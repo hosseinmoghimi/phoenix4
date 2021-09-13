@@ -73,7 +73,9 @@
                             <tr>
                                 <td class="table-header">
 
-
+<small>
+    ردیف
+</small>
                                 </td>
                                 <td class="table-header">
 
@@ -209,19 +211,15 @@
 
                                             </h5>
 
-                                            <p>
+                                            {% if order.descriptions %}
                                             <ul>
+                                                {% for description in order.descriptions %}
                                                 <li>
-
-                                                    واحد مبلغ ها {{CURRENCY}} می باشد.
+                                                    {{description|safe}}
                                                 </li>
+                                                {% endfor %}
                                             </ul>
-                                            <br>
-                                            {% if order.description %}
-
-                                            {{order.description|safe}}
                                             {% endif %}
-                                            </p>
                                         </div>
                                         <div class="col-2">
                                             <img src="{{order.get_qrcode_url}}" width="100%" alt="">

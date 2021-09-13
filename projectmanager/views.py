@@ -1,3 +1,4 @@
+from core.constants import CURRENCY
 import re
 from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
@@ -163,7 +164,12 @@ class ProjectViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
-        description = f"""مربوط به {project.full_title}"""
+        
+        descriptions = [
+            f"واحد مبلغ ها {CURRENCY} می باشد.",
+            f"""مربوط به پروژه  {project.full_title}""",
+            ]
+            
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
         order = {
@@ -174,7 +180,7 @@ class ProjectViews(View):
             'ship_fee': ship_fee,
             'total_for_pay': total_for_pay,
             'print_date': print_date,
-            'description': description,
+            'descriptions': descriptions,
         }
         context['order_lines'] = order_lines
         context['order'] = order
@@ -202,7 +208,11 @@ class ProjectViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
-        description = f"""مربوط به {project.full_title}"""
+        
+        descriptions = [
+            f"واحد مبلغ ها {CURRENCY} می باشد.",
+            f"""مربوط به پروژه  {project.full_title}""",
+            ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
         order = {
@@ -213,7 +223,7 @@ class ProjectViews(View):
             'ship_fee': ship_fee,
             'total_for_pay': total_for_pay,
             'print_date': print_date,
-            'description': description,
+            'descriptions': descriptions,
         }
         context['order'] = order
         context['order_lines'] = order_lines

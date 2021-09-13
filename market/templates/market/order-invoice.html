@@ -213,16 +213,15 @@
                                             </h5>
 
                                             <p>
+
+                                            {% if order.descriptions %}
                                             <ul>
+                                                {% for description in order.descriptions %}
                                                 <li>
-
-                                                    واحد مبلغ ها {{CURRENCY}} می باشد.
+                                                    {{description|safe}}
                                                 </li>
+                                                {% endfor %}
                                             </ul>
-                                            <br>
-                                            {% if order.description %}
-
-                                            {{order.description|safe}}
                                             {% endif %}
                                             </p>
                                         </div>
