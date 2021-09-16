@@ -1,4 +1,5 @@
 {% extends "market/layout.html" %}
+{% load to_persian_date %}
 {% load to_price %}
 {% load static %}
 {% block content %}
@@ -7,7 +8,9 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
-                <h2 class="title text-center">سفارشات</h2>
+                <h2 class="title text-center">
+                    {{orders_title}}
+                </h2>
                 {% if perms.core.change_picture %}
                 <div class="text-center">
                     {{header_image.get_edit_btn|safe}}
@@ -21,9 +24,67 @@
     <div class="container">
         <div class="card card-plain">
             <div class="card-body">
-                <h3 class="card-title text-center">سبد خرید</h3>
+                <h3 class="card-title text-center">
+                    {{orders_title}}
+                </h3>
                 <br />
-               {% include "market/includes/cart-app/template.html" %}
+
+
+                <table class="table table-shopping rtl">
+                    <thead>
+                        <tr>
+                            <th class="farsi text-center">سفارش</th>
+                            <th class="farsi text-right">تاریخ سفارش</th>
+                            <th class="farsi text-right">جمع کل</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        {% for order in orders %}
+
+
+                        <tr>
+
+                            <td class="farsi text-right">
+                                <a href="{{order.get_absolute_url}}">
+                                    سفارش
+                                    {{order.pk}}
+                                </a>
+                                {{order.get_status_tag|safe}}
+                            </td>
+                            <td class="small">
+                                {{order.date_ordered|to_persian_datetime|safe}}
+
+                            </td>
+                            <td>
+                                {{order.total|to_price_pure}}
+                                <span class="farsi">{{CURRENCY}}</span>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+                        <tr>
+                            <td colspan=""></td>
+                            <td class="td-total farsi text-muted">
+                                جمع کل
+                            </td>
+                            <td colspan="1" class="td-price farsi">
+                                <span v-text="to_price(total)">
+
+                                </span>
+                                <small class="text-muted">{{CURRENCY}}</small>
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

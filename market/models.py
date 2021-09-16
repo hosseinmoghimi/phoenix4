@@ -102,7 +102,13 @@ class Customer(models.Model):
     region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-
+    def get_orders_url(self):
+        return reverse(APP_NAME+":orders",
+            kwargs={
+                'customer_id':self.pk,
+                'supplier_id':0,
+                'shipper_id':0
+            })
 
     def get_cart_url(self):
         return reverse(APP_NAME+":customer_cart",kwargs={'customer_id':self.customer.id})

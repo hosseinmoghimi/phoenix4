@@ -226,9 +226,15 @@ class OrderViews(View):
 
         orders = OrderRepo(request).orders(*args, **kwargs)
         context = getContext(request)
+        customer=CustomerRepo(request=request).customer(*args, **kwargs)
+        if customer is not None:
+            context['orders_title']="لیست سفارشات "+customer.title
+            orders=orders.filter(customer=customer)
         context['header_image'] = PictureRepo(
             request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)
+
         context['orders'] = orders
+        print(orders)
         context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"orders.html", context)
 

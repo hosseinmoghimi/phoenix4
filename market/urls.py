@@ -11,6 +11,7 @@ urlpatterns = [
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
     path("order_invoice/<int:pk>/",views.OrderViews().order_invoice,name="order_invoice"),
     path("order/<int:pk>/",views.OrderViews().order,name="order"),
+    path("orders/<int:customer_id>/<int:supplier_id>/<int:shipper_id>",views.OrderViews().orders,name="orders"),
     path("customer/<int:pk>/",views.CustomerViews().customer,name="customer"),
     path("supplier/<int:pk>/",views.SupplierViews().supplier,name="supplier"),
     path("shipper/<int:pk>/",views.ShipperViews().shipper,name="shipper"),

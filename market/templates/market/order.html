@@ -171,21 +171,21 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                            {% if order.order_date %}
+                            {% if order.date_ordered %}
                             <tr>
                                 <td class="text-left">
                                     تاریخ سفارش :
                                 </td>
                                 <td>
                                     <div class="small text-warning">
-                                        {{order.order_date|to_persian_datetime|safe}}
+                                        {{order.date_ordered|to_persian_datetime|safe}}
                                     </div>
                                 </td>
                             </tr>
 
                             {% endif %}
 
-                            {% if order.pack_date %}
+                            {% if order.date_packed %}
                             <tr>
                                 <td class="text-left">
                                     تاریخ بسته بندی :
@@ -193,28 +193,28 @@
                                 <td>
                                     <div class="small text-warning">
 
-                                        {{order.pack_date|to_persian_datetime|safe}}
+                                        {{order.date_packed|to_persian_datetime|safe}}
                                     </div>
                                 </td>
                             </tr>
 
                             {% endif %}
 
-                            {% if order.ship_date %}
+                            {% if order.date_shipped %}
                             <tr>
                                 <td class="text-left">
                                     تاریخ ارسال :
                                 </td>
                                 <td>
                                     <div class="small text-warning">
-                                        {{order.ship_date|to_persian_datetime|safe}}
+                                        {{order.date_shipped|to_persian_datetime|safe}}
                                     </div>
 
                                 </td>
                             </tr>
                             {% endif %}
 
-                            {% if order.deliver_date %}
+                            {% if order.date_delivered %}
                             <tr>
                                 <td class="text-left">
                                     تاریخ تحویل :
@@ -222,11 +222,10 @@
                                 <td>
                                     <div class="small text-warning">
 
-                                        {{order.deliver_date|to_persian_datetime|safe}}
+                                        {{order.date_delivered|to_persian_datetime|safe}}
                                     </div>
                                 </td>
                             </tr>
-
                             {% endif %}
                         </table>
                     </div>
@@ -237,6 +236,7 @@
                 </div>
                 <br />
                 {% include "market/includes/order-app/template.html" %}
+
                 {% if do_pack_form %}
                 <form action="{% url 'market:do_pack_order' %}" method="POST">
                     {% csrf_token %}

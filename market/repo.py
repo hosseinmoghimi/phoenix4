@@ -238,17 +238,20 @@ class OrderRepo:
         self.objects = Order.objects
         self.profile = ProfileRepo(user=self.user).me
 
+    def orders(self,*args, **kwargs):
+        return self.list(*args, **kwargs)
+
     def list(self, *args, **kwargs):
         objects = self.objects.all()
-        if 'customer_id' in kwargs:
+        if 'customer_id' in kwargs and not kwargs['customer_id']==0:
             objects = objects.filter(customer_id=kwargs['customer_id'])
         if 'customer' in kwargs:
             objects = objects.filter(customer=kwargs['customer'])
-        if 'supplier_id' in kwargs:
+        if 'supplier_id' in kwargs and not kwargs['supplier_id']==0:
             objects = objects.filter(supplier_id=kwargs['supplier_id'])
         if 'supplier' in kwargs:
             objects = objects.filter(supplier=kwargs['supplier'])
-        if 'shipper_id' in kwargs:
+        if 'shipper_id' in kwargs and not kwargs['shipper_id']==0:
             objects = objects.filter(shipper_id=kwargs['shipper_id'])
         if 'shipper' in kwargs:
             objects = objects.filter(shipper=kwargs['shipper'])
