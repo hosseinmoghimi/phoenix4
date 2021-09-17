@@ -7,11 +7,13 @@
     style="background-image: url('{{product.image_header}}');">
     <div class="container">
         <div class="row title-row">
-            <div class="col-md-4 mr-auto">
+            <div class="col-md-4 mr-auto" id="cart-app">
                 <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
                     <span class="farsi">
 
-                        0 در سبد خرید
+                        <span v-text="in_cart"></span>
+                        
+
                     </span>
                     <i class="material-icons mx-2">shopping_cart</i>
 
@@ -226,5 +228,6 @@
 {% if me_customer %}
 
 {% include "market/includes/add-to-cart-app/script.html" %}
+{% include "market/includes/cart-app/cart-app.html" %}
 {% endif %}
 {% endblock %}

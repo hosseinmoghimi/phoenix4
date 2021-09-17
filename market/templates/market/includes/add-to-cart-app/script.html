@@ -41,9 +41,11 @@
                 posting.done((data) => {
                     console.log(data)
                     if (data.result === 'SUCCEED') {
-                        let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        let in_cart=data.cart_line.quantity + " " + data.cart_line.shop.unit_name
+                        let message = in_cart + " با موفقیت به سبد خرید شما افزوده شد."
                         aa.message = message
                         aa.done = true
+                        cart_app.in_cart=in_cart+" در سبد خرید "
                         setTimeout(() => {
                             aa.done = false
                         }, 1800);

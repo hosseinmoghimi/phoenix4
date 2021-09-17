@@ -1,12 +1,12 @@
 from core.constants import CURRENCY
 from utility.persian2 import PersianCalendar
 from django.http.response import Http404
-from market.serializers import CartLineSerializer, OrderLineSerializer, ShopSerializer
+from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ShopSerializer
 import json
 from market.enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
 from core.models import Parameter
 from core.repo import ParameterRepo, PictureRepo
-from core.views import CoreContext, PageContext
+from core.views import CoreContext, MessageView, PageContext
 from django.views import View
 from market.forms import *
 from .repo import BlogRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
@@ -73,9 +73,9 @@ class CartViews(View):
         context = getContext(request)
         cart = CartRepo(request=request).cart(customer=customer)
         context['cart'] = cart
-        context['is_empty'] = len(cart['lines']) == 0
+        context['is_empty'] = len(cart.lines) == 0
         context['cart_lines_s'] = json.dumps(
-            CartLineSerializer(cart['lines'], many=True).data)
+            CartLineSerializer(cart.lines, many=True).data)
         context['customer'] = customer
         context['header_image'] = PictureRepo(
             request=request, app_name=APP_NAME).picture(name=PictureEnum.CART_HEADER)
@@ -113,11 +113,22 @@ class ProductViews(View):
             context['supplier_shops'] = ShopRepo(request=request).list(
                 product=product).order_by('unit_name', 'unit_price')
         if context['me_customer'] is not None:
+            
+            context['in_cart']="ناموجود در سبد خرید شما"
+            me_customer=context['me_customer']
             shops = ShopRepo(request=request).list(
-                product=product, region=context['me_customer'].region, level=context['me_customer'].level)
+                product=product, region=me_customer.region, level=me_customer.level)
             context['shops'] = shops
             context['shops_s'] = json.dumps(
                 ShopSerializer(shops, many=True).data)
+            cart=CartRepo(request=request).cart(customer_id=me_customer.id)
+            context['cart']=cart
+            line=cart.lines.filter(shop__product=product).first()
+            if line is not None:
+                in_cart=str(int(line.quantity))+" "+str(line.shop.unit_name)+" در سبد خرید "
+                context['in_cart']=in_cart
+
+            context['cart_s']=json.dumps(CartSerializer(cart).data)
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
@@ -187,6 +198,11 @@ class OrderViews(View):
     def order(self, request, *args, **kwargs):
         user = request.user
         order = OrderRepo(request=request).order(*args, **kwargs)
+        if order is None:
+            raise Http404
+            # message= MessageView(request=request)
+            # message.title="همچنین "
+            # return message.show(request=request)
         context = getContext(request)
         context['header_image'] = PictureRepo(
             request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)
@@ -234,7 +250,7 @@ class OrderViews(View):
             request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)
 
         context['orders'] = orders
-        print(orders)
+        # print(orders)
         context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"orders.html", context)
 

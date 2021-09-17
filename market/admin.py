@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Blog, Brand, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product,Category, ProductFeature, ProductInStock, Shipper, Shop, ShopRegion, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product,Category, ProductFeature, ProductInStock, Shipper, Shop, ShopRegion, Supplier, UnitName, WareHouse
 
 admin.site.register(Product)
 admin.site.register(Category)
@@ -23,3 +23,4 @@ admin.site.register(Brand)
 admin.site.register(WareHouse)
 admin.site.register(Employee)
 admin.site.register(OrderInWareHouse)
+admin.site.register(Cart)

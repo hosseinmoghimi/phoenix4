@@ -1,0 +1,17 @@
+
+<script>
+    let cart=JSON.parse(`{{cart_s|escapejs}}`)
+    let in_cart="{{in_cart}}"
+    let cart_app=new Vue({
+        el:"#cart-app",
+        data:{
+            cart:cart,
+            in_cart:in_cart,
+        },
+        mounted:function(){
+        },
+        methods:{
+
+        }
+    })
+</script>

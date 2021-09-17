@@ -2,11 +2,11 @@ from utility.persian2 import PersianCalendar
 from django.utils import timezone
 from core import repo as CoreRepo
 from messenger.repo import NotificationRepo
-from market.enums import OrderStatusEnum, ShopLevelEnum
+from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderLine, Product, Category, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderLine, Product, Category, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 
 class ShipperRepo:
@@ -77,9 +77,6 @@ class ProductRepo:
         unit_name = kwargs['unit_name'] if 'unit_name' in kwargs else "عدد"
         if unit_name=="":
             unit_name="عدد"
-        print(unit_name=="")
-        print(unit_name is None)
-        print(10*"#")
         category_id = kwargs['category_id'] if 'category_id' in kwargs else None
         if self.user.has_perm(APP_NAME+".add_product"):
             product = Product()
@@ -267,7 +264,7 @@ class OrderRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         order= self.objects.filter(pk=pk).first() 
-        if order.supplier.profile == self.profile:
+        if order is not None and order.supplier.profile == self.profile:
             if order.status == OrderStatusEnum.CONFIRMED:
                 order.date_accepted = timezone.now()
                 order.status = OrderStatusEnum.ACCEPTED
@@ -525,6 +522,17 @@ class ShopRepo:
             # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
             objects = objects.filter(supplier__region=kwargs['region'])
         return objects
+    def confirm_cart(self,*args, **kwargs):
+        quantity=0
+        shop=None
+        if 'shop' in kwargs:
+            shop=kwargs['shop']
+            shop=self.shop(pk=shop.id)
+        if 'quantity' in kwargs:
+            quantity=kwargs['quantity']
+        if shop is not None:
+            shop.available=shop.available-quantity
+            shop.save()
 
     def add_shop(self, *args, **kwargs):
         product_id = 0
@@ -568,8 +576,18 @@ class ShopRepo:
             shop.level = level
             shop.save()
             return shop
-
-class CartRepo:
+    def shop(self,*args, **kwargs):
+        objects = self.objects.all()
+        pk=0
+        if 'shop_id' in kwargs:
+            pk = kwargs['shop_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        shop=objects.filter(pk=pk).first()
+        return shop
+class CartLineRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
         self.user = None
@@ -581,18 +599,36 @@ class CartRepo:
         self.objects = CartLine.objects
         self.profile = ProfileRepo(user=self.user).me
 
+
+class CartRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Cart.objects
+        self.profile = ProfileRepo(user=self.user).me
+
     def cart(self, *args, **kwargs):
         objects = self.objects.all()
+        customer_id=0
         if 'customer' in kwargs:
             customer = kwargs['customer']
             customer_id=customer.id
         elif 'customer_id' in kwargs:
             customer_id = kwargs['customer_id']
-            customer=Customer.objects.filter(pk=customer_id)
-        cart={}
-        cart['lines']=objects.filter(customer=customer)
-        orders=self.get_cart_orders(customer_id=customer_id)
-        cart['orders']=orders
+            customer=Customer.objects.filter(pk=customer_id).first()
+        cart=objects.filter(customer_id=customer_id).first()
+        if cart is None:
+            cart=Cart()
+            cart.customer=customer
+            cart.save()
+
+        cart.lines=CartLine.objects.filter(customer=customer)
+        cart.orders=self.get_cart_orders(customer_id=customer_id)
         return cart
     
     def get_cart_orders(self,customer_id=0,no_ship=None):
@@ -602,13 +638,14 @@ class CartRepo:
             customer=CustomerRepo(user=self.user).me
         else:
             customer=CustomerRepo(user=self.user).customer(customer_id=customer_id)
-        cart_lines = self.objects.filter(customer=customer)
+        cart_lines = CartLine.objects.filter(customer=customer)
         if len(cart_lines)==0:
             return None
         shops =ShopRepo(user=self.user).list(cart_lines=cart_lines)
         orders=[]
         for supplier in Supplier.objects.filter(id__in=shops.values('supplier_id')):
             order = Order()
+            order.status=OrderStatusEnum.CART
             order.supplier = supplier
             order.customer_id = customer_id
             if no_ship:
@@ -620,12 +657,14 @@ class CartRepo:
             order.address = ''
             order.no_ship = no_ship
             # order.total=order.ship_fee
+            # order.save()
             order.lines=[]
             if order is not None:
                 for cart_line in cart_lines:
                     if cart_line.shop.supplier == supplier:
                         order_line=OrderLine(order=order, product=cart_line.shop.product, quantity=cart_line.quantity,
-                                    unit_price=cart_line.shop.unit_price, unit_name=cart_line.shop.unit_name)
+                                    unit_price=cart_line.shop.unit_price, unit_name=cart_line.shop.unit_name,status=OrderLineStatusEnum.CART)
+                        # order_line.save()
                         order.lines.append(order_line)
                         # order.total+=cart_line.shop.unit_price*cart_line.quantity
                 
@@ -633,46 +672,7 @@ class CartRepo:
         
         return orders
     
-    def add_shop(self, *args, **kwargs):
-        product_id = 0
-        supplier_id = 0
-        unit_name = ""
-        unit_price = 0
-        available = 100
-        level=ShopLevelEnum.REGULAR
-        if 'level' in kwargs:
-            level = kwargs['level']
-        if 'product_id' in kwargs:
-            product_id = kwargs['product_id']
-        if 'supplier_id' in kwargs:
-            supplier_id = kwargs['supplier_id']
-        if 'unit_name' in kwargs:
-            unit_name = kwargs['unit_name']
-        if 'unit_price' in kwargs:
-            unit_price = kwargs['unit_price']
-        if 'available' in kwargs:
-            available = kwargs['available']
-        shop = Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).first()
-        if shop is None:
-            shop = Shop(
-                supplier_id=supplier_id,
-                product_id=product_id,
-                level=level,
-                unit_name=unit_name,
-                unit_price=unit_price,
-                available=available
-            )
-            shop.save()
-            return shop
-        else:
-            shops=Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
-            shops.delete()
-            shop.available = available
-            shop.unit_price = unit_price
-            shop.level = level
-            shop.save()
-            return shop
-
+    
     def checkout(self,cart_lines,customer_id):
         user=self.user
         if customer_id is None:
@@ -681,7 +681,7 @@ class CartRepo:
             customer = CustomerRepo(user=self.user).customer(customer_id=customer_id)
         if customer is not None:
             # delete old cart_lines
-            self.objects.filter(customer=customer).delete()
+            CartLine.objects.filter(customer=customer).delete()
             
             # create new cart_lines
             for cart_line in cart_lines:
@@ -689,7 +689,7 @@ class CartRepo:
                     new_cart_line=CartLine(shop=Shop.objects.get(pk=cart_line['shop_id']),quantity=cart_line['quantity'],customer=customer)
                     new_cart_line.save()
             # get new cart_lines
-            cart_lines = self.objects.filter(customer=customer)
+            cart_lines = CartLine.objects.filter(customer=customer)
             return cart_lines
                  
     def add_to_cart(self,*args, **kwargs):
@@ -701,6 +701,7 @@ class CartRepo:
             lines.delete()
             cart_line=CartLine(shop_id=shop_id,quantity=quantity,customer=customer)
             cart_line.save()
+            cart=Cart.objects.filter(customer=customer).first()
             return cart_line
 
     def confirm(self, address, supplier_id,description=None,customer_id=None,no_ship=False):
@@ -711,7 +712,7 @@ class CartRepo:
             customer = CustomerRepo(user=self.user).customer(customer_id=customer_id)
             
         if customer is not None:
-            cart_lines = self.objects.filter(customer=customer)
+            cart_lines = CartLine.objects.filter(customer=customer)
             shops = ShopRepo(user=self.user).list(cart_lines=cart_lines)
             orders=[]
             if supplier_id==0:
@@ -732,7 +733,6 @@ class CartRepo:
                 order.no_ship = no_ship
                 from django.utils import timezone
                 order.date_ordered =  timezone.now()
-
                 order.save()
                 if order is not None:
                     orders.append(order)
@@ -746,6 +746,7 @@ class CartRepo:
                                 #product_title=cart_line.shop.product.title,
                                 unit_name=cart_line.shop.unit_name)
                             order_line.save()
+                            ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
                             cart_line.delete()
                     # order=OrderRepo(user=self.user).get(order_id=order.pk)
                     # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)

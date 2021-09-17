@@ -1,8 +1,10 @@
+from django.db.models.base import Model
+from django.db.models.fields.reverse_related import ManyToOneRel
 from utility.persian2 import PersianCalendar
 from utility.qrcode import generate_qrcode
 from core.settings import ADMIN_URL, MEDIA_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL
 from django.db.models.fields import CharField
-from market.enums import DegreeLevelEnum, EmployeeEnum, OrderStatusEnum, ShopLevelEnum
+from market.enums import DegreeLevelEnum, EmployeeEnum, OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.db import models
 from core.models import BasicPage
 from .apps import APP_NAME
@@ -102,6 +104,8 @@ class Customer(models.Model):
     region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    def cart(self):
+        return Cart.objects.filter(customer=self).first()
     def get_orders_url(self):
         return reverse(APP_NAME+":orders",
             kwargs={
@@ -190,6 +194,7 @@ class OrderLine(models.Model):
     unit_name=models.CharField(_("unit_name"), max_length=50)
     unit_price=models.IntegerField(_("unit_price"))
     description=models.TextField(_("description"),blank=True)
+    status=models.CharField(_("status"),choices=OrderLineStatusEnum.choices,default=OrderLineStatusEnum.CART, max_length=50)
 
     def guarantees(self):
         return Guarantee.objects.filter(orderline=self)
@@ -428,7 +433,28 @@ class Brand(models.Model):
     def get_edit_url(self):
         return ADMIN_URL+APP_NAME+'/brand/'+str(self.pk)+'/change/'
   
- 
+
+class Cart(models.Model):
+    lines=[]
+    customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
+    # lines=models.ManyToManyField("cartline",blank=True, verbose_name=_("lines"))
+    # def orders(self):
+    #     return CartLine.objects.filter(customer=self.customer)
+    # def lines(self):
+    #     return OrderLine.objects.filter(customer=self.customer)
+    orders=[]
+    
+
+    class Meta:
+        verbose_name = _("Cart")
+        verbose_name_plural = _("Carts")
+
+    def __str__(self):
+        return self.customer.profile.name
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":customer_cart", kwargs={"customer_id": self.pk})
+
 
 
 class ProductInStock(models.Model):
