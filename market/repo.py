@@ -6,9 +6,9 @@ from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderLine, Product, Category, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderLine, Product, Category, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
-
+import json
 class ShipperRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -95,6 +95,20 @@ class ProductRepo:
                 category.products.add(product)
             return product
 
+    def add_specification(self, *args, **kwargs):
+
+        name = kwargs['name'] if 'name' in kwargs else None
+        value = kwargs['value'] if 'value' in kwargs else None
+        # product_id = kwargs['product_id'] if 'product_id' in kwargs else 0
+        product=self.product(*args, **kwargs)
+        if product is not None:
+            # ProductSpecification.objects.filter(product=product).filter(name=name).delete()
+            p=ProductSpecification(product=product,name=name,value=value)
+            p.save()
+            return p
+
+
+        
 
 
 class OfferRepo:
@@ -540,7 +554,11 @@ class ShopRepo:
         unit_name = ""
         unit_price = 0
         available = 100
+        specifications=[]
         level=ShopLevelEnum.REGULAR
+        if 'specifications' in kwargs:
+            specifications = kwargs['specifications']
+            specifications=json.loads(specifications)
         if 'level' in kwargs:
             level = kwargs['level']
         if 'product_id' in kwargs:
@@ -567,13 +585,25 @@ class ShopRepo:
                 available=available
             )
             shop.save()
+            if len(specifications)>0:
+                for specification in specifications:
+                    shop.specifications.add(specification)
             return shop
         else:
-            shops=Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
-            shops.delete()
-            shop.available = available
-            shop.unit_price = unit_price
-            shop.level = level
+            # shops=Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).exclude(pk=shop.id)
+            # shops.delete()
+            
+            # shop.available = available
+            # shop.unit_price = unit_price
+            # shop.level = level
+            shop = Shop(
+                supplier_id=supplier_id,
+                product_id=product_id,
+                level=level,
+                unit_name=unit_name,
+                unit_price=unit_price,
+                available=available
+            )
             shop.save()
             return shop
     def shop(self,*args, **kwargs):

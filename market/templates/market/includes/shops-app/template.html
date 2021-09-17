@@ -1,86 +1,136 @@
 {% load to_price %}
 <div id="shops-app">
-    
+
 
     <div class="col-md-12">
-            <table class="table farsi">
-                {% for shop in supplier_shops %}
-                <tr>
-                    <td>
-                        {{shop.supplier.region}}
-                    </td>
+        <table class="table farsi">
+            {% for shop in supplier_shops %}
+            <tr>
+                <td>
+                    {{shop.supplier.region}}
+                </td>
 
-                    <td>
-                        <a href="{{shop.supplier.get_absolute_url}}">
+                <td>
+                    <a href="{{shop.supplier.get_absolute_url}}">
 
-                            {{shop.supplier.title}}
-                        </a>
-                    </td>
-
-
-                    <td>
-                        <span class="badge badge-primary">
-
-                            {{shop.level}}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="badge badge-danger">
-
-                            {{shop.unit_name}}
-                        </span>
-                    </td>
+                        {{shop.supplier.title}}
+                    </a>
+                </td>
 
 
+                <td>
+                    <span class="badge badge-primary">
 
-                    <td>
-                        {{shop.unit_price|to_price}}
-                    </td>
+                        {{shop.level}}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-danger">
+
+                        {{shop.unit_name}}
+                    </span>
+                </td>
 
 
 
-                </tr>
-                {% endfor %}
-                <tr v-for="shop in shops">
-                    <td>
-                        <span v-text="shop.supplier.region">
-
-                        </span>
-                    </td>
-
-                    <td>
-                        <a href="{{shop.supplier.get_absolute_url}}" v-text="shop.supplier.title">
-
-                        </a>
-                    </td>
-
-
-                    <td>
-                        <span class="badge badge-primary" v-text="shop.level">
-
-                        </span>
-                    </td>
-                    <td>
-                        <span class="badge badge-danger" v-text="shop.unit_name">
-
-                        </span>
-                    </td>
+                <td>
+                    {{shop.unit_price|to_price}}
+                </td>
+                <td>
+                    {% for specification in shop.specifications.all %}
 
 
 
-                    <td>
-                        <span v-text="to_price(shop.unit_price)">
 
-                        </span>
-                    </td>
+                    <span class="btn-group ltr">
+                        <button class="btn btn-round btn-warning btn-sm">
+
+                            {{specification.value}}
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button class="btn btn-info btn-sm">
+                            {{specification.name}}
+                        </button>
+                    </span>
+
+                    {% endfor %}
+
+                </td>
+                {% if perms.market.change_shop %}
+                <td>
+                    <a href="{{shop.get_edit_url}}">
+                        <i class="material-icons">
+                            settings
+                        </i>
+                    </a>
+                </td>
+                {% endif %}
+
+            </tr>
+            {% endfor %}
+            <tr v-for="shop in shops">
+                <td>
+                    <span v-text="shop.supplier.region">
+
+                    </span>
+                </td>
+
+                <td>
+                    <a href="{{shop.supplier.get_absolute_url}}" v-text="shop.supplier.title">
+
+                    </a>
+                </td>
 
 
+                <td>
+                    <span class="badge badge-primary" v-text="shop.level">
 
-                </tr>
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-danger" v-text="shop.unit_name">
 
-            </table>
+                    </span>
+                </td>
+                <td>
+                    <template v-for="specification in shop.specifications">
+                        <div class="btn-group ltr">
+
+                            <button class="btn btn-round btn-warning btn-sm">
+                                <span v-text="specification.name"></span>
+
+                                <div class="ripple-container"></div>
+                            </button>
+                            <button class="btn btn-round btn-info btn-sm">
+                                <span v-text="specification.value"></span>
+
+                            </button>
+                        </div>
+                    </template>
+                </td>
+
+
+                <td>
+                    <span v-text="to_price(shop.unit_price)">
+
+                    </span>
+                </td>
+
+                {% if perms.market.change_shop %}
+                <td>
+                    <a :href="shop.get_edit_url">
+                        <i class="material-icons">
+                            settings
+                        </i>
+                    </a>
+                </td>
+                {% endif %}
+
+            </tr>
+
+        </table>
     </div>
-    
+
     <form @submit.prevent="add_shop({{product.id}},{{me_supplier.id}})">
         <div class="row pick-size">
             <div class="col-md-12">
@@ -122,7 +172,21 @@
                     <span class="bmd-help farsi rtl text-right">قیمت را به {{CURRENCY}} وارد کنید.</span>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-check" v-for="specification in specifications">
+                    <label class="form-check-label">
+                        <input @click="toggle_specification(specification)" class="form-check-input" type="checkbox" value=""
+                            unchecked>
 
+                        <span v-text="specification.name"></span>
+                        :
+                        <span v-text="specification.value"></span>
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
             <div class="col-md-4">
                 <button class="btn btn-block btn-info farsi" type="submit">
                     تایید و فروش

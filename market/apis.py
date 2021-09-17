@@ -1,6 +1,6 @@
 import json
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ShopSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -35,8 +35,10 @@ class ShopApi(APIView):
             add_shop_form=AddShopForm(request.POST)
             if add_shop_form.is_valid():
                 log=3
-                unit_price=add_shop_form.cleaned_data['unit_price']
+            
+                specifications=add_shop_form.cleaned_data['specifications']
                 unit_name=add_shop_form.cleaned_data['unit_name']
+                unit_price=add_shop_form.cleaned_data['unit_price']
                 level=add_shop_form.cleaned_data['level']
                 available=add_shop_form.cleaned_data['available']
                 product_id=add_shop_form.cleaned_data['product_id']
@@ -45,6 +47,7 @@ class ShopApi(APIView):
                     unit_price=unit_price,
                     unit_name=unit_name,
                     level=level,
+                    specifications=specifications,
                     available=available,
                     product_id=product_id,
                     supplier_id=supplier_id,
@@ -121,6 +124,42 @@ class CategoryApi(APIView):
         
       
 class ProductApi(APIView):
+    def add_product_specification(self,request,*args, **kwargs):
+        user=request.user
+        if request.method=='POST':
+            add_product_specification_form=AddProductSpecificationForm(request.POST)
+            if add_product_specification_form.is_valid():
+                product_id=add_product_specification_form.cleaned_data['product_id']
+                name=add_product_specification_form.cleaned_data['name']
+                value=add_product_specification_form.cleaned_data['value']
+                
+                product_specification=ProductRepo(user=request.user).add_specification(product_id=product_id,name=name,value=value)
+                if product_specification is not None:
+                    product_specification_s=ProductSpecificationSerializer(product_specification).data
+                    return JsonResponse({'result':SUCCEED,'product_specification':product_specification_s})
+                    
+                return JsonResponse({'result':'2'})                    
+            return JsonResponse({'result':'3'})
+        return JsonResponse({'result':'4'})
+    def add_product_specification(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_product_specification_form=AddProductSpecificationForm(request.POST)
+            if add_product_specification_form.is_valid():
+                product_id=add_product_specification_form.cleaned_data['product_id']
+                name=add_product_specification_form.cleaned_data['name']
+                value=add_product_specification_form.cleaned_data['value']
+                
+                product_specification=ProductRepo(user=request.user).add_specification(product_id=product_id,name=name,value=value)
+                if product_specification is not None:
+                    context['product_specification']=ProductSpecificationSerializer(product_specification).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+        
     def add_product(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED

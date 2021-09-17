@@ -43,6 +43,9 @@ class Product(MarketPage):
     model_name=models.CharField(_("model"),null=True,blank=True, max_length=50)
     unit_names=models.ManyToManyField("unitname", verbose_name=_("unit_names"))
     for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
+    def specifications(self):
+        specifications= ProductSpecification.objects.filter(product=self).order_by('name','value')
+        return specifications
     def old_price(self):
         old_price= Shop.objects.filter(product=self).order_by('-old_price').first()
         if old_price is None:
@@ -268,7 +271,8 @@ class Shop(models.Model):
     available=models.IntegerField(_("تعداد موجودی"),default=10)
     date_added=models.DateTimeField(_("date-added"), auto_now=False, auto_now_add=True)
     supplier=models.ForeignKey("supplier", verbose_name=_("supplier"), on_delete=models.CASCADE)
-
+    specifications=models.ManyToManyField("productspecification",blank=True, verbose_name=_("specifications"))
+    class_name="shop"
     class Meta:
         verbose_name = _("Shop")
         verbose_name_plural = _("Shops")
@@ -278,7 +282,8 @@ class Shop(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":shop", kwargs={"pk": self.pk})
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 class Supplier(MarketPage):
 
     region=models.ForeignKey("shopregion", verbose_name=_("shop_region"), on_delete=models.CASCADE)
@@ -433,6 +438,22 @@ class Brand(models.Model):
     def get_edit_url(self):
         return ADMIN_URL+APP_NAME+'/brand/'+str(self.pk)+'/change/'
   
+
+class ProductSpecification(models.Model):
+    product=models.ForeignKey("Product", verbose_name=_("product"), on_delete=models.CASCADE)
+    name=models.CharField(_("name"), max_length=50)
+    value=models.CharField(_("value"), max_length=50)
+    class_name="productspecification"
+    class Meta:
+        verbose_name = _("ProductSpecification")
+        verbose_name_plural = _("ProductSpecifications")
+
+    def __str__(self):
+        return f"{self.product.title} @ {self.name} : {self.value}"
+
+    def get_edit_url(self):
+        return f'{ ADMIN_URL}{APP_NAME}/productspecification/{self.pk}/change/'
+
 
 class Cart(models.Model):
     lines=[]

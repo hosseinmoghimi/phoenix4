@@ -1,7 +1,7 @@
 from core.constants import CURRENCY
 from utility.persian2 import PersianCalendar
 from django.http.response import Http404
-from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ShopSerializer
+from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ProductSpecificationSerializer, ShopSerializer
 import json
 from market.enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
 from core.models import Parameter
@@ -59,6 +59,12 @@ class BasicViews(View):
             context['add_category_form'] = AddCategoryForm()
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
+class ShopViews(View):
+    def shop(self, request, *args, **kwargs):
+        
+        context = getContext(request)
+        return render(request, TEMPLATE_ROOT+"shop.html", context)
+
 
 class CartViews(View):
     def cart(self, request, *args, **kwargs):
@@ -107,6 +113,8 @@ class ProductViews(View):
         page = product
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
+        if request.user.has_perm(APP_NAME+".add_productspecification"):
+            context['add_product_specification_form']=AddProductSpecificationForm()
         context['product'] = product
         context['shop_levels'] = (i[0] for i in ShopLevelEnum.choices)
         if context['me_supplier'] is not None:
@@ -130,6 +138,7 @@ class ProductViews(View):
 
             context['cart_s']=json.dumps(CartSerializer(cart).data)
         context['body_class'] = "product-page"
+        context['specifications_s']=json.dumps(ProductSpecificationSerializer(product.specifications(),many=True).data)
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
     def brand(self, request, *args, **kwargs):
