@@ -40,6 +40,7 @@
             },
             add_shop: function (product_id, supplier_id) {
                 let specifications1 = JSON.stringify(this.selected_specifications)
+                
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     product_id: product_id,

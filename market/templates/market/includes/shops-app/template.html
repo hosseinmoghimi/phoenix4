@@ -173,15 +173,15 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-check" v-for="specification in specifications">
+                <div class="form-check" class="my-5 mx-3" v-for="specification in specifications">
                     <label class="form-check-label">
                         <input @click="toggle_specification(specification)" class="form-check-input" type="checkbox" value=""
                             unchecked>
 
-                        <span v-text="specification.name"></span>
-                        :
-                        <span v-text="specification.value"></span>
-                        <span class="form-check-sign">
+    <span v-text="specification.name" ></span>
+    :
+    <span v-text="specification.value"></span>
+    <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
                     </label>

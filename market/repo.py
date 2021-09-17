@@ -558,7 +558,6 @@ class ShopRepo:
         level=ShopLevelEnum.REGULAR
         if 'specifications' in kwargs:
             specifications = kwargs['specifications']
-            specifications=json.loads(specifications)
         if 'level' in kwargs:
             level = kwargs['level']
         if 'product_id' in kwargs:
@@ -585,8 +584,11 @@ class ShopRepo:
                 available=available
             )
             shop.save()
+            print(specifications)
+            print(10*"#$$$$")
             if len(specifications)>0:
                 for specification in specifications:
+                    specification=ProductSpecification.objects.filter(pk=specification['id']).first()
                     shop.specifications.add(specification)
             return shop
         else:
@@ -605,6 +607,13 @@ class ShopRepo:
                 available=available
             )
             shop.save()
+            print(specifications)
+            print(10*"#$$$$")
+            if len(specifications)>0:
+                for specification in specifications:
+                    specification=ProductSpecification.objects.filter(pk=specification['id']).first()
+                    shop.specifications.add(specification)
+                    
             return shop
     def shop(self,*args, **kwargs):
         objects = self.objects.all()

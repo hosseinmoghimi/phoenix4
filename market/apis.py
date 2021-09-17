@@ -47,7 +47,7 @@ class ShopApi(APIView):
                     unit_price=unit_price,
                     unit_name=unit_name,
                     level=level,
-                    specifications=specifications,
+                    specifications=json.loads(specifications),
                     available=available,
                     product_id=product_id,
                     supplier_id=supplier_id,
