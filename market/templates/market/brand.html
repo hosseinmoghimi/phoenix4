@@ -6,14 +6,14 @@
 
 {% block page_header %}
 <div class="page-header header-filter header-small" data-parallax="true"
-    style="background-image: url('{{category.image_header}}');">
+    style="background-image: url('{{brand.header_image}}');">
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
                 <div class="brand">
-                    <h1 class="title text-center">{{category.title}}
+                    <h1 class="title text-center">{{brand.title}}
                         {% if perms.market.change_category %}
-                        {{category.get_edit_btn|safe}}
+                        {{brand.get_edit_btn|safe}}
                         {% endif %}
                     </h1>
                     <h4 class="text-center">{{shop_header_slogan.value}}
@@ -23,12 +23,8 @@
 
                         {% endif %}
                     </h4>
-                    {% if perms.core.change_picture %}
-                    <div class="text-center">
-                        {{shop_header_image.get_edit_btn|safe}}
-                    </div>
-
-                    {% endif %}
+                  
+                    
 
 
                 </div>

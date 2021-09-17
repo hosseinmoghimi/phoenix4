@@ -26,7 +26,8 @@ def getContext(request, *args, **kwargs):
 
     context['me_supplier'] = SupplierRepo(request=request).me
     context['me_customer'] = CustomerRepo(request=request).me
-    context['suppliers'] = SupplierRepo(request=request).list
+    context['suppliers'] = SupplierRepo(request=request).list()
+    context['brands'] = BrandRepo(request=request).list()
     context['navbar'] = APP_NAME+"/includes/nav-bar.html"
     context['layout_parent'] = LAYOUT_PARENT
     context['root_categories'] = CategoryRepo(

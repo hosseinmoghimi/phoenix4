@@ -411,9 +411,9 @@ class Brand(models.Model):
         return MEDIA_URL+str(self.header_image_origin)
     def get_edit_btn(self):
         return f"""
-        <a class="text-info google-drive-opener" href="{self.get_edit_url()}">
-            <i class="material-icons" aria-hidden="true">settings</i>
-            ویرایش 
+        <a title="ویرایش {self.title}" class="text-info google-drive-opener" href="{self.get_edit_url()}">
+            <i class="material-icons" aria-hidden="true">edit</i>
+             
             </a>
         """
 

@@ -101,6 +101,41 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card card-collapse">
+                <div class="card-header" role="tab" id="headingTwo4">
+                    <h5 class="mb-0">
+                        <a class="collapsed" data-toggle="collapse" href="#collapseTwo4"
+                            aria-expanded="false" aria-controls="collapseTwo4">
+برند ها
+                            <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseTwo4" class="collapse" role="tabpanel" aria-labelledby="headingTwo4">
+                    <div class="card-body">
+                        {% for brand in brands %}
+
+
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+
+
+                                <a href="{{brand.get_absolute_url}}">
+                                    {{brand.title}}
+                                </a>
+
+
+                            </label>
+                        </div>
+
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+
             <div class="card card-collapse">
                 <div class="card-header" role="tab" id="headingThree">
                     <h5 class="mb-0">

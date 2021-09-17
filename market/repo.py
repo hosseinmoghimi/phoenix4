@@ -584,8 +584,7 @@ class ShopRepo:
                 available=available
             )
             shop.save()
-            print(specifications)
-            print(10*"#$$$$")
+            
             if len(specifications)>0:
                 for specification in specifications:
                     specification=ProductSpecification.objects.filter(pk=specification['id']).first()
@@ -607,13 +606,12 @@ class ShopRepo:
                 available=available
             )
             shop.save()
-            print(specifications)
-            print(10*"#$$$$")
+            
             if len(specifications)>0:
                 for specification in specifications:
                     specification=ProductSpecification.objects.filter(pk=specification['id']).first()
                     shop.specifications.add(specification)
-                    
+
             return shop
     def shop(self,*args, **kwargs):
         objects = self.objects.all()
