@@ -34,13 +34,16 @@
 
                 </div>
                 <div class="col-md-6 col-sm-6">
-                    <h2 class="title">افزودن کالا
-                       در دسته
-                       <a href="{{category.get_absolute_url}}">
-                        {{category.title}}
-                       </a>
-                       
-                    </h2>
+                    <h5>
+                        افزودن کالا
+                        در دسته
+                    </h5>
+                    <a href="{{category.get_absolute_url}}">
+                        <h2 class="title">
+                            {{category.title}}
+
+                        </h2>
+                    </a>
                     <h3 class="main-price">{{supplier.region.name}}</h3>
                     <div id="accordion" role="tablist">
                         {% if supplier.short_description %}
@@ -95,21 +98,22 @@
 
 
                     </div>
-<div>
-    <form @submit.prevent="add_product()">
+                    <div>
+                        <form @submit.prevent="add_product()">
 
-        <input v-model="new_product_title" required type="text" class="farsi form-control" placeholder="نام کالا">
-        <button type="submit" class="farsi btn btn-success">
-            افزودن
-        </button>
-    </form>
-</div>
+                            <input v-model="new_product_title" required type="text" class="farsi form-control"
+                                placeholder="نام کالا">
+                            <button type="submit" class="farsi btn btn-success">
+                                افزودن
+                            </button>
+                        </form>
+                    </div>
 
                 </div>
             </div>
         </div>
-      
-        
+
+
         <div class="related-products">
             <div class="card">
                 <div class="card-body">
@@ -143,9 +147,9 @@
                                         <small>{{shop.product.category.title}}</small>
                                     </td>
 
-                                   
 
-                                    
+
+
                                 </tr>
 
                                 <!-- <tr>
@@ -162,8 +166,8 @@
 
         </div>
 
-        
-      
+
+
 
     </div>
 </div>
@@ -180,19 +184,19 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let url_add_product="{% url 'market:add_product' %}"
-    let category_id=parseInt("{{category.id}}")
-    let products_app=new Vue({
-        el:"#products-app",
-        data:{
-            products:[],
-            new_product_title:"",
-            waiting:false,
-            
+    let url_add_product = "{% url 'market:add_product' %}"
+    let category_id = parseInt("{{category.id}}")
+    let products_app = new Vue({
+        el: "#products-app",
+        data: {
+            products: [],
+            new_product_title: "",
+            waiting: false,
+
         }
         ,
-        methods:{
-            add_product:function(){
+        methods: {
+            add_product: function () {
                 products_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,

@@ -28,12 +28,20 @@
                 <div class="col-md-6 col-sm-6">
                     <div class="px-3 text-center">
 
-                        <img src="{{supplier.image}}" class="w-100 mx-5">
+                        <img src="{{employee.profile.image}}" class="rounded w-100 mx-5">
                     </div>
 
 
                 </div>
                 <div class="col-md-6 col-sm-6">
+                    <h3 class="card-title text-center">{{employee.profile.name}}</h3>
+                    <p>
+
+                        <a href="{{employee.profile.get_absolute_url}}">
+                            {{employee.profile.name}}
+                        </a>
+                    </p>
+
                     <h2 class="title">{{supplier.title}}
                         {% if perms.market.change_supplier %}
                         {{supplier.get_edit_btn|safe}}
@@ -214,7 +222,7 @@
 
         </div>
 
-        
+
         <div class="related-products">
             <div class="card">
                 <div class="card-body">

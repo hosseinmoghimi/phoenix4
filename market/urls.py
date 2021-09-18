@@ -37,5 +37,6 @@ urlpatterns = [
     path("api/add_shop/",apis.ShopApi().add_shop,name="add_shop"),
     path("api/add_to_cart/",apis.CartApi().add_to_cart,name="add_to_cart"),
     path("api/checkout_cart/",apis.CartApi().checkout_cart,name="checkout_cart"),
+    path("api/add_warehouse/",apis.WareHouseApi().add_warehouse,name="add_warehouse"),
     
 ]

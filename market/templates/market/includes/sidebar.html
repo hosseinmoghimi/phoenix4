@@ -136,6 +136,52 @@
                 </div>
             </div>
 
+
+            <div class="card card-collapse">
+                <div class="card-header" role="tab" id="headingTwo44">
+                    <h5 class="mb-0">
+                        <a class="collapsed" data-toggle="collapse" href="#collapseTwo44"
+                            aria-expanded="false" aria-controls="collapseTwo44">
+انبار ها
+                            <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseTwo44" class="collapse" role="tabpanel" aria-labelledby="headingTwo44">
+                    <div class="card-body">
+                        {% for ware_house in ware_houses %}
+
+
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+
+
+                                <a href="{{ware_house.get_absolute_url}}">
+                                    {{ware_house.name}}
+                                </a>
+
+
+                            </label>
+                        </div>
+
+                        {% endfor %}
+                        <div class="form-check">
+                            <label class="form-check-label">
+
+
+                                <a href="{% url 'market:ware_houses' %}">
+                                    لیست انبار ها
+                                </a>
+
+
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="card card-collapse">
                 <div class="card-header" role="tab" id="headingThree">
                     <h5 class="mb-0">

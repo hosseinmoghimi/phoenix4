@@ -9,7 +9,7 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
 from django.views import View
 from market.forms import *
-from .repo import BlogRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
+from .repo import BlogRepo, EmployeeRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
 from .apps import APP_NAME
 from authentication.views import ProfileContext
 from django.shortcuts import render, redirect, reverse
@@ -26,6 +26,7 @@ def getContext(request, *args, **kwargs):
 
     context['me_supplier'] = SupplierRepo(request=request).me
     context['me_customer'] = CustomerRepo(request=request).me
+    context['ware_houses'] = WareHouseRepo(request=request).list()
     context['suppliers'] = SupplierRepo(request=request).list()
     context['brands'] = BrandRepo(request=request).list()
     context['navbar'] = APP_NAME+"/includes/nav-bar.html"
@@ -70,6 +71,9 @@ class EmployeeViews(View):
     def employee(self, request, *args, **kwargs):
         
         context = getContext(request)
+        employee=EmployeeRepo(request=request).employee(*args, **kwargs)
+        context['employee']=employee
+        context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"employee.html", context)
 class WareHouseViews(View):
     def ware_house(self, request, *args, **kwargs):
@@ -77,6 +81,7 @@ class WareHouseViews(View):
         context = getContext(request)
         ware_house=WareHouseRepo(request=request).ware_house(*args, **kwargs)
         context['ware_house']=ware_house
+        context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
 
     def ware_houses(self, request, *args, **kwargs):
@@ -84,6 +89,9 @@ class WareHouseViews(View):
         context = getContext(request)
         ware_houses=WareHouseRepo(request=request).list(*args, **kwargs)
         context['ware_houses']=ware_houses
+        context['body_class'] = "product-page"
+        if request.user.has_perm(APP_NAME+".add_warehouse"):
+            context['add_ware_house_form']=AddWareHouseForm()
         return render(request, TEMPLATE_ROOT+"ware-houses.html", context)
 
 
@@ -176,6 +184,8 @@ class ProductViews(View):
         context=getContext(request=request)
         category=CategoryRepo(request=request).category(*args, **kwargs)
         context['category']=category
+        
+        context['body_class'] = "product-page"
         return render(request,TEMPLATE_ROOT+"add-product.html",context)
 
 class CustomerViews(View):

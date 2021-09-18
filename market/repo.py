@@ -415,15 +415,20 @@ class EmployeeRepo():
             self.user = kwargs['user']
         self.objects = Employee.objects
         self.profile = ProfileRepo(user=self.user).me
-    def list(self):
+    def list(self,*args, **kwargs):
         return self.objects.all()
         
-    def get(self,employee_id):
-        try:
-            return self.objects.get(pk=employee_id)
-        except :
-            return None
-
+    def employee(self,*args, **kwargs):
+        objects = self.objects.all()
+        pk=0
+        if 'employee_id' in kwargs:
+            pk = kwargs['employee_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        employee=objects.filter(pk=pk).first()
+        return employee
 
 
 class WareHouseRepo:
@@ -467,6 +472,21 @@ class WareHouseRepo:
             order_in_warehouse.save()
             return order_in_warehouse
 
+    def add_ware_house(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_warehouse"):
+            return
+        name=None
+        address=""
+        if 'name' in kwargs:
+            name=kwargs['name']
+        if 'address' in kwargs:
+            address=kwargs['address']
+        if name is None:
+            return
+        ware_house=WareHouse(name=name,address=address)
+        ware_house.save()
+        return ware_house
+        
 
 class BrandRepo:
     def __init__(self, *args, **kwargs):

@@ -23,12 +23,12 @@
     <div class="container">
         <div class="card card-plain">
             <div class="card-body">
-                <h3 class="card-title text-center">ioio;jio;uiou</h3>
+                <h3 class="card-title text-center">{{customer.profile.name}}</h3>
                 <p>
 
-                    <a href="{{customer.get_orders_url}}">
-                        لیست سفارشات
-                    </a>
+                    <a href="{{customer.profile.get_absolute_url}}">
+                        {{customer.profile.name}}
+                                        </a>
                 </p>
                 <div id="order-header" class=" rtl text-right mb-5 farsi">
 

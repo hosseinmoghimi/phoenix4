@@ -112,6 +112,10 @@ class AddProductForm(forms.Form):
     category_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100,required=True)
     
+class AddWareHouseForm(forms.Form):
+    name=forms.CharField(max_length=100, required=True)
+    address=forms.CharField(max_length=2000, required=False)
+
 class AddShopForm(forms.Form):
     supplier_id=forms.IntegerField(required=True)
     product_id=forms.IntegerField( required=True)

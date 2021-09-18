@@ -1,10 +1,10 @@
 import json
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
-from .repo import CartRepo, CategoryRepo, ProductRepo, ShopRepo
+from .repo import CartRepo, CategoryRepo, ProductRepo, ShopRepo, WareHouseRepo
 from .apps import APP_NAME
 
 class categoryApi(APIView):
@@ -121,7 +121,27 @@ class CategoryApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-        
+
+class WareHouseApi(APIView):
+    def add_warehouse(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_warehouse_form=AddWareHouseForm(request.POST)
+            if add_warehouse_form.is_valid():
+                log=3
+                name=add_warehouse_form.cleaned_data['name']
+                address=add_warehouse_form.cleaned_data['address']
+                ware_house=WareHouseRepo(request=request).add_ware_house(name=name,address=address)
+                if ware_house is not None:
+                    log=4
+                    ware_house=WareHouseSerializer(ware_house).data
+                    context['ware_house']=ware_house
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)      
       
 class ProductApi(APIView):
     def add_product_specification(self,request,*args, **kwargs):
