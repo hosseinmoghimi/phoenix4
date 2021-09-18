@@ -339,7 +339,14 @@ class WareHouse(models.Model):
     def __str__(self):
         return self.name
 
-        
+    def get_edit_btn(self):
+        return f"""
+                                <a target="_blank" title="ویرایش انبار" href="{self.get_edit_url()}">
+                                    <i class="material-icons">
+                                        edit
+                                    </i>
+                                </a>
+        """            
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":ware_house", kwargs={"pk": self.pk})

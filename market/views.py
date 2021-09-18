@@ -66,6 +66,26 @@ class ShopViews(View):
         context = getContext(request)
         return render(request, TEMPLATE_ROOT+"shop.html", context)
 
+class EmployeeViews(View):
+    def employee(self, request, *args, **kwargs):
+        
+        context = getContext(request)
+        return render(request, TEMPLATE_ROOT+"employee.html", context)
+class WareHouseViews(View):
+    def ware_house(self, request, *args, **kwargs):
+        
+        context = getContext(request)
+        ware_house=WareHouseRepo(request=request).ware_house(*args, **kwargs)
+        context['ware_house']=ware_house
+        return render(request, TEMPLATE_ROOT+"ware-house.html", context)
+
+    def ware_houses(self, request, *args, **kwargs):
+        
+        context = getContext(request)
+        ware_houses=WareHouseRepo(request=request).list(*args, **kwargs)
+        context['ware_houses']=ware_houses
+        return render(request, TEMPLATE_ROOT+"ware-houses.html", context)
+
 
 class CartViews(View):
     def cart(self, request, *args, **kwargs):

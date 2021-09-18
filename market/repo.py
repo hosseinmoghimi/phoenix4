@@ -439,18 +439,18 @@ class WareHouseRepo:
         except:
             return None
 
-    def __init__(self,user=None):
-        self.user=user  
-        self.profile=CoreRepo.ProfileRepo(user).me
-        objects=WareHouse.objects
-        self.objects=objects.filter(id__lte=0)
+    
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = WareHouse.objects
+        self.profile = ProfileRepo(user=self.user).me
 
-        if user.is_superuser:
-            self.objects=objects
-        else:
-            employee=EmployeeRepo(user=user).me
-            if employee is not None:
-                self.objects=employee.warehouse_set.all()
     def product_in_stock(self,pk):
         try:
             return ProductInStock.objects.get(pk=pk)
@@ -739,10 +739,11 @@ class CartRepo:
             quantity=kwargs['quantity']
             lines=CartLine.objects.filter(customer=customer).filter(shop_id=shop_id)
             lines.delete()
-            cart_line=CartLine(shop_id=shop_id,quantity=quantity,customer=customer)
-            cart_line.save()
-            cart=Cart.objects.filter(customer=customer).first()
-            return cart_line
+            if quantity>0:
+                cart_line=CartLine(shop_id=shop_id,quantity=quantity,customer=customer)
+                cart_line.save()
+                cart=Cart.objects.filter(customer=customer).first()
+                return cart_line
 
     def confirm(self, address, supplier_id,description=None,customer_id=None,no_ship=False):
         user=self.user

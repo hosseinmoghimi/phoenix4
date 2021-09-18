@@ -25,6 +25,9 @@ urlpatterns = [
     path("confirm_cart/",views.CartViews().confirm,name="confirm_cart"),
     path("cart/<int:customer_id>/",views.CartViews().cart,name="customer_cart"),
     path("shop/<int:pk>/",views.ShopViews().shop,name="shop"),
+    path("employee/<int:pk>/",views.EmployeeViews().employee,name="employee"),
+    path("ware_house/<int:pk>/",views.WareHouseViews().ware_house,name="ware_house"),
+    path("ware_houses/",views.WareHouseViews().ware_houses,name="ware_houses"),
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),
