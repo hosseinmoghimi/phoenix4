@@ -63,9 +63,8 @@ class BasicViews(View):
 
 class ShopViews(View):
     def shop(self, request, *args, **kwargs):
-        
-        context = getContext(request)
-        return render(request, TEMPLATE_ROOT+"shop.html", context)
+        shop=ShopRepo(request=request).shop(*args, **kwargs)
+        return redirect(shop.product.get_absolute_url())
 
 class EmployeeViews(View):
     def employee(self, request, *args, **kwargs):

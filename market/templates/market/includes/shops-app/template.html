@@ -25,6 +25,8 @@
                     </span>
                 </td>
                 <td>
+                    
+                    {{shop.available}}
                     <span class="badge badge-danger">
 
                         {{shop.unit_name}}
@@ -59,7 +61,7 @@
                 </td>
                 {% if perms.market.change_shop %}
                 <td>
-                    <a href="{{shop.get_edit_url}}">
+                    <a target="_blank" href="{{shop.get_edit_url}}">
                         <i class="material-icons">
                             settings
                         </i>
@@ -89,8 +91,13 @@
                     </span>
                 </td>
                 <td>
-                    <span class="badge badge-danger" v-text="shop.unit_name">
+                        <span v-text="shop.available">
 
+                        </span>
+                    <span class="badge badge-danger" >
+                        <span v-text="shop.unit_name">
+
+                        </span>
                     </span>
                 </td>
                 <td class="text-right">
@@ -117,9 +124,12 @@
                     </span>
                 </td>
 
+               
+
+
                 {% if perms.market.change_shop %}
                 <td>
-                    <a :href="shop.get_edit_url">
+                    <a target="_blank" :href="shop.get_edit_url">
                         <i class="material-icons">
                             settings
                         </i>
@@ -142,7 +152,7 @@
                     {{me_supplier.title}}
                 </h4>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>واحد فروش</label>
                 <select v-model="unit_name" required class="selectpicker farsi" data-style="select-with-transition"
                     data-size="4">
@@ -154,7 +164,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>سطح فروش</label>
                 <select v-model="level" required class="selectpicker farsi" data-style="select-with-transition"
                     data-size="4">
@@ -166,14 +176,22 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-4 ltr">
+            <div class="col-md-6 ltr">
+                <div class="form-group bmd-form-group">
+                    <label for="exampleInputqs1" class="bmd-label-floating">موجودی در انبار</label>
+                    <input v-model="available" required type="number" class="form-control" id="exampleInputqs1">
+                    <span class="bmd-help farsi rtl text-right">قیمت را به {{CURRENCY}} وارد کنید.</span>
+                </div>
+            </div>
+
+            <div class="col-md-6 ltr">
                 <div class="form-group bmd-form-group">
                     <label for="exampleInputq1" class="bmd-label-floating">قیمت واحد به {{CURRENCY}}</label>
                     <input v-model="unit_price" required type="number" class="form-control" id="exampleInputq1">
                     <span class="bmd-help farsi rtl text-right">قیمت را به {{CURRENCY}} وارد کنید.</span>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-check" class="my-5 mx-3" v-for="specification in specifications">
                     <span v-text="specification.name"></span>
                     :
@@ -190,7 +208,7 @@
                     <hr>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <button class="btn btn-block btn-info farsi" type="submit">
                     تایید و فروش
                 </button>
