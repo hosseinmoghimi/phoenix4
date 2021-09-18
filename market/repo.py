@@ -504,6 +504,9 @@ class BrandRepo:
         if 'region' in kwargs:
             # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
             objects = objects.filter(supplier__region=kwargs['region'])
+        if 'level' in kwargs:
+            # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
+            objects = objects.filter(level=kwargs['level'])
         return objects
 
 

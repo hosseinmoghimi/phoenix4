@@ -2,18 +2,18 @@
     <table class=" mx-3 table table-striped">
 
         <tr v-for="specification in specifications">
-            <td class="">
+            <td class="text-left">
                 <span v-text="specification.name"></span>
             </td>
-            <td class="">
+            <td class="text-right">
                 <span v-text="specification.value"></span>
             </td>
             {% if add_product_specification_form %}
-            <td class="">
-                <a target="_blank" :href="specification.get_edit_url">
+            <td class="text-right">
+                <a target="_blank" title="ویرایش" :href="specification.get_edit_url">
 
                     <i class="material-icons text-warning">
-                        settings
+                        edit
                     </i>
                 </a>
             </td>

@@ -1,6 +1,6 @@
 {% load to_price %}
 <div id="shops-app">
-
+<h4>کالاهای موجود برای فروش</h4>
 
     <div class="col-md-12">
         <table class="table farsi">
@@ -33,10 +33,8 @@
 
 
 
-                <td>
-                    {{shop.unit_price|to_price}}
-                </td>
-                <td>
+               
+                <td class="text-right">
                     {% for specification in shop.specifications.all %}
 
 
@@ -55,6 +53,9 @@
 
                     {% endfor %}
 
+                </td>
+                 <td>
+                    {{shop.unit_price|to_price}}
                 </td>
                 {% if perms.market.change_shop %}
                 <td>
@@ -92,17 +93,17 @@
 
                     </span>
                 </td>
-                <td>
+                <td class="text-right">
                     <template v-for="specification in shop.specifications">
                         <div class="btn-group ltr">
-
+                            
                             <button class="btn btn-round btn-warning btn-sm">
-                                <span v-text="specification.name"></span>
-
+                                <span v-text="specification.value"></span>
+                                
                                 <div class="ripple-container"></div>
                             </button>
-                            <button class="btn btn-round btn-info btn-sm">
-                                <span v-text="specification.value"></span>
+                            <button class="btn  btn-info btn-sm">
+                                <span v-text="specification.name"></span>
 
                             </button>
                         </div>
@@ -174,17 +175,19 @@
             </div>
             <div class="col-md-4">
                 <div class="form-check" class="my-5 mx-3" v-for="specification in specifications">
+                    <span v-text="specification.name"></span>
+                    :
+                    <span v-text="specification.value"></span>
                     <label class="form-check-label">
-                        <input @click="toggle_specification(specification)" class="form-check-input" type="checkbox" value=""
-                            unchecked>
+                        <input @click="toggle_specification(specification)" class="form-check-input" type="checkbox"
+                            value="" unchecked>
 
-    <span v-text="specification.name" ></span>
-    :
-    <span v-text="specification.value"></span>
-    <span class="form-check-sign">
+                      
+                        <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
                     </label>
+                    <hr>
                 </div>
             </div>
             <div class="col-md-4">
