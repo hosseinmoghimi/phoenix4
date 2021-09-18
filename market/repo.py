@@ -555,6 +555,8 @@ class ShopRepo:
             objects = objects.filter(supplier=kwargs['supplier'])
         if 'supplier_id' in kwargs:
             objects = objects.filter(supplier_id=kwargs['supplier_id'])
+        if 'level' in kwargs:
+            objects = objects.filter(level=kwargs['level'])
         if 'region' in kwargs:
             # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
             objects = objects.filter(supplier__region=kwargs['region'])
