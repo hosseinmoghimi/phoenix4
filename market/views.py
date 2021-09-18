@@ -172,6 +172,11 @@ class ProductViews(View):
         context['products'] = brand.product_set.all()
         return render(request, TEMPLATE_ROOT+"brand.html", context)
 
+    def add_product(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        category=CategoryRepo(request=request).category(*args, **kwargs)
+        context['category']=category
+        return render(request,TEMPLATE_ROOT+"add-product.html",context)
 
 class CustomerViews(View):
     def customer(self, request, *args, **kwargs):

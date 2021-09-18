@@ -101,6 +101,12 @@
                 {% endif %}
 
             </h2>
+            {% if perms.market.add_product %}
+            <a href="{% url 'market:add_product_view' category_id=category.id %}">
+                افزودن دسته ای کالا
+            </a>
+            {% endif %}
+
             <div class="row">
                 <div class="col-md-3">
                     {% include "market/includes/sidebar.html" %}

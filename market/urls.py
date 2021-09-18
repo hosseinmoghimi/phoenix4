@@ -20,6 +20,7 @@ urlpatterns = [
     path("cart/",views.CartViews().cart,name="cart"),
     path('do_pack_order/',views.OrderViews().do_pack_order,name='do_pack_order'),
     path('do_deliver_order/',views.OrderViews().do_deliver_order,name='do_deliver_order'),
+    path('add_product/<int:category_id>/',views.ProductViews().add_product,name='add_product_view'),
     path('do_cancel_order/',views.OrderViews().do_cancel_order,name='do_cancel_order'),
     path('do_ship_order/',views.OrderViews().do_ship_order,name='do_ship_order'),
     path("confirm_cart/",views.CartViews().confirm,name="confirm_cart"),
