@@ -154,12 +154,18 @@
         ,
         methods: {
             add_products: function () {
-                specifications = [
-                    {
-                        name: this.specification_name,
-                        value: this.specification_value
-                    }
-                ]
+                const specification_values = this.specification_value.split(" ");
+                specification_values.forEach
+                specifications = []
+                specification_values.forEach(value => {
+                    specifications.push(
+                        {
+                            name: this.specification_name,
+                            value: value
+                        }
+                    )
+
+                });
                 specifications = JSON.stringify(specifications)
                 console.log(specifications)
                 products_app.waiting = true
