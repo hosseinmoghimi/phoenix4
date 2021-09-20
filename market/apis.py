@@ -1,4 +1,6 @@
 import json
+
+from django.db.models import manager
 from market.forms import *
 from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
 from django.http import JsonResponse
@@ -144,23 +146,7 @@ class WareHouseApi(APIView):
         return JsonResponse(context)      
       
 class ProductApi(APIView):
-    def add_product_specification(self,request,*args, **kwargs):
-        user=request.user
-        if request.method=='POST':
-            add_product_specification_form=AddProductSpecificationForm(request.POST)
-            if add_product_specification_form.is_valid():
-                product_id=add_product_specification_form.cleaned_data['product_id']
-                name=add_product_specification_form.cleaned_data['name']
-                value=add_product_specification_form.cleaned_data['value']
-                
-                product_specification=ProductRepo(user=request.user).add_specification(product_id=product_id,name=name,value=value)
-                if product_specification is not None:
-                    product_specification_s=ProductSpecificationSerializer(product_specification).data
-                    return JsonResponse({'result':SUCCEED,'product_specification':product_specification_s})
-                    
-                return JsonResponse({'result':'2'})                    
-            return JsonResponse({'result':'3'})
-        return JsonResponse({'result':'4'})
+    
     def add_product_specification(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
@@ -180,7 +166,7 @@ class ProductApi(APIView):
         context['log']=log
         return JsonResponse(context)
         
-    def add_product(self,request,*args, **kwargs):
+    def add_products(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
         log=1
@@ -191,13 +177,20 @@ class ProductApi(APIView):
                 log=3
                 title=add_product_form.cleaned_data['title']
                 unit_name=add_product_form.cleaned_data['unit_name']
+                specifications=add_product_form.cleaned_data['specifications']
                 category_id=add_product_form.cleaned_data['category_id']
-                product=ProductRepo(request=request).add_product(
+                
+                if specifications is None or specifications=="":
+                    specifications=None
+                else:
+                    specifications=json.loads(specifications)
+                products=ProductRepo(request=request).add_product(
                     title=title,
                     unit_name=unit_name,
+                    specifications=specifications,
                     category_id=category_id)
-                if product is not None:
-                    context['product']=ProductSerializer(product).data
+                if products is not None:
+                    context['products']=ProductSerializer(products,many=True).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
