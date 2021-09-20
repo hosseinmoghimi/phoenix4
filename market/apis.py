@@ -166,7 +166,7 @@ class ProductApi(APIView):
         context['log']=log
         return JsonResponse(context)
         
-    def add_products(self,request,*args, **kwargs):
+    def add_product(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
         log=1
@@ -184,13 +184,43 @@ class ProductApi(APIView):
                     specifications=None
                 else:
                     specifications=json.loads(specifications)
-                products=ProductRepo(request=request).add_product(
+                product=ProductRepo(request=request).add_product(
                     title=title,
                     unit_name=unit_name,
                     specifications=specifications,
                     category_id=category_id)
-                if products is not None:
-                    context['products']=ProductSerializer(products,many=True).data
+                if product is not None:
+                    context['product']=ProductSerializer(product).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+        
+    def add_product_for_shop(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_product_for_shop_form=AddProductForShopForm(request.POST)
+            if add_product_for_shop_form.is_valid():
+                log=3
+                title=add_product_for_shop_form.cleaned_data['title']
+                unit_name=add_product_for_shop_form.cleaned_data['unit_name']
+                specifications=add_product_for_shop_form.cleaned_data['specifications']
+                category_id=add_product_for_shop_form.cleaned_data['category_id']
+                supplier_id=add_product_for_shop_form.cleaned_data['supplier_id']
+                
+                if specifications is None or specifications=="":
+                    specifications=None
+                else:
+                    specifications=json.loads(specifications)
+                product=ProductRepo(request=request).add_product(
+                    title=title,
+                    unit_name=unit_name,
+                    specifications=specifications,
+                    category_id=category_id)
+                if product is not None:
+                    context['product']=ProductSerializer(product).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

@@ -31,7 +31,8 @@ urlpatterns = [
     path("ware_houses/",views.WareHouseViews().ware_houses,name="ware_houses"),
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
-    path("api/add_products/",apis.ProductApi().add_products,name="add_products"),
+    path("api/add_product/",apis.ProductApi().add_product,name="add_product"),
+    path("api/add_product_for_shop/",apis.ProductApi().add_product_for_shop,name="add_product_for_shop"),
     path("api/add_product_specification/",apis.ProductApi().add_product_specification,name="add_product_specification"),
     path("api/add_category/",apis.CategoryApi().add_category,name="add_category"),
     path("api/add_shop/",apis.ShopApi().add_shop,name="add_shop"),

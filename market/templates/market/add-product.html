@@ -48,7 +48,7 @@
 
 
                     <div>
-                        <form @submit.prevent="add_products()">
+                        <form @submit.prevent="add_product()">
 
                             <input v-model="new_product_title" required type="text" class="farsi form-control"
                                 placeholder="نام کالا">
@@ -139,7 +139,7 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let url_add_products = "{% url 'market:add_products' %}"
+    let url_add_product = "{% url 'market:add_product' %}"
     let category_id = parseInt("{{category.id}}")
     let products_app = new Vue({
         el: "#products-app",
@@ -153,7 +153,7 @@
         }
         ,
         methods: {
-            add_products: function () {
+            add_product: function () {
                 const specification_values = this.specification_value.split(" ");
                 specification_values.forEach
                 specifications = []
@@ -178,17 +178,15 @@
                 console.log(payload)
 
                 let aa = this
-                let posting = $.post(url_add_products, payload)
+                let posting = $.post(url_add_product, payload)
                 posting.done((data) => {
                     products_app.waiting = false
 
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         // products_app.new_product_title = ""
-                        data.products.forEach(product => {
-                            products_app.products.push(product)
-
-                        });
+                        
+                        products_app.products.push(data.product)
 
                     }
                 })

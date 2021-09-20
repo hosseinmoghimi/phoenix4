@@ -70,7 +70,7 @@ class ParameterEnum(TextChoices):
     SHOP_HEADER_IMAGE='تصویر بنر فروشگاه',_('تصویر بنر فروشگاه')
 
 class ShopLevelEnum(TextChoices):
-    REGULAR='مشتری عادی'
-    CO_WORKER='همکار'
-    WHOLE_SALE='توزیع کننده عمده'
-    RETAIL='توزیع کننده خرد'
+    REGULAR='مشتری عادی',_('مشتری عادی')
+    CO_WORKER='همکار',_('همکار')
+    WHOLE_SALE='توزیع کننده عمده',_('توزیع کننده عمده')
+    RETAIL='توزیع کننده خرد',_('توزیع کننده خرد')

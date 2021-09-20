@@ -113,6 +113,14 @@ class AddProductForm(forms.Form):
     title=forms.CharField(max_length=100,required=True)
     specifications=forms.CharField( max_length=500, required=False)
     
+class AddProductForShopForm(forms.Form):
+    unit_name=forms.CharField(max_length=50, required=False)
+    supplier_id=forms.IntegerField(required=True)
+    unit_price=forms.IntegerField(required=True)
+    category_id=forms.IntegerField(required=True)
+    title=forms.CharField(max_length=100,required=True)
+    specifications=forms.CharField( max_length=500, required=False)
+    
 class AddWareHouseForm(forms.Form):
     name=forms.CharField(max_length=100, required=True)
     address=forms.CharField(max_length=2000, required=False)

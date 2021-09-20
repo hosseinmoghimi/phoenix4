@@ -1,5 +1,5 @@
 <script>
-    let url_add_products = "{% url 'market:add_products' %}"
+    let url_add_product = "{% url 'market:add_product' %}"
     let url_add_category = "{% url 'market:add_category' %}"
 
     // let category_id=parseInt("{{category_id}}")
@@ -28,7 +28,7 @@
             can_add_product: true,
         },
         methods: {
-            add_products: function () {
+            add_product: function () {
                 add_list_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -38,7 +38,7 @@
                 console.log(payload)
 
                 let aa = this
-                let posting = $.post(url_add_products, payload)
+                let posting = $.post(url_add_product, payload)
                 posting.done((data) => {
                     add_list_app.waiting = false
 
@@ -46,10 +46,8 @@
                     if (data.result === 'SUCCEED') {
                         add_list_app.new_product_title = ""
                         add_list_app.can_add_category = false
-                        data.products.forEach(product => {
                             
-                            show_list_app.products.push(product)
-                        });
+                            show_list_app.products.push(data.product)
 
                     }
                 })

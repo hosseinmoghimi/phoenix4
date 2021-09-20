@@ -132,6 +132,7 @@
                 </div>
             </div>
         </div>
+        <!-- shops -->
         <div class="related-products">
             <div class="card">
                 <div class="card-body">
@@ -145,6 +146,7 @@
                                     <th class="text-right">محصول</th>
                                     <th class="text-right">سطح</th>
                                     <th class="text-right">واحد</th>
+                                    <th class="text-right">ویژگی</th>
                                     <th class="text-right">قیمت</th>
                                     <th class="text-right">تاریخ</th>
                                     <th></th>
@@ -162,7 +164,11 @@
                                     <td class="td-name text-right">
                                         <a href="{{shop.product.get_absolute_url}}">{{shop.product.title}}</a>
                                         <br />
-                                        <small>{{shop.product.category.title}}</small>
+                                        <a href="{{shop.product.category.get_absolute_url}}">
+                                            <small>{{shop.product.category.title}}</small>
+                                            
+                                        </a>
+
                                     </td>
 
                                     <td class="text-right">
@@ -174,12 +180,35 @@
 
                                     </td>
                                     <td class="text-right">
+                                        {{shop.available}}
+
                                         <span class="badge badge-danger">
                                             {{shop.unit_name}}
 
                                         </span>
 
                                     </td>
+                                    <td class="text-right">
+                                        {% for specification in shop.specifications.all %}
+                    
+                    
+                    
+                    
+                                        <span class="btn-group ltr">
+                                            <button class="btn btn-round btn-warning btn-sm">
+                    
+                                                {{specification.value}}
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                            <button class="btn btn-info btn-sm">
+                                                {{specification.name}}
+                                            </button>
+                                        </span>
+                    
+                                        {% endfor %}
+                    
+                                    </td>
+
                                     <td class="td-number text-right">
                                         {{shop.unit_price|to_price_pure}}
                                         <small class="text-muted">{{CURRENCY}}</small>
@@ -187,11 +216,18 @@
 
                                     <td class="td-number text-right">
                                         <small class="text-muted">
+<small>
 
-                                            {{shop.date_added|to_persian_datetime|safe}}
+    {{shop.date_added|to_persian_datetime|safe}}
+</small>
                                         </small>
                                     </td>
                                     <td class="td-actions">
+                                        <a href="{{shop.get_edit_url}}">
+                                            <i class="material-icons">
+                                                edit
+                                            </i>
+                                        </a>
                                         <button type="button" rel="tooltip" data-placement="left" title="Remove item"
                                             class="btn btn-link">
                                             <i class="material-icons">close</i>
@@ -214,7 +250,7 @@
 
         </div>
 
-        
+        <!-- orders -->
         <div class="related-products">
             <div class="card">
                 <div class="card-body">
@@ -228,6 +264,7 @@
                                     <th class="text-right">محصول</th>
                                     <th class="text-right">سطح</th>
                                     <th class="text-right">واحد</th>
+                                    
                                     <th class="text-right">قیمت</th>
                                     <th class="text-right">تاریخ</th>
                                     <th></th>
@@ -263,6 +300,7 @@
                                         </span>
 
                                     </td>
+                                    
                                     <td class="td-number text-right">
                                         {{shop.unit_price|to_price_pure}}
                                         <small class="text-muted">{{CURRENCY}}</small>
