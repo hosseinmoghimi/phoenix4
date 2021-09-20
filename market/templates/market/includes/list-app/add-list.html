@@ -9,7 +9,7 @@
 
     {% endif %}
     {% if add_product_form %}
-    <form @submit.prevent="add_product()" v-if="can_add_product">
+    <form @submit.prevent="add_products()" v-if="can_add_product">
 
         <input type="text" required v-model="new_product_title" placeholder="نام محصول جدید" class="farsi form-control">
     </form>

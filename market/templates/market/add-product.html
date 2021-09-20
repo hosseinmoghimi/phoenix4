@@ -28,7 +28,7 @@
                 <div class="col-md-6 col-sm-6">
                     <div class="px-3 text-center">
 
-                        <img src="{{supplier.image}}" class="w-100 mx-5">
+                        <img src="{{category.image}}" class="w-80 mx-5">
                     </div>
 
 
@@ -45,67 +45,22 @@
                         </h2>
                     </a>
                     <h3 class="main-price">{{supplier.region.name}}</h3>
-                    <div id="accordion" role="tablist">
-                        {% if supplier.short_description %}
-                        <div class="card card-collapse">
-                            <div class="card-header" role="tab" id="headingShortDescription">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseShortDescription" aria-expanded="true"
-                                        aria-controls="collapseShortDescription">
-                                        توضیحات کوتاه
-                                        <i class="material-icons">keyboard_arrow_down</i>
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="collapseShortDescription" class="collapse" role="tabpanel"
-                                aria-labelledby="headingShortDescription" data-parent="#accordion">
-                                <div class="card-body">
 
 
-                                    {{supplier.short_description|safe}}
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endif %}
-
-                        {% if supplier.description %}
-                        <div class="card card-collapse">
-                            <div class="card-header" role="tab" id="headingDescription">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
-                                        aria-controls="collapseShortDescription">
-                                        توضیحات کامل
-                                        <i class="material-icons">keyboard_arrow_down</i>
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="collapseDescription" class="collapse" role="tabpanel"
-                                aria-labelledby="headingDescription" data-parent="#accordion">
-                                <div class="card-body">
-
-
-                                    {{supplier.description|safe}}
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endif %}
-
-
-
-
-                    </div>
                     <div>
-                        <form @submit.prevent="add_product()">
+                        <form @submit.prevent="add_products()">
 
                             <input v-model="new_product_title" required type="text" class="farsi form-control"
                                 placeholder="نام کالا">
+                            <input type="text" class="form-control farsi" v-model="specification_name"
+                                placeholder="عنوان ویژگی">
+                            <input type="text" class="form-control farsi" v-model="specification_value"
+                                placeholder="مقدار ویژگی">
+
                             <button type="submit" class="farsi btn btn-success">
                                 افزودن
                             </button>
+
                         </form>
                     </div>
 
@@ -184,7 +139,7 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let url_add_product = "{% url 'market:add_product' %}"
+    let url_add_products = "{% url 'market:add_products' %}"
     let category_id = parseInt("{{category.id}}")
     let products_app = new Vue({
         el: "#products-app",
@@ -192,28 +147,42 @@
             products: [],
             new_product_title: "",
             waiting: false,
+            specification_name: "",
+            specification_value: "",
 
         }
         ,
         methods: {
-            add_product: function () {
+            add_products: function () {
+                specifications = [
+                    {
+                        name: this.specification_name,
+                        value: this.specification_value
+                    }
+                ]
+                specifications = JSON.stringify(specifications)
+                console.log(specifications)
                 products_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.new_product_title,
                     category_id: category_id,
+                    specifications: specifications,
                 }
                 console.log(payload)
 
                 let aa = this
-                let posting = $.post(url_add_product, payload)
+                let posting = $.post(url_add_products, payload)
                 posting.done((data) => {
                     products_app.waiting = false
 
                     console.log(data)
                     if (data.result === 'SUCCEED') {
-                        products_app.new_product_title = ""
-                        products_app.products.push(data.product)
+                        // products_app.new_product_title = ""
+                        data.products.forEach(product => {
+                            products_app.products.push(product)
+
+                        });
 
                     }
                 })

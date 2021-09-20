@@ -72,28 +72,39 @@ class ProductRepo:
         return self.objects.filter(pk=pk).first()
 
     def add_product(self, *args, **kwargs):
-
+        products=[]
+        # print(kwargs['specifications'])
+        # print(100*"@#$")
         title = kwargs['title'] if 'title' in kwargs else None
+        specifications = kwargs['specifications'] if 'specifications' in kwargs else None
+        if specifications is None:
+            specifications=[{'name':'size','value':'25'}]
         unit_name = kwargs['unit_name'] if 'unit_name' in kwargs else "عدد"
         if unit_name=="":
             unit_name="عدد"
         category_id = kwargs['category_id'] if 'category_id' in kwargs else None
+        
+        # print(specifications)
+        # print(100*"@#$")
         if self.user.has_perm(APP_NAME+".add_product"):
-            product = Product()
-            product.title = title
+            for specification in specifications:
+                product = Product()
+                product.title = title
 
-            unit_name_ = UnitName.objects.filter(name=unit_name).first()
-            if unit_name_ is None:
-                unit_name_ = UnitName()
-                unit_name_.name = unit_name
-                unit_name_.save()
-            product.for_category=False
-            product.save()
-            product.unit_names.add(unit_name_)
-            category = Category.objects.filter(pk=category_id).first()
-            if category is not None:
-                category.products.add(product)
-            return product
+                unit_name_ = UnitName.objects.filter(name=unit_name).first()
+                if unit_name_ is None:
+                    unit_name_ = UnitName()
+                    unit_name_.name = unit_name
+                    unit_name_.save()
+                product.for_category=False
+                product.save()
+                product.unit_names.add(unit_name_)
+                category = Category.objects.filter(pk=category_id).first()
+                if category is not None:
+                    category.products.add(product)
+                self.add_specification(product_id=product.id,name=specification['name'],value=specification['value'])
+                products.append(product)
+            return products
 
     def add_specification(self, *args, **kwargs):
 
