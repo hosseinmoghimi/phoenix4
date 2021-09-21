@@ -129,8 +129,13 @@ class CartViews(View):
                 address = confirm_cart_form.cleaned_data['address']
                 description = confirm_cart_form.cleaned_data['description']
                 no_ship = confirm_cart_form.cleaned_data['no_ship']
-                orders = CartRepo(request=request).confirm(no_ship=no_ship,customer_id=customer_id, address=address,
-                                                           description=description, no_ship=no_ship, supplier_id=supplier_id)
+                orders = CartRepo(request=request).confirm(
+                    no_ship=no_ship,
+                    customer_id=customer_id,
+                    address=address,
+                    description=description,
+                    supplier_id=supplier_id
+                    )
                 if orders is not None and len(orders) == 1:
                     return redirect(orders[0].get_absolute_url())
 
