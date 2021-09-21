@@ -62,9 +62,9 @@ class ConfirmCartForm(forms.Form):
     description=forms.CharField( max_length=200, required=False)
     no_ship=forms.BooleanField(required=False)
 
-class CheckoutForm(forms.Form):
-    address=forms.CharField( max_length=200, required=True)
-    description=forms.CharField( max_length=200, required=False)
+# class CheckoutForm(forms.Form):
+#     address=forms.CharField( max_length=200, required=True)
+#     description=forms.CharField( max_length=200, required=False)
 
 class DoDeliverForm(forms.Form):
     order_id=forms.IntegerField(required=True)

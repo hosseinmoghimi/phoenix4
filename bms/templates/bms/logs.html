@@ -250,10 +250,8 @@
                     per_page: this.per_page,
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
-                console.log(payload)
                 let posting = $.post(url_get_logs, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result == 'SUCCEED') {
 
                         data.logs.forEach(log1 => {

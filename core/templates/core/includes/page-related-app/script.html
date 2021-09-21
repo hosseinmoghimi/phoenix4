@@ -16,9 +16,7 @@
                     bidirectional: related_pages_app.bidirectional,
                     related_page_id: related_pages_app.related_page_id,
                 }
-                console.log(payload)
                 $.post(url, payload).done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED'){
                         related_pages_app.related_page_id=""
                         related_pages_app.related_pages.push(data.related_page)

@@ -778,7 +778,11 @@ class CartRepo:
         return orders
     
     
-    def checkout(self,cart_lines,customer_id):
+    def checkout(self,*args, **kwargs):
+        cart_lines=kwargs['cart_lines'] if 'cart_lines' in kwargs else None
+        customer_id=kwargs['customer_id'] if 'customer_id' in kwargs else None
+        if cart_lines is None or customer_id is None:
+            return None
         user=self.user
         if customer_id is None:
             customer=CustomerRepo(user=self.user).me
@@ -810,7 +814,13 @@ class CartRepo:
                 cart=Cart.objects.filter(customer=customer).first()
                 return cart_line
 
-    def confirm(self, address, supplier_id,description=None,customer_id=None,no_ship=False):
+    def confirm(self,*args, **kwargs):
+        
+        no_ship=kwargs['no_ship'] if 'no_ship' in kwargs else False
+        customer_id=kwargs['customer_id'] if 'customer_id' in kwargs else None
+        description=kwargs['description'] if 'description' in kwargs else None
+        supplier_id=kwargs['supplier_id'] if 'supplier_id' in kwargs else None
+        address=kwargs['address'] if 'address' in kwargs else None
         user=self.user
         if customer_id is None:
             customer=CustomerRepo(user=self.user).me

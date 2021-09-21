@@ -95,7 +95,9 @@ class CartApi(APIView):
                 customer_id=checkout_cart_form.cleaned_data['customer_id']
                 cart_lines=json.loads(cart_lines)
                 cart_lines=CartRepo(user=request.user).checkout(
-                    cart_lines=cart_lines,customer_id=customer_id)
+                    cart_lines=cart_lines,
+                    customer_id=customer_id
+                    )
                 if cart_lines is not None:
                     level=4
                     cart_lines_s=CartLineSerializer(cart_lines,many=True).data

@@ -25,7 +25,6 @@
             })
 
             posting.done(function (data) {
-                console.log(data)
                 if (data.result === 'SUCCEED') {
                     comment_app.comments=data.comments
                 }
@@ -59,21 +58,18 @@ let comment_app = new Vue({
 
 
             let url =url_add_comment
-            console.log(url)
 
             let payload={
                 page_id: page_id,
                 text: comment_app.text,
                 csrfmiddlewaretoken: csrfmiddlewaretoken
             }
-            console.log(payload)
             var posting = $.post(url,payload
                 
             );
 
             // Put the results in a div
             posting.done(function (data) {
-                console.log(data)
 
                 if (data.result === 'SUCCEED') {
                     // swal({

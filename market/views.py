@@ -124,11 +124,12 @@ class CartViews(View):
             confirm_cart_form = ConfirmCartForm(request.POST)
             if confirm_cart_form.is_valid():
                 customer_id = confirm_cart_form.cleaned_data['customer_id']
+                no_ship = confirm_cart_form.cleaned_data['no_ship']
                 supplier_id = confirm_cart_form.cleaned_data['supplier_id']
                 address = confirm_cart_form.cleaned_data['address']
                 description = confirm_cart_form.cleaned_data['description']
                 no_ship = confirm_cart_form.cleaned_data['no_ship']
-                orders = CartRepo(request=request).confirm(customer_id=customer_id, address=address,
+                orders = CartRepo(request=request).confirm(no_ship=no_ship,customer_id=customer_id, address=address,
                                                            description=description, no_ship=no_ship, supplier_id=supplier_id)
                 if orders is not None and len(orders) == 1:
                     return redirect(orders[0].get_absolute_url())
@@ -308,8 +309,9 @@ class OrderViews(View):
                 order = OrderRepo(user=request.user).do_deliver(
                     order_id=order_id, description=description)
                 if ware_house_id > 0:
-                    WareHouseRepo(user=request.user).add_order_in_ware_house(
-                        order_id=order.id, ware_house_id=ware_house_id, direction=True, description=description)
+                    pass
+                    # WareHouseRepo(user=request.user).add_order_in_ware_house(
+                    #     order_id=order.id, ware_house_id=ware_house_id, direction=True, description=description)
 
                 if order is not None:
                     return redirect(order.get_absolute_url())
@@ -327,8 +329,8 @@ class OrderViews(View):
                     count_of_packs = 1
                 order = OrderRepo(user=request.user).do_pack(
                     order_id=order_id, count_of_packs=count_of_packs, description=description)
-                WareHouseRepo(user=request.user).add_order_in_ware_house(
-                    order_id=order.id, ware_house_id=ware_house_id, direction=False, description=description)
+                # WareHouseRepo(user=request.user).add_order_in_ware_house(
+                #     order_id=order.id, ware_house_id=ware_house_id, direction=False, description=description)
                 if order is not None:
                     return redirect(order.get_absolute_url())
         # return redirect(reverse('market:orders_supplier',kwargs={'supplier_id':0}))

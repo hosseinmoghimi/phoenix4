@@ -28,13 +28,11 @@
                     if (specification.id == specification1.id) {
                         added = false
                         this.selected_specifications.splice(i, 1)
-                        console.log(this.selected_specifications)
                         return
                     }
                     i++
                 });
                 if (added) {
-                    console.log(this.selected_specifications)
                     this.selected_specifications.push({ id: specification.id })
                 }
             },

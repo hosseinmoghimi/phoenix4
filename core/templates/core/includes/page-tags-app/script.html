@@ -17,11 +17,9 @@
                     page_id: page_id,
                     tag_id: tag_id,
                 }
-                console.log(payload)
                 $.post(url, payload).done((data) => {
                     
                 page_tags_app.waiting=false
-                    console.log(data)
                     if (data.result === 'SUCCEED'){
                         page_tags_app.tag_title=""
                         page_tags_app.tags=page_tags_app.tags.filter(tag=>tag.id!=tag_id)
@@ -36,11 +34,9 @@
                     page_id: page_id,
                     title: page_tags_app.tag_title,
                 }
-                console.log(payload)
                 $.post(url, payload).done((data) => {
                     
                 page_tags_app.waiting=false
-                    console.log(data)
                     if (data.result === 'SUCCEED'){
                         page_tags_app.tag_title=""
                         page_tags_app.tags.push(data.tag)

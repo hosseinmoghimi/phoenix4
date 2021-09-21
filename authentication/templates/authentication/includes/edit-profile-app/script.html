@@ -15,7 +15,6 @@
         methods: {
             edit_profile: function () {
                 let url = "{% url 'authentication:edit_profile' profile_id=selected_profile.id %}"
-                console.log(url)
                 let payload = {
                     // profile_id:edit_profile_app.profile_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -27,9 +26,7 @@
                     email: edit_profile_app.email,
                 }
                 let posting = $.post(url, payload)
-                console.log(payload)
                 posting.done((data) => {
-                     console.log(data.result)
                     if (data.result === 'SUCCEED') {
 
                         edit_profile_app.edited_successfully = true
