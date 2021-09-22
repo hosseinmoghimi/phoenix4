@@ -29,6 +29,7 @@ urlpatterns = [
     path("employee/<int:pk>/",views.EmployeeViews().employee,name="employee"),
     path("ware_house/<int:pk>/",views.WareHouseViews().ware_house,name="ware_house"),
     path("ware_houses/",views.WareHouseViews().ware_houses,name="ware_houses"),
+    path("product-feature/<int:pk>/",views.ProductViews().product_feature,name="productfeature"),
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),

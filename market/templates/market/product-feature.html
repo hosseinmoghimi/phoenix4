@@ -33,17 +33,12 @@
                     <span class="farsi">
                         {{product.category.get_breadcrumb|safe}}
                     </span>
-                    <h2 class="title">{{product.title}}
+                    <h2 class="title">{{product_feature.title}}
                         {% if perms.market.change_product %}
-                        {{product.get_edit_btn|safe}}
+                        {{product_feature.get_edit_btn|safe}}
                         {% endif %}
                     </h2>
-                    {% if product.brand %}
-                    <div class="text-right farsi">
-                        برند :
-                        {{product.brand.get_logo_link|safe}}
-                    </div>
-                    {% endif %}
+                 
 
                     {% if product.model_name %}
                     <div class="text-right farsi">

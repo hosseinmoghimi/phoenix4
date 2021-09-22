@@ -43,6 +43,7 @@ class Product(MarketPage):
     model_name=models.CharField(_("model"),null=True,blank=True, max_length=50)
     unit_names=models.ManyToManyField("unitname", verbose_name=_("unit_names"))
     for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
+    features=models.ManyToManyField("productfeature",blank=True, verbose_name=_("features"))
     def specifications(self):
         specifications= ProductSpecification.objects.filter(product=self).order_by('name','value')
         return specifications
@@ -526,13 +527,14 @@ class ProductInStock(models.Model):
 
 class ProductFeature(MarketPage):
     # product=models.ForeignKey("Product",related_name="productfeature_sett", verbose_name=_("product"), on_delete=models.CASCADE)
+    class_name='productfeature'
     class Meta:
         verbose_name = _("ProductFeature")
         verbose_name_plural = _("فیچر های کالا ها و محصولات")
 
 
     def save(self,*args, **kwargs):
-        self.child_class='productfeature'
+        self.class_name='productfeature'
         super(ProductFeature,self).save(*args, **kwargs)
    
 

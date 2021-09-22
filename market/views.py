@@ -9,7 +9,7 @@ from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
 from django.views import View
 from market.forms import *
-from .repo import BlogRepo, EmployeeRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
+from .repo import BlogRepo, EmployeeRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
 from .apps import APP_NAME
 from authentication.views import ProfileContext
 from django.shortcuts import render, redirect, reverse
@@ -98,7 +98,7 @@ class CartViews(View):
     def cart(self, request, *args, **kwargs):
         if 'customer_id' in kwargs:
             customer_id = kwargs['customer_id']
-            customer = CustomerRepo(request).customer(
+            customer = CustomerRepo(request=request).customer(
                 customer_id=kwargs['customer_id'])
         else:
             customer = CustomerRepo(request=request).me
@@ -141,11 +141,21 @@ class CartViews(View):
 
 
 class ProductViews(View):
+    def product_feature(self, request, *args, **kwargs):
+
+        product_feature = ProductFeatureRepo(request=request).product_feature(*args, **kwargs)
+        page = product_feature
+        context = getContext(request)
+        context.update(PageContext(request=request, page=product_feature))
+        context['body_class'] = "product-page"
+        context['product_feature']=product_feature
+        return render(request, TEMPLATE_ROOT+"product-feature.html", context)
+
     def product(self, request, *args, **kwargs):
 
-        product = ProductRepo(request).product(*args, **kwargs)
+        product = ProductRepo(request=request).product(*args, **kwargs)
         page = product
-        context = getContext(request)
+        context = getContext(request=request)
         context.update(PageContext(request=request, page=page))
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form']=AddProductSpecificationForm()
@@ -171,13 +181,13 @@ class ProductViews(View):
                 context['in_cart']=in_cart
 
             context['cart_s']=json.dumps(CartSerializer(cart).data)
-        context['body_class'] = "product-page"
         context['specifications_s']=json.dumps(ProductSpecificationSerializer(product.specifications(),many=True).data)
+        context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
     def brand(self, request, *args, **kwargs):
 
-        brand = BrandRepo(request).brand(*args, **kwargs)
+        brand = BrandRepo(request=request).brand(*args, **kwargs)
         page = brand
         context = getContext(request)
         context['brand'] = brand
@@ -196,7 +206,7 @@ class ProductViews(View):
 class CustomerViews(View):
     def customer(self, request, *args, **kwargs):
 
-        customer = CustomerRepo(request).customer(*args, **kwargs)
+        customer = CustomerRepo(request=request).customer(*args, **kwargs)
         profile = customer.profile
         context = getContext(request)
         context.update(ProfileContext(request=request, profile=profile))
@@ -224,7 +234,7 @@ class GuaranteeView(View):
 class SupplierViews(View):
     def supplier(self, request, *args, **kwargs):
 
-        supplier = SupplierRepo(request).supplier(*args, **kwargs)
+        supplier = SupplierRepo(request=request).supplier(*args, **kwargs)
         page = supplier
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
@@ -235,7 +245,7 @@ class SupplierViews(View):
 
 class ShipperViews(View):
     def shipper(self, request, *args, **kwargs):
-        shipper = SupplierRepo(request).shipper(*args, **kwargs)
+        shipper = SupplierRepo(request=request).shipper(*args, **kwargs)
         page = shipper
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
@@ -290,7 +300,7 @@ class OrderViews(View):
 
     def orders(self, request, *args, **kwargs):
 
-        orders = OrderRepo(request).orders(*args, **kwargs)
+        orders = OrderRepo(request=request).orders(*args, **kwargs)
         context = getContext(request)
         customer=CustomerRepo(request=request).customer(*args, **kwargs)
         if customer is not None:
@@ -366,7 +376,7 @@ class OrderViews(View):
     def order_invoice(self, request, *args, **kwargs):
         context = getContext(request)
         TAX_PERCENT = 0
-        order = OrderRepo(request).order(*args, **kwargs)
+        order = OrderRepo(request=request).order(*args, **kwargs)
         order_lines = []
         lines_total = 0
         for order_line in order.orderline_set.all():
@@ -410,7 +420,7 @@ class OrderViews(View):
 class OfferViews(View):
     def offer(self, request, *args, **kwargs):
 
-        offer = OfferRepo(request).offer(*args, **kwargs)
+        offer = OfferRepo(request=request).offer(*args, **kwargs)
         page = offer
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
@@ -423,7 +433,7 @@ class OfferViews(View):
 class BlogViews(View):
     def blog(self, request, *args, **kwargs):
 
-        blog = BlogRepo(request).blog(*args, **kwargs)
+        blog = BlogRepo(request=request).blog(*args, **kwargs)
         page = blog
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
@@ -435,7 +445,7 @@ class BlogViews(View):
 
 class CategoryViews(View):
     def category(self, request, *args, **kwargs):
-        category = CategoryRepo(request).category(*args, **kwargs)
+        category = CategoryRepo(request=request).category(*args, **kwargs)
         page = category
         context = getContext(request)
         context.update(PageContext(request=request, page=page))

@@ -290,7 +290,10 @@ class BasicPage(models.Model):
         </a>
         """
     def get_absolute_url(self):
-        return reverse(self.app_name+":"+self.class_name, kwargs={"pk": self.pk})
+        app_name=self.app_name
+        class_name=self.class_name
+        pk=self.pk
+        return reverse(app_name+":"+class_name, kwargs={"pk": pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
     def delete(self,*args, **kwargs):

@@ -6,7 +6,7 @@ from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 import json
 class ShipperRepo:
@@ -279,6 +279,30 @@ class CustomerRepo:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+class ProductFeatureRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = ProductFeature.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def product_feature(self,*args, **kwargs):
+        pk=0
+        if 'product_feature_id' in kwargs:
+            pk = kwargs['product_feature_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        product_feature= self.objects.filter(pk=pk).first() 
+
+        return product_feature
+
 
 class OrderRepo:
     def __init__(self, *args, **kwargs):
@@ -291,6 +315,8 @@ class OrderRepo:
             self.user = kwargs['user']
         self.objects = Order.objects
         self.profile = ProfileRepo(user=self.user).me
+
+
 
     def orders(self,*args, **kwargs):
         return self.list(*args, **kwargs)
@@ -326,8 +352,6 @@ class OrderRepo:
                 order.date_accepted = timezone.now()
                 order.status = OrderStatusEnum.ACCEPTED
                 order.save()
-        print(order)
-        print(100*"#")
         return order
 
     def do_pack(self, *args, **kwargs):
