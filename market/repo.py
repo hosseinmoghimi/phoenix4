@@ -6,7 +6,7 @@ from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderLine, Product, Category, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 import json
 class ShipperRepo:
@@ -326,13 +326,17 @@ class OrderRepo:
                 order.date_accepted = timezone.now()
                 order.status = OrderStatusEnum.ACCEPTED
                 order.save()
+        print(order)
+        print(100*"#")
         return order
 
-    def do_pack(self, order_id, description, count_of_packs=1):
+    def do_pack(self, *args, **kwargs):
+        order=self.order(*args, **kwargs)
+        description=kwargs['description'] if 'description' in kwargs else None
+        count_of_packs=kwargs['count_of_packs'] if 'count_of_packs' in kwargs else 1
         profile = self.profile
         if profile is None:
             return None
-        order = self.objects.get(pk=order_id)
         if order.supplier.profile == profile and (order.status == OrderStatusEnum.PACKING or order.status==OrderStatusEnum.ACCEPTED):
 
             order.count_of_packs = count_of_packs
@@ -407,11 +411,15 @@ class OrderRepo:
                 return order
         
 
-    def do_deliver(self, order_id, description=''):
+    def do_deliver(self,*args, **kwargs):
+        order=self.order(*args, **kwargs)
+        description=kwargs['description'] if 'description' in kwargs else None
+        ware_house_repo=WareHouseRepo(request=self.request)
+        ware_house=ware_house_repo.ware_house(*args, **kwargs)
+
         customer = CustomerRepo(user=self.user).me
         if customer is None:
             return None 
-        order = self.order(order_id=order_id)
         if order.description is None:
             order.description=""
         if order.status == OrderStatusEnum.SHIPPED or (order.status == OrderStatusEnum.PACKED and order.no_ship==True):
@@ -425,7 +433,9 @@ class OrderRepo:
                     NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
                 if order.customer.profile is not None:
                     NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
-                
+                if ware_house is not None:
+                    ware_house_repo.add_order_in_ware_house(order=order, ware_house=ware_house, direction=True, description=description)
+
                 return order
 
 
@@ -475,17 +485,18 @@ class EmployeeRepo():
 
 
 class WareHouseRepo:
-    def get(self,ware_house_id):
-        try:
-            return self.objects.get(pk=ware_house_id)
-        except:
-            return None
+    def ware_house(self,*args, **kwargs):
+        pk=0
+        if 'ware_house_id' in kwargs:
+            pk = kwargs['ware_house_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        ware_house= self.objects.filter(pk=pk).first() 
+        
+        return ware_house
 
-    def ware_house(self,pk):
-        try:
-            return self.objects.get(pk=pk)
-        except:
-            return None
 
     
     def __init__(self, *args, **kwargs):
@@ -505,10 +516,21 @@ class WareHouseRepo:
         except:
             pass
     def list(self):
-        return self.objects.all()
-    def add_order_in_ware_house(self,order_id,ware_house_id,direction,description=None):
-        order=Order.objects.get(pk=order_id)
-        ware_house=WareHouse.objects.get(pk=ware_house_id)
+        objects= self.objects.all()
+        return objects
+    def add_order_in_ware_house(self,*args, **kwargs):
+        order_id=kwargs['order_id'] if 'order_id' in kwargs else None
+        order=kwargs['order'] if 'order' in kwargs else None
+        ware_house_id=kwargs['ware_house_id'] if 'ware_house_id' in kwargs else None
+        ware_house=kwargs['ware_house'] if 'ware_house' in kwargs else None
+        direction=kwargs['direction'] if 'direction' in kwargs else None
+        description=kwargs['description'] if 'description' in kwargs else None
+        if order is None:
+            order=OrderRepo(request=self.request).order(pk=order_id)
+        if ware_house is None:
+            ware_house=self.ware_house(pk=ware_house_id)
+        if order is None or ware_house is None:
+            return None
         employee=Employee.objects.filter(profile=self.profile).first()
         if order is not None and ware_house is not None and employee is not None:
             order_in_warehouse=OrderInWareHouse(direction=direction,description=description,adder=employee,order=order,ware_house=ware_house)

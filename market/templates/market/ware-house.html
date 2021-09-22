@@ -62,60 +62,6 @@
                     </div>
                     {% endfor %}
 
-                    <div id="accordion" role="tablist">
-                        {% if shipper.short_description %}
-                        <div class="card card-collapse">
-                            <div class="card-header" role="tab" id="headingShortDescription">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseShortDescription" aria-expanded="true"
-                                        aria-controls="collapseShortDescription">
-                                        توضیحات کوتاه
-                                        <i class="material-icons">keyboard_arrow_down</i>
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="collapseShortDescription" class="collapse" role="tabpanel"
-                                aria-labelledby="headingShortDescription" data-parent="#accordion">
-                                <div class="card-body">
-
-
-                                    {{shipper.short_description|safe}}
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endif %}
-
-                        {% if shipper.description %}
-                        <div class="card card-collapse">
-                            <div class="card-header" role="tab" id="headingDescription">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
-                                        aria-controls="collapseShortDescription">
-                                        توضیحات کامل
-                                        <i class="material-icons">keyboard_arrow_down</i>
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="collapseDescription" class="collapse" role="tabpanel"
-                                aria-labelledby="headingDescription" data-parent="#accordion">
-                                <div class="card-body">
-
-
-                                    {{shipper.description|safe}}
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endif %}
-
-
-
-
-                    </div>
-
 
                 </div>
             </div>
@@ -157,61 +103,41 @@
         <div class="related-products">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="title text-center">محصولات ارائه شده توسط {{shipper.title}}</h3>
+                    <h3 class="title text-center">سفارش های مرتبط با {{ware_house.title}}</h3>
 
                     <div class="table-responsive rtl farsi">
                         <table class="table table-shopping">
                             <thead>
                                 <tr>
-                                    <th class="text-center"></th>
-                                    <th class="text-right">محصول</th>
-                                    <th class="text-right">سطح</th>
-                                    <th class="text-right">واحد</th>
-                                    <th class="text-right">قیمت</th>
+                                    <th class="text-right">سفارش</th>
+                                    <th class="text-right">جهت</th>
                                     <th class="text-right">تاریخ</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for shop in shipper.shop_set.all %}
+                                {% for order_in_ware_house in ware_house.orderinwarehouse_set.all %}
 
                                 <tr>
-                                    <td>
-                                        <div class="img-container">
-                                            <img class="rounded" src="{{shop.product.thumbnail}}" alt="...">
-                                        </div>
-                                    </td>
+
                                     <td class="td-name text-right">
-                                        <a href="{{shop.product.get_absolute_url}}">{{shop.product.title}}</a>
-                                        <br />
-                                        <small>{{shop.product.category.title}}</small>
+                                        <a href="{{order_in_ware_house.order.get_absolute_url}}">
+                                            {{order_in_ware_house.order.title}}
+                                        </a>
+
                                     </td>
 
                                     <td class="text-right">
-                                        <span class="badge badge-primary">
-
-                                            {{shop.level}}
-                                        </span>
-
+                                        {{order_in_ware_house.get_direction_badge|safe}}
 
                                     </td>
+
                                     <td class="text-right">
-                                        <span class="badge badge-danger">
-                                            {{shop.unit_name}}
+                                        <small>
 
-                                        </span>
-
-                                    </td>
-                                    <td class="td-number text-right">
-                                        {{shop.unit_price|to_price_pure}}
-                                        <small class="text-muted">{{CURRENCY}}</small>
-                                    </td>
-
-                                    <td class="td-number text-right">
-                                        <small class="text-muted">
-
-                                            {{shop.date_added|to_persian_datetime|safe}}
+                                            {{order_in_ware_house.date_added|to_persian_datetime|safe}}
                                         </small>
+
                                     </td>
                                     <td class="td-actions">
                                         <button type="button" rel="tooltip" data-placement="left" title="Remove item"
@@ -237,87 +163,6 @@
         </div>
 
 
-        <div class="related-products">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="title text-center">سفارشات {{shipper.title}}</h3>
-
-                    <div class="table-responsive rtl farsi">
-                        <table class="table table-shopping">
-                            <thead>
-                                <tr>
-                                    <th class="text-center"></th>
-                                    <th class="text-right">محصول</th>
-                                    <th class="text-right">سطح</th>
-                                    <th class="text-right">واحد</th>
-                                    <th class="text-right">قیمت</th>
-                                    <th class="text-right">تاریخ</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for order in shipper.order_set.all %}
-
-                                <tr>
-                                    <td>
-                                        <div class="img-container">
-                                            <img class="rounded" src="{{shop.product.thumbnail}}" alt="...">
-                                        </div>
-                                    </td>
-                                    <td class="td-name text-right">
-                                        <a href="{{shop.product.get_absolute_url}}">{{shop.product.title}}</a>
-                                        <br />
-                                        <small>{{shop.product.category.title}}</small>
-                                    </td>
-
-                                    <td class="text-right">
-                                        <span class="badge badge-primary">
-
-                                            {{shop.level}}
-                                        </span>
-
-
-                                    </td>
-                                    <td class="text-right">
-                                        <span class="badge badge-danger">
-                                            {{shop.unit_name}}
-
-                                        </span>
-
-                                    </td>
-                                    <td class="td-number text-right">
-                                        {{shop.unit_price|to_price_pure}}
-                                        <small class="text-muted">{{CURRENCY}}</small>
-                                    </td>
-
-                                    <td class="td-number text-right">
-                                        <small class="text-muted">
-
-                                            {{shop.date_added|to_persian_datetime|safe}}
-                                        </small>
-                                    </td>
-                                    <td class="td-actions">
-                                        <button type="button" rel="tooltip" data-placement="left" title="Remove item"
-                                            class="btn btn-link">
-                                            <i class="material-icons">close</i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                {% endfor %}
-                                <!-- <tr>
-                      <td colspan="6"></td>
-                      <td colspan="2" class="text-right">
-                        <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
-                      </td>
-                    </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
 
     </div>
 </div>

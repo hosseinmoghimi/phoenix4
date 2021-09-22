@@ -274,7 +274,7 @@ class OrderViews(View):
          # do ship form
         me_shipper = ShipperRepo(request=request).me
 
-        if me_shipper is not None and order.status == OrderStatusEnum.PACKED:
+        if me_shipper is not None and order.status == OrderStatusEnum.PACKED and not order.no_ship:
             do_ship_form = DoShipForm()
             context['do_ship_form'] = do_ship_form
         # do deiver form
@@ -311,13 +311,9 @@ class OrderViews(View):
                 ware_house_id = do_deliver_form.cleaned_data['ware_house_id']
                 order_id = do_deliver_form.cleaned_data['order_id']
                 description = do_deliver_form.cleaned_data['description']
-                order = OrderRepo(user=request.user).do_deliver(
-                    order_id=order_id, description=description)
-                if ware_house_id > 0:
-                    pass
-                    # WareHouseRepo(user=request.user).add_order_in_ware_house(
-                    #     order_id=order.id, ware_house_id=ware_house_id, direction=True, description=description)
-
+                order = OrderRepo(request=request).do_deliver(
+                    order_id=order_id, description=description,ware_house_id=ware_house_id)
+                
                 if order is not None:
                     return redirect(order.get_absolute_url())
         return redirect(reverse('market:orders', kwargs={'profile_id': 0}))

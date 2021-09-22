@@ -160,7 +160,8 @@ class Order(models.Model):
         return self.lines_total()+self.ship_fee
     def __str__(self):
         return f"سفارش شماره {str(self.pk)} /{str(self.supplier)} / {str(self.customer)} "
-
+    def title(self):
+        return f"سفارش شماره {self.pk}"
     def get_absolute_url(self):
         return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
 
@@ -603,3 +604,14 @@ class OrderInWareHouse(models.Model):
             return super(OrderInWareHouse,self).save(*args, **kwargs)
     def get_absolute_url(self):
         return reverse("OrderInWareHouse_detail", kwargs={"pk": self.pk})
+    def get_direction_badge(self):
+        if self.direction:
+            badge =f"""
+                <span class="badge badge-success">وارد شده به انبار</span>
+            """
+        else:
+            badge =f"""
+                <span class="badge badge-danger">خارج شده به انبار</span>
+            """
+
+        return badge
