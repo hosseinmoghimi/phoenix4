@@ -861,9 +861,14 @@ class CartRepo:
         if customer is not None:
             shop_id=kwargs['shop_id']
             quantity=kwargs['quantity']
+            shop=ShopRepo(request=self.request).shop(*args, **kwargs)
+            if shop is None:
+                return
+            if shop.available<quantity:
+                return
             lines=CartLine.objects.filter(customer=customer).filter(shop_id=shop_id)
             lines.delete()
-            if quantity>0:
+            if quantity>0 :
                 cart_line=CartLine(shop_id=shop_id,quantity=quantity,customer=customer)
                 cart_line.save()
                 cart=Cart.objects.filter(customer=customer).first()
