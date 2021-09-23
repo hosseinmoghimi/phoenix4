@@ -1,7 +1,9 @@
 <tr class="farsi">
     <td>
         <div class="img-container">
+            <a :title="cart_line.shop.product.title" :href="cart_line.shop.product.get_absolute_url">
             <img class="rounded" :src="cart_line.shop.product.thumbnail" alt="...">
+            </a>
         </div>
     </td>
     <td class="td-name">
