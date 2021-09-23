@@ -693,7 +693,7 @@ class ShopRepo:
             unit_price = kwargs['unit_price']
         if 'available' in kwargs:
             available = kwargs['available']
-        if available==0 or unit_price==0:
+        if not available>0 or unit_price==0:
             Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).delete()
             return {'result':'deleted'}
         shop = Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).first()
