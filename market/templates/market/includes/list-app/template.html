@@ -48,7 +48,15 @@
                 <h4 class="card-title">
                     <a href="{{product.get_absolute_url}}">{{product.title}}</a>
                 </h4>
+                {% if product.brand %}
+                <div class="text-canter farsi">
+                    <a title="{{product.brand.title}}" target="_blank" href="{{product.brand.get_absolute_url}}" class="docs-creator">
+                        <img src="{{product.brand.image}}" height="32" alt="{{product.brand.title}}">
+            
+                    </a>
 
+                </div>
+                {% endif %}
                 <div class="card-description">
 
                     {% if product.short_description %}
