@@ -179,7 +179,7 @@
             <div class="col-md-6 ltr">
                 <div class="form-group bmd-form-group">
                     <label for="exampleInputqs1" class="bmd-label-floating">موجودی در انبار</label>
-                    <input v-model="available" required type="number" class="form-control" id="exampleInputqs1">
+                    <input v-model="available" min="1" required type="number" class="form-control" id="exampleInputqs1">
                     <span class="bmd-help farsi rtl text-right">قیمت را به {{CURRENCY}} وارد کنید.</span>
                 </div>
             </div>
@@ -187,7 +187,7 @@
             <div class="col-md-6 ltr">
                 <div class="form-group bmd-form-group">
                     <label for="exampleInputq1" class="bmd-label-floating">قیمت واحد به {{CURRENCY}}</label>
-                    <input v-model="unit_price" required type="number" class="form-control" id="exampleInputq1">
+                    <input v-model="unit_price" required type="number" class="form-control" min="1" id="exampleInputq1">
                     <span class="bmd-help farsi rtl text-right">قیمت را به {{CURRENCY}} وارد کنید.</span>
                 </div>
             </div>
