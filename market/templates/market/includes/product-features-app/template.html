@@ -1,0 +1,52 @@
+<div class="features text-center" id="product-features-app">
+    <div class="row">
+        {% if add_product_feature_form %}
+        <div class="col-md-12 text-center">
+            <form @submit.prevent="add_feature()">
+                <input type="number" class="form-control farsi" v-model="product_feature_id">
+                <button class="btn btn-success farsi" type="submit">افزودن</button>
+            </form>
+        </div>
+        {% endif %}
+        {% for feature in product.features.all %}
+
+        <div class="col-md-4  mr-auto ml-auto">
+            <div class="info">
+                <div class="icon icon-info">
+                    <i class="material-icons">local_shipping</i>
+                </div>
+                <h4 class="info-title">
+                    <a href="{{feature.get_absolute_url}}">
+
+                        {{feature.title}}
+                    </a>
+                </h4>
+                {% if feature.short_description %}
+
+                <div class="farsi text-muted small">{{feature.short_description|safe}}</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+
+
+        <div class="col-md-4  mr-auto ml-auto" v-for="feature in features">
+            <div class="info">
+                <div class="icon icon-info">
+                    <i class="material-icons">local_shipping</i>
+                </div>
+                <h4 class="info-title">
+                    <a :href="feature.get_absolute_url" v-text="feature.title">
+
+                    </a>
+                </h4>
+                {% if feature.short_description %}
+
+                <div class="farsi text-muted small">{{feature.short_description|safe}}</div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>

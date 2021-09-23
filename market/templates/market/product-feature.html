@@ -40,35 +40,13 @@
                     </h2>
                  
 
-                    {% if product.model_name %}
-                    <div class="text-right farsi">
-
-                        مدل : {{product.model_name}}
-                    </div>
-                    {% endif %}
+                  
 
                     <!-- <h3 class="main-price">$335</h3> -->
                     <div id="accordion" role="tablist">
-                        <div class="card card-collapse">
-                            <div class="card-header" role="tab" id="headingSpecification">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseSpecification" aria-expanded="true"
-                                        aria-controls="collapseSpecification">
-                                        ویژگی ها <i class="material-icons">keyboard_arrow_down</i>
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="collapseSpecification" class="collapse" role="tabpanel"
-                                aria-labelledby="headingSpecification" data-parent="#accordion">
-                                <div class="card-body">
+                   
 
-                                    {% include "market/includes/product-specifications-app/template.html" %}
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {% if product.short_description %}
+                        {% if product_feature.short_description %}
                         <div class="card card-collapse">
                             <div class="card-header" role="tab" id="headingShortDescription">
                                 <h5 class="mb-0">
@@ -84,7 +62,7 @@
                                 <div class="card-body">
 
 
-                                    {{product.short_description|safe}}
+                                    {{product_feature.short_description|safe}}
 
                                 </div>
                             </div>
@@ -92,7 +70,7 @@
 
                         {% endif %}
 
-                        {% if product.description %}
+                        {% if product_feature.description %}
                         <div class="card card-collapse">
                             <div class="card-header" role="tab" id="headingDescription">
                                 <h5 class="mb-0">
@@ -108,7 +86,7 @@
                                 <div class="card-body">
 
 
-                                    {{product.description|safe}}
+                                    {{product_feature.description|safe}}
 
                                 </div>
                             </div>
@@ -125,55 +103,43 @@
 
 
 
-                    {% if me_customer %}
-                    <div class="mb-4"></div>
-                    {% include "market/includes/add-to-cart-app/template.html" %}
-                    {% endif %}
-
+              
 
 
                 </div>
 
 
 
-                {% if me_supplier %}
-
-                <div class="col-md-12">
-
-                    {% include "market/includes/shops-app/template.html" %}
-                </div>
-                {% endif %}
+              
 
             </div>
         </div>
         <div class="features text-center">
             <div class="row">
-                {% for feature in product.features.all %}
 
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <div class="info">
                         <div class="icon icon-info">
                             <i class="material-icons">local_shipping</i>
                         </div>
                         <h4 class="info-title">
-                            <a href="{{feature.get_absolute_url}}">
+                            <a href="{{product_feature.get_absolute_url}}">
 
-                                {{feature.title}}
+                                {{product_feature.title}}
                             </a>
                         </h4>
-                        {% if feature.short_description %}
+                        {% if product_feature.short_description %}
 
-                        <div class="farsi text-muted small">{{feature.short_description|safe}}</div>
+                        <div class="farsi text-muted small">{{product_feature.short_description|safe}}</div>
                         {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
         <div class="related-products">
-            <h3 class="title text-center">محصولات مرتبط</h3>
+            <h3 class="title text-center">محصولات دارای این ویژگی</h3>
             <div class="row">
-                {% for related_product in related_pages %}
+                {% for related_product in product_feature.product_set.all %}
 
                 <div class="col-lg-3 col-md-6 mr-auto ml-auto">
                     <div class="card card-product">
@@ -224,16 +190,5 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "market/includes/product-images-app/script.html" %}
-{% if me_supplier %}
 
-{% include "market/includes/shops-app/script.html" %}
-{% endif %}
-
-
-{% include "market/includes/product-specifications-app/script.html" %}
-{% if me_customer %}
-
-{% include "market/includes/add-to-cart-app/script.html" %}
-{% include "market/includes/cart-app/cart-app.html" %}
-{% endif %}
 {% endblock %}

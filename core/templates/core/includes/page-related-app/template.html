@@ -53,43 +53,7 @@
             </div>
             {% if add_related_page_form %}
             <div class="card-footer">
-                <span  v-show="!show_add_form" @click="show_add_form=true"  title="افزودن صفحه مرتبط"
-                 class="material-icons text-primary" style="cursor: pointer;">
-                    loupe
-                    </span>
-
-                <form v-show="show_add_form" @submit.prevent="add_related_page()">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">شناسه صفحه مرتبط</label>
-                                <input  min="0" required type="number" v-model="related_page_id" class="form-control"
-                                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="شناسه صفحه">
-                                <small id="emailHelp" class="form-text farsi text-muted">
-                                    شناسه صفحه مرتبط را وارد کنید.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input type="checkbox" v-model="bidirectional" class="form-check-input"
-                                    id="exampleCheck1">
-                                <label class="form-check-label pr-3" for="exampleCheck1">ارتباط دو طرفه</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <button @click="show_add_form=false" class="btn btn-outline-secondary">انصراف</button>
-                            <button type="submit" class="btn btn-primary">تایید</button>
-
-                        </div>
-                    </div>
-
-
-                </form>
+             {% include "core/includes/page-related-app/form.html" %}
 
             </div>
             {% endif %}

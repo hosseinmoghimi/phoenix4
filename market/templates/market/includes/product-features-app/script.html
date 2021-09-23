@@ -1,0 +1,30 @@
+<script>
+    let product_features_app = new Vue({
+        el: "#product-features-app",
+        data: {
+            product_feature_id:318,
+            
+            features: [],
+        },
+        methods: {
+            add_feature:function(){
+                let url="{% url 'market:add_feature_for_product' %}"
+                let payload={
+                    product_id:page_id,
+                    product_feature_id:parseInt(this.product_feature_id),
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                }
+                console.log(payload)
+                let posting=$.post(url,payload)
+                posting.done((data)=>{
+                    console.log(data)
+                    if(data.result==='SUCCEED'){
+                        product_features_app.features.push(data.feature)
+                        product_features_app.product_feature_id=""
+                    }
+                })
+            }
+
+        },
+    })
+</script>

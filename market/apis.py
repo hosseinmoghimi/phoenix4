@@ -2,7 +2,7 @@ import json
 
 from django.db.models import manager
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -94,7 +94,7 @@ class CartApi(APIView):
                 cart_lines=checkout_cart_form.cleaned_data['cart_lines']
                 customer_id=checkout_cart_form.cleaned_data['customer_id']
                 cart_lines=json.loads(cart_lines)
-                cart_lines=CartRepo(user=request.user).checkout(
+                cart_lines=CartRepo(request=request).checkout(
                     cart_lines=cart_lines,
                     customer_id=customer_id
                     )
@@ -149,6 +149,27 @@ class WareHouseApi(APIView):
       
 class ProductApi(APIView):
     
+    def add_feature_for_product(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_product_feature_form=AddProductFeatureForm(request.POST)
+            if add_product_feature_form.is_valid():
+                log=3
+                product_id=add_product_feature_form.cleaned_data['product_id']
+                product_feature_id=add_product_feature_form.cleaned_data['product_feature_id']
+                
+                feature=ProductRepo(request=request).add_feature(product_id=product_id,product_feature_id=product_feature_id)
+                if feature is not None:
+                    log=4
+                    context['feature']=ProductFeatureSerializer(feature).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+        
+    
     def add_product_specification(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
@@ -161,7 +182,7 @@ class ProductApi(APIView):
                 name=add_product_specification_form.cleaned_data['name']
                 value=add_product_specification_form.cleaned_data['value']
                 
-                product_specification=ProductRepo(user=request.user).add_specification(product_id=product_id,name=name,value=value)
+                product_specification=ProductRepo(request=request).add_specification(product_id=product_id,name=name,value=value)
                 if product_specification is not None:
                     context['product_specification']=ProductSpecificationSerializer(product_specification).data
                     context['result']=SUCCEED

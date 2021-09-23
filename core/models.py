@@ -168,7 +168,7 @@ class BasicPage(models.Model):
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
-    related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط از"))
+    related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط"))
     @property
     def full_title(self,*args, **kwargs):
         seperator="/"

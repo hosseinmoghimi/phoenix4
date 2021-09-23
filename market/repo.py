@@ -70,7 +70,16 @@ class ProductRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
-
+    def add_feature(self,*args, **kwargs):
+        feature=ProductFeatureRepo(request=self.request).product_feature(*args, **kwargs)
+        product=ProductRepo(request=self.request).product(*args, **kwargs)
+        print(product)
+        print(feature)
+        print(20*"##$%")
+        if product is None or feature is None:
+            return None
+        product.features.add(feature)
+        return feature
     def add_product_for_shop(self, *args, **kwargs):
         products=[]
         # print(kwargs['specifications'])

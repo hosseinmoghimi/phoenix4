@@ -1,0 +1,27 @@
+<div class="features text-center">
+    <div class="row">
+        {% for feature in product.features.all %}
+
+        <div class="col-md-4  mr-auto ml-auto">
+            <div class="info">
+                <div class="icon icon-info">
+                    <i class="material-icons">local_shipping</i>
+                </div>
+                <h4 class="info-title">
+                    <a href="{{feature.get_absolute_url}}">
+
+                        {{feature.title}}
+                    </a>
+                </h4>
+                {% if feature.short_description %}
+
+                <div class="farsi text-muted small">{{feature.short_description|safe}}</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+
+
+    </div>
+</div>

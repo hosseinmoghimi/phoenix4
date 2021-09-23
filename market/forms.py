@@ -55,6 +55,11 @@ class SearchForm(forms.Form):
 class RemoveShopForm(forms.Form):
     shop_id=forms.IntegerField(required=True)
 
+
+class AddProductFeatureForm(forms.Form):
+    product_id=forms.IntegerField(required=True)
+    product_feature_id=forms.IntegerField(required=True)
+
 class ConfirmCartForm(forms.Form):
     supplier_id=forms.IntegerField(required=False)
     customer_id=forms.IntegerField(required=False)

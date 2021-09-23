@@ -182,6 +182,8 @@ class ProductViews(View):
 
             context['cart_s']=json.dumps(CartSerializer(cart).data)
         context['specifications_s']=json.dumps(ProductSpecificationSerializer(product.specifications(),many=True).data)
+        if request.user.has_perm(APP_NAME+".change_product"):
+            context['add_product_feature_form']=AddProductFeatureForm()
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"product.html", context)
 
@@ -219,14 +221,14 @@ class CustomerViews(View):
 class GuaranteeView(View):
     def guarantee_qrcode(self, request, *args, **kwargs):
         context = getContext(request)
-        guarantee = GuaranteeRepo(user=request.user).guarantee(*args, **kwargs)
+        guarantee = GuaranteeRepo(request=request).guarantee(*args, **kwargs)
         return guarantee.get_qrcode_response(context=context)
 
     def guarantee(self, request, *args, **kwargs):
         context = getContext(request)
         context['header_image'] = PictureRepo(
             request=request, app_name=APP_NAME).picture(name=PictureEnum.GUARANTEE_HEADER)
-        guarantee = GuaranteeRepo(user=request.user).guarantee(*args, **kwargs)
+        guarantee = GuaranteeRepo(request=request).guarantee(*args, **kwargs)
         context['guarantee'] = guarantee
         return render(request, TEMPLATE_ROOT+'guarantee.html', context)
 
@@ -273,7 +275,7 @@ class OrderViews(View):
         
         context['add_order_in_ware_house_form']=AddOrderInWareHouseForm()
         
-        ware_houses=WareHouseRepo(user=request.user).list()
+        ware_houses=WareHouseRepo(request=request).list()
         context['ware_houses']=ware_houses
         
         me_supplier = SupplierRepo(request=request).me
@@ -338,9 +340,9 @@ class OrderViews(View):
                 ware_house_id = do_pack_form.cleaned_data['ware_house_id']
                 if count_of_packs is None:
                     count_of_packs = 1
-                order = OrderRepo(user=request.user).do_pack(
+                order = OrderRepo(request=request).do_pack(
                     order_id=order_id, count_of_packs=count_of_packs, description=description)
-                # WareHouseRepo(user=request.user).add_order_in_ware_house(
+                # WareHouseRepo(request=request).add_order_in_ware_house(
                 #     order_id=order.id, ware_house_id=ware_house_id, direction=False, description=description)
                 if order is not None:
                     return redirect(order.get_absolute_url())
@@ -353,7 +355,7 @@ class OrderViews(View):
             if do_ship_form.is_valid():
                 order_id = do_ship_form.cleaned_data['order_id']
                 description = do_ship_form.cleaned_data['description']
-                order = OrderRepo(user=request.user).do_ship(
+                order = OrderRepo(request=request).do_ship(
                     order_id=order_id, description=description)
 
                 if order is not None:
@@ -366,7 +368,7 @@ class OrderViews(View):
             if cancel_order_form.is_valid():
                 order_id = cancel_order_form.cleaned_data['order_id']
                 description = cancel_order_form.cleaned_data['description']
-                order = OrderRepo(user=request.user).do_cancel(
+                order = OrderRepo(request=request).do_cancel(
                     order_id=order_id, description=description)
 
                 if order is not None:
