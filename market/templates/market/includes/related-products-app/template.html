@@ -1,4 +1,5 @@
 
+{% load to_price %}
 <div class="row" id="related-pages-app">
     {% if add_related_page_form %}
     <div class="col-md-12 mb-3">
@@ -18,7 +19,10 @@
                 </a>
             </div>
             <div class="card-body">
+                {% if related_product.sub_title %}
+                  
                 <h6 class="card-category text-rose">{{related_product.sub_title}}</h6>
+                {% endif %}
                 <h4 class="card-title">
                     <a href="{{related_product.get_absolute_url}}">{{related_product.title}}</a>
                 </h4>
@@ -31,7 +35,9 @@
             </div>
             <div class="card-footer justify-content-between">
                 <div class="price">
-                    <h4>$1,459</h4>
+                    <h4>
+                        {{product.unit_price|to_price}}
+                    </h4>
                 </div>
                 <div class="stats">
                     <button type="button" rel="tooltip" title="Saved to Wishlist"
