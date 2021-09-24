@@ -123,7 +123,44 @@ class Image(models.Model):
     class Meta:
         verbose_name = _("GalleryPhoto")
         verbose_name_plural = _("تصاویر")
+ 
+    def create_thumbnail(self,*args, **kwargs):
+        #Opening the uploaded image
+        if self.image_main_origin is None:
+            return
+        from PIL import Image as PilImage
+        from io import BytesIO
+        import sys
+        from django.core.files.uploadedfile import InMemoryUploadedFile
 
+
+        image = PilImage.open(self.image_main_origin)
+    
+        output = BytesIO()
+        
+        THUMBNAIL_DIMENSION=100
+        #Resize/modify the image
+        image = image.resize( (THUMBNAIL_DIMENSION,THUMBNAIL_DIMENSION),PilImage.ANTIALIAS )
+        
+        #after modifications, save it to the output
+        image.save(output, format='JPEG', quality=95)
+        
+        output.seek(0)
+        
+
+        #change the imagefield value to be the newley modifed image value
+        image_name=f"{self.image_main_origin.name.split('.')[0]}.jpg"
+        image_path=IMAGE_FOLDER+'image/jpeg'
+        print(image_name)
+        print(image_path)
+        print(10*"#454564564522")
+        self.thumbnail_origin = InMemoryUploadedFile(output,'ImageField', image_name, image_path, sys.getsizeof(output), None)
+
+
+    def save(self,*args, **kwargs):
+        if not self.thumbnail_origin:
+            self.create_thumbnail()
+        return super(Image,self).save(*args, **kwargs)
     
 
     def get_absolute_url(self):
