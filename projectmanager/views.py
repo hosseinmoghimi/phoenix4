@@ -25,6 +25,7 @@ TEMPLATE_ROOT = APP_NAME+"/"
 def getContext(request):
     context = DefaultContext(request=request, app_name=APP_NAME)
     context['layout_parent']="material-dashboard-5-rtl/layout.html"
+    context['layout_parent']="material-kit-pro/layout.html"
     context['layout_parent']="phoenix/layout.html"
     context["layout"] = TEMPLATE_ROOT+"layout.html"
     context["admin_utility"] = AdminUtility(request=request)

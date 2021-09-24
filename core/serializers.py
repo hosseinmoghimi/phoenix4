@@ -22,7 +22,7 @@ class PageDocumentSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields=['id','title','image','get_edit_url']
+        fields=['id','title','thumbnail','image','get_edit_url']
 class PageImageSerializer(serializers.ModelSerializer):
     image=ImageSerializer()
     class Meta:
