@@ -153,6 +153,7 @@ class ProductRepo:
     def add_product_for_shoe(self, *args, **kwargs):
         title = kwargs['title'] if 'title' in kwargs else None
         availables = kwargs['availables'] if 'availables' in kwargs else None
+        barcode = kwargs['barcode'] if 'barcode' in kwargs else None
         
         unit_name = kwargs['unit_name'] if 'unit_name' in kwargs else "جفت"
         if unit_name=="":
@@ -170,6 +171,7 @@ class ProductRepo:
             return
         product = Product()
         product.title = title
+        product.barcode = barcode
 
         unit_name_ = UnitName.objects.filter(name=unit_name).first()
         if unit_name_ is None:
@@ -181,16 +183,22 @@ class ProductRepo:
         category.products.add(product)
         if availables is not None:
             for available in availables:
-                self.add_specification(product_id=product.id,name="سایز",value=available['size'])
-                shop=Shop(
-                    unit_price=unit_price,
-                    buy_price=buy_price,
-                    available=available['available'],
-                    supplier=supplier,
-                    unit_name=unit_name,
-
-                    )
-                shop.save()
+                avail= available['available']
+                avail=int(avail)
+                if not avail==0:
+                    print(avail)
+                    p=self.add_specification(product_id=product.id,name="سایز",value=available['size'])
+                    shop=Shop(
+                        unit_price=unit_price,
+                        buy_price=buy_price,
+                        available=available['available'],
+                        supplier=supplier,
+                        unit_name=unit_name,
+                        product=product,
+                        )
+                    
+                    shop.save()
+                    shop.specifications.add(p)
         return product
 
     def add_specification(self, *args, **kwargs):

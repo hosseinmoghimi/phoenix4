@@ -240,6 +240,7 @@ class ProductApi(APIView):
                 unit_price=add_product_for_shoe_form.cleaned_data['unit_price']
                 buy_price=add_product_for_shoe_form.cleaned_data['buy_price']
                 supplier_id=add_product_for_shoe_form.cleaned_data['supplier_id']
+                barcode=add_product_for_shoe_form.cleaned_data['barcode']
                 
                 if availables is None or availables=="":
                     availables=None
@@ -249,6 +250,7 @@ class ProductApi(APIView):
                     category_id=category_id,
                     title=title,
                     unit_name=unit_name,
+                    barcode=barcode,
                     supplier_id=supplier_id,
                     unit_price=unit_price,
                     buy_price=buy_price,

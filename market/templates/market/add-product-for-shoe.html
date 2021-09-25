@@ -53,6 +53,13 @@
                             <input v-model="new_product_title" required type="text" class="farsi form-control"
                                 placeholder="نام کالا">
 
+                                <input v-model="new_product_barcode" required type="text" class="farsi form-control"
+                                placeholder="کد کالا">
+                            <input v-model="unit_price" required type="number" class="farsi form-control"
+                                placeholder="قیمت فروش">
+                            <input v-model="buy_price" required type="number" class="farsi form-control"
+                                placeholder="قیمت خرید">
+
                             <div v-for="available in availables">
                                 <div class="row mt-3">
                                     <div class="col-4 farsi">
@@ -149,45 +156,39 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let supplier_id=parseInt("{{me_supplier.id}}")
+    let supplier_id = parseInt("{{me_supplier.id}}")
     let url_add_product = "{% url 'market:add_product_for_shoe' %}"
     let category_id = parseInt("{{category.id}}")
-    let availables=[]
+    let availables = []
     sizes = [37, 38, 39, 40, 41, 42, 43]
     sizes.forEach(size => {
-        availables.push(
-            {
-                size: size,
-                available: 0,
-                unit_price:0,
-            }
-        )
+        availables.push({size:size,available:0})
     });
 
     let products_app = new Vue({
         el: "#products-app",
         data: {
             products: [],
-            new_product_title: "",
+            new_product_title: "کفش آپادانا",
             waiting: false,
-            specification_name: "سایز",
-            specification_value: "",
             availables: availables,
-            unit_price:"",
-            buy_price:"",
-            supplier_id:supplier_id,
+            unit_price: "425000",
+            buy_price: "300000",
+            new_product_barcode:"00125",
         }
         ,
         methods: {
             add_product: function () {
-                
+
                 availables = JSON.stringify(availables)
                 products_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.new_product_title,
                     category_id: category_id,
+                    barcode:this.new_product_barcode,
                     availables: availables,
+                    supplier_id: supplier_id,
                     unit_price: this.unit_price,
                     buy_price: this.buy_price,
                 }

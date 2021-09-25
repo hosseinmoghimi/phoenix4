@@ -124,6 +124,7 @@ class AddProductForm(forms.Form):
     
 class AddProductForShoeForm(forms.Form):
     category_id=forms.IntegerField(required=True)
+    barcode=forms.CharField(max_length=50,required=True)
     title=forms.CharField(max_length=100,required=True)
     unit_name=forms.CharField(max_length=50, required=False)
     supplier_id=forms.IntegerField(required=True)
