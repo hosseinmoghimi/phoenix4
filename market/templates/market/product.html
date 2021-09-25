@@ -7,7 +7,8 @@
     style="background-image: url('{{product.image_header}}');">
     <div class="container">
         <div class="row title-row">
-            <div class="col-md-4 mr-auto" id="cart-app">
+            {% if me_customer %}
+              <div class="col-md-4 mr-auto" id="cart-app">
                 <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
                     <span class="farsi">
 
@@ -19,6 +20,8 @@
 
                 </a>
             </div>
+            {% endif %}
+            
         </div>
     </div>
 </div>

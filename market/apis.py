@@ -42,12 +42,14 @@ class ShopApi(APIView):
                 specifications=add_shop_form.cleaned_data['specifications']
                 unit_name=add_shop_form.cleaned_data['unit_name']
                 unit_price=add_shop_form.cleaned_data['unit_price']
+                buy_price=add_shop_form.cleaned_data['buy_price']
                 level=add_shop_form.cleaned_data['level']
                 available=add_shop_form.cleaned_data['available']
                 product_id=add_shop_form.cleaned_data['product_id']
                 supplier_id=add_shop_form.cleaned_data['supplier_id']
                 shop=ShopRepo(request=request).add_shop(
                     unit_price=unit_price,
+                    buy_price=buy_price,
                     unit_name=unit_name,
                     level=level,
                     specifications=json.loads(specifications),

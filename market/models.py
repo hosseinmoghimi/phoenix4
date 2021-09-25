@@ -315,6 +315,9 @@ class Shop(models.Model):
         verbose_name = _("Shop")
         verbose_name_plural = _("Shops")
 
+    def get_delete_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
+
     def __str__(self):
         return f"{self.product.title} برای {self.level} هر {self.unit_name} : {self.unit_price} {CURRENCY} فروش توسط {self.supplier.title}"
 

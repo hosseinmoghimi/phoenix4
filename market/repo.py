@@ -727,10 +727,13 @@ class ShopRepo:
         unit_name = ""
         unit_price = 0
         available = 100
+        buy_price=0
         specifications=[]
         level=ShopLevelEnum.REGULAR
         if 'specifications' in kwargs:
             specifications = kwargs['specifications']
+        if 'buy_price' in kwargs:
+            buy_price = kwargs['buy_price']
         if 'level' in kwargs:
             level = kwargs['level']
         if 'product_id' in kwargs:
@@ -752,6 +755,7 @@ class ShopRepo:
                 supplier_id=supplier_id,
                 product_id=product_id,
                 level=level,
+                buy_price=buy_price,
                 unit_name=unit_name,
                 unit_price=unit_price,
                 available=available
@@ -774,6 +778,7 @@ class ShopRepo:
                 supplier_id=supplier_id,
                 product_id=product_id,
                 level=level,
+                buy_price=buy_price,
                 unit_name=unit_name,
                 unit_price=unit_price,
                 available=available

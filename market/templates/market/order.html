@@ -242,7 +242,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="order_id" value="{{order.id}}">
                     <h3>
-                        بسته بندی کردن سفارش
+                      بسته بندی کردن سفارش توسط {{order.supplier.title}}
                     </h3>
                     <div class="row rtl">
                         <div class="col-4">

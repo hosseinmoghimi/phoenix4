@@ -29,21 +29,19 @@
                 </h3>
                 <br />
 
-
-                <table class="table table-shopping rtl">
+                <table class="table table-shopping">
                     <thead>
                         <tr>
-                            <th class="farsi text-center">سفارش</th>
+                            <th class="farsi text-right">سفارش</th>
+                            <th class="farsi text-right">وضعیت</th>
+                            <th class="farsi text-right">فروشنده</th>
+                            <th class="farsi text-right">مشتری</th>
                             <th class="farsi text-right">تاریخ سفارش</th>
                             <th class="farsi text-right">جمع کل</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-
-
-                        {% for order in orders %}
-
+                        {% for order in supplier.order_set.all %}
 
                         <tr>
 
@@ -52,13 +50,33 @@
                                     سفارش
                                     {{order.pk}}
                                 </a>
+                             
+                            </td>
+
+                            <td class="farsi text-right">
+                       
                                 {{order.get_status_tag|safe}}
                             </td>
-                            <td class="small">
+
+                            <td class="small text-right">
+                                <a href="{{order.supplier.get_absolute_url}}">
+                                {{order.supplier.title}}
+                                </a>
+                            </td>
+
+                            
+                            <td class="small text-right">
+                                <a href="{{order.customer.get_absolute_url}}">
+                                    {{order.customer.title}}
+                                </a>
+                            </td>
+
+                            
+                            <td class="small text-right">
                                 {{order.date_ordered|to_persian_datetime|safe}}
 
                             </td>
-                            <td>
+                            <td class=" text-right">
                                 {{order.total|to_price_pure}}
                                 <span class="farsi">{{CURRENCY}}</span>
 
@@ -66,8 +84,10 @@
 
                         </tr>
 
-
                         {% endfor %}
+                       
+                        
+                        
                         <tr>
                             <td colspan=""></td>
                             <td class="td-total farsi text-muted">

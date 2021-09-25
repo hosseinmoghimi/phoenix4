@@ -152,7 +152,7 @@
                     {{me_supplier.title}}
                 </h4>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label>واحد فروش</label>
                 <select v-model="unit_name" required class="selectpicker farsi" data-style="select-with-transition"
                     data-size="4">
@@ -164,7 +164,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label>سطح فروش</label>
                 <select v-model="level" required class="selectpicker farsi" data-style="select-with-transition"
                     data-size="4">
@@ -176,7 +176,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-6 ltr">
+            <div class="col-md-2 ltr">
                 <div class="form-group bmd-form-group">
                     <label for="exampleInputqs1" class="bmd-label-floating">موجودی در انبار</label>
                     <input v-model="available" min="1" required type="number" class="form-control" id="exampleInputqs1">
@@ -184,13 +184,22 @@
                 </div>
             </div>
 
-            <div class="col-md-6 ltr">
+            <div class="col-md-2 ltr">
                 <div class="form-group bmd-form-group">
-                    <label for="exampleInputq1" class="bmd-label-floating">قیمت واحد به {{CURRENCY}}</label>
-                    <input v-model="unit_price" required type="number" class="form-control" min="1" id="exampleInputq1">
+                    <label for="exampleInputq1q" class="bmd-label-floating">قیمت خرید به {{CURRENCY}}</label>
+                    <input v-model="buy_price" required type="number" class="form-control" min="0" id="exampleInputq1q">
                     <span class="bmd-help farsi rtl text-right">قیمت را به {{CURRENCY}} وارد کنید.</span>
                 </div>
             </div>
+
+            <div class="col-md-2 ltr">
+                <div class="form-group bmd-form-group">
+                    <label for="exampleInputq1" class="bmd-label-floating">قیمت فروش به {{CURRENCY}}</label>
+                    <input v-model="unit_price" required type="number" class="form-control" min="1" id="exampleInputq1">
+                    <span class="bmd-help farsi rtl text-right">قیمت فروش را به {{CURRENCY}} وارد کنید.</span>
+                </div>
+            </div>
+
             <div class="col-md-6">
                 <div class="form-check" class="my-5 mx-3" v-for="specification in specifications">
                     <span v-text="specification.name"></span>

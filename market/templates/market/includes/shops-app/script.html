@@ -9,10 +9,11 @@
 
         },
         data: {
-            unit_name: "",
+            unit_name: "جفت",
             unit_price: "",
-            available: 15,
-            level: "",
+            buy_price: "0",
+            available: 3,
+            level: "{{level}}",
             shops: [],
             specifications: specifications,
             selected_specifications: []
@@ -45,6 +46,7 @@
                     unit_name: this.unit_name,
                     supplier_id: supplier_id,
                     level: this.level,
+                    buy_price:this.buy_price,
                     specifications: specifications1,
                     unit_price: this.unit_price,
                     available: this.available,

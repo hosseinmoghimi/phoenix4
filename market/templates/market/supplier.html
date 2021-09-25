@@ -166,7 +166,7 @@
                                         <br />
                                         <a href="{{shop.product.category.get_absolute_url}}">
                                             <small>{{shop.product.category.title}}</small>
-                                            
+
                                         </a>
 
                                     </td>
@@ -190,13 +190,13 @@
                                     </td>
                                     <td class="text-right">
                                         {% for specification in shop.specifications.all %}
-                    
-                    
-                    
-                    
+
+
+
+
                                         <span class="btn-group ltr">
                                             <button class="btn btn-round btn-warning btn-sm">
-                    
+
                                                 {{specification.value}}
                                                 <div class="ripple-container"></div>
                                             </button>
@@ -204,9 +204,9 @@
                                                 {{specification.name}}
                                             </button>
                                         </span>
-                    
+
                                         {% endfor %}
-                    
+
                                     </td>
 
                                     <td class="td-number text-right">
@@ -216,22 +216,22 @@
 
                                     <td class="td-number text-right">
                                         <small class="text-muted">
-<small>
+                                            <small>
 
-    {{shop.date_added|to_persian_datetime|safe}}
-</small>
+                                                {{shop.date_added|to_persian_datetime|safe}}
+                                            </small>
                                         </small>
                                     </td>
                                     <td class="td-actions">
-                                        <a href="{{shop.get_edit_url}}">
+                                        <a title="ویرایش" href="{{shop.get_edit_url}}">
                                             <i class="material-icons">
                                                 edit
                                             </i>
                                         </a>
-                                        <button type="button" rel="tooltip" data-placement="left" title="Remove item"
-                                            class="btn btn-link">
+                                        <a href="{{shop.get_delete_url}}" target="_blank" rel="tooltip"
+                                            data-placement="left" title="حذف از لیست فروش" class="btn btn-link">
                                             <i class="material-icons">close</i>
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
 
@@ -260,64 +260,56 @@
                         <table class="table table-shopping">
                             <thead>
                                 <tr>
-                                    <th class="text-center"></th>
-                                    <th class="text-right">محصول</th>
-                                    <th class="text-right">سطح</th>
-                                    <th class="text-right">واحد</th>
-                                    
-                                    <th class="text-right">قیمت</th>
-                                    <th class="text-right">تاریخ</th>
-                                    <th></th>
+                                    <th class="farsi text-right">سفارش</th>
+                                    <th class="farsi text-right">وضعیت</th>
+                                    <th class="farsi text-right">فروشنده</th>
+                                    <th class="farsi text-right">مشتری</th>
+                                    <th class="farsi text-right">تاریخ سفارش</th>
+                                    <th class="farsi text-right">جمع کل</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for order in supplier.order_set.all %}
 
                                 <tr>
-                                    <td>
-                                        <div class="img-container">
-                                            <img class="rounded" src="{{shop.product.thumbnail}}" alt="...">
-                                        </div>
-                                    </td>
-                                    <td class="td-name text-right">
-                                        <a href="{{shop.product.get_absolute_url}}">{{shop.product.title}}</a>
-                                        <br />
-                                        <small>{{shop.product.category.title}}</small>
+
+                                    <td class="farsi text-right">
+                                        <a href="{{order.get_absolute_url}}">
+                                            سفارش
+                                            {{order.pk}}
+                                        </a>
+                                     
                                     </td>
 
-                                    <td class="text-right">
-                                        <span class="badge badge-primary">
-
-                                            {{shop.level}}
-                                        </span>
-
-
+                                    <td class="farsi text-right">
+                               
+                                        {{order.get_status_tag|safe}}
                                     </td>
-                                    <td class="text-right">
-                                        <span class="badge badge-danger">
-                                            {{shop.unit_name}}
 
-                                        </span>
-
+                                    <td class="small text-right">
+                                        <a href="{{order.supplier.get_absolute_url}}">
+                                        {{order.supplier.title}}
+                                        </a>
                                     </td>
+
                                     
-                                    <td class="td-number text-right">
-                                        {{shop.unit_price|to_price_pure}}
-                                        <small class="text-muted">{{CURRENCY}}</small>
+                                    <td class="small text-right">
+                                        <a href="{{order.customer.get_absolute_url}}">
+                                            {{order.customer.title}}
+                                        </a>
                                     </td>
 
-                                    <td class="td-number text-right">
-                                        <small class="text-muted">
+                                    
+                                    <td class="small text-right">
+                                        {{order.date_ordered|to_persian_datetime|safe}}
 
-                                            {{shop.date_added|to_persian_datetime|safe}}
-                                        </small>
                                     </td>
-                                    <td class="td-actions">
-                                        <button type="button" rel="tooltip" data-placement="left" title="Remove item"
-                                            class="btn btn-link">
-                                            <i class="material-icons">close</i>
-                                        </button>
+                                    <td class=" text-right">
+                                        {{order.total|to_price_pure}}
+                                        <span class="farsi">{{CURRENCY}}</span>
+
                                     </td>
+
                                 </tr>
 
                                 {% endfor %}

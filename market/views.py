@@ -74,6 +74,7 @@ class EmployeeViews(View):
         context['employee']=employee
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"employee.html", context)
+
 class WareHouseViews(View):
     def ware_house(self, request, *args, **kwargs):
         
@@ -179,6 +180,7 @@ class ProductViews(View):
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form']=AddProductSpecificationForm()
         context['product'] = product
+        context['level']=ShopLevelEnum.REGULAR
         context['shop_levels'] = (i[0] for i in ShopLevelEnum.choices)
         if context['me_supplier'] is not None:
             context['supplier_shops'] = ShopRepo(request=request).list(
@@ -223,6 +225,7 @@ class ProductViews(View):
         
         context['body_class'] = "product-page"
         return render(request,TEMPLATE_ROOT+"add-product.html",context)
+    
     def add_product_for_shoe(self,request,*args, **kwargs):
         context=getContext(request=request)
         category=CategoryRepo(request=request).category(*args, **kwargs)
@@ -241,7 +244,7 @@ class CustomerViews(View):
         context.update(ProfileContext(request=request, profile=profile))
         context['customer'] = customer
 
-        context['body_class'] = "product-page"
+        context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"customer.html", context)
 
 
