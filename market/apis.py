@@ -27,6 +27,7 @@ class categoryApi(APIView):
                     context['result']=SUCCEED
         return JsonResponse(context)
 
+
 class ShopApi(APIView):
     def add_shop(self,request,*args, **kwargs):
         context={}
@@ -61,6 +62,7 @@ class ShopApi(APIView):
         context['log']=log
         return JsonResponse(context)
       
+
 class CartApi(APIView):
     def add_to_cart(self,request,*args, **kwargs):
         context={}
@@ -105,6 +107,8 @@ class CartApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
+
 class CategoryApi(APIView):
     def add_category(self,request,*args, **kwargs):
         context={}
@@ -126,6 +130,7 @@ class CategoryApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+
 class WareHouseApi(APIView):
     def add_warehouse(self,request,*args, **kwargs):
         context={}
@@ -146,7 +151,8 @@ class WareHouseApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)      
-      
+
+
 class ProductApi(APIView):
     
     def add_feature_for_product(self,request,*args, **kwargs):
@@ -218,6 +224,42 @@ class ProductApi(APIView):
         context['log']=log
         return JsonResponse(context)
         
+    def add_product_for_shoe(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_product_for_shoe_form=AddProductForShoeForm(request.POST)
+            if add_product_for_shoe_form.is_valid():
+                log=3
+                category_id=add_product_for_shoe_form.cleaned_data['category_id']
+                title=add_product_for_shoe_form.cleaned_data['title']
+                unit_name=add_product_for_shoe_form.cleaned_data['unit_name']
+                availables=add_product_for_shoe_form.cleaned_data['availables']
+                unit_price=add_product_for_shoe_form.cleaned_data['unit_price']
+                buy_price=add_product_for_shoe_form.cleaned_data['buy_price']
+                supplier_id=add_product_for_shoe_form.cleaned_data['supplier_id']
+                
+                if availables is None or availables=="":
+                    availables=None
+                else:
+                    availables=json.loads(availables)
+                product=ProductRepo(request=request).add_product_for_shoe(
+                    category_id=category_id,
+                    title=title,
+                    unit_name=unit_name,
+                    supplier_id=supplier_id,
+                    unit_price=unit_price,
+                    buy_price=buy_price,
+                    availables=availables,
+                    )
+                if product is not None:
+                    context['product']=ProductSerializer(product).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+        
     def add_product_for_shop(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
@@ -247,7 +289,7 @@ class ProductApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-        
+         
     def products(self,request,category_id,*args, **kwargs):
         context={}
         context['result']=SUCCEED

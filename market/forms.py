@@ -104,7 +104,11 @@ class EditProfileForm(forms.Form):
     #email=forms.EmailField(required=False)
     bio=forms.CharField( max_length=200, required=False)
     region=forms.CharField(max_length=50, required=False)
-    
+
+class AddProductForCategoryPage(forms.Form):
+    product_id=forms.IntegerField(required=True)
+    category_id=forms.IntegerField(required=False)
+
 class AddCustomerForm(forms.Form):
     profile_id=forms.IntegerField(required=True)
 
@@ -117,6 +121,15 @@ class AddProductForm(forms.Form):
     category_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100,required=True)
     specifications=forms.CharField( max_length=500, required=False)
+    
+class AddProductForShoeForm(forms.Form):
+    category_id=forms.IntegerField(required=True)
+    title=forms.CharField(max_length=100,required=True)
+    unit_name=forms.CharField(max_length=50, required=False)
+    supplier_id=forms.IntegerField(required=True)
+    availables=forms.CharField( max_length=500, required=False)
+    unit_price=forms.IntegerField(required=False)
+    buy_price=forms.IntegerField(required=False)
     
 class AddProductForShopForm(forms.Form):
     unit_name=forms.CharField(max_length=50, required=False)

@@ -103,11 +103,19 @@
             </h2>
             {% if perms.market.add_product %}
             <a href="{% url 'market:add_product_view' category_id=category.id %}">
-             <h5 class="text-center">
+                <h5 class="text-center">
 
-                 افزودن دسته ای کالا
+                    افزودن دسته ای کالا
                 </h5>
             </a>
+
+            <a href="{% url 'market:add_product_for_shoe_view' category_id=category.id %}">
+                <h5 class="text-center">
+
+                    افزودن دسته ای کفش
+                </h5>
+            </a>
+
             {% endif %}
 
             <div class="row">

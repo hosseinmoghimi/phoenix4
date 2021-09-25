@@ -52,10 +52,20 @@
 
                             <input v-model="new_product_title" required type="text" class="farsi form-control"
                                 placeholder="نام کالا">
-                            <input type="text" class="form-control farsi" v-model="specification_name"
-                                placeholder="عنوان ویژگی">
-                            <input type="text" class="form-control farsi" v-model="specification_value"
-                                placeholder="مقدار ویژگی">
+
+                            <div v-for="available in availables">
+                                <div class="row mt-3">
+                                    <div class="col-4 farsi">
+                                        موجودی سایز
+                                        <span v-text="available.size"></span>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control farsi" v-model="available.available"
+                                            :placeholder="'موجودی سایز ' + available.size">
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <button type="submit" class="farsi btn btn-success">
                                 افزودن
@@ -139,8 +149,21 @@
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let url_add_product = "{% url 'market:add_product' %}"
+    let supplier_id=parseInt("{{me_supplier.id}}")
+    let url_add_product = "{% url 'market:add_product_for_shoe' %}"
     let category_id = parseInt("{{category.id}}")
+    let availables=[]
+    sizes = [37, 38, 39, 40, 41, 42, 43]
+    sizes.forEach(size => {
+        availables.push(
+            {
+                size: size,
+                available: 0,
+                unit_price:0,
+            }
+        )
+    });
+
     let products_app = new Vue({
         el: "#products-app",
         data: {
@@ -149,32 +172,26 @@
             waiting: false,
             specification_name: "سایز",
             specification_value: "",
-
+            availables: availables,
+            unit_price:"",
+            buy_price:"",
+            supplier_id:supplier_id,
         }
         ,
         methods: {
             add_product: function () {
-                const specification_values = this.specification_value.split(" ");
-                specification_values.forEach
-                specifications = []
-                specification_values.forEach(value => {
-                    specifications.push(
-                        {
-                            name: this.specification_name,
-                            value: value
-                        }
-                    )
-
-                });
-                specifications = JSON.stringify(specifications)
+                
+                availables = JSON.stringify(availables)
                 products_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.new_product_title,
                     category_id: category_id,
-                    specifications: specifications,
+                    availables: availables,
+                    unit_price: this.unit_price,
+                    buy_price: this.buy_price,
                 }
-
+                console.log(payload)
                 let aa = this
                 let posting = $.post(url_add_product, payload)
                 posting.done((data) => {
@@ -182,7 +199,7 @@
 
                     if (data.result === 'SUCCEED') {
                         // products_app.new_product_title = ""
-                        
+
                         products_app.products.push(data.product)
 
                     }

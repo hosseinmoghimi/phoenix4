@@ -3,7 +3,7 @@ from django.db.models.fields.reverse_related import ManyToOneRel
 from utility.persian2 import PersianCalendar
 from utility.qrcode import generate_qrcode
 from core.settings import ADMIN_URL, MEDIA_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, IntegerField
 from market.enums import DegreeLevelEnum, EmployeeEnum, OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.db import models
 from core.models import BasicPage
@@ -27,6 +27,7 @@ class MarketPage(BasicPage):
         self.app_name=APP_NAME
         super(MarketPage,self).save(*args, **kwargs)
 
+
 class UnitName(models.Model):
     name=models.CharField(_("unit_name"), max_length=50)
     
@@ -38,11 +39,13 @@ class UnitName(models.Model):
     def __str__(self):
         return self.name
 
+
 class Product(MarketPage):
     brand=models.ForeignKey("brand",null=True,blank=True, verbose_name=_("brand"),on_delete=models.CASCADE)
     model_name=models.CharField(_("model"),null=True,blank=True, max_length=50)
+    barcode=models.CharField(_("بارکد"),null=True,blank=True, max_length=50)
     unit_names=models.ManyToManyField("unitname", verbose_name=_("unit_names"))
-    for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
+    # for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
     features=models.ManyToManyField("productfeature",blank=True, verbose_name=_("features"))
     def specifications(self):
         specifications= ProductSpecification.objects.filter(product=self).order_by('name','value')
@@ -73,12 +76,20 @@ class Product(MarketPage):
     def category(self):
         return self.category_set.first()
 
+
 class Category(MarketPage):
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))
     def childs(self):
         return Category.objects.filter(parent=self)
   
-      
+    def top_products(self,count):
+        objects= CategoryProductTop.objects.filter(category=self)
+        list1=[]
+        for object in objects:
+            list1.append(object.product.id)
+        print(list1)
+        print(10*"#$^%^$%$%")
+        return Product.objects.filter(id__in=list1)[:count]
 
     class Meta:
         verbose_name = _("Category")
@@ -87,6 +98,22 @@ class Category(MarketPage):
     def save(self,*args, **kwargs):
         self.class_name='category'
         super(Category,self).save(*args, **kwargs)
+
+class CategoryProductTop(models.Model):
+    category=models.ForeignKey("category", verbose_name=_("category"), on_delete=models.CASCADE)
+    product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
+    priority=models.IntegerField(_("ترتیب"),default=100)
+    class_name="categoryproducttop"
+    class Meta:
+        verbose_name = _("CategoryProductTop")
+        verbose_name_plural = _("CategoryProductTops")
+
+    def __str__(self):
+        return f"{self.category.title} : {self.product.title}"
+
+    def get_absolute_url(self):
+        return reverse("CategoryProductTop_detail", kwargs={"pk": self.pk})
+
 
 class ShopRegion(models.Model):
     name=models.CharField(_("name"), max_length=50)
@@ -102,6 +129,7 @@ class ShopRegion(models.Model):
 
     def get_absolute_url(self):
         return reverse("ShopRegion_detail", kwargs={"pk": self.pk})
+
 
 class Customer(models.Model):
     title=models.CharField(_("title"), max_length=50)
@@ -130,6 +158,7 @@ class Customer(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":customer", kwargs={"pk": self.pk})
+
 
 class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
@@ -192,6 +221,8 @@ class Order(models.Model):
         """
     def get_edit_url(self):
         return ADMIN_URL+APP_NAME+"/order/"+str(self.pk)+"/change/"
+
+
 class OrderLine(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
@@ -217,6 +248,7 @@ class OrderLine(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":orderLine", kwargs={"pk": self.pk})
 
+
 class CartLine(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
     shop=models.ForeignKey("shop", verbose_name=_("shop"), on_delete=models.CASCADE)
@@ -235,6 +267,7 @@ class CartLine(models.Model):
     def line_total(self):
         return self.shop.unit_price*self.quantity
 
+
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))
     col=models.IntegerField(_("col"),default=4)
@@ -251,6 +284,7 @@ class Offer(MarketPage):
     def get_absolute_url(self):
         return reverse(APP_NAME+":offer", kwargs={"pk": self.pk})
 
+
 class Blog(MarketPage):
 
     
@@ -264,11 +298,13 @@ class Blog(MarketPage):
         self.class_name="blog"
         return super(Blog,self).save(*args, **kwargs)
 
+
 class Shop(models.Model):
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
     unit_name=models.CharField(_("unit_name"), max_length=50)
     old_price=models.IntegerField(_("قیمت قبلی"),default=0)
+    buy_price=models.IntegerField(_("قیمت خرید"),default=0)
     unit_price=models.IntegerField(_("قیمت فروش"))
     available=models.IntegerField(_("تعداد موجودی"),default=10)
     date_added=models.DateTimeField(_("date-added"), auto_now=False, auto_now_add=True)
@@ -286,6 +322,8 @@ class Shop(models.Model):
         return reverse(APP_NAME+":shop", kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+
+
 class Supplier(MarketPage):
 
     region=models.ForeignKey("shopregion", verbose_name=_("shop_region"), on_delete=models.CASCADE)
@@ -309,6 +347,7 @@ class Supplier(MarketPage):
         self.class_name="supplier"
         return super(Supplier,self).save(*args, **kwargs)
 
+
 class Shipper(MarketPage):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     
@@ -320,6 +359,7 @@ class Shipper(MarketPage):
     def save(self,*args, **kwargs):
         self.class_name="shipper"
         return super(Shipper,self).save(*args, **kwargs)
+
 
 class WareHouse(models.Model):
     name=models.CharField(_("نام انبار"), max_length=50)
@@ -354,6 +394,7 @@ class WareHouse(models.Model):
         return reverse(APP_NAME+":ware_house", kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/warehouse/{self.pk}/change/'
+
 
 class Guarantee(models.Model):
     orderline=models.ForeignKey("OrderLine", verbose_name=_("سفارش"), on_delete=models.CASCADE)
@@ -399,6 +440,7 @@ class Guarantee(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":guarantee", kwargs={"pk": self.pk})
+
 
 class Brand(models.Model):
     prefix=models.CharField(_("پیش تعریف"), max_length=200,default='',null=True,blank=True)
@@ -486,7 +528,6 @@ class Cart(models.Model):
         return reverse(APP_NAME+":customer_cart", kwargs={"customer_id": self.pk})
 
 
-
 class ProductInStock(models.Model):
     adder=models.ForeignKey("Employee",null=True,blank=True, verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
     ware_house=models.ForeignKey("WareHouse", verbose_name=_("انبار"), on_delete=models.PROTECT)
@@ -524,6 +565,7 @@ class ProductInStock(models.Model):
         return reverse(APP_NAME+":product_in_stock", kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/productinstock/{self.pk}/change/'
+
 
 class ProductFeature(MarketPage):
     # product=models.ForeignKey("Product",related_name="productfeature_sett", verbose_name=_("product"), on_delete=models.CASCADE)
@@ -580,7 +622,6 @@ class Employee(models.Model):
     def get_edit_url(self):
         if self.profile is not None:
             return self.profile.get_edit_url()
-
 
 
 class OrderInWareHouse(models.Model):

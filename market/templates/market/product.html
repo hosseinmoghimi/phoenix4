@@ -38,6 +38,15 @@
                         {{product.get_edit_btn|safe}}
                         {% endif %}
                     </h2>
+                    {% if perms.market.add_categoryproducttop %}
+                    <form action="{% url 'market:add_product_for_category_page' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{product.id}}" name="product_id">
+                        <button class="btn btn-info farsi" type="submit">
+                            افزودن به برگزیده های دسته بندی
+                        </button>
+                    </form>
+                    {% endif %}
                     {% if product.brand %}
                     <div class="text-right farsi">
                         برند :
@@ -151,16 +160,16 @@
 
             </div>
         </div>
-{% if add_product_feature_form %}
-  
-{% include "market/includes/product-features-app/template.html" %}
-{% else %}
+        {% if add_product_feature_form %}
 
-{% include "market/includes/product-features-app/template_.html" %}
-{% endif %}
+        {% include "market/includes/product-features-app/template.html" %}
+        {% else %}
+
+        {% include "market/includes/product-features-app/template_.html" %}
+        {% endif %}
 
 
-     
+
         {% if related_pages or add_related_page_form %}
 
         <div class="related-products">
@@ -185,7 +194,7 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let page_id=parseInt("{{page.id}}")
+    let page_id = parseInt("{{page.id}}")
 </script>
 
 {% include "market/includes/product-images-app/script.html" %}

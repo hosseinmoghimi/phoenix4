@@ -141,6 +141,25 @@ class CartViews(View):
 
 
 class ProductViews(View):
+    
+    def add_product_for_category_page(self,request,*args, **kwargs):
+
+        log=1
+        if request.method=='POST':
+            log=2
+            add_product_for_category_page_form=AddProductForCategoryPage(request.POST)
+            if add_product_for_category_page_form.is_valid():
+                log=3
+                category_id=add_product_for_category_page_form.cleaned_data['category_id']
+                product_id=add_product_for_category_page_form.cleaned_data['product_id']
+                category=ProductRepo(request=request).add_product_for_category_page(
+                    product_id=product_id,
+                    category_id=category_id)
+                if category is not None:
+                    return redirect(category.get_absolute_url())
+       
+        raise Http404
+
     def product_feature(self, request, *args, **kwargs):
 
         product_feature = ProductFeatureRepo(request=request).product_feature(*args, **kwargs)
@@ -204,6 +223,14 @@ class ProductViews(View):
         
         context['body_class'] = "product-page"
         return render(request,TEMPLATE_ROOT+"add-product.html",context)
+    def add_product_for_shoe(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        category=CategoryRepo(request=request).category(*args, **kwargs)
+        context['category']=category
+        
+        
+        context['body_class'] = "product-page"
+        return render(request,TEMPLATE_ROOT+"add-product-for-shoe.html",context)
 
 class CustomerViews(View):
     def customer(self, request, *args, **kwargs):
@@ -447,6 +474,7 @@ class BlogViews(View):
 
 class CategoryViews(View):
     def category(self, request, *args, **kwargs):
+        
         category = CategoryRepo(request=request).category(*args, **kwargs)
         page = category
         context = getContext(request)
@@ -456,7 +484,7 @@ class CategoryViews(View):
         context['categories'] = categories
         products = category.products.all()
         context['products'] = products
-        context['top_products'] = products.filter(for_category=True)[:3]
+        context['top_products'] = category.top_products(3)
         if request.user.has_perm(APP_NAME+".add_product") and len(categories) == 0:
             context['add_product_form'] = AddProductForm()
         if request.user.has_perm(APP_NAME+".add_category") and len(products) == 0:

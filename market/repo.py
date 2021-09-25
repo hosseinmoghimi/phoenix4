@@ -6,7 +6,7 @@ from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 import json
 class ShipperRepo:
@@ -62,6 +62,17 @@ class ProductRepo:
             return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
         return objects
 
+    def add_product_for_category_page(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_categoryproducttop"):
+            return
+        category=CategoryRepo(request=self.request).category(*args, **kwargs)
+        product=ProductRepo(request=self.request).product(*args, **kwargs)
+        if category is None:
+            category=product.category_set.first()
+        category_product_top=CategoryProductTop(product=product,category=category)
+        category_product_top.save()
+        return category
+
     def product(self, *args, **kwargs):
         if 'product_id' in kwargs:
             pk = kwargs['product_id']
@@ -73,17 +84,13 @@ class ProductRepo:
     def add_feature(self,*args, **kwargs):
         feature=ProductFeatureRepo(request=self.request).product_feature(*args, **kwargs)
         product=ProductRepo(request=self.request).product(*args, **kwargs)
-        print(product)
-        print(feature)
-        print(20*"##$%")
+
         if product is None or feature is None:
             return None
         product.features.add(feature)
         return feature
     def add_product_for_shop(self, *args, **kwargs):
         products=[]
-        # print(kwargs['specifications'])
-        # print(100*"@#$")
         title = kwargs['title'] if 'title' in kwargs else None
         specifications = kwargs['specifications'] if 'specifications' in kwargs else None
         if specifications is None:
@@ -93,8 +100,6 @@ class ProductRepo:
             unit_name="عدد"
         category_id = kwargs['category_id'] if 'category_id' in kwargs else None
         
-        # print(specifications)
-        # print(100*"@#$")
         if self.user.has_perm(APP_NAME+".add_product"):
             for specification in specifications:
                 product = Product()
@@ -105,7 +110,6 @@ class ProductRepo:
                     unit_name_ = UnitName()
                     unit_name_.name = unit_name
                     unit_name_.save()
-                product.for_category=False
                 product.save()
                 product.unit_names.add(unit_name_)
                 category = Category.objects.filter(pk=category_id).first()
@@ -115,8 +119,7 @@ class ProductRepo:
                 products.append(product)
             return products
     def add_product(self, *args, **kwargs):
-        # print(kwargs['specifications'])
-        # print(100*"@#$")
+
         title = kwargs['title'] if 'title' in kwargs else None
         specifications = kwargs['specifications'] if 'specifications' in kwargs else None
         
@@ -124,28 +127,71 @@ class ProductRepo:
         if unit_name=="":
             unit_name="عدد"
         category_id = kwargs['category_id'] if 'category_id' in kwargs else None
+        category=CategoryRepo(request=self.request).category(*args, **kwargs)
+        if category is None:
+            category=CategoryRepo(request=self.request).misc()
         
-        # print(specifications)
-        # print(100*"@#$")
-        if self.user.has_perm(APP_NAME+".add_product"):
-            product = Product()
-            product.title = title
+        if not self.user.has_perm(APP_NAME+".add_product"):
+            return
+        product = Product()
+        product.title = title
 
-            unit_name_ = UnitName.objects.filter(name=unit_name).first()
-            if unit_name_ is None:
-                unit_name_ = UnitName()
-                unit_name_.name = unit_name
-                unit_name_.save()
-            product.for_category=False
-            product.save()
-            product.unit_names.add(unit_name_)
-            category = Category.objects.filter(pk=category_id).first()
-            if category is not None:
-                category.products.add(product)
-            if specifications is not None:
-                for specification in specifications:
-                    self.add_specification(product_id=product.id,name=specification['name'],value=specification['value'])
-            return product
+        unit_name_ = UnitName.objects.filter(name=unit_name).first()
+        if unit_name_ is None:
+            unit_name_ = UnitName()
+            unit_name_.name = unit_name
+            unit_name_.save()
+        product.save()
+        product.unit_names.add(unit_name_)
+        
+        category.products.add(product)
+        if specifications is not None:
+            for specification in specifications:
+                self.add_specification(product_id=product.id,name=specification['name'],value=specification['value'])
+        return product
+
+    def add_product_for_shoe(self, *args, **kwargs):
+        title = kwargs['title'] if 'title' in kwargs else None
+        availables = kwargs['availables'] if 'availables' in kwargs else None
+        
+        unit_name = kwargs['unit_name'] if 'unit_name' in kwargs else "جفت"
+        if unit_name=="":
+            unit_name="جفت"
+        # category_id = kwargs['category_id'] if 'category_id' in kwargs else 0
+        # supplier_id = kwargs['supplier_id'] if 'supplier_id' in kwargs else 0
+        unit_price = kwargs['unit_price'] if 'unit_price' in kwargs else 0
+        buy_price = kwargs['buy_price'] if 'buy_price' in kwargs else 0
+        supplier=SupplierRepo(request=self.request).supplier(*args, **kwargs)
+        category=CategoryRepo(request=self.request).category(*args, **kwargs)
+        if category is None:
+            category=CategoryRepo(request=self.request).misc()
+
+        if not self.user.has_perm(APP_NAME+".add_product"):
+            return
+        product = Product()
+        product.title = title
+
+        unit_name_ = UnitName.objects.filter(name=unit_name).first()
+        if unit_name_ is None:
+            unit_name_ = UnitName()
+            unit_name_.name = unit_name
+            unit_name_.save()
+        product.save()
+        product.unit_names.add(unit_name_)
+        category.products.add(product)
+        if availables is not None:
+            for available in availables:
+                self.add_specification(product_id=product.id,name="سایز",value=available['size'])
+                shop=Shop(
+                    unit_price=unit_price,
+                    buy_price=buy_price,
+                    available=available['available'],
+                    supplier=supplier,
+                    unit_name=unit_name,
+
+                    )
+                shop.save()
+        return product
 
     def add_specification(self, *args, **kwargs):
 
@@ -158,9 +204,6 @@ class ProductRepo:
             p=ProductSpecification(product=product,name=name,value=value)
             p.save()
             return p
-
-
-        
 
 
 class OfferRepo:
@@ -287,6 +330,7 @@ class CustomerRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+
 
 class ProductFeatureRepo:
     def __init__(self, *args, **kwargs):
@@ -489,7 +533,6 @@ class GuaranteeRepo():
         return self.objects.filter(pk=pk).first()
 
 
-
 class EmployeeRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -628,7 +671,6 @@ class BrandRepo:
         return objects
 
 
-
 class ShopRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -747,6 +789,8 @@ class ShopRepo:
             pk = kwargs['id']
         shop=objects.filter(pk=pk).first()
         return shop
+
+
 class CartLineRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -942,6 +986,7 @@ class CartRepo:
             
             return orders
 
+
 class CategoryRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -961,6 +1006,7 @@ class CategoryRepo:
         return objects
 
     def category(self, *args, **kwargs):
+        
         if 'category_id' in kwargs:
             pk = kwargs['category_id']
         elif 'pk' in kwargs:
@@ -981,3 +1027,11 @@ class CategoryRepo:
                 category.parent_id = parent_id
             category.save()
             return category
+
+    def misc(self):
+        title="متفرقه"
+        misc=Category.objects.filter(title=title).first()
+        if misc is None:
+            misc=Category(title=title)
+            misc.save()
+        return misc
