@@ -7,18 +7,7 @@
 <div class="page-header header-filter" data-parallax="true" filter-color="rose"
     style="background-image: url('{{supplier.image_header}}');">
     <div class="container">
-        <div class="row title-row">
-            <div class="col-md-4 mr-auto">
-                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
-                    <span class="farsi">
 
-                        0 در سبد خرید
-                    </span>
-                    <i class="material-icons mx-2">shopping_cart</i>
-
-                </a>
-            </div>
-        </div>
     </div>
 </div>
 <div class="section">
@@ -39,7 +28,13 @@
                         {{supplier.get_edit_btn|safe}}
                         {% endif %}
                     </h2>
-                    <h3 class="main-price">{{supplier.region.name}}</h3>
+                    <h3 class="main-price">
+                        <span class="material-icons">
+                            public
+                        </span>
+
+                        {{supplier.region.name}}
+                    </h3>
                     <div id="accordion" role="tablist">
                         {% if supplier.short_description %}
                         <div class="card card-collapse">
@@ -278,28 +273,28 @@
                                             سفارش
                                             {{order.pk}}
                                         </a>
-                                     
+
                                     </td>
 
                                     <td class="farsi text-right">
-                               
+
                                         {{order.get_status_tag|safe}}
                                     </td>
 
                                     <td class="small text-right">
                                         <a href="{{order.supplier.get_absolute_url}}">
-                                        {{order.supplier.title}}
+                                            {{order.supplier.title}}
                                         </a>
                                     </td>
 
-                                    
+
                                     <td class="small text-right">
                                         <a href="{{order.customer.get_absolute_url}}">
                                             {{order.customer.title}}
                                         </a>
                                     </td>
 
-                                    
+
                                     <td class="small text-right">
                                         {{order.date_ordered|to_persian_datetime|safe}}
 

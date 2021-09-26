@@ -99,6 +99,7 @@ class Category(MarketPage):
         self.class_name='category'
         super(Category,self).save(*args, **kwargs)
 
+
 class CategoryProductTop(models.Model):
     category=models.ForeignKey("category", verbose_name=_("category"), on_delete=models.CASCADE)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)

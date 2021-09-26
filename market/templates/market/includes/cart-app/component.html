@@ -23,6 +23,27 @@
             </div>
         </a>
     </td>
+
+    
+    <td class="td-name">
+
+        <div v-for="specification in cart_line.shop.specifications" class="text-right">
+            <span class="btn-group ltr">
+
+                <button class="btn btn-round  btn-warning btn-sm">
+                    <span v-text="specification.value"></span>
+                    
+                    <div class="ripple-container"></div>
+                </button>
+                <button class="btn btn-info btn-sm">
+                    <span v-text="specification.name"></span>
+
+                </button>
+            </span>
+        </div>
+
+    </td>
+
     
     <td class="td-number text-right">
         <span v-text="to_price(cart_line.shop.unit_price)"></span>

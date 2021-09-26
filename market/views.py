@@ -427,9 +427,10 @@ class OrderViews(View):
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
         descriptions = [
-            f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"آدرس تحویل : {order.address}",
-            f"تعداد بسته قابل تحویل : {order.count_of_packs} بسته"
+            f""" سفارش شماره {order.pk} <span class="bg-dark text-light px-2 rounded">{order.status}</span>""",
+            f"""<small>تعداد بسته قابل تحویل </small>: {order.count_of_packs} بسته""",
+            f"""<small>آدرس تحویل :</small> {order.address}""",
+            f"""واحد مبلغ ها {CURRENCY} می باشد.""",
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
