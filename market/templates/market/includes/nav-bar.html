@@ -3,15 +3,14 @@
         <i class="material-icons">apps</i>
         <span class="farsi">
 
-          محصولات
+            محصولات
         </span>
     </a>
     <div class="dropdown-menu dropdown-with-icons">
-        
-      
+
+
         {% for category in root_categories %}
-          <a href="{{category.get_absolute_url}}"
-            class="dropdown-item">
+        <a href="{{category.get_absolute_url}}" class="dropdown-item">
             <i class="material-icons">line_style</i>
             <span class="farsi">
 
@@ -19,5 +18,53 @@
             </span>
         </a>
         {% endfor %}
+    </div>
+</li>
+
+
+<li class="dropdown nav-item">
+    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+        <span class="material-icons">
+            person
+        </span>
+        <span class="farsi">
+
+            {{me_customer.profile.name}}
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-with-icons">
+
+
+
+
+        <a href="{{me_customer.get_absolute_url}}" class="dropdown-item">
+            <i class="material-icons">line_style</i>
+            <span class="farsi">
+
+                {{me_customer.profile.name}}
+            </span>
+        </a>
+
+        <a href="{{me_customer.get_cart_url}}" class="dropdown-item">
+            <i class="material-icons">shopping_cart</i>
+            <span class="farsi">
+                سبد خرید
+            </span>
+        </a>
+
+
+        <a href="{{me_customer.get_orders_url}}" class="dropdown-item">
+            <i class="material-icons">
+
+                ballot
+            </i>
+            <span class="farsi">
+                سفارشات
+            </span>
+        </a>
+
+
+
+
     </div>
 </li>

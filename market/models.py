@@ -148,7 +148,7 @@ class Customer(models.Model):
             })
 
     def get_cart_url(self):
-        return reverse(APP_NAME+":customer_cart",kwargs={'customer_id':self.customer.id})
+        return reverse(APP_NAME+":customer_cart",kwargs={'customer_id':self.id})
 
     class Meta:
         verbose_name = _("Customer")

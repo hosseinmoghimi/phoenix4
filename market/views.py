@@ -243,6 +243,7 @@ class CustomerViews(View):
         context = getContext(request)
         context.update(ProfileContext(request=request, profile=profile))
         context['customer'] = customer
+        context['orders'] = customer.order_set.all()
 
         context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"customer.html", context)
@@ -331,7 +332,7 @@ class OrderViews(View):
         return render(request, TEMPLATE_ROOT+"order.html", context)
 
     def orders(self, request, *args, **kwargs):
-
+        
         orders = OrderRepo(request=request).orders(*args, **kwargs)
         context = getContext(request)
         customer=CustomerRepo(request=request).customer(*args, **kwargs)

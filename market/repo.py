@@ -9,6 +9,8 @@ from authentication.repo import ProfileRepo
 from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 import json
+
+
 class ShipperRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -39,7 +41,6 @@ class ShipperRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
-
 
 
 class ProductRepo:
@@ -186,7 +187,6 @@ class ProductRepo:
                 avail= available['available']
                 avail=int(avail)
                 if not avail==0:
-                    print(avail)
                     p=self.add_specification(product_id=product.id,name="سایز",value=available['size'])
                     shop=Shop(
                         unit_price=unit_price,
@@ -383,20 +383,19 @@ class OrderRepo:
         return self.list(*args, **kwargs)
 
     def list(self, *args, **kwargs):
-        objects = self.objects.all()
-        if 'customer_id' in kwargs and not kwargs['customer_id']==0:
-            objects = objects.filter(customer_id=kwargs['customer_id'])
-        if 'customer' in kwargs:
-            objects = objects.filter(customer=kwargs['customer'])
-        if 'supplier_id' in kwargs and not kwargs['supplier_id']==0:
-            objects = objects.filter(supplier_id=kwargs['supplier_id'])
-        if 'supplier' in kwargs:
-            objects = objects.filter(supplier=kwargs['supplier'])
-        if 'shipper_id' in kwargs and not kwargs['shipper_id']==0:
-            objects = objects.filter(shipper_id=kwargs['shipper_id'])
-        if 'shipper' in kwargs:
-            objects = objects.filter(shipper=kwargs['shipper'])
-        
+        objects = Order.objects.all()
+
+        customer=CustomerRepo(request=self.request).customer(*args, **kwargs)
+        supplier=SupplierRepo(request=self.request).supplier(*args, **kwargs)
+        shipper=ShipperRepo(request=self.request).shipper(*args, **kwargs)
+
+
+        if customer is not None:
+            objects = objects.filter(customer=customer)
+        if supplier is not None:
+            objects = objects.filter(supplier=supplier)
+        if shipper is not None:
+            objects = objects.filter(shipper=shipper)
         return objects
 
     def order(self, *args, **kwargs):
@@ -407,7 +406,7 @@ class OrderRepo:
             pk = kwargs['pk']
         elif 'id' in kwargs:
             pk = kwargs['id']
-        order= self.objects.filter(pk=pk).first() 
+        order= self.objects.filter(pk=pk).first()
         if order is not None and order.supplier.profile == self.profile:
             if order.status == OrderStatusEnum.CONFIRMED:
                 order.date_accepted = timezone.now()
