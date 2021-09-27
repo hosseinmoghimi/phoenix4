@@ -9,6 +9,7 @@ urlpatterns = [
     path("category/<int:pk>/",views.CategoryViews().category,name="category"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
+    path("shops/<int:supplier_id>/",views.ShopViews().shops,name="shops"),
     path("order_invoice/<int:pk>/",views.OrderViews().order_invoice,name="order_invoice"),
     path("order/<int:pk>/",views.OrderViews().order,name="order"),
     path("orders/<int:customer_id>/<int:supplier_id>/<int:shipper_id>",views.OrderViews().orders,name="orders"),

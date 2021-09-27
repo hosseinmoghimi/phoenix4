@@ -1,3 +1,5 @@
+import contextlib
+from typing import ContextManager
 from core.constants import CURRENCY
 from utility.persian2 import PersianCalendar
 from django.http.response import Http404
@@ -75,6 +77,18 @@ class ShopViews(View):
     def shop(self, request, *args, **kwargs):
         shop=ShopRepo(request=request).shop(*args, **kwargs)
         return redirect(shop.product.get_absolute_url())
+
+    def shops(self, request, *args, **kwargs):
+        supplier=SupplierRepo(request=request).supplier(*args, **kwargs)
+        if supplier is None:
+            raise Http404
+        context=getContext(request=request)
+        
+        context['body_class'] = "product-page"
+        
+        shops=ShopRepo(request=request).list(supplier=supplier)
+        context['shops']=shops
+        return render(request,TEMPLATE_ROOT+"shops.html",context)
 
 class EmployeeViews(View):
     def employee(self, request, *args, **kwargs):

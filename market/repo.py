@@ -692,6 +692,10 @@ class ShopRepo:
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
+        if 'supplier' in kwargs:
+            return self.objects.filter(supplier=kwargs['supplier'])
+        if 'supplier_id' in kwargs:
+            return self.objects.filter(supplier_id=kwargs['supplier_id'])
         if 'cart_lines' in kwargs:
             return self.objects.filter(id__in=kwargs['cart_lines'].values('shop_id'))
         if 'product' in kwargs:

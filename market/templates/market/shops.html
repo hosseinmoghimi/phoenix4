@@ -59,19 +59,7 @@
                         </div>
 
                         {% endif %}
-                        <div class="farsi">
 
-                            <a href="{{supplier.get_orders_url}}">
-                                لیست سفارشات
-                            </a>
-                        </div>
-
-                        <div class="farsi">
-
-                            <a href="{{supplier.get_shops_url}}">
-                                لیست محصولات
-                            </a>
-                        </div>
                         {% if supplier.description %}
                         <div class="card card-collapse">
                             <div class="card-header" role="tab" id="headingDescription">
@@ -105,40 +93,7 @@
                 </div>
             </div>
         </div>
-        <div class="features text-center">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="info">
-                        <div class="icon icon-info">
-                            <i class="material-icons">local_shipping</i>
-                        </div>
-                        <h4 class="info-title">2 Days Delivery </h4>
-                        <p>Divide details about your product or agency work into parts. Write a few lines about each
-                            one. A paragraph describing a feature will be enough.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="info">
-                        <div class="icon icon-success">
-                            <i class="material-icons">verified_user</i>
-                        </div>
-                        <h4 class="info-title">Refundable Policy</h4>
-                        <p>Divide details about your product or agency work into parts. Write a few lines about each
-                            one. A paragraph describing a feature will be enough.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="info">
-                        <div class="icon icon-rose">
-                            <i class="material-icons">favorite</i>
-                        </div>
-                        <h4 class="info-title">Popular Item</h4>
-                        <p>Divide details about your product or agency work into parts. Write a few lines about each
-                            one. A paragraph describing a feature will be enough.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+   
         <!-- shops -->
         <div class="related-products">
             <div class="card">
@@ -160,7 +115,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for shop in supplier.shop_set.all %}
+                                {% for shop in shops %}
 
                                 <tr>
                                     <td>
@@ -252,20 +207,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- orders -->
-        <div class="related-products">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="title text-center">سفارشات {{supplier.title}}</h3>
-
-
-                    {% include "market/includes/orders-app/template.html" %}
-
                 </div>
             </div>
 

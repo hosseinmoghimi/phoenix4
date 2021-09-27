@@ -352,7 +352,10 @@ class Supplier(MarketPage):
         self.class_name="supplier"
         return super(Supplier,self).save(*args, **kwargs)
 
-
+    def get_orders_url(self):
+        return reverse(APP_NAME+":orders",kwargs={'supplier_id':self.pk,'customer_id':0,'shipper_id':0})
+    def get_shops_url(self):
+        return reverse(APP_NAME+":shops",kwargs={'supplier_id':self.pk})
 class Shipper(MarketPage):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     

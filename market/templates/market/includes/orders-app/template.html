@@ -73,11 +73,16 @@
                 {% if perms.market.change_order %}
 
                 <td>
+                   
+                    <a title="چاپ فاکتور" target="_blank" class="" href="{{order.get_invoice_url}}">
+                        <i class="material-icons">print</i>
+                    </a>
                     <a target="_blank" title="ویرایش" href="{{order.get_edit_url}}">
                         <i class="material-icons">
                             edit
                         </i>
                     </a>
+
                 </td>
                 {% endif %}
 
