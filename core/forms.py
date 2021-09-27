@@ -9,6 +9,7 @@ class AddRelatedPageForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     related_page_id=forms.IntegerField(required=True)
     bidirectional=forms.BooleanField(required=False)
+    add_or_remove=forms.BooleanField(required=False)
     
 class AddPageTagForm(forms.Form):
     page_id=forms.IntegerField(required=True)

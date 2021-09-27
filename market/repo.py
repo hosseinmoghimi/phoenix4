@@ -187,7 +187,7 @@ class ProductRepo:
                 avail= available['available']
                 avail=int(avail)
                 if not avail==0:
-                    p=self.add_specification(product_id=product.id,name="سایز",value=available['size'])
+                    p=self.add_specification(product_id=product.id,name=available['name'],value=available['value'])
                     shop=Shop(
                         unit_price=unit_price,
                         buy_price=buy_price,
@@ -374,7 +374,7 @@ class OrderRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Order.objects
+        self.objects = Order.objects.order_by("-date_ordered")
         self.profile = ProfileRepo(user=self.user).me
 
 
@@ -383,7 +383,7 @@ class OrderRepo:
         return self.list(*args, **kwargs)
 
     def list(self, *args, **kwargs):
-        objects = Order.objects.all()
+        objects = self.objects.all()
 
         customer=CustomerRepo(request=self.request).customer(*args, **kwargs)
         supplier=SupplierRepo(request=self.request).supplier(*args, **kwargs)
@@ -803,18 +803,6 @@ class ShopRepo:
         return shop
 
 
-class CartLineRepo:
-    def __init__(self, *args, **kwargs):
-        self.request = None
-        self.user = None
-        if 'request' in kwargs:
-            self.request = kwargs['request']
-            self.user = self.request.user
-        if 'user' in kwargs:
-            self.user = kwargs['user']
-        self.objects = CartLine.objects
-        self.profile = ProfileRepo(user=self.user).me
-
 
 class CartRepo:
     def __init__(self, *args, **kwargs):
@@ -933,70 +921,72 @@ class CartRepo:
     def confirm(self,*args, **kwargs):
         
         no_ship=kwargs['no_ship'] if 'no_ship' in kwargs else False
-        customer_id=kwargs['customer_id'] if 'customer_id' in kwargs else None
+        # customer_id=kwargs['customer_id'] if 'customer_id' in kwargs else None
         description=kwargs['description'] if 'description' in kwargs else None
         supplier_id=kwargs['supplier_id'] if 'supplier_id' in kwargs else None
         address=kwargs['address'] if 'address' in kwargs else None
-        user=self.user
-        if customer_id is None:
-            customer=CustomerRepo(user=self.user).me
+        customer=CustomerRepo(user=self.user).customer(*args, **kwargs)
+        
+            
+        if customer is None:
+            customer=CustomerRepo(request=self.request).me
+        cart_lines = CartLine.objects.filter(customer=customer)
+        shops = ShopRepo(user=self.user).list(cart_lines=cart_lines)
+        orders=[]
+        if supplier_id==0:
+            suppliers=Supplier.objects.filter(id__in=shops.values('supplier_id'))
         else:
-            customer = CustomerRepo(user=self.user).customer(customer_id=customer_id)
-            
-        if customer is not None:
-            cart_lines = CartLine.objects.filter(customer=customer)
-            shops = ShopRepo(user=self.user).list(cart_lines=cart_lines)
-            orders=[]
-            if supplier_id==0:
-                suppliers=Supplier.objects.filter(id__in=shops.values('supplier_id'))
+            suppliers=[SupplierRepo(user=self.user).supplier(supplier_id=supplier_id)]
+        for supplier in suppliers:
+            order = Order()
+            order.supplier_id = supplier.id
+            order.customer = customer
+            if no_ship:
+                order.ship_fee = 0
             else:
-                suppliers=[SupplierRepo(user=self.user).supplier(supplier_id=supplier_id)]
-            for supplier in suppliers:
-                order = Order()
-                order.supplier_id = supplier.id
-                order.customer = customer
-                if no_ship:
-                    order.ship_fee = 0
-                else:
-                    order.ship_fee = supplier.ship_fee
-                order.status = OrderStatusEnum.CONFIRMED
-                order.description = description
-                order.address = address
-                order.no_ship = no_ship
-                from django.utils import timezone
-                order.date_ordered =  timezone.now()
-                order.save()
-                if order is not None:
-                    orders.append(order)
-                    for cart_line in cart_lines:
-                        if cart_line.shop.supplier == supplier:
-                            order_line=OrderLine(
-                                order=order,
-                                product=cart_line.shop.product,
-                                quantity=cart_line.quantity,
-                                unit_price=cart_line.shop.unit_price,
-                                #product_title=cart_line.shop.product.title,
-                                unit_name=cart_line.shop.unit_name)
-                            order_line.save()
-                            ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
-                            cart_line.delete()
-                    # order=OrderRepo(user=self.user).get(order_id=order.pk)
-                    # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)
-                    if order.supplier.profile is not None:
-                        NotificationRepo(request=self.request).add(
-                            title='سفارش تایید شده',
-                            body=f'سفارش تایید شده به مبلغ {order.total} تومان',
-                            url=order.get_absolute_url(),
-                            icon='alarm',
-                            profile_id=order.supplier.profile.pk,
-                            color='danger',priority=1
-                            )
-                    # ProfileTransactionRepo(user=self.user).add(
-                    #     profile_bestankar=order.supplier.profile,
-                    #     profile_bedehkar=order.customer.profile,amount=order.total(),description=f'فاکتور شماره {order.id}')
-                    
-            
-            return orders
+                order.ship_fee = supplier.ship_fee
+            order.status = OrderStatusEnum.CONFIRMED
+            order.description = description
+            order.address = address
+            order.no_ship = no_ship
+            from django.utils import timezone
+            order.date_ordered =  timezone.now()
+            order.save()
+            if order is not None:
+                orders.append(order)
+                for cart_line in cart_lines:
+                    description=""
+                    for spec in cart_line.shop.specifications.all():
+                        description+=spec.name+" : "+spec.value+" ، "
+                    if cart_line.shop.supplier == supplier:
+                        order_line=OrderLine(
+                            order=order,
+                            product=cart_line.shop.product,
+                            quantity=cart_line.quantity,
+                            unit_price=cart_line.shop.unit_price,
+                            description=description,
+                            #product_title=cart_line.shop.product.title,
+                            unit_name=cart_line.shop.unit_name)
+                        order_line.save()
+                        ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
+                        cart_line.delete()
+                # order=OrderRepo(user=self.user).get(order_id=order.pk)
+                # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)
+                if order.supplier.profile is not None:
+                    NotificationRepo(request=self.request).add(
+                        title='سفارش تایید شده',
+                        body=f'سفارش تایید شده به مبلغ {order.total} تومان',
+                        url=order.get_absolute_url(),
+                        icon='alarm',
+                        profile_id=order.supplier.profile.pk,
+                        color='danger',priority=1
+                        )
+                # ProfileTransactionRepo(user=self.user).add(
+                #     profile_bestankar=order.supplier.profile,
+                #     profile_bedehkar=order.customer.profile,amount=order.total(),description=f'فاکتور شماره {order.id}')
+                
+        
+        return orders
 
 
 class CategoryRepo:

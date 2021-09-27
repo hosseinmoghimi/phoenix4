@@ -138,7 +138,7 @@ class Image(models.Model):
     
         output = BytesIO()
         
-        THUMBNAIL_DIMENSION=100
+        THUMBNAIL_DIMENSION=250
         #Resize/modify the image
         image = image.resize( (THUMBNAIL_DIMENSION,THUMBNAIL_DIMENSION),PilImage.ANTIALIAS )
         
@@ -151,9 +151,6 @@ class Image(models.Model):
         #change the imagefield value to be the newley modifed image value
         image_name=f"{self.image_main_origin.name.split('.')[0]}.jpg"
         image_path=IMAGE_FOLDER+'image/jpeg'
-        print(image_name)
-        print(image_path)
-        print(10*"#454564564522")
         self.thumbnail_origin = InMemoryUploadedFile(output,'ImageField', image_name, image_path, sys.getsizeof(output), None)
 
 

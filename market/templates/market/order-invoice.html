@@ -108,25 +108,26 @@
                                     {{forloop.counter}}
                                 </td>
                                 <td>
-
-                                    {{order_line.product.title}}
-
+                                    <div>
+                                        {{order_line.product_title}}
+                                    </div>
+                                    {% if order_line.description %}
+                                    <div style="border-top: 1px #666 solid;">
+                                        {{order_line.description|safe}}
+                                    </div>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {{order_line.quantity}}
                                     <small class="text-secondary">
-
                                         {{order_line.unit_name}}
                                     </small>
-
                                 </td>
                                 <td>
                                     {{order_line.unit_price|to_price_pure}}
-
                                 </td>
                                 <td>
                                     {{order_line.line_total|to_price_pure}}
-
                                 </td>
                             </tr>
                             {% endfor %}
@@ -214,7 +215,7 @@
 
                                             <p>
 
-                                            {% if order.descriptions %}
+                                                {% if order.descriptions %}
                                             <ul>
                                                 {% for description in order.descriptions %}
                                                 <li>

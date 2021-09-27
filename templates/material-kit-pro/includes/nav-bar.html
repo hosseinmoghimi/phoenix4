@@ -9,8 +9,17 @@
                 <span class="navbar-toggler-icon"></span>
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="https://demos.creative-tim.com/material-kit-pro/index.html">
-                Material Kit PRO </a>
+            <a class="navbar-brand" href="{{market_link.value}}">
+                <span class="farsi">
+
+                    {% if market_title %}
+
+                    {{market_title.value}}
+                    {% else %}
+                    خانه
+                    {% endif %}
+                </span>
+            </a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -167,7 +176,7 @@
                 <li class="button-container nav-item iframe-extern">
                     <a href="{{profile.get_absolute_url}}" target="_blank"
                         class="btn  btn-primary   btn-round btn-block farsi">
-                        <i class="material-icons">shopping_cart</i> 
+                        <i class="material-icons">shopping_cart</i>
                         <span class="farsi">
                             {{profile.name}}
                         </span>

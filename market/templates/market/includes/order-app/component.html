@@ -7,12 +7,15 @@
     <td class="td-name">
         <a :href="order_line.product.get_absolute_url">
             <div class="text-right">
-
                 <span v-text="order_line.product.title"></span>
             </div>
         </a>
-        <br />
+        <div class="farsi text-right ">
+            <small class="text-muted">
 
+                <span v-text="order_line.description"></span>
+            </small>
+        </div>
     </td>
 
     <td class="td-number text-right">

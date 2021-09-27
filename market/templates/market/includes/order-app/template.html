@@ -22,6 +22,7 @@
                 <template v-for="order_line in order_lines">
 
                     <order-line-component :order_line="order_line"></order-line-component>
+                  
                     <template v-if="show_guarantees" v-for="guarantee in order_line.guarantees">
 
                         <tr>
@@ -55,8 +56,6 @@
                         </tr>
                     </template>
                 </template>
-
-
                 <tr>
                     <td colspan="2"></td>
                     <td class="td-total farsi text-muted">

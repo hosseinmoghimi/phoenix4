@@ -38,7 +38,8 @@ class BasicApi(APIView):
                 page_id = add_related_page_form.cleaned_data['page_id']
                 related_page_id = add_related_page_form.cleaned_data['related_page_id']
                 bidirectional = add_related_page_form.cleaned_data['bidirectional']
-                related_page = BasicPageRepo(request=request).add_related_page(page_id=page_id, bidirectional=bidirectional, related_page_id=related_page_id)
+                add_or_remove = add_related_page_form.cleaned_data['add_or_remove']
+                related_page = BasicPageRepo(request=request).add_related_page(add_or_remove=add_or_remove,page_id=page_id, bidirectional=bidirectional, related_page_id=related_page_id)
                 if related_page is not None:
                     log = 4
                     context['related_page'] = BasicPageSerializer(related_page).data

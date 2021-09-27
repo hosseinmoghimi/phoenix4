@@ -42,11 +42,12 @@
                         {% endif %}
                     </h2>
                     {% if perms.market.add_categoryproducttop %}
-                    <form action="{% url 'market:add_product_for_category_page' %}" method="POST">
+                    <form class="text-right" action="{% url 'market:add_product_for_category_page' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{product.id}}" name="product_id">
                         <button class="btn btn-info farsi" type="submit">
                             افزودن به برگزیده های دسته بندی
+                        {{product.category.title}}
                         </button>
                     </form>
                     {% endif %}

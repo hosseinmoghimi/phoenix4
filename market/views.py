@@ -24,6 +24,8 @@ def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     context['title'] = "Market"
 
+    context['market_title']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.MARKET_TITLE)
+    context['market_link']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.MARKET_LINK)
     context['me_supplier'] = SupplierRepo(request=request).me
     context['me_customer'] = CustomerRepo(request=request).me
     context['ware_houses'] = WareHouseRepo(request=request).list()
@@ -120,7 +122,6 @@ class CartViews(View):
         return render(request, TEMPLATE_ROOT+"cart.html", context)
 
     def confirm(self, request):
-        user = request.user
         if request.method == 'POST':
             confirm_cart_form = ConfirmCartForm(request.POST)
             if confirm_cart_form.is_valid():
@@ -243,7 +244,7 @@ class CustomerViews(View):
         context = getContext(request)
         context.update(ProfileContext(request=request, profile=profile))
         context['customer'] = customer
-        context['orders'] = customer.order_set.all()
+        context['orders'] = OrderRepo(request=request).list(customer_id=customer.id)
 
         context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"customer.html", context)
@@ -273,6 +274,7 @@ class SupplierViews(View):
         context.update(PageContext(request=request, page=page))
         context['supplier'] = supplier
         context['body_class'] = "product-page"
+        context['orders'] = OrderRepo(request=request).list(supplier_id=supplier.id)
         return render(request, TEMPLATE_ROOT+"supplier.html", context)
 
 
@@ -422,7 +424,8 @@ class OrderViews(View):
                 'unit_name': unit_name,
                 'unit_price': unit_price,
                 'line_total': quantity*unit_price,
-                'product': order_line.product.title,
+                'product_title': order_line.product.title,
+                'description': f""" <small>{order_line.description}</small>""",
             })
 
         tax = int(TAX_PERCENT*(lines_total)/100)

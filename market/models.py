@@ -47,6 +47,9 @@ class Product(MarketPage):
     unit_names=models.ManyToManyField("unitname", verbose_name=_("unit_names"))
     # for_category=models.BooleanField(_("نمایش در صفحه دسته بندی"))
     features=models.ManyToManyField("productfeature",blank=True, verbose_name=_("features"))
+    def category(self):
+        return self.category_set.first()
+    
     def specifications(self):
         specifications= ProductSpecification.objects.filter(product=self).order_by('name','value')
         return specifications
@@ -87,8 +90,6 @@ class Category(MarketPage):
         list1=[]
         for object in objects:
             list1.append(object.product.id)
-        print(list1)
-        print(10*"#$^%^$%$%")
         return Product.objects.filter(id__in=list1)[:count]
 
     class Meta:

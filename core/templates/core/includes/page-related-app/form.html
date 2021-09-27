@@ -5,7 +5,7 @@ class="material-icons text-primary" style="cursor: pointer;">
 
 <form v-show="show_add_form" @submit.prevent="add_related_page()">
    <div class="row">
-       <div class="col-md-4">
+       <div class="col-md-3">
            <div class="form-group">
                <label for="exampleInputEmail1">شناسه صفحه مرتبط</label>
                <input  min="0" required type="number" v-model="related_page_id" class="farsi form-control"
@@ -15,8 +15,12 @@ class="material-icons text-primary" style="cursor: pointer;">
                </small>
            </div>
        </div>
-       <div class="col-md-2">
-
+       <div class="col-md-3">
+        <div class="form-check">
+            <input type="checkbox" @input="change_button_text()" v-model="add" class="form-check-input farsi"
+                id="exampleCheck1">
+            <label class="form-check-label pr-3" for="exampleCheck1">افزودن</label>
+        </div>
        </div>
        <div class="col-md-3">
            <div class="form-check">
@@ -28,7 +32,10 @@ class="material-icons text-primary" style="cursor: pointer;">
 
        <div class="col-md-3">
            <button @click="show_add_form=false" class="btn btn-outline-secondary farsi">انصراف</button>
-           <button type="submit" class="btn btn-primary farsi">تایید</button>
+           <button type="submit" class="btn btn-primary farsi">
+               
+            <span v-text="button_text"></span>
+           </button>
 
        </div>
    </div>
