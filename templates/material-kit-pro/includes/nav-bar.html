@@ -28,6 +28,8 @@
 
                 {% include navbar %}
                 {% endif %}
+                {% if DEBUG %}
+
                 <li class="dropdown nav-item">
                     <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                         <i class="material-icons">apps</i>
@@ -51,7 +53,8 @@
                     </div>
                 </li>
 
-                {% if apps %}
+                {% endif %}
+                {% if apps and DEBUG %}
 
 
 
@@ -77,7 +80,7 @@
                     </div>
                 </li>
                 {% endif %}
-
+                {% if DEBUG %}
                 <li class="dropdown nav-item">
                     <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                         <i class="material-icons">view_day</i> Sections
@@ -171,14 +174,16 @@
                         </a>
                     </div>
                 </li>
-                {% if profile %}
+
+                {% endif %}
+                {% if profile_button %}
 
                 <li class="button-container nav-item iframe-extern">
-                    <a href="{{profile.get_absolute_url}}" target="_blank"
-                        class="btn  btn-primary   btn-round btn-block farsi">
-                        <i class="material-icons">shopping_cart</i>
+                    <a href="{{profile_button.url}}"
+                        class="btn  btn-{{profile_button.color}}   btn-round btn-block farsi">
+                        <i class="material-icons">{{profile_button.icon}}</i>
                         <span class="farsi">
-                            {{profile.name}}
+                            {{profile_button.title}}
                         </span>
                     </a>
                 </li>

@@ -23,11 +23,19 @@ LAYOUT_PARENT = "material-kit-pro/layout.html"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     context['title'] = "Market"
-
-    context['market_title']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.MARKET_TITLE)
-    context['market_link']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.MARKET_LINK)
+    context['market_title']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_TITLE)
+    context['market_link']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_LINK)
     context['me_supplier'] = SupplierRepo(request=request).me
-    context['me_customer'] = CustomerRepo(request=request).me
+    me_customer=CustomerRepo(request=request).me
+    context['me_customer'] = me_customer
+    if me_customer is not None:
+        context['profile_button']={
+            'url':me_customer.get_absolute_url(),
+            'title':me_customer.title,
+            'icon':"shopping_cart",
+            'color':"primary",
+        }
+    
     context['ware_houses'] = WareHouseRepo(request=request).list()
     context['suppliers'] = SupplierRepo(request=request).list()
     context['brands'] = BrandRepo(request=request).list()
