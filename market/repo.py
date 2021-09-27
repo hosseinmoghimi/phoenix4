@@ -820,6 +820,20 @@ class CartRepo:
         self.objects = Cart.objects
         self.profile = ProfileRepo(user=self.user).me
 
+    def get_cart_profit(self,*args, **kwargs):
+        if 'customer' in kwargs:
+            customer=kwargs['customer']
+        else:
+            customer=CustomerRepo(request=self.request).customer(*args, **kwargs)
+        if customer is None:
+            return None
+        profit=0
+        cart_lines=CartLine.objects.filter(customer=customer)
+        for cart_line in cart_lines:
+            dis=cart_line.shop.unit_price-cart_line.shop.buy_price
+            profit+=dis*cart_line.quantity
+        return profit
+
     def cart(self, *args, **kwargs):
         objects = self.objects.all()
         customer_id=0

@@ -33,8 +33,14 @@
                         {{customer.profile.name}}
                     </a>
                 </p>
-                {% include "market/includes/orders-app/template.html" %}
-
+                <p>
+                    <a href="{{customer.get_orders_url}}">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                        لیست سفارشات 
+                    </a>
+                </p>
 
             </div>
         </div>

@@ -356,6 +356,8 @@ class Supplier(MarketPage):
         return reverse(APP_NAME+":orders",kwargs={'supplier_id':self.pk,'customer_id':0,'shipper_id':0})
     def get_shops_url(self):
         return reverse(APP_NAME+":shops",kwargs={'supplier_id':self.pk})
+
+
 class Shipper(MarketPage):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     
@@ -517,13 +519,15 @@ class ProductSpecification(models.Model):
 class Cart(models.Model):
     lines=[]
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
+
     # lines=models.ManyToManyField("cartline",blank=True, verbose_name=_("lines"))
     # def orders(self):
     #     return CartLine.objects.filter(customer=self.customer)
     # def lines(self):
     #     return OrderLine.objects.filter(customer=self.customer)
     orders=[]
-    
+
+
 
     class Meta:
         verbose_name = _("Cart")
@@ -534,6 +538,31 @@ class Cart(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":customer_cart", kwargs={"customer_id": self.pk})
+
+class FinancialReport(models.Model):
+    order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"),blank=True, max_length=500)
+    supplier_profit=models.IntegerField(_("سود فروشنده"),default=0)
+    shipper_profit=models.IntegerField(_("سود حمل کننده"),default=0)
+    customer_profit=models.IntegerField(_("سود مشتری"),default=0)
+    date_added=models.DateTimeField(_("تاریخ ثبت سند"), auto_now=False, auto_now_add=True)
+    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=500)
+
+    def save(self,*args, **kwargs):
+        if self.title is None or self.title=="":
+            self.title="گزارش مالی سفارش شماره "+str(self.order.pk)
+        return super(FinancialReport,self).save(*args, **kwargs)
+
+
+    class Meta:
+        verbose_name = _("FinancialReport")
+        verbose_name_plural = _("FinancialReports")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":financialreport", kwargs={"pk": self.pk})
 
 
 class ProductInStock(models.Model):

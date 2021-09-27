@@ -73,6 +73,7 @@ class BasicViews(View):
             context['add_category_form'] = AddCategoryForm()
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
+
 class ShopViews(View):
     def shop(self, request, *args, **kwargs):
         shop=ShopRepo(request=request).shop(*args, **kwargs)
@@ -83,12 +84,13 @@ class ShopViews(View):
         if supplier is None:
             raise Http404
         context=getContext(request=request)
-        
+
         context['body_class'] = "product-page"
         
         shops=ShopRepo(request=request).list(supplier=supplier)
         context['shops']=shops
         return render(request,TEMPLATE_ROOT+"shops.html",context)
+
 
 class EmployeeViews(View):
     def employee(self, request, *args, **kwargs):
@@ -98,6 +100,7 @@ class EmployeeViews(View):
         context['employee']=employee
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"employee.html", context)
+
 
 class WareHouseViews(View):
     def ware_house(self, request, *args, **kwargs):
@@ -130,8 +133,10 @@ class CartViews(View):
         if customer is None:
             raise Http404
         context = getContext(request)
-        cart = CartRepo(request=request).cart(customer=customer)
+        cart_repo=CartRepo(request=request)
+        cart = cart_repo.cart(customer=customer)
         context['cart'] = cart
+        context['profit']=cart_repo.get_cart_profit(customer=customer)
         context['is_empty'] = len(cart.lines) == 0
         context['cart_lines_s'] = json.dumps(
             CartLineSerializer(cart.lines, many=True).data)
@@ -258,6 +263,7 @@ class ProductViews(View):
         context['body_class'] = "product-page"
         return render(request,TEMPLATE_ROOT+"add-product-for-shoe.html",context)
 
+
 class CustomerViews(View):
     def customer(self, request, *args, **kwargs):
 
@@ -360,11 +366,25 @@ class OrderViews(View):
         orders = OrderRepo(request=request).orders(*args, **kwargs)
         context = getContext(request)
         customer=CustomerRepo(request=request).customer(*args, **kwargs)
+        shipper=ShipperRepo(request=request).shipper(*args, **kwargs)
+        supplier=SupplierRepo(request=request).supplier(*args, **kwargs)
+        if supplier is not None:
+            context['orders_title']="لیست سفارشات "+supplier.title
+            orders=orders.filter(supplier=supplier)
+            context['supplier']=supplier
+
         if customer is not None:
             context['orders_title']="لیست سفارشات "+customer.title
             orders=orders.filter(customer=customer)
-        context['header_image'] = PictureRepo(
-            request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)
+            context['customer']=customer
+
+        if shipper is not None:
+            context['orders_title']="لیست سفارشات "+shipper.title
+            orders=orders.filter(shipper=shipper)
+            context['shipper']=shipper
+
+
+        context['header_image'] = PictureRepo(request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)
 
         context['orders'] = orders
         # print(orders)
