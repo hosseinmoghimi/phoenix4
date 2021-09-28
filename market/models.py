@@ -1,9 +1,6 @@
-from django.db.models.base import Model
-from django.db.models.fields.reverse_related import ManyToOneRel
 from utility.persian2 import PersianCalendar
 from utility.qrcode import generate_qrcode
 from core.settings import ADMIN_URL, MEDIA_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL
-from django.db.models.fields import CharField, IntegerField
 from market.enums import DegreeLevelEnum, EmployeeEnum, OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.db import models
 from core.models import BasicPage
