@@ -3,8 +3,26 @@
         {% if add_product_feature_form %}
         <div class="col-md-12 text-center">
             <form @submit.prevent="add_feature()">
-                <input type="number" class="form-control farsi" v-model="product_feature_id">
-                <button class="btn btn-success farsi" type="submit">افزودن</button>
+                <input placeholder="شناسه " type="number" class="form-control farsi" v-model="product_feature_id">
+                <div>
+                    <div class="form-check" class="my-5 mx-3">
+                        افزودن
+                        <label class="form-check-label">
+                            <input @input="change_button_text()" v-model="add" class="form-check-input" type="checkbox">
+        
+        
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                        <hr>
+                    </div>
+
+                </div>
+                <button class="btn btn-success farsi" type="submit">
+                    
+                    <span v-text="add ? 'افزودن' : 'حذف'"></span>
+                </button>
             </form>
         </div>
         {% endif %}

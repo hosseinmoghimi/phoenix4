@@ -91,11 +91,18 @@ class ProductRepo:
     def add_feature(self,*args, **kwargs):
         feature=ProductFeatureRepo(request=self.request).product_feature(*args, **kwargs)
         product=ProductRepo(request=self.request).product(*args, **kwargs)
-
+        if 'add_or_remove' in kwargs:
+            add_or_remove=kwargs['add_or_remove']
+        else:
+            add_or_remove="add"
         if product is None or feature is None:
             return None
-        product.features.add(feature)
+        if add_or_remove=='add':
+            product.features.add(feature)
+        if add_or_remove=='remove':
+            product.features.remove(feature)
         return feature
+        
     def add_product_for_shop(self, *args, **kwargs):
         products=[]
         title = kwargs['title'] if 'title' in kwargs else None

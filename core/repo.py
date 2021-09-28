@@ -192,6 +192,38 @@ class PageCommentRepo:
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 
+class NavLinkRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'app_name' in kwargs:
+            app_name=kwargs['app_name']
+            self.objects=NavLink.objects.filter(Q(app_name=app_name)).order_by("priority")
+        else:
+            self.objects=NavLink.objects.all().order_by("priority")
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'app_name' in kwargs:
+            app_name=kwargs['app_name']
+            objects=objects.filter(Q(app_name=app_name))
+        return objects
+    def nav_link(self,*args, **kwargs):
+        pk=0
+        if 'nav_link_id' in kwargs:
+            pk=kwargs['nav_link_id']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'title' in kwargs:
+            return self.objects.filter(title=kwargs['title']).first()
+        return self.objects.filter(pk=pk).first()
+    
 
 class PageLinkRepo:
     def __init__(self,*args, **kwargs):

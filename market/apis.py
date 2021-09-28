@@ -168,8 +168,9 @@ class ProductApi(APIView):
                 log=3
                 product_id=add_product_feature_form.cleaned_data['product_id']
                 product_feature_id=add_product_feature_form.cleaned_data['product_feature_id']
+                add_or_remove=add_product_feature_form.cleaned_data['add_or_remove']
                 
-                feature=ProductRepo(request=request).add_feature(product_id=product_id,product_feature_id=product_feature_id)
+                feature=ProductRepo(request=request).add_feature(add_or_remove=add_or_remove,product_id=product_id,product_feature_id=product_feature_id)
                 if feature is not None:
                     log=4
                     context['feature']=ProductFeatureSerializer(feature).data
