@@ -62,7 +62,7 @@ class ProductRepo:
         objects = self.objects.all()
         if 'search_for' in kwargs:
             search_for=kwargs['search_for']
-            objects = objects.filter(title__contains=search_for)
+            objects = objects.filter(Q(title__contains=search_for)|Q(brand__title__contains=search_for)|Q(barcode=search_for)|Q(model_name__contains=search_for))
         if 'for_home' in kwargs:
             objects = objects.filter(for_home=kwargs['for_home'])
         if 'category_id' in kwargs:

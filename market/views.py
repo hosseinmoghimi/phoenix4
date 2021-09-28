@@ -236,6 +236,8 @@ class ProductViews(View):
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form']=AddProductSpecificationForm()
         context['product'] = product
+
+        context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR
         context['shop_levels'] = (i[0] for i in ShopLevelEnum.choices)
         if context['me_supplier'] is not None:

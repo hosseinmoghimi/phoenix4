@@ -1,0 +1,16 @@
+<script>
+    let likes_count = parseInt("{{likes_count}}")
+    let my_like = parseInt("{{my_like}}")
+    let page_like_app = new Vue({
+        el: "#page-like-app",
+        data: {
+            likes_count: likes_count,
+            my_like: my_like
+        },
+        methods: {
+            toggle_like: function () {
+
+            }
+        }
+    })
+</script>

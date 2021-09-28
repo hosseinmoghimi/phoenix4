@@ -8,7 +8,7 @@
 
     {% endif %}
 
-    {% for related_product in related_pages %}
+    {% for related_product in related_products %}
 
     <div class="col-lg-3 col-md-6 mr-auto ml-auto">
         <div class="card card-product">
@@ -35,7 +35,7 @@
             <div class="card-footer justify-content-between">
                 <div class="price">
                     <h4>
-                        {{product.unit_price|to_price}}
+                        {{related_product.unit_price|to_price}}
                     </h4>
                 </div>
                 <div class="stats">

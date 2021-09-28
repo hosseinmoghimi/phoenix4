@@ -75,7 +75,13 @@ class Product(MarketPage):
         super(Product,self).save(*args, **kwargs)
     def category(self):
         return self.category_set.first()
-
+    def related_products(self):
+        
+        ids=[]
+        for pa in self.related_pages.all():
+            ids.append(pa.id)
+        related_products=Product.objects.filter(id__in=ids)
+        return related_products
 
 class Category(MarketPage):
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))

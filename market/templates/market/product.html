@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row title-row">
             {% if me_customer %}
-              <div class="col-md-4 mr-auto" id="cart-app">
+            <div class="col-md-4 mr-auto" id="cart-app">
                 <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
                     <span class="farsi">
 
@@ -21,7 +21,7 @@
                 </a>
             </div>
             {% endif %}
-            
+
         </div>
     </div>
 </div>
@@ -42,20 +42,30 @@
                         {% endif %}
                     </h2>
                     {% if product.barcode %}
-                     <h2>
-                      <small class="text-muted">
-                          کد : 
-                      </small>
+                    <h2>
+                        <small class="text-muted">
+                            کد :
+                        </small>
                         {{product.barcode}}
-                     </h2> 
+                    </h2>
                     {% endif %}
+
+                    <div class="text-right">
+                        <span class="material-icons">
+                            thumb_up
+                        </span>
+                        <span class="farsi">
+
+                            {{product.likes_count}}
+                        </span>
+                    </div>
                     {% if perms.market.add_categoryproducttop %}
                     <form class="text-right" action="{% url 'market:add_product_for_category_page' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{product.id}}" name="product_id">
                         <button class="btn btn-info farsi" type="submit">
                             افزودن به برگزیده های دسته بندی
-                        {{product.category.title}}
+                            {{product.category.title}}
                         </button>
                     </form>
                     {% endif %}

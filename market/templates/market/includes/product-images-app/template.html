@@ -1,7 +1,10 @@
 <div id="product-images-app">
 
     <div class="tab-content">
-        <img class="w-100" :src="selected_image.image">
+        <a target="_blank" :href="selected_image.image">
+
+            <img class="w-100" :src="selected_image.image">
+        </a>
     </div>
     <div class="row">
         <div class="col-2" v-for="image in images">

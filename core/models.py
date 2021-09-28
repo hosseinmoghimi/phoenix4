@@ -347,6 +347,8 @@ class BasicPage(models.Model):
             ids.append(image.image.id)
         return Image.objects.filter(id__in=ids)
 
+    def likes_count(self):
+        return len(PageLike.objects.filter(page=self))
     
 class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
@@ -447,6 +449,18 @@ class Link(Icon):
 
 #     def get_absolute_url(self):
 #         return reverse(APP_NAME+":tag", kwargs={"pk": self.pk})
+class PageLike(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    page=models.ForeignKey("basicpage", verbose_name=_("page"), on_delete=models.CASCADE)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("PageLike")
+        verbose_name_plural = _("PageLikes")
+
+    def __str__(self):
+        return self.page.title
+
 
 
 
