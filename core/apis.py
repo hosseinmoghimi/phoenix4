@@ -212,3 +212,20 @@ class BasicApi(APIView):
                     context['result'] = SUCCEED
         context['log'] = log
         return JsonResponse(context)
+    def delete_page_image(self, request, *args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log += 1
+            delete_page_image_form = DeletePageImageForm(request.POST, request.FILES)
+            if delete_page_image_form.is_valid():
+                log += 1
+                page_id = delete_page_image_form.cleaned_data['page_id']
+                image_id = delete_page_image_form.cleaned_data['image_id']
+                done = PageImageRepo(request=request).delete_page_image(
+                    image_id=image_id, page_id=page_id)
+                if done :
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)

@@ -1,7 +1,8 @@
 <script>
-    let image={image:"{{product.image}}"}
-    let url_add_page_image="{% url 'core:add_page_image' %}"
-    let product_id=parseInt("{{product.id}}")
+    let image = { image: "{{product.image}}" }
+    let url_add_page_image = "{% url 'core:add_page_image' %}"
+    let url_delete_page_image = "{% url 'core:delete_page_image' %}"
+    let product_id = parseInt("{{product.id}}")
     let images = JSON.parse(`{{images_s|escapejs}}`)
     let selected_image = {}
     if (images.length > 0)
@@ -14,9 +15,10 @@
         data: {
             selected_image: selected_image,
             images: images,
-            show_add_page_image_form :false,
-            add_page_image_form_title:"",
-            add_page_image_form_file:"",
+            show_add_page_image_form: false,
+            show_delete_page_image_form: false,
+            add_page_image_form_title: "",
+            add_page_image_form_file: "",
         },
         methods: {
             select_image: function (image) {
@@ -52,6 +54,23 @@
                         }
                     },
                 });
+
+            },
+            delete_page_image: function () {
+                let image_id=selected_image.id
+                let payload = {
+                    image_id: image_id,
+                    page_id: page_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url_delete_page_image, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === "SUCCEED") {
+                        product_images_app.images = product_images_app.images.filter(im => im.id != image_id)
+                    }
+
+                })
 
             },
 

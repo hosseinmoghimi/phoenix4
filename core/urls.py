@@ -10,6 +10,7 @@ urlpatterns = [
     path("change_parameter/",apis.BasicApi().change_parameter,name='change_parameter'),
     path("delete_page_comment/",apis.BasicApi().delete_page_comment,name='delete_page_comment'),
     path("add_page_comment/",apis.BasicApi().add_page_comment,name='add_page_comment'),
+    path("delete_page_image/",apis.BasicApi().delete_page_image,name='delete_page_image'),
     path("add_page_image/",apis.BasicApi().add_page_image,name='add_page_image'),
     path("add_related_page/",apis.BasicApi().add_related_page,name='add_related_page'),
     path("add_page_tag/",apis.BasicApi().add_page_tag,name='add_page_tag'),

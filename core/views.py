@@ -61,6 +61,8 @@ def PageContext(request, page):
     if request.user.has_perm(APP_NAME+".change_page"):
         context['add_related_page_form'] = AddRelatedPageForm()
         
+    if request.user.has_perm(APP_NAME+".delete_pageimage"):
+        context['delete_page_image_form'] = DeletePageImageForm()
     page_comments = page.pagecomment_set.all()
     context['page_comments'] = page_comments
     page_comments_s = json.dumps(

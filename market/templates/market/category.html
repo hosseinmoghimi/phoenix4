@@ -95,6 +95,16 @@
     {% endif %}
     <div class="section">
         <div class="container">
+            {% if category.parent %}
+
+            <div class="text-center">
+                <span class="farsi">
+                    <a href="{{category.parent.get_absolute_url}}">
+                        {{category.parent.title}}
+                    </a>
+                </span>
+            </div>
+            {% endif %}
             <h2 class="section-title text-center">{{category.title}}
                 {% if perms.market.change_category %}
                 {{category.get_edit_btn|safe}}

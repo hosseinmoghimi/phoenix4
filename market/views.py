@@ -116,6 +116,7 @@ class ShopViews(View):
         
         shops=ShopRepo(request=request).list(supplier=supplier)
         context['shops']=shops
+        context['supplier']=supplier
         return render(request,TEMPLATE_ROOT+"shops.html",context)
 
 

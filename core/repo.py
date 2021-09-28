@@ -156,6 +156,8 @@ class BasicPageRepo:
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
         return objects.all()
+
+
 class PageCommentRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -191,6 +193,7 @@ class PageCommentRepo:
             return self.objects.filter(pk=kwargs['page_link_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
+
 
 class NavLinkRepo:
     def __init__(self,*args, **kwargs):
@@ -251,6 +254,7 @@ class PageLinkRepo:
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 
+
 class PageImageRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -268,8 +272,13 @@ class PageImageRepo:
         
         new_page_image.save()
         return new_page_image
-
-   
+    def delete_page_image(self,image_id,page_id,*args, **kwargs):
+        if self.user.has_perm(APP_NAME+".delete_pageimage"):
+            pi=PageImage.objects.filter(image_id=image_id).filter(page_id=page_id)
+            if len(pi)>0:
+                pi.delete()
+                return True
+  
 
 class ParameterRepo:
     def __init__(self,*args, **kwargs):
@@ -335,6 +344,8 @@ class ParameterRepo:
 
     def list(self,*args, **kwargs):
         return self.objects.all()
+
+
 class DocumentRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -398,6 +409,8 @@ class PictureRepo:
 
     def picture(self,*args, **kwargs):
         return self.get(*args, **kwargs)
+
+
 class LinkRepo:
     
     def __init__(self,*args, **kwargs):

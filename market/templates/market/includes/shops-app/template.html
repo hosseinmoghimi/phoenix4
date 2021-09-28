@@ -46,7 +46,9 @@
 
                         <div>
                             <small class="text-muted text-right">
-
+                                <span class="material-icons">
+                                    public
+                                </span>
                                 {{shop.supplier.region}}
                             </small>
 
@@ -104,6 +106,7 @@
 
             </tr>
             {% endfor %}
+            {% if add_shop_form %}
             <tr v-for="shop in shops">
                 <td>
                     <span v-text="shop.supplier.region">
@@ -171,6 +174,8 @@
                 {% endif %}
 
             </tr>
+              
+            {% endif %}
 
         </table>
     </div>
