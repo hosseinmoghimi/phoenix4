@@ -178,6 +178,8 @@ class Order(models.Model):
     description=models.CharField(_("description"),max_length=500,null=True,blank=True)
     address=models.CharField(_("description"),max_length=500,null=True,blank=True)
     no_ship=models.BooleanField(_("خود مشتری مراجعه و تحویل میگیرد؟"))
+    
+    class_name="order"
     def sum_total(self):
         return self.lines_total()+self.ship_fee
     def lines_total(self):
@@ -197,6 +199,8 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
 
+    def get_delete_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
     def get_invoice_url(self):
         return reverse(APP_NAME+":order_invoice", kwargs={"pk": self.pk})
     def get_status_color(self):
@@ -223,7 +227,8 @@ class Order(models.Model):
         """
     def get_edit_url(self):
         return ADMIN_URL+APP_NAME+"/order/"+str(self.pk)+"/change/"
-
+    def get_financial_report(self):
+        return FinancialReport.objects.filter(order=self).first()
 
 class OrderLine(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
@@ -233,7 +238,7 @@ class OrderLine(models.Model):
     unit_price=models.IntegerField(_("unit_price"))
     description=models.TextField(_("description"),blank=True)
     status=models.CharField(_("status"),choices=OrderLineStatusEnum.choices,default=OrderLineStatusEnum.CART, max_length=50)
-
+    profit=models.IntegerField(_("سود"),default=0)
     def guarantees(self):
         return Guarantee.objects.filter(orderline=self)
 
@@ -269,6 +274,8 @@ class CartLine(models.Model):
     def line_total(self):
         return self.shop.unit_price*self.quantity
 
+    def get_profit(self):
+        return self.quantity*(self.shop.unit_price-self.shop.buy_price)
 
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))
@@ -547,13 +554,14 @@ class FinancialReport(models.Model):
     customer_profit=models.IntegerField(_("سود مشتری"),default=0)
     date_added=models.DateTimeField(_("تاریخ ثبت سند"), auto_now=False, auto_now_add=True)
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=500)
-
+    class_name="financialreport"
     def save(self,*args, **kwargs):
         if self.title is None or self.title=="":
             self.title="گزارش مالی سفارش شماره "+str(self.order.pk)
         return super(FinancialReport,self).save(*args, **kwargs)
 
-
+    def get_edit_url(self):
+        return ADMIN_URL+APP_NAME+"/"+self.class_name+"/"+str(self.pk)+"/change/"
     class Meta:
         verbose_name = _("FinancialReport")
         verbose_name_plural = _("FinancialReports")
@@ -562,7 +570,7 @@ class FinancialReport(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":financialreport", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":financial_report", kwargs={"pk": self.pk})
 
 
 class ProductInStock(models.Model):

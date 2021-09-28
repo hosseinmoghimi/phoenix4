@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
-                <h2 class="title text-center">سفارش شماره {{order.pk}}</h2>
+                <h2 class="title text-center">گزارش مالی سفارش شماره {{order.pk}}</h2>
                 {% if perms.core.change_picture %}
                 <div class="text-center">
                     {{header_image.get_edit_btn|safe}}
@@ -22,38 +22,39 @@
     <div class="container">
         <div class="card card-plain">
             <div class="card-body">
-                <!-- <h3 class="card-title text-center">سفارش شماره {{order.pk}}</h3> -->
+                <h3 class="card-title text-center">گزارش مالی سفارش شماره {{order.pk}}</h3>
 
 
 
 
                 <div id="order-header" class="row rtl text-right mb-5 farsi">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <h3 class="card-title farsi text-right">
-                            سفارش شماره {{order.id}} {{order.get_status_tag|safe}}
+                            گزارش مالی سفارش شماره {{order.id}} {{order.get_status_tag|safe}}
+
+                            
 
 
                         </h3>
 
-
                         <h3 class="card-title farsi text-right">
-                            {% if perms.core.change_order %}
 
-                            <a target="_blank" title="ویرایش" class="mx-2" href="{{order.get_edit_url}}">
+                            {% if perms.core.change_financialreport %}
+
+                            <a target="_blank" title="ویرایش" href="{{financial_report.get_edit_url}}">
                                 <i class="material-icons">
                                     settings
                                 </i>
                             </a>
                             {% endif %}
-                            <a title="چاپ فاکتور" target="_blank" class="mx-2" href="{{order.get_invoice_url}}">
+                            <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{order.get_invoice_url}}">
                                 <i class="material-icons">print</i>
                             </a>
-{% if order.get_financial_report %}
-  
-<a title="گزارش مالی" target="_blank" class="mx-2" href="{{order.get_financial_report.get_absolute_url}}">
-    <i class="material-icons">request_quote</i>
-</a>
-{% endif %}
+
+                            <a title="گزارش مالی" target="_blank" class="mx-3"
+                                href="{{order.get_financial_report.get_absolute_url}}">
+                                <i class="material-icons">request_quote</i>
+                            </a>
 
 
                         </h3>
@@ -100,7 +101,13 @@
 
 
 
+                        <div>
 
+                            سود شما از این فاکتور
+                            :
+                            {{order.get_profit|to_price}}
+
+                        </div>
 
                         <div class="farsi mr-3 mb-3">آدرس تحویل :
                             <i>
@@ -130,7 +137,7 @@
 
 
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <table class="table">
                             <tr>
                                 <td class="text-left">
@@ -257,15 +264,25 @@
                         <img src="{{order.get_qrcode_url}}" width="200" alt="">
 
                     </div>
+                    <div class="col-md-4">
+                        <div class="farsi">
+
+                            سود فروشنده :
+                            {{financial_report.supplier_profit|to_price}}
+                            <br>
+                            سود مشتری :
+
+                            {{financial_report.customer_profit|to_price}}
+                            <br>
+                            سود حمل کننده :
+                            {{financial_report.shipper_profit|to_price}}
+                        </div>
+                    </div>
                 </div>
                 <br />
                 {% include "market/includes/order-app/template.html" %}
-                {% include "market/includes/order-app/do-pack-form.html" %}
-                {% include "market/includes/order-app/do-ship-form.html" %}
-                {% include "market/includes/order-app/do-deliver-form.html" %}
-                {% include "market/includes/order-app/do-cancel-form.html" %}
 
-             
+
 
 
 

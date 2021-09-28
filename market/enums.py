@@ -61,6 +61,7 @@ class OrderLineStatusEnum(TextChoices):
 
 class PictureEnum(TextChoices):
     CART_HEADER='تصویر سربرگ سبد خرید',_('تصویر سربرگ سبد خرید')
+    SEARCH_HEADER='تصویر سربرگ صفحه جستجو',_('تصویر سربرگ صفحه جستجو')
     ORDER_HEADER='تصویر سربرگ سبد سفارش' ,_('تصویر سربرگ سبد سفارش')
     ORDERS_HEADER='تصویر سربرگ سفارشات',_('تصویر سربرگ سفارشات')
     GUARANTEE_HEADER="تصویر سربرگ گارانتی",_("تصویر سربرگ گارانتی")

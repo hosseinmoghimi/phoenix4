@@ -6,7 +6,7 @@ from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Employee, FinancialReport, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 import json
 
@@ -28,6 +28,9 @@ class ShipperRepo:
         objects = self.objects.all()
         if 'for_home' in kwargs:
             objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         if 'category_id' in kwargs:
             return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
         return objects
@@ -57,6 +60,9 @@ class ProductRepo:
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         if 'for_home' in kwargs:
             objects = objects.filter(for_home=kwargs['for_home'])
         if 'category_id' in kwargs:
@@ -291,6 +297,9 @@ class SupplierRepo:
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         if 'for_home' in kwargs:
             objects = objects.filter(for_home=kwargs['for_home'])
         if 'category_id' in kwargs:
@@ -322,7 +331,10 @@ class CustomerRepo:
         self.me = Customer.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
-        objects = self.objects.all()
+        objects=self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         if 'for_home' in kwargs:
             objects = objects.filter(for_home=kwargs['for_home'])
         if 'category_id' in kwargs:
@@ -598,8 +610,11 @@ class WareHouseRepo:
             return ProductInStock.objects.get(pk=pk)
         except:
             pass
-    def list(self):
+    def list(self,*args, **kwargs):
         objects= self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         return objects
     def add_order_in_ware_house(self,*args, **kwargs):
         order_id=kwargs['order_id'] if 'order_id' in kwargs else None
@@ -659,6 +674,9 @@ class BrandRepo:
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         if 'cart_lines' in kwargs:
             return self.objects.filter(id__in=kwargs['cart_lines'].values('shop_id'))
         if 'product' in kwargs:
@@ -675,6 +693,48 @@ class BrandRepo:
         if 'level' in kwargs:
             # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
             objects = objects.filter(level=kwargs['level'])
+        return objects
+
+
+class FinancialReportRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = FinancialReport.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def financial_report(self, *args, **kwargs):
+        if 'financial_report_id' in kwargs:
+            pk = kwargs['financial_report_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'order_id' in kwargs:
+            return self.objects.filter(order_id=kwargs['order_id'])
+        if 'order' in kwargs:
+            objects = objects.filter(order=kwargs['order'])
+        # if 'supplier' in kwargs:
+        #     objects = objects.filter(supplier=kwargs['supplier'])
+        # if 'supplier_id' in kwargs:
+        #     objects = objects.filter(supplier_id=kwargs['supplier_id'])
+        # if 'shipper' in kwargs:
+        #     objects = objects.filter(shipper=kwargs['shipper'])
+        # if 'shipper_id' in kwargs:
+        #     objects = objects.filter(shipper_id=kwargs['shipper_id'])
+        # if 'customer' in kwargs:
+        #     objects = objects.filter(customer=kwargs['customer'])
+        # if 'customer_id' in kwargs:
+        #     objects = objects.filter(customer_id=kwargs['customer_id'])
         return objects
 
 
@@ -972,6 +1032,7 @@ class CartRepo:
             order.save()
             if order is not None:
                 orders.append(order)
+                supplier_profit=0
                 for cart_line in cart_lines:
                     description=""
                     for spec in cart_line.shop.specifications.all():
@@ -979,6 +1040,7 @@ class CartRepo:
                     if cart_line.shop.supplier == supplier:
                         order_line=OrderLine(
                             order=order,
+                            profit=cart_line.get_profit(),
                             product=cart_line.shop.product,
                             quantity=cart_line.quantity,
                             unit_price=cart_line.shop.unit_price,
@@ -987,7 +1049,12 @@ class CartRepo:
                             unit_name=cart_line.shop.unit_name)
                         order_line.save()
                         ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
+                        supplier_profit+=cart_line.get_profit()
                         cart_line.delete()
+                financial_report=FinancialReport()
+                financial_report.order=order
+                financial_report.supplier_profit=supplier_profit
+                financial_report.save()
                 # order=OrderRepo(user=self.user).get(order_id=order.pk)
                 # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)
                 if order.supplier.profile is not None:
@@ -1021,6 +1088,9 @@ class CategoryRepo:
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
         if 'for_home' in kwargs:
             objects = objects.filter(Q(for_home=True) | Q(parent=None))
         return objects

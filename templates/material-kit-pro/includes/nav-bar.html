@@ -201,6 +201,16 @@
                 </li>
                 {% endif %}
 
+                {% if search_form %}
+                <li class="button-container nav-item iframe-extern">
+                    <form action="{% url 'market:search' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" style="background-color: #eeeeee66;border-radius:100px" required class="form-control farsi px-2" placeholder="جستجو ..." name="search_for">
+                    </form>
+                </li>
+                {% endif %}
+
+
             </ul>
         </div>
     </div>

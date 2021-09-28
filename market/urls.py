@@ -5,7 +5,9 @@ from django.urls import path,include
 app_name=APP_NAME
 urlpatterns = [
     path("",views.BasicViews().home,name="home"),
+    path('search/',views.BasicViews().search,name="search"),
     path("product/<int:pk>/",views.ProductViews().product,name="product"),
+    path("financial_report/<int:pk>/",views.OrderViews().financial_report,name="financial_report"),
     path("category/<int:pk>/",views.CategoryViews().category,name="category"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),

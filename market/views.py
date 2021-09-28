@@ -1,17 +1,14 @@
-import contextlib
-from typing import ContextManager
 from core.constants import CURRENCY
 from utility.persian2 import PersianCalendar
 from django.http.response import Http404
 from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ProductSpecificationSerializer, ShopSerializer
 import json
-from market.enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
-from core.models import Parameter
+from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
 from core.repo import ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
 from django.views import View
 from market.forms import *
-from .repo import BlogRepo, EmployeeRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
+from .repo import BlogRepo, EmployeeRepo, FinancialReportRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
 from .apps import APP_NAME
 from authentication.views import ProfileContext
 from django.shortcuts import render, redirect, reverse
@@ -45,6 +42,7 @@ def getContext(request, *args, **kwargs):
     context['layout_parent'] = LAYOUT_PARENT
     context['root_categories'] = CategoryRepo(
         request=request).list(for_home=True)
+    context['search_form']=SearchForm()
     return context
 # Create your views here.
 
@@ -72,6 +70,36 @@ class BasicViews(View):
         if request.user.has_perm(APP_NAME+".add_category") and len(products) == 0:
             context['add_category_form'] = AddCategoryForm()
         return render(request, TEMPLATE_ROOT+"index.html", context)
+
+    def search(self, request, *args, **kwargs):
+        context = getContext(request)
+        log = 1
+        if request.method == 'POST':
+            log += 1
+            search_form = SearchForm(request.POST)
+            if search_form.is_valid():
+                log += 1
+                search_for = search_form.cleaned_data['search_for']
+                context['search_for'] = search_for
+                context['products'] = ProductRepo(
+                    request=request).list(search_for=search_for)
+                context['categories'] = CategoryRepo(
+                    request=request).list(search_for=search_for)
+                context['customers'] = CustomerRepo(
+                    request=request).list(search_for=search_for)
+                context['suppliers'] = SupplierRepo(
+                    request=request).list(search_for=search_for)
+                context['shippers'] = ShipperRepo(
+                    request=request).list(search_for=search_for)
+                
+                context['log'] = log
+                context['header_image'] = PictureRepo(request=request, app_name=APP_NAME).picture(name=PictureEnum.SEARCH_HEADER)
+        
+                return render(request, TEMPLATE_ROOT+"search.html", context)
+        return BasicViews().home(request=request)
+ 
+
+
 
 
 class ShopViews(View):
@@ -318,6 +346,13 @@ class ShipperViews(View):
 
 
 class OrderViews(View):
+    def financial_report(self,request,*args, **kwargs):
+        context = getContext(request)
+        financial_report=FinancialReportRepo(request=request).financial_report(*args, **kwargs)
+        context['financial_report']=financial_report
+        context['order']=financial_report.order
+        return render(request, TEMPLATE_ROOT+"financial-report.html", context)
+
     def order(self, request, *args, **kwargs):
         user = request.user
         order = OrderRepo(request=request).order(*args, **kwargs)
