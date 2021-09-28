@@ -659,3 +659,12 @@ class SocialLink(Link):
 
 
 
+class NavLink(Link):
+    app_name=models.CharField(_("app_name"), max_length=50)
+
+
+    
+
+    class Meta:
+        verbose_name = _("NavLink")
+        verbose_name_plural = _("NavLinks")

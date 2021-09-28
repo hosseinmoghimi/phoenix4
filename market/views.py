@@ -27,6 +27,8 @@ def getContext(request, *args, **kwargs):
     context['me_supplier'] = SupplierRepo(request=request).me
     me_customer=CustomerRepo(request=request).me
     context['me_customer'] = me_customer
+    vertical_navs=NavLi
+    context['vertical_navs']=vertical_navs
     if me_customer is not None:
         context['profile_button']={
             'url':me_customer.get_absolute_url(),
@@ -98,9 +100,6 @@ class BasicViews(View):
                 return render(request, TEMPLATE_ROOT+"search.html", context)
         return BasicViews().home(request=request)
  
-
-
-
 
 class ShopViews(View):
     def shop(self, request, *args, **kwargs):
