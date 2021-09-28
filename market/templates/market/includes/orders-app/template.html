@@ -44,7 +44,7 @@
                 <td class="small text-right">
                     <a href="{{order.supplier.get_absolute_url}}">
                         <img src="{{order.supplier.image}}" class="rounded-circle" width="32" alt="">
-                     
+
                         {{order.supplier.title}}
                     </a>
                 </td>
@@ -73,15 +73,37 @@
                 {% if perms.market.change_order %}
 
                 <td>
-                   
-                    <a title="چاپ فاکتور" target="_blank" class="" href="{{order.get_invoice_url}}">
-                        <i class="material-icons">print</i>
+                    {% if order.get_financial_report %}
+
+                    <a title="گزارش مالی" href="{{order.get_financial_report.get_absolute_url}}">
+                        <i class="material-icons text-success">request_quote</i>
                     </a>
-                    <a target="_blank" title="ویرایش" href="{{order.get_edit_url}}">
-                        <i class="material-icons">
+                    {% endif %}
+                    <a title="جزئیات سفارش" href="{{order.get_absolute_url}}">
+                        <i class="material-icons text-primary">
+
+                            ballot
+                        </i>
+
+
+                    </a>
+
+                    <a title="چاپ فاکتور" target="_blank" href="{{order.get_invoice_url}}">
+                        <i class="material-icons text-info">print</i>
+                    </a>
+                    <a title="ویرایش" target="_blank" href="{{order.get_edit_url}}">
+                        <i class="material-icons text-warning">
                             edit
                         </i>
                     </a>
+                    {% if perms.market.delete_order %}
+
+                    <a title="حذف سفارش" target="_blank" href="{{order.get_delete_url}}">
+                        <i class="material-icons text-danger">
+                            delete
+                        </i>
+                    </a>
+                    {% endif %}
 
                 </td>
                 {% endif %}
