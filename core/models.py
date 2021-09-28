@@ -164,8 +164,8 @@ class Image(models.Model):
         return MEDIA_URL+str(self.image_main_origin)
 
 class BasicPage(models.Model):
-    title = models.CharField(_("عنوان"), max_length=50)
-    sub_title=models.CharField(_("زیر عنوان"),null=True, blank=True, max_length=50)
+    title = models.CharField(_("عنوان"), max_length=300)
+    sub_title=models.CharField(_("زیر عنوان"),null=True, blank=True, max_length=300)
     for_home=models.BooleanField(_("نمایش در خانه"),default=False)
     parent = models.ForeignKey("BasicPage",related_name="childs",null=True,blank=True, verbose_name=_(
         "والد"), on_delete=models.SET_NULL)
@@ -335,7 +335,7 @@ class BasicPage(models.Model):
             for page in self.childs.all():
                 page.delete()
         else:
-            for page in self.childs():
+            for page in BasicPage.objects.filter(parent=self):
                 page.parent=self.parent
                 page.save()
         return super(BasicPage,self).delete(*args, **kwargs)

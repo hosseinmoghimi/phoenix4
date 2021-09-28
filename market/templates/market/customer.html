@@ -11,9 +11,14 @@
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
                 <h2 class="title text-center">{{customer.title}}</h2>
-                {% if perms.core.change_customer %}
+                {% if perms.market.change_customer %}
                 <div class="text-center">
-                    {{customer.get_edit_btn|safe}}
+                    <a href="{{customer.get_edit_url}}">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                    
                 </div>
                 {% endif %}
             </div>
@@ -41,7 +46,9 @@
                         لیست سفارشات 
                     </a>
                 </p>
-
+<div>
+    {% include "market/includes/list-app/template.html" %}
+</div>
             </div>
         </div>
     </div>

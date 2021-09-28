@@ -301,6 +301,7 @@ class CustomerViews(View):
         context.update(ProfileContext(request=request, profile=profile))
         context['customer'] = customer
         context['orders'] = OrderRepo(request=request).list(customer_id=customer.id)
+        context['products'] = customer.favorites.all()
 
         context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"customer.html", context)

@@ -37,7 +37,7 @@ class BrandSerializer(serializers.ModelSerializer):
 class ProductSerializerForShop(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title','get_absolute_url','thumbnail']
+        fields = ['id', 'title','barcode','get_absolute_url','thumbnail']
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):

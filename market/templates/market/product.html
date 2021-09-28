@@ -41,6 +41,14 @@
                         {{product.get_edit_btn|safe}}
                         {% endif %}
                     </h2>
+                    {% if product.barcode %}
+                     <h2>
+                      <small class="text-muted">
+                          کد : 
+                      </small>
+                        {{product.barcode}}
+                     </h2> 
+                    {% endif %}
                     {% if perms.market.add_categoryproducttop %}
                     <form class="text-right" action="{% url 'market:add_product_for_category_page' %}" method="POST">
                         {% csrf_token %}

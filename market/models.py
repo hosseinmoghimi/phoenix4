@@ -83,7 +83,7 @@ class Category(MarketPage):
         return Category.objects.filter(parent=self)
   
     def top_products(self,count):
-        objects= CategoryProductTop.objects.filter(category=self)
+        objects= CategoryProductTop.objects.filter(category=self).order_by('-date_added')
         list1=[]
         for object in objects:
             list1.append(object.product.id)
@@ -102,6 +102,7 @@ class CategoryProductTop(models.Model):
     category=models.ForeignKey("category", verbose_name=_("category"), on_delete=models.CASCADE)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
     priority=models.IntegerField(_("ترتیب"),default=100)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     class_name="categoryproducttop"
     class Meta:
         verbose_name = _("CategoryProductTop")
@@ -135,6 +136,8 @@ class Customer(models.Model):
     region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    favorites=models.ManyToManyField("product", verbose_name=_("products"),blank=True)
+    class_name="customer"
     def cart(self):
         return Cart.objects.filter(customer=self).first()
     def get_orders_url(self):
@@ -157,7 +160,8 @@ class Customer(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":customer", kwargs={"pk": self.pk})
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
 class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
