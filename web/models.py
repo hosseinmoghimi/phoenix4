@@ -7,6 +7,8 @@ from django.utils.translation import gettext as _
 IMAGE_FOLDER=APP_NAME+"/img/"
 from core.models import BasicPage
 from django.shortcuts import reverse
+
+
 class WebPage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
@@ -25,6 +27,7 @@ class Blog(WebPage):
     def save(self,*args, **kwargs):
         self.class_name="blog"
         return super(Blog,self).save(*args, **kwargs)
+
 
 class Carousel(models.Model):
     app_name=models.CharField(_("app_name"), max_length=50)
@@ -60,6 +63,7 @@ class Carousel(models.Model):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
+
 class OurWork(WebPage):
     # status=models.CharField(_("وضعیت"),choices=OurWorkStatusEnum.choices,default=OurWorkStatusEnum.DONE, max_length=50)
     location = models.CharField(
@@ -79,7 +83,6 @@ class OurWork(WebPage):
     class Meta:
         verbose_name = _("OurWork")
         verbose_name_plural = _("پروژه های انجام شده")
-
 
 
 class Testimonial(models.Model):
@@ -145,6 +148,7 @@ class Feature(WebPage):
     def ourworks(self):
         return OurWork.objects.filter(parent=self)
 
+
 class Award(WebPage):
     # title=models.CharField(_("عنوان"), max_length=50)    
     # image=models.ForeignKey("GalleryPhoto", verbose_name=_("تصویر"), on_delete=models.CASCADE)
@@ -169,8 +173,6 @@ class Award(WebPage):
     # def __str__(self):
     #     return self.title
 
-    
- 
 
 class Technology(WebPage):
     # question = models.CharField(_("سوال"), max_length=200)  
@@ -239,7 +241,6 @@ class OurTeam(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":ourteam",kwargs={'pk':self.pk})
-
 
 
 class ContactMessage(models.Model):

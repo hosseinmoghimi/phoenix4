@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djecrety',
     'django_cleanup.apps.CleanupConfig',
-    # 'tinymce',
     'django.contrib.sites',   # <--
     # 'social_app',   # <--
     'django.contrib.humanize',

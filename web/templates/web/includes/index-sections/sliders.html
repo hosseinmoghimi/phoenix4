@@ -17,14 +17,17 @@
             <div class="carousel-inner">
                 {% for slider in sliders %}
                 <div class="carousel-item">
-                    <div class="page-header header-filter" style="background-image: url('{{slider.image}}');">
+                    <div class="page-header header-filter1" style="background-image: url('{{slider.image}}');">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6 text-left">
                                     <h1 class="title">{{slider.title}}</h1>
 
                                     {% if slider.body %}
-                                    {{slider.body|safe}}
+                                    <div class="farsi">
+
+                                        {{slider.body|safe}}
+                                    </div>
                                     {% endif %}
                                     <br>
                                     <div class="buttons">
@@ -40,6 +43,9 @@
 
 
                                     </div>
+                                    {% if perms.web.change_carousel %}
+                                      {{slider.get_edit_btn|safe}}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
