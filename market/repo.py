@@ -76,6 +76,11 @@ class ProductRepo:
         product=ProductRepo(request=self.request).product(*args, **kwargs)
         if category is None:
             category=product.category_set.first()
+        c=CategoryProductTop.objects.filter(product=product).filter(category=category)
+        if len(c)>0:
+            c.delete()
+            return category
+
         category_product_top=CategoryProductTop(product=product,category=category)
         category_product_top.save()
         return category

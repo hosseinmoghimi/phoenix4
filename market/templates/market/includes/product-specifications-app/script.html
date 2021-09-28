@@ -1,7 +1,7 @@
 <script>
     let url_add_product_specification = "{% url 'market:add_product_specification' %}"
     if (typeof specifications === 'undefined')
-        let specifications = JSON.parse(`{{specifications_s|escapejs}}`)
+        specifications = JSON.parse(`{{specifications_s|escapejs}}`)
 
     let product_specifications_app = new Vue({
         el: "#product-specifications-app",
