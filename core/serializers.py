@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
-from .models import BasicPage, Image, PageComment, PageDocument, PageImage, PageLink, Tag
+from .models import BasicPage, Image, PageComment, PageDocument, PageImage, PageLink, Parameter, Tag
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,10 @@ class PageDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageDocument
         fields=['id','title','get_download_url','get_edit_url']
+class ParameterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parameter
+        fields=['id','name','app_name','value']
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image

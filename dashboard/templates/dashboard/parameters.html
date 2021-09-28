@@ -15,23 +15,20 @@
 {% block content %}
 
 <div class="rtl text-right mb-5">
-{% for app in my_apps %}
+    {% for app in my_apps %}
 
-    <a class="btn btn-{{app.color}}" href="{% url 'dashboard:change_parameters' app_name=app.name %}">
+    <a class="btn btn-{{app.color}}" href="{% url 'dashboard:parameters' app_name=app.name %}">
         {{app.title}}
     </a>
-    
+
     {% endfor %}
 </div>
 
 <div id="app">
-    <form @submit.prevent="change_parameter(parameter.id,parameter.value)" v-for="parameter in parameters">
+    <form @submit.prevent="change_parameter(parameter.id,parameter.name,parameter.value)" v-for="parameter in parameters">
         <div class="row">
             <div class="col-md-4">
-                {% verbatim %}
-
-                {{parameter.name}}
-                {% endverbatim %}
+                <span v-text="parameter.name"></span>
             </div>
             <div class="col-md-7">
                 <input type="text" class="form-control" v-model="parameter.value">
@@ -65,6 +62,7 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% endif %}
 <script>
+    let app_name = "{{app_name}}"
     let parameters = JSON.parse("{{parameters_s|escapejs}}")
     let url_change_parameter = "{% url 'core:change_parameter' %}"
     let app = new Vue({
@@ -73,18 +71,21 @@
             parameters: parameters,
         },
         methods: {
-            change_parameter: function (parameter_id, parameter_value) {
+            change_parameter: function (parameter_id, parameter_name, parameter_value) {
                 // console.log(parameter_id)
                 // console.log(parameter_value)
                 // console.log("#parameter"+parameter_id)
                 // console.log($("#parameter"+parameter_id)[0])
                 // console.log($("#parameter"+parameter_id)[0].val())
                 // parameter_value=$("#parameter"+parameter_id).val()
-                payload = {
+                let payload = {
                     parameter_id: parameter_id,
                     parameter_value: parameter_value,
+                    app_name: app_name,
+                    // parameter_name: parameter_name,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
+                console.log(payload)
                 var posting = $.post(url_change_parameter, payload);
 
                 // Put the results in a div
@@ -100,8 +101,8 @@
                         // let bgcolor='bgcolor'
                         // let html=''
                         // showNotification(title, align, icon, bgcolor, html) 
-                        message=
-                        `
+                        message =
+                            `
                         <p>
                         با موفقیت تغییر یافت
                         </p>            

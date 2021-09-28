@@ -10,15 +10,23 @@ class AddRelatedPageForm(forms.Form):
     related_page_id=forms.IntegerField(required=True)
     bidirectional=forms.BooleanField(required=False)
     add_or_remove=forms.BooleanField(required=False)
-    
+
+class ChangeParameterForm(forms.Form):
+    parameter_id=forms.IntegerField(required=False)
+    app_name=forms.CharField(max_length=50,required=False)
+    parameter_name=forms.CharField(max_length=100,required=False)
+    parameter_value=forms.CharField(max_length=10000,required=True)
+
 class AddPageTagForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100,required=True)
-    
+
+
 class RemovePageTagForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     tag_id=forms.IntegerField(required=True)
-    
+
+
 class AddPageLinkForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100, required=True)

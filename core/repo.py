@@ -287,15 +287,26 @@ class ParameterRepo:
         
         self.objects=Parameter.objects.filter(Q(app_name=None)|Q(app_name=self.app_name))
     
-    def change_parameter(self,parameter_id,parameter_value):
-        if self.user.has_perm(APP_NAME+'.change_parameter'):
-            try:
-                parameter=Parameter.objects.get(pk=parameter_id)
-            except:
+    def change_parameter(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+'.change_parameter'):
+            return None
+        parameter_id=kwargs['parameter_id'] if 'parameter_id' in kwargs else None
+        parameter_name=kwargs['parameter_name'] if 'parameter_name' in kwargs else None
+        parameter_value=kwargs['parameter_value'] if 'parameter_value' in kwargs else None
+        app_name=kwargs['app_name'] if 'app_name' in kwargs else None
+        if parameter_id is not None:
+            parameter=Parameter.objects.filter(pk=parameter_id).first()
+            if parameter is None:
                 return None
-            parameter.value_origin=parameter_value
-            parameter.save()
-            return parameter
+        elif parameter_name is not None and app_name is not None:
+            parameter=Parameter.objects.filter(app_name=app_name).filter(name=parameter_name).first()
+            if parameter is None:
+                parameter=Parameter(app_name=app_name,name=parameter_name,value_origin="")
+                parameter.save()
+        
+        parameter.value_origin=parameter_value
+        parameter.save()
+        return parameter
 
     
     def set(self,name,value=None):
@@ -322,6 +333,8 @@ class ParameterRepo:
             parameter=self.objects.filter(app_name=self.app_name).get(name=name)
         return parameter
 
+    def list(self,*args, **kwargs):
+        return self.objects.all()
 class DocumentRepo:
     def __init__(self,*args, **kwargs):
         self.request=None

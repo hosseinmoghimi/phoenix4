@@ -1,12 +1,38 @@
-from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer, TagSerializer
+from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer, ParameterSerializer, TagSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *
-from .repo import BasicPageRepo, DocumentRepo, PageCommentRepo, PageImageRepo, PageLinkRepo, TagRepo
+from .repo import BasicPageRepo, DocumentRepo, PageCommentRepo, PageImageRepo, PageLinkRepo, ParameterRepo, TagRepo
 from .constants import SUCCEED, FAILED
 
 
 class BasicApi(APIView):
+    def change_parameter(self, request, *args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log += 1
+            change_parameter_form = ChangeParameterForm(request.POST)
+            if change_parameter_form.is_valid():
+                log += 1
+                
+                parameter_id = change_parameter_form.cleaned_data['parameter_id']
+                app_name = change_parameter_form.cleaned_data['app_name']
+                parameter_name = change_parameter_form.cleaned_data['parameter_name']
+                parameter_value = change_parameter_form.cleaned_data['parameter_value']
+                
+                parameter = ParameterRepo(request=request).change_parameter(
+                    parameter_id=parameter_id,
+                    app_name=app_name,
+                    parameter_name=parameter_name,
+                    parameter_value=parameter_value,
+                    )
+                if parameter is not None:
+                    context['parameter'] = ParameterSerializer(parameter).data
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
     def add_page(self, request, *args, **kwargs):
         log = 1
         context = {}

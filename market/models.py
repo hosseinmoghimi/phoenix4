@@ -230,6 +230,7 @@ class Order(models.Model):
     def get_financial_report(self):
         return FinancialReport.objects.filter(order=self).first()
 
+
 class OrderLine(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
@@ -276,6 +277,7 @@ class CartLine(models.Model):
 
     def get_profit(self):
         return self.quantity*(self.shop.unit_price-self.shop.buy_price)
+
 
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))

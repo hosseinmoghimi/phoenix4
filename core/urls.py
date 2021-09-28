@@ -7,6 +7,7 @@ urlpatterns = [
     path("add_page/",apis.BasicApi().add_page,name='add_page'),
     path("add_page_document/",apis.BasicApi().add_page_document,name='add_page_document'),
     
+    path("change_parameter/",apis.BasicApi().change_parameter,name='change_parameter'),
     path("delete_page_comment/",apis.BasicApi().delete_page_comment,name='delete_page_comment'),
     path("add_page_comment/",apis.BasicApi().add_page_comment,name='add_page_comment'),
     path("add_page_image/",apis.BasicApi().add_page_image,name='add_page_image'),
