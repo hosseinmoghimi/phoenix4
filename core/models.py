@@ -660,7 +660,7 @@ class SocialLink(Link):
 
 
 class NavLink(Link):
-    app_name=models.CharField(_("app_name"), max_length=50)
+    app_name=models.CharField(_("app_name"),choices=AppNameEnum.choices, max_length=50)
 
 
     

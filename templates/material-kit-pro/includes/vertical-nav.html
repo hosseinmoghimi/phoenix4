@@ -2,7 +2,15 @@
 
   <ul>
 
-    {% if not vertical_navs %}
+  
+    {% for link in vertical_navs %}
+    <li>
+      <a href="{{link.url}}" data-number="{{link.pk}}">
+        <span class="cd-dot"></span>
+        <span class="cd-label">{{link.title}}</span>
+      </a>
+    </li>
+    {% empty %}
     <li>
       <a href="#headers" data-number="1">
         <span class="cd-dot"></span>
@@ -44,14 +52,6 @@
       <a href="#contactus" data-number="8">
         <span class="cd-dot"></span>
         <span class="cd-label">Contact Us</span>
-      </a>
-    </li>
-    {% endif %}
-    {% for link in vertical_navs %}
-    <li>
-      <a href="{{link.url}}" data-number="{{link.pk}}">
-        <span class="cd-dot"></span>
-        <span class="cd-label">{{link.title}}</span>
       </a>
     </li>
     {% endfor %}

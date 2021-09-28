@@ -4,7 +4,7 @@ from django.http.response import Http404
 from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ProductSpecificationSerializer, ShopSerializer
 import json
 from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
-from core.repo import ParameterRepo, PictureRepo
+from core.repo import NavLinkRepo, ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
 from django.views import View
 from market.forms import *
@@ -27,7 +27,7 @@ def getContext(request, *args, **kwargs):
     context['me_supplier'] = SupplierRepo(request=request).me
     me_customer=CustomerRepo(request=request).me
     context['me_customer'] = me_customer
-    vertical_navs=NavLi
+    vertical_navs=NavLinkRepo(request=request,app_name=APP_NAME).list()
     context['vertical_navs']=vertical_navs
     if me_customer is not None:
         context['profile_button']={
