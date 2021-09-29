@@ -1109,7 +1109,7 @@ class CategoryRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Category.objects
+        self.objects = Category.objects.order_by('priority')
         self.profile = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):

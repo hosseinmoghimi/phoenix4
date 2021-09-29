@@ -636,7 +636,7 @@ class CategoryViews(View):
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
         context['category'] = category
-        categories = category.childs()
+        categories = category.childs().order_by('priority')
         context['categories'] = categories
         products = category.products.all()
         context['products'] = products
