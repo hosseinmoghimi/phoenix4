@@ -9,7 +9,8 @@
         <td class="td-name">
             <a :href="order_line.product.get_absolute_url">
                 <div class="text-right">
-                    <span v-text="order_line.product.title"></span>...
+                    <span v-text="order_line.product.title"></span>
+                    <small class="mx-2 text-muted" v-text="order_line.product.barcode"></small>
                 </div>
             </a>
             <div class="farsi text-right ">

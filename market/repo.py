@@ -804,6 +804,7 @@ class ShopRepo:
         unit_price = 0
         available = 100
         buy_price=0
+        old_price=0
         specifications=[]
         level=ShopLevelEnum.REGULAR
         if 'specifications' in kwargs:
@@ -822,6 +823,8 @@ class ShopRepo:
             unit_price = kwargs['unit_price']
         if 'available' in kwargs:
             available = kwargs['available']
+        if 'old_price' in kwargs:
+            old_price = kwargs['old_price']
         if not available>0 or unit_price==0:
             Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).delete()
             return {'result':'deleted'}
@@ -833,6 +836,7 @@ class ShopRepo:
                 level=level,
                 buy_price=buy_price,
                 unit_name=unit_name,
+                old_price=old_price,
                 unit_price=unit_price,
                 available=available
             )
@@ -855,6 +859,7 @@ class ShopRepo:
                 product_id=product_id,
                 level=level,
                 buy_price=buy_price,
+                old_price=old_price,
                 unit_name=unit_name,
                 unit_price=unit_price,
                 available=available
@@ -1064,7 +1069,7 @@ class CartRepo:
                         order_line.save()
                         ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
                         supplier_profit+=cart_line.get_profit()
-                        customer_profit+=cart_line.shop.unit_price-cart_line.shop.old_price
+                        customer_profit+=cart_line.quantity*(cart_line.shop.old_price-cart_line.shop.unit_price)
                         cart_line.delete()
                 financial_report=FinancialReport()
                 financial_report.order=order

@@ -158,6 +158,7 @@ class AddShopForm(forms.Form):
     product_id=forms.IntegerField( required=True)
     specifications=forms.CharField(max_length=2000, required=False)
     unit_name=forms.CharField(required=True)
+    old_price=forms.CharField(required=False)
     buy_price=forms.CharField(required=False)
     level=forms.CharField(required=False)
     unit_price=forms.IntegerField(required=True)

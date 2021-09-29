@@ -267,6 +267,7 @@ class ProductViews(View):
         if context['me_supplier'] is not None:
             context['supplier_shops'] = ShopRepo(request=request).list(
                 product=product).order_by('unit_name', 'unit_price')
+            context['add_shop_form']=AddShopForm()
         if context['me_customer'] is not None:
             
             context['in_cart']="ناموجود در سبد خرید شما"
