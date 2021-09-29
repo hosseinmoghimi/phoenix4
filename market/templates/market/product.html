@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block page_header %}
-<div class="page-header header-filter" data-parallax="true" filter-color="rose"
+<div class="page-header header-filter" id="product-main" data-parallax="true" filter-color="rose"
     style="background-image: url('{{product.image_header}}');">
     <div class="container">
         <div class="row title-row">
@@ -182,16 +182,18 @@
 
             </div>
         </div>
-     
-        {% include "market/includes/product-features-app/template.html" %}
+     <div id="product-features">
+
+         {% include "market/includes/product-features-app/template.html" %}
+        </div>
         
 
 
 
         {% if related_pages or add_related_page_form %}
 
-        <div class="related-products">
-            <h3 class="title text-center">محصولات مرتبط</h3>
+        <div class="related-products" id="related-products-div">
+            <h3  class="title text-center">محصولات مرتبط</h3>
             {% include "market/includes/related-products-app/template.html" %}
 
         </div>
@@ -199,6 +201,7 @@
         {% if order_lines %}
 
         <div class="related-products">
+            <a id="product-orders"></a>
             <h3 class="title text-center">سفارشات مربوطه</h3>
             {% include "market/includes/product-orders-app/template.html" %}
 

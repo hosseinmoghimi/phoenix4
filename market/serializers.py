@@ -25,7 +25,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class SupplierSerializerForShop(serializers.ModelSerializer):
     class Meta:
         model = Supplier
-        fields = ['id', 'title','get_absolute_url']
+        fields = ['id', 'title','get_absolute_url','region','image']
 
 
 class BrandSerializer(serializers.ModelSerializer):

@@ -255,7 +255,12 @@ class ProductViews(View):
         if request.user.has_perm(APP_NAME+".view_orderline"):
             order_lines=product.orderline_set.all().order_by("-order__date_ordered")
             context['order_lines'] = order_lines
-
+        vertical_navs=[]
+        vertical_navs.append({'url':"#product-main",'title':'مشخصات محصول','priority':1})
+        vertical_navs.append({'url':"#product-features",'title':'خدمات برای این محصول','priority':2})
+        vertical_navs.append({'url':"#related-products-div",'title':'محصولات مشابه','priority':3})
+        vertical_navs.append({'url':"#product-orders",'title':'سفارشات این محصول','priority':4})
+        context['vertical_navs']=vertical_navs
         context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR
         context['shop_levels'] = (i[0] for i in ShopLevelEnum.choices)

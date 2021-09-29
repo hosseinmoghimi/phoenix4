@@ -1046,6 +1046,7 @@ class CartRepo:
             if order is not None:
                 orders.append(order)
                 supplier_profit=0
+                customer_profit=0
                 for cart_line in cart_lines:
                     description=""
                     for spec in cart_line.shop.specifications.all():
@@ -1063,10 +1064,12 @@ class CartRepo:
                         order_line.save()
                         ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
                         supplier_profit+=cart_line.get_profit()
+                        customer_profit+=cart_line.shop.unit_price-cart_line.shop.old_price
                         cart_line.delete()
                 financial_report=FinancialReport()
                 financial_report.order=order
                 financial_report.supplier_profit=supplier_profit
+                financial_report.customer_profit=customer_profit
                 financial_report.save()
                 # order=OrderRepo(user=self.user).get(order_id=order.pk)
                 # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)
