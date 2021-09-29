@@ -349,7 +349,10 @@ class BasicPage(models.Model):
 
     def likes_count(self):
         return len(PageLike.objects.filter(page=self))
-    
+
+
+
+
 class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)

@@ -30,6 +30,7 @@
         <div class="col-md-4 mb-5">
             <div class="card mb-5">
                 <div class="card-body">
+                    {% include "core/includes/page-like-app/template.html" %}
                     <p>
                         <span class="small text-secondary">
                             وضعیت:
@@ -227,6 +228,8 @@
 {% include "projectmanager/includes/project-edit-app/script.html" %}
 {% include "core/includes/page-related-app/script.html" %}
 {% include "core/includes/page-tags-app/script.html" %}
+
+{% include "core/includes/page-like-app/script.html" %}
 {% include "projectmanager/includes/locations-app/script.html" %}
 
 {% endblock %}

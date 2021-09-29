@@ -1,6 +1,6 @@
 <script>
-    let likes_count = parseInt("{{likes_count}}")
-    let my_like = parseInt("{{my_like}}")
+    let likes_count = parseInt("{{page.likes_count}}")
+    let my_like = JSON.parse(`{{my_like|escapejs}}`)
     let page_like_app = new Vue({
         el: "#page-like-app",
         data: {

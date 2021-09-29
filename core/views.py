@@ -1,5 +1,5 @@
 import json
-from core.serializers import BasicPageSerializer, ImageSerializer, PageCommentSerializer, TagSerializer
+from core.serializers import BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageLikeSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -39,10 +39,18 @@ def CoreContext(request, *args, **kwargs):
 
 def PageContext(request, page):
     if page is None:
+        raise Http404
+    if page is None:
         return {}
     context = {}
     context['page'] = page
     context['parent_id'] = page.id
+    from authentication.repo import ProfileRepo
+    profile=ProfileRepo(request=request).me
+    my_like=PageLike.objects.filter(page=page).filter(profile=profile).first()
+    # if my_like is None:
+    #     my_like={'id':0}
+    context['my_like'] =json.dumps(PageLikeSerializer(my_like).data)
     context['related_pages'] = page.related_pages.all()
     if request.user.has_perm(APP_NAME+".add_pagelink"):
         context['add_page_link_form'] = AddPageLinkForm()

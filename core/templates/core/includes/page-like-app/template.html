@@ -1,3 +1,12 @@
 <div id="page-like-app">
-    
+    <span v-if="!my_like.id" class="material-icons">
+        thumb_up
+    </span>
+
+    <span v-if="my_like.id" class="material-icons text-success">
+        thumb_up
+    </span>
+    <span v-text="likes_count"></span>
+
+</div>
 </div>
