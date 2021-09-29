@@ -67,10 +67,19 @@
 
                         </h3>
 
-                        <h5 class="text-primary">
-                            {{order.total|to_price}}
+                        <h5 class="text-warning">
+                            <small class="text-muted">
+                                تخفیف : 
+                            </small>
+                            {{order.get_financial_report.off|to_price}}
                         </h5>
 
+                        <h5 class="text-primary">
+                            <small class="text-muted">
+                                جمع کل : 
+                            </small>
+                            {{order.total|to_price}}
+                        </h5>
                         <!-- <span class="badge badge-success"> -->
                         <h4 class="title farsi text-primary">{{order.count_of_packs}} بسته</h4>
                         <!-- </span> -->

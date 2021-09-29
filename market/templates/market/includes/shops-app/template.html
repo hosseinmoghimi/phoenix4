@@ -131,7 +131,15 @@
 
                     </td>
                     <td>
-                        {{shop.unit_price|to_price}}
+                        <div>
+                            {{shop.unit_price|to_price}}
+                        </div>
+                        <div class="text-muted">
+                            <small>
+
+                                {{shop.buy_price|to_price}}
+                            </small>
+                        </div>
                     </td>
                     {% if perms.market.change_shop %}
                     <td>

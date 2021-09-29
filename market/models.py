@@ -567,6 +567,7 @@ class FinancialReport(models.Model):
     customer_profit=models.IntegerField(_("سود مشتری"),default=0)
     date_added=models.DateTimeField(_("تاریخ ثبت سند"), auto_now=False, auto_now_add=True)
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=500)
+    off=models.IntegerField(_("تخفیف"),default=0)
     class_name="financialreport"
     def save(self,*args, **kwargs):
         if self.title is None or self.title=="":
