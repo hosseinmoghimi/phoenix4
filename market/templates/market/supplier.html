@@ -8,6 +8,7 @@
     style="background-image: url('{{supplier.image_header}}');">
     <div class="container">
 
+
     </div>
 </div>
 <div class="section">
@@ -35,6 +36,30 @@
 
                         {{supplier.region.name}}
                     </h3>
+
+                    {% include "core/includes/page-like-app/template.html" %}
+
+
+                    <div class="farsi text-right" >
+
+                        <a class="btn btn-warning rounded mx-3" href="{{supplier.get_orders_url}}">
+<i class="material-icons">
+    ballot
+</i>
+                            لیست سفارشات
+
+                        </a>
+                 
+                        
+                        <a class="btn btn-rose rounded mx-3" href="{{supplier.get_shops_url}}">
+<i class="material-icons">
+    shopping_cart
+</i>
+                            لیست محصولات
+
+                        </a>
+                    </div>
+
                     <div id="accordion" role="tablist">
                         {% if supplier.short_description %}
                         <div class="card card-collapse">
@@ -59,19 +84,7 @@
                         </div>
 
                         {% endif %}
-                        <div class="farsi">
 
-                            <a href="{{supplier.get_orders_url}}">
-                                لیست سفارشات
-                            </a>
-                        </div>
-
-                        <div class="farsi">
-
-                            <a href="{{supplier.get_shops_url}}">
-                                لیست محصولات
-                            </a>
-                        </div>
                         {% if supplier.description %}
                         <div class="card card-collapse">
                             <div class="card-header" role="tab" id="headingDescription">
@@ -283,4 +296,9 @@
 {% block modal %}
 {% endblock %}
 {% block script %}
+<script>
+    let page_id = "{{supplier.id}}"
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "core/includes/page-like-app/script.html" %}
 {% endblock %}

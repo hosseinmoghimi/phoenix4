@@ -48,30 +48,30 @@
                     <td>
                         <div class="text-right">
                             <div class="media">
-                                <a href="{{shop.product.get_absolute_url}}">
 
+                                <a href="{{shop.product.get_absolute_url}}">
                                     <div class="img-container">
                                         <img class="rounded" src="{{shop.product.thumbnail}}" alt="..." width="96"
                                             height="96">
                                     </div>
-                                    <div class="media-body">
-
-                                        <div class="mt-3">
-
-                                            <a href="{{shop.product.get_absolute_url}}">
-                                                {{shop.product.title}}
-                                            </a>
-                                        </div>
-                                        <div class="text-muted">
-                                            <a href="{{shop.product.category.get_absolute_url}}">
-                                                <small class="text-muted">
-
-                                                    {{shop.product.category.title}}
-                                                </small>
-                                            </a>
-                                        </div>
-                                    </div>
                                 </a>
+                                <div class="media-body">
+
+                                    <div class="mt-3">
+
+                                        <a href="{{shop.product.get_absolute_url}}">
+                                            {{shop.product.title}}
+                                        </a>
+                                    </div>
+                                    <div class="text-muted">
+                                        <a href="{{shop.product.category.get_absolute_url}}">
+                                            <small class="text-muted">
+
+                                                {{shop.product.category.title}}
+                                            </small>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -132,7 +132,16 @@
                     </td>
                     <td>
                         <div>
-                            {{shop.unit_price|to_price}}
+                            <span class="text-danger">
+
+                                {{shop.unit_price|to_price}}
+                            </span>
+                        </div>
+                        <div class="text-warning" style="text-decoration: line-through">
+                            <small>
+
+                                {{shop.old_price|to_price}}
+                            </small>
                         </div>
                         <div class="text-muted">
                             <small>

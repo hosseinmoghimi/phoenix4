@@ -123,6 +123,7 @@ class ProductRepo:
             for specification in specifications:
                 product = Product()
                 product.title = title
+                product.creator=self.profile
 
                 unit_name_ = UnitName.objects.filter(name=unit_name).first()
                 if unit_name_ is None:
@@ -154,6 +155,7 @@ class ProductRepo:
         if not self.user.has_perm(APP_NAME+".add_product"):
             return
         product = Product()
+        product.creator=self.profile
         product.title = title
 
         unit_name_ = UnitName.objects.filter(name=unit_name).first()
@@ -191,6 +193,7 @@ class ProductRepo:
             return
         product = Product()
         product.title = title
+        product.creator=self.profile
         product.barcode = barcode
 
         unit_name_ = UnitName.objects.filter(name=unit_name).first()
@@ -1134,6 +1137,7 @@ class CategoryRepo:
         if self.user.has_perm(APP_NAME+".add_category"):
             category = Category()
             category.title = title
+            category.creator=self.profile
             if parent_id > 0:
                 category.parent_id = parent_id
             category.save()
