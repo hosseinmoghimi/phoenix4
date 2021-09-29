@@ -1,3 +1,4 @@
+from django.http import request
 from .models import *
 from .constants import *
 from authentication.repo import ProfileRepo
@@ -135,6 +136,21 @@ class BasicPageRepo:
             if bidirectional:
                 related_page.related_pages.remove(page)
             return related_page
+
+
+    def toggle_like(self,*args, **kwargs):
+        page=self.page(*args, **kwargs)
+        profile=ProfileRepo(request=self.request).me
+        likes=PageLike.objects.filter(page=page).filter(profile=profile)
+        if len(likes)==0 and profile is not None and page is not None:
+            my_like=PageLike(page=page,profile=profile)
+            my_like.save()
+            return my_like
+        else:
+            likes.delete()
+            return None
+
+
 
 
 

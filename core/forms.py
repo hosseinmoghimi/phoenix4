@@ -9,7 +9,10 @@ class DeletePageImageForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     image_id=forms.IntegerField(required=True)
     
+class PageLikeToggleForm(forms.Form):
+    page_id=forms.IntegerField(required=True)
 
+    
 class AddRelatedPageForm(forms.Form):
     page_id=forms.IntegerField(required=True)
     related_page_id=forms.IntegerField(required=True)

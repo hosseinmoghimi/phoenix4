@@ -1,12 +1,19 @@
-<div id="page-like-app">
-    <span v-if="!my_like.id" class="material-icons">
-        thumb_up
-    </span>
+<div id="page-like-app" class="text-right">
+    <span @click="toggle_like()" style="cursor: pointer;" >
 
-    <span v-if="my_like.id" class="material-icons text-success">
-        thumb_up
+        <span v-if="!my_like" class="material-icons">
+            thumb_up
+        </span>
+        
+        <span v-if="my_like" class="material-icons text-success">
+            thumb_up
+        </span>
     </span>
     <span v-text="likes_count"></span>
+    <span class="farsi">
+
+        نفر این صفحه را پسندیده اند.
+    </span>
 
 </div>
 </div>

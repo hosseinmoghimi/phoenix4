@@ -48,8 +48,8 @@ def PageContext(request, page):
     from authentication.repo import ProfileRepo
     profile=ProfileRepo(request=request).me
     my_like=PageLike.objects.filter(page=page).filter(profile=profile).first()
-    # if my_like is None:
-    #     my_like={'id':0}
+    if my_like is None:
+        my_like={'id':0}
     context['my_like'] =json.dumps(PageLikeSerializer(my_like).data)
     context['related_pages'] = page.related_pages.all()
     if request.user.has_perm(APP_NAME+".add_pagelink"):

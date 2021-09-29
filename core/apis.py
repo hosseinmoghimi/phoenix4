@@ -1,4 +1,5 @@
-from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLinkSerializer, ParameterSerializer, TagSerializer
+from core.models import PageLike
+from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, ParameterSerializer, TagSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *
@@ -227,5 +228,30 @@ class BasicApi(APIView):
                     image_id=image_id, page_id=page_id)
                 if done :
                     context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
+
+
+
+class PageApi(APIView):
+    def toggle_like(self,request,*args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log += 1
+            toggle_like_page_form = PageLikeToggleForm(request.POST)
+            if toggle_like_page_form.is_valid():
+                log += 1
+                
+                page_id = toggle_like_page_form.cleaned_data['page_id']
+                page_repo=BasicPageRepo(request=request)
+                my_like = page_repo.toggle_like(
+                    page_id=page_id,                    
+                    )
+                if my_like is not None:    
+                    context['my_like'] = PageLikeSerializer(my_like).data
+                context['likes_count'] = page_repo.page(page_id=page_id).likes_count()
+                context['result'] = SUCCEED
         context['log'] = log
         return JsonResponse(context)

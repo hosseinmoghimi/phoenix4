@@ -5,11 +5,26 @@
         el: "#page-like-app",
         data: {
             likes_count: likes_count,
-            my_like: my_like
+            my_like: my_like.id >0
         },
         methods: {
             toggle_like: function () {
-
+                let url = "{% url 'core:toggle_like' %}"
+                let payload = {
+                    page_id: page_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                // console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    // console.log(data)
+                    if (data.result==="SUCCEED")
+                    {
+                        page_like_app.my_like=!(typeof data.my_like==='undefined')
+                        page_like_app.likes_count=data.likes_count
+                        // console.log(page_like_app.my_like)
+                    }
+                })
             }
         }
     })

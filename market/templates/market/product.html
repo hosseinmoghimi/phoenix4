@@ -50,15 +50,7 @@
                     </h2>
                     {% endif %}
 
-                    <div class="text-right">
-                        <span class="material-icons">
-                            thumb_up
-                        </span>
-                        <span class="farsi">
-
-                            {{product.likes_count}}
-                        </span>
-                    </div>
+                    {% include "core/includes/page-like-app/template.html" %}
                     {% if perms.market.add_categoryproducttop %}
                     <form class="text-right" action="{% url 'market:add_product_for_category_page' %}" method="POST">
                         {% csrf_token %}
@@ -256,6 +248,8 @@
 {% if add_related_page_form %}
 {% include "core/includes/page-related-app/script.html" %}
 {% endif %}
+{% include "core/includes/page-like-app/script.html" %}
+
 
 
 {% endblock %}
