@@ -147,6 +147,8 @@ class ProductRepo:
         if unit_name=="":
             if "کفش" in title:
                 unit_name="جفت"
+        if unit_name=="":
+            unit_name="عدد"
         category_id = kwargs['category_id'] if 'category_id' in kwargs else None
         category=CategoryRepo(request=self.request).category(*args, **kwargs)
         if category is None:
