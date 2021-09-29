@@ -638,7 +638,7 @@ class CategoryViews(View):
         context['category'] = category
         categories = category.childs().order_by('priority')
         context['categories'] = categories
-        products = category.products.all()
+        products = category.products.all().order_by('priority')
         context['products'] = products
         context['top_products'] = category.top_products(3)
         if request.user.has_perm(APP_NAME+".add_product") and len(categories) == 0:
