@@ -182,13 +182,9 @@
 
             </div>
         </div>
-        {% if add_product_feature_form %}
-
+     
         {% include "market/includes/product-features-app/template.html" %}
-        {% else %}
-
-        {% include "market/includes/product-features-app/template_.html" %}
-        {% endif %}
+        
 
 
 
@@ -197,6 +193,14 @@
         <div class="related-products">
             <h3 class="title text-center">محصولات مرتبط</h3>
             {% include "market/includes/related-products-app/template.html" %}
+
+        </div>
+        {% endif %}
+        {% if order_lines %}
+
+        <div class="related-products">
+            <h3 class="title text-center">سفارشات مربوطه</h3>
+            {% include "market/includes/product-orders-app/template.html" %}
 
         </div>
         {% endif %}

@@ -44,25 +44,16 @@
                                     settings
                                 </i>
                             </a>
-
-
-                            <a target="_blank" title="ویرایش" class="mx-2" href="{{order.get_edit_view_url}}">
-                                <i class="material-icons text-danger">
-                                    settings
-                                </i>
-                            </a>
-
                             {% endif %}
                             <a title="چاپ فاکتور" target="_blank" class="mx-2" href="{{order.get_invoice_url}}">
                                 <i class="material-icons">print</i>
                             </a>
-                            {% if order.get_financial_report %}
-
-                            <a title="گزارش مالی" target="_blank" class="mx-2"
-                                href="{{order.get_financial_report.get_absolute_url}}">
-                                <i class="material-icons">request_quote</i>
-                            </a>
-                            {% endif %}
+{% if order.get_financial_report %}
+  
+<a title="گزارش مالی" target="_blank" class="mx-2" href="{{order.get_financial_report.get_absolute_url}}">
+    <i class="material-icons">request_quote</i>
+</a>
+{% endif %}
 
 
                         </h3>
@@ -170,7 +161,7 @@
                                 </td>
                                 <td>
                                     {{order.get_financial_report.supplier_profit|to_price}}
-
+                           
                                 </td>
                             </tr>
                             {% if order.shipper %}
@@ -186,8 +177,8 @@
                                     </a>
                                 </td>
                                 <td>
-
-                                    {{order.get_financial_report.shipper_profit|to_price}}
+                                    
+                                        {{order.get_financial_report.shipper_profit|to_price}}
                                 </td>
                             </tr>
                             {% endif %}
@@ -268,13 +259,10 @@
                     </div>
                 </div>
                 <br />
-                {% include "market/includes/order-app/template.html" %}
-                {% include "market/includes/order-app/do-pack-form.html" %}
-                {% include "market/includes/order-app/do-ship-form.html" %}
-                {% include "market/includes/order-app/do-deliver-form.html" %}
-                {% include "market/includes/order-app/do-cancel-form.html" %}
-
-
+                {% include "market/includes/order-edit-app/template.html" %}
+               
+                
+             
 
 
 
@@ -288,6 +276,6 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "market/includes/order-app/script.html" %}
+{% include "market/includes/order-edit-app/script.html" %}
 
 {% endblock %}

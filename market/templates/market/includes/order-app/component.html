@@ -1,7 +1,10 @@
 <tr class="farsi">
     <td>
         <div class="img-container">
-            <img class="rounded" :src="order_line.product.thumbnail" alt="...">
+            <a :href="order_line.product.get_absolute_url">
+
+                <img class="rounded" :src="order_line.product.thumbnail" alt="...">
+            </a>
         </div>
     </td>
     <td class="td-name">

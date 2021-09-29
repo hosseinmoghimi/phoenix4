@@ -60,7 +60,15 @@ class AddProductFeatureForm(forms.Form):
     product_id=forms.IntegerField(required=True)
     product_feature_id=forms.IntegerField(required=True)
     add_or_remove=forms.CharField(max_length=10, required=False)
-    
+
+class EditOrderLineForm(forms.Form):
+    order_id=forms.IntegerField(required=True)
+    product_id=forms.IntegerField(required=True)
+    quantity=forms.IntegerField(required=True)
+    unit_price=forms.IntegerField(required=True)
+    unit_name=forms.CharField(max_length=50, required=False)
+    description=forms.CharField(max_length=50, required=False)
+
 class ConfirmCartForm(forms.Form):
     supplier_id=forms.IntegerField(required=False)
     customer_id=forms.IntegerField(required=False)

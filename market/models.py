@@ -83,6 +83,7 @@ class Product(MarketPage):
         related_products=Product.objects.filter(id__in=ids)
         return related_products
 
+
 class Category(MarketPage):
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))
     def childs(self):
@@ -169,6 +170,7 @@ class Customer(models.Model):
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
+
 class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
     supplier=models.ForeignKey("supplier", verbose_name=_("supplier"), on_delete=models.CASCADE)
@@ -187,6 +189,8 @@ class Order(models.Model):
     no_ship=models.BooleanField(_("خود مشتری مراجعه و تحویل میگیرد؟"))
     
     class_name="order"
+    def get_edit_view_url(self):
+        return reverse(APP_NAME+":edit_order",kwargs={'pk':self.pk})
     def sum_total(self):
         return self.lines_total()+self.ship_fee
     def lines_total(self):

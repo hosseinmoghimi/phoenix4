@@ -63,6 +63,34 @@ class ShopApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
+class OrderApi(APIView):
+    def edit_order_line(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            edit_order_line_form=EditOrderLineForm(request.POST)
+            if edit_order_line_form.is_valid():
+                log=3
+                order_id=edit_order_line_form.cleaned_data['order_id']
+                product_id=edit_order_line_form.cleaned_data['product_id']
+                unit_name=edit_order_line_form.cleaned_data['unit_name']
+                unit_price=edit_order_line_form.cleaned_data['unit_price']
+                quantity=edit_order_line_form.cleaned_data['quantity']
+                cart_line=CartRepo(request=request).add_to_cart(
+                    product_id=product_id,
+                    order_id=order_id,
+                    unit_name=unit_name,
+                    unit_price=unit_price,
+                    quantity=quantity,
+                    )
+                if cart_line is not None:
+                    context['cart_line']=CartLineSerializer(cart_line).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
       
 
 class CartApi(APIView):

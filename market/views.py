@@ -151,6 +151,9 @@ class WareHouseViews(View):
 
 
 class CartViews(View):
+    def create_cart(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        return render(request,TEMPLATE_ROOT+"create-cart.html",context)
     def cart(self, request, *args, **kwargs):
         if 'customer_id' in kwargs:
             customer_id = kwargs['customer_id']
@@ -198,7 +201,20 @@ class CartViews(View):
 
 
 class ProductViews(View):
-    
+    def product_sold(self,request,*args, **kwargs):
+
+        product = ProductRepo(request=request).product(*args, **kwargs)
+        page = product
+        context = getContext(request=request)
+        context.update(PageContext(request=request, page=page))
+        if request.user.has_perm(APP_NAME+".add_productspecification"):
+            context['add_product_specification_form']=AddProductSpecificationForm()
+        context['product'] = product
+        if request.user.has_perm(APP_NAME+".view_orderline"):
+            order_lines=product.orderline_set.all().order_by("order__date_ordered")
+            context['order_lines'] = order_lines
+        context['body_class'] = "product-page"
+        return render(request, TEMPLATE_ROOT+"product-sold.html.html", context)
     def add_product_for_category_page(self,request,*args, **kwargs):
 
         log=1
@@ -236,6 +252,9 @@ class ProductViews(View):
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form']=AddProductSpecificationForm()
         context['product'] = product
+        if request.user.has_perm(APP_NAME+".view_orderline"):
+            order_lines=product.orderline_set.all().order_by("-order__date_ordered")
+            context['order_lines'] = order_lines
 
         context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR
@@ -398,6 +417,49 @@ class OrderViews(View):
             context['do_cancel_form'] = do_cancel_form
 
         return render(request, TEMPLATE_ROOT+"order.html", context)
+
+    def edit_order(self,request,*args, **kwargs):
+        user = request.user
+        order = OrderRepo(request=request).order(*args, **kwargs)
+        if order is None:
+            raise Http404
+            # message= MessageView(request=request)
+            # message.title="همچنین "
+            # return message.show(request=request)
+        context = getContext(request)
+        context['header_image'] = PictureRepo(
+            request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)
+        context['order'] = order
+        context['order_lines_s'] = json.dumps(
+            OrderLineSerializer(order.orderline_set.all(), many=True).data)
+        context['body_class'] = "shopping-cart"
+        
+        context['add_order_in_ware_house_form']=AddOrderInWareHouseForm()
+        
+        ware_houses=WareHouseRepo(request=request).list()
+        context['ware_houses']=ware_houses
+        
+        me_supplier = SupplierRepo(request=request).me
+        if me_supplier is not None and order.supplier == me_supplier and order.status == OrderStatusEnum.ACCEPTED:
+            do_pack_form = DoPackForm()
+            context['do_pack_form'] = do_pack_form
+
+         # do ship form
+        me_shipper = ShipperRepo(request=request).me
+
+        if me_shipper is not None and order.status == OrderStatusEnum.PACKED and not order.no_ship:
+            do_ship_form = DoShipForm()
+            context['do_ship_form'] = do_ship_form
+        # do deiver form
+        customer = CustomerRepo(user=user).me
+        if customer is not None and (order.status == OrderStatusEnum.SHIPPED or (order.status == OrderStatusEnum.PACKED and order.no_ship == True)) and order.customer == customer:
+            do_deliver_form = DoDeliverForm()
+            context['do_deliver_form'] = do_deliver_form
+        if customer is not None and order.status == OrderStatusEnum.CONFIRMED and order.customer == customer:
+            do_cancel_form = CancelOrderForm()
+            context['do_cancel_form'] = do_cancel_form
+
+        return render(request, TEMPLATE_ROOT+"order-edit.html", context)
 
     def orders(self, request, *args, **kwargs):
         
