@@ -1,9 +1,11 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Employee, EmployeeSpeciality, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, ServiceRequestSignature
+from .models import Employee, EmployeeSpeciality, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Location, Request, RequestSignature, Service, ServiceRequest, ServiceRequestSignature
 
 admin.site.register(Location)
+admin.site.register(Request)
+admin.site.register(RequestSignature)
 admin.site.register(Project)
 admin.site.register(OrganizationUnit)
 admin.site.register(EmployeeSpeciality)

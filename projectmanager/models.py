@@ -89,6 +89,7 @@ class Employee(models.Model):
             ids.append(proj.id)
         return Project.objects.filter(id__in=ids)
     
+
 class ProjectManagerPage(CoreBasicPage):
     def get_status_color(self):
         return StatusColor(self.status)
@@ -309,6 +310,7 @@ class OrganizationUnit(ProjectManagerPage):
     def childs(self):
         return OrganizationUnit.objects.filter(parent_id=self.id)
 
+
 class EmployeeSpeciality(ProjectManagerPage):
     employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     max=models.IntegerField(_("max"))
@@ -458,6 +460,72 @@ class ServiceRequest(models.Model):
         #         line=OrderLine(product=self.material.product,unit_name=self.unit_name,quantity=self.quantity,unit_price=self.unit_price,order=material_order)
         #         line.save()
         return super(ServiceRequest,self).save(*args, **kwargs)
+
+class RequestSignature(models.Model):
+    request=models.ForeignKey("request", verbose_name=_("request"), on_delete=models.CASCADE)
+    employee=models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.PROTECT)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    description=models.CharField(_("description"), max_length=200)
+    status=models.CharField(_("status"),choices=SignatureStatusEnum.choices,default=SignatureStatusEnum.REQUESTED, max_length=200)
+    
+    
+
+    class Meta:
+        verbose_name = _("RequestSignature")
+        verbose_name_plural = _("RequestSignatures")
+    
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+    
+    def get_status_color(self):
+      return StatusColor(self.status)
+
+    def get_status_tag(self):
+        return f"""
+            <span class="badge badge-{self.get_status_color()}">{self.status}</span>
+        """
+
+   
+    def __str__(self):
+        return str(self.pk)
+
+    def get_absolute_url(self):
+        return reverse("RequestSignature_detail", kwargs={"pk": self.pk})
+
+
+class Request(models.Model):
+    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
+    quantity=models.IntegerField(_("تعداد"))
+    unit_name=models.CharField(_("واحد"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD,max_length=50)
+    unit_price=models.IntegerField(_("قیمت واحد"))
+    description=models.CharField(_("توضیحات"),null=True,blank=True,default='', max_length=50)
+    creator=models.ForeignKey("employee", related_name="request_createds",verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
+    handler=models.ForeignKey("employee", related_name="request_handeleds",verbose_name=_("پاسخ دهنده"),null=True,blank=True, on_delete=models.PROTECT)
+    date_added=models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
+    date_delivered=models.DateTimeField(_("تاریخ درخواست"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    status=models.CharField(_("وضعیت"),choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
+    class_name='request'
+    
+    def get_status_color(self):
+        return StatusColor(self.status)
+
+    def get_status_tag(self):
+        return f"""<span class="badge badge-pill badge-{self.get_status_color()}">{self.status}</span>"""
+    def signatures(self):
+        return RequestSignature.objects.filter(materialrequest=self).order_by('-date_added')
+    def line_total(self):
+        return self.quantity*self.unit_price
+    
+
+    class Meta:
+        verbose_name = _("Request")
+        verbose_name_plural = _("Requests")
+
+    def __str__(self):
+        return self.project.title
+
+    def get_absolute_url(self):
+        return reverse("Request_detail", kwargs={"pk": self.pk})
 
 
 class ServiceRequestSignature(models.Model):
