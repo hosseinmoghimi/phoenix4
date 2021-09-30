@@ -181,10 +181,10 @@
                 <li class="button-container nav-item iframe-extern">
                     <a href="{{profile_button.url}}"
                         class="btn mx-2 btn-{{profile_button.color}} btn-round btn-block farsi">
-                        <i class="material-icons">{{profile_button.icon}}</i>
                         <span class="farsi">
                             {{profile_button.title}}
                         </span>
+                        <i class="material-icons">{{profile_button.icon}}</i>
                     </a>
                 </li>
                 {% endif %}
@@ -192,11 +192,11 @@
 
                 <li class="button-container nav-item iframe-extern">
                     <a href="{{ADMIN_URL}}{{APP_NAME}}" target="_blank" class="btn  btn-info mx-2 btn-round btn-block">
-                        <i class="material-icons">settings</i>
                         <span class="farsi">
 
                             مدیریت
                         </span>
+                        <i class="material-icons">settings</i>
                     </a>
                 </li>
                 {% endif %}
@@ -205,7 +205,8 @@
                 <li class="button-container nav-item iframe-extern">
                     <form action="{% url 'market:search' %}" method="POST">
                         {% csrf_token %}
-                        <input type="text" style="padding: 20px 30px;background-color: #eeeeee66;border-radius:100px" required class="mx-2 form-control farsi" placeholder="جستجو ..." name="search_for">
+                        <input type="text" style="padding: 20px 30px;background-color: #eeeeee66;border-radius:100px"
+                            required class="mx-2 form-control farsi" placeholder="جستجو ..." name="search_for">
                     </form>
                 </li>
                 {% endif %}

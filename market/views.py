@@ -24,7 +24,8 @@ def getContext(request, *args, **kwargs):
     context['title'] = "Market"
     context['market_title']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_TITLE)
     context['market_link']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_LINK)
-    context['me_supplier'] = SupplierRepo(request=request).me
+    me_supplier=SupplierRepo(request=request).me
+    context['me_supplier'] = me_supplier
     me_customer=CustomerRepo(request=request).me
     context['me_customer'] = me_customer
     vertical_navs=NavLinkRepo(request=request,app_name=APP_NAME).list()
@@ -35,6 +36,14 @@ def getContext(request, *args, **kwargs):
             'title':me_customer.title,
             'icon':"shopping_cart",
             'color':"primary",
+        }
+    
+    if me_supplier is not None:
+        context['profile_button']={
+            'url':me_supplier.get_absolute_url(),
+            'title':me_supplier.title,
+            'icon':"store",
+            'color':"rose",
         }
     
     context['ware_houses'] = WareHouseRepo(request=request).list()
