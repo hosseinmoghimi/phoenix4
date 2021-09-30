@@ -256,8 +256,9 @@ class ProductViews(View):
         vertical_navs=[]
         vertical_navs.append({'url':"#product-main",'title':'مشخصات محصول','priority':1})
         vertical_navs.append({'url':"#product-features",'title':'خدمات برای این محصول','priority':2})
-        vertical_navs.append({'url':"#related-products-div",'title':'محصولات مشابه','priority':3})
-        vertical_navs.append({'url':"#product-orders",'title':'سفارشات این محصول','priority':4})
+        vertical_navs.append({'url':"#comments",'title':'نظرات کاربران','priority':3})
+        vertical_navs.append({'url':"#related-products-div",'title':'محصولات مشابه','priority':4})
+        vertical_navs.append({'url':"#product-orders",'title':'سفارشات این محصول','priority':5})
         context['vertical_navs']=vertical_navs
         context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR

@@ -1,5 +1,6 @@
 {% extends "market/layout.html" %}
 {% load to_price %}
+{% load to_persian_date %}
 {% load static %}
 
 {% block page_header %}
@@ -186,12 +187,55 @@
         </div>
         {% endif %}
 
-
+<div id="comments"></div>
         <div class="my-5 farsi">
             <div class="row">
-                <div class="col-md-12">
-                    {% include "core/includes/page-comments-app/template.html" %}
-
+                <div class="col-md-12"  id="page-comments-app">
+                    <h3  class="text-center">
+                        نظرات کاربران
+                    </h3>
+                    {% for page_comment in page.pagecomment_set.all1 %}
+                    <div class="py-3">
+    
+                        <div class="media">
+                            <img src="{{page_comment.profile.image}}" class="rounded-circle" width="64" alt="">
+                            <div class="media-body">
+                                <h6 class="small">{{page_comment.profile.name}}
+                                    <span class="text-secondary mx-3 small">
+    
+                                        {{page_comment.date_added|to_persian_datetime|safe}}
+                                    </span>
+                                </h6>
+                                <div class="text-secondary text-right">{{page_comment.comment}}</div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    {% endfor %}
+                    <div class="py-3" v-for="page_comment in page_comments">
+                        <page-comment-component :page_comment="page_comment">
+                        </page-comment-component>
+    
+                    </div>
+                    {% if add_page_comment_form %}
+    
+                    <div class="media">
+                        <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
+                        <div class="media-body mr-2">
+                            <h6>{{profile.name}}</h6>
+       
+                                <textarea 
+                                id="comment_inputed" 
+                                v-model="comment" 
+                                class="farsi form-control" 
+                                rows="5"
+                                ></textarea>
+                                <button @click="add_comment"
+                                 class="btn btn-primary farsi btn-round btn-wd float-right">ثبت نظر</button>
+             
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -238,7 +282,59 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
     let page_id = parseInt("{{page.id}}")
-    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
+    let page_comment_component_template = `
+    
+    <div class="media">
+    <a :href="page_comment.profile.get_absolute_url">
+        <img :src="page_comment.profile.image" class="rounded-circle" width="64" alt="">
+    </a>
+    <div class="media-body mr-2">
+        <div class="text-right">
+            <a target="_blank" :href="page_comment.profile.get_absolute_url">
+
+                <span class="farsi text-right text-primary" v-text="page_comment.profile.name"></span>
+            </a>
+            <span class="farsi small text-secondary mr-2 text-right" v-text="page_comment.persian_date_added"></span>
+        </div>
+
+
+        <div class="  farsi  text-right " >
+
+            <div class="farsi text-dark text-right" v-html="page_comment.comment">
+
+            </div>
+            <div>
+
+                <a v-if="page_comment.profile.id=={{profile.id}} && !confirm_delete" style="cursor:pointer"
+                    class="small text-danger mr-auto1 mx-2" @click="confirm_delete=true">
+                    حذف
+    
+                </a>
+    
+                <span v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                    class="small text-danger mr-auto1 mx-2">
+                    این نظر حذف شود ؟
+    
+                </span>
+    
+                <a v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                    class="small text-secondary mr-auto1 mx-2" @click="confirm_delete=false">
+                    خیر
+    
+                </a>
+                <a v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                    class="small text-danger mr-auto1 mx-2" @click="delete_comment(page_comment.id)">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                    حذف کن
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    `
 </script>
 
 
