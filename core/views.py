@@ -20,7 +20,7 @@ def CoreContext(request, *args, **kwargs):
         app_name = kwargs['app_name']
     context['user'] = request.user
     context['apps']=apps
-    context['profile'] = ProfileRepo(user=request.user).me
+    context['profile'] = ProfileRepo(request=request).me
     context['APP_NAME'] = app_name
     context['current_datetime'] = PersianCalendar(
     ).from_gregorian(timezone.now())
@@ -180,10 +180,10 @@ class PageViews(View):
 
     def download(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.has_perm("core.change_document"):
-            document = DocumentRepo(user=request.user).document(*args, **kwargs)
+            document = DocumentRepo(request=request).document(*args, **kwargs)
             return document.download_response()
 
-        document = DocumentRepo(user=request.user).document(*args, **kwargs)
+        document = DocumentRepo(request=request).document(*args, **kwargs)
         if document is None:
             raise Http404
 
@@ -205,8 +205,8 @@ class PageViews(View):
 
     def access(self, request, *args, **kwargs):
         return True
-        document = DocumentRepo(user=request.user).document(pk=pk)
-        self.me = ProfileRepo(user=request.user).me
+        document = DocumentRepo(request=request).document(pk=pk)
+        self.me = ProfileRepo(request=request).me
         if self.me is not None and document.page in self.me.my_pages().all():
             return True
         if request.user.has_perm(APP_NAME+'.view_document'):
