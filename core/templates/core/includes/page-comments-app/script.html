@@ -54,7 +54,6 @@
             add_comment: function () {
                 let url = url_add_page_comment
                 this.comment=$("#comment_inputed").val()
-                console.log(this.comment)
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     page_id: page_id,

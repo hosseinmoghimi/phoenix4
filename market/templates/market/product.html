@@ -175,7 +175,7 @@
             </div>
         </div>
         {% if page.documents.all or add_page_document_form %}
-          
+
         <div class="my-5 farsi">
             <div class="row">
                 <div class="col-md-12">
@@ -185,18 +185,29 @@
             </div>
         </div>
         {% endif %}
-     <div id="product-features">
 
-         {% include "market/includes/product-features-app/template.html" %}
+
+        <div class="my-5 farsi">
+            <div class="row">
+                <div class="col-md-12">
+                    {% include "core/includes/page-comments-app/template.html" %}
+
+                </div>
+            </div>
         </div>
-        
+
+        <div id="product-features">
+
+            {% include "market/includes/product-features-app/template.html" %}
+        </div>
+
 
 
 
         {% if related_pages or add_related_page_form %}
 
         <div class="related-products" id="related-products-div">
-            <h3  class="title text-center">محصولات مرتبط</h3>
+            <h3 class="title text-center">محصولات مرتبط</h3>
             {% include "market/includes/related-products-app/template.html" %}
 
         </div>
@@ -227,7 +238,9 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
     let page_id = parseInt("{{page.id}}")
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
 </script>
+
 
 {% include "market/includes/product-images-app/script.html" %}
 
@@ -260,6 +273,7 @@
 {% include "core/includes/page-related-app/script.html" %}
 {% endif %}
 {% include "core/includes/page-like-app/script.html" %}
+{% include "core/includes/page-comments-app/script.html" %}
 
 
 {% include "core/includes/page-documents-app/script.html" %}
