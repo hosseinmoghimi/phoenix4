@@ -178,16 +178,16 @@ class PageViews(View):
         context['pages_s'] = json.dumps(pages_s)
         return render(request, "phoenix/pages-chart.html", context)
 
-    def download(self, request, pk):
+    def download(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.has_perm("core.change_document"):
-            document = DocumentRepo(user=request.user).document(document_id=pk)
+            document = DocumentRepo(user=request.user).document(*args, **kwargs)
             return document.download_response()
 
-        document = DocumentRepo(user=request.user).document(pk=pk)
+        document = DocumentRepo(user=request.user).document(*args, **kwargs)
         if document is None:
             raise Http404
 
-        if self.access(request=request, pk=pk) and document is not None:
+        if self.access(request=request,*args, **kwargs) and document is not None:
             return document.download_response()
         message_view = MessageView()
         message_view.links = []
@@ -203,7 +203,7 @@ class PageViews(View):
 
         return message_view.response(request)
 
-    def access(self, request, pk):
+    def access(self, request, *args, **kwargs):
         return True
         document = DocumentRepo(user=request.user).document(pk=pk)
         self.me = ProfileRepo(user=request.user).me

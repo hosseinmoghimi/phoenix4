@@ -374,11 +374,15 @@ class DocumentRepo:
         self.profile=ProfileRepo(user=self.user).me
         self.objects=Document.objects.order_by('priority')
 
-    def document(self,document_id):
-        try:
-            return self.objects.get(pk=document_id)
-        except:
-            return None
+    def document(self,*args, **kwargs):
+        
+        if 'document_id' in kwargs:
+            pk = kwargs['document_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
 
     def add_page_document(self,title,file,priority=1000,page_id=None):
         
