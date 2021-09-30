@@ -40,26 +40,35 @@
                     {% include "core/includes/page-like-app/template.html" %}
 
 
-                    <div class="farsi text-right" >
+                    <div class="farsi text-right">
 
                         <a class="btn btn-warning rounded mx-3" href="{{supplier.get_orders_url}}">
-<i class="material-icons">
-    ballot
-</i>
+                            <i class="material-icons">
+                                ballot
+                            </i>
                             لیست سفارشات
 
                         </a>
-                 
-                        
+
+
                         <a class="btn btn-rose rounded mx-3" href="{{supplier.get_shops_url}}">
-<i class="material-icons">
-    shopping_cart
-</i>
+                            <i class="material-icons">
+                                shopping_cart
+                            </i>
                             لیست محصولات
 
                         </a>
                     </div>
+{% if supplier.profile %}
+  <div class="text-right farsi px-3">
+    <a href="{{supplier.profile.get_absolute_url}}">
+        <img src="{{supplier.profile.image}}" width="48" class="rounded-circle"
+            alt="">
+        {{supplier.profile.name}}
+    </a>
 
+  </div>
+{% endif %}
                     <div id="accordion" role="tablist">
                         {% if supplier.short_description %}
                         <div class="card card-collapse">
