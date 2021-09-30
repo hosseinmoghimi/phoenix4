@@ -151,7 +151,7 @@ class ProjectViews(View):
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
-        for material_request in project.materialrequest_set.all():
+        for material_request in MaterialRepo(request=request).material_requests(project_id=project.id):
             quantity = material_request.quantity
             unit_name = material_request.unit_name
             unit_price = material_request.unit_price
@@ -169,7 +169,7 @@ class ProjectViews(View):
         
         descriptions = [
             f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به پروژه  {project.full_title}""",
+            f"""مربوط به پروژه  {project.full_title}     ({project.id})""",
             ]
             
         total_for_pay = tax+lines_total
@@ -195,7 +195,7 @@ class ProjectViews(View):
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
-        for service_request in project.servicerequest_set.all():
+        for service_request in ServiceRepo(request=request).service_requests(project_id=project.id):
             quantity = service_request.quantity
             unit_name = service_request.unit_name
             unit_price = service_request.unit_price
@@ -213,7 +213,7 @@ class ProjectViews(View):
         
         descriptions = [
             f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به پروژه  {project.full_title}""",
+            f"""مربوط به پروژه  {project.full_title}     ({project.id})""",
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
