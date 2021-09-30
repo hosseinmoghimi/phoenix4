@@ -170,7 +170,7 @@ class Project(ProjectManagerPage):
         return super(Project,self).save(*args, **kwargs)
     def sum_material_requests(self):
         sum=0
-        for material_request in self.materialrequest_set.all():
+        for material_request in self.request_set.filter(request_type=RequestTypeEnum.MATERIAL_REQUEST):
             sum+=material_request.quantity*material_request.unit_price
         return sum
     def sum_total(self):
@@ -180,7 +180,7 @@ class Project(ProjectManagerPage):
         return sum
     def sum_service_requests(self):
         sum=0
-        for service_request in self.servicerequest_set.all():
+        for service_request in self.request_set.filter(request_type=RequestTypeEnum.SERVICE_REQUEST):
             sum+=service_request.quantity*service_request.unit_price
         return sum
     def sub_projects(self):
@@ -231,7 +231,7 @@ class Service(ProjectManagerPage):
     def save(self,*args, **kwargs):
         self.class_name='service'
         super(Service,self).save(*args, **kwargs)
-
+    
     class Meta:
         verbose_name = _("خدمات")
         verbose_name_plural = _("خدمات")
@@ -330,30 +330,56 @@ class EmployeeSpeciality(ProjectManagerPage):
         return reverse(APP_NAME+":employee_speciality", kwargs={"pk": self.pk})
 
 
-class MaterialRequest(models.Model):
-    material=models.ForeignKey("Material", verbose_name=_("متریال"), on_delete=models.PROTECT)
+class Request(models.Model):
+    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
     quantity=models.IntegerField(_("تعداد"))
     unit_name=models.CharField(_("واحد"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD,max_length=50)
-    unit_price=models.IntegerField(_("فی"))
-    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
+    unit_price=models.IntegerField(_("قیمت واحد"))
     description=models.CharField(_("توضیحات"),null=True,blank=True,default='', max_length=50)
-    profile=models.ForeignKey("authentication.Profile", verbose_name=_("تحویل گیرنده"), on_delete=models.PROTECT)
+    creator=models.ForeignKey("employee", related_name="request_createds",verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
+    handler=models.ForeignKey("employee", related_name="request_handeleds",verbose_name=_("پاسخ دهنده"),null=True,blank=True, on_delete=models.PROTECT)
     date_added=models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
     date_delivered=models.DateTimeField(_("تاریخ درخواست"),null=True,blank=True, auto_now=False, auto_now_add=False)
     status=models.CharField(_("وضعیت"),choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
-
-    class_name='materialrequest'
+    request_type=models.CharField(_("type"),choices=RequestTypeEnum.choices, max_length=50)
+    class_name='request'
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+    def persian_date_delivered(self):
+        return PersianCalendar().from_gregorian(self.date_delivered)
     def can_be_edited(self):
         return self.project.can_be_edited
+    
+    def get_status_color(self):
+        return StatusColor(self.status)
+
+    def get_status_tag(self):
+        return f"""<span class="badge badge-pill badge-{self.get_status_color()}">{self.status}</span>"""
+    def signatures(self):
+        return RequestSignature.objects.filter(materialrequest=self).order_by('-date_added')
+    def line_total(self):
+        return self.quantity*self.unit_price
+    
+
+    class Meta:
+        verbose_name = _("Request")
+        verbose_name_plural = _("Requests")
+
+    def __str__(self):
+        return self.project.title
+
+    def get_absolute_url(self):
+        return reverse("Request_detail", kwargs={"pk": self.pk})
+
+
+class MaterialRequest(Request):
+    material=models.ForeignKey("Material", verbose_name=_("متریال"), on_delete=models.PROTECT)
+
+    class_name='materialrequest'
     
     class Meta:
         verbose_name = _("درخواست متریال")
         verbose_name_plural = _("درخواست های متریال")
-    def persian_date_delivered(self):
-        if self.date_delivered is not None:
-            return PersianCalendar().from_gregorian(self.date_delivered)
-    def persian_date_added(self):
-        return PersianCalendar().from_gregorian(self.date_added)
     def __str__(self):
         return f'{self.project.title} ___  {self.material.title} #{self.quantity} {self.unit_name}'
 
@@ -369,15 +395,6 @@ class MaterialRequest(models.Model):
             </i>
         </a>
         """
-    def get_status_color(self):
-        return StatusColor(self.status)
-
-    def get_status_tag(self):
-        return f"""<span class="badge badge-pill badge-{self.get_status_color()}">{self.status}</span>"""
-    def signatures(self):
-        return MaterialRequestSignature.objects.filter(materialrequest=self).order_by('-date_added')
-    def line_total(self):
-        return self.quantity*self.unit_price
     def save(self,*args, **kwargs):
         # updated=False
     
@@ -393,33 +410,18 @@ class MaterialRequest(models.Model):
         #     if not updated:
         #         line=OrderLine(product=self.material.product,unit_name=self.unit_name,quantity=self.quantity,unit_price=self.unit_price,order=material_order)
         #         line.save()
+        self.request_type=RequestTypeEnum.MATERIAL_REQUEST
         return super(MaterialRequest,self).save(*args, **kwargs)
 
 
-class ServiceRequest(models.Model):
-    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
+class ServiceRequest(Request):
     service=models.ForeignKey("service", verbose_name=_("service"), on_delete=models.PROTECT)
-    quantity=models.IntegerField(_("تعداد"))
-    unit_name=models.CharField(_("واحد"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD,max_length=50)
-    unit_price=models.IntegerField(_("فی"))
-    description=models.CharField(_("توضیحات"),null=True,blank=True,default='', max_length=50)
-    profile=models.ForeignKey("authentication.Profile", verbose_name=_("تحویل گیرنده"), on_delete=models.PROTECT)
-    date_added=models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
-    date_delivered=models.DateTimeField(_("تاریخ درخواست"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    status=models.CharField(_("وضعیت"),choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
-    employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("employee"), on_delete=models.CASCADE)
+
     class_name='servicerequest'
-    def can_be_edited(self):
-        return self.project.can_be_edited
     
     class Meta:
         verbose_name = _("درخواست سرویس")
         verbose_name_plural = _("درخواست های سرویس")
-    def persian_date_delivered(self):
-        if self.date_delivered is not None:
-            return PersianCalendar().from_gregorian(self.date_delivered)
-    def persian_date_added(self):
-        return PersianCalendar().from_gregorian(self.date_added)
     def __str__(self):
         return f'{self.project.title} ___  {self.service.title} #{self.quantity} {self.unit_name}'
 
@@ -435,15 +437,6 @@ class ServiceRequest(models.Model):
             </i>
         </a>
         """
-    def get_status_color(self):
-        return StatusColor(self.status)
-
-    def get_status_tag(self):
-        return f"""<span class="badge badge-pill badge-{self.get_status_color()}">{self.status}</span>"""
-    def signatures(self):
-        return MaterialRequestSignature.objects.filter(materialrequest=self).order_by('-date_added')
-    def line_total(self):
-        return self.quantity*self.unit_price
     def save(self,*args, **kwargs):
         # updated=False
     
@@ -459,7 +452,9 @@ class ServiceRequest(models.Model):
         #     if not updated:
         #         line=OrderLine(product=self.material.product,unit_name=self.unit_name,quantity=self.quantity,unit_price=self.unit_price,order=material_order)
         #         line.save()
+        self.request_type=RequestTypeEnum.SERVICE_REQUEST
         return super(ServiceRequest,self).save(*args, **kwargs)
+
 
 class RequestSignature(models.Model):
     request=models.ForeignKey("request", verbose_name=_("request"), on_delete=models.CASCADE)
@@ -492,113 +487,3 @@ class RequestSignature(models.Model):
     def get_absolute_url(self):
         return reverse("RequestSignature_detail", kwargs={"pk": self.pk})
 
-
-class Request(models.Model):
-    project=models.ForeignKey("Project", verbose_name=_("پروژه"), on_delete=models.CASCADE)
-    quantity=models.IntegerField(_("تعداد"))
-    unit_name=models.CharField(_("واحد"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD,max_length=50)
-    unit_price=models.IntegerField(_("قیمت واحد"))
-    description=models.CharField(_("توضیحات"),null=True,blank=True,default='', max_length=50)
-    creator=models.ForeignKey("employee", related_name="request_createds",verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
-    handler=models.ForeignKey("employee", related_name="request_handeleds",verbose_name=_("پاسخ دهنده"),null=True,blank=True, on_delete=models.PROTECT)
-    date_added=models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
-    date_delivered=models.DateTimeField(_("تاریخ درخواست"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    status=models.CharField(_("وضعیت"),choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
-    class_name='request'
-    
-    def get_status_color(self):
-        return StatusColor(self.status)
-
-    def get_status_tag(self):
-        return f"""<span class="badge badge-pill badge-{self.get_status_color()}">{self.status}</span>"""
-    def signatures(self):
-        return RequestSignature.objects.filter(materialrequest=self).order_by('-date_added')
-    def line_total(self):
-        return self.quantity*self.unit_price
-    
-
-    class Meta:
-        verbose_name = _("Request")
-        verbose_name_plural = _("Requests")
-
-    def __str__(self):
-        return self.project.title
-
-    def get_absolute_url(self):
-        return reverse("Request_detail", kwargs={"pk": self.pk})
-
-
-class ServiceRequestSignature(models.Model):
-    service_request=models.ForeignKey("servicerequest", verbose_name=_("درخواست"), on_delete=models.CASCADE)
-    profile=models.ForeignKey("authentication.Profile", verbose_name=_("profile"), on_delete=models.PROTECT)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    description=models.CharField(_("description"), max_length=200)
-    status=models.CharField(_("status"),choices=SignatureStatusEnum.choices,default=SignatureStatusEnum.REQUESTED, max_length=200)
-    class Meta:
-        verbose_name = _("امضای درخواست سرویس")
-        verbose_name_plural = _("امضا های درخواست سرویس")
-
-    def __str__(self):
-        return f'{self.profile.name} : {self.description} @ {PersianCalendar().from_gregorian(self.date_added)}'
-
-    def persian_date_added(self):
-        return PersianCalendar().from_gregorian(self.date_added)
-    
-    def get_status_color(self):
-      return StatusColor(self.status)
-
-    def get_status_tag(self):
-        return f"""
-            <span class="badge badge-{self.get_status_color()}">{self.status}</span>
-        """
-
-   
-   
-    def get_edit_btn(self):
-        return f"""
-            <a target="_blank" title="ویرایش" href="{self.get_edit_url()}">
-               <i class="material-icons">
-                    edit
-                </i>
-            </a>
-        """
-
-    def get_edit_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/servicerequestsignature/{self.pk}/change/"
-
-
-class MaterialRequestSignature(models.Model):
-    material_request=models.ForeignKey("materialrequest", verbose_name=_("درخواست"), on_delete=models.CASCADE)
-    profile=models.ForeignKey("authentication.Profile", verbose_name=_("profile"), on_delete=models.PROTECT)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    description=models.CharField(_("description"), max_length=200)
-    status=models.CharField(_("status"),choices=SignatureStatusEnum.choices,default=SignatureStatusEnum.REQUESTED, max_length=200)
-    class Meta:
-        verbose_name = _("امضای درخواست متریال")
-        verbose_name_plural = _("امضا های درخواست متریال")
-
-    def __str__(self):
-        return f'{self.profile.name} : {self.description} @ {PersianCalendar().from_gregorian(self.date_added)}'
-
-    def persian_date_added(self):
-        return PersianCalendar().from_gregorian(self.date_added)
-    
-    def get_status_color(self):
-      return StatusColor(self.status)
-    
-    def get_status_tag(self):
-        return f"""
-            <span class="badge badge-{self.get_status_color()}">{self.status}</span>
-        """
-
-    def get_edit_btn(self):
-        return f"""
-            <a target="_blank" title="ویرایش" href="{self.get_edit_url()}">
-               <i class="material-icons">
-                    edit
-                </i>
-            </a>
-        """
-
-    def get_edit_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/materialrequestsignature/{self.pk}/change/"

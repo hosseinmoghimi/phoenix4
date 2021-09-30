@@ -2,6 +2,9 @@ from core.enums import *
 from django.utils.translation import gettext as _
 
 
+class RequestTypeEnum(TextChoices):
+    MATERIAL_REQUEST='درخواست متریال',_('درخواست متریال')
+    SERVICE_REQUEST='درخواست سرویس',_('درخواست سرویس')
 
 class SignatureStatusEnum(TextChoices):
     DEFAULT='DEFAULT',_('DEFAULT')

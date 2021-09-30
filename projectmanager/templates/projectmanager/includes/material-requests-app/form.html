@@ -1,0 +1,70 @@
+{% load static %}
+
+
+<div class="text-right">
+
+    <button v-if="!show_add_material_request_form" @click="show_add_material_request_form=true" class="btn btn-success">
+        <i class="material-icons text-light">
+            add
+        </i>
+    </button>
+    <div class="row" v-if="show_add_material_request_form">
+        <div class="col-8">
+            <form @submit.prevent="add_material_request()">
+
+                <input @input="filter_list" required type="text" v-model="add_material_request_form_title"
+                    class="farsi form-control" placeholder="متریال">
+                <p class="text-right">
+                    <span v-text="selected_material().title"></span>
+                    <span>هر </span>
+                    <span v-text="add_material_request_form_unit_name"></span>
+                    <span v-text="to_price(add_material_request_form_unit_price,'')"></span>
+                    <small>
+
+                        {{CURRENCY}}
+                    </small>
+                </p>
+                <div class="row">
+                    <div class="col-4">
+                        <input required type="number" min="0" placeholder="تعداد" class="form-control"
+                            v-model="add_material_request_form_quantity">
+                    </div>
+                    <div class="col-4">
+                        <select v-model="add_material_request_form_unit_name" class="form-control farsi" id="">
+                            <option disabled selected>نام واحد</option>
+                            {% for unit_name in unit_names %}
+                            <option value="{{unit_name}}">{{unit_name}}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="col-4">
+                        <input required type="number" v-model="add_material_request_form_unit_price"
+                            class="farsi form-control" placeholder="قیمت واحد">
+                    </div>
+
+                    <div class="col-12 text-left">
+                        <button class="btn btn-secondary" @click="show_add_material_request_form=false"
+                            type="reset">Cancel</button>
+
+                        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+                        <button v-if="!waiting" class="btn btn-primary" type="submit">
+                            <i class="material-icons">
+                                add
+                            </i>
+                            افزودن
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-4">
+            <button v-for="material in materials" class="btn btn-secondary my-2 btn-block"
+                @click="select_material(material)" v-text="material.title"></button>
+        </div>
+
+
+    </div>
+</div>

@@ -246,6 +246,7 @@ class EmployeeRepo():
         else:
             self.objects=Employee.objects.filter(id=0)
 
+        self.me=Employee.objects.filter(profile=self.profile).first()
     def employee(self, *args, **kwargs):
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
@@ -344,6 +345,7 @@ class ServiceRepo():
             self.user = kwargs['user']
         self.objects = Service.objects
         self.me=ProfileRepo(user=self.user).me
+        self.employee=EmployeeRepo(request=self.request).me
 
     def service(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -385,11 +387,15 @@ class ServiceRepo():
         signature.save()
         return signature
 
+    
     def service_requests(self,*args, **kwargs):
         objects=ServiceRequest.objects.all()
+        if 'project_id' in kwargs:
+            objects=objects.filter(project_id=kwargs['project_id'])
+        if 'service_id' in kwargs:
+            objects=objects.filter(service_id=kwargs['service_id'])
         return objects
-
-                   
+     
     def list(self, *args, **kwargs):
         objects = self.objects.all()
         if 'search_for' in kwargs:
@@ -406,6 +412,7 @@ class ServiceRepo():
         if 'project_id' in kwargs:
             new_service_request.project_id = kwargs['project_id']
         if 'employee_id' in kwargs:
+            handler_id = kwargs['employee_id']
             employee_id = kwargs['employee_id']
             if not employee_id==0:
                 new_service_request.employee_id=employee_id
@@ -430,7 +437,8 @@ class ServiceRepo():
                 service.save()            
             new_service_request.service_id=service.id
         profile = ProfileRepo(user=self.user).me
-        new_service_request.profile = profile
+        new_service_request.handler_id = handler_id
+        new_service_request.creator=self.employee
         if new_service_request.quantity > 0 and new_service_request.unit_price > 0:
             new_service_request.save()
             new_service_request.service.unit_price = new_service_request.unit_price
@@ -614,6 +622,7 @@ class MaterialRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Material.objects
+        self.employee=EmployeeRepo(request=self.request).me
 
     def material(self, *args, **kwargs):
         if 'pk' in kwargs:
@@ -658,6 +667,8 @@ class MaterialRepo():
             new_material_request.material_id = kwargs['material_id']
         if 'quantity' in kwargs:
             new_material_request.quantity = kwargs['quantity']
+        if 'handler_id' in kwargs:
+            new_material_request.handler_id = kwargs['handler_id']
         if 'unit_name' in kwargs:
             new_material_request.unit_name = kwargs['unit_name']
         if 'unit_price' in kwargs:
@@ -669,7 +680,8 @@ class MaterialRepo():
         if 'status' in kwargs:
             new_material_request.status = kwargs['status']
         profile = ProfileRepo(user=self.user).me
-        new_material_request.profile = profile
+        new_material_request.creator = self.employee
+        new_material_request.handler_id = handler_id
         if new_material_request.quantity > 0 and new_material_request.unit_price > 0:
             new_material_request.save()
             new_material_request.material.unit_price = new_material_request.unit_price
@@ -714,4 +726,8 @@ class MaterialRepo():
 
     def material_requests(self,*args, **kwargs):
         objects=MaterialRequest.objects.all()
+        if 'project_id' in kwargs:
+            objects=objects.filter(project_id=kwargs['project_id'])
+        if 'material_id' in kwargs:
+            objects=objects.filter(material_id=kwargs['material_id'])
         return objects

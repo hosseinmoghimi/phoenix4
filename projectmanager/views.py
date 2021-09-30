@@ -1,5 +1,6 @@
 from core.constants import CURRENCY
 import re
+from projectmanager.models import MaterialRequest
 from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
@@ -251,8 +252,8 @@ class ProjectViews(View):
         employees=project.employees()
         context['employees']=employees
         context['locations']=project.locations.all()
-        context['material_requests']=project.materialrequest_set.all()
-        context['service_requests']=project.servicerequest_set.all()
+        context['material_requests']=MaterialRepo(request=request).material_requests(project_id=project.id)
+        context['service_requests']=ServiceRepo(request=request).service_requests(project_id=project.id)
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         context['all_locations']=LocationRepo(request=request).list().order_by('title')
@@ -398,6 +399,7 @@ class MaterialViews(View):
         context['materials'] =materials
         material_requests=material.materialrequest_set.all()
         context['material_requests'] = material_requests
+        context['material_requests']=MaterialRepo(request=request).material_requests(material_id=material.id)
       
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
         
@@ -463,7 +465,7 @@ class ServiceViews(View):
         service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)
         context['service'] = service
-        context['service_requests'] = service.servicerequest_set.all()
+        context['service_requests']=ServiceRepo(request=request).service_requests(service_id=service.id)
         context['services'] = service.childs()
         context.update(PageContext(request=request, page=service))
         context['add_service_form'] = AddServiceForm()

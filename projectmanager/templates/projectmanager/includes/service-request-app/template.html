@@ -32,8 +32,8 @@
 
             پرسنل :
             <a target="_blank" href="{{service_request.employee.get_absolute_url}}">
-                <img src="{{service_request.employee.profile.image}}" class="ml-2 rounded" width="32" alt="">
-                {{service_request.employee.profile.name}}
+                <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded" width="32" alt="">
+                {{service_request.handler.profile.name}}
             </a>
             <small class="mr-3 text-secondary">
                 شاغل در
@@ -41,17 +41,17 @@
             </small>
             <small class="mr-4">
 
-                <a target="_blank" href="{{service_request.employee.organization_unit.employer.get_absolute_url}}">
+                <a target="_blank" href="{{service_request.handler.organization_unit.employer.get_absolute_url}}">
 
-                    {{service_request.employee.organization_unit.employer.title}}
+                    {{service_request.handler.organization_unit.employer.title}}
                 </a>
             </small>
             /
             <small>
 
-                <a target="_blank" href="{{service_request.employee.organization_unit.get_absolute_url}}">
+                <a target="_blank" href="{{service_request.handler.organization_unit.get_absolute_url}}">
 
-                    {{service_request.employee.organization_unit.title}}
+                    {{service_request.handler.organization_unit.title}}
                 </a>
             </small>
 
