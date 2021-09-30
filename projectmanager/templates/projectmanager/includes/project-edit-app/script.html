@@ -32,6 +32,7 @@
             employer_id: employer_id,
             contractor_id: contractor_id,
             SUCCEED: false,
+            archive: false,
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -39,13 +40,13 @@
         methods: {
             edit_project: function () {
                 project_app.waiting = true
-
                 let payload = {
                     project_id: project.id,
                     percentage_completed: this.percentage_completed,
                     start_date: this.start_date,
                     end_date: this.end_date,
                     status: this.status,
+                    archive: this.archive,
                     employer_id: this.employer_id,
                     contractor_id: this.contractor_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
@@ -60,6 +61,7 @@
                 })
                 // Put the results in a div
                 posting.done(function (data) {
+
                     project_app.waiting = false
                     //console.log(data)
                     if (data.result === 'SUCCEED') {

@@ -18,6 +18,7 @@ class ProjectRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         
+        self.objects=Project.objects.filter(id=0)
         self.profile=ProfileRepo(*args, **kwargs).me
         if self.user is None:
             self.objects=Project.objects.filter(id=0)
@@ -30,10 +31,8 @@ class ProjectRepo():
                 for proj in employee.my_projects():
                     lisst.append(proj.id)
             self.objects=Project.objects.filter(id__in=lisst)
-        else:
-            self.objects=Project.objects.filter(id=0)
 
-
+        self.objects=self.objects.filter(archive=False)
     def add_location(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_location"):
             return None
@@ -64,7 +63,11 @@ class ProjectRepo():
             if 'contractor_id' in kwargs:
                 project.contractor_id=kwargs['contractor_id']
             if 'employer_id' in kwargs:
-                project.employer_id=kwargs['employer_id']                
+                project.employer_id=kwargs['employer_id']      
+            if 'archive' in kwargs:
+                project.archive=kwargs['archive']       
+            print(kwargs)      
+            print(10*" 34224256 ")
             project.save()
             return project
 

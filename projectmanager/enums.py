@@ -87,5 +87,5 @@ def StatusColor(status):
     elif status==RequestStatusEnum.DENIED:
         color= 'danger'
     elif status==RequestStatusEnum.PURCHASING:
-        color= 'primary'
+        color= 'success'
     return color

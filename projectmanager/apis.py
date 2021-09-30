@@ -94,6 +94,7 @@ class ProjectApi(APIView):
             edit_project_form=EditProjectForm(request.POST)
             if edit_project_form.is_valid():
                 log+=1
+                archive=edit_project_form.cleaned_data['archive']
                 project_id=edit_project_form.cleaned_data['project_id']
                 percentage_completed=edit_project_form.cleaned_data['percentage_completed']
                 start_date=edit_project_form.cleaned_data['start_date']
@@ -104,7 +105,7 @@ class ProjectApi(APIView):
                 
                 start_date=PersianCalendar().to_gregorian(start_date)
                 end_date=PersianCalendar().to_gregorian(end_date)
-                project=ProjectRepo(request=request).edit_project(contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
+                project=ProjectRepo(request=request).edit_project(archive=archive,contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
                 if project is not None: 
                     context['project']=ProjectSerializer(project).data
                     context['result']=SUCCEED

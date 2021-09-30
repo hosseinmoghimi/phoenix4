@@ -2,7 +2,7 @@ from django.db import models, reset_queries
 from django.db.models.base import Model
 from django.db.models.fields import BooleanField, CharField
 from .apps import APP_NAME
-from django.utils.translation import gettext as _
+from django.utils.translation import deactivate, gettext as _
 from .settings import *
 from django.shortcuts import reverse
 from django.http import Http404
@@ -166,6 +166,9 @@ class Image(models.Model):
 class BasicPage(models.Model):
     title = models.CharField(_("عنوان"), max_length=300)
     sub_title=models.CharField(_("زیر عنوان"),null=True, blank=True, max_length=300)
+    image_thumbnail_origin = models.ImageField(_("تصویر کوچک"), upload_to=IMAGE_FOLDER+'Page/Thumbnail/',
+                                         null=True, blank=True, height_field=None, width_field=None, max_length=None)
+    archive = models.BooleanField(_("بایگانی شود؟"), default=False)
     for_home=models.BooleanField(_("نمایش در خانه"),default=False)
     parent = models.ForeignKey("BasicPage",related_name="childs",null=True,blank=True, verbose_name=_(
         "والد"), on_delete=models.SET_NULL)
@@ -176,14 +179,11 @@ class BasicPage(models.Model):
         _("توضیح کوتاه"), null=True, blank=True)
     description = HTMLField(
         _("توضیح کامل"), null=True, blank=True)
-    image_thumbnail_origin = models.ImageField(_("تصویر کوچک"), upload_to=IMAGE_FOLDER+'Page/Thumbnail/',
-                                         null=True, blank=True, height_field=None, width_field=None, max_length=None)
     image_header_origin =models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Page/Header/', height_field=None, width_field=None, max_length=None)                              
     image_main_origin = models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Page/Main/', height_field=None, width_field=None, max_length=None)
     
-    archive = models.BooleanField(_("بایگانی شود؟"), default=False)
     
     priority = models.IntegerField(_('اولویت / ترتیب'), default=100)
 

@@ -12,7 +12,8 @@
 
 
         </div>
-        <div id="collapseseProjectEdit" class="collapse show" aria-labelledby="headingProjectEdit" data-parent="#accordion">
+        <div id="collapseseProjectEdit" class="collapse show" aria-labelledby="headingProjectEdit"
+            data-parent="#accordion">
 
             <div class="card-body" id="project-app">
                 {% if edit_project_form %}
@@ -52,7 +53,7 @@
 
                                 وضعیت
                             </span>
-                            <select name="" id="" class="form-control" v-model="status">
+                            <select required name="" id="" class="form-control" v-model="status">
                                 {% for project_status in project_status_enum %}
                                 <option value="{{project_status}}">{{project_status}}</option>
                                 {% endfor %}
@@ -65,7 +66,7 @@
 
                                 کارفرما
                             </span>
-                            <select name="" id="" class="form-control" v-model="employer_id">
+                            <select required name="" id="" class="form-control" v-model="employer_id">
                                 {% for employer in employers %}
                                 <option value="{{employer.id}}">{{employer.title}}</option>
                                 {% endfor %}
@@ -78,22 +79,36 @@
 
                                 پیمانکار
                             </span>
-                            <select name="" id="" class="form-control" v-model="contractor_id">
+                            <select required name="" id="" class="form-control" v-model="contractor_id">
                                 {% for contractor in employers %}
                                 <option value="{{contractor.id}}">{{contractor.title}}</option>
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="col-4 text-right mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" v-model="archive" type="checkbox"
+                                    id="flexCheckDefault34">
+                                <label class="form-check-label mx-3" for="flexCheckDefault34">
+                                    بایگانی شود؟
 
-                        <div class="col-4">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-4 text-right">
                             <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 
 
 
-                            <button v-if="!waiting"  class="btn btn-outline-primary" type="submit">
+                            <button v-if="!waiting" class="btn btn-outline-primary btn-block" type="submit">
                                 <i class="material-icons">
-                                    OK
+                                    check_circle_outline
                                 </i>
+                                <span class="farsi">
+
+                                    ذخیره تغییرات
+                                </span>
                             </button>
 
                         </div>

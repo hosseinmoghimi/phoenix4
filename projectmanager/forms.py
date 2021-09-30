@@ -42,6 +42,7 @@ class EditProjectForm(forms.Form):
     start_date=forms.CharField(max_length=20, required=True)
     end_date=forms.CharField(max_length=20, required=True)
     status=forms.CharField(max_length=50, required=False)
+    archive=forms.BooleanField(required=False)
 
 
 class AddSignatureForm(forms.Form):
