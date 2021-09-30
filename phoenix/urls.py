@@ -12,6 +12,8 @@ from django.conf.urls import url
 urlpatterns = [
     path('market/', include('market.urls')),
     path('bms/', include('bms.urls')),
+    path('school/', include('school.urls')),
+    path('vehicles/', include('vehicles.urls')),
     path('projectmanager/', include('projectmanager.urls')),
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),

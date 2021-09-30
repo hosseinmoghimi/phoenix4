@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let points=JSON.parse(`{{points_s|escapejs`)
+        var map;
+        var pathCoordinates = Array();
+        function initMap() {
+            var countryLength
+            var mapLayer = document.getElementById("map-layer");
+            var centerCoordinates = new google.maps.LatLng(37.6, -95.665);
+            var defaultOptions = {
+                center : centerCoordinates,
+                zoom : 4
+            }
+            map = new google.maps.Map(mapLayer, defaultOptions);
+            geocoder = new google.maps.Geocoder();
+           
+            countryLength = 3
+         points.forEach(element => {
+             
+         });
+            geocoder.geocode({
+                'address' : '<?php echo $countryResult[$k]["country"]; ?>'
+            }, function(LocationResult, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var latitude = LocationResult[0].geometry.location.lat();
+                    var longitude = LocationResult[0].geometry.location.lng();
+                    pathCoordinates.push({
+                        lat : latitude,
+                        lng : longitude
+                    });
+     
+                    new google.maps.Marker({
+                        position : new google.maps.LatLng(latitude, longitude),
+                        map : map,
+                        title : '<?php echo $countryResult[$k]["country"]; ?>'
+                    });
+     
+                    if (countryLength == pathCoordinates.length) {
+                        drawPath();
+                    }
+     
+                }
+            });
+          
+        }
+        function drawPath() {
+            new google.maps.Polyline({
+                path : pathCoordinates,
+                geodesic : true,
+                strokeColor : '#FF0000',
+                strokeOpacity : 1,
+                strokeWeight : 4,
+                map : map
+            });
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap">
+        
+    </script>
+    
+</head>
+<body>
+    
+</body>
+</html>

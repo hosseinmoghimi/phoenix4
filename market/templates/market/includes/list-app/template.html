@@ -84,8 +84,12 @@
             </div>
             <div class="card-footer">
                 <div class="price-container">
+                    {% if product.old_price %}
+
                     <span class="price price-old mx-2 farsi">
-                        {{product.old_price|to_price_pure}}</span>
+                        {{product.old_price|to_price_pure}}
+                    </span>
+                    {% endif %}
                     <span class="price price-new mx-2 farsi"> {{product.unit_price|to_price}}</span>
                 </div>
                 <div class="stats mr-auto">

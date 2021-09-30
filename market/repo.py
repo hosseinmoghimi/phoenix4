@@ -790,7 +790,7 @@ class ShopRepo:
             # objects = objects.filter(supplier__in=Supplier.objects.filter(region=kwargs['region']))
             objects = objects.filter(supplier__region=kwargs['region'])
         return objects
-    def confirm_cart(self,*args, **kwargs):
+    def confirm_cart_temp(self,*args, **kwargs):
         quantity=0
         shop=None
         if 'shop' in kwargs:
@@ -830,6 +830,8 @@ class ShopRepo:
             available = kwargs['available']
         if 'old_price' in kwargs:
             old_price = kwargs['old_price']
+        if old_price==0 or old_price=="":
+            old_price=None
         if not available>0 or unit_price==0:
             Shop.objects.filter(supplier_id=supplier_id).filter(level=level).filter(product_id=product_id).filter(unit_name=unit_name).delete()
             return {'result':'deleted'}
@@ -1072,9 +1074,13 @@ class CartRepo:
                             #product_title=cart_line.shop.product.title,
                             unit_name=cart_line.shop.unit_name)
                         order_line.save()
-                        ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
+                        
+                        cart_line.shop.available=cart_line.shop.available-cart_line.quantity
+                        cart_line.shop.save()
+                        # ShopRepo(request=self.request).confirm_cart(shop=cart_line.shop,quantity=cart_line.quantity)
                         supplier_profit+=cart_line.get_profit()
-                        customer_profit+=cart_line.quantity*(cart_line.shop.old_price-cart_line.shop.unit_price)
+                        if cart_line.shop.old_price is not None:
+                            customer_profit+=cart_line.quantity*(cart_line.shop.old_price-cart_line.shop.unit_price)
                         cart_line.delete()
                 financial_report=FinancialReport()
                 financial_report.order=order

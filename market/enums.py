@@ -60,6 +60,7 @@ class OrderLineStatusEnum(TextChoices):
 
 
 class PictureEnum(TextChoices):
+    CUSTOMER_HEADER='تصویر سربرگ صفحه مشتری',_('تصویر سربرگ صفحه مشتری')
     BRANDS_IMAGE_HEADER='تصویر سربرگ صفحه برند ها',_('تصویر سربرگ صفحه برند ها')
     CART_HEADER='تصویر سربرگ سبد خرید',_('تصویر سربرگ سبد خرید')
     SEARCH_HEADER='تصویر سربرگ صفحه جستجو',_('تصویر سربرگ صفحه جستجو')

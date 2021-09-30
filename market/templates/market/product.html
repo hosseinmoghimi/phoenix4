@@ -75,7 +75,14 @@
                         مدل : {{product.model_name}}
                     </div>
                     {% endif %}
-
+                    <div class="text-right farsi my-2">
+                        {% if product.old_price %}
+                        قیمت :
+                        <span class="price h4 price-old mx-2 farsi text-danger" style="text-decoration: line-through">
+                            {{product.old_price|to_price}}
+                        </span>
+                        {% endif %}
+                    </div>
                     <!-- <h3 class="main-price">$335</h3> -->
                     <div id="accordion" role="tablist">
                         <div class="card card-collapse">
@@ -187,64 +194,65 @@
         </div>
         {% endif %}
 
-<div id="comments"></div>
-        <div class="my-5 farsi">
-            <div class="row">
-                <div class="col-md-12"  id="page-comments-app">
-                    <h3  class="text-center">
-                        نظرات کاربران
-                    </h3>
-                    {% for page_comment in page.pagecomment_set.all1 %}
-                    <div class="py-3">
-    
-                        <div class="media">
-                            <img src="{{page_comment.profile.image}}" class="rounded-circle" width="64" alt="">
-                            <div class="media-body">
-                                <h6 class="small">{{page_comment.profile.name}}
-                                    <span class="text-secondary mx-3 small">
-    
-                                        {{page_comment.date_added|to_persian_datetime|safe}}
-                                    </span>
-                                </h6>
-                                <div class="text-secondary text-right">{{page_comment.comment}}</div>
-                            </div>
-                        </div>
-                    </div>
-                   
-                    {% endfor %}
-                    <div class="py-3" v-for="page_comment in page_comments">
-                        <page-comment-component :page_comment="page_comment">
-                        </page-comment-component>
-    
-                    </div>
-                    {% if add_page_comment_form %}
-    
-                    <div class="media">
-                        <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
-                        <div class="media-body mr-2">
-                            <h6>{{profile.name}}</h6>
-       
-                                <textarea 
-                                id="comment_inputed" 
-                                v-model="comment" 
-                                class="farsi form-control" 
-                                rows="5"
-                                ></textarea>
-                                <button @click="add_comment"
-                                 class="btn btn-primary farsi btn-round btn-wd float-right">ثبت نظر</button>
-             
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
         <div id="product-features">
 
             {% include "market/includes/product-features-app/template.html" %}
         </div>
 
+
+        <div id="comments"></div>
+        <div class="my-5 farsi">
+            <div class="row">
+                <div class="col-md-12" id="page-comments-app">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center">
+                                نظرات کاربران
+                            </h3>
+                            {% for page_comment in page.pagecomment_set.all1 %}
+                            <div class="py-3">
+
+                                <div class="media">
+                                    <img src="{{page_comment.profile.image}}" class="rounded-circle" width="64" alt="">
+                                    <div class="media-body">
+                                        <h6 class="small">{{page_comment.profile.name}}
+                                            <span class="text-secondary mx-3 small">
+
+                                                {{page_comment.date_added|to_persian_datetime|safe}}
+                                            </span>
+                                        </h6>
+                                        <div class="text-secondary text-right">{{page_comment.comment}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                            <div class="py-3" v-for="page_comment in page_comments">
+                                <page-comment-component :page_comment="page_comment">
+                                </page-comment-component>
+
+                            </div>
+                            {% if add_page_comment_form %}
+
+                            <div class="media">
+                                <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
+                                <div class="media-body mr-2">
+                                    <h6>{{profile.name}}</h6>
+
+                                    <textarea id="comment_inputed" v-model="comment" class="farsi form-control"
+                                        rows="5"></textarea>
+                                    <button @click="add_comment"
+                                        class="btn btn-primary farsi btn-round btn-wd float-right">ثبت نظر</button>
+
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
 
 

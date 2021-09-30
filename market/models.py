@@ -325,7 +325,7 @@ class Shop(models.Model):
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
     unit_name=models.CharField(_("unit_name"), max_length=50)
-    old_price=models.IntegerField(_("قیمت بدون تخفیف"),default=0)
+    old_price=models.IntegerField(_("قیمت بدون تخفیف"),null=True,blank=True)
     buy_price=models.IntegerField(_("قیمت خرید"),default=0)
     unit_price=models.IntegerField(_("قیمت فروش"))
     available=models.IntegerField(_("تعداد موجودی"),default=10)

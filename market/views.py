@@ -351,6 +351,8 @@ class CustomerViews(View):
         context['orders'] = OrderRepo(request=request).list(customer_id=customer.id)
         context['products'] = customer.favorites.all()
 
+        context['header_image'] = PictureRepo(
+            request=request, app_name=APP_NAME).picture(name=PictureEnum.CUSTOMER_HEADER)
         context['body_class'] = "shopping-cart"
         return render(request, TEMPLATE_ROOT+"customer.html", context)
 
@@ -379,6 +381,13 @@ class SupplierViews(View):
         context.update(PageContext(request=request, page=page))
         context['supplier'] = supplier
         context['body_class'] = "product-page"
+        
+        vertical_navs=[]
+        
+        vertical_navs.append({'url':"#supplier-title",'title':'مشخصات','priority':1})
+        vertical_navs.append({'url':"#shops-title",'title':'محصولات آماده فروش','priority':2})
+        vertical_navs.append({'url':"#orders-title",'title':'سفارشات','priority':3})
+        context['vertical_navs']=vertical_navs
         context['orders'] = OrderRepo(request=request).list(supplier_id=supplier.id)
         return render(request, TEMPLATE_ROOT+"supplier.html", context)
 

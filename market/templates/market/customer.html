@@ -21,6 +21,20 @@
                     
                 </div>
                 {% endif %}
+
+                {% if perms.core.change_picture %}
+                <div class="text-center">
+                    {{header_image.get_edit_btn|safe}}
+
+                    <a href="{{header_image.get_edit_url}}">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                    
+                </div>
+                {% endif %}
+
             </div>
         </div>
     </div>

@@ -1,0 +1,80 @@
+{% extends "web/layout.html" %}
+{% load static %}
+{% block head %}
+  <style>
+      th,td{
+          text-align: right;
+
+      }
+  </style>
+{% endblock head %}
+{% block content %}
+
+<div class="page-header header-filter" style="background-image: url('{% static 'vehicles/images/header.jpg' %}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                {% if perms.core.change_mainpic %}
+                {{header_image.get_edit_btn|safe}}
+                {% endif %}
+                <h3 class="title text-center"> مدیریت و مانیتورینگ عملکرد
+                </h3>
+                <h1 class="title text-center">
+
+                    ماشین آلات</h1>
+                <p class="text-center">
+                    با توسعه روز افزون تکنولوژی ، سرمایه گذاری روی ماشین آلات بیشتر شده است و رویکرد مدیریت ماشین آلات
+                    در سازمان ها در حال تغییر و تحول می باشد. لذا داشتن یک نرم افزار مناسب که علاوه بر ثبت و نگهداری
+                    کلیه اطلاعات ماشین آلات و تجهیزات، قابلیت نمایش هشدارهای مربوط به آنها را نیز داشته باشد و مطلوب
+                    ترین روش ها براي تداوم کار با حداکثر بازدهی و صرف حداقل هزینه را ارائه دهد، بسیار ضروری است.
+                </p>
+            </div>
+            <div class="col-md-10 ml-auto mr-auto">
+                <div class="card card-raised card-form-horizontal">
+                    <div class="card-body ">
+                        <form method="" action="">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group bmd-form-group">
+                                        <input type="text" value="" placeholder="Company Name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group bmd-form-group">
+                                        <input type="email" value="" placeholder="Company Email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group bmd-form-group">
+                                        <input type="password" value="" placeholder="Company Password"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary btn-block">Sign up</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block content_vehicles %}
+{% endblock %}
+
+
+{% endblock %}
+
+
+
+
+{% block script %}
+
+{% block script_vehicles %}
+{% endblock %}
+
+
+{% endblock %}
