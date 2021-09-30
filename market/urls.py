@@ -21,6 +21,7 @@ urlpatterns = [
     path("supplier/<int:pk>/",views.SupplierViews().supplier,name="supplier"),
     path("shipper/<int:pk>/",views.ShipperViews().shipper,name="shipper"),
     path("brand/<int:pk>/",views.ProductViews().brand,name="brand"),
+    path("brands/",views.ProductViews().brands,name="brands"),
     path("guarantee/<int:pk>/",views.GuaranteeView().guarantee,name="guarantee"),
     path("cart/",views.CartViews().cart,name="cart"),
     path('do_pack_order/',views.OrderViews().do_pack_order,name='do_pack_order'),

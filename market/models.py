@@ -10,7 +10,7 @@ from django.shortcuts import reverse
 from core.constants import CURRENCY
 from utility.currency import to_price
 
-IMAGE_FOLDER=APP_NAME+"/imags/"
+IMAGE_FOLDER=APP_NAME+"/images/"
 
 class MarketPage(BasicPage):
 

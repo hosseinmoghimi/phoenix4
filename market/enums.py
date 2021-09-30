@@ -60,12 +60,14 @@ class OrderLineStatusEnum(TextChoices):
 
 
 class PictureEnum(TextChoices):
+    BRANDS_IMAGE_HEADER='تصویر سربرگ صفحه برند ها',_('تصویر سربرگ صفحه برند ها')
     CART_HEADER='تصویر سربرگ سبد خرید',_('تصویر سربرگ سبد خرید')
     SEARCH_HEADER='تصویر سربرگ صفحه جستجو',_('تصویر سربرگ صفحه جستجو')
     ORDER_HEADER='تصویر سربرگ سبد سفارش' ,_('تصویر سربرگ سبد سفارش')
     ORDERS_HEADER='تصویر سربرگ سفارشات',_('تصویر سربرگ سفارشات')
     GUARANTEE_HEADER="تصویر سربرگ گارانتی",_("تصویر سربرگ گارانتی")
 class ParameterEnum(TextChoices):
+    BRANDS_SLOGAN="شعار صفحه برند ها",_("شعار صفحه برند ها")
     SHOP_HEADER_TITLE='عنوان فروشگاه',_('عنوان فروشگاه')
     SHOP_HEADER_LINK='لینک فروشگاه',_('لینک فروشگاه')
     SHOP_HEADER_SLOGAN='شعار فروشگاه',_('شعار فروشگاه')

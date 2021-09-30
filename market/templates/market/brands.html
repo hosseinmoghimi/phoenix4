@@ -1,0 +1,89 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load static %}
+
+
+
+{% block page_header %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{image_header.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <div class="brand">
+                    <h1 class="title text-center">برند ها 
+                    </h1>
+                    <h4 class="text-center">{{brands_slogan.value}}
+                        {% if perms.core.change_parameter %}
+
+                        {{brands_slogan.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% if perms.core.change_picture %}
+                    <div class="text-center">
+                        {{image_header.get_edit_btn|safe}}
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="main {{main_class}}">
+
+    
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                {% for brand in brands %}
+
+                <div class="col-md-4">
+                    <div class="card card-product card-plain">
+                        <div class="card-header card-header-image">
+                            <a href="{{brand.get_absolute_url}}">
+                                <img src="{{brand.image}}" class="w-100" alt="">
+                            </a>
+                        </div>
+                        <div class="card-body text-center">
+                            <h4 class="card-title">
+                                <a href="{{brand.get_absolute_url}}">{{brand.title}}</a>
+                            </h4>
+
+                            <div class="card-description">
+
+                                {% if brand.short_description %}
+
+                                {{brand.short_description|safe}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div><!-- section -->
+
+
+    
+
+
+    
+
+</div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

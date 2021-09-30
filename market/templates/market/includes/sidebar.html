@@ -99,7 +99,19 @@
                 </div>
                 <div id="collapseTwo4" class="collapse" role="tabpanel" aria-labelledby="headingTwo4">
                     <div class="card-body mr-5">
-                        {% for brand in brands %}
+                        <div class="form-check">
+                            <label class="form-check-label">
+
+
+                                <a class="my-2" href="{% url 'market:brands' %}">
+                                    
+                                   همه برند ها
+                                </a>
+
+
+                            </label>
+                        </div>
+                          {% for brand in brands %}
 
 
 
@@ -117,7 +129,7 @@
                         </div>
 
                         {% endfor %}
-
+                       
                     </div>
                 </div>
             </div>
