@@ -14,20 +14,7 @@
         </div>
     </div>
 
-    {% if delete_page_image_form %}
-    <button @click="show_delete_page_image_form=true" v-if="!show_delete_page_image_form" class="btn btn-danger mt-4 farsi">
-        حذف تصویر
-    </button>
-    <button @click="show_delete_page_image_form=false" v-if="show_delete_page_image_form"  class="btn btn-secondary mt-4 farsi">
-        انصراف </button>
-    <form @submit.prevent="delete_page_image()" v-if="show_delete_page_image_form">
-        <button type="submit" class="btn btn-danger mt-4 farsi">
-            حذف تصویر
-        </button>
-
-    </form>
-
-    {% endif %}
+   
     {% if add_page_image_form %}
     <p>
 
@@ -62,6 +49,24 @@
         </div>
 
     </form>
+    {% endif %}
+
+    {% if delete_page_image_form %}
+    <div class="text-right">
+        
+    <button @click="show_delete_page_image_form=true" v-if="!show_delete_page_image_form" class="btn btn-danger mt-4 farsi">
+        حذف تصویر
+    </button>
+    <button @click="show_delete_page_image_form=false" v-if="show_delete_page_image_form"  class="btn btn-secondary mt-4 farsi">
+        انصراف </button>
+    <form @submit.prevent="delete_page_image()" v-if="show_delete_page_image_form">
+        <button type="submit" class="btn btn-danger mt-4 farsi">
+            حذف تصویر
+        </button>
+
+    </form>
+
+</div>
     {% endif %}
 
 </div>

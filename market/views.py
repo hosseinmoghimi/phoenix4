@@ -252,9 +252,7 @@ class ProductViews(View):
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form']=AddProductSpecificationForm()
         context['product'] = product
-        if request.user.has_perm(APP_NAME+".view_orderline"):
-            order_lines=product.orderline_set.all().order_by("-order__date_ordered")
-            context['order_lines'] = order_lines
+        # if request.user.has_perm(APP_NAME+".view_orderline"):
         vertical_navs=[]
         vertical_navs.append({'url':"#product-main",'title':'مشخصات محصول','priority':1})
         vertical_navs.append({'url':"#product-features",'title':'خدمات برای این محصول','priority':2})
@@ -264,7 +262,10 @@ class ProductViews(View):
         context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR
         context['shop_levels'] = (i[0] for i in ShopLevelEnum.choices)
-        if context['me_supplier'] is not None:
+        me_supplier=context['me_supplier']
+        if me_supplier is not None:
+            order_lines=product.orderline_set.all().filter(order__supplier_id=me_supplier.id).order_by("-order__date_ordered")
+            context['order_lines'] = order_lines
             context['supplier_shops'] = ShopRepo(request=request).list(
                 product=product).order_by('unit_name', 'unit_price')
             context['add_shop_form']=AddShopForm()
@@ -280,6 +281,7 @@ class ProductViews(View):
             cart=CartRepo(request=request).cart(customer_id=me_customer.id)
             context['cart']=cart
             line=cart.lines.filter(shop__product=product).first()
+
             if line is not None:
                 in_cart=str(int(line.quantity))+" "+str(line.shop.unit_name)+" در سبد خرید "
                 context['in_cart']=in_cart
