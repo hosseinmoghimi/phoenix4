@@ -34,7 +34,7 @@
 
                     <div class="col-lg-4">
                         <select v-model="add_service_request_form_employee_id"
-                            class="form-control farsi" id="">
+                            class="form-control farsi" id="" required>
                             <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
                             {% for employee in employees %}
                             <option value="{{employee.id}}">{{employee.profile.name}}</option>

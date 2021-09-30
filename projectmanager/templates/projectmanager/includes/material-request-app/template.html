@@ -29,6 +29,38 @@
         <p>
 
 
+            پرسنل :
+            <a target="_blank" href="{{material_request.employee.get_absolute_url}}">
+                <img src="{{material_request.handler.profile.image}}" class="ml-2 rounded-circle" width="32" alt="">
+                {{material_request.handler.profile.name}}
+            </a>
+            <small class="mr-3 text-secondary">
+                شاغل در
+
+            </small>
+            <small class="mr-4">
+
+                <a target="_blank" href="{{material_request.handler.organization_unit.employer.get_absolute_url}}">
+
+                    {{material_request.handler.organization_unit.employer.title}}
+                </a>
+            </small>
+            /
+            <small>
+
+                <a target="_blank" href="{{material_request.handler.organization_unit.get_absolute_url}}">
+
+                    {{material_request.handler.organization_unit.title}}
+                </a>
+            </small>
+
+
+
+
+        </p>
+        <p>
+
+
             تعداد : {{material_request.quantity}}
             <small>
                 {{material_request.unit_name}}
@@ -51,6 +83,8 @@
             </small>
 
         </p>
+        
+
         <table class="table">
       
             
@@ -60,12 +94,12 @@
 
 
 
-                {% for signature in material_request.materialrequestsignature_set.all %}
+                {% for signature in material_request.requestsignature_set.all %}
                 <tr>
                     <td>
                         <div class="media">
-                            <a href="{{signature.profile.get_absolute_url}}">
-                                <img src="{{signature.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
+                            <a href="{{signature.employee.get_absolute_url}}">
+                                <img src="{{signature.employee.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
                             </a>
                             <div class="media-body pr-3">
                                 <div>
@@ -74,8 +108,8 @@
                                 </div>
                                 <div >
 
-                                    <a href="{{signature.profile.get_absolute_url}}">
-                                        {{signature.profile.name}}
+                                    <a href="{{signature.employee.get_absolute_url}}">
+                                        {{signature.employee.profile.name}}
                                     </a>
                                     <small class="mx-2 text-secondary">
 
@@ -103,8 +137,8 @@
                 <tr v-for="signature in signatures">
                     <td>
                         <div class="media">
-                            <a :href="signature.profile.get_absolute_url">
-                                <img :src="signature.profile.image" class="rounded-circle mr-3" width=48 alt="">
+                            <a :href="signature.employee.get_absolute_url">
+                                <img :src="signature.employee.profile.image" class="rounded-circle mr-3" width=48 alt="">
                             </a>
                             <div class="media-body pr-3">
                                 <div>
@@ -114,8 +148,8 @@
 
                                 </div>
                                 <div>
-                                    <a :href="signature.profile.get_absolute_url">
-                                        <span v-text="signature.profile.name"></span>
+                                    <a :href="signature.employee.get_absolute_url">
+                                        <span v-text="signature.employee.profile.name"></span>
                                     </a>
 
                                     <small class="text-secondary" v-text="signature.persian_date_added">

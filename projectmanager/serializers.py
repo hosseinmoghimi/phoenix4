@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, ServiceRequestSignature
+from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest
 from authentication.serializers import ProfileSerializer
 
 
@@ -39,19 +39,19 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields=['id','title','unit_name','unit_price','thumbnail','get_absolute_url']
 
 
-class MaterialRequestSerializer(serializers.ModelSerializer):
-    material=MaterialSerializer()
-    project=ProjectSerializer()
-    profile=ProfileSerializer()
-    class Meta:
-        model=MaterialRequest
-        fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
-
 class EmployeeSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:
         model=Employee
         fields=['id','get_absolute_url','profile']
+class MaterialRequestSerializer(serializers.ModelSerializer):
+    material=MaterialSerializer()
+    project=ProjectSerializer()
+    handler=EmployeeSerializer()
+    class Meta:
+        model=MaterialRequest
+        fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
+
 class EventSerializerForChart(serializers.ModelSerializer):
     class Meta:
         model=Event
@@ -59,12 +59,11 @@ class EventSerializerForChart(serializers.ModelSerializer):
 
 class ServiceRequestSerializer(serializers.ModelSerializer):
     service=ServiceSerializer()
-    employee=EmployeeSerializer()
     project=ProjectSerializer()
-    profile=ProfileSerializer()
+    handler=EmployeeSerializer()
     class Meta:
         model=ServiceRequest
-        fields=['id','service','employee','quantity','persian_date_added','get_edit_url','get_status_tag','project','profile','unit_name','unit_price','get_absolute_url']
+        fields=['id','service','handler','quantity','persian_date_added','get_edit_url','get_status_tag','project','unit_name','unit_price','get_absolute_url']
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model=Event
@@ -80,14 +79,9 @@ class OrganizationUnitSerializer(serializers.ModelSerializer):
     class Meta:
         model=OrganizationUnit
         fields=['id','employer','title','employees','get_absolute_url','get_edit_url','short_description','thumbnail']
-class MaterialRequestSignatureSerializer(serializers.ModelSerializer):
-    profile=ProfileSerializer()
+class RequestSignatureSerializer(serializers.ModelSerializer):
+    employee=EmployeeSerializer()
     class Meta:
-        model=MaterialRequestSignature
-        fields=['id','status','profile','get_edit_url','description','persian_date_added','get_status_color']
+        model=RequestSignature
+        fields=['id','status','employee','get_edit_url','description','persian_date_added','get_status_color']
 
-class ServiceRequestSignatureSerializer(serializers.ModelSerializer):
-    profile=ProfileSerializer()
-    class Meta:
-        model=ServiceRequestSignature
-        fields=['id','status','profile','get_edit_url','description','persian_date_added','get_status_color']

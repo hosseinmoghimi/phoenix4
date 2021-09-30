@@ -5,7 +5,7 @@ from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, Signature
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, MaterialRequestSignature, Project, OrganizationUnit, Location, ProjectManagerPage, Service, ServiceRequest, ServiceRequestSignature
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest
 from utility.persian import PersianCalendar
 
 class ProjectRepo():
@@ -372,19 +372,20 @@ class ServiceRepo():
         return self.organization_unit(*args, **kwargs)
 
     def add_signature(self,service_request_id,status,description=None):
-        if not self.user.has_perm(APP_NAME+".add_servicerequestsignature"):
+        if not self.user.has_perm(APP_NAME+".add_requestsignature"):
             return None
-        signature=ServiceRequestSignature()
+        signature=RequestSignature()
         signature.description=description
         service_request=self.service_request(service_request_id=service_request_id)
         if service_request is not None:
             service_request.status=status
             service_request.save()
-        signature.service_request_id=service_request_id
+        signature.request_id=service_request_id
         signature.status=status
         signature.date_added=timezone.now()
-        signature.profile=ProfileRepo(user=self.user).me
+        signature.employee=EmployeeRepo(request=self.request).me
         signature.save()
+
         return signature
 
     
@@ -444,7 +445,7 @@ class ServiceRepo():
             new_service_request.service.unit_price = new_service_request.unit_price
             new_service_request.service.unit_name = new_service_request.unit_name
             new_service_request.service.save()
-            service_request_signature=ServiceRequestSignature(profile=profile,service_request=new_service_request,status=SignatureStatusEnum.REQUESTED)
+            service_request_signature=RequestSignature(employee=self.employee,request=new_service_request,status=SignatureStatusEnum.REQUESTED)
             service_request_signature.save()
             return new_service_request
 
@@ -681,13 +682,12 @@ class MaterialRepo():
             new_material_request.status = kwargs['status']
         profile = ProfileRepo(user=self.user).me
         new_material_request.creator = self.employee
-        new_material_request.handler_id = handler_id
         if new_material_request.quantity > 0 and new_material_request.unit_price > 0:
             new_material_request.save()
             new_material_request.material.unit_price = new_material_request.unit_price
             new_material_request.material.unit_name = new_material_request.unit_name
             new_material_request.material.save()
-            material_request_signature=MaterialRequestSignature(profile=profile,material_request=new_material_request,status=SignatureStatusEnum.REQUESTED)
+            material_request_signature=RequestSignature(employee=self.employee,request=new_material_request,status=SignatureStatusEnum.REQUESTED)
             material_request_signature.save()
             return new_material_request
 
@@ -711,16 +711,16 @@ class MaterialRepo():
     
     def add_signature(self,material_request_id,status,description=None):
         if self.user.has_perm(APP_NAME+".add_materialrequestsignature"):
-            signature=MaterialRequestSignature()
+            signature=RequestSignature()
             signature.description=description
-            signature.material_request_id=material_request_id
+            signature.request_id=material_request_id
             material_request=self.material_request(material_request_id=material_request_id)
             if material_request is not None:
                 material_request.status=status
                 material_request.save()
             signature.status=status
             signature.date_added=timezone.now()
-            signature.profile=ProfileRepo(user=self.user).me
+            signature.employee=EmployeeRepo(request=self.request).me
             signature.save()
             return signature
 

@@ -47,7 +47,8 @@
                 var posting = $.post(url_add_material_request, payload);
                 posting.fail(function (xhr, status, error) {
                     material_request_app.waiting = false
-                    showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                    // showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                    console.log('خطا در ارتباط')
                 })
                 // Put the results in a div
                 posting.done(function (data) {

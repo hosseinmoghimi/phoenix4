@@ -31,8 +31,8 @@
 
 
             پرسنل :
-            <a target="_blank" href="{{service_request.employee.get_absolute_url}}">
-                <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded" width="32" alt="">
+            <a target="_blank" href="{{service_request.handler.get_absolute_url}}">
+                <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded-circle" width="32" alt="">
                 {{service_request.handler.profile.name}}
             </a>
             <small class="mr-3 text-secondary">
@@ -97,12 +97,12 @@
         <table class="table">
 
             <tbody>
-                {% for signature in service_request.servicerequestsignature_set.all %}
+                {% for signature in service_request.requestsignature_set.all %}
                 <tr>
                     <td>
                         <div class="media">
-                            <a href="{{signature.profile.get_absolute_url}}">
-                                <img src="{{signature.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
+                            <a href="{{signature.employee.get_absolute_url}}">
+                                <img src="{{signature.employee.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
                             </a>
                             <div class="media-body pr-3">
                                 <div>
@@ -111,8 +111,8 @@
                                 </div>
                                 <div>
 
-                                    <a href="{{signature.profile.get_absolute_url}}">
-                                        {{signature.profile.name}}
+                                    <a href="{{signature.employee.get_absolute_url}}">
+                                        {{signature.employee.profile.name}}
                                     </a>
                                     <small class="mx-2 text-secondary">
 
@@ -140,8 +140,8 @@
                 <tr v-for="signature in signatures">
                     <td>
                         <div class="media">
-                            <a :href="signature.profile.get_absolute_url">
-                                <img :src="signature.profile.image" class="rounded-circle mr-3" width=48 alt="">
+                            <a :href="signature.employee.get_absolute_url">
+                                <img :src="signature.employee.profile.image" class="rounded-circle mr-3" width=48 alt="">
                             </a>
                             <div class="media-body pr-3">
                                 <div>
@@ -150,8 +150,8 @@
                                         v-text="signature.status"></span>
                                 </div>
                                 <div>
-                                    <a :href="signature.profile.get_absolute_url">
-                                        <span v-text="signature.profile.name"></span>
+                                    <a :href="signature.employee.get_absolute_url">
+                                        <span v-text="signature.employee.profile.name"></span>
                                     </a>
 
                                     <small class="text-secondary" v-text="signature.persian_date_added">

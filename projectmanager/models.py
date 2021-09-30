@@ -463,7 +463,7 @@ class RequestSignature(models.Model):
     description=models.CharField(_("description"), max_length=200)
     status=models.CharField(_("status"),choices=SignatureStatusEnum.choices,default=SignatureStatusEnum.REQUESTED, max_length=200)
     
-    
+    class_name="requestsignature"
 
     class Meta:
         verbose_name = _("RequestSignature")
@@ -487,3 +487,5 @@ class RequestSignature(models.Model):
     def get_absolute_url(self):
         return reverse("RequestSignature_detail", kwargs={"pk": self.pk})
 
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"

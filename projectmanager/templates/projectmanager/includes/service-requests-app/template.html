@@ -63,10 +63,10 @@
 
                             <td>
 
-                                <a target="_blank" href="{{service_request.employee.get_absolute_url}}">
-                                    <img src="{{service_request.employee.profile.image}}" class="ml-2 rounded-circle"
+                                <a target="_blank" href="{{service_request.handler.get_absolute_url}}">
+                                    <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded-circle"
                                         width="32" alt="">
-                                    {{service_request.employee.profile.name}}
+                                    {{service_request.handler.profile.name}}
                                 </a>
                             </td>
 
@@ -134,10 +134,10 @@
                             </td>
                             <td>
 
-                                <a target="_blank" :href="service_request.employee.get_absolute_url">
-                                    <img :src="service_request.employee.profile.image" class="ml-2 rounded" width="32"
+                                <a target="_blank" :href="service_request.handler.get_absolute_url">
+                                    <img :src="service_request.handler.profile.image" class="ml-2 rounded" width="32"
                                         alt="">
-                                    <span v-text="service_request.employee.profile.name">
+                                    <span v-text="service_request.handler.profile.name">
                                     </span>
                                 </a>
                             </td>

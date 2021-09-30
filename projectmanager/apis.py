@@ -1,5 +1,5 @@
 from utility.persian import PersianCalendar
-from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialRequestSignatureSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, ServiceRequestSerializer, ServiceRequestSignatureSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, RequestSignatureSerializer, ServiceRequestSerializer, ServiceSerializer
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -124,11 +124,11 @@ class ProjectApi(APIView):
                 service_request_id=add_signature_form.cleaned_data['service_request_id']
                 if material_request_id is not None:
                     signature=MaterialRepo(request=request).add_signature(material_request_id=material_request_id,status=status,description=description)
-                    context['signature']=MaterialRequestSignatureSerializer(signature).data
+                    context['signature']=RequestSignatureSerializer(signature).data
                     context['result']=SUCCEED
                 if service_request_id is not None:
                     signature=ServiceRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
-                    context['signature']=ServiceRequestSignatureSerializer(signature).data
+                    context['signature']=RequestSignatureSerializer(signature).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
