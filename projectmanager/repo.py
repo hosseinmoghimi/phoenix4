@@ -393,7 +393,7 @@ class ServiceRepo():
 
     
     def service_requests(self,*args, **kwargs):
-        objects=ServiceRequest.objects.all()
+        objects=ServiceRequest.objects.filter(project__archive=False)
         if 'project_id' in kwargs:
             objects=objects.filter(project_id=kwargs['project_id'])
         if 'service_id' in kwargs:
@@ -728,7 +728,7 @@ class MaterialRepo():
             return signature
 
     def material_requests(self,*args, **kwargs):
-        objects=MaterialRequest.objects.all()
+        objects=MaterialRequest.objects.filter(project__archive=False)
         if 'project_id' in kwargs:
             objects=objects.filter(project_id=kwargs['project_id'])
         if 'material_id' in kwargs:
