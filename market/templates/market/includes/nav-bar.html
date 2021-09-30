@@ -21,7 +21,8 @@
     </div>
 </li>
 
-
+{% if me_customer %}
+  
 <li class="dropdown nav-item">
     <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
         <span class="material-icons">
@@ -64,7 +65,31 @@
         </a>
 
 
+        <a href="{% url 'authentication:logout' %}" class="dropdown-item">
+            <i class="material-icons">
+
+                logout
+            </i>
+            <span class="farsi">
+خروج
+            </span>
+        </a>
+
+
+
 
 
     </div>
 </li>
+{% endif %}
+{% if not profile %}
+<li class="button-container nav-item iframe-extern">
+    <a href="{% url 'authentication:login' %}" target="_blank" class="btn  btn-success mx-2 btn-round btn-block">
+        <i class="material-icons">settings</i>
+        <span class="farsi">
+
+            ورود
+        </span>
+    </a>
+</li>
+{% endif %}
