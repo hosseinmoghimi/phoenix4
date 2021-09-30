@@ -16,6 +16,7 @@
                         {{brand.get_edit_btn|safe}}
                         {% endif %}
                     </h1>
+
                     <h4 class="text-center">{{shop_header_slogan.value}}
                         {% if perms.core.change_parameter %}
 
@@ -23,8 +24,8 @@
 
                         {% endif %}
                     </h4>
-                  
-                    
+
+
 
 
                 </div>
@@ -87,22 +88,37 @@
         </div>
     </div><!-- section -->
 
-      
+
     {% endif %}
     <div class="section">
         <div class="container">
-            <h2 class="section-title text-center">{{category.title}}</h2>
             <div class="text-center">
 
-                <img src="{{brand.image}}" height="96" >
-              </div> 
-              
+                <img src="{{brand.image}}" height="96">
+            </div>
+            <h2 class="section-title text-center">{{brand.title}}
+                {% if perms.market.change_category %}
+                {{brand.get_edit_btn|safe}}
+                {% endif %}
+
+            </h2>
+            {% if brand.url %}
+            <a href="{{brand.url}}" target="_blank">
+                <h4 class="text-center">
+                    <span class="material-icons">
+                        home
+                    </span>
+                    وب سایت
+                    {{brand.persian_title}}
+                </h4>
+            </a>
+            {% endif %}
             <div class="row">
                 <div class="col-md-3">
                     {% include "market/includes/sidebar.html" %}
                 </div>
                 <div class="col-md-9">
-                  
+
                     {% include "market/includes/list-app/template.html" %}
                 </div>
             </div>
