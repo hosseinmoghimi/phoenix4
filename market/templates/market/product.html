@@ -37,18 +37,39 @@
                     <span class="farsi">
                         {{product.category.get_breadcrumb|safe}}
                     </span>
-                    <h2 class="title">{{product.title}}
+                    <h3 class="title">{{product.title}}
                         {% if perms.market.change_product %}
-                        {{product.get_edit_btn|safe}}
+                        <span class="mx-2">
+
+                            {{product.get_edit_btn|safe}}
+                        </span>
                         {% endif %}
-                    </h2>
+                        {% if perms.market.add_categoryproducttop %}
+
+
+                        <form class="text-right d-inline" action="{% url 'market:add_product_for_category_page' %}"
+                            method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{product.id}}" name="product_id">
+                            <button title="افزودن به لیست محصولات برگزیده و یا نه" class="btn btn-info btn-link farsi"
+                                type="submit">
+                                <span class="material-icons">
+                                    verified
+                                </span>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </h3>
+
+                   
+
                     {% if product.barcode %}
-                    <h2>
+                    <h4>
                         <small class="text-muted">
                             کد :
                         </small>
                         {{product.barcode}}
-                    </h2>
+                    </h4>
                     {% endif %}
 
                     {% include "core/includes/page-like-app/template.html" %}
@@ -174,19 +195,7 @@
                 </div>
                 {% endif %}
 
-                {% if perms.market.add_categoryproducttop %}
-                <div class="col-md-12">
 
-                    <form class="text-right" action="{% url 'market:add_product_for_category_page' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" value="{{product.id}}" name="product_id">
-                        <button class="btn btn-info farsi" type="submit">
-                            افزودن به برگزیده های دسته بندی
-                            {{product.category.title}}
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
 
 
             </div>

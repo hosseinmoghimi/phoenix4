@@ -175,6 +175,7 @@ class ProductRepo:
         return product
 
     def add_product_for_shoe(self, *args, **kwargs):
+        old_price = kwargs['old_price'] if 'old_price' in kwargs else None
         title = kwargs['title'] if 'title' in kwargs else None
         availables = kwargs['availables'] if 'availables' in kwargs else None
         barcode = kwargs['barcode'] if 'barcode' in kwargs else None
@@ -218,6 +219,7 @@ class ProductRepo:
                         available=available['available'],
                         supplier=supplier,
                         unit_name=unit_name,
+                        old_price=old_price,
                         product=product,
                         )
                     

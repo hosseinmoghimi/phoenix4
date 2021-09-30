@@ -32,8 +32,10 @@
 
                                 <input v-model="new_product_barcode" required type="text" class="farsi form-control"
                                 placeholder="کد کالا">
-                            <input v-model="buy_price" required type="number" class="farsi form-control"
-                                placeholder="قیمت خرید">
+                                <input v-model="old_price" type="number" class="farsi form-control"
+                                    placeholder="قیمت بدون تخفیف">
+                                    <input v-model="buy_price" required type="number" class="farsi form-control"
+                                        placeholder="قیمت خرید">
                             <input v-model="unit_price" required type="number" class="farsi form-control"
                                 placeholder="قیمت فروش">
 

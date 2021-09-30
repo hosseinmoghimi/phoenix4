@@ -140,6 +140,7 @@ class AddProductForShoeForm(forms.Form):
     availables=forms.CharField( max_length=500, required=False)
     unit_price=forms.IntegerField(required=False)
     buy_price=forms.IntegerField(required=False)
+    old_price=forms.IntegerField(required=False)
     
 class AddProductForShopForm(forms.Form):
     unit_name=forms.CharField(max_length=50, required=False)
