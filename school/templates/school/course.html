@@ -1,35 +1,37 @@
 {% extends "school/layout.html" %}
 {% block content %}
 <h3 class="text-center">
-    مدرسه
+    واحد درسی 
 </h3>
 <div class="card">
     <div class="card-body">
         <div class="mb-3">
             <h4>
 
-                <a href="{{school.get_absolute_url}}">
-                    {{school.title}}
+                <a href="{{course.get_absolute_url}}">
+                    {{course.title}}
                 </a>
-                {% if perms.school.change_school %}
-                {{school.get_edit_btn|safe}}
+                {% if perms.school.change_course %}
+                {{course.get_edit_btn|safe}}
 
                 {% endif %}
             </h4>
         </div>
 
+
+
         <div class="mb-3">
-            {% for classroom in school.classroom_set.all %}
+            {% for book in course.books.all %}
             <h4>
                 <small class="text-muted">
-                    کلاس
+                    کتاب
                 </small>
-                <a href="{{classroom.get_absolute_url}}">
+                <a href="{{book.get_absolute_url}}">
 
-                    {{classroom.title}}
+                    {{book.title}}
                 </a>
-                {% if perms.school.change_classroom %}
-                {{classroom.get_edit_btn|safe}}
+                {% if perms.school.change_book %}
+                {{book.get_edit_btn|safe}}
 
                 {% endif %}
             </h4>

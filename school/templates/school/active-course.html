@@ -1,0 +1,205 @@
+{% extends "school/layout.html" %}
+{% block content %}
+<h3 class="text-center">
+    <small class="text-muted">
+
+        واحد درسی در حال آموزش
+    </small>
+    {{active_course.title}}
+</h3>
+
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    <h4>
+
+                        <a href="{{active_course.get_absolute_url}}">
+                            {{active_course.title}}
+                        </a>
+                        {% if perms.school.change_activecourse %}
+                        {{active_course.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                </div>
+
+                <div class="mb-3">
+                    <h4>
+
+                        <small class="text-muted">
+                            دوره
+                        </small>
+                        <a href="{{active_course.course.get_absolute_url}}">
+                            {{active_course.course.title}}
+                        </a>
+                        {% if perms.school.change_course %}
+                        {{active_course.course.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-body">
+
+                <h4>
+                    دبیران
+                </h4>
+
+                <div class="mb-3">
+                    {% for teacher in active_course.teachers.all %}
+                    <h4>
+                        <small class="text-muted">
+                            دبیر
+                        </small>
+                        <a href="{{teacher.get_absolute_url}}">
+
+                            {{teacher.profile.name}}
+                        </a>
+                        {% if perms.school.change_teacher %}
+                        {{teacher.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% endfor %}
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-body">
+                <h4>
+                    دانش آموزان
+                </h4>
+
+                <div class="mb-3">
+                    {% for student in active_course.students.all %}
+                    <h4>
+                        <small class="text-muted">
+                            دانش آموز
+                        </small>
+                        <a href="{{student.get_absolute_url}}">
+
+                            {{student.profile.name}}
+                        </a>
+                        {% if perms.school.change_student %}
+                        {{student.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% endfor %}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-8">
+
+        <div class="card">
+            <div class="card-body">
+
+                <h4>
+                    کتاب ها
+                </h4>
+                <div class="mb-3">
+                    {% for book in active_course.course.books.all %}
+                    <div class="mb-5">
+                        
+                    <h4>
+                        <small class="text-muted">
+                            کتاب
+                        </small>
+                        <a href="{{book.get_absolute_url}}">
+
+                            {{book.title}}
+                        </a>
+                        {% if perms.school.change_book %}
+                        {{book.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+
+                    {% for document in book.documents.all %}
+                    <h5 class="mr-5">
+                        <small class="text-muted">
+                            دانلود
+                        </small>
+                        <a href="{{document.get_download_url}}">
+
+                            {{document.title}}
+                        </a>
+                        {% if perms.core.change_document %}
+                        {{document.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h5>
+                    {% endfor %}
+                    
+                </div>
+                    {% endfor %}
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4>
+                    جلسات </h4>
+
+                <div class="mb-3">
+                    {% for session in active_course.session_set.all %}
+                    <h4>
+                        <small class="text-muted">
+                            جلسه شماره
+                            {{session.session_no}}
+                        </small>
+                        -
+                        <a href="{{session.get_absolute_url}}">
+
+                            {{session.title}}
+                        </a>
+                        {% if perms.school.change_session %}
+                        {{session.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% endfor %}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
