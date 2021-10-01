@@ -69,16 +69,7 @@ class Employee(models.Model):
             </i>
         </a>
         """
-    def service_requests(self,*args, **kwargs):
-        service_requests=self.servicerequest_set.all()
-        from django.db.models import Q
-        if 'undone' in kwargs and kwargs['undone']==True:
-            service_requests=service_requests.filter(
-                Q(status=RequestStatusEnum.IN_PROGRESS)|
-                Q(status=RequestStatusEnum.ACCEPTED)|
-                Q(status=RequestStatusEnum.REQUESTED)
-                )
-        return service_requests
+    
         
     def get_dashboard_url(self):
         return reverse(APP_NAME+":dashboard",kwargs={'employee_id':self.pk})

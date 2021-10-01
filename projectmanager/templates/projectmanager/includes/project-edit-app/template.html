@@ -21,6 +21,9 @@
 
                 <form @submit.prevent="edit_project()">
                     <div class="row">
+                        <div class="col-12">
+                            <input type="text" v-model="title" class="form-control" required placeholder="عنوان پروژه">
+                        </div>
                         <div class="col-4 text-right mb-3">
                             <span class="farsi text-right">
 

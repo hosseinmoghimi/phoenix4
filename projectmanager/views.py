@@ -359,8 +359,10 @@ class EmployeeViews(View):
         context = getContext(request)
         context.update(ProfileContext(request=request,profile=employee.profile))
         context['employee'] = employee
-        service_requests=employee.service_requests(undone=True)
+        service_requests=ServiceRepo(request=request).service_requests(employee_id=employee.id)
         context['service_requests']=service_requests
+        material_requests=MaterialRepo(request=request).material_requests(employee_id=employee.id)
+        context['material_requests']=material_requests
         context['layout'] = "base-layout.html"
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)

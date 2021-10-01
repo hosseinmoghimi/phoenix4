@@ -26,6 +26,9 @@
                         <th>
                             تاریخ درخواست
                         </th>
+                        <th>
+                            مسئول خرید
+                        </th>
                         {% if not project %}
 
                         <th>
@@ -57,6 +60,13 @@
                                     {{material_request.date_added|to_persian_date|safe}}
                                 </small>
                             </td>
+                            <td>
+                                <a target="_blank" href="{{material_request.handler.get_absolute_url}}">
+                                    <img src="{{material_request.handler.profile.image}}" class="ml-2 rounded-circle"
+                                        width="32" alt="">
+                                    {{material_request.handler.profile.name}}
+                                </a>
+                            </td>
                             {% if not project %}
 
                             <td>
@@ -68,7 +78,6 @@
                                 </a>
                             </td>
                             {% endif %}
-
                             <td>
 
                                 <a target="_blank" href="{{material_request.material.get_absolute_url}}">
@@ -109,12 +118,21 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% if add_material_request_form %}
 
                         <tr v-for="material_request in material_requests">
                             <td>
                                 <small v-text="material_request.persian_date_added">
 
                                 </small>
+                            </td>
+                            <td>
+                                <a target="_blank" :href="material_request.handler.get_absolute_url">
+                                    <img :src="material_request.handler.profile.image" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    <span v-text="material_request.handler.profile.name">
+                                    </span>
+                                </a>
                             </td>
                             <td>
                                 <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32" alt="">
@@ -155,16 +173,18 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        {% endif %}
                     </tbody>
                 </table>
 
                 {% if add_material_request_form %}
-              {% include "projectmanager/includes/material-requests-app/form.html" %}
+                {% include "projectmanager/includes/material-requests-app/form.html" %}
 
 
                 {% endif %}
             </div>
             <div class="card-footer ">
+                {% if project %}
                 <p>
 
                     <span class="small text-secondary">
@@ -179,6 +199,8 @@
 
 
                 </p>
+
+                {% endif %}
 
 
 

@@ -15,6 +15,7 @@
             waiting: false,
             sum_material_requests: sum_material_requests,
             show_add_material_request_form: false,
+            add_material_request_form_employee_id:""
         },
         methods: {
             to_price: function (value, CURRENCY) {
@@ -37,6 +38,7 @@
                     unit_price: this.add_material_request_form_unit_price,
                     unit_name: this.add_material_request_form_unit_name,
                     quantity: this.add_material_request_form_quantity,
+                    employee_id:this.add_material_request_form_employee_id,
                     // status: this.add_material_request_form_status,
                     // description: this.add_material_request_form_description,
                     csrfmiddlewaretoken: csrfmiddlewaretoken

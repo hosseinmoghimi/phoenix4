@@ -25,6 +25,7 @@
                     </small>
                 </p>
                 <div class="row">
+                    
                     <div class="col-4">
                         <input required type="number" min="0" placeholder="تعداد" class="form-control"
                             v-model="add_material_request_form_quantity">
@@ -42,7 +43,16 @@
                         <input required type="number" v-model="add_material_request_form_unit_price"
                             class="farsi form-control" placeholder="قیمت واحد">
                     </div>
+<div class="col-4">
+    <select v-model="add_material_request_form_employee_id"
+    class="form-control farsi" id="" required>
+    <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
+    {% for employee in employees %}
+    <option value="{{employee.id}}">{{employee.profile.name}}</option>
+    {% endfor %}
+</select>
 
+</div>
                     <div class="col-12 text-left">
                         <button class="btn btn-secondary" @click="show_add_material_request_form=false"
                             type="reset">Cancel</button>

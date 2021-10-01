@@ -95,6 +95,7 @@ class ProjectApi(APIView):
             if edit_project_form.is_valid():
                 log+=1
                 archive=edit_project_form.cleaned_data['archive']
+                title=edit_project_form.cleaned_data['title']
                 project_id=edit_project_form.cleaned_data['project_id']
                 percentage_completed=edit_project_form.cleaned_data['percentage_completed']
                 start_date=edit_project_form.cleaned_data['start_date']
@@ -105,7 +106,7 @@ class ProjectApi(APIView):
                 
                 start_date=PersianCalendar().to_gregorian(start_date)
                 end_date=PersianCalendar().to_gregorian(end_date)
-                project=ProjectRepo(request=request).edit_project(archive=archive,contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
+                project=ProjectRepo(request=request).edit_project(title=title,archive=archive,contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
                 if project is not None: 
                     context['project']=ProjectSerializer(project).data
                     context['result']=SUCCEED
@@ -234,11 +235,12 @@ class MaterialApi(APIView):
                 log+=1
                 material_id=add_material_request_form.cleaned_data['material_id']
                 # material_title=add_material_request_form.cleaned_data['material_title']
+                employee_id=add_material_request_form.cleaned_data['employee_id']
                 project_id=add_material_request_form.cleaned_data['project_id']
                 quantity=add_material_request_form.cleaned_data['quantity']
                 unit_name=add_material_request_form.cleaned_data['unit_name']
                 unit_price=add_material_request_form.cleaned_data['unit_price']
-                material_request=MaterialRepo(request=request).add_material_request(unit_price=unit_price,unit_name=unit_name,quantity=quantity,material_id=material_id,project_id=project_id)
+                material_request=MaterialRepo(request=request).add_material_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,material_id=material_id,project_id=project_id)
                 if material_request is not None:
                     context['material_request']=MaterialRequestSerializer(material_request).data
                     context['result']=SUCCEED

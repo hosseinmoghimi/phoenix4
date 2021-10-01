@@ -30,11 +30,13 @@ class AddEventForm(forms.Form):
 class AddMaterialRequestForm(forms.Form):
     project_id=forms.IntegerField(required=True)
     quantity=forms.IntegerField(required=True)
+    employee_id=forms.IntegerField(required=False)
     material_id=forms.IntegerField(required=True)
     unit_price=forms.IntegerField(required=True)
     unit_name=forms.CharField(max_length=50, required=True)
 
 class EditProjectForm(forms.Form):
+    title=forms.CharField(max_length=100, required=False)
     project_id=forms.IntegerField(required=True)
     percentage_completed=forms.IntegerField(required=True)
     employer_id=forms.IntegerField(required=False)

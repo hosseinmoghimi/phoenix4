@@ -20,6 +20,7 @@
     } catch (error) {
 
     }
+    let title="{{project.title}}"
     let project_app = new Vue({
         el: "#project-app",
         data: {
@@ -33,6 +34,7 @@
             contractor_id: contractor_id,
             SUCCEED: false,
             archive: false,
+            title:title,
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -48,6 +50,7 @@
                     status: this.status,
                     archive: this.archive,
                     employer_id: this.employer_id,
+                    title:this.title,
                     contractor_id: this.contractor_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }

@@ -191,8 +191,8 @@
               {% include "projectmanager/includes/service-requests-app/form.html" %}
                 {% endif %}
             </div>
-            {% if add_service_request_form %}
             <div class="card-footer ">
+                {% if project %}
 
                 <p>
 
@@ -211,8 +211,8 @@
 
 
 
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
 </div>

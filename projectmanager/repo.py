@@ -63,7 +63,9 @@ class ProjectRepo():
             if 'contractor_id' in kwargs:
                 project.contractor_id=kwargs['contractor_id']
             if 'employer_id' in kwargs:
-                project.employer_id=kwargs['employer_id']      
+                project.employer_id=kwargs['employer_id']     
+            if 'title' in kwargs:
+                project.title=kwargs['title']     
             if 'archive' in kwargs:
                 project.archive=kwargs['archive']       
             print(kwargs)      
@@ -398,6 +400,8 @@ class ServiceRepo():
             objects=objects.filter(project_id=kwargs['project_id'])
         if 'service_id' in kwargs:
             objects=objects.filter(service_id=kwargs['service_id'])
+        if 'employee_id' in kwargs:
+            objects=objects.filter(handler_id=kwargs['employee_id'])
         return objects
      
     def list(self, *args, **kwargs):
@@ -671,6 +675,8 @@ class MaterialRepo():
             new_material_request.material_id = kwargs['material_id']
         if 'quantity' in kwargs:
             new_material_request.quantity = kwargs['quantity']
+        if 'employee_id' in kwargs:
+            new_material_request.handler_id = kwargs['employee_id']
         if 'handler_id' in kwargs:
             new_material_request.handler_id = kwargs['handler_id']
         if 'unit_name' in kwargs:
@@ -733,4 +739,6 @@ class MaterialRepo():
             objects=objects.filter(project_id=kwargs['project_id'])
         if 'material_id' in kwargs:
             objects=objects.filter(material_id=kwargs['material_id'])
+        if 'employee_id' in kwargs:
+            objects=objects.filter(handler_id=kwargs['employee_id'])
         return objects

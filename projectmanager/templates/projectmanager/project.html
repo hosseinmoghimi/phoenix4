@@ -48,7 +48,13 @@
 
 
                         <a href="{{project.employer.get_absolute_url}}">
-                            {{project.employer.title}}
+                            <span class="material-icons text-danger">
+                                store
+                            </span>
+                            <span class="text-danger">
+
+                                {{project.employer.title}}
+                            </span>
                         </a>
                     </p>
 
@@ -59,7 +65,16 @@
                         </span>
 
                         <a href="{{project.contractor.get_absolute_url}}">
-                            {{project.contractor.title}}
+
+
+
+                            <span class="material-icons text-success">
+                                engineering
+                            </span>
+                            <span class="text-success">
+
+                                {{project.contractor.title}}
+                            </span>
                         </a>
                     </p>
                     <P>
@@ -107,7 +122,7 @@
                         </span>
 
                         <span class="text-primary">
-                            {{project.weight}} 
+                            {{project.weight}}
 
                         </span>
                         <br>
@@ -117,7 +132,7 @@
                         </span>
 
                         <span class="text-primary">
-                            {{project.sum_weight}} 
+                            {{project.sum_weight}}
                         </span>
 
 
@@ -138,13 +153,13 @@
                     <p>
 
                         <a href="{{project.get_event_chart_url}}">
-                         نمودار رویداد های پروژه
+                            نمودار رویداد های پروژه
                         </a>
                     </p>
- <p>
+                    <p>
 
                         <a href="{{project.get_guantt_chart_url}}">
-                         نمودار نمودار گانت زیر پروژه ها
+                            نمودار نمودار گانت زیر پروژه ها
                         </a>
                     </p>
                 </div>
@@ -164,7 +179,7 @@
             {% include "core/includes/page-description-app/short-description.html" %}
         </div>
 
-        
+
         <div class="col-md-12 mb-5">
             {% include "core/includes/page-description-app/full-description.html" %}
         </div>
