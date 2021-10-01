@@ -44,6 +44,7 @@ class ProfileRepo():
         
         if selected_user is None :            
             result=FAILED
+            profile=None
             message="چنین کاربری وجود ندارد."
             return (result,profile,request,message)
 
@@ -57,14 +58,14 @@ class ProfileRepo():
             message="کلمه عبور با موفقیت تغییر یافت."
             return (result,profile,request,message)
 
-        selected_user=authenticate(request=request,username=username,password=old_password)                                    
+        selected_user=authenticate(request=request,username=username,password=old_password)  
         if selected_user is not None:
             selected_user.set_password(new_password)
             selected_user.save()
             if selected_user is not None:
-                request=self.login(request=request,username=username,password=new_password)
+                request=authenticate(request=request,username=username,password=new_password)
                 result=SUCCEED
-                profile=Profile.objects.filter(user=selected_user)
+                profile=Profile.objects.filter(user=selected_user).first()
                 message="کلمه عبور با موفقیت تغییر یافت."
                 return (result,profile,request,message)
         

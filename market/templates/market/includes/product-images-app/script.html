@@ -44,10 +44,9 @@
                             console.log(data)
                             if (data.result === 'SUCCEED') {
                                 product_images_app.images.push(data.page_image.image)
-                                product_images_app.add_page_image_form_title = ''
+                                // product_images_app.add_page_image_form_title = ''
                                 product_images_app.add_page_image_form_file = ''
                                 product_images_app.show_add_page_image_form = false
-
                             }
                         }
                         else {
@@ -57,7 +56,7 @@
 
             },
             delete_page_image: function () {
-                let image_id=selected_image.id
+                let image_id=this.selected_image.id
                 let payload = {
                     image_id: image_id,
                     page_id: page_id,
@@ -68,6 +67,8 @@
                     console.log(data)
                     if (data.result === "SUCCEED") {
                         product_images_app.images = product_images_app.images.filter(im => im.id != image_id)
+                        product_images_app.selected_image=product_images_app.images[0]
+
                     }
 
                 })

@@ -52,32 +52,32 @@
                             {% csrf_token %}
                             <input type="hidden" value="{{product.id}}" name="product_id">
                             {% if product.is_top_in_category %}
-                               <button title="حذف از لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
+                            <button title="حذف از لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
                                 type="submit">
                                 <!-- <span class="material-icons">
                                     verified
                                 </span> -->
                                 <span class="material-icons">
                                     star
-                                    </span>
+                                </span>
                             </button>
                             {% else %}
                             <button title="افزودن به لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
-                            type="submit">
-                            <!-- <span class="material-icons">
+                                type="submit">
+                                <!-- <span class="material-icons">
                                 verified
                             </span> -->
-                            <span class="material-icons">
-                                star_border
+                                <span class="material-icons">
+                                    star_border
                                 </span>
-                        </button>
+                            </button>
                             {% endif %}
-                           
+
                         </form>
                         {% endif %}
                     </h3>
 
-                   
+
 
                     {% if product.barcode %}
                     <h4>
@@ -113,6 +113,27 @@
                     <div class="text-right farsi my-2">
                         از فروشگاه های زیر ارزان تر بخرید.
                     </div>
+                    {% endif %}
+
+
+                    {% if me_supplier %}
+                    <div class="farsi text-right">
+                        <div>
+
+                            موجودی در فروشگاه
+                            <a href="{{me_supplier.get_absolute_url}}">
+                                {{me_supplier.title}}
+                            </a>
+                        </div>
+                        {% for available in availables %}
+
+                        <div>
+                            {{available.quantity}}
+                            {{available.unit_name}}
+                        </div>
+                        {% endfor %}
+                    </div>
+
                     {% endif %}
                     <!-- <h3 class="main-price">$335</h3> -->
                     <div id="accordion" role="tablist">
