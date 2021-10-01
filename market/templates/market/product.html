@@ -51,12 +51,28 @@
                             method="POST">
                             {% csrf_token %}
                             <input type="hidden" value="{{product.id}}" name="product_id">
-                            <button title="افزودن به لیست محصولات برگزیده و یا نه" class="btn btn-info btn-link farsi"
+                            {% if product.is_top_in_category %}
+                               <button title="حذف از لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
                                 type="submit">
-                                <span class="material-icons">
+                                <!-- <span class="material-icons">
                                     verified
-                                </span>
+                                </span> -->
+                                <span class="material-icons">
+                                    star
+                                    </span>
                             </button>
+                            {% else %}
+                            <button title="افزودن به لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
+                            type="submit">
+                            <!-- <span class="material-icons">
+                                verified
+                            </span> -->
+                            <span class="material-icons">
+                                star_border
+                                </span>
+                        </button>
+                            {% endif %}
+                           
                         </form>
                         {% endif %}
                     </h3>
