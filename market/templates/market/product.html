@@ -127,9 +127,13 @@
                         </div>
                         {% for available in availables %}
 
+                        
                         <div>
                             {{available.quantity}}
-                            {{available.unit_name}}
+                            <span class="badge badge-rose">
+
+                                {{available.unit_name}}
+                            </span>
                         </div>
                         {% endfor %}
                     </div>

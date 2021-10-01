@@ -274,6 +274,7 @@ class ProductViews(View):
         context['shop_levels'] = (i[0] for i in ShopLevelEnum.choices)
         me_supplier=context['me_supplier']
         if me_supplier is not None:
+            context['availables']=ShopRepo(request=request).availables(product_id=product.id,supplier_id=me_supplier.id)
             order_lines=product.orderline_set.all().filter(order__supplier_id=me_supplier.id).order_by("-order__date_ordered")
             context['order_lines'] = order_lines
             context['supplier_shops'] = ShopRepo(request=request).list(

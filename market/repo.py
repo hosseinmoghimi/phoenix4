@@ -769,7 +769,21 @@ class ShopRepo:
             self.user = kwargs['user']
         self.objects = Shop.objects
         self.profile = ProfileRepo(user=self.user).me
-
+    def availables(self,*args, **kwargs):
+        product_id=kwargs['product_id']
+        supplier_id=kwargs['supplier_id']
+        shops=self.objects.filter(supplier_id=supplier_id).filter(product_id=product_id)
+        availables=[]
+        unit_names=[]
+        for shop in shops:
+            if shop.unit_name not in unit_names:
+                unit_names.append(shop.unit_name)
+        for unit_name in unit_names:
+            quantity=0
+            for shop in self.objects.filter(supplier_id=supplier_id).filter(product_id=product_id).filter(unit_name=unit_name):
+                quantity+=shop.available
+            availables.append({'quantity':quantity,'unit_name':unit_name})
+        return availables
     def list(self, *args, **kwargs):
         objects = self.objects.all()
         if 'supplier' in kwargs:
