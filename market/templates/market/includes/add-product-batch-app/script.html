@@ -3,9 +3,9 @@
     let url_add_product = "{% url 'market:add_product_for_shoe' %}"
     let category_id = parseInt("{{category.id}}")
     let availables = []
-    sizes = [37, 38, 39, 40, 41, 42, 43]
+    sizes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]
     sizes.forEach(size => {
-        availables.push({name:"سایز",value:size,available:0})
+        availables.push({ name: "سایز", value: size, available: 0 })
     });
 
     let products_app = new Vue({
@@ -17,8 +17,8 @@
             availables: availables,
             unit_price: "",
             buy_price: "",
-            new_product_barcode:"",
-            old_price:"",
+            new_product_barcode: "",
+            old_price: "",
         }
         ,
         methods: {
@@ -30,7 +30,7 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.new_product_title,
                     category_id: category_id,
-                    barcode:this.new_product_barcode,
+                    barcode: this.new_product_barcode,
                     availables: availables,
                     supplier_id: supplier_id,
                     unit_price: this.unit_price,
