@@ -56,7 +56,7 @@
                             {% if perms.stock.change_document %}
 
                             <a target="_blank" title="ویرایش" href="{{document.get_edit_url}}">
-                                <i class="material-icons">edit</i>
+                                <i class="material-icons  text-warning">edit</i>
                             </a>
                             {% endif %}
                         </td>
@@ -92,7 +92,7 @@
                             {% if perms.stock.change_document %}
 
                             <a target="_blank" title="ویرایش" :href="document.get_edit_url">
-                                <i class="material-icons">edit</i>
+                                <i class="material-icons text-warning">edit</i>
                             </a>
                             {% endif %}
                         </td>

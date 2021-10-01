@@ -28,8 +28,10 @@
                         add_stock_app.first_name=""
                         add_stock_app.stock1=""
                         add_stock_app.stock2=""
-                        stocks_list_app.stocks.push(data.stock)
+                        // stocks_list_app.stocks.push(data.stock)
+                        stocks=stocks.reverse()
                         stocks.push(data.stock)
+                        stocks=stocks.reverse()
                     }
                 })
             },

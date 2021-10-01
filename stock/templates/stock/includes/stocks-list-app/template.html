@@ -42,11 +42,20 @@
 
                 </td>
                 <td>
-                    <a target="_blank" :href="stock.get_edit_url">
+                    <a target="_blank" title="جزئیات" :href="stock.get_absolute_url">
                         <i class="material-icons">
+                            ballot
+                        </i>
+                    </a>
+                    {% if perms.stock.change_stock %}
+
+                    <a target="_blank" title="ویرایش" :href="stock.get_edit_url">
+                        <i class="material-icons text-warning">
                             edit
                         </i>
                     </a>
+                    {% endif %}
+
                 </td>
             </tr>
 

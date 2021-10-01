@@ -38,6 +38,10 @@ class BasicViews(View):
                 context=getContext(request)
                 stocks=StockRepo(request=request).list(search_for=search_for)
                 context['stocks']=stocks
+                agents=AgentRepo(request=request).list()
+                context['agents']=agents
+                context['agents_s']=json.dumps(AgentSerializer(agents,many=True).data)
+                context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
                 return render(request,TEMPLATE_ROOT+'index.html',context)
         return self.home(request=request,*args, **kwargs)
     def home(self,request,*args, **kwargs):
@@ -45,8 +49,8 @@ class BasicViews(View):
         stocks=StockRepo(request=request).list()
         agents=AgentRepo(request=request).list()
         context['stocks']=stocks
-        context['agents']=agents
         context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
+        context['agents']=agents
         context['agents_s']=json.dumps(AgentSerializer(agents,many=True).data)
         context['add_stock_form']=AddStockForm()
         return render(request,TEMPLATE_ROOT+'index.html',context)
