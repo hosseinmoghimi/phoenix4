@@ -24,16 +24,17 @@ def save_profile_receiver(sender,instance,*args, **kwargs):
     #         profile.save()
     #     except:
     #         pass
-    # try:
-    #     from market.models import Customer
-    #     customers=Customer.objects.filter(profile=profile)
-    #     if len(customers)==0:
-    #         customer=Customer()
-    #         customer.profile=profile
-    #         customer.title=instance.first_name+" "+instance.last_name
-    #         customer.save()
-    # except:
-    #     pass
+    try:
+        from market.models import Customer,ShopRegion
+        customers=Customer.objects.filter(profile=profile)
+        if len(customers)==0:
+            customer=Customer()
+            customer.profile=profile
+            customer.region=ShopRegion.objects.first()
+            customer.title=instance.first_name+" "+instance.last_name
+            customer.save()
+    except:
+        pass
     
 
 post_save.connect(create_profile_receiver, sender=settings.AUTH_USER_MODEL)

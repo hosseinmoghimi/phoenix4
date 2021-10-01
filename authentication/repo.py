@@ -3,6 +3,7 @@ from core.constants import FAILED, SUCCEED
 from .models import *
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+
 class ProfileRepo():
     def __init__(self,*args, **kwargs):
         self.request=None

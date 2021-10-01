@@ -37,7 +37,7 @@
                     <td colspan="2" class="text-left">
                         <button type="button" @click="checkout()" class="btn btn-info btn-round farsi"
                             v-if="!checkout_done">تایید و ادامه فرآیند خرید<i
-                                class="material-icons">keyboard_arrow_right</i></button>
+                                class="material-icons">keyboard_arrow_left</i></button>
                     </td>
                 </tr>
 
@@ -71,14 +71,22 @@
         </div>
 
         <div class="form-group bmd-form-group">
-            <label for="address{{order.id}}" class="bmd-label-floating">آدرس تحویل</label>
-            <input type="text" name="address" required id="address{{order.id}}" class="form-control text-right farsi" >
+            <!-- <label for="address{{order.id}}" class="bmd-label-floating">آدرس تحویل</label> -->
+        <div class="form-group bmd-form-group">
+            <input value="خواف " type="text" name="address" placeholder="آدرس تحویل" required id="address{{order.id}}" class="form-control text-right farsi" >
         </div>
 
 
 
-        <button type="submit" class="btn btn-info btn-round farsi">تایید سفارش {{order.supplier.title}}<i
-                class="material-icons" aria-hidden="true">keyboard_arrow_left</i></button>
+        <button type="submit" class="btn btn-info btn-round farsi">
+            
+            <i
+
+                class="material-icons" aria-hidden="true">keyboard_arrow_left</i>
+            تایید سفارش {{order.supplier.title}}
+            
+            
+            </button>
     </form>
 
     {% endfor %}

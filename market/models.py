@@ -31,7 +31,7 @@ class UnitName(models.Model):
 
     class Meta:
         verbose_name = _("UnitName")
-        verbose_name_plural = _("UnitNames")
+        verbose_name_plural = _("واحدهای فروش")
 
     def __str__(self):
         return self.name
@@ -68,7 +68,7 @@ class Product(MarketPage):
 
     class Meta:
         verbose_name = _("Product")
-        verbose_name_plural = _("Products")
+        verbose_name_plural = _("محصولات و کالاها")
 
     def save(self,*args, **kwargs):
         self.class_name='product'
@@ -98,7 +98,7 @@ class Category(MarketPage):
 
     class Meta:
         verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+        verbose_name_plural = _("دسته بندی ها")
 
     def save(self,*args, **kwargs):
         self.class_name='category'
@@ -113,7 +113,7 @@ class CategoryProductTop(models.Model):
     class_name="categoryproducttop"
     class Meta:
         verbose_name = _("CategoryProductTop")
-        verbose_name_plural = _("CategoryProductTops")
+        verbose_name_plural = _("کالاهای صدر لیست دسته بندی")
 
     def __str__(self):
         return f"{self.category.title} : {self.product.title}"
@@ -129,7 +129,7 @@ class ShopRegion(models.Model):
 
     class Meta:
         verbose_name = _("ShopRegion")
-        verbose_name_plural = _("ShopRegions")
+        verbose_name_plural = _("ناحیه های بازار")
 
     def __str__(self):
         return self.name
@@ -160,7 +160,7 @@ class Customer(models.Model):
 
     class Meta:
         verbose_name = _("Customer")
-        verbose_name_plural = _("Customers")
+        verbose_name_plural = _("مشتریان")
 
     def __str__(self):
         return self.profile.name
@@ -200,7 +200,7 @@ class Order(models.Model):
         return sum
     class Meta:
         verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
+        verbose_name_plural = _("سفارشات")
     def total(self):
         return self.lines_total()+self.ship_fee
     def __str__(self):
@@ -259,7 +259,7 @@ class OrderLine(models.Model):
 
     class Meta:
         verbose_name = _("OrderLine")
-        verbose_name_plural = _("OrderLines")
+        verbose_name_plural = _("ریز سفارشات")
 
     def __str__(self):
         return f"{str(self.order)} : {self.product.title} : {self.quantity} {self.unit_name} {to_price(self.unit_price)}ی/ {to_price(self.unit_price*self.quantity)}"
@@ -276,7 +276,7 @@ class CartLine(models.Model):
     
     class Meta:
         verbose_name = _("CartLine")
-        verbose_name_plural = _("CartLines")
+        verbose_name_plural = _("سبد های خرید")
 
     def __str__(self):
         return f"{str(self.customer)} : {self.quantity} {self.shop.unit_name} {self.shop.product.title} از {self.shop.supplier.title}"
@@ -297,7 +297,7 @@ class Offer(MarketPage):
 
     class Meta:
         verbose_name = _("Offer")
-        verbose_name_plural = _("Offers")
+        verbose_name_plural = _("جشنواره ها")
 
     def save(self,*args, **kwargs):
         self.class_name='offer'
@@ -313,7 +313,7 @@ class Blog(MarketPage):
 
     class Meta:
         verbose_name = _("Blog")
-        verbose_name_plural = _("Blogs")
+        verbose_name_plural = _("مقالات")
 
 
     def save(self,*args, **kwargs):
@@ -335,7 +335,7 @@ class Shop(models.Model):
     class_name="shop"
     class Meta:
         verbose_name = _("Shop")
-        verbose_name_plural = _("Shops")
+        verbose_name_plural = _("کالاهای موجود و آماده فروش")
 
     def get_delete_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
@@ -366,7 +366,7 @@ class Supplier(MarketPage):
 
     class Meta:
         verbose_name = _("Supplier")
-        verbose_name_plural = _("Suppliers")
+        verbose_name_plural = _("فروشنده ها")
 
     def save(self,*args, **kwargs):
         self.class_name="supplier"
@@ -384,7 +384,7 @@ class Shipper(MarketPage):
 
     class Meta:
         verbose_name = _("Shipper")
-        verbose_name_plural = _("Shippers")
+        verbose_name_plural = _("پیک های ارسال کالا")
 
     def save(self,*args, **kwargs):
         self.class_name="shipper"
@@ -527,7 +527,7 @@ class ProductSpecification(models.Model):
     class_name="productspecification"
     class Meta:
         verbose_name = _("ProductSpecification")
-        verbose_name_plural = _("ProductSpecifications")
+        verbose_name_plural = _("ویژگی های محصولات")
 
     def __str__(self):
         return f"{self.product.title} @ {self.name} : {self.value}"
@@ -551,7 +551,7 @@ class Cart(models.Model):
 
     class Meta:
         verbose_name = _("Cart")
-        verbose_name_plural = _("Carts")
+        verbose_name_plural = _("سبد های خرید مشتریان")
 
     def __str__(self):
         return self.customer.profile.name
@@ -578,7 +578,7 @@ class FinancialReport(models.Model):
         return ADMIN_URL+APP_NAME+"/"+self.class_name+"/"+str(self.pk)+"/change/"
     class Meta:
         verbose_name = _("FinancialReport")
-        verbose_name_plural = _("FinancialReports")
+        verbose_name_plural = _("گزارش های مالی")
 
     def __str__(self):
         return self.title
@@ -673,7 +673,7 @@ class Employee(models.Model):
 
     class Meta:
         verbose_name = _("Employee")
-        verbose_name_plural = _("Employees - کارکنان")
+        verbose_name_plural = _("کارکنان")
 
     def get_absolute_url(self):
         return reverse(APP_NAME+':employee',kwargs={'pk':self.pk})
@@ -693,7 +693,7 @@ class OrderInWareHouse(models.Model):
     
     class Meta:
         verbose_name = _("ثبت سفارش در دفتر انبار")
-        verbose_name_plural = _("OrderInWareHouses")
+        verbose_name_plural = _("ثبت سفارش در دفتر انبار")
 
     def __str__(self):
         return f"""سفارش شماره {self.order.id} {("ورود به" if self.direction else "خروج از")} {self.ware_house.name}"""
