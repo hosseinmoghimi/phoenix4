@@ -33,8 +33,8 @@
                     <td>
                         <span class="material-icons">
                             paid
-                            </span>
-                                 <span>{{payment.title}}</span>
+                        </span>
+                        <span>{{payment.title}}</span>
                     </td>
 
                     <td>
@@ -54,12 +54,12 @@
                     </td>
                     <td>
                         {% if payment.image_origin %}
-                          
+
                         <a class="mx-3" href="{{payment.image}}" target="_blank">
                             <span class="material-icons text-danger">
                                 collections
-                                </span>
-                          
+                            </span>
+
                             <span class="text-danger">
 
                                 تصویر
@@ -69,9 +69,9 @@
                         <a class="mx-3 text-secondary" target="_blank">
                             <span class="material-icons text-secondary">
                                 collections
-                                </span>
-                                
-                                تصویر
+                            </span>
+
+                            تصویر
                         </a>
                         {% endif %}
 
@@ -92,9 +92,9 @@
                     <td>
                         <span class="material-icons">
                             paid
-                            </span>
-                            
-                            <span v-text="payment.title"></span>
+                        </span>
+
+                        <span v-text="payment.title"></span>
                     </td>
 
                     <td>
@@ -112,23 +112,22 @@
                             <span v-text="payment.persian_date_paid"></span>
                         </small>
                     </td>
-                    <td> <a class="mx-3" 
-                        v-if="payment.image!='/media/'" :href="payment.image" target="_blank">
-                        <span class="material-icons text-danger">
-                            collections
+                    <td> <a class="mx-3" v-if="payment.image!='/media/'" :href="payment.image" target="_blank">
+                            <span class="material-icons text-danger">
+                                collections
                             </span>
-                            
+
                             <span class="text-primary">
-                           
-                            تصویر
-                        </span>
+
+                                تصویر
+                            </span>
                         </a>
-                        <a target="_blank"  v-if="payment.image==='/media/'" class="mx-3 text-secondary docs-creator">
-                              <span class="material-icons text-secondary">
-                                    collections
-                                    </span>
-                                    <span class="text-secondary">
-                              
+                        <a target="_blank" v-if="payment.image==='/media/'" class="mx-3 text-secondary docs-creator">
+                            <span class="material-icons text-secondary">
+                                collections
+                            </span>
+                            <span class="text-secondary">
+
                                 تصویر
                             </span>
                         </a>
