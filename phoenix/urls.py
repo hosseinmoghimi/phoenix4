@@ -10,7 +10,7 @@ from django.conf.urls import url
 # from authentication.views import AuthenticationView
 
 urlpatterns = [
-    path('phoenix4/', include('market.urls')),
+    path('phoenix4/', include('market.urls')),#for bad redirect
     path('market/', include('market.urls')),
     path('bms/', include('bms.urls')),
     path('school/', include('school.urls')),
