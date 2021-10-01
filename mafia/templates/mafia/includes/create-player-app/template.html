@@ -1,0 +1,107 @@
+{% if add_player_form %}
+<span v-show="!show_add_player_form" title="افزودن بازیکن جدید" class="material-icons" style="cursor: pointer;"
+    @click="show_add_player_form=!show_add_player_form">
+    loupe
+</span>
+
+<div v-show="show_add_player_form">
+
+    <form @submit.prevent="add_player">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">
+
+                        نام
+                    </label>
+                    <input required="required" type="text" v-model="first_name" aria-describedby="emailHelp"
+                        placeholder="نام" class="form-control">
+
+                    <small id="emailHelp" class="form-text farsi text-muted">
+                        شناسه صفحه مرتبط را وارد کنید.
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">
+
+                        نام خانوادگی
+                    </label>
+                    <input required="required" type="text" v-model="last_name" aria-describedby="emailHelp"
+                        placeholder="نام خانوادگی" class="form-control">
+
+                    <small id="emailHelp" class="form-text farsi text-muted">
+                        شناسه صفحه مرتبط را وارد کنید.
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">
+
+                        نام کاربری
+                    </label>
+                    <input required="required" type="text" v-model="username" aria-describedby="emailHelp"
+                        placeholder="نام کاربری" class="form-control">
+
+                    <small id="emailHelp" class="form-text farsi text-muted">
+                        شناسه صفحه مرتبط را وارد کنید.
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">
+
+                        کلمه عبور
+                    </label>
+                    <input required="required" type="password" v-model="password" aria-describedby="emailHelp"
+                        placeholder="کلمه عبور" class="form-control">
+
+                    <small id="emailHelp" class="form-text farsi text-muted">
+                        شناسه صفحه مرتبط را وارد کنید.
+                    </small>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">
+
+                        شماره همراه
+                    </label>
+                    <input required="required" type="text" v-model="mobile" aria-describedby="emailHelp"
+                        placeholder="شماره همراه" class="form-control">
+
+                    <small id="emailHelp" class="form-text farsi text-muted">
+                        شناسه صفحه مرتبط را وارد کنید.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <button class="btn btn-success" type="submit">افزودن</button>
+                
+                <div style="cursor: pointer;" class="my-2 farsi text-center" @click="show_add_player_form=false">انصراف</div>
+            </div>
+        </div>
+        <p v-if="success_message" class="alert alert-success" v-text="message">
+
+        </p>
+
+        <p v-if="danger_message" class="alert alert-success" v-text="message">
+
+        </p>
+
+    </form>
+</div>
+{% endif %}

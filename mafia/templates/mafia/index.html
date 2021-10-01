@@ -6,25 +6,8 @@
         {% include "mafia/includes/select-player-app/template.html" %}
     </div>
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-<h5 class="text-center">
-    لیست آخرین بازی ها
-</h5>
-            </div>
-            <div class="card-body">
-                <ul class="nav flex-column pr-0">
-
-                    {% for game in games %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{game.get_absolute_url}}">بازی شماره {{game.id}}</a>
-                    </li>
-
-                    {% endfor %}
-                </ul>
-
-            </div>
-        </div>
+      
+        {% include "mafia/includes/games-list-app/template.html" %}
     </div>
 
     <div class="col-md-4">
