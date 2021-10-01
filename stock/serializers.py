@@ -1,12 +1,17 @@
 from authentication.repo import ProfileRepo
 from rest_framework import serializers
-from .models import Document, Payment, Stock
+from .models import Agent, Document, Payment, Stock
 from authentication.serializers import ProfileSerializer
 
+class AgentSerializer(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    class Meta:
+        model =Agent
+        fields = ['id','profile','get_absolute_url','get_edit_url']
 
 class StockSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
-    agent=ProfileSerializer
+    agent=AgentSerializer()
     class Meta:
         model =Stock
         fields = ['id','profile','stock1','stock2','get_absolute_url','get_edit_url','get_stock_amount','agent']

@@ -42,7 +42,9 @@ class StockApi(APIView):
                 log+=1
                 first_name=add_stock_form.cleaned_data['first_name']
                 last_name=add_stock_form.cleaned_data['last_name']
-                stock=StockRepo(request=request).add_stock(first_name=first_name,last_name=last_name)
+                stock1=add_stock_form.cleaned_data['stock1']
+                stock2=add_stock_form.cleaned_data['stock2']
+                stock=StockRepo(request=request).add_stock(first_name=first_name,last_name=last_name,stock1=stock1,stock2=stock2)
                 context['stock']=StockSerializer(stock).data
                 context['result']=SUCCEED
         context['log']=log
