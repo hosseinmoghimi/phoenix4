@@ -53,7 +53,7 @@ class AddPageImageForm(forms.Form):
 
 class AddPageCommentForm(forms.Form):
     page_id=forms.IntegerField(required=True)
-    comment=forms.CharField(max_length=200, required=True)
+    comment=forms.CharField(max_length=500, required=True)
     
 
 class DeletePageCommentForm(forms.Form):
