@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from core.views import CoreContext
+from vehicles.forms import AddWorkShiftForm
 from vehicles.repo import DriverRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import DriverSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -59,5 +60,7 @@ class VehicleViews(View):
         vehicle_work_events_s=json.dumps(VehicleWorkEventSerializer(vehicle_work_events,many=True).data)
         context['vehicle_work_events_s']=vehicle_work_events_s
 
+        if request.user.has_perm(APP_NAME+".add_workshif"):
+            context['add_work_shift_form']=AddWorkShiftForm()
 
         return render(request,TEMPLATE_FOLDER+"vehicle.html",context)

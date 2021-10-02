@@ -1,0 +1,41 @@
+{% if add_work_shift_form %}
+
+<form @submit.prevent="add_work_shift()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">شروع شیفت</label>
+                <date-picker v-model="start_datetime"></date-picker>
+
+                <small id="emailHelp" class="form-text farsi text-muted">
+                    شناسه صفحه مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">پایان شیفت</label>
+                <date-picker v-model="end_datetime"></date-picker>
+
+                <small id="emailHelp" class="form-text farsi text-muted">
+                    شناسه صفحه مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+    <select name="" id="" class="form-control">
+        <template v-for="driver in drivers">
+
+            <option :value="driver.id">
+                <span v-text="driver.profile.name"></span>
+            </option>
+        </template>
+    </select>
+
+
+</form>
+{% endif %}

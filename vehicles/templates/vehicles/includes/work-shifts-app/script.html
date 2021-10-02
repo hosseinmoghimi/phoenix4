@@ -18,9 +18,26 @@
         data: {
             work_shifts: work_shifts,
             drivers: drivers,
+            start_datetime: current_datetime,
+            end_datetime: current_datetime,
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+
         },
         methods: {
             to_price: value => to_price(value),
+            add_work_shift: function () {
+                let url_add_work_shift = "{% url 'vehicles:add_work_shift' %}"
+                let payload = {
+                    vehicle_id: vehicle_id,
+                    driver_id: this.driver_id,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+
+                }
+            },
         }
     })
 </script>
