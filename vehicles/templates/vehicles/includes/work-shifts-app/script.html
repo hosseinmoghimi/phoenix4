@@ -20,6 +20,7 @@
             drivers: drivers,
             start_datetime: current_datetime,
             end_datetime: current_datetime,
+            driver_id:"",
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -37,6 +38,7 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
 
                 }
+                console.log(payload)
             },
         }
     })

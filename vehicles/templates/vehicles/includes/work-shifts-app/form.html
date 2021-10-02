@@ -27,7 +27,7 @@
         </div>
 
     </div>
-    <select name="" id="" class="form-control">
+    <select v-model="driver_id" id="" class="form-control">
         <template v-for="driver in drivers">
 
             <option :value="driver.id">

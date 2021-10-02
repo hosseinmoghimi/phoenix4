@@ -80,6 +80,8 @@ def PageContext(request, page):
     
     context['images_s']=json.dumps(ImageSerializer(page.images(),many=True).data)
     context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
+    if page.keywords is not None:
+        context['keywords']=page.keywords
     return context
 
 

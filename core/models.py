@@ -203,6 +203,7 @@ class BasicPage(models.Model):
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
     related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط"))
+    keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
     @property
     def full_title(self,*args, **kwargs):
         seperator="/"
