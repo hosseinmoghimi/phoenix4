@@ -222,6 +222,6 @@ systemctl start emperor.uwsgi.service
 
 restart service:
 ```bash
-systemctl restart emperor.uwsgi.service
+sudo systemctl restart emperor.uwsgi.service
 sudo /etc/init.d/nginx restart
 ```

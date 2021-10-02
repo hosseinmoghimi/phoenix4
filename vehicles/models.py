@@ -1,3 +1,4 @@
+from django.db.models.fields import CharField
 from core.models import BasicPage
 from django.db import models
 from django.db.models import Sum
@@ -58,7 +59,7 @@ class Vehicle(models.Model):
             pic='grader.jpg'
         return f'{STATIC_URL}{APP_NAME}/images/thumbnail/{pic}/'
     def get_absolute_url(self):
-        return reverse(APP_NAME+":vehicle", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":vehicle", kwargs={"vehicle_id": self.pk})
 
 
 class VehicleLocation(models.Model):
@@ -107,7 +108,7 @@ class Driver(models.Model):
         verbose_name_plural = _("Drivers")
 
     def __str__(self):
-        return self.profile.name()
+        return self.profile.name
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":driver", kwargs={"pk": self.pk})
@@ -121,9 +122,9 @@ class WorkShift(models.Model):
     driver=models.ForeignKey("driver", verbose_name=_("driver"), on_delete=models.CASCADE)
     start_time=models.DateTimeField(_("start_time"), auto_now=False, auto_now_add=False)
     end_time=models.DateTimeField(_("end_date"), auto_now=False, auto_now_add=False)
-    description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
     income=models.IntegerField(_("درآمد"),default=0)
     outcome=models.IntegerField(_("هزینه"),default=0)
+    description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
     def persian_start_time(self):
         return PersianCalendar().from_gregorian(self.start_time)
     def persian_end_time(self):

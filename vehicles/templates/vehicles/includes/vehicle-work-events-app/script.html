@@ -1,0 +1,24 @@
+{% if DEBUG %}
+<script>
+    /*
+    must be initialized:
+      drivers_s
+      work_shifts_s
+
+    */
+</script>
+{% endif %}
+<script>
+
+    let vehicle_work_events = JSON.parse(`{{vehicle_work_events_s|escapejs}}`)
+
+    let vehicle_work_events_app = new Vue({
+        el: "#vehicle-work-events-app",
+        data: {
+            vehicle_work_events: vehicle_work_events,
+        },
+        methods: {
+            to_price: value => to_price(value),
+        }
+    })
+</script>

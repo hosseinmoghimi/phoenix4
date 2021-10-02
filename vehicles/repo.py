@@ -2,7 +2,9 @@ from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
 from .models import Vehicle,VehicleWorkEvent,Driver,Maintenance,WorkShift,Area,ServiceMan
 from .apps import APP_NAME
+
 class VehicleRepo():
+    
     def __init__(self,*args, **kwargs):
         self.request = None
         self.user = None
@@ -13,8 +15,10 @@ class VehicleRepo():
             self.user = kwargs['user']
         self.objects = Vehicle.objects
         self.me=ProfileRepo(user=self.user).me
+
     def list(self,*args, **kwargs):
         return self.objects.all()
+
     def vehicle(self,*args, **kwargs):
         if 'vehicle_id' in kwargs:
             pk=kwargs['vehicle_id']
@@ -23,6 +27,8 @@ class VehicleRepo():
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+
 class ServiceManRepo():
     def __init__(self,*args, **kwargs):
         self.request = None
@@ -46,7 +52,6 @@ class ServiceManRepo():
         return self.objects.filter(pk=pk).first()
    
 
-
 class AreaRepo():
     def __init__(self,*args, **kwargs):
         self.request = None
@@ -68,8 +73,7 @@ class AreaRepo():
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
-   
-  
+     
 
 class DriverRepo():
     def __init__(self,*args, **kwargs):
@@ -92,10 +96,7 @@ class DriverRepo():
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
-   
-  
-   
-
+      
 
 class MaintenanceRepo():
     def __init__(self,*args, **kwargs):
@@ -156,6 +157,7 @@ class MaintenanceRepo():
                 objects=objects.filter(maintenance_type=maintenance_type)
         return objects
 
+
 class WorkShiftRepo():
     def __init__(self,*args, **kwargs):
         self.request = None
@@ -168,7 +170,10 @@ class WorkShiftRepo():
         self.objects = WorkShift.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'vehicle_id' in kwargs:
+            objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
+        return objects
     def work_shift(self,*args, **kwargs):
         if 'work_shift_id' in kwargs:
             pk=kwargs['work_shift_id']
@@ -179,11 +184,6 @@ class WorkShiftRepo():
         return self.objects.filter(pk=pk).first()
    
   
-
-
-
-
-
 class VehicleWorkEventRepo():
     def __init__(self,*args, **kwargs):
         self.request = None
@@ -196,7 +196,10 @@ class VehicleWorkEventRepo():
         self.objects = VehicleWorkEvent.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'vehicle_id' in kwargs:
+            objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
+        return objects
     def vehicle_work_event(self,*args, **kwargs):
         if 'vehicle_work_event_id' in kwargs:
             pk=kwargs['vehicle_work_event_id']

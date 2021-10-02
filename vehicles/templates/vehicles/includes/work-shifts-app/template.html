@@ -1,0 +1,81 @@
+<div class="card" id="work-shifts-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            شیفت های کاری
+        </h4>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    ماشین
+                </th>
+
+                <th>
+                    راننده
+                </th>
+<th>
+شروع / پایان
+</th>
+                <th>
+                    درآمد
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="work_shift in work_shifts">
+                    <td>
+                        <span v-text="work_shift.vehicle.name"></span>
+                    </td>
+                    <td>
+                        <a :href="work_shift.driver.get_absolute_url">
+
+                            <img :src="work_shift.driver.profile.image" class="rounded-circle" width="48">
+                            <span v-text="work_shift.driver.profile.name"></span>
+                        </a>
+
+                    </td>
+                    <td>
+                        <div>
+                            <small class="text-secondary" v-text="work_shift.persian_start_time"></small>
+
+                        </div>
+                        <div>
+                            <small class="text-secondary" v-text="work_shift.persian_end_time"></small>
+
+                        </div>
+
+                    </td>
+                    <td>
+                        <div class="text-success">
+                            <span v-text="to_price(work_shift.income)"></span>
+                            <small class="text-muted mx-2">
+
+                                {{CURRENCY}}
+                            </small>
+
+                        </div>
+                        
+                        <div class="text-danger">
+                            <span v-text="to_price(work_shift.outcome)"></span>
+                            <small class="text-muted mx-2">
+
+                                {{CURRENCY}}
+                            </small>
+
+                        </div>
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        {% if add_work_shift_form %}
+        {% include "vehicles/includes/work-shifts-app/form.html" %}
+
+        {% endif %}
+
+    </div>
+</div>

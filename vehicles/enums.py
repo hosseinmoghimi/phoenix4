@@ -26,6 +26,7 @@ class VehicleBrandEnum(TextChoices):
     BENZ='بنز',_('بنز')
     ISUZU='ایسوزو',_('ایسوزو')
     SCANIA='اسکانیا',_('اسکانیا')
+    MAZDA='مزدا',_('مزدا')
     VOLVO='ولوو',_('ولوو')
     CATERPILAR='کاترپیلار',_('کاترپیلار')
     HYUNDAI='هیوندای',_('هیوندای')

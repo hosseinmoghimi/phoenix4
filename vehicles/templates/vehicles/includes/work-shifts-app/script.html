@@ -1,0 +1,26 @@
+{% if DEBUG %}
+<script>
+    /*
+    must be initialized:
+      drivers_s
+      work_shifts_s
+
+    */
+</script>
+{% endif %}
+<script>
+
+    let work_shifts = JSON.parse(`{{work_shifts_s|escapejs}}`)
+    let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
+
+    let work_shifts_app = new Vue({
+        el: "#work-shifts-app",
+        data: {
+            work_shifts: work_shifts,
+            drivers: drivers,
+        },
+        methods: {
+            to_price: value => to_price(value),
+        }
+    })
+</script>
