@@ -225,7 +225,7 @@ class BasicApi(APIView):
                 page_id = delete_page_image_form.cleaned_data['page_id']
                 image_id = delete_page_image_form.cleaned_data['image_id']
                 done = PageImageRepo(request=request).delete_page_image(
-                    image_id=image_id, page_id=page_id)
+                    image_id=image_id, page_id=page_id,delete_image=True)
                 if done :
                     context['result'] = SUCCEED
         context['log'] = log

@@ -290,9 +290,13 @@ class PageImageRepo:
         return new_page_image
     def delete_page_image(self,image_id,page_id,*args, **kwargs):
         if self.user.has_perm(APP_NAME+".delete_pageimage"):
+                
             pi=PageImage.objects.filter(image_id=image_id).filter(page_id=page_id)
             if len(pi)>0:
                 pi.delete()
+                if 'delete_image' in kwargs and kwargs['delete_image']:
+                    Image.objects.filter(pk=image_id).delete()
+
                 return True
   
 

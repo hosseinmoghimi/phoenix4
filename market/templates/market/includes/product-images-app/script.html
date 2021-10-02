@@ -56,7 +56,7 @@
 
             },
             delete_page_image: function () {
-                let image_id=this.selected_image.id
+                let image_id = this.selected_image.id
                 let payload = {
                     image_id: image_id,
                     page_id: page_id,
@@ -67,8 +67,12 @@
                     console.log(data)
                     if (data.result === "SUCCEED") {
                         product_images_app.images = product_images_app.images.filter(im => im.id != image_id)
-                        product_images_app.selected_image=product_images_app.images[0]
+                        if(product_images_app.images.length>0)
+                            product_images_app.selected_image = product_images_app.images[0]
+                        else
+                            product_images_app.selected_image={ image: "{{SITE_URL}}static/market/img/pages/image/product.jpg" , thumbnail: "{{SITE_URL}}static/market/img/pages/image/product.jpg" }
 
+                        console.log(product_images_app.images)
                     }
 
                 })
