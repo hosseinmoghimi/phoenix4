@@ -8,9 +8,12 @@
     <div class="card-body">
         <table class="table table-striped">
             <thead>
+                {% if not area %}
+
                 <th>
                     محدوده
                 </th>
+                {% endif %}
 
                 {% if not vehicle %}
                 <th>
@@ -18,9 +21,12 @@
                 </th>
                 {% endif %}
 
+                {% if not driver %}
+
                 <th>
                     راننده
                 </th>
+                {% endif %}
                 <th>
                     شروع / پایان
                 </th>
@@ -30,6 +36,8 @@
             </thead>
             <tbody>
                 <tr v-for="work_shift in work_shifts">
+                    {% if not area %}
+
                     <td>
                         <a :href="work_shift.area.get_absolute_url">
 
@@ -37,6 +45,7 @@
                         </a>
 
                     </td>
+                    {% endif %}
                     {% if not vehicle %}
 
                     <td>
@@ -46,6 +55,8 @@
                         </a>
                     </td>
                     {% endif %}
+                    {% if not driver %}
+
                     <td>
                         <a :href="work_shift.driver.get_absolute_url">
 
@@ -54,6 +65,7 @@
                         </a>
 
                     </td>
+                    {% endif %}
                     <td>
                         <div>
                             <small class="text-secondary" v-text="work_shift.persian_start_time"></small>

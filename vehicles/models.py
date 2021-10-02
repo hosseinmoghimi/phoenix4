@@ -94,7 +94,7 @@ class Area(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":area", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":area", kwargs={"area_id": self.pk})
 
 
 class Driver(models.Model):
@@ -111,7 +111,7 @@ class Driver(models.Model):
         return self.profile.name
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":driver", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":driver", kwargs={"driver_id": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/driver/{self.pk}/change/'
 

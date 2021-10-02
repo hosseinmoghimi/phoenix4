@@ -182,6 +182,10 @@ class WorkShiftRepo():
         objects = self.objects.all()
         if 'vehicle_id' in kwargs:
             objects = objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'area_id' in kwargs:
+            objects = objects.filter(area_id=kwargs['area_id'])
+        if 'driver_id' in kwargs:
+            objects = objects.filter(driver_id=kwargs['driver_id'])
         return objects
 
     def work_shift(self, *args, **kwargs):

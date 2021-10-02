@@ -33,5 +33,56 @@
       </div>
     </div>
   </div>
+
+
+  <div class="col-md-4">
+    <div class="card">
+
+      <div class="card-header">
+        <h3 class="title text-center">
+          محدوده ها
+        </h3>
+      </div>
+      <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+          {% for area in areas %}
+
+          <li class="nav-item">
+            <a class="nav-link farsi docs-creator" href="{{area.get_absolute_url}}">
+              {{area.name}}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+
+      <div class="card-header">
+        <h3 class="title text-center">
+          راننده
+        </h3>
+      </div>
+      <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+          {% for driver in drivers %}
+
+          <li class="nav-item">
+            <a class="nav-link farsi docs-creator" href="{{driver.get_absolute_url}}">
+              <img src="{{driver.profile.image}}" class="rounded-circle" width="48" alt="">
+              {{driver.profile.name}}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 {% endblock content %}

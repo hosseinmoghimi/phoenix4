@@ -7,28 +7,41 @@
                     vehicle_id
                     areas
     */
+    let work_shifts = JSON.parse(`{{work_shifts_s|escapejs}}`)
 </script>
 {% endif %}
-<script>
 
-    let work_shifts = JSON.parse(`{{work_shifts_s|escapejs}}`)
+{% if add_work_shift_form %}
+<script>
     let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
     let areas = JSON.parse(`{{areas_s|escapejs}}`)
-
-    let work_shifts_app = new Vue({
-        el: "#work-shifts-app",
-        data: {
+     data= {
             work_shifts: work_shifts,
             drivers: drivers,
             start_datetime: current_datetime,
             end_datetime: current_datetime,
-            driver_id: "2",
+            driver_id: "",
             areas: areas,
-            area_id: "2",
+            area_id: "",
             description: "",
-            income: "250000",
-            outcome: "35000",
-        },
+            income: "",
+            outcome: "",
+        }
+</script>
+{% else %}
+<script>
+    data= {
+            work_shifts: work_shifts,
+          
+        }
+</script>
+{% endif %}
+<script>
+
+
+    let work_shifts_app = new Vue({
+        el: "#work-shifts-app",
+        data: data,
         components: {
             DatePicker: VuePersianDatetimePicker
 

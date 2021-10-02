@@ -24,8 +24,16 @@ def getContext(request,*args, **kwargs):
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
+
         vehicles=VehicleRepo(request=request).list()
         context['vehicles']=vehicles
+
+        areas=AreaRepo(request=request).list(*args, **kwargs)
+        context['areas']=areas
+
+        drivers=DriverRepo(request=request).list(*args, **kwargs)
+        context['drivers']=drivers
+
         return render(request,TEMPLATE_FOLDER+"index.html",context)
 
 
@@ -71,3 +79,43 @@ class VehicleViews(View):
             context['add_work_shift_form']=AddWorkShiftForm()
 
         return render(request,TEMPLATE_FOLDER+"vehicle.html",context)
+
+
+
+
+class AreaViews(View):
+    def area(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        area=AreaRepo(request=request).area(*args, **kwargs)
+        context['area']=area
+
+
+        
+        work_shifts=WorkShiftRepo(request=request).list(*args, **kwargs)
+        context['work_shifts']=work_shifts
+        work_shifts_s=json.dumps(WorkShiftSerializer(work_shifts,many=True).data)
+        context['work_shifts_s']=work_shifts_s
+        
+
+        return render(request,TEMPLATE_FOLDER+"area.html",context)
+
+        
+class DriverViews(View):
+    def driver(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        driver=DriverRepo(request=request).driver(*args, **kwargs)
+        context['driver']=driver
+
+
+        
+        work_shifts=WorkShiftRepo(request=request).list(*args, **kwargs)
+        context['work_shifts']=work_shifts
+        work_shifts_s=json.dumps(WorkShiftSerializer(work_shifts,many=True).data)
+        context['work_shifts_s']=work_shifts_s
+        
+
+        return render(request,TEMPLATE_FOLDER+"driver.html",context)
