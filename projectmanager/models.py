@@ -215,8 +215,8 @@ class Material(ProjectManagerPage):
 class Service(ProjectManagerPage):
     # service_date=models.DateTimeField(_("تاریخ ارائه خدمات"), auto_now=False, auto_now_add=False)
     # project_for=models.ForeignKey("Project",related_name='workservices', verbose_name=_("پروژه مرتبط"), on_delete=models.CASCADE)
-    unit_price=models.IntegerField(_("هزینه پیش فرض خدمات"))
-    unit_name=models.CharField(_("نام واحد"),max_length=50)
+    unit_price=models.IntegerField(_("هزینه پیش فرض خدمات"),default=0)
+    unit_name=models.CharField(_("نام واحد"),max_length=50,default="سرویس")
     def childs(self):
         return Service.objects.filter(parent_id=self.pk)
     def save(self,*args, **kwargs):
