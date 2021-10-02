@@ -19,15 +19,32 @@ class WorkShiftApi(APIView):
             add_work_shift_form=AddWorkShiftForm(request.POST)
             if add_work_shift_form.is_valid():
                 log=3
-                location=add_work_shift_form.cleaned_data['location']
-                title=add_work_shift_form.cleaned_data['title']
-                page_id=add_work_shift_form.cleaned_data['page_id']
-                work_shift=WorkShiftRepo(request=request).add_work_shift(page_id=page_id,location=location,title=title)
+                
+                driver_id=add_work_shift_form.cleaned_data['driver_id']
+                vehicle_id=add_work_shift_form.cleaned_data['vehicle_id']
+                start_datetime=add_work_shift_form.cleaned_data['start_datetime']
+                end_datetime=add_work_shift_form.cleaned_data['end_datetime']
+                area_id=add_work_shift_form.cleaned_data['area_id']
+                description=add_work_shift_form.cleaned_data['description']
+                income=add_work_shift_form.cleaned_data['income']
+                outcome=add_work_shift_form.cleaned_data['outcome']
+                end_datetime=PersianCalendar().to_gregorian(end_datetime)
+                start_datetime=PersianCalendar().to_gregorian(start_datetime)
+                work_shift=WorkShiftRepo(request=request).add_work_shift(
+                    area_id=area_id,
+                    income=income,
+                    outcome=outcome,
+                    description=description,
+                    driver_id=driver_id,
+                    vehicle_id=vehicle_id,
+                    start_datetime=start_datetime,
+                    end_datetime=end_datetime)
                 
                 if work_shift is not None:
                     log=4
-                    work_shift=WorkShiftSerializer(location).data
+                    work_shift=WorkShiftSerializer(work_shift).data
                     context['work_shift']=work_shift
                     context['result']=SUCCEED
+        context['log']=log
         return JsonResponse(context)
     

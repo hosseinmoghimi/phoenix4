@@ -2,7 +2,8 @@ from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
 from .models import Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
 from .apps import APP_NAME
-
+from django.utils import timezone
+now=timezone.now()
 
 class VehicleRepo():
 
@@ -193,7 +194,28 @@ class WorkShiftRepo():
         return self.objects.filter(pk=pk).first()
 
     def add_work_shift(self, *args, **kwargs):
-        pass
+        if not self.user.has_perm(APP_NAME+".add_workshift"):
+            return
+        area_id=kwargs['area_id'] if 'area_id' in kwargs else 0
+        vehicle_id=kwargs['vehicle_id'] if 'vehicle_id' in kwargs else 0
+        start_datetime=kwargs['start_datetime'] if 'start_datetime' in kwargs else now
+        end_datetime=kwargs['end_datetime'] if 'end_datetime' in kwargs else now
+        driver_id=kwargs['driver_id'] if 'driver_id' in kwargs else 0
+        income=kwargs['income'] if 'income' in kwargs else 0
+        outcome=kwargs['outcome'] if 'outcome' in kwargs else 0
+        description=kwargs['description'] if 'description' in kwargs else ""
+
+        work_shift=WorkShift()
+        work_shift.area_id=area_id
+        work_shift.vehicle_id=vehicle_id
+        work_shift.start_time=start_datetime
+        work_shift.end_time=end_datetime
+        work_shift.driver_id=driver_id
+        work_shift.income=income
+        work_shift.outcome=outcome
+        work_shift.description=description
+        work_shift.save()
+        return work_shift
 
 
 class VehicleWorkEventRepo():

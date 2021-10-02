@@ -9,15 +9,21 @@
         <table class="table table-striped">
             <thead>
                 <th>
+                    محدوده
+                </th>
+
+                {% if not vehicle %}
+                <th>
                     ماشین
                 </th>
+                {% endif %}
 
                 <th>
                     راننده
                 </th>
-<th>
-شروع / پایان
-</th>
+                <th>
+                    شروع / پایان
+                </th>
                 <th>
                     درآمد
                 </th>
@@ -25,8 +31,21 @@
             <tbody>
                 <tr v-for="work_shift in work_shifts">
                     <td>
-                        <span v-text="work_shift.vehicle.name"></span>
+                        <a :href="work_shift.area.get_absolute_url">
+
+                            <span v-text="work_shift.area.name"></span>
+                        </a>
+
                     </td>
+                    {% if not vehicle %}
+
+                    <td>
+                        <a :href="work_shift.vehicle.get_absolute_url">
+
+                            <span v-text="work_shift.vehicle.name"></span>
+                        </a>
+                    </td>
+                    {% endif %}
                     <td>
                         <a :href="work_shift.driver.get_absolute_url">
 
@@ -55,7 +74,7 @@
                             </small>
 
                         </div>
-                        
+
                         <div class="text-danger">
                             <span v-text="to_price(work_shift.outcome)"></span>
                             <small class="text-muted mx-2">
