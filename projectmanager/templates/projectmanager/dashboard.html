@@ -14,28 +14,35 @@
 
             </h3>
 
-            <div class="media">
+            <div class="media my-4">
                 <img src="{{employee.profile.image}}" class="rounded-circle" width="96" alt="">
                 <div class="media-body mr-3">
                     <div>
-                        <a href="{{employee.get_absolute_url}}">
-
+                        <a href="{{employee.profile.get_absolute_url}}">
+                            <i class="material-icons text-info">
+                                person
+                            </i>
                             {{employee.profile.name}}
                         </a>
                     </div>
-                    <div>
+                    <div class="mt-2">
+                        <a href="{{employee.organization_unit.employer.get_absolute_url}}">
+                            <i class="material-icons text-success">
+                                store
+                            </i>
+                            {{employee.organization_unit.employer.title}}
+                        </a>
+                    </div>
+                    <div class="mt-2">
                         <a href="{{employee.organization_unit.get_absolute_url}}">
+                            <i class="material-icons text-danger">
+                                apartment
+                            </i>
 
                             {{employee.organization_unit.title}}
                         </a>
                     </div>
 
-                    <div>
-                        <a href="{{employee.organization_unit.employer.get_absolute_url}}">
-
-                            {{employee.organization_unit.employer.title}}
-                        </a>
-                    </div>
 
                 </div>
             </div>
@@ -43,14 +50,14 @@
         </div>
     </div>
     <div class="col-md-4"></div>
-  
-    
-<div class="col-md-12">
-    {% include "projectmanager/includes/service-requests-app/template.html" %}
-</div>
-<div class="col-md-12">
-    {% include "projectmanager/includes/material-requests-app/template.html" %}
-</div>
+
+
+    <div class="col-md-12">
+        {% include "projectmanager/includes/service-requests-app/template.html" %}
+    </div>
+    <div class="col-md-12">
+        {% include "projectmanager/includes/material-requests-app/template.html" %}
+    </div>
 </div>
 {% endblock %}
 
