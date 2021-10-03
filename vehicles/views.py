@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from core.views import CoreContext
-from vehicles.forms import AddWorkShiftForm
-from vehicles.repo import AreaRepo, DriverRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import AreaSerializer, DriverSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.enums import MaintenanceEnum
+from vehicles.forms import AddMaintenanceForm, AddWorkShiftForm
+from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, ServiceManRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, ServiceManSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
 from django.views import View
 import json
@@ -31,6 +32,11 @@ class BasicViews(View):
         areas=AreaRepo(request=request).list(*args, **kwargs)
         context['areas']=areas
 
+
+        
+        service_mans=ServiceManRepo(request=request).list(*args, **kwargs)
+        context['service_mans']=service_mans
+
         drivers=DriverRepo(request=request).list(*args, **kwargs)
         context['drivers']=drivers
 
@@ -55,6 +61,8 @@ class VehicleViews(View):
 
 
         
+
+        
         work_shifts=WorkShiftRepo(request=request).list(*args, **kwargs)
         context['work_shifts']=work_shifts
         work_shifts_s=json.dumps(WorkShiftSerializer(work_shifts,many=True).data)
@@ -70,13 +78,24 @@ class VehicleViews(View):
 
 
         
-        areas=AreaRepo(request=request).list(*args, **kwargs)
-        context['areas']=areas
-        areas_s=json.dumps(AreaSerializer(areas,many=True).data)
-        context['areas_s']=areas_s
 
         if request.user.has_perm(APP_NAME+".add_workshif"):
             context['add_work_shift_form']=AddWorkShiftForm()
+            areas=AreaRepo(request=request).list(*args, **kwargs)
+            context['areas']=areas
+            areas_s=json.dumps(AreaSerializer(areas,many=True).data)
+            context['areas_s']=areas_s
+
+        if request.user.has_perm(APP_NAME+".add_maintenance"):
+            context['add_maintenance_form']=AddMaintenanceForm()
+            context['maintenance_types']=(i[0] for i in MaintenanceEnum.choices)
+            maintenances=MaintenanceRepo(request=request).list(*args, **kwargs)
+            context['maintenances_s']=json.dumps(MaintenanceSerializer(maintenances,many=True).data)
+            
+            service_mans=ServiceManRepo(request=request).list(*args, **kwargs)
+            context['service_mans']=service_mans
+            context['service_mans_s']=json.dumps(ServiceManSerializer(service_mans,many=True).data)
+
 
         return render(request,TEMPLATE_FOLDER+"vehicle.html",context)
 
@@ -101,7 +120,25 @@ class AreaViews(View):
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
 
-        
+
+class MaintenanceViews(View):
+    def maintenance(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        maintenance=MaintenanceRepo(request=request).maintenance(*args, **kwargs)
+        context['maintenance']=maintenance
+
+
+        maintenances=MaintenanceRepo(request=request).list(maintenance_type=maintenance.maintenance_type)
+        context['maintenances']=maintenances
+        context['maintenances_s']=json.dumps(MaintenanceSerializer(maintenances,many=True).data)
+            
+
+
+        return render(request,TEMPLATE_FOLDER+"maintenance.html",context)
+
+
 class DriverViews(View):
     def driver(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -119,3 +156,16 @@ class DriverViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"driver.html",context)
+class ServiceManViews(View):
+    def service_man(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        service_man=ServiceManRepo(request=request).service_man(*args, **kwargs)
+        context['service_man']=service_man
+
+        maintenances=MaintenanceRepo(request=request).list(*args, **kwargs)
+        context['maintenances_s']=json.dumps(MaintenanceSerializer(maintenances,many=True).data)
+            
+    
+        return render(request,TEMPLATE_FOLDER+"service-man.html",context)

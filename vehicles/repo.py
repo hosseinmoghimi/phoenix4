@@ -119,9 +119,19 @@ class MaintenanceRepo():
         self.me = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):
-        return self.objects.all()
+        objects= self.objects.all()
+        if 'vehicle_id' in kwargs:
+            objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'maintenance_type' in kwargs:
+            objects=objects.filter(maintenance_type=kwargs['maintenance_type'])
+        if 'service_man_id' in kwargs:
+            objects=objects.filter(service_man_id=kwargs['service_man_id'])
+        if 'maintenance_type' in kwargs:
+            objects=objects.filter(maintenance_type=kwargs['maintenance_type'])
+        return objects
 
     def maintenance(self, *args, **kwargs):
+        pk=0
         if 'maintenance_id' in kwargs:
             pk = kwargs['maintenance_id']
         elif 'pk' in kwargs:
@@ -130,16 +140,30 @@ class MaintenanceRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
-    def add_maintenance(self, vehicle_id, maintenance_type, service_man_id, maintenance_date, paid, kilometer):
-        if self.user.has_perm(APP_NAME+".add_manitenance"):
-            if service_man_id == 0:
-                service_man = None
-            else:
-                service_man = ServiceMan.objects.get(pk=service_man_id)
-            maintenance = Maintenance(vehicle_id=vehicle_id, maintenance_type=maintenance_type,
-                                      service_man=service_man, event_time=maintenance_date, paid=paid, kilometer=kilometer)
-            maintenance.save()
-            return maintenance
+    def add_maintenance(self, *args, **kwargs):
+        
+        if not self.user.has_perm(APP_NAME+".add_manitenance"):
+            return
+        paid=kwargs['paid'] if 'paid' in kwargs else 0
+        service_man_id=kwargs['service_man_id'] if 'service_man_id' in kwargs else 0
+        maintenance_type=kwargs['maintenance_type'] if 'maintenance_type' in kwargs else ""
+        description=kwargs['description'] if 'description' in kwargs else ""
+        title=kwargs['title'] if 'title' in kwargs else ""
+        vehicle_id=kwargs['vehicle_id'] if 'vehicle_id' in kwargs else 0
+        event_datetime=kwargs['event_datetime'] if 'event_datetime' in kwargs else ""
+        kilometer=kwargs['kilometer'] if 'kilometer' in kwargs else 0
+
+        maintenance = Maintenance()
+        maintenance.vehicle_id=vehicle_id
+        maintenance.title=title
+        maintenance.description=description
+        maintenance.maintenance_type=maintenance_type
+        maintenance.service_man_id=service_man_id
+        maintenance.event_datetime=event_datetime
+        maintenance.paid=paid
+        maintenance.kilometer=kilometer
+        maintenance.save()
+        return maintenance
 
     def get_report(self, *args, **kwargs):
         objects = self.objects.all()

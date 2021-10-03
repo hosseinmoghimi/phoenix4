@@ -33,6 +33,9 @@
                 <th>
                     درآمد
                 </th>
+                <th>
+
+                </th>
             </thead>
             <tbody>
                 <tr v-for="work_shift in work_shifts">
@@ -96,6 +99,23 @@
 
                         </div>
 
+
+                    </td>
+                    <td>
+                        <a target="_blank" title="جزئیات" :href="work_shift.get_absolute_url">
+
+
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                        </a>
+
+                        <a target="_blank" title="ویرایش" :href="work_shift.get_edit_url">
+
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
 
                     </td>
                 </tr>

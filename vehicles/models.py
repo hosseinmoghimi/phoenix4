@@ -167,19 +167,17 @@ class ServiceMan(models.Model):
         return self.name if self.name is not None else self.profile.name()
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":service_man", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":service_man", kwargs={"service_man_id": self.pk})
 
 
 class VehicleEvent(VehiclePage):
     # title=models.CharField(_("title"),blank=True, max_length=50)
     vehicle=models.ForeignKey("vehicle", verbose_name=_("ماشین"), on_delete=models.CASCADE)
-    event_time=models.DateTimeField(_("event_time"), auto_now=False, auto_now_add=False)
+    event_datetime=models.DateTimeField(_("event_datetime"), auto_now=False, auto_now_add=False)
     kilometer=models.IntegerField(_("کارکرد"),null=True,blank=True)
     # description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
     # child_class=models.CharField(_("child_class"),default='vehicleworkevent', max_length=50)
     # images=models.ManyToManyField("core.galleryphoto",blank=True, verbose_name=_("images"))
-    def __str__(self):
-        return self.title
     def save(self,*args, **kwargs):
         self.class_name="vehicleevent"
         return super(VehicleEvent,self).save(*args, **kwargs)
@@ -191,12 +189,12 @@ class VehicleEvent(VehiclePage):
     class Meta:
         verbose_name = 'VehicleEvent'
         verbose_name_plural = 'VehicleEvents'
-    def persian_event_time(self):
-        return PersianCalendar().from_gregorian(self.event_time)
+    def persian_event_datetime(self):
+        return PersianCalendar().from_gregorian(self.event_datetime)
 
 
 class Maintenance(VehicleEvent):
-    maintenance_type=models.CharField(_("سرویس"),choices=MaintenanceEnum.choices, max_length=50)
+    maintenance_type=models.CharField(_("سرویس"),choices=MaintenanceEnum.choices, max_length=100)
     service_man=models.ForeignKey("serviceman", verbose_name=_("سرویس کار"),null=True,blank=True, on_delete=models.CASCADE)
     paid=models.IntegerField(_("هزینه به تومان"))
     def get_icon(self):
@@ -245,11 +243,11 @@ class Maintenance(VehicleEvent):
         self.child_class="maintenance"
         return super(Maintenance,self).save()
     def __str__(self):
-        return f'{self.maintenance_type} {self.vehicle}'
+        return f'{self.service_man} {self.maintenance_type} {self.vehicle}'
 
     def get_absolute_url(self):
-        return super(Maintenance,self).get_absolute_url()
-        # return reverse(APP_NAME+":maintenance", kwargs={"pk": self.pk})
+        # return super(Maintenance,self).get_absolute_url()
+        return reverse(APP_NAME+":maintenance", kwargs={"maintenance_id": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/maintenance/{self.pk}/change/'
 

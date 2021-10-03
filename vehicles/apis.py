@@ -4,8 +4,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 
-from vehicles.repo import WorkShiftRepo
-from vehicles.serializers import WorkShiftSerializer
+from vehicles.repo import MaintenanceRepo, WorkShiftRepo
+from vehicles.serializers import MaintenanceSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -44,6 +44,45 @@ class WorkShiftApi(APIView):
                     log=4
                     work_shift=WorkShiftSerializer(work_shift).data
                     context['work_shift']=work_shift
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+
+class MaintenanceApi(APIView):
+    def add_maintenance(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_maintenance_form=AddMaintenanceForm(request.POST)
+            if add_maintenance_form.is_valid():
+                log=3
+                
+                title=add_maintenance_form.cleaned_data['title']
+                vehicle_id=add_maintenance_form.cleaned_data['vehicle_id']
+                event_datetime=add_maintenance_form.cleaned_data['event_datetime']
+                kilometer=add_maintenance_form.cleaned_data['kilometer']
+                paid=add_maintenance_form.cleaned_data['paid']
+                description=add_maintenance_form.cleaned_data['description']
+                service_man_id=add_maintenance_form.cleaned_data['service_man_id']
+                maintenance_type=add_maintenance_form.cleaned_data['maintenance_type']
+                event_datetime=PersianCalendar().to_gregorian(event_datetime)
+                maintenance=MaintenanceRepo(request=request).add_maintenance(
+                    paid=paid,
+                    service_man_id=service_man_id,
+                    maintenance_type=maintenance_type,
+                    description=description,
+                    title=title,
+                    vehicle_id=vehicle_id,
+                    event_datetime=event_datetime,
+                    kilometer=kilometer)
+                
+                if maintenance is not None:
+                    log=4
+                    maintenance=MaintenanceSerializer(maintenance).data
+                    context['maintenance']=maintenance
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

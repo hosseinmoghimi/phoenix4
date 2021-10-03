@@ -25,7 +25,7 @@ class WorkShiftSerializer(serializers.ModelSerializer):
     area=AreaSerializer()
     class Meta:
         model=WorkShift
-        fields=['id','vehicle','income','outcome','driver','persian_start_time','persian_end_time','area']
+        fields=['id','vehicle','income','outcome','driver','persian_start_time','persian_end_time','area','get_edit_url']
 
 
 class ServiceManSerializer(serializers.ModelSerializer):
@@ -40,7 +40,7 @@ class MaintenanceSerializer(serializers.ModelSerializer):
     vehicle=VehicleSerializer()
     class Meta:
         model=Maintenance
-        fields=['id','maintenance_type','service_man','vehicle','get_absolute_url','persian_event_time']
+        fields=['id','maintenance_type','get_edit_url','kilometer','service_man','paid','vehicle','get_absolute_url','persian_event_datetime']
 
 
 class VehicleWorkEventSerializer(serializers.ModelSerializer):
@@ -48,5 +48,5 @@ class VehicleWorkEventSerializer(serializers.ModelSerializer):
     work_shift=WorkShiftSerializer()
     class Meta:
         model=VehicleWorkEvent
-        fields=['id','vehicle','event_type','work_shift','get_absolute_url','persian_event_time']
+        fields=['id','vehicle','event_type','work_shift','get_absolute_url','persian_event_datetime']
 
