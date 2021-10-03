@@ -618,6 +618,7 @@ class OrderViews(View):
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
+        context['order_no'] = order.pk
         order = {
             'customer': order.customer.profile.name,
             'supplier': order.supplier,
@@ -627,6 +628,7 @@ class OrderViews(View):
             'total_for_pay': total_for_pay,
             'print_date': print_date,
             'descriptions': descriptions,
+            'number':order.pk,
         }
         context['order_lines'] = order_lines
         context['order'] = order
