@@ -614,6 +614,7 @@ class OrderViews(View):
             f"""<small>تعداد بسته قابل تحویل </small>: {order.count_of_packs} بسته""",
             f"""<small>آدرس تحویل :</small> {order.address}""",
             f"""واحد مبلغ ها {CURRENCY} می باشد.""",
+            f"""تحویل سفارشات منوط به <span class="bg-dark text-light px-2 rounded">تسویه نقدی</span> می باشد.""",
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
