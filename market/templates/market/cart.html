@@ -59,6 +59,10 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script >
+                let customer_id = parseInt("{{me_customer.id}}")
+
+</script>
 {% include "market/includes/cart-app/script.html" %}
 
 {% endblock %}

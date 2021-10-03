@@ -11,8 +11,12 @@
         <a :href="order_line.product.get_absolute_url">
             <div class="text-right">
                 <span v-text="order_line.product.title"></span>
+            </div>
+            <div class="text-right">
+                <small class="mx-2 text-muted" > کد :</small>
                 <small class="mx-2 text-muted" v-text="order_line.product.barcode"></small>
             </div>
+
         </a>
         <div class="farsi text-right ">
             <small class="text-muted">

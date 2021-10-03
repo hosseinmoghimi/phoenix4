@@ -52,7 +52,11 @@
     <td class="td-number">
 
         <div class="btn-group btn-group-sm ltr">
-            <button class="btn btn-round btn-success" @click="add_quantity(1)"> <i class="material-icons">add</i>
+
+            
+        <span v-if="false" v-text="to_price(cart_line.quantity)"></span>
+        <template v-if="true">
+                   <button class="btn btn-round btn-success" @click="add_quantity(1)"> <i class="material-icons">add</i>
             </button>
 
             <button class="btn btn-round btn-light">
@@ -62,6 +66,8 @@
 
             <button class="btn btn-round btn-danger" @click="add_quantity(-1)"> <i class="material-icons">remove</i>
             </button>
+        </template>
+     
         </div>
         <div class="text-center">
             <span class="farsi" v-text="cart_line.shop.unit_name">

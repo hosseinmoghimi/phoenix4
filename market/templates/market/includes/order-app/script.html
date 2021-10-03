@@ -1,5 +1,5 @@
 <script>
-    let url_checkout_cart = "{% url 'market:checkout_cart' %}"
+    let url_save_cart = "{% url 'market:save_cart' %}"
     let order_line_component_template = `{% include 'market/includes/order-app/component.html' %}`
     let order_lines = JSON.parse(`{{order_lines_s|escapejs}}`)
     let order_line_component = Vue.component('order-line-component', {
@@ -73,7 +73,7 @@
                 console.log(this.order_lines)
             },
             checkout: function () {
-                let url = url_checkout_cart
+                let url = url_save_cart
                 let order_lines = []
                 this.order_lines.forEach(order_line => {
                     order_lines.push({

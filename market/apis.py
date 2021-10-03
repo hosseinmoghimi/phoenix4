@@ -116,7 +116,7 @@ class CartApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-    def checkout_cart(self,request,*args, **kwargs):
+    def save_cart(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
         log=1
@@ -128,7 +128,7 @@ class CartApi(APIView):
                 cart_lines=checkout_cart_form.cleaned_data['cart_lines']
                 customer_id=checkout_cart_form.cleaned_data['customer_id']
                 cart_lines=json.loads(cart_lines)
-                cart_lines=CartRepo(request=request).checkout(
+                cart_lines=CartRepo(request=request).save(
                     cart_lines=cart_lines,
                     customer_id=customer_id
                     )

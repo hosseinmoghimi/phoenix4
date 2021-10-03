@@ -996,16 +996,13 @@ class CartRepo:
         return orders
     
     
-    def checkout(self,*args, **kwargs):
+    def save(self,*args, **kwargs):
         cart_lines=kwargs['cart_lines'] if 'cart_lines' in kwargs else None
         customer_id=kwargs['customer_id'] if 'customer_id' in kwargs else None
+
         if cart_lines is None or customer_id is None:
             return None
-        user=self.user
-        if customer_id is None:
-            customer=CustomerRepo(user=self.user).me
-        else:
-            customer = CustomerRepo(user=self.user).customer(customer_id=customer_id)
+        customer = CustomerRepo(user=self.user).customer(customer_id=customer_id)
         if customer is not None:
             # delete old cart_lines
             CartLine.objects.filter(customer=customer).delete()
@@ -1013,10 +1010,10 @@ class CartRepo:
             # create new cart_lines
             for cart_line in cart_lines:
                 if cart_line['quantity']>0:
-                    new_cart_line=CartLine(shop=Shop.objects.get(pk=cart_line['shop_id']),quantity=cart_line['quantity'],customer=customer)
+                    new_cart_line=CartLine(shop_id=cart_line['shop_id'],quantity=cart_line['quantity'],customer_id=customer_id)
                     new_cart_line.save()
             # get new cart_lines
-            cart_lines = CartLine.objects.filter(customer=customer)
+            cart_lines = CartLine.objects.filter(customer_id=customer_id)
             return cart_lines
                  
     def add_to_cart(self,*args, **kwargs):

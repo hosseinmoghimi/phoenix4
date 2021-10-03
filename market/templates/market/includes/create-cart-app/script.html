@@ -1,5 +1,5 @@
 <script>
-    let url_checkout_cart = "{% url 'market:checkout_cart' %}"
+    let url_save_cart = "{% url 'market:save_cart' %}"
     let cart_line_component_template = `{% include 'market/includes/cart-app/component.html' %}`
     let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
     let add_to_cart_component = Vue.component('cart-line-component', {

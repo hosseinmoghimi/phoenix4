@@ -133,12 +133,7 @@
 
 
 {% block script %}
-<script>
-    let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
-    var cart_line_template = `{1% include 'market/includes/cart-line.html' %}`
-    let checkout_cart_url = "{% url 'market:checkout_cart' %}"
-    let delete_cart_line_url = "{1% url 'market:delete_cart_line' %}"
-</script>
+
 {% if DEBUG %}
 <script src="{% static 'vendor/js/vue.js' %}"></script>
 {% else %}
