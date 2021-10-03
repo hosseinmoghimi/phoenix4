@@ -10,6 +10,9 @@
         },
         methods: {
             add_quantity: function (a) {
+                if (cart_app.save_done)
+                    return
+
                 if ((this.cart_line.quantity + a) < 0) {
                     this.cart_line.quantity = 0
                 }
