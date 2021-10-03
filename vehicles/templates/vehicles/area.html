@@ -19,12 +19,20 @@
                         <a class="nav-link farsi docs-creator" href="{{area.get_absolute_url}}">
                             {{area.name}}
                         </a>
+                        {% if perms.vehicles.change_area %}
+                        <a title="ویرایش" target="_blank" href="{{area.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                      {% endif %}
                     </li>
                 </ul>
             </div>
 
         </div>
     </div>
+   
     <div class="col-md-12">
         {% include "vehicles/includes/work-shifts-app/template.html" %}
     </div>

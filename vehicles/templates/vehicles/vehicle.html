@@ -19,6 +19,13 @@
                         <a class="nav-link farsi docs-creator" href="{{vehicle.get_absolute_url}}">
                             {{vehicle.name}}
                         </a>
+                        {% if perms.vehicles.change_vehicle %}
+                        <a title="ویرایش" target="_blank" href="{{vehicle.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                      {% endif %}
                     </li>
                 </ul>
             </div>
