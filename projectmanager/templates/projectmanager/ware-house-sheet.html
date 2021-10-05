@@ -1,0 +1,38 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+
+{% block content %}
+<div class="farsi">
+
+    <div>
+        <a href="{{ware_house_sheet.ware_house.get_absolute_url}}">
+            {{ware_house_sheet.ware_house.title}}
+        </a>
+
+
+
+
+    </div>
+
+
+
+    <div>
+        <a href="{{ware_house_sheet.material.get_absolute_url}}">
+            {{ware_house_sheet.material.title}}
+        </a>
+
+    </div>
+
+
+
+</div>
+
+{% endblock content %}
+
+
+{% block script %}
+
+{% endblock script %}

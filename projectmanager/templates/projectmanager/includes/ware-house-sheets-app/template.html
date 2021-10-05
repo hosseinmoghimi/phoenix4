@@ -1,0 +1,42 @@
+<div id="ware-house-sheets-app">
+    <table class="table table-striped">
+        <thead>
+            <th>
+
+            </th>
+            <th>
+                material
+            </th>
+            <th>
+                direction
+            </th>
+            <th>
+
+            </th>
+        </thead>
+        <tbody>
+            <tr v-for="sheet in sheets">
+                <td>
+                    <a :href="sheet.get_absolute_url">
+
+                        <i class="material-icons">
+                            ballot
+                        </i>
+                    </a>
+                </td>
+                <td>
+                    <a :href="sheet.material.get_absolute_url">
+
+                        <span v-text="sheet.material.title"></span>
+                    </a>
+                </td>
+                <td>
+                    <span :class="'badge badge-'+sheet.get_status_color" v-text="sheet.direction"></span>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

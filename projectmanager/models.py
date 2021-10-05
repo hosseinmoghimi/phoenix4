@@ -462,7 +462,7 @@ class Request(models.Model):
 class MaterialRequest(Request):
     material = models.ForeignKey("Material", verbose_name=_(
         "متریال"), on_delete=models.PROTECT)
-
+    sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
     class_name = 'materialrequest'
 
     class Meta:
@@ -616,6 +616,8 @@ class WareHouse(OrganizationUnit):
         </a>
         """
 
+    def sheets(self):
+        return WareHouseSheet.objects.filter(ware_house=self)
 
 class WareHouseSheet(models.Model):
     sheet_no=models.CharField(_("sheet_no"), max_length=50)
@@ -632,12 +634,25 @@ class WareHouseSheet(models.Model):
     employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("employee"), on_delete=models.CASCADE)
     # who_exited=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("who_entered"), on_delete=models.CASCADE)
     description=models.CharField(_("description"),null=True,blank=True, max_length=500)
+    class_name="warehousesheet"
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+
+    def get_status_color(self):
+        if self.direction==WareHouseSheetDirectionEnum.ENTER:
+            return "success"
+        if self.direction==WareHouseSheetDirectionEnum.EXIT:
+            return "danger"
+
     class Meta:
         verbose_name = _("WareHouseSheet")
         verbose_name_plural = _("WareHouseSheets")
 
     def __str__(self):
-        return self.ware_house.title
+        return f"{self.ware_house.title} : {self.material.title}"
 
     def get_absolute_url(self):
-        return reverse("WareHouseSheet", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":ware_house_sheet", kwargs={"pk": self.pk})
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+

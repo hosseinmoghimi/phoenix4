@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest
+from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, WareHouseSheet
 from authentication.serializers import ProfileSerializer
 
 
@@ -84,4 +84,12 @@ class RequestSignatureSerializer(serializers.ModelSerializer):
     class Meta:
         model=RequestSignature
         fields=['id','status','employee','get_edit_url','description','persian_date_added','get_status_color']
+
+
+class WareHouseSheetSerializer(serializers.ModelSerializer):
+    employee=EmployeeSerializer()
+    material=MaterialSerializer()
+    class Meta:
+        model=WareHouseSheet
+        fields=['id','direction','material','employee','get_edit_url','description','persian_date_added','get_status_color','get_absolute_url']
 

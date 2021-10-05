@@ -83,7 +83,16 @@
             </small>
 
         </p>
-        
+
+        {% if material_request.sheet %}
+        <p>
+
+            <a href="{{material_request.sheet.get_absolute_url}}">
+                
+               برگه انبار
+            </a>
+        </p>
+        {% endif %}
 
         <table class="table">
       

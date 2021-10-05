@@ -5,7 +5,7 @@ from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, Signature
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheet
 from utility.persian import PersianCalendar
 
 class ProjectRepo():
@@ -250,6 +250,15 @@ class WareHouseRepo():
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
+    def ware_house_sheet(self, *args, **kwargs):
+        objects=WareHouseSheet.objects
+        pk=0
+        if 'ware_house_sheet_id' in kwargs:
+            return objects.filter(pk=kwargs['ware_house_sheet_id']).first()
+        if 'pk' in kwargs:
+            return objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return objects.filter(pk=kwargs['id']).first()
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()

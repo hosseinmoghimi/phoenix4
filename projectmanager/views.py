@@ -1,6 +1,6 @@
 from core.constants import CURRENCY
 import re
-from projectmanager.models import MaterialRequest, OrganizationUnit
+from projectmanager.models import MaterialRequest, OrganizationUnit, WareHouseSheet
 from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
@@ -10,7 +10,7 @@ from core.serializers import BasicPageSerializer
 from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo, TagRepo
-from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
 from django.shortcuts import render
 from .forms import *
@@ -387,13 +387,21 @@ class EmployeeViews(View):
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)
 
 class WareHouseViews(View):
+    def ware_house_sheet(self, request, *args, **kwargs):
+        context = getContext(request)
+        ware_house_sheet=WareHouseRepo(request=request).ware_house_sheet(*args, **kwargs)
+        context['ware_house_sheet']=ware_house_sheet
+        return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
     def ware_house(self, request, *args, **kwargs):
         ware_house = WareHouseRepo(request=request).ware_house(*args, **kwargs)
         context = getContext(request)
         context.update(PageContext(request=request, page=ware_house))
         context['ware_house'] = ware_house
         context.update(OrganizationUnitViews().getOrgUnitContext(request=request, organization_unit=ware_house))
-     
+        ware_house_sheets=ware_house.sheets()
+        ware_house_sheets_s=json.dumps(WareHouseSheetSerializer(ware_house_sheets,many=True).data)
+        context['ware_house_sheets_s']=ware_house_sheets_s
+
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
  
 
