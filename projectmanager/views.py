@@ -1,6 +1,6 @@
 from core.constants import CURRENCY
 import re
-from projectmanager.models import MaterialRequest
+from projectmanager.models import MaterialRequest, OrganizationUnit
 from web.repo import CarouselRepo
 from utility.persian import PersianCalendar
 from authentication.repo import ProfileRepo
@@ -17,7 +17,7 @@ from .forms import *
 import json
 from .apps import APP_NAME
 from core.views import DefaultContext, MessageView, PageContext
-from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, WareHouseRepo
 from django.views import View
 from .utils import AdminUtility
 TEMPLATE_ROOT = APP_NAME+"/"
@@ -305,6 +305,25 @@ class ProjectViews(View):
 
 
 class OrganizationUnitViews(View):
+    def getOrgUnitContext(self,request,organization_unit,*args, **kwargs):
+        context={}
+        context['organization_unit'] = organization_unit
+        context['add_organization_unit_form'] = AddOrganizationUnitForm()
+        context['organization_units'] = organization_unit.childs()
+        organization_units = organization_unit.childs()
+        context['organization_units'] = organization_units
+        context['add_employee_form'] = AddEmployerForm()
+        all_profiles = ProfileRepo(user=request.user).objects.all()
+        context['all_profiles_s'] = json.dumps(
+            ProfileSerializer(all_profiles, many=True).data)
+        context['organization_units_s'] = json.dumps(
+            OrganizationUnitSerializer(organization_units, many=True).data)
+        context['all_organization_units_s'] = json.dumps(
+            OrganizationUnitSerializer(organization_units, many=True).data)
+
+        context['projects'] = organization_unit.project_set.all()
+        return context
+
     def organization_unit(self, request, *args, **kwargs):
         organization_unit = OrganizationUnitRepo(
             request=request).organization_unit(*args, **kwargs)
@@ -367,6 +386,15 @@ class EmployeeViews(View):
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)
 
+class WareHouseViews(View):
+    def ware_house(self, request, *args, **kwargs):
+        ware_house = WareHouseRepo(request=request).ware_house(*args, **kwargs)
+        context = getContext(request)
+        context.update(PageContext(request=request, page=ware_house))
+        context['ware_house'] = ware_house
+        context.update(OrganizationUnitViews().getOrgUnitContext(request=request, organization_unit=ware_house))
+     
+        return render(request, TEMPLATE_ROOT+"ware-house.html", context)
  
 
 class MaterialViews(View):

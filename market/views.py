@@ -609,12 +609,16 @@ class OrderViews(View):
 
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
+        address=f"""آدرس فروشنده : {order.supplier.address}""" if order.supplier.address is not None else ""
+        tel=f"""تلفن فروشنده : {order.supplier.tel}""" if order.supplier.tel is not None else ""
         descriptions = [
             f""" سفارش شماره {order.pk} <span class="bg-dark text-light px-2 rounded">{order.status}</span>""",
             f"""<small>تعداد بسته قابل تحویل </small>: {order.count_of_packs} بسته""",
             f"""<small>آدرس تحویل :</small> {order.address}""",
             f"""واحد مبلغ ها {CURRENCY} می باشد.""",
             f"""تحویل سفارشات منوط به <span class="bg-dark text-light px-2 rounded">تسویه نقدی</span> می باشد.""",
+            f"""{address}""",
+            f"""{tel}""",
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date

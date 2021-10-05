@@ -351,7 +351,8 @@ class BasicPage(models.Model):
     def likes_count(self):
         return len(PageLike.objects.filter(page=self))
 
-
+    def save(self,*args, **kwargs):
+        return super(BasicPage,self).save()
 
 
 class Link(Icon):

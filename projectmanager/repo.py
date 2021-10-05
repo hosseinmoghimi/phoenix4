@@ -5,7 +5,7 @@ from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, Signature
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse
 from utility.persian import PersianCalendar
 
 class ProjectRepo():
@@ -155,6 +155,7 @@ class OrganizationUnitRepo():
             self.objects=OrganizationUnit.objects.filter(id=0)
 
     def organization_unit(self, *args, **kwargs):
+        pk=0
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
@@ -229,6 +230,35 @@ class OrganizationUnitRepo():
                 emp.save()
                 return emp
             
+
+class WareHouseRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouse.objects
+    def ware_house(self, *args, **kwargs):
+        pk=0
+        if 'ware_house_id' in kwargs:
+            return self.objects.filter(pk=kwargs['ware_house_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(
+                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects
 
 
 class EmployeeRepo():

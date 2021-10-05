@@ -364,6 +364,8 @@ class Supplier(MarketPage):
     logo_origin=models.ImageField(_("logo"), null=True,blank=True,upload_to=IMAGE_FOLDER+"suppier/logo/", height_field=None, width_field=None, max_length=None)
     warehouses=models.ManyToManyField("market.WareHouse", verbose_name=_("warehouses"),blank=True)
     employees=models.ManyToManyField("Employee", verbose_name=_("کارکنان"),blank=True)
+    tel=models.CharField(_("تلفن"),null=True,blank=True, max_length=50)
+    address=models.CharField(_("آدرس"),null=True,blank=True, max_length=500)
     def logo(self):
         if self.logo_origin:
             return f"{MEDIA_URL}{self.logo_origin}"
