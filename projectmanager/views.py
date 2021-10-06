@@ -1,25 +1,22 @@
-from core.constants import CURRENCY
-import re
-from projectmanager.models import MaterialRequest, OrganizationUnit, WareHouseSheet
-from web.repo import CarouselRepo
-from utility.persian import PersianCalendar
+import json
+from .apps import APP_NAME
+from .forms import *
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, WareHouseRepo, WareHouseSheetRepo
+from .serializers import EmployeeSerializer, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
+from .utils import AdminUtility
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
 from authentication.serializers import ProfileSerializer
-from core.serializers import BasicPageSerializer
-from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
+from core.constants import CURRENCY
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import ParameterRepo, PictureRepo, TagRepo
-from projectmanager.serializers import EmployeeSerializer, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
-from projectmanager.forms import AddOrganizationUnitForm, AddProjectForm
-from django.shortcuts import render
-from .forms import *
-import json
-from .apps import APP_NAME
+from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
-from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, WareHouseRepo
 from django.views import View
-from .utils import AdminUtility
+from django.shortcuts import render
+from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
+from utility.persian import PersianCalendar
+from web.repo import CarouselRepo
 TEMPLATE_ROOT = APP_NAME+"/"
 
 
@@ -39,6 +36,8 @@ def getContext(request):
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
     }
     return context
+
+
 class LoactionViews(View):
     def location(self, request, *args, **kwargs):
         context = getContext(request)
@@ -48,6 +47,7 @@ class LoactionViews(View):
         pages=repo.pages(location)
         context['pages']=pages
         return render(request, TEMPLATE_ROOT+"location.html", context)
+
 
 class BasicViews(View):
     def search(self, request, *args, **kwargs):
@@ -386,12 +386,9 @@ class EmployeeViews(View):
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)
 
+
 class WareHouseViews(View):
-    def ware_house_sheet(self, request, *args, **kwargs):
-        context = getContext(request)
-        ware_house_sheet=WareHouseRepo(request=request).ware_house_sheet(*args, **kwargs)
-        context['ware_house_sheet']=ware_house_sheet
-        return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
+    
     def ware_house(self, request, *args, **kwargs):
         ware_house = WareHouseRepo(request=request).ware_house(*args, **kwargs)
         context = getContext(request)
@@ -404,6 +401,15 @@ class WareHouseViews(View):
 
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
  
+
+
+class WareHouseSheetViews(View):
+    def ware_house_sheet(self, request, *args, **kwargs):
+        context = getContext(request)
+        ware_house_sheet=WareHouseSheetRepo(request=request).ware_house_sheet(*args, **kwargs)
+        context['ware_house_sheet']=ware_house_sheet
+        return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
+    
 
 class MaterialViews(View):
     def materials(self, request, *args, **kwargs):

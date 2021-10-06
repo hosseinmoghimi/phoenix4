@@ -414,16 +414,11 @@ class Request(models.Model):
     unit_price = models.IntegerField(_("قیمت واحد"))
     description = models.CharField(
         _("توضیحات"), null=True, blank=True, default='', max_length=50)
-    creator = models.ForeignKey("employee", related_name="request_createds", verbose_name=_(
-        "ثبت کننده"), on_delete=models.PROTECT)
-    handler = models.ForeignKey("employee", related_name="request_handeleds", verbose_name=_(
-        "پاسخ دهنده"), null=True, blank=True, on_delete=models.PROTECT)
-    date_added = models.DateTimeField(
-        _("تاریخ درخواست"), auto_now=False, auto_now_add=True)
-    date_delivered = models.DateTimeField(
-        _("تاریخ درخواست"), null=True, blank=True, auto_now=False, auto_now_add=False)
-    status = models.CharField(_("وضعیت"), choices=RequestStatusEnum.choices,
-                              default=RequestStatusEnum.REQUESTED, max_length=50)
+    creator = models.ForeignKey("employee", related_name="request_createds", verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
+    handler = models.ForeignKey("employee", related_name="request_handeleds", verbose_name=_("پاسخ دهنده"), null=True, blank=True, on_delete=models.PROTECT)
+    date_added = models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
+    date_delivered = models.DateTimeField(_("تاریخ درخواست"), null=True, blank=True, auto_now=False, auto_now_add=False)
+    status = models.CharField(_("وضعیت"), choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
     request_type = models.CharField(
         _("type"), choices=RequestTypeEnum.choices, max_length=50)
     class_name = 'request'
@@ -463,7 +458,7 @@ class Request(models.Model):
 class MaterialRequest(Request):
     material = models.ForeignKey("Material", verbose_name=_(
         "متریال"), on_delete=models.PROTECT)
-    sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
+    # sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
     class_name = 'materialrequest'
 
     class Meta:
@@ -620,15 +615,14 @@ class WareHouse(OrganizationUnit):
     def sheets(self):
         return WareHouseSheet.objects.filter(ware_house=self)
 
+
 class WareHouseSheet(models.Model):
+    # material_requests=models.ManyToManyField("materialrequest", verbose_name=_("materialrequests"))
+    material_requests=models.ForeignKey("materialrequest", verbose_name=_("material_request"), on_delete=models.CASCADE)
     sheet_no=models.CharField(_("sheet_no"), max_length=50)
+    serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=50)
     direction=models.CharField(_("direction"),choices=WareHouseSheetDirectionEnum.choices, max_length=50)
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
-    material=models.ForeignKey("material", verbose_name=_("material"), on_delete=models.CASCADE)
-    serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=50)
-    quantity=models.IntegerField(_("quantity"))
-    unit_price=models.IntegerField(_("unit_price"),default=0)
-    unit_name=models.CharField(_("unit_name"),max_length=100,default="عدد")
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_entered=models.DateTimeField(_("date_entered"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_exited=models.DateTimeField(_("date_exited"),null=True,blank=True, auto_now=False, auto_now_add=False)
@@ -662,7 +656,7 @@ class WareHouseSheet(models.Model):
         verbose_name_plural = _("WareHouseSheets")
 
     def __str__(self):
-        return f"{self.ware_house.title} : {self.material.title}"
+        return f"{self.ware_house.title}  "
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":ware_house_sheet", kwargs={"pk": self.pk})

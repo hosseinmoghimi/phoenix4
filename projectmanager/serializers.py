@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, WareHouseSheet
+from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, WareHouse, WareHouseSheet
 from authentication.serializers import ProfileSerializer
 
 
@@ -85,11 +85,19 @@ class RequestSignatureSerializer(serializers.ModelSerializer):
         model=RequestSignature
         fields=['id','status','employee','get_edit_url','description','persian_date_added','get_status_color']
 
+class WareHouseSerializer(serializers.ModelSerializer):
+    employees=EmployeeSerializer(many=True)
+    employer=EmployerSerializer()
+    class Meta:
+        model=WareHouse
+        fields=['id','employer','title','employees','get_absolute_url','get_edit_url','short_description','thumbnail']
+
 
 class WareHouseSheetSerializer(serializers.ModelSerializer):
     employee=EmployeeSerializer()
-    material=MaterialSerializer()
+    ware_house=WareHouseSerializer()
+    material_request=MaterialRequestSerializer()
     class Meta:
         model=WareHouseSheet
-        fields=['id','direction','material','employee','get_edit_url','description','quantity','serial_no','unit_name','persian_date_entered','persian_date_exited','persian_date_added','get_status_color','get_absolute_url']
+        fields=['id','direction','ware_house','material_request','employee','get_edit_url','description','serial_no','persian_date_entered','persian_date_exited','persian_date_added','get_status_color','get_absolute_url']
 

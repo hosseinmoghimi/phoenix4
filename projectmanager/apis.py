@@ -1,9 +1,10 @@
+from projectmanager.models import WareHouseSheet
 from utility.persian import PersianCalendar
-from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, RequestSignatureSerializer, ServiceRequestSerializer, ServiceSerializer
+from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, RequestSignatureSerializer, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo
+from .repo import EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, WareHouseSheetRepo
 from .forms import *
 
 
@@ -134,6 +135,8 @@ class ProjectApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
+
 class EventApi(APIView):
     def add_event(self,request,*args, **kwargs):
         context={}
@@ -158,6 +161,7 @@ class EventApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
 
 class OrganizationUnitApi(APIView):
     def add_organization_unit(self,request,*args, **kwargs):
@@ -241,8 +245,10 @@ class MaterialApi(APIView):
                 unit_name=add_material_request_form.cleaned_data['unit_name']
                 unit_price=add_material_request_form.cleaned_data['unit_price']
                 material_request=MaterialRepo(request=request).add_material_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,material_id=material_id,project_id=project_id)
+                ware_house_sheet=WareHouseSheetRepo(request=request).add_sheet(material_request=material_request)
                 if material_request is not None:
                     context['material_request']=MaterialRequestSerializer(material_request).data
+                    context['ware_house_sheet']=WareHouseSheetSerializer(ware_house_sheet).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
@@ -264,7 +270,6 @@ class MaterialApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-
 
 
 class ServiceApi(APIView):

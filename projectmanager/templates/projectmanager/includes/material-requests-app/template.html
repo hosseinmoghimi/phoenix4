@@ -128,6 +128,14 @@
 
                         <tr v-for="material_request in material_requests">
                             <td>
+                                <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
+
+                            <td>
                                 <small v-text="material_request.persian_date_added">
 
                                 </small>
@@ -167,11 +175,7 @@
                             <td>
                                 <span v-html="material_request.get_status_tag"></span>
 
-                                <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        description
-                                    </i>
-                                </a>
+                             
                                 {% if perms.projectmanager.change_materialrequest %}
                                 <a title="ویرایش" target="_blank" :href="material_request.get_edit_url">
                                     <i class="material-icons">edit</i>

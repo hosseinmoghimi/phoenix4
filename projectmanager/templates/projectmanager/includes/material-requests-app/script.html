@@ -55,6 +55,8 @@
                 // Put the results in a div
                 posting.done(function (data) {
                     material_request_app.waiting = false
+                    console.log(data)
+
                     if (data.result === 'SUCCEED') {
                         material_request_app.material_requests.push(data.material_request)
                         // material_request_app.show_add_material_request_form = false

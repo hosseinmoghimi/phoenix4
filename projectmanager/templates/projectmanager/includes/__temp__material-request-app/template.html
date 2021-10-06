@@ -6,7 +6,7 @@
 
 
 
-        
+
 
         <h5 class="text-right">
             متریال :
@@ -58,6 +58,20 @@
 
 
         </p>
+
+        {% if material_request.sheet %}
+        <p>
+
+            <a href="{{material_request.sheet.get_absolute_url}}">
+                <i class="material-icons">
+                    ballot
+                </i>
+                برگه انبار
+            </a>
+        </p>
+        {% endif %}
+
+
         <p>
 
 
@@ -84,21 +98,13 @@
 
         </p>
 
-        {% if material_request.sheet %}
-        <p>
 
-            <a href="{{material_request.sheet.get_absolute_url}}">
-                
-               برگه انبار
-            </a>
-        </p>
-        {% endif %}
 
         <table class="table">
-      
-            
+
+
             <tbody>
-              
+
 
 
 
@@ -108,14 +114,15 @@
                     <td>
                         <div class="media">
                             <a href="{{signature.employee.get_absolute_url}}">
-                                <img src="{{signature.employee.profile.image}}" class="rounded-circle mr-3" width=48 alt="">
+                                <img src="{{signature.employee.profile.image}}" class="rounded-circle mr-3" width=48
+                                    alt="">
                             </a>
                             <div class="media-body pr-3">
                                 <div>
-                                   
-                                    {{signature.get_status_tag|safe}} 
+
+                                    {{signature.get_status_tag|safe}}
                                 </div>
-                                <div >
+                                <div>
 
                                     <a href="{{signature.employee.get_absolute_url}}">
                                         {{signature.employee.profile.name}}
@@ -147,11 +154,12 @@
                     <td>
                         <div class="media">
                             <a :href="signature.employee.get_absolute_url">
-                                <img :src="signature.employee.profile.image" class="rounded-circle mr-3" width=48 alt="">
+                                <img :src="signature.employee.profile.image" class="rounded-circle mr-3" width=48
+                                    alt="">
                             </a>
                             <div class="media-body pr-3">
                                 <div>
-                                    
+
                                     <span :class="'badge badge-'+signature.get_status_color"
                                         v-text="signature.status"></span>
 
@@ -186,7 +194,7 @@
         </div>
     </div>
     <div class="card-footer">
-   <p class="alert alert-info">
+        <p class="alert alert-info">
             <small>
 
                 ابتدا یک پاراف اضافه کرده و سپس نوع امضا را انتخاب و در آخر دکمه امضا می کنم را بزنید.
@@ -220,7 +228,7 @@
 
 
 
-                    <button v-if="!waiting"  type="submit" class="btn btn-success">
+                    <button v-if="!waiting" type="submit" class="btn btn-success">
                         <i class="material-icons">
                             assignment_turned_in
                         </i>
