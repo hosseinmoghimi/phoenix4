@@ -416,10 +416,11 @@ class OrderViews(View):
         user = request.user
         order = OrderRepo(request=request).order(*args, **kwargs)
         if order is None:
-            raise Http404
-            # message= MessageView(request=request)
-            # message.title="همچنین "
-            # return message.show(request=request)
+            # raise Http404
+            message= MessageView(request=request)
+            message.header_text="چنین پروژه ای وجود ندارد."
+            message.message_html="""<p class="farsi text-right">چنین پروژه ای وجود ندارد.</p>"""
+            return message.show(request=request)
         context = getContext(request)
         context['header_image'] = PictureRepo(
             request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_HEADER)

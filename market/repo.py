@@ -406,10 +406,29 @@ class OrderRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Order.objects.order_by("-date_ordered")
         self.profile = ProfileRepo(user=self.user).me
-
-
+        me_supplier=SupplierRepo(request=self.request).me
+        me_customer=CustomerRepo(request=self.request).me
+        me_shipper=ShipperRepo(request=self.request).me
+        # print(me_supplier)
+        # print(10*"#$")
+        # print(me_customer)
+        # print(10*"#$")
+        # print(me_shipper)
+        # print(10*"#$")
+        if self.user.has_perm(APP_NAME+".view_order"):
+            self.objects=Order.objects.all()
+        else:
+            a=Q(pk=0)
+            if me_supplier is not None:
+                a=a|Q(supplier=me_supplier)
+            if me_customer is not None:
+                a=a|Q(customer=me_customer)
+            if me_shipper is not None:
+                a=a|Q(shipper=me_shipper)
+            self.objects=Order.objects.filter(a)
+        self.objects = self.objects.order_by("-date_ordered")
+        
 
     def orders(self,*args, **kwargs):
         return self.list(*args, **kwargs)

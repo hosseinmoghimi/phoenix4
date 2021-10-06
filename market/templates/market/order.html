@@ -69,14 +69,14 @@
 
                         <h5 class="text-warning">
                             <small class="text-muted">
-                                تخفیف : 
+                                تخفیف :
                             </small>
                             {{order.get_financial_report.off|to_price}}
                         </h5>
 
                         <h5 class="text-primary">
                             <small class="text-muted">
-                                جمع کل : 
+                                جمع کل :
                             </small>
                             {{order.total|to_price}}
                         </h5>
@@ -118,16 +118,18 @@
 
 
 
+                        <div class="alert alert-warning rounded">
+                            <div class="container farsi text-right ">
+                                <div class="alert-icon">
+                                    <i class="material-icons">place</i>
+                                </div>
 
 
-                        <div class="farsi mr-3 mb-3">آدرس تحویل :
-                            <i>
+                                <b>آدرس تحویل</b>
 
-                                <span class="title farsi mx-3">
-                                    {{order.address}}
 
-                                </span>
-                            </i>
+                                {{order.address}}
+                            </div>
                         </div>
 
 
@@ -135,6 +137,7 @@
 
 
 
+                        {% if order.description %}
 
                         <div class="farsi mr-3">
                             توضیحات : <i>
@@ -145,6 +148,9 @@
                                 </span>
                             </i>
                         </div>
+
+                        {% endif %}
+
 
 
                     </div>
