@@ -272,8 +272,7 @@ class WareHouseSheetRepo():
         if 'employee_id' in kwargs:
             sheet.employee_id=kwargs['employee_id']
         sheet.save()
-        print(sheet)
-        print(10*"#@")
+        
         return sheet
     def ware_house_sheet(self, *args, **kwargs):
         objects=WareHouseSheet.objects
