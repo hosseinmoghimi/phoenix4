@@ -25,6 +25,24 @@
         </a>
 
     </div>
+    {% for material_request in ware_house_sheet.materialrequest_set.all %}
+
+    <div>
+        <a href="{{material_request.get_absolute_url}}">
+            <i class="material-icons">
+                ballot
+            </i>
+            درخواست متریال مربوطه
+        </a>
+        <h6 class="text-secondary">
+            پروژه :
+            <a href="{{material_request.project.get_absolute_url}}">
+
+                {{material_request.project.full_title}}
+            </a>
+        </h6>
+    </div>
+    {% endfor %}
 
 
 

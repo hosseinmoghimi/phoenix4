@@ -24,6 +24,9 @@
                 <table class="table table-striped">
                     <thead>
                         <th>
+
+                        </th>
+                        <th>
                             تاریخ درخواست
                         </th>
                         <th>
@@ -54,6 +57,13 @@
                     <tbody>
                         {% for material_request in material_requests %}
                         <tr>
+                            <td>
+                                <a target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
                             <td>
                                 <small>
 
@@ -105,11 +115,7 @@
                             </td>
                             <td>
                                 {{material_request.get_status_tag|safe}}
-                                <a target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        description
-                                    </i>
-                                </a>
+
 
                                 {% if perms.projectmanager.change_materialrequest %}
                                 {{material_request.get_edit_btn|safe}}

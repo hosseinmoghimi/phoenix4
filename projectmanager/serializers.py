@@ -91,5 +91,5 @@ class WareHouseSheetSerializer(serializers.ModelSerializer):
     material=MaterialSerializer()
     class Meta:
         model=WareHouseSheet
-        fields=['id','direction','material','employee','get_edit_url','description','persian_date_added','get_status_color','get_absolute_url']
+        fields=['id','direction','material','employee','get_edit_url','description','quantity','serial_no','unit_name','persian_date_entered','persian_date_exited','persian_date_added','get_status_color','get_absolute_url']
 

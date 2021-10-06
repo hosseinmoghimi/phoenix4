@@ -1,42 +1,100 @@
 <div id="ware-house-sheets-app">
-    <table class="table table-striped">
-        <thead>
-            <th>
 
-            </th>
-            <th>
-                material
-            </th>
-            <th>
-                direction
-            </th>
-            <th>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="title text-center">
+                برگه های انبار
+            </h3>
+        </div>
 
-            </th>
-        </thead>
-        <tbody>
-            <tr v-for="sheet in sheets">
-                <td>
-                    <a :href="sheet.get_absolute_url">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <th>
 
-                        <i class="material-icons">
-                            ballot
-                        </i>
-                    </a>
-                </td>
-                <td>
-                    <a :href="sheet.material.get_absolute_url">
+                    </th>
+                    <th>
+                        متریال
+                    </th>
+                    <th>
+                        جهت
+                    </th>
+                    <th>
+                        تعداد
+                    </th>
 
-                        <span v-text="sheet.material.title"></span>
-                    </a>
-                </td>
-                <td>
-                    <span :class="'badge badge-'+sheet.get_status_color" v-text="sheet.direction"></span>
-                </td>
-                <td>
 
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    <th>
+                        شماره سریال
+                    </th>
+
+
+                    <th>
+                        تاریخ
+                    </th>
+                    <th>
+                        پرسنل
+                    </th>
+
+                </thead>
+                <tbody>
+                    <tr v-for="sheet in sheets">
+                        <td>
+                            <a title="جزئیات" target="_blank" :href="sheet.get_absolute_url">
+
+                                <i class="material-icons">
+                                    ballot
+                                </i>
+                            </a>
+                            {% if perms.projectmanager.change_warehousesheet %}
+
+                            <a title="ویرایش" target="_blank" :href="sheet.get_edit_url">
+
+                                <i class="material-icons">
+                                    edit
+                                </i>
+                            </a>
+                            {% endif %}
+
+
+                        </td>
+                        <td>
+                            <a :href="sheet.material.get_absolute_url">
+
+                                <span v-text="sheet.material.title"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <span :class="'badge badge-'+sheet.get_status_color" v-text="sheet.direction"></span>
+                        </td>
+                        <td>
+                            <span v-text="sheet.quantity"></span>
+                            <span class="badge badge-primary" v-text="sheet.unit_name"></span>
+
+
+                        </td>
+
+                        <td>
+                            <small class="text-secondary " v-text="sheet.serial_no"></small>
+
+                        </td>
+                        <td>
+                            <small class="text-secondary " v-text="sheet.persian_date_entered"></small> ~
+                            <small class="text-secondary " v-text="sheet.persian_date_exited"></small>
+
+                        </td>
+                        <td>
+                            <a :href="sheet.employee.get_absolute_url">
+                                <img :src="sheet.employee.profile.image" alt="" class="rounded-circle" width="32">
+                                <span v-text="sheet.employee.profile.name"></span>
+                            </a>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 </div>

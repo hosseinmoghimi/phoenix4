@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.shortcuts import reverse
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from utility.persian import PersianCalendar
+
 IMAGE_FOLDER = APP_NAME+"/images/"
 
 
@@ -637,6 +638,18 @@ class WareHouseSheet(models.Model):
     class_name="warehousesheet"
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
+
+    def persian_date_entered(self):
+        if self.date_entered is not None:
+            return PersianCalendar().from_gregorian(self.date_entered)
+        else:
+            return ""
+
+    def persian_date_exited(self):
+        if self.date_exited is not None:
+            return PersianCalendar().from_gregorian(self.date_exited)
+        else:
+            return ""
 
     def get_status_color(self):
         if self.direction==WareHouseSheetDirectionEnum.ENTER:
