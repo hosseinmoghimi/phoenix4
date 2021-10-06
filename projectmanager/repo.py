@@ -1,7 +1,7 @@
 from projectmanager.serializers import ServiceRequestSerializer
 from django.http import request
 from django.utils import timezone
-from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
+from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum, WareHouseSheetDirectionEnum
 from authentication.repo import ProfileRepo
 from django.db.models.query_utils import Q
 from .apps import APP_NAME
@@ -230,6 +230,73 @@ class OrganizationUnitRepo():
                 emp.save()
                 return emp
             
+class WareHouseSheetRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouseSheet.objects
+    def add_sheet(self,*args, **kwargs):
+        sheet=WareHouseSheet()
+        if 'ware_house' in kwargs:
+            sheet.ware_house=kwargs['ware_house']
+        if 'ware_house_id' in kwargs:
+            sheet.ware_house_id=kwargs['ware_house_id']
+        if 'material_request_id' in kwargs:
+            sheet.material_request_id=kwargs['material_request_id']
+        if 'material_request' in kwargs:
+            sheet.material_request=kwargs['material_request']
+            ware_house=sheet.material_request.project.contractor.organizationunit_set.filter(class_name="warehouse").first()
+            if ware_house is None:
+                return None
+            sheet.ware_house_id=ware_house.id
+            sheet.direction=WareHouseSheetDirectionEnum.EXIT
+            sheet.sheet_no=sheet.material_request.pk
+        if 'direction' in kwargs:
+            sheet.direction=kwargs['direction']
+        if 'serial_no' in kwargs:
+            sheet.serial_no=kwargs['serial_no']
+        if 'description' in kwargs:
+            sheet.description=kwargs['description']
+        if 'date_entered' in kwargs:
+            sheet.date_entered=kwargs['date_entered']
+        if 'date_exited' in kwargs:
+            sheet.date_exited=kwargs['date_exited']
+        if 'employee' in kwargs:
+            sheet.employee=kwargs['employee']
+        if 'employee_id' in kwargs:
+            sheet.employee_id=kwargs['employee_id']
+        sheet.save()
+        print(sheet)
+        print(10*"#@")
+        return sheet
+    def ware_house_sheet(self, *args, **kwargs):
+        objects=WareHouseSheet.objects
+        pk=0
+        if 'ware_house_sheet_id' in kwargs:
+            return objects.filter(pk=kwargs['ware_house_sheet_id']).first()
+        if 'pk' in kwargs:
+            return objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return objects.filter(pk=kwargs['id']).first()
+    
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'ware_house' in kwargs:
+            objects = objects.filter(ware_house=kwargs['ware_house'])
+        if 'ware_house_id' in kwargs:
+            objects = objects.filter(ware_house_id=kwargs['ware_house_id'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects
 
 class WareHouseRepo():
     def __init__(self, *args, **kwargs):
@@ -250,15 +317,7 @@ class WareHouseRepo():
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
-    def ware_house_sheet(self, *args, **kwargs):
-        objects=WareHouseSheet.objects
-        pk=0
-        if 'ware_house_sheet_id' in kwargs:
-            return objects.filter(pk=kwargs['ware_house_sheet_id']).first()
-        if 'pk' in kwargs:
-            return objects.filter(pk=kwargs['pk']).first()
-        if 'id' in kwargs:
-            return objects.filter(pk=kwargs['id']).first()
+    
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
