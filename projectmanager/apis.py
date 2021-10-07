@@ -130,7 +130,7 @@ class ProjectApi(APIView):
                     context['signature']=RequestSignatureSerializer(signature).data
                     context['result']=SUCCEED
                 if service_request_id is not None:
-                    signature=ServiceRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
+                    signature=ServiceRequestRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
                     context['signature']=RequestSignatureSerializer(signature).data
                     context['result']=SUCCEED
         context['log']=log
