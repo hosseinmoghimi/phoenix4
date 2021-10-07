@@ -246,8 +246,7 @@ class WareHouseSheetRepo():
         self.objects=WareHouseSheet.objects
 
     def add_material_request_to_ware_house_sheet(self,*args, **kwargs):
-        print(kwargs)
-        print(10*"###@@@***")
+
         ware_house_sheet=None
         material_request=None
         if 'material_request_id' in kwargs:

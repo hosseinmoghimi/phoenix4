@@ -240,7 +240,7 @@
             {% for ware_house_sheet in material_request.warehousesheet_set.all %}
             <p>
 
-                <a href="{{ware_house_sheet.get_absolute_url}}">
+                <a class="btn btn-primary" href="{{ware_house_sheet.get_absolute_url}}">
                     <i class="material-icons">
                         ballot
                     </i>
@@ -263,6 +263,23 @@
                         {{ware_house_sheet.date_exported|to_persian_datetime|safe}}
                     </small>
                 </span>
+
+                <a  class="btn btn-primary" href="{{ware_house_sheet.ware_house.get_absolute_url}}">
+                    <i class="material-icons">
+                        store
+                    </i>
+                    {{ware_house_sheet.ware_house.title}}
+                </a>
+
+
+                
+                <a  class="btn btn-primary" href="{{ware_house_sheet.ware_house.employer.get_absolute_url}}">
+                    <i class="material-icons">
+                        apartment
+                    </i>
+                    {{ware_house_sheet.ware_house.employer.title}}
+                </a>
+
             </p>
             {% empty %}
 

@@ -50,12 +50,12 @@
                 posting.fail(function (xhr, status, error) {
                     material_request_app.waiting = false
                     // showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
-                    console.log('خطا در ارتباط')
+                    // console.log('خطا در ارتباط')
                 })
                 // Put the results in a div
                 posting.done(function (data) {
                     material_request_app.waiting = false
-                    console.log(data)
+                    // console.log(data)
 
                     if (data.result === 'SUCCEED') {
                         material_request_app.material_requests.push(data.material_request)
