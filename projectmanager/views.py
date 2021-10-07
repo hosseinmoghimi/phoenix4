@@ -392,9 +392,9 @@ class EmployeeViews(View):
         context = getContext(request)
         context.update(ProfileContext(request=request,profile=employee.profile))
         context['employee'] = employee
-        service_requests=ServiceRepo(request=request).service_requests(employee_id=employee.id)
+        service_requests=ServiceRequestRepo(request=request).service_requests(employee_id=employee.id)
         context['service_requests']=service_requests
-        material_requests=MaterialRepo(request=request).material_requests(employee_id=employee.id)
+        material_requests=MaterialRequestRepo(request=request).material_requests(employee_id=employee.id)
         context['material_requests']=material_requests
         context['layout'] = "base-layout.html"
         # context['selected_profile'] = employee.profile
@@ -533,7 +533,7 @@ class ServiceViews(View):
         service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)
         context['service'] = service
-        context['service_requests']=ServiceRepo(request=request).service_requests(service_id=service.id)
+        context['service_requests']=ServiceRequestRepo(request=request).service_requests(service_id=service.id)
         context['services'] = service.childs()
         context.update(PageContext(request=request, page=service))
         context['add_service_form'] = AddServiceForm()

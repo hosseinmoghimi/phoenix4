@@ -518,6 +518,8 @@ class MaterialRequest(Request):
         self.request_type = RequestTypeEnum.MATERIAL_REQUEST
         return super(MaterialRequest, self).save(*args, **kwargs)
 
+    def ware_house_sheet(self):
+        return self.warehousesheet_set.first()
 
 class ServiceRequest(Request):
     service = models.ForeignKey("service", verbose_name=_("service"), on_delete=models.PROTECT)
@@ -641,7 +643,10 @@ class WareHouseSheet(models.Model):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_imported=models.DateTimeField(_("تاریخ ورود"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_exported=models.DateTimeField(_("تاریخ خروج"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("employee"), on_delete=models.CASCADE)
+    employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("پرسنل"), on_delete=models.CASCADE)
+    shelf=models.IntegerField(_("کمد"),null=True,blank=True)
+    row=models.IntegerField(_("طبقه"),null=True,blank=True)
+    col=models.IntegerField(_("ردیف"),null=True,blank=True)
     # who_exited=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("who_entered"), on_delete=models.CASCADE)
     description=models.CharField(_("description"),null=True,blank=True, max_length=500)
     class_name="warehousesheet"

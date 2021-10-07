@@ -63,6 +63,18 @@
                                         ballot
                                     </i>
                                 </a>
+                                {% if material_request.ware_house_sheet %}
+                                <a target="_blank" href="{{material_request.ware_house_sheet.get_absolute_url}}" title="نمایش برگه انبار">
+                                    <i class="material-icons text-success">
+                                        ballot
+                                    </i>
+                                </a>
+                                {% else %}
+                                
+                                    <i class="material-icons text-danger">
+                                        ballot
+                                    </i>
+                                {% endif %}
                             </td>
                             <td>
                                 <small>

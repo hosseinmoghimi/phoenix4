@@ -88,6 +88,9 @@
                             <table class="table table-striped">
                                 <thead>
                                     <th>
+
+                                    </th>
+                                    <th>
                                         تاریخ درخواست
                                     </th>
                                     <th>
@@ -109,6 +112,26 @@
                                 <tbody>
                                     {% for material_request in material.materialrequest_set.all %}
                                     <tr>
+                                        <td>
+                                            <a title="جزئیات" href="{{material_request.get_absolute_url}}">
+                                                <i class="material-icons">
+                                                    description
+                                                </i>
+                                            </a>
+
+                                            {% if material_request.ware_house_sheet %}
+                                            <a target="_blank" href="{{material_request.ware_house_sheet.get_absolute_url}}" title="نمایش برگه انبار">
+                                                <i class="material-icons text-success">
+                                                    ballot
+                                                </i>
+                                            </a>
+                                            {% else %}
+                                            
+                                                <i class="material-icons text-danger">
+                                                    ballot
+                                                </i>
+                                            {% endif %}
+                                        </td>
                                         <td>
                                             <small>
                                                 {{material_request.date_added|to_persian_date|safe}}
@@ -140,11 +163,7 @@
                                         <td>
 
                                             {{material_request.get_status_tag|safe}}
-                                            <a title="جزئیات" href="{{material_request.get_absolute_url}}">
-                                                <i class="material-icons">
-                                                    description
-                                                </i>
-                                            </a>
+                                           
                                             {% if perms.projectmanager.change_materialrequest %}
                                             <a title="ویرایش" href="{{material_request.get_edit_url}}">
                                                 <i class="material-icons">
