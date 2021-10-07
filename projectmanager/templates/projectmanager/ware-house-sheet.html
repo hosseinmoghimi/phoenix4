@@ -61,6 +61,7 @@
                     تاریخ ورود به انبار :
                     {{ware_house_sheet.date_imported|to_persian_datetime|safe}}
                 </p>
+              
 
                 {% endif %}
 
@@ -73,7 +74,12 @@
                 </p>
 
                 {% endif %}
-
+                <p class="text-left">
+                    <a href="{{ware_house_sheet.employee.get_absolute_url}}">
+                        {{ware_house_sheet.employee.profile.name}}
+                        <img src="{{ware_house_sheet.employee.profile.image}}" class="rounded-circle" width="48" alt="">
+                    </a>
+                </p>
             </div>
         </div>
 
