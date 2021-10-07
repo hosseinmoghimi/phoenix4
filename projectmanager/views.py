@@ -151,7 +151,7 @@ class ProjectViews(View):
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
-        for material_request in MaterialRepo(request=request).material_requests(project_id=project.id):
+        for material_request in MaterialRequestRepo(request=request).material_requests(project_id=project.id):
             quantity = material_request.quantity
             unit_name = material_request.unit_name
             unit_price = material_request.unit_price
@@ -195,7 +195,7 @@ class ProjectViews(View):
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
-        for service_request in ServiceRepo(request=request).service_requests(project_id=project.id):
+        for service_request in ServiceRequestRepo(request=request).service_requests(project_id=project.id):
             quantity = service_request.quantity
             unit_name = service_request.unit_name
             unit_price = service_request.unit_price
