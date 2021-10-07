@@ -429,7 +429,7 @@ class MaterialViews(View):
         context['materials'] =materials
         material_requests=material.materialrequest_set.all()
         context['material_requests'] = material_requests
-        context['material_requests']=MaterialRepo(request=request).material_requests(material_id=material.id)
+        context['material_requests']=MaterialRequestRepo(request=request).material_requests(material_id=material.id)
       
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
         
