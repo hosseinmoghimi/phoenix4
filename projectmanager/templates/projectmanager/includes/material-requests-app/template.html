@@ -4,7 +4,7 @@
 <div id="accordion">
 
 
-    <div class="card" id="material-request-app">
+    <div class="card" id="material-requests-app">
         <div class="card-header" id="headingmaterialrequests">
 
             <h5 class="card-title text-center farsi">
@@ -38,6 +38,15 @@
                             پروژه
                         </th>
                         {% endif %}
+
+
+                        {% if not ware_house %}
+
+                        <th>
+                            انبار
+                        </th>
+                        {% endif %}
+
                         <th>
                             متریال
                         </th>
@@ -64,16 +73,17 @@
                                     </i>
                                 </a>
                                 {% if material_request.ware_house_sheet %}
-                                <a target="_blank" href="{{material_request.ware_house_sheet.get_absolute_url}}" title="نمایش برگه انبار">
+                                <a target="_blank" href="{{material_request.ware_house_sheet.get_absolute_url}}"
+                                    title="نمایش برگه انبار">
                                     <i class="material-icons text-success">
                                         ballot
                                     </i>
                                 </a>
                                 {% else %}
-                                
-                                    <i title="برگه انبار ثبت نشده است." class="material-icons text-danger">
-                                        ballot
-                                    </i>
+
+                                <i title="برگه انبار ثبت نشده است." class="material-icons text-danger">
+                                    ballot
+                                </i>
                                 {% endif %}
                             </td>
                             <td>
@@ -100,6 +110,22 @@
                                 </a>
                             </td>
                             {% endif %}
+                            {% if not ware_house %}
+                            <td>
+                                {% if material_request.ware_house_sheet %}
+
+
+                                <a target="_blank"
+                                    href="{{material_request.ware_house_sheet.ware_house.get_absolute_url}}">
+
+
+                                    {{material_request.ware_house_sheet.ware_house.title}}
+                                </a>
+
+                                {% endif %}
+                            </td>
+                            {% endif %}
+
                             <td>
 
                                 <a target="_blank" href="{{material_request.material.get_absolute_url}}">
@@ -185,7 +211,7 @@
                             <td>
                                 <span v-html="material_request.get_status_tag"></span>
 
-                             
+
                                 {% if perms.projectmanager.change_materialrequest %}
                                 <a title="ویرایش" target="_blank" :href="material_request.get_edit_url">
                                     <i class="material-icons">edit</i>

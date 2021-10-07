@@ -2,8 +2,8 @@ from core.enums import *
 from django.utils.translation import gettext as _
 
 class WareHouseSheetDirectionEnum(TextChoices):
-    ENTER="ورود به انبار",_("ورود به انبار")
-    EXIT="خروج از انبار",_("خروج از انبار")
+    IMPORT="ورود به انبار",_("ورود به انبار")
+    EXPORT="خروج از انبار",_("خروج از انبار")
 
 
 class RequestTypeEnum(TextChoices):

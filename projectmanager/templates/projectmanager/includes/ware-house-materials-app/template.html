@@ -1,0 +1,56 @@
+{% load to_price %}
+<div class="card">
+    <div class="card-header">
+        <h4>
+            متریال ها
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>متریال</th>
+                <th>ورود/خروج</th>
+                <th>تعداد</th>
+                <th>قیمت</th>
+                <th>جمع</th>
+            </thead>
+            <tbody>
+                {% for ware_house_material in ware_house_materials %}
+
+                <tr>
+                    <td>
+                        <a href="{{ware_house_material.material.get_absolute_url}}">
+                            {{ware_house_material.material.title}}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ware_house_material.direction_color}}">
+
+                            {{ware_house_material.direction}}
+
+                        </span>
+                    </td>
+                    <td>
+                        {{ware_house_material.total_quantities}}
+                        <span class="badge badge-primary px-2 py-2">
+                            {{ware_house_material.unit_name}}
+
+
+                        </span>
+                    </td>
+                    <td>
+                        {{ware_house_material.average_unit_price|to_price}}
+
+                    </td>
+                    <td>
+                        {{ware_house_material.total_price|to_price}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+{% load static %}
 <div id="ware-house-sheets-app">
 
     <div class="card">
@@ -13,14 +14,17 @@
                     <th>
 
                     </th>
+
+                    {% if not ware_house %}
                     <th>
                         انبار متریال
                     </th>
-                  
+                    {% endif %}
+
                     <th>
                         جهت
                     </th>
-                  
+
 
                     <th>
                         شماره سریال
@@ -43,28 +47,46 @@
                                 <i class="material-icons">
                                     ballot
                                 </i>
-                                برگه 
+                                برگه
                                 <span v-text="sheet.id"></span>
                             </a>
-                           
+
                         </td>
+                        {% if not ware_house %}
+
                         <td>
-                            <div>
-                                <a :href="sheet.ware_house.get_absolute_url">
-                                    <span v-text="sheet.ware_house.title"></span>
-                                </a>
+                            <div class="media">
+                                <!-- <i class="material-icons">
+                                    store
+                                </i> -->
+
+                                <img src="{% static 'projectmanager/img/warehouse.jpg' %}" class="rounded-circle"
+                                    width="48" alt="">
+                                <div class="media-body mr-2">
+
+                                    <div>
+                                        <a :href="sheet.ware_house.get_absolute_url">
+                                            <span v-text="sheet.ware_house.title"></span>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a :href="sheet.ware_house.employer.get_absolute_url">
+                                            <small class="text-secondary"
+                                                v-text="sheet.ware_house.employer.title"></small>
+                                        </a>
+                                    </div>
+
+                                </div>
                             </div>
-                            <div>
-                                <a  :href="sheet.ware_house.employer.get_absolute_url">
-                                    <small class="text-secondary" v-text="sheet.ware_house.employer.title"></small>
-                                </a>
-                            </div>
+
+
                         </td>
-                     
+
+                        {% endif %}
                         <td>
                             <span :class="'badge badge-'+sheet.get_status_color" v-text="sheet.direction"></span>
                         </td>
-                      
+
                         <td>
                             <small class="text-secondary " v-text="sheet.serial_no"></small>
                         </td>

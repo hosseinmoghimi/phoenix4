@@ -521,6 +521,7 @@ class MaterialRequest(Request):
     def ware_house_sheet(self):
         return self.warehousesheet_set.first()
 
+
 class ServiceRequest(Request):
     service = models.ForeignKey("service", verbose_name=_("service"), on_delete=models.PROTECT)
 
@@ -666,9 +667,9 @@ class WareHouseSheet(models.Model):
             return ""
 
     def get_status_color(self):
-        if self.direction==WareHouseSheetDirectionEnum.ENTER:
+        if self.direction==WareHouseSheetDirectionEnum.IMPORT:
             return "success"
-        if self.direction==WareHouseSheetDirectionEnum.EXIT:
+        if self.direction==WareHouseSheetDirectionEnum.EXPORT:
             return "danger"
 
     class Meta:

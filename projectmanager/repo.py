@@ -1,12 +1,10 @@
-from projectmanager.serializers import ServiceRequestSerializer
-from django.http import request
+from django.db.models.aggregates import Avg
 from django.utils import timezone
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum, WareHouseSheetDirectionEnum
 from authentication.repo import ProfileRepo
-from django.db.models.query_utils import Q
+from django.db.models import Q,Sum
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheet
-from utility.persian import PersianCalendar
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheet
 
 
 class ProjectRepo():
@@ -267,7 +265,7 @@ class WareHouseSheetRepo():
 
         
         ware_house_sheet=WareHouseSheet()
-        ware_house_sheet.direction=WareHouseSheetDirectionEnum.EXIT
+        ware_house_sheet.direction=WareHouseSheetDirectionEnum.EXPORT
         if 'ware_house_id' in kwargs:
             ware_house_id=kwargs['ware_house_id']
             ware_house=WareHouse.objects.filter(pk=ware_house_id).first()
@@ -331,7 +329,30 @@ class WareHouseRepo():
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
-    
+
+    def ware_house_materials(self,*args, **kwargs):
+        ware_house_materials=[]
+        if 'ware_house_id' in kwargs:
+            ware_house_id=kwargs['ware_house_id']
+            ware_house=WareHouse.objects.filter(ok=ware_house_id).first()
+            if ware_house is None:
+                return ware_house_materials
+        if 'ware_house' in kwargs:
+            ware_house=kwargs['ware_house']
+        for ware_house_sheet in ware_house.warehousesheet_set.all():
+            ware_house_material_s=ware_house_sheet.material_requests.filter(status=RequestStatusEnum.DELIVERED).values('material_id','unit_name').annotate(total_quantities=Sum('quantity')).annotate(average_unit_price=Avg('unit_price'))
+            for ware_house_material in ware_house_material_s:
+                material=MaterialRepo(request=self.request).material(pk=ware_house_material['material_id'])
+                ware_house_materials.append({
+                    'material':material,
+                    'unit_name':ware_house_material['unit_name'],
+                    'total_quantities':ware_house_material['total_quantities'],
+                    'direction':WareHouseSheetDirectionEnum.EXPORT,
+                    'average_unit_price':ware_house_material['average_unit_price'],
+                    'direction_color':'danger',
+                    'total_price':ware_house_material['average_unit_price']*ware_house_material['total_quantities'],
+                })
+        return ware_house_materials
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -883,6 +904,8 @@ class MaterialRepo():
         return self.organization_unit(*args, **kwargs)
 
     def list(self, *args, **kwargs):
+
+
         objects = self.objects
         if 'search_for' in kwargs:
             objects = objects.filter(title__contains=kwargs['search_for'])

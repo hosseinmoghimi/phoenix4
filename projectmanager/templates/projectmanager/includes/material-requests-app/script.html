@@ -3,7 +3,7 @@
     let materials = JSON.parse(`{{materials_s|escapejs}}`)
     let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
     let material_request_app = new Vue({
-        el: "#material-request-app",
+        el: "#material-requests-app",
         data: {
             new_material_request_material_id: 1,
             add_material_request_form_title: "",

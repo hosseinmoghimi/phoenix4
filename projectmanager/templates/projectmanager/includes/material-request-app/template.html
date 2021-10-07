@@ -209,15 +209,15 @@
         </div>
         <div class="card-footer">
 
-{% if add_signature_form %}
-  
+            {% if add_signature_form %}
 
-{% include "projectmanager/includes/material-request-app/add-signature-form.html" %}
-{% else %}
-<p>
-    شما مجوز لازم برای امضای این درخواست را ندارید.
-</p>
-{% endif %}
+
+            {% include "projectmanager/includes/material-request-app/add-signature-form.html" %}
+            {% else %}
+            <p>
+                شما مجوز لازم برای امضای این درخواست را ندارید.
+            </p>
+            {% endif %}
 
 
 
@@ -264,7 +264,7 @@
                     </small>
                 </span>
 
-                <a  class="btn btn-primary" href="{{ware_house_sheet.ware_house.get_absolute_url}}">
+                <a class="btn btn-primary" href="{{ware_house_sheet.ware_house.get_absolute_url}}">
                     <i class="material-icons">
                         store
                     </i>
@@ -272,14 +272,15 @@
                 </a>
 
 
-                
-                <a  class="btn btn-primary" href="{{ware_house_sheet.ware_house.employer.get_absolute_url}}">
+
+                <a class="btn btn-primary" href="{{ware_house_sheet.ware_house.employer.get_absolute_url}}">
                     <i class="material-icons">
                         apartment
                     </i>
                     {{ware_house_sheet.ware_house.employer.title}}
                 </a>
 
+   
             </p>
             {% empty %}
 

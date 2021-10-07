@@ -406,13 +406,17 @@ class EmployeeViews(View):
 class WareHouseViews(View):
     
     def ware_house(self, request, *args, **kwargs):
-        ware_house = WareHouseRepo(request=request).ware_house(*args, **kwargs)
+        ware_house_repo=WareHouseRepo(request=request)
+        ware_house = ware_house_repo.ware_house(*args, **kwargs)
         context = getContext(request)
         context.update(PageContext(request=request, page=ware_house))
         context['ware_house'] = ware_house
         context.update(OrganizationUnitViews().getOrgUnitContext(request=request, organization_unit=ware_house))
         ware_house_sheets=ware_house.sheets()
         ware_house_sheets_s=json.dumps(WareHouseSheetSerializer(ware_house_sheets,many=True).data)
+        # context['materials']=ware_house_repo.materials(ware_house_id=ware_house.id)
+        ware_house_materials=ware_house_repo.ware_house_materials(ware_house=ware_house)
+        context['ware_house_materials']=ware_house_materials
         context['ware_house_sheets_s']=ware_house_sheets_s
 
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
@@ -520,6 +524,7 @@ class MaterialRequestViews(View):
         # context['material_requests_s'] ="[]"
         context['material_requests_s'] =json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
         return render(request, TEMPLATE_ROOT+"material-requests.html", context)
+
 
 class ServiceRequestViews(View):
     def service_request(self, request, *args, **kwargs):
