@@ -332,6 +332,11 @@
                 </div>
                 <div class="card mb-3">
                     <div class="card-body">
+                        <p>
+                            <a href="{% url 'projectmanager:organization_units_chart' employer_id=employer.id %}">
+                                چارت سازمانی
+                            </a>
+                        </p>
                         {% if add_organization_unit_form %}
                         <form @submit.prevent="add_organization_unit()" class="mb-3">
                             <div class="row">
@@ -356,10 +361,11 @@
                         </form>
 
                         {% endif %}
-                        {% for organization_unit in employer.organizationunit_set.all %}
-                        {% if organization_unit.parent %}
 
-                        {% else %}
+
+                        {% for organization_unit in employer.organizationunit_set.all %}
+                        {% if not organization_unit.parent %}
+
 
                         <div class="row">
 

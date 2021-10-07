@@ -305,6 +305,20 @@ class ProjectViews(View):
 
 
 class OrganizationUnitViews(View):
+    def organization_units_chart(self, request, *args, **kwargs):
+        context = getContext(request)
+        if 'employer_id' in kwargs and kwargs['employer_id']>0:
+            employer_id=kwargs['employer_id']
+        else:
+            employer_id=0
+
+        employer=(EmployerRepo(request=request).employer(pk=employer_id))
+        page=employer
+        pages=employer.organizationunit_set.first().all_sub_pages()
+        pages_s = BasicPageSerializer(pages, many=True).data
+        context['pages_s'] = json.dumps(pages_s)
+        return render(request, "phoenix/pages-chart.html", context)
+
     def getOrgUnitContext(self,request,organization_unit,*args, **kwargs):
         context={}
         context['organization_unit'] = organization_unit

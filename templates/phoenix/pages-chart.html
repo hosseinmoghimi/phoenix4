@@ -62,12 +62,12 @@
       // tooltip='tooltip'
       // data.addRow([{'v':name, 'f':caption}, manager, tooltip])
       
-      pages.forEach(element => {
+      pages.forEach(page => {
         // //console.log(element)
-        id = element.id.toString(10)
-        caption = '<a href="'+element.get_absolute_url+'">'+element.title+'</a>'
-        manager = element.parent_id?element.parent_id.toString(10):null
-        tooltip = element.title
+        id = page.id.toString(10)
+        caption = '<a href="'+page.get_absolute_url+'">'+page.title+'</a>'
+        manager = page.parent_id?page.parent_id.toString(10):null
+        tooltip = page.title
         data.addRow([{ 'v': id, 'f': caption }, manager, tooltip])
       });
 

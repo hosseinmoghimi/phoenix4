@@ -18,6 +18,7 @@ urlpatterns = [
     path('project-materials-order/<int:pk>/',views.ProjectViews().project_materials_order,name="project_materials_order"),
     path('project-services-order/<int:pk>/',views.ProjectViews().project_services_order,name="project_services_order"),
     path('projects-chart/<int:pk>/',views.ProjectViews().projects_chart,name="projects_chart"),
+    path('organization_units_chart/<int:employer_id>/',views.OrganizationUnitViews().organization_units_chart,name="organization_units_chart"),
     path('employer/<int:pk>/',views.OrganizationUnitViews().employer,name="employer"),
     path('employee/<int:pk>/',views.EmployeeViews().employee,name="employee"),
     path('organizationunit/<int:pk>/',views.OrganizationUnitViews().organization_unit,name="organizationunit"),
