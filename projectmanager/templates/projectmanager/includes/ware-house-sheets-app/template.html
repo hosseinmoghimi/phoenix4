@@ -16,16 +16,11 @@
                     <th>
                         انبار متریال
                     </th>
-                    <th>
-                        متریال
-                    </th>
+                  
                     <th>
                         جهت
                     </th>
-                    <th>
-                        تعداد
-                    </th>
-
+                  
 
                     <th>
                         شماره سریال
@@ -38,6 +33,7 @@
                     <th>
                         پرسنل
                     </th>
+                    <th></th>
 
                 </thead>
                 <tbody>
@@ -47,15 +43,10 @@
                                 <i class="material-icons">
                                     ballot
                                 </i>
+                                برگه 
+                                <span v-text="sheet.id"></span>
                             </a>
-                            {% if perms.projectmanager.change_warehousesheet %}
-                            <a title="ویرایش" target="_blank" :href="sheet.get_edit_url">
-
-                                <i class="material-icons">
-                                    edit
-                                </i>
-                            </a>
-                            {% endif %}
+                           
                         </td>
                         <td>
                             <div>
@@ -64,35 +55,38 @@
                                 </a>
                             </div>
                             <div>
-                                <a :href="sheet.ware_house.employer.get_absolute_url">
+                                <a  :href="sheet.ware_house.employer.get_absolute_url">
                                     <small class="text-secondary" v-text="sheet.ware_house.employer.title"></small>
                                 </a>
                             </div>
                         </td>
-                        <td>
-                            <a :href="sheet.material_request.material.get_absolute_url">
-                                <span v-text="sheet.material_request.material.title"></span>
-                            </a>
-                        </td>
+                     
                         <td>
                             <span :class="'badge badge-'+sheet.get_status_color" v-text="sheet.direction"></span>
                         </td>
-                        <td>
-                            <span v-text="sheet.material_request.quantity"></span>
-                            <span class="badge badge-primary" v-text="sheet.material_request.unit_name"></span>
-                        </td>
+                      
                         <td>
                             <small class="text-secondary " v-text="sheet.serial_no"></small>
                         </td>
                         <td>
-                            <small class="text-secondary " v-text="sheet.persian_date_entered"></small> ~
-                            <small class="text-secondary " v-text="sheet.persian_date_exited"></small>
+                            <small class="text-secondary " v-text="sheet.persian_date_imported"></small>
+                            <small class="text-secondary " v-text="sheet.persian_date_exported"></small>
                         </td>
                         <td>
-                            <a :href="sheet.employee.get_absolute_url">
+                            <a v-if="sheet.employee" :href="sheet.employee.get_absolute_url">
                                 <img :src="sheet.employee.profile.image" alt="" class="rounded-circle" width="32">
                                 <span v-text="sheet.employee.profile.name"></span>
                             </a>
+                        </td>
+                        <td>
+                            {% if perms.projectmanager.change_warehousesheet %}
+                            <a title="ویرایش" target="_blank" :href="sheet.get_edit_url">
+
+                                <i class="material-icons">
+                                    edit
+                                </i>
+                            </a>
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>

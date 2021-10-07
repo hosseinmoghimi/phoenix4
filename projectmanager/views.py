@@ -1,7 +1,7 @@
 import json
 from .apps import APP_NAME
 from .forms import *
-from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, WareHouseRepo, WareHouseSheetRepo
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseRepo, WareHouseSheetRepo
 from .serializers import EmployeeSerializer, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from .utils import AdminUtility
 from authentication.repo import ProfileRepo
@@ -252,8 +252,8 @@ class ProjectViews(View):
         employees=project.employees()
         context['employees']=employees
         context['locations']=project.locations.all()
-        context['material_requests']=MaterialRepo(request=request).material_requests(project_id=project.id)
-        context['service_requests']=ServiceRepo(request=request).service_requests(project_id=project.id)
+        context['material_requests']=MaterialRequestRepo(request=request).material_requests(project_id=project.id)
+        context['service_requests']=ServiceRequestRepo(request=request).service_requests(project_id=project.id)
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         context['all_locations']=LocationRepo(request=request).list().order_by('title')
@@ -420,21 +420,7 @@ class MaterialViews(View):
         if request.user.has_perm(APP_NAME+".add_material"):
             context['add_material_form'] = AddMaterialForm()
         return render(request, TEMPLATE_ROOT+"materials.html", context)
-    def material_request(self, request, *args, **kwargs):
-        material_request = MaterialRepo(request=request).material_request(*args, **kwargs)
-        context = getContext(request)
-        context['material_request'] = material_request
-        context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
-        return render(request, TEMPLATE_ROOT+"material-request.html", context)
-
-    def material_requests(self, request, *args, **kwargs):
-        material_requests = MaterialRepo(request=request).material_requests(*args, **kwargs)
-        context = getContext(request)
-        context['material_requests'] = material_requests
-        # context['material_requests_s'] ="[]"
-        context['material_requests_s'] =json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
-        return render(request, TEMPLATE_ROOT+"material-requests.html", context)
-
+    
     def material(self, request, *args, **kwargs):
         material = MaterialRepo(request=request).material(*args, **kwargs)
         context = getContext(request)
@@ -452,6 +438,44 @@ class MaterialViews(View):
             context['add_material_form'] = AddMaterialForm()
         return render(request, TEMPLATE_ROOT+"material.html", context)
 
+
+class MaterialRequestViews(View):
+    def material_request(self, request, *args, **kwargs):
+        material_request = MaterialRequestRepo(request=request).material_request(*args, **kwargs)
+        context = getContext(request)
+        context['material_request'] = material_request
+        context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
+        if request.user.has_perm(APP_NAME+".add_warehousesheet"):
+            context['add_material_request_to_ware_house_sheet_form']=AddMaterialRequestToWareHouseSheetForm()
+            context["ware_houses"]=material_request.project.contractor.ware_houses()
+        return render(request, TEMPLATE_ROOT+"material-request.html", context)
+
+    def material_requests(self, request, *args, **kwargs):
+        material_requests = MaterialRequestRepo(request=request).material_requests(*args, **kwargs)
+        context = getContext(request)
+        context['material_requests'] = material_requests
+        # context['material_requests_s'] ="[]"
+        context['material_requests_s'] =json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        return render(request, TEMPLATE_ROOT+"material-requests.html", context)
+
+class ServiceRequestViews(View):
+    def service_request(self, request, *args, **kwargs):
+        service_request = ServiceRequestRepo(request=request).service_request(*args, **kwargs)
+        context = getContext(request)
+        context['service_request'] = service_request
+        context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
+        return render(request, TEMPLATE_ROOT+"service-request.html", context)
+
+    def service_requests(self, request, *args, **kwargs):
+        service_requests = ServiceRequestRepo(request=request).service_requests(*args, **kwargs)
+        context = getContext(request)
+        context['service_requests'] = service_requests
+        context['service_requests_s'] = json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
+        return render(request, TEMPLATE_ROOT+"service-requests.html", context)
+
+    
+
+  
 
 class EventViews(View):
     def eventsContext(self,request,*args, **kwargs):
@@ -491,20 +515,6 @@ class EventViews(View):
 
 
 class ServiceViews(View):
-    def service_request(self, request, *args, **kwargs):
-        service_request = ServiceRepo(request=request).service_request(*args, **kwargs)
-        context = getContext(request)
-        context['service_request'] = service_request
-        context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
-        return render(request, TEMPLATE_ROOT+"service-request.html", context)
-
-    def service_requests(self, request, *args, **kwargs):
-        service_requests = ServiceRepo(request=request).service_requests(*args, **kwargs)
-        context = getContext(request)
-        context['service_requests'] = service_requests
-        context['service_requests_s'] = json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
-        return render(request, TEMPLATE_ROOT+"service-requests.html", context)
-
     def service(self, request, *args, **kwargs):
         service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)

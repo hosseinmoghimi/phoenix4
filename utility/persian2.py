@@ -9,7 +9,9 @@ class PersianCalendar:
         a=PersianCalendar().from_gregorian(value)
         return f'<span title="{value.strftime("%Y/%m/%d %H:%M:%S") }">{str(a)}</span>'
     def to_gregorian(self,persian_date_input):
-        return self.parse(persian_date_input).date
+        a= self.parse(persian_date_input)
+        if a is not None:
+            return self.parse(persian_date_input).date
         
     def __init__(self,date=None):
         if date is None:
@@ -30,6 +32,8 @@ class PersianCalendar:
     def now(self):
         return JalaliDateTime.today()
     def parse(self,value,add_time_zone=False):
+        if value=="" or value is None:
+            return None
         shamsi_date_time=value
 
         year_=int(shamsi_date_time[0:4])
@@ -37,7 +41,7 @@ class PersianCalendar:
         day_=int(shamsi_date_time[8:10])
         padding=shamsi_date_time.find(':')
         if not padding==-1:
-            padding-=2;
+            padding-=2
             hour_=int(shamsi_date_time[padding:padding+2])
             
             padding+=3

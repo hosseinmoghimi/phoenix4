@@ -1,0 +1,43 @@
+{% if add_material_request_to_ware_house_sheet_form %}
+   <form @submit.prevent="add_material_request_to_ware_house_sheet()">
+
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="farsi text-right">
+                        شناسه برگه انبار
+
+                    </div>
+
+
+                    <input placeholder="شناسه برگه انبار" required type="number" class="form-control"
+                        v-model="ware_house_sheet_id">
+
+
+                </div>
+
+
+
+                <div class="col-md-4">
+
+                    <div class="farsi text-right">
+                        انبار متریال
+
+                    </div>
+
+                    <select v-model="ware_house_id" class="form-control">
+                        {% for ware_house in ware_houses %}
+                        <option value="{{ware_house.id}}">{{ware_house.title}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <button class="btn btn-success btn-block" type="submit">تایید</button>
+
+
+                </div>
+            </div>
+        </form>
+{% endif %}

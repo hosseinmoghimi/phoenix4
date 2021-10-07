@@ -20,6 +20,9 @@
                 <table class="table table-striped">
                     <thead>
                         <th>
+
+                        </th>
+                        <th>
                             تاریخ درخواست
                         </th>
                         <th>
@@ -54,6 +57,13 @@
                     <tbody>
                         {% for service_request in service_requests %}
                         <tr>
+                            <td>
+                                <a target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
                             <td>
                                 <small>
 
@@ -111,11 +121,7 @@
                             </td>
                             <td>
                                 {{service_request.get_status_tag|safe}}
-                                <a target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        description
-                                    </i>
-                                </a>
+                             
 
                                 {% if perms.projectmanager.change_servicerequest %}
                                 {{service_request.get_edit_btn|safe}}
@@ -127,6 +133,14 @@
                         {% if add_service_request_form %}
 
                         <tr v-for="service_request in service_requests">
+                            <td>
+                                <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
+
                             <td>
                                 <small v-text="service_request.persian_date_added">
 
@@ -170,11 +184,7 @@
                             <td>
                                 <span v-html="service_request.get_status_tag"></span>
 
-                                <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        description
-                                    </i>
-                                </a>
+                             
                                 {% if perms.projectmanager.change_servicerequest %}
                                 <a title="ویرایش" target="_blank" :href="service_request.get_edit_url">
                                     <i class="material-icons">edit</i>

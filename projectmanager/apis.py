@@ -1,10 +1,9 @@
-from projectmanager.models import WareHouseSheet
 from utility.persian import PersianCalendar
 from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, RequestSignatureSerializer, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import EmployerRepo, EventRepo, LocationRepo, MaterialRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, WareHouseSheetRepo
+from .repo import EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseSheetRepo
 from .forms import *
 
 
@@ -126,7 +125,7 @@ class ProjectApi(APIView):
                 material_request_id=add_signature_form.cleaned_data['material_request_id']
                 service_request_id=add_signature_form.cleaned_data['service_request_id']
                 if material_request_id is not None:
-                    signature=MaterialRepo(request=request).add_signature(material_request_id=material_request_id,status=status,description=description)
+                    signature=MaterialRequestRepo(request=request).add_signature(material_request_id=material_request_id,status=status,description=description)
                     context['signature']=RequestSignatureSerializer(signature).data
                     context['result']=SUCCEED
                 if service_request_id is not None:
@@ -227,31 +226,36 @@ class OrganizationUnitApi(APIView):
         return JsonResponse(context)
 
 
-class MaterialApi(APIView):
-    def add_material_request(self,request,*args, **kwargs):
+class WareHouseSheetApi(APIView):
+    def add_material_request_to_ware_house_sheet(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
         log=1
         if request.method=='POST':
             log+=1
-            add_material_request_form=AddMaterialRequestForm(request.POST)
-            if add_material_request_form.is_valid():
+            add_material_request_to_ware_house_sheet_form=AddMaterialRequestToWareHouseSheetForm(request.POST)
+            if add_material_request_to_ware_house_sheet_form.is_valid():
                 log+=1
-                material_id=add_material_request_form.cleaned_data['material_id']
-                # material_title=add_material_request_form.cleaned_data['material_title']
-                employee_id=add_material_request_form.cleaned_data['employee_id']
-                project_id=add_material_request_form.cleaned_data['project_id']
-                quantity=add_material_request_form.cleaned_data['quantity']
-                unit_name=add_material_request_form.cleaned_data['unit_name']
-                unit_price=add_material_request_form.cleaned_data['unit_price']
-                material_request=MaterialRepo(request=request).add_material_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,material_id=material_id,project_id=project_id)
-                ware_house_sheet=WareHouseSheetRepo(request=request).add_sheet(material_request=material_request)
-                if material_request is not None:
-                    context['material_request']=MaterialRequestSerializer(material_request).data
+                ware_house_sheet_id=add_material_request_to_ware_house_sheet_form.cleaned_data['ware_house_sheet_id']
+                material_request_id=add_material_request_to_ware_house_sheet_form.cleaned_data['material_request_id']
+                ware_house_id=add_material_request_to_ware_house_sheet_form.cleaned_data['ware_house_id']
+                date_exported=add_material_request_to_ware_house_sheet_form.cleaned_data['date_exported']
+                
+                date_exported=PersianCalendar().to_gregorian(date_exported)
+                ware_house_sheet=WareHouseSheetRepo(request=request).add_material_request_to_ware_house_sheet(
+                    material_request_id=material_request_id,
+                    ware_house_id=ware_house_id,
+                    ware_house_sheet_id=ware_house_sheet_id,
+                    )
+
+                if ware_house_sheet is not None:
                     context['ware_house_sheet']=WareHouseSheetSerializer(ware_house_sheet).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
+
+class MaterialApi(APIView):
 
     def add_material(self,request,*args, **kwargs):
         context={}
@@ -272,7 +276,36 @@ class MaterialApi(APIView):
         return JsonResponse(context)
 
 
-class ServiceApi(APIView):
+class MaterialRequestApi(APIView):
+    def add_material_request(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_material_request_form=AddMaterialRequestForm(request.POST)
+            if add_material_request_form.is_valid():
+                log+=1
+                material_id=add_material_request_form.cleaned_data['material_id']
+                # material_title=add_material_request_form.cleaned_data['material_title']
+                employee_id=add_material_request_form.cleaned_data['employee_id']
+                project_id=add_material_request_form.cleaned_data['project_id']
+                quantity=add_material_request_form.cleaned_data['quantity']
+                unit_name=add_material_request_form.cleaned_data['unit_name']
+                unit_price=add_material_request_form.cleaned_data['unit_price']
+                material_request=MaterialRequestRepo(request=request).add_material_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,material_id=material_id,project_id=project_id)
+                # ware_house_sheet=WareHouseSheetRepo(request=request).add_sheet(material_request=material_request)
+                if material_request is not None:
+                    context['material_request']=MaterialRequestSerializer(material_request).data
+                    # context['ware_house_sheet']=WareHouseSheetSerializer(ware_house_sheet).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+ 
+
+
+class ServiceRequestApi(APIView):
     def add_service_request(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
@@ -288,13 +321,34 @@ class ServiceApi(APIView):
                 quantity=add_service_request_form.cleaned_data['quantity']
                 unit_name=add_service_request_form.cleaned_data['unit_name']
                 unit_price=add_service_request_form.cleaned_data['unit_price']
-                service_request=ServiceRepo(request=request).add_service_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_title=service_title,project_id=project_id)
+                service_request=ServiceRequestRepo(request=request).add_service_request(employee_id=employee_id,unit_price=unit_price,unit_name=unit_name,quantity=quantity,service_title=service_title,project_id=project_id)
                 if service_request is not None:
                     context['service_request']=ServiceRequestSerializer(service_request).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
 
+    def add_service(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_service_form=AddServiceForm(request.POST)
+            if add_service_form.is_valid():
+                log+=1
+                title=add_service_form.cleaned_data['title']
+                parent_id=add_service_form.cleaned_data['parent_id']
+                service=ServiceRepo(request=request).add_service(title=title,parent_id=parent_id)
+                if service is not None:
+                    context['service']=ServiceSerializer(service).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+
+
+class ServiceApi(APIView):
     def add_service(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED

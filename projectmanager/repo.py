@@ -8,6 +8,7 @@ from .apps import APP_NAME
 from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheet
 from utility.persian import PersianCalendar
 
+
 class ProjectRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -230,6 +231,7 @@ class OrganizationUnitRepo():
                 emp.save()
                 return emp
             
+
 class WareHouseSheetRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -241,39 +243,51 @@ class WareHouseSheetRepo():
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=WareHouseSheet.objects
-    def add_sheet(self,*args, **kwargs):
-        sheet=WareHouseSheet()
-        if 'ware_house' in kwargs:
-            sheet.ware_house=kwargs['ware_house']
-        if 'ware_house_id' in kwargs:
-            sheet.ware_house_id=kwargs['ware_house_id']
+
+    def add_material_request_to_ware_house_sheet(self,*args, **kwargs):
+        print(kwargs)
+        print(10*"###@@@***")
+        ware_house_sheet=None
+        material_request=None
         if 'material_request_id' in kwargs:
-            sheet.material_request_id=kwargs['material_request_id']
-        if 'material_request' in kwargs:
-            sheet.material_request=kwargs['material_request']
-            ware_house=sheet.material_request.project.contractor.organizationunit_set.filter(class_name="warehouse").first()
-            if ware_house is None:
-                return None
-            sheet.ware_house_id=ware_house.id
-            sheet.direction=WareHouseSheetDirectionEnum.EXIT
-            sheet.sheet_no=sheet.material_request.pk
-        if 'direction' in kwargs:
-            sheet.direction=kwargs['direction']
-        if 'serial_no' in kwargs:
-            sheet.serial_no=kwargs['serial_no']
-        if 'description' in kwargs:
-            sheet.description=kwargs['description']
-        if 'date_entered' in kwargs:
-            sheet.date_entered=kwargs['date_entered']
-        if 'date_exited' in kwargs:
-            sheet.date_exited=kwargs['date_exited']
-        if 'employee' in kwargs:
-            sheet.employee=kwargs['employee']
-        if 'employee_id' in kwargs:
-            sheet.employee_id=kwargs['employee_id']
-        sheet.save()
+            material_request=MaterialRequestRepo(request=self.request).material_request(material_request_id=kwargs['material_request_id'])
+        if material_request is None:
+            return None
+        if len(material_request.warehousesheet_set.all())>0:
+            return None
+
+        if 'ware_house_sheet_id' in kwargs and not kwargs['ware_house_sheet_id']==0:
+            ware_house_sheet_id=kwargs['ware_house_sheet_id']
+            ware_house_sheet=self.ware_house_sheet(ware_house_sheet_id=ware_house_sheet_id)
+            if ware_house_sheet is None:
+                    return None
+        if material_request is not None and ware_house_sheet is not None:
+            ware_house_sheet.material_requests.add(material_request)
+            return ware_house_sheet
+
         
-        return sheet
+        ware_house_sheet=WareHouseSheet()
+        ware_house_sheet.direction=WareHouseSheetDirectionEnum.EXIT
+        if 'ware_house_id' in kwargs:
+            ware_house_id=kwargs['ware_house_id']
+            ware_house=WareHouse.objects.filter(pk=ware_house_id).first()
+            if ware_house is None:
+                return 
+            ware_house_sheet.ware_house=ware_house
+
+        if 'date_exported' in kwargs:
+            ware_house_sheet.date_exported=kwargs['date_exported']
+        if 'employee_id' in kwargs:
+            ware_house_sheet.employee_id=kwargs['employee_id']
+        if 'description' in kwargs:
+            ware_house_sheet.description=kwargs['description']
+            
+        if material_request is not None and ware_house_sheet is not None:
+            ware_house_sheet.save()
+            ware_house_sheet.material_requests.add(material_request)
+            return ware_house_sheet
+
+    
     def ware_house_sheet(self, *args, **kwargs):
         objects=WareHouseSheet.objects
         pk=0
@@ -296,6 +310,7 @@ class WareHouseSheetRepo():
         if 'for_home' in kwargs:
             objects = objects.filter(Q(for_home=kwargs['for_home']) | Q(parent=None))
         return objects
+
 
 class WareHouseRepo():
     def __init__(self, *args, **kwargs):
@@ -459,8 +474,47 @@ class ServiceRepo():
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(
+                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects.all()
+
+  
+    def add_service(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_service"):
+            return None
+        new_service = Service(unit_name=UnitNameEnum.SERVICE,unit_price=0)
+
+       
+        if 'title' in kwargs:
+            new_service.title = kwargs['title']
+        if 'parent_id' in kwargs and kwargs['parent_id']>0:
+            
+            new_service.parent_id = kwargs['parent_id']
+        new_service.creator=self.me    
+        new_service.save()
+        return new_service
+
+class ServiceRequestRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = ServiceRequest.objects
+        self.me=ProfileRepo(user=self.user).me
+        self.employee=EmployeeRepo(request=self.request).me
+
+   
     def service_request(self, *args, **kwargs):
-        objects = ServiceRequest.objects
+        objects = self.objects
         if 'pk' in kwargs:
             return objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
@@ -470,9 +524,7 @@ class ServiceRepo():
         if 'title' in kwargs:
             return objects.filter(pk=kwargs['title']).first()
 
-    def get(self, *args, **kwargs):
-        return self.organization_unit(*args, **kwargs)
-
+   
     def add_signature(self,service_request_id,status,description=None):
         if not self.user.has_perm(APP_NAME+".add_requestsignature"):
             return None
@@ -553,21 +605,7 @@ class ServiceRepo():
             service_request_signature.save()
             return new_service_request
 
-    def add_service(self, *args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_service"):
-            return None
-        new_service = Service(unit_name=UnitNameEnum.SERVICE,unit_price=0)
-
-       
-        if 'title' in kwargs:
-            new_service.title = kwargs['title']
-        if 'parent_id' in kwargs and kwargs['parent_id']>0:
-            
-            new_service.parent_id = kwargs['parent_id']
-        new_service.creator=self.me    
-        new_service.save()
-        return new_service
-
+ 
 
 class EventRepo():
     def __init__(self, *args, **kwargs):
@@ -627,6 +665,100 @@ class EventRepo():
 
     def search(self,search_for):
         objects = self.objects.filter(title__contains=search_for)
+        return objects
+
+
+class MaterialRequestRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = MaterialRequest.objects
+        self.employee=EmployeeRepo(request=self.request).me
+
+    def material_request(self, *args, **kwargs):
+        objects = MaterialRequest.objects
+        if 'pk' in kwargs:
+            return objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return objects.filter(pk=kwargs['id']).first()
+        if 'material_request_id' in kwargs:
+            return objects.filter(pk=kwargs['material_request_id']).first()
+        if 'title' in kwargs:
+            return objects.filter(pk=kwargs['title']).first()
+
+    def list(self, *args, **kwargs):
+        objects=self.objects.filter(project__archive=False)
+        if 'project_id' in kwargs:
+            objects=objects.filter(project_id=kwargs['project_id'])
+        if 'material_id' in kwargs:
+            objects=objects.filter(material_id=kwargs['material_id'])
+        if 'employee_id' in kwargs:
+            objects=objects.filter(handler_id=kwargs['employee_id'])
+        return objects
+
+    def add_material_request(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_materialrequest"):
+            return None
+        new_material_request = MaterialRequest(status=RequestStatusEnum.REQUESTED)
+        if 'project_id' in kwargs:
+            new_material_request.project_id = kwargs['project_id']
+        if 'material_id' in kwargs:
+            new_material_request.material_id = kwargs['material_id']
+        if 'quantity' in kwargs:
+            new_material_request.quantity = kwargs['quantity']
+        if 'employee_id' in kwargs:
+            new_material_request.handler_id = kwargs['employee_id']
+        if 'handler_id' in kwargs:
+            new_material_request.handler_id = kwargs['handler_id']
+        if 'unit_name' in kwargs:
+            new_material_request.unit_name = kwargs['unit_name']
+        if 'unit_price' in kwargs:
+            new_material_request.unit_price = kwargs['unit_price']
+        if 'description' in kwargs:
+            new_material_request.description = kwargs['description']
+        if 'status' in kwargs:
+            new_material_request.status = kwargs['status']
+        if 'status' in kwargs:
+            new_material_request.status = kwargs['status']
+        profile = ProfileRepo(user=self.user).me
+        new_material_request.creator = self.employee
+        if new_material_request.quantity > 0 and new_material_request.unit_price > 0:
+            new_material_request.save()
+            new_material_request.material.unit_price = new_material_request.unit_price
+            new_material_request.material.unit_name = new_material_request.unit_name
+            new_material_request.material.save()
+            material_request_signature=RequestSignature(employee=self.employee,request=new_material_request,status=SignatureStatusEnum.REQUESTED)
+            material_request_signature.save()
+            return new_material_request
+
+    def add_signature(self,material_request_id,status,description=None):
+        if self.user.has_perm(APP_NAME+".add_materialrequestsignature"):
+            signature=RequestSignature()
+            signature.description=description
+            signature.request_id=material_request_id
+            material_request=self.material_request(material_request_id=material_request_id)
+            if material_request is not None:
+                material_request.status=status
+                material_request.save()
+            signature.status=status
+            signature.date_added=timezone.now()
+            signature.employee=EmployeeRepo(request=self.request).me
+            signature.save()
+            return signature
+
+    def material_requests(self,*args, **kwargs):
+        objects=MaterialRequest.objects.filter(project__archive=False)
+        if 'project_id' in kwargs:
+            objects=objects.filter(project_id=kwargs['project_id'])
+        if 'material_id' in kwargs:
+            objects=objects.filter(material_id=kwargs['material_id'])
+        if 'employee_id' in kwargs:
+            objects=objects.filter(handler_id=kwargs['employee_id'])
         return objects
 
 
@@ -716,7 +848,6 @@ class LocationRepo():
         return objects
 
 
-
 class MaterialRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -739,17 +870,6 @@ class MaterialRepo():
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 
-    def material_request(self, *args, **kwargs):
-        objects = MaterialRequest.objects
-        if 'pk' in kwargs:
-            return objects.filter(pk=kwargs['pk']).first()
-        if 'id' in kwargs:
-            return objects.filter(pk=kwargs['id']).first()
-        if 'material_request_id' in kwargs:
-            return objects.filter(pk=kwargs['material_request_id']).first()
-        if 'title' in kwargs:
-            return objects.filter(pk=kwargs['title']).first()
-
     def get(self, *args, **kwargs):
         return self.organization_unit(*args, **kwargs)
 
@@ -761,41 +881,6 @@ class MaterialRepo():
             objects = objects.filter(
                 Q(for_home=kwargs['for_home']) | Q(parent=None))
         return objects.all()
-
-    def add_material_request(self, *args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_materialrequest"):
-            return None
-        new_material_request = MaterialRequest(status=RequestStatusEnum.REQUESTED)
-        if 'project_id' in kwargs:
-            new_material_request.project_id = kwargs['project_id']
-        if 'material_id' in kwargs:
-            new_material_request.material_id = kwargs['material_id']
-        if 'quantity' in kwargs:
-            new_material_request.quantity = kwargs['quantity']
-        if 'employee_id' in kwargs:
-            new_material_request.handler_id = kwargs['employee_id']
-        if 'handler_id' in kwargs:
-            new_material_request.handler_id = kwargs['handler_id']
-        if 'unit_name' in kwargs:
-            new_material_request.unit_name = kwargs['unit_name']
-        if 'unit_price' in kwargs:
-            new_material_request.unit_price = kwargs['unit_price']
-        if 'description' in kwargs:
-            new_material_request.description = kwargs['description']
-        if 'status' in kwargs:
-            new_material_request.status = kwargs['status']
-        if 'status' in kwargs:
-            new_material_request.status = kwargs['status']
-        profile = ProfileRepo(user=self.user).me
-        new_material_request.creator = self.employee
-        if new_material_request.quantity > 0 and new_material_request.unit_price > 0:
-            new_material_request.save()
-            new_material_request.material.unit_price = new_material_request.unit_price
-            new_material_request.material.unit_name = new_material_request.unit_name
-            new_material_request.material.save()
-            material_request_signature=RequestSignature(employee=self.employee,request=new_material_request,status=SignatureStatusEnum.REQUESTED)
-            material_request_signature.save()
-            return new_material_request
 
     def add_material(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_material"):
@@ -829,13 +914,3 @@ class MaterialRepo():
             signature.employee=EmployeeRepo(request=self.request).me
             signature.save()
             return signature
-
-    def material_requests(self,*args, **kwargs):
-        objects=MaterialRequest.objects.filter(project__archive=False)
-        if 'project_id' in kwargs:
-            objects=objects.filter(project_id=kwargs['project_id'])
-        if 'material_id' in kwargs:
-            objects=objects.filter(material_id=kwargs['material_id'])
-        if 'employee_id' in kwargs:
-            objects=objects.filter(handler_id=kwargs['employee_id'])
-        return objects

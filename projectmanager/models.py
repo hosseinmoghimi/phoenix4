@@ -79,6 +79,8 @@ class Employer(models.Model):
             </i>
         </a>
         """
+    def ware_houses(self):
+        return WareHouse.objects.filter(employer=self)
 
 
 class Employee(models.Model):
@@ -617,15 +619,13 @@ class WareHouse(OrganizationUnit):
 
 
 class WareHouseSheet(models.Model):
-    # material_requests=models.ManyToManyField("materialrequest", verbose_name=_("materialrequests"))
-    material_requests=models.ForeignKey("materialrequest", verbose_name=_("material_request"), on_delete=models.CASCADE)
-    sheet_no=models.CharField(_("sheet_no"), max_length=50)
+    material_requests=models.ManyToManyField("materialrequest",blank=True, verbose_name=_("materialrequests"))
     serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=50)
     direction=models.CharField(_("direction"),choices=WareHouseSheetDirectionEnum.choices, max_length=50)
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    date_entered=models.DateTimeField(_("date_entered"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    date_exited=models.DateTimeField(_("date_exited"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_imported=models.DateTimeField(_("تاریخ ورود"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_exported=models.DateTimeField(_("تاریخ خروج"),null=True,blank=True, auto_now=False, auto_now_add=False)
     employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("employee"), on_delete=models.CASCADE)
     # who_exited=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("who_entered"), on_delete=models.CASCADE)
     description=models.CharField(_("description"),null=True,blank=True, max_length=500)
@@ -633,15 +633,15 @@ class WareHouseSheet(models.Model):
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
 
-    def persian_date_entered(self):
-        if self.date_entered is not None:
-            return PersianCalendar().from_gregorian(self.date_entered)
+    def persian_date_imported(self):
+        if self.date_imported is not None:
+            return PersianCalendar().from_gregorian(self.date_imported)
         else:
             return ""
 
-    def persian_date_exited(self):
-        if self.date_exited is not None:
-            return PersianCalendar().from_gregorian(self.date_exited)
+    def persian_date_exported(self):
+        if self.date_exported is not None:
+            return PersianCalendar().from_gregorian(self.date_exported)
         else:
             return ""
 
@@ -656,7 +656,7 @@ class WareHouseSheet(models.Model):
         verbose_name_plural = _("WareHouseSheets")
 
     def __str__(self):
-        return f"{self.ware_house.title}  "
+        return f"برگه انبار شماره {self.pk} - {self.ware_house.title} : {self.ware_house.employer.title}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":ware_house_sheet", kwargs={"pk": self.pk})

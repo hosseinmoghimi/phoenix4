@@ -96,8 +96,8 @@ class WareHouseSerializer(serializers.ModelSerializer):
 class WareHouseSheetSerializer(serializers.ModelSerializer):
     employee=EmployeeSerializer()
     ware_house=WareHouseSerializer()
-    material_request=MaterialRequestSerializer()
+    material_requests=MaterialRequestSerializer(many=True)
     class Meta:
         model=WareHouseSheet
-        fields=['id','direction','ware_house','material_request','employee','get_edit_url','description','serial_no','persian_date_entered','persian_date_exited','persian_date_added','get_status_color','get_absolute_url']
+        fields=['id','direction','ware_house','material_requests','employee','get_edit_url','description','serial_no','persian_date_imported','persian_date_exported','persian_date_added','get_status_color','get_absolute_url']
 
