@@ -262,8 +262,7 @@
                                         class="material-icons text-info mr-2">assignment</i>
                                     کارفرمای پروژه های
                                 </h6>
-                                {% for project in employer.projects_out.all %}
-                                {% if not project.parent %}
+                                {% for project in employer.root_projects_out %}
 
                                 <div class="text-right">
                                     <small>
@@ -291,7 +290,6 @@
                                         aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
                                 </div>
-                                {% endif %}
                                 {% endfor %}
 
 
@@ -305,8 +303,7 @@
                                         class="material-icons text-info mr-2">assignment</i>
                                     پیمانکار پروژه های
                                 </h6>
-                                {% for project in employer.projects_in.all %}
-                                {% if not project.parent %}
+                                {% for project in employer.root_projects_in %}
 
                                 <div class="text-right">
                                     <small>
@@ -328,7 +325,6 @@
                                         aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
                                 </div>
-                                {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

@@ -79,9 +79,24 @@ class Employer(models.Model):
             </i>
         </a>
         """
+    
     def ware_houses(self):
         return WareHouse.objects.filter(employer=self)
 
+    def root_projects_in(self):
+        list1=[]
+        projects=Project.objects.filter(contractor=self)
+        for proj in projects:
+            if proj.parent is None or not proj.parent_project().contractor.id==proj.contractor.id:
+                list1.append(proj.pk)
+        return Project.objects.filter(pk__in=list1)
+    def root_projects_out(self):
+        list1=[]
+        projects=Project.objects.filter(employer=self)
+        for proj in projects:
+            if proj.parent is None or not proj.parent_project().employer.id==proj.employer.id:
+                list1.append(proj.pk)
+        return Project.objects.filter(pk__in=list1)
 
 class Employee(models.Model):
     profile = models.ForeignKey("authentication.profile", verbose_name=_(
