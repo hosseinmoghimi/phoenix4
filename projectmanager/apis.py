@@ -64,7 +64,6 @@ class ProjectApi(APIView):
                     location_s=LocationSerializer(location).data
                     return JsonResponse({'result':SUCCEED,'location':location_s})
         return JsonResponse({'result':FAILED,'log':log})
-    
 
     def add_project(self,request,*args, **kwargs):
         context={}
@@ -102,16 +101,18 @@ class ProjectApi(APIView):
                 end_date=edit_project_form.cleaned_data['end_date']
                 status=edit_project_form.cleaned_data['status']
                 employer_id=edit_project_form.cleaned_data['employer_id']
+                weight=edit_project_form.cleaned_data['weight']
                 contractor_id=edit_project_form.cleaned_data['contractor_id']
                 
                 start_date=PersianCalendar().to_gregorian(start_date)
                 end_date=PersianCalendar().to_gregorian(end_date)
-                project=ProjectRepo(request=request).edit_project(title=title,archive=archive,contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
+                project=ProjectRepo(request=request).edit_project(weight=weight,title=title,archive=archive,contractor_id=contractor_id,employer_id=employer_id,project_id=project_id,percentage_completed=percentage_completed,start_date=start_date,end_date=end_date,status=status)
                 if project is not None: 
                     context['project']=ProjectSerializer(project).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+    
     def add_signature(self,request,*args, **kwargs):
         context={}
         log=1
@@ -302,8 +303,6 @@ class MaterialRequestApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
- 
-
 
 class ServiceRequestApi(APIView):
     def add_service_request(self,request,*args, **kwargs):
@@ -345,7 +344,6 @@ class ServiceRequestApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-
 
 
 class ServiceApi(APIView):

@@ -6,7 +6,7 @@
             <h5 class="card-title text-center farsi">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseProjectEdit"
                     aria-expanded="true" aria-controls="collapseseProjectEdit">
-                    زمان بندی پروژه
+                    مشخصات و ویژگی های پروژه
                 </button>
             </h5>
 
@@ -49,6 +49,15 @@
                             </span>
 
                             <input required type="number" class="form-control" v-model="percentage_completed">
+
+                        </div>
+                        <div class="col-4 text-right mb-3">
+                            <span class="farsi text-right">
+
+                                وزن پروژه
+                            </span>
+
+                            <input required type="number" class="form-control" v-model="weight">
 
                         </div>
                         <div class="col-4 text-right mb-3">
@@ -104,7 +113,7 @@
 
 
 
-                            <button v-if="!waiting" class="btn btn-outline-primary btn-block" type="submit">
+                            <button v-if="!waiting" class="btn btn-outline-success btn-block" type="submit">
                                 <i class="material-icons">
                                     check_circle_outline
                                 </i>

@@ -5,6 +5,7 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
     let status = "{{project.status}}"
+    let weight = parseInt("{{project.weight}}")
     let url_edit_project = "{% url 'projectmanager:edit_project' %}"
     let employer_id = 0
     try {
@@ -35,6 +36,7 @@
             SUCCEED: false,
             archive: false,
             title:title,
+            weight:weight,
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -52,9 +54,10 @@
                     employer_id: this.employer_id,
                     title:this.title,
                     contractor_id: this.contractor_id,
+                    weight: this.weight,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                //console.log(payload)
+                // console.log(payload)
 
 
                 var posting = $.post(url_edit_project, payload);
@@ -66,7 +69,7 @@
                 posting.done(function (data) {
 
                     project_app.waiting = false
-                    //console.log(data)
+                    // console.log(data)
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)
                         // project_timing_app.add_service_form_title = ""

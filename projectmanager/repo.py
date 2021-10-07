@@ -64,13 +64,14 @@ class ProjectRepo():
             if 'contractor_id' in kwargs:
                 project.contractor_id=kwargs['contractor_id']
             if 'employer_id' in kwargs:
-                project.employer_id=kwargs['employer_id']     
+                project.employer_id=kwargs['employer_id']
             if 'title' in kwargs:
-                project.title=kwargs['title']     
+                project.title=kwargs['title']
+            if 'weight' in kwargs:
+                project.weight=kwargs['weight']
+                pass
             if 'archive' in kwargs:
-                project.archive=kwargs['archive']       
-            print(kwargs)      
-            print(10*" 34224256 ")
+                project.archive=kwargs['archive']
             project.save()
             return project
 
