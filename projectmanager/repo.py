@@ -500,6 +500,7 @@ class ServiceRepo():
         new_service.save()
         return new_service
 
+
 class ServiceRequestRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -527,18 +528,26 @@ class ServiceRequestRepo():
 
    
     def add_signature(self,service_request_id,status,description=None):
-        if not self.user.has_perm(APP_NAME+".add_requestsignature"):
-            return None
+        me_employee=EmployeeRepo(request=self.request).me
+        service_request=self.service_request(service_request_id=service_request_id)
+        if service_request is None or me_employee is None:
+            return
+        if self.user.has_perm(APP_NAME+".add_requestsignature"):
+            pass
+        if service_request.project in me_employee.my_projects():
+            pass
+        else:
+            return
+        
         signature=RequestSignature()
         signature.description=description
-        service_request=self.service_request(service_request_id=service_request_id)
-        if service_request is not None:
-            service_request.status=status
-            service_request.save()
+        service_request.status=status
+        service_request.save()
+
         signature.request_id=service_request_id
         signature.status=status
         signature.date_added=timezone.now()
-        signature.employee=EmployeeRepo(request=self.request).me
+        signature.employee=me_employee
         signature.save()
 
         return signature

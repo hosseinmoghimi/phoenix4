@@ -1,4 +1,6 @@
 import json
+
+from django.http.response import Http404
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseRepo, WareHouseSheetRepo
@@ -455,17 +457,64 @@ class MaterialViews(View):
 
 class MaterialRequestViews(View):
     def material_request(self, request, *args, **kwargs):
+        me_employee=EmployeeRepo(request=request).me
         material_request = MaterialRequestRepo(request=request).material_request(*args, **kwargs)
+        if material_request is None:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین درخواستی وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
+        if request.user.has_perm(APP_NAME+".view_materialrequest"):
+            pass
+        elif me_employee is not None and material_request.project in me_employee.my_projects():
+            pass
+        else:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین درخواستی وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
+
         context = getContext(request)
         context['material_request'] = material_request
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
+        
+        context['add_signature_form']=AddSignatureForm()
         if request.user.has_perm(APP_NAME+".add_warehousesheet"):
             context['add_material_request_to_ware_house_sheet_form']=AddMaterialRequestToWareHouseSheetForm()
             context["ware_houses"]=material_request.project.contractor.ware_houses()
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
 
     def material_requests(self, request, *args, **kwargs):
-        material_requests = MaterialRequestRepo(request=request).material_requests(*args, **kwargs)
+        me_employee=EmployeeRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".view_materialrequest"):
+            material_requests = MaterialRequestRepo(request=request).material_requests(*args, **kwargs)
+        
+        elif me_employee is not None:
+            material_requests = MaterialRequestRepo(request=request).material_requests(employee_id=me_employee.id,*args, **kwargs)
+        else:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین درخواستی وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
+
         context = getContext(request)
         context['material_requests'] = material_requests
         # context['material_requests_s'] ="[]"
@@ -474,14 +523,60 @@ class MaterialRequestViews(View):
 
 class ServiceRequestViews(View):
     def service_request(self, request, *args, **kwargs):
+        
+        me_employee=EmployeeRepo(request=request).me
         service_request = ServiceRequestRepo(request=request).service_request(*args, **kwargs)
+        if service_request is None:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین درخواستی وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
+
         context = getContext(request)
+
+        if request.user.has_perm(APP_NAME+".view_servicerequest"):
+            pass
+        elif me_employee is not None and service_request.project in me_employee.my_projects():
+            pass
+        else:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین درخواستی وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.show(request=request,app_name=APP_NAME)
         context['service_request'] = service_request
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
+        context['add_signature_form']=AddSignatureForm()
         return render(request, TEMPLATE_ROOT+"service-request.html", context)
 
     def service_requests(self, request, *args, **kwargs):
-        service_requests = ServiceRequestRepo(request=request).service_requests(*args, **kwargs)
+        me_employee=EmployeeRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".view_servicerequest"):
+            service_requests = ServiceRequestRepo(request=request).service_requests(*args, **kwargs)
+        elif me_employee is not None:
+            service_requests = ServiceRequestRepo(request=request).service_requests(employee_id=me_employee.id,*args, **kwargs)
+        else:
+            mv=MessageView()
+            mv.header_text="خطای 404"
+            mv.message_html=f"""
+            <p class="text-center">
+            چنین درخواستی وجود ندارد.
+            </p>
+            """
+            mv.message_text=f"""
+            """
+            return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
         context = getContext(request)
         context['service_requests'] = service_requests
         context['service_requests_s'] = json.dumps(ServiceRequestSerializer(service_requests,many=True).data)

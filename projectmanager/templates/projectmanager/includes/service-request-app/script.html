@@ -31,7 +31,9 @@
                 //console.log(payload)
                 let posting = $.post(url_add_signature, payload)
                 posting.done((data) => {
-                    //console.log(data)
+                    
+                    service_request_app.waiting = false
+                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         service_request_app.signatures.push(data.signature)
                         service_request_app.add_signature_form_description = ""

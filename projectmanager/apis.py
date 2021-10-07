@@ -127,12 +127,14 @@ class ProjectApi(APIView):
                 service_request_id=add_signature_form.cleaned_data['service_request_id']
                 if material_request_id is not None:
                     signature=MaterialRequestRepo(request=request).add_signature(material_request_id=material_request_id,status=status,description=description)
-                    context['signature']=RequestSignatureSerializer(signature).data
-                    context['result']=SUCCEED
+                    if signature is not None:
+                        context['signature']=RequestSignatureSerializer(signature).data
+                        context['result']=SUCCEED
                 if service_request_id is not None:
                     signature=ServiceRequestRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
-                    context['signature']=RequestSignatureSerializer(signature).data
-                    context['result']=SUCCEED
+                    if signature is not None:
+                        context['signature']=RequestSignatureSerializer(signature).data
+                        context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
 

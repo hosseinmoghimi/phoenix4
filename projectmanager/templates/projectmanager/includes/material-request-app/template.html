@@ -209,9 +209,15 @@
         </div>
         <div class="card-footer">
 
+{% if add_signature_form %}
+  
 
-
-            {% include "projectmanager/includes/material-request-app/add-signature-form.html" %}
+{% include "projectmanager/includes/material-request-app/add-signature-form.html" %}
+{% else %}
+<p>
+    شما مجوز لازم برای امضای این درخواست را ندارید.
+</p>
+{% endif %}
 
 
 
