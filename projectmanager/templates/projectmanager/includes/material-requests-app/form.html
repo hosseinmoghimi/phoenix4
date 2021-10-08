@@ -4,9 +4,10 @@
 <div class="text-right">
 
     <button v-if="!show_add_material_request_form" @click="show_add_material_request_form=true" class="btn btn-success">
-        <i class="material-icons text-light">
+        <i class="material-icons">
             add
         </i>
+        افزودن
     </button>
     <div class="row" v-if="show_add_material_request_form">
         <div class="col-8">
@@ -14,16 +15,7 @@
 
                 <input @input="filter_list" required type="text" v-model="add_material_request_form_title"
                     class="farsi form-control" placeholder="متریال">
-                <p class="text-right">
-                    <span v-text="selected_material().title"></span>
-                    <span>هر </span>
-                    <span v-text="add_material_request_form_unit_name"></span>
-                    <span v-text="to_price(add_material_request_form_unit_price,'')"></span>
-                    <small>
-
-                        {{CURRENCY}}
-                    </small>
-                </p>
+              
                 <div class="row">
 
                     <div class="col-4">
@@ -55,7 +47,7 @@
                     </div>
                     <div class="col-12 text-left">
                         <button class="btn btn-secondary" @click="show_add_material_request_form=false"
-                            type="reset">Cancel</button>
+                            type="reset">انصراف</button>
 
                         <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
 

@@ -39,8 +39,8 @@ class RequestStatusEnum(TextChoices):
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     REQUESTED='درخواست شده',_('درخواست شده')
     PURCHASING='در حال خرید',_('در حال خرید')
-    ALREADY_AVAILABLE='متعلق به کارفرما',_('متعلق به کارفرما')
-
+    EMPLOYERS='متعلق به کارفرما',_('متعلق به کارفرما')
+    AVAILABLE_IN_STORE="موجود در انبار",_("موجود در انبار")
 
 
 class AssignmentStatusEnum(TextChoices):
@@ -80,7 +80,9 @@ def StatusColor(status):
         color= 'danger'
     elif status==RequestStatusEnum.DEFAULT:
         color= 'rose'
-    elif status==RequestStatusEnum.ALREADY_AVAILABLE:
+    elif status==RequestStatusEnum.AVAILABLE_IN_STORE:
+        color= 'success'
+    elif status==RequestStatusEnum.EMPLOYERS:
         color= 'info'
     elif status==RequestStatusEnum.IN_PROGRESS:
         color= 'info'
