@@ -1,7 +1,19 @@
+{% if add_material_request_form %}
 <script>
-    let sum_material_requests = parseInt("{{project.sum_material_requests}}")
-    let materials = JSON.parse(`{{materials_s|escapejs}}`)
+
     let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
+    let materials = JSON.parse(`{{materials_s|escapejs}}`)
+</script>
+{% endif %}
+
+<script>
+    let sum_material_requests = 0
+    try {
+
+        sum_material_requests = parseInt("{{project.sum_material_requests}}")
+    } catch (error) {
+
+    }
     let material_request_app = new Vue({
         el: "#material-requests-app",
         data: {
@@ -15,7 +27,7 @@
             waiting: false,
             sum_material_requests: sum_material_requests,
             show_add_material_request_form: false,
-            add_material_request_form_employee_id:""
+            add_material_request_form_employee_id: ""
         },
         methods: {
             to_price: function (value, CURRENCY) {
@@ -38,7 +50,7 @@
                     unit_price: this.add_material_request_form_unit_price,
                     unit_name: this.add_material_request_form_unit_name,
                     quantity: this.add_material_request_form_quantity,
-                    employee_id:this.add_material_request_form_employee_id,
+                    employee_id: this.add_material_request_form_employee_id,
                     // status: this.add_material_request_form_status,
                     // description: this.add_material_request_form_description,
                     csrfmiddlewaretoken: csrfmiddlewaretoken

@@ -29,9 +29,9 @@
                         <th>
                             تاریخ درخواست
                         </th>
-                        <th>
+                        <!-- <th>
                             مسئول خرید
-                        </th>
+                        </th> -->
                         {% if not project %}
 
                         <th>
@@ -40,16 +40,13 @@
                         {% endif %}
 
 
-                        {% if not ware_house %}
 
-                        <th>
-                            انبار
-                        </th>
-                        {% endif %}
+                        {% if not material %}
 
                         <th>
                             متریال
                         </th>
+                        {% endif %}
                         <th>
                             تعداد
                         </th>
@@ -72,19 +69,7 @@
                                         ballot
                                     </i>
                                 </a>
-                                {% if material_request.ware_house_sheet %}
-                                <a target="_blank" href="{{material_request.ware_house_sheet.get_absolute_url}}"
-                                    title="نمایش برگه انبار">
-                                    <i class="material-icons text-success">
-                                        ballot
-                                    </i>
-                                </a>
-                                {% else %}
 
-                                <i title="برگه انبار ثبت نشده است." class="material-icons text-danger">
-                                    ballot
-                                </i>
-                                {% endif %}
                             </td>
                             <td>
                                 <small>
@@ -92,13 +77,13 @@
                                     {{material_request.date_added|to_persian_date|safe}}
                                 </small>
                             </td>
-                            <td>
+                            <!-- <td>
                                 <a target="_blank" href="{{material_request.handler.get_absolute_url}}">
                                     <img src="{{material_request.handler.profile.image}}" class="ml-2 rounded-circle"
                                         width="32" alt="">
                                     {{material_request.handler.profile.name}}
                                 </a>
-                            </td>
+                            </td> -->
                             {% if not project %}
 
                             <td>
@@ -110,21 +95,8 @@
                                 </a>
                             </td>
                             {% endif %}
-                            {% if not ware_house %}
-                            <td>
-                                {% if material_request.ware_house_sheet %}
 
-
-                                <a target="_blank"
-                                    href="{{material_request.ware_house_sheet.ware_house.get_absolute_url}}">
-
-
-                                    {{material_request.ware_house_sheet.ware_house.title}}
-                                </a>
-
-                                {% endif %}
-                            </td>
-                            {% endif %}
+                            {% if not material %}
 
                             <td>
 
@@ -134,6 +106,7 @@
                                     {{material_request.material.title}}
                                 </a>
                             </td>
+                            {% endif %}
 
                             <td>
                                 {{material_request.quantity}}
@@ -176,14 +149,7 @@
                                 <small v-text="material_request.persian_date_added">
                                 </small>
                             </td>
-                            <td>
-                                <a target="_blank" :href="material_request.handler.get_absolute_url">
-                                    <img :src="material_request.handler.profile.image" class="ml-2 rounded" width="32"
-                                        alt="">
-                                    <span v-text="material_request.handler.profile.name">
-                                    </span>
-                                </a>
-                            </td>
+                          
                             <td>
                                 <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32" alt="">
 
@@ -248,7 +214,34 @@
 
                 {% endif %}
 
+                {% if material %}
+                <p>
 
+                    <span>
+                        <span class="text-secondary">
+
+                            تعداد کل درخواست شده :
+                        </span>
+                        <span>
+                            {{material.count_requested|to_price_pure}}
+                        </span>
+                    </span>
+
+
+
+                    <span class="mr-4">
+                        <span class="text-secondary">
+
+                            مبلغ کل درخواست شده :
+                        </span>
+                        <span>
+
+                            {{material.sum_price_requested|to_price}}
+                        </span>
+                    </span>
+
+                </p>
+                {% endif %}
 
             </div>
         </div>

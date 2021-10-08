@@ -3,7 +3,7 @@ import json
 from django.http.response import Http404
 from .apps import APP_NAME
 from .forms import *
-from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseRepo, WareHouseSheetRepo
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
 from .serializers import EmployeeSerializer, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from .utils import AdminUtility
 from authentication.repo import ProfileRepo
@@ -415,13 +415,12 @@ class WareHouseViews(View):
         ware_house_sheets=ware_house.sheets()
         ware_house_sheets_s=json.dumps(WareHouseSheetSerializer(ware_house_sheets,many=True).data)
         # context['materials']=ware_house_repo.materials(ware_house_id=ware_house.id)
-        ware_house_materials=ware_house_repo.ware_house_materials(ware_house=ware_house)
+        ware_house_materials=WareHouseMaterialRepo(request=request).list(ware_house=ware_house)
         context['ware_house_materials']=ware_house_materials
         context['ware_house_sheets_s']=ware_house_sheets_s
 
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
  
-
 
 class WareHouseSheetViews(View):
     def ware_house_sheet(self, request, *args, **kwargs):
@@ -449,6 +448,12 @@ class MaterialViews(View):
         context['materials'] =materials
         material_requests=material.materialrequest_set.all()
         context['material_requests'] = material_requests
+        
+        ware_house_sheet_lines=WareHouseSheetLineRepo(request=request).list(material_id=material.id)
+        context['ware_house_sheet_lines']=ware_house_sheet_lines
+
+        ware_house_materials=WareHouseMaterialRepo(request=request).list(material_id=material.id)
+        context['ware_house_materials']=ware_house_materials
         context['material_requests']=MaterialRequestRepo(request=request).material_requests(material_id=material.id)
       
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)

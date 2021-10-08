@@ -25,7 +25,8 @@
                         </i>
                     </a>
                     {% endif %}
-                    <span class="badge badge-{{ware_house_sheet.get_status_color}}">{{ware_house_sheet.direction}}</span>
+                    <span
+                        class="badge badge-{{ware_house_sheet.get_status_color}}">{{ware_house_sheet.direction}}</span>
 
                 </h4>
                 <h5 class="text-right">
@@ -65,7 +66,7 @@
                     تاریخ ورود به انبار :
                     {{ware_house_sheet.date_imported|to_persian_datetime|safe}}
                 </p>
-              
+
 
                 {% endif %}
 
@@ -97,21 +98,9 @@
 
         <table class="table table-striped">
             <thead>
-                <th>
 
-                </th>
-                <th>
-                    تاریخ درخواست
-                </th>
-                <th>
-                    مسئول خرید
-                </th>
-                {% if not project %}
 
-                <th>
-                    پروژه
-                </th>
-                {% endif %}
+
                 <th>
                     متریال
                 </th>
@@ -125,81 +114,62 @@
                     جمع
                 </th>
                 <th>
-                    وضعیت
+
                 </th>
                 <th>
 
                 </th>
             </thead>
             <tbody>
-                {% for material_request in ware_house_sheet.material_requests.all %}
+                {% for sheet_line in ware_house_sheet.sheet_lines %}
                 <tr>
+
+
+
                     <td>
-                        <a target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
-                            <i class="material-icons">
-                                ballot
-                            </i>
+
+                        <a target="_blank" href="{{sheet_line.material.get_absolute_url}}">
+                            <img src="{{sheet_line.material.thumbnail}}" class="ml-2 rounded" width="32" alt="">
+                            {{sheet_line.material.title}}
                         </a>
                     </td>
+
                     <td>
+                        {{sheet_line.quantity}}
                         <small>
 
-                            {{material_request.date_added|to_persian_date|safe}}
-                        </small>
-                    </td>
-                    <td>
-                        <a target="_blank" href="{{material_request.handler.get_absolute_url}}">
-                            <img src="{{material_request.handler.profile.image}}" class="ml-2 rounded-circle" width="32"
-                                alt="">
-                            {{material_request.handler.profile.name}}
-                        </a>
-                    </td>
-                    {% if not project %}
-
-                    <td>
-
-                        <a target="_blank" href="{{material_request.project.get_absolute_url}}">
-
-
-                            {{material_request.project.title}}
-                        </a>
-                    </td>
-                    {% endif %}
-                    <td>
-
-                        <a target="_blank" href="{{material_request.material.get_absolute_url}}">
-                            <img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32" alt="">
-                            {{material_request.material.title}}
-                        </a>
-                    </td>
-
-                    <td>
-                        {{material_request.quantity}}
-                        <small>
-
-                            {{material_request.unit_name}}
+                            {{sheet_line.unit_name}}
                         </small>
 
                     </td>
                     <td>
-                        {{material_request.unit_price|to_price_pure}}
+                        {{sheet_line.unit_price|to_price_pure}}
 
                     </td>
                     <td>
-                        {{material_request.line_total|to_price}}
+                        {{sheet_line.line_total|to_price}}
 
                     </td>
                     <td>
-                        {{material_request.get_status_tag|safe}}
+                        {% if sheet_line.description %}
+                        <small class="text-secondary">
+                            {{sheet_line.description}}
 
-
-                        {% if perms.projectmanager.change_materialrequest %}
-                        {{material_request.get_edit_btn|safe}}
-
+                        </small>
                         {% endif %}
                     </td>
                     <td>
 
+
+                        {% if perms.projectmanager.change_warehousesheetline %}
+                        <a href="{{sheet_line.get_edit_url}}" target="_blank" title="ویرایش">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+
+
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

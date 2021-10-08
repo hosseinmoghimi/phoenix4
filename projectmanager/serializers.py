@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, WareHouse, WareHouseSheet
+from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseSheet, WareHouseSheetLine
 from authentication.serializers import ProfileSerializer
 
 
@@ -93,20 +93,70 @@ class WareHouseSerializer(serializers.ModelSerializer):
         fields=['id','employer','title','employees','get_absolute_url','get_edit_url','short_description','thumbnail']
 
 
-class WareHouseSheetSerializer(serializers.ModelSerializer):
-    employee=EmployeeSerializer()
+class WareHouseSheetLineSerializer(serializers.ModelSerializer):
+    material=MaterialSerializer()
+    class Meta:
+        model=WareHouseSheetLine
+        fields=['id','material','quantity','shelf','row','col',
+        'serial_no','get_edit_url','description','unit_name',
+        'unit_price','location',
+        'get_absolute_url']
+
+
+
+
+
+class WareHouseImportSheetSerializer(serializers.ModelSerializer):
+    creator=EmployeeSerializer()
     ware_house=WareHouseSerializer()
-    material_requests=MaterialRequestSerializer(many=True)
+    sheet_lines=WareHouseSheetLineSerializer(many=True)
+    delivery=EmployeeSerializer()
+    transferee=EmployeeSerializer()
+    class Meta:
+        model=WareHouseImportSheet
+        fields=['id','direction','ware_house','sheet_lines',
+        'employee','get_edit_url','description','serial_no',
+        'persian_date_imported','persian_date_exported',
+        'persian_date_added','get_status_color','get_absolute_url'
+        ,'delivery','transferee']
+
+
+
+class WareHouseExportSheetSerializer(serializers.ModelSerializer):
+    creator=EmployeeSerializer()
+    ware_house=WareHouseSerializer()
+    sheet_lines=WareHouseSheetLineSerializer(many=True)
+    tahvil_dahandeh=EmployeeSerializer()
+    tahvil_girandeh=EmployeeSerializer()
+    class Meta:
+        model=WareHouseExportSheet
+        fields=['id','direction','ware_house','sheet_lines',
+        'employee','get_edit_url','description','serial_no',
+        'persian_date_imported','persian_date_exported',
+        'persian_date_added','get_status_color','get_absolute_url'
+        ,'tahvil_dahandeh','tahvil_girandeh']
+
+
+
+class WareHouseSheetSerializer(serializers.ModelSerializer):
+    creator=EmployeeSerializer()
+    ware_house=WareHouseSerializer()
+    sheet_lines=WareHouseSheetLineSerializer(many=True)
+    tahvil_dahandeh=EmployeeSerializer()
+    tahvil_girandeh=EmployeeSerializer()
     class Meta:
         model=WareHouseSheet
-        fields=['id','direction','ware_house','material_requests','employee','get_edit_url','description','serial_no','persian_date_imported','persian_date_exported','persian_date_added','get_status_color','get_absolute_url']
+        fields=['id','direction','ware_house','sheet_lines',
+        'creator','get_edit_url','description',
+        'persian_date_imported','persian_date_exported',
+        'persian_date_added','get_status_color','get_absolute_url'
+        ,'tahvil_dahandeh','tahvil_girandeh']
 
 
 class MaterialRequestFullSerializer(serializers.ModelSerializer):
     material=MaterialSerializer()
     project=ProjectSerializer()
     handler=EmployeeSerializer()
-    ware_house_sheet=WareHouseSheetSerializer()
     class Meta:
         model=MaterialRequest
-        fields=['id','material','ware_house_sheet','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
+        fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']

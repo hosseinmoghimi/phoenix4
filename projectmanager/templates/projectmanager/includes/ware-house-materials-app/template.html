@@ -2,7 +2,7 @@
 <div class="card">
     <div class="card-header">
         <h4>
-            متریال ها
+            موجودی متریال انبار
 
         </h4>
 
@@ -11,30 +11,52 @@
     <div class="card-body">
         <table class="table table-striped">
             <thead>
+                {% if not ware_house %}
+
+                <th>انبار</th>
+                {% endif %}
+                {% if not material %}
+
                 <th>متریال</th>
-                <th>ورود/خروج</th>
-                <th>تعداد</th>
+                {% endif %}
+                <th>نقطه خرید</th>
+                <th>حداقل موجودی</th>
+                <th>موجودی</th>
                 <th>قیمت</th>
-                <th>جمع</th>
+                <th>وضعیت</th>
             </thead>
             <tbody>
                 {% for ware_house_material in ware_house_materials %}
 
                 <tr>
+                    {% if not ware_house %}
+                    <td>
+
+                        <a href="{{ware_house_material.ware_house.get_absolute_url}}">
+                            {{ware_house_material.ware_house.title}}
+                        </a>
+                    </td>
+                    {% endif %}
+                    {% if not material %}
+
                     <td>
                         <a href="{{ware_house_material.material.get_absolute_url}}">
                             {{ware_house_material.material.title}}
                         </a>
                     </td>
+                    {% endif %}
                     <td>
-                        <span class="badge badge-{{ware_house_material.direction_color}}">
+                        {{ware_house_material.order_point}}
 
-                            {{ware_house_material.direction}}
-
-                        </span>
                     </td>
+
                     <td>
-                        {{ware_house_material.total_quantities}}
+                        {{ware_house_material.minimum}}
+
+                    </td>
+
+                    <td>
+                        {{ware_house_material.sum_quantity}}
                         <span class="badge badge-primary px-2 py-2">
                             {{ware_house_material.unit_name}}
 
@@ -46,7 +68,11 @@
 
                     </td>
                     <td>
-                        {{ware_house_material.total_price|to_price}}
+                        {{ware_house_material.get_status_tag|safe}}
+                        {% if perms.projectmanager.change_warehousematerial %}
+                        {{ware_house_material.get_edit_btn|safe}}
+
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

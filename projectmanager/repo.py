@@ -4,7 +4,7 @@ from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, Signature
 from authentication.repo import ProfileRepo
 from django.db.models import Q,Sum
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheet
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
 
 
 class ProjectRepo():
@@ -309,6 +309,48 @@ class WareHouseSheetRepo():
             objects = objects.filter(Q(for_home=kwargs['for_home']) | Q(parent=None))
         return objects
 
+class WareHouseMaterialRepo():
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouseMaterial.objects
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'ware_house' in kwargs:
+            objects=objects.filter(ware_house=kwargs['ware_house'])
+        if 'ware_house_id' in kwargs:
+            objects=objects.filter(ware_house_id=kwargs['ware_house_id'])
+        if 'material' in kwargs:
+            objects=objects.filter(material=kwargs['material'])
+        if 'material_id' in kwargs:
+            objects=objects.filter(material_id=kwargs['material_id'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            q=Q(pk=0)
+            q=q|Q(material__title__contains=search_for)
+            q=q|Q(code__contains=search_for)
+            q=q|Q(description__contains=search_for)
+            objects=objects.filter(q)
+        return objects
+        
+
+
+    def ware_house_material(self, *args, **kwargs):
+        pk=0
+        if 'ware_house_material_id' in kwargs:
+            return self.objects.filter(pk=kwargs['ware_house_material_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+
 
 class WareHouseRepo():
     def __init__(self, *args, **kwargs):
@@ -332,6 +374,7 @@ class WareHouseRepo():
 
     def ware_house_materials(self,*args, **kwargs):
         ware_house_materials=[]
+        return []
         if 'ware_house_id' in kwargs:
             ware_house_id=kwargs['ware_house_id']
             ware_house=WareHouse.objects.filter(ok=ware_house_id).first()
@@ -369,6 +412,42 @@ class WareHouseRepo():
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(
+                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects
+
+
+
+class WareHouseSheetLineRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouseSheetLine.objects
+    def ware_house_sheet_line(self, *args, **kwargs):
+        pk=0
+        if 'ware_house_sheet_line_id' in kwargs:
+            return self.objects.filter(pk=kwargs['ware_house_sheet_line_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+    
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'material' in kwargs:
+            objects = objects.filter(material=kwargs['material'])
+        if 'material_id' in kwargs:
+            objects = objects.filter(material_id=kwargs['material_id'])
         if 'search_for' in kwargs:
             objects = objects.filter(title__contains=kwargs['search_for'])
         if 'for_home' in kwargs:

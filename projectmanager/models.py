@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.fields import CharField
+from django.db.models import Sum
 from core.models import BasicPage as CoreBasicPage
 from .apps import APP_NAME
 from .enums import *
@@ -98,6 +98,7 @@ class Employer(models.Model):
                 list1.append(proj.pk)
         return Project.objects.filter(pk__in=list1)
 
+
 class Employee(models.Model):
     profile = models.ForeignKey("authentication.profile", verbose_name=_(
         "profile"), on_delete=models.CASCADE)
@@ -136,7 +137,6 @@ class Employee(models.Model):
         for proj in self.organization_unit.project_set.all():
             ids.append(proj.id)
         return Project.objects.filter(id__in=ids)
-
 
 
 class Project(ProjectManagerPage):
@@ -518,9 +518,6 @@ class MaterialRequest(Request):
         self.request_type = RequestTypeEnum.MATERIAL_REQUEST
         return super(MaterialRequest, self).save(*args, **kwargs)
 
-    def ware_house_sheet(self):
-        return self.warehousesheet_set.first()
-
 
 class ServiceRequest(Request):
     service = models.ForeignKey("service", verbose_name=_("service"), on_delete=models.PROTECT)
@@ -606,6 +603,16 @@ class RequestSignature(models.Model):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
 
+    def get_edit_btn(self):
+        return f"""
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
+
+
 class WareHouse(OrganizationUnit):
     address = models.CharField(_("آدرس"), null=True, blank=True, max_length=500)
 
@@ -637,17 +644,16 @@ class WareHouse(OrganizationUnit):
 
 
 class WareHouseSheet(models.Model):
-    material_requests=models.ManyToManyField("materialrequest",blank=True, verbose_name=_("materialrequests"))
-    serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=50)
+    ware_house=models.ManyToManyField("warehouse",blank=True, verbose_name=_("warehouse"))
     direction=models.CharField(_("direction"),choices=WareHouseSheetDirectionEnum.choices, max_length=50)
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_imported=models.DateTimeField(_("تاریخ ورود"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_exported=models.DateTimeField(_("تاریخ خروج"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    employee=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("پرسنل"), on_delete=models.CASCADE)
-    shelf=models.IntegerField(_("کمد"),null=True,blank=True)
-    row=models.IntegerField(_("طبقه"),null=True,blank=True)
-    col=models.IntegerField(_("ردیف"),null=True,blank=True)
+    creator=models.ForeignKey("employee",related_name="warehousesheets_created",null=True,blank=True, verbose_name=_("ثبت کننده"), on_delete=models.CASCADE)
+    tahvil_dahandeh=models.ForeignKey("employee",related_name="warehousesheets_importer", verbose_name=_("تحویل دهنده"),null=True,blank=True, on_delete=models.CASCADE)
+    tahvil_girandeh=models.ForeignKey("employee",related_name="warehousesheets_exporter", verbose_name=_("تحویل گیرنده"),null=True,blank=True, on_delete=models.CASCADE)
+
     # who_exited=models.ForeignKey("employee",null=True,blank=True, verbose_name=_("who_entered"), on_delete=models.CASCADE)
     description=models.CharField(_("description"),null=True,blank=True, max_length=500)
     class_name="warehousesheet"
@@ -677,14 +683,186 @@ class WareHouseSheet(models.Model):
         verbose_name_plural = _("WareHouseSheets")
 
     def __str__(self):
-        return f"برگه انبار شماره {self.pk} - {self.ware_house.title} : {self.ware_house.employer.title}"
+        return f"برگه {self.direction} انبار شماره {self.pk} - {self.ware_house.title} : {self.ware_house.employer.title}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":ware_house_sheet", kwargs={"pk": self.pk})
+    
+    def get_edit_url(self):
+        if self.direction==WareHouseSheetDirectionEnum.EXPORT:
+            class_name="warehouseexportsheet"
+        if self.direction==WareHouseSheetDirectionEnum.IMPORT:
+            class_name="warehouseimportsheet"
+
+        return f"{ADMIN_URL}{APP_NAME}/{class_name}/{self.pk}/change/"
+
+    def sheet_lines(self):
+        return WareHouseSheetLine.objects.filter(ware_house_sheet=self)
+
+
+class WareHouseImportSheet(WareHouseSheet):
+    class_name="warehouseimportsheet"
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    
+    class Meta:
+        verbose_name = _("WareHouseImportSheet")
+        verbose_name_plural = _("WareHouseImportSheets")
+
+    def __str__(self):
+        return f"{self.ware_house.title} : برگه ورود شماره  {self.pk}"
+
+    def get_absolute_url(self):
+        return reverse("WareHouseImportSheet_detail", kwargs={"pk": self.pk})
 
 
+    def get_edit_btn(self):
+        return f"""
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
 
 
+class WareHouseExportSheet(WareHouseSheet):
+
+    
+    class_name="warehouseexportsheet"
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    
+    class Meta:
+        verbose_name = _("WareHouseExportSheet")
+        verbose_name_plural = _("WareHouseExportSheets")
+
+    def __str__(self):
+        return f"{self.ware_house.title} : برگه خروج شماره  {self.pk}"
+
+    def get_absolute_url(self):
+        return reverse("WareHouseImportSheet_detail", kwargs={"pk": self.pk})
+
+
+class WareHouseSheetLine(models.Model):
+    ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
+    material=models.ForeignKey("material", verbose_name=_("material"), on_delete=models.CASCADE)
+    quantity=models.IntegerField(_("quantity"))
+    serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=50)
+    unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices, max_length=50)
+    unit_price=models.IntegerField(_("unit_price"),default=0)
+    location=models.CharField(_("location"),null=True,blank=True, max_length=50)
+    shelf=models.IntegerField(_("کمد"),null=True,blank=True)
+    row=models.IntegerField(_("طبقه"),null=True,blank=True)
+    col=models.IntegerField(_("ردیف"),null=True,blank=True)
+    description=models.CharField(_("description"),null=True,blank=True, max_length=500)
+    
+    class_name="warehousesheetline"
+    def line_total(self):
+        return self.quantity*self.unit_price
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    
+    def get_edit_btn(self):
+        return f"""
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
+
+    class Meta:
+        verbose_name = _("WareHouseSheetLine")
+        verbose_name_plural = _("WareHouseSheetLines")
+
+    def __str__(self):
+        return f"{self.ware_house_sheet} : {self.material.title} "
+
+    def get_absolute_url(self):
+        return self.ware_house_sheet.get_absolute_url()
+        # return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+
+class WareHouseMaterial(models.Model):
+    ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
+    material=models.ForeignKey("material", verbose_name=_("material"), on_delete=models.CASCADE)
+    code=models.CharField(_("کد"),null=True,blank=True, max_length=50)
+    minimum=models.IntegerField(_("minimum"),default=0)
+    order_point=models.IntegerField(_("order_point"),default=0)
+    unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,null=True,blank=True, max_length=50)
+    unit_price_origin=models.IntegerField(_("unit_price"),null=True,blank=True)
+    sum_quantity_origin=models.IntegerField(_("quantity"),null=True,blank=True)
+    shelf=models.CharField(_("کمد"),null=True,blank=True, max_length=50)
+    row=models.CharField(_("طبقه"),null=True,blank=True, max_length=50)
+    col=models.CharField(_("ردیف"),null=True,blank=True, max_length=50)
+    description=models.CharField(_("description"),null=True,blank=True, max_length=500)
+
+    class_name="warehousematerial"
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    def calculate_sums(self):
+        sum_quantity=0
+        sum_price=0
+        all_q=0
+        lines_p=WareHouseSheetLine.objects.filter(ware_house_sheet__ware_house=self.ware_house).filter(material=self.material).filter(ware_house_sheet__direction=WareHouseSheetDirectionEnum.IMPORT)
+        lines_n=WareHouseSheetLine.objects.filter(ware_house_sheet__ware_house=self.ware_house).filter(material=self.material).filter(ware_house_sheet__direction=WareHouseSheetDirectionEnum.EXPORT)
+        print(lines_n)
+        print(lines_p)
+        print(10*"####")
+        for line in lines_p:
+            sum_quantity+=line.quantity
+            sum_price+=line.quantity*line.unit_price
+            all_q+=line.quantity
+        for line in lines_n:
+            sum_quantity-=line.quantity
+            sum_price+=line.quantity*line.unit_price
+            all_q+=line.quantity
+        self.sum_quantity_origin=sum_quantity
+        self.unit_price_origin=sum_price/all_q
+        self.save()
+
+    def sum_quantity(self):
+        self.calculate_sums()
+        return self.sum_quantity_origin
+    
+    def average_unit_price(self):
+        self.calculate_sums()
+        return self.unit_price_origin
+
+    class Meta:
+        verbose_name = _("WareHouseMaterial")
+        verbose_name_plural = _("WareHouseMaterials")
+
+    def __str__(self):
+        return f"{self.ware_house.title}  :  {self.material.title}"
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":ware_house_material", kwargs={"ware_house_material_id": self.pk})
+
+    def get_status_tag(self):
+        status="عادی"
+        color="success"
+
+        if self.sum_quantity_origin<self.order_point:
+            color="warning"
+            status="خرید"
+        if self.sum_quantity_origin<self.minimum:
+            color="danger"
+            status="خرید"
+        
+        return f"""
+            <span class="badge badge-{color} px-2 py-2">
+                            {status}
+                        </span>
+            """   
+
+    def get_edit_btn(self):
+        return f"""
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
 
