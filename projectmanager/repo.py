@@ -363,6 +363,8 @@ class WareHouseRepo():
                     'direction_color':'success',
                     'total_price':ware_house_material['average_unit_price']*ware_house_material['total_quantities'],
                 })
+
+        
         return ware_house_materials
 
     def list(self, *args, **kwargs):

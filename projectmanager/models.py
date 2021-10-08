@@ -684,3 +684,7 @@ class WareHouseSheet(models.Model):
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
+
+
+
+
