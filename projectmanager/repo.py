@@ -339,9 +339,8 @@ class WareHouseRepo():
                 return ware_house_materials
         if 'ware_house' in kwargs:
             ware_house=kwargs['ware_house']
-        for ware_house_sheet in ware_house.warehousesheet_set.all():
-            ware_house_material_s=ware_house_sheet.material_requests.filter(status=RequestStatusEnum.DELIVERED).values('material_id','unit_name').annotate(total_quantities=Sum('quantity')).annotate(average_unit_price=Avg('unit_price'))
-            for ware_house_material in ware_house_material_s:
+        for ware_house_sheet in ware_house.warehousesheet_set.filter(direction=WareHouseSheetDirectionEnum.EXPORT):
+            for ware_house_material in ware_house_sheet.material_requests.filter(status=RequestStatusEnum.DELIVERED).values('material_id','unit_name').annotate(total_quantities=Sum('quantity')).annotate(average_unit_price=Avg('unit_price')):
                 material=MaterialRepo(request=self.request).material(pk=ware_house_material['material_id'])
                 ware_house_materials.append({
                     'material':material,
@@ -350,6 +349,18 @@ class WareHouseRepo():
                     'direction':WareHouseSheetDirectionEnum.EXPORT,
                     'average_unit_price':ware_house_material['average_unit_price'],
                     'direction_color':'danger',
+                    'total_price':ware_house_material['average_unit_price']*ware_house_material['total_quantities'],
+                })
+        for ware_house_sheet in ware_house.warehousesheet_set.filter(direction=WareHouseSheetDirectionEnum.IMPORT):
+            for ware_house_material in ware_house_sheet.material_requests.filter(status=RequestStatusEnum.AVAILABLE_IN_STORE).values('material_id','unit_name').annotate(total_quantities=Sum('quantity')).annotate(average_unit_price=Avg('unit_price')):
+                material=MaterialRepo(request=self.request).material(pk=ware_house_material['material_id'])
+                ware_house_materials.append({
+                    'material':material,
+                    'unit_name':ware_house_material['unit_name'],
+                    'total_quantities':ware_house_material['total_quantities'],
+                    'direction':WareHouseSheetDirectionEnum.IMPORT,
+                    'average_unit_price':ware_house_material['average_unit_price'],
+                    'direction_color':'success',
                     'total_price':ware_house_material['average_unit_price']*ware_house_material['total_quantities'],
                 })
         return ware_house_materials
