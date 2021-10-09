@@ -4,22 +4,34 @@
 
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="farsi text-right">
-                شناسه برگه انبار
+                شناسه برگه خروج از انبار
 
             </div>
 
 
-            <input placeholder="شناسه برگه انبار" required type="number" class="form-control"
-                v-model="ware_house_sheet_id">
+            <input placeholder="شناسه برگه خروج از انبار"  type="number" class="form-control"
+                v-model="ware_house_export_sheet_id">
+
+
+        </div>
+        <div class="col-md-3">
+            <div class="farsi text-right">
+                شناسه برگه ورود به انبار
+
+            </div>
+
+
+            <input placeholder="شناسه برگه ورود به انبار"  type="number" class="form-control"
+                v-model="ware_house_import_sheet_id">
 
 
         </div>
 
 
 
-        <div class="col-md-4">
+        <div class="col-md-3">
 
             <div class="farsi text-right">
                 انبار متریال
@@ -33,7 +45,7 @@
             </select>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="farsi text-right">
                 &nbsp;
             </div>

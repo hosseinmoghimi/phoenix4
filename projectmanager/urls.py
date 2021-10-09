@@ -27,6 +27,8 @@ urlpatterns = [
     path('service/<int:pk>/',views.ServiceViews().service,name="service"),
     path('ware_house_sheet/<int:pk>/',views.WareHouseSheetViews().ware_house_sheet,name="ware_house_sheet"),
     path('ware_house/<int:pk>/',views.WareHouseViews().ware_house,name="warehouse"),
+    path('ware_house_import_sheet/<int:pk>/',views.WareHouseSheetViews().ware_house_import_sheet,name="warehouseimportsheet"),
+    path('ware_house_export_sheet/<int:pk>/',views.WareHouseSheetViews().ware_house_export_sheet,name="warehouseexportsheet"),
     
     path('materials/',views.MaterialViews().materials,name="materials"),
     path('services/',views.ServiceViews().services,name="services"),

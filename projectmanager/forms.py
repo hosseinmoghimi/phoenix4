@@ -19,7 +19,8 @@ class AddMaterialForm(forms.Form):
 
 class AddMaterialRequestToWareHouseSheetForm(forms.Form):
     material_request_id=forms.IntegerField(required=True)
-    ware_house_sheet_id=forms.IntegerField(required=False)
+    ware_house_import_sheet_id=forms.IntegerField(required=False)
+    ware_house_export_sheet_id=forms.IntegerField(required=False)
     ware_house_id=forms.IntegerField(required=False)
     employee_id=forms.IntegerField(required=False)
     date_exported=forms.CharField(max_length=50,required=False)

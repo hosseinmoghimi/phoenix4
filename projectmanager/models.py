@@ -477,7 +477,7 @@ class MaterialRequest(Request):
         "متریال"), on_delete=models.PROTECT)
     # sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
     class_name = 'materialrequest'
-
+    ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("برگه انبار"), null=True,blank=True,on_delete=models.CASCADE)
     class Meta:
         verbose_name = _("درخواست متریال")
         verbose_name_plural = _("درخواست های متریال")
@@ -644,9 +644,8 @@ class WareHouse(OrganizationUnit):
 
 
 class WareHouseSheet(models.Model):
-    ware_house=models.ManyToManyField("warehouse",blank=True, verbose_name=_("warehouse"))
-    direction=models.CharField(_("direction"),choices=WareHouseSheetDirectionEnum.choices, max_length=50)
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
+    direction=models.CharField(_("direction"),choices=WareHouseSheetDirectionEnum.choices, max_length=50)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_imported=models.DateTimeField(_("تاریخ ورود"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_exported=models.DateTimeField(_("تاریخ خروج"),null=True,blank=True, auto_now=False, auto_now_add=False)
@@ -702,6 +701,7 @@ class WareHouseSheet(models.Model):
 
 class WareHouseImportSheet(WareHouseSheet):
     class_name="warehouseimportsheet"
+    
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
     
@@ -713,8 +713,7 @@ class WareHouseImportSheet(WareHouseSheet):
         return f"{self.ware_house.title} : برگه ورود شماره  {self.pk}"
 
     def get_absolute_url(self):
-        return reverse("WareHouseImportSheet_detail", kwargs={"pk": self.pk})
-
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
 
     def get_edit_btn(self):
         return f"""
@@ -725,11 +724,14 @@ class WareHouseImportSheet(WareHouseSheet):
         </a>
         """
 
+    def save(self,*args, **kwargs):
+        self.direction=WareHouseSheetDirectionEnum.IMPORT
+        return super(WareHouseImportSheet,self).save(*args, **kwargs)
+
 
 class WareHouseExportSheet(WareHouseSheet):
-
-    
     class_name="warehouseexportsheet"
+    
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
     
@@ -741,7 +743,11 @@ class WareHouseExportSheet(WareHouseSheet):
         return f"{self.ware_house.title} : برگه خروج شماره  {self.pk}"
 
     def get_absolute_url(self):
-        return reverse("WareHouseImportSheet_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def save(self,*args, **kwargs):
+        self.direction=WareHouseSheetDirectionEnum.EXPORT
+        return super(WareHouseExportSheet,self).save(*args, **kwargs)
 
 
 class WareHouseSheetLine(models.Model):
@@ -807,9 +813,6 @@ class WareHouseMaterial(models.Model):
         all_q=0
         lines_p=WareHouseSheetLine.objects.filter(ware_house_sheet__ware_house=self.ware_house).filter(material=self.material).filter(ware_house_sheet__direction=WareHouseSheetDirectionEnum.IMPORT)
         lines_n=WareHouseSheetLine.objects.filter(ware_house_sheet__ware_house=self.ware_house).filter(material=self.material).filter(ware_house_sheet__direction=WareHouseSheetDirectionEnum.EXPORT)
-        print(lines_n)
-        print(lines_p)
-        print(10*"####")
         for line in lines_p:
             sum_quantity+=line.quantity
             sum_price+=line.quantity*line.unit_price

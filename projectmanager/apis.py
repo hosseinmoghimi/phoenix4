@@ -239,7 +239,8 @@ class WareHouseSheetApi(APIView):
             add_material_request_to_ware_house_sheet_form=AddMaterialRequestToWareHouseSheetForm(request.POST)
             if add_material_request_to_ware_house_sheet_form.is_valid():
                 log+=1
-                ware_house_sheet_id=add_material_request_to_ware_house_sheet_form.cleaned_data['ware_house_sheet_id']
+                ware_house_export_sheet_id=add_material_request_to_ware_house_sheet_form.cleaned_data['ware_house_export_sheet_id']
+                ware_house_import_sheet_id=add_material_request_to_ware_house_sheet_form.cleaned_data['ware_house_import_sheet_id']
                 material_request_id=add_material_request_to_ware_house_sheet_form.cleaned_data['material_request_id']
                 ware_house_id=add_material_request_to_ware_house_sheet_form.cleaned_data['ware_house_id']
                 date_exported=add_material_request_to_ware_house_sheet_form.cleaned_data['date_exported']
@@ -248,7 +249,8 @@ class WareHouseSheetApi(APIView):
                 ware_house_sheet=WareHouseSheetRepo(request=request).add_material_request_to_ware_house_sheet(
                     material_request_id=material_request_id,
                     ware_house_id=ware_house_id,
-                    ware_house_sheet_id=ware_house_sheet_id,
+                    ware_house_export_sheet_id=ware_house_export_sheet_id,
+                    ware_house_import_sheet_id=ware_house_import_sheet_id,
                     )
 
                 if ware_house_sheet is not None:

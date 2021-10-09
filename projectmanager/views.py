@@ -418,11 +418,17 @@ class WareHouseViews(View):
         ware_house_materials=WareHouseMaterialRepo(request=request).list(ware_house=ware_house)
         context['ware_house_materials']=ware_house_materials
         context['ware_house_sheets_s']=ware_house_sheets_s
+        context['ware_house_sheet_lines']=WareHouseSheetLineRepo(request=request).list(ware_house_id=ware_house.id)
 
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
  
 
 class WareHouseSheetViews(View):
+    def ware_house_import_sheet(self, request, *args, **kwargs):
+        return self.ware_house_sheet(request,*args, **kwargs)
+    def ware_house_export_sheet(self, request, *args, **kwargs):
+        return self.ware_house_sheet(request,*args, **kwargs)
+    
     def ware_house_sheet(self, request, *args, **kwargs):
         context = getContext(request)
         ware_house_sheet=WareHouseSheetRepo(request=request).ware_house_sheet(*args, **kwargs)

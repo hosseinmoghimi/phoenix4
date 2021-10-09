@@ -14,7 +14,8 @@
             add_signature_form_description: "",
             waiting: false,
             event_datetime: current_datetime,
-            ware_house_sheet_id: "",
+            ware_house_export_sheet_id: "",
+            ware_house_import_sheet_id :"",
             add_to_sheet_description: "",
             ware_house_sheet:null,
             ware_house_id:"",
@@ -29,7 +30,8 @@
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     material_request_id: material_request_id,
-                    ware_house_sheet_id: this.ware_house_sheet_id,
+                    ware_house_import_sheet_id: this.ware_house_import_sheet_id,
+                    ware_house_export_sheet_id: this.ware_house_export_sheet_id,
                     ware_house_id: this.ware_house_id,
                     description: this.add_to_sheet_description,
                 }

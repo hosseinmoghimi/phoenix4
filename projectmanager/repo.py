@@ -4,7 +4,7 @@ from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, Signature
 from authentication.repo import ProfileRepo
 from django.db.models import Q,Sum
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
 
 
 class ProjectRepo():
@@ -242,48 +242,87 @@ class WareHouseSheetRepo():
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=WareHouseSheet.objects
+        self.me_employee=EmployeeRepo(Request=self.request).me
 
     def add_material_request_to_ware_house_sheet(self,*args, **kwargs):
-
-        ware_house_sheet=None
+        if not self.user.has_perm(APP_NAME+".add_warehousesheetline"):
+            return
+        ware_house_export_sheet=None
+        ware_house_import_sheet=None
+        ware_house_sheet_line=None
+        ware_house_sheet_line=WareHouseSheetLine()
         material_request=None
         if 'material_request_id' in kwargs:
             material_request=MaterialRequestRepo(request=self.request).material_request(material_request_id=kwargs['material_request_id'])
+        
         if material_request is None:
             return None
-        if len(material_request.warehousesheet_set.all())>0:
-            return None
+            
+        if 'ware_house_export_sheet_id' in kwargs and kwargs['ware_house_export_sheet_id']==0 and 'ware_house_id' in kwargs:
+            ware_house_export_sheet=WareHouseExportSheet()
+            ware_house_export_sheet.ware_house_id=kwargs['ware_house_id']
+            ware_house_export_sheet.creator=self.me_employee
+            ware_house_export_sheet.save()
+            ware_house_sheet_line.ware_house_sheet=ware_house_export_sheet
+            ware_house_sheet_line.material=material_request.material
+            ware_house_sheet_line.quantity=material_request.quantity
+            ware_house_sheet_line.unit_name=material_request.unit_name
+            ware_house_sheet_line.unit_price=material_request.unit_price
+            ware_house_sheet_line.save()
+            return ware_house_export_sheet
 
-        if 'ware_house_sheet_id' in kwargs and not kwargs['ware_house_sheet_id']==0:
-            ware_house_sheet_id=kwargs['ware_house_sheet_id']
-            ware_house_sheet=self.ware_house_sheet(ware_house_sheet_id=ware_house_sheet_id)
-            if ware_house_sheet is None:
+        if 'ware_house_import_sheet_id' in kwargs and kwargs['ware_house_import_sheet_id']==0 and 'ware_house_id' in kwargs:
+            ware_house_import_sheet=WareHouseImportSheet()
+            ware_house_import_sheet.ware_house_id=kwargs['ware_house_id']
+            ware_house_import_sheet.creator=self.me_employee
+            ware_house_import_sheet.save()
+            ware_house_sheet_line.ware_house_sheet=ware_house_import_sheet
+            ware_house_sheet_line.material=material_request.material
+            ware_house_sheet_line.quantity=material_request.quantity
+            ware_house_sheet_line.unit_name=material_request.unit_name
+            ware_house_sheet_line.unit_price=material_request.unit_price
+            ware_house_sheet_line.save()
+            return ware_house_import_sheet
+
+        if 'ware_house_export_sheet_id' in kwargs and not kwargs['ware_house_export_sheet_id']==0:
+            ware_house_export_sheet_id=kwargs['ware_house_export_sheet_id']
+            ware_house_export_sheet=WareHouseExportSheetRepo(request=self.request).ware_house_export_sheet(pk=ware_house_export_sheet_id)
+            if ware_house_export_sheet is None:
                     return None
-        if material_request is not None and ware_house_sheet is not None:
-            ware_house_sheet.material_requests.add(material_request)
-            return ware_house_sheet
+            ware_house_sheet_line=WareHouseSheetLine()
+            ware_house_sheet_line.ware_house_sheet=ware_house_export_sheet
+            ware_house_sheet_line.material=material_request.material
+            ware_house_sheet_line.unit_price=material_request.unit_price
+            ware_house_sheet_line.unit_name=material_request.unit_name
+            ware_house_sheet_line.save()
+
+
+        if 'ware_house_import_sheet_id' in kwargs and not kwargs['ware_house_export_sheet_id']==0:
+            ware_house_import_sheet_id=kwargs['ware_house_import_sheet_id']
+            ware_house_import_sheet=WareHouseImportSheetRepo(request=self.request).ware_house_import_sheet(pk=ware_house_import_sheet_id)
+            if ware_house_import_sheet is None:
+                    return None
+            ware_house_sheet_line=WareHouseSheetLine()
+            ware_house_sheet_line.ware_house_sheet=ware_house_import_sheet
+            ware_house_sheet_line.material=material_request.material
+            ware_house_sheet_line.unit_price=material_request.unit_price
+            ware_house_sheet_line.unit_name=material_request.unit_name
+            ware_house_sheet_line.save()
 
         
-        ware_house_sheet=WareHouseSheet()
-        ware_house_sheet.direction=WareHouseSheetDirectionEnum.EXPORT
-        if 'ware_house_id' in kwargs:
-            ware_house_id=kwargs['ware_house_id']
-            ware_house=WareHouse.objects.filter(pk=ware_house_id).first()
-            if ware_house is None:
-                return 
-            ware_house_sheet.ware_house=ware_house
+        
+
 
         if 'date_exported' in kwargs:
-            ware_house_sheet.date_exported=kwargs['date_exported']
+            ware_house_sheet_line.date_exported=kwargs['date_exported']
         if 'employee_id' in kwargs:
-            ware_house_sheet.employee_id=kwargs['employee_id']
+            ware_house_sheet_line.employee_id=kwargs['employee_id']
         if 'description' in kwargs:
-            ware_house_sheet.description=kwargs['description']
-            
-        if material_request is not None and ware_house_sheet is not None:
-            ware_house_sheet.save()
-            ware_house_sheet.material_requests.add(material_request)
-            return ware_house_sheet
+            ware_house_sheet_line.description=kwargs['description']
+
+        ware_house_sheet_line.save()    
+        if material_request is not None and ware_house_sheet_line is not None:
+            return ware_house_sheet_line
 
     
     def ware_house_sheet(self, *args, **kwargs):
@@ -308,6 +347,7 @@ class WareHouseSheetRepo():
         if 'for_home' in kwargs:
             objects = objects.filter(Q(for_home=kwargs['for_home']) | Q(parent=None))
         return objects
+
 
 class WareHouseMaterialRepo():
     def __init__(self,*args, **kwargs):
@@ -349,7 +389,6 @@ class WareHouseMaterialRepo():
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
-
 
 
 class WareHouseRepo():
@@ -420,6 +459,67 @@ class WareHouseRepo():
         return objects
 
 
+class WareHouseExportSheetRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouseExportSheet.objects
+    def ware_house_export_sheet(self, *args, **kwargs):
+        pk=0
+        if 'ware_house_export_sheet_id' in kwargs:
+            return self.objects.filter(pk=kwargs['ware_house_export_sheet_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+  
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(
+                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects
+
+
+class WareHouseImportSheetRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouseImportSheet.objects
+    def ware_house_export_sheet(self, *args, **kwargs):
+        pk=0
+        if 'ware_house_export_sheet_id' in kwargs:
+            return self.objects.filter(pk=kwargs['ware_house_export_sheet_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+  
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'for_home' in kwargs:
+            objects = objects.filter(
+                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        return objects
+
 
 class WareHouseSheetLineRepo():
     def __init__(self, *args, **kwargs):
@@ -448,6 +548,8 @@ class WareHouseSheetLineRepo():
             objects = objects.filter(material=kwargs['material'])
         if 'material_id' in kwargs:
             objects = objects.filter(material_id=kwargs['material_id'])
+        if 'ware_house_id' in kwargs:
+            objects = objects.filter(ware_house_sheet__ware_house_id=kwargs['ware_house_id'])
         if 'search_for' in kwargs:
             objects = objects.filter(title__contains=kwargs['search_for'])
         if 'for_home' in kwargs:
@@ -477,6 +579,7 @@ class EmployeeRepo():
             self.objects=Employee.objects.filter(id=0)
 
         self.me=Employee.objects.filter(profile=self.profile).first()
+    
     def employee(self, *args, **kwargs):
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
@@ -726,7 +829,6 @@ class ServiceRequestRepo():
             service_request_signature=RequestSignature(employee=self.employee,request=new_service_request,status=SignatureStatusEnum.REQUESTED)
             service_request_signature.save()
             return new_service_request
-
  
 
 class EventRepo():
