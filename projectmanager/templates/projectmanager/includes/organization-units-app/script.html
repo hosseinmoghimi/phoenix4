@@ -12,6 +12,7 @@
         data: {
             selected_organization_unit_title: "",
             new_organization_unit_title: "",
+            new_organization_is_ware_house: false,
             organization_units: organization_units,
 
 
@@ -52,6 +53,7 @@
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     parent_id: organization_unit_id,
+                    is_ware_house: this.new_organization_is_ware_house,
                     title: this.new_organization_unit_title,
                 }
                 let posting = $.post(url, payload)

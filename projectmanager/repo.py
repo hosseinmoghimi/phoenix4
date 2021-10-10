@@ -182,7 +182,10 @@ class OrganizationUnitRepo():
     def add_organization_unit(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_organizationunit"):
             return None
-        new_organization = OrganizationUnit()
+        if 'is_ware_house' in kwargs and kwargs['is_ware_house']==True:
+            new_organization = WareHouse()
+        else:
+            new_organization = OrganizationUnit()
 
         if 'title' in kwargs:
             new_organization.title = kwargs['title']
@@ -242,87 +245,81 @@ class WareHouseSheetRepo():
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=WareHouseSheet.objects
-        self.me_employee=EmployeeRepo(Request=self.request).me
+        self.me_employee=EmployeeRepo(request=self.request).me
 
     def add_material_request_to_ware_house_sheet(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_warehousesheetline"):
             return
-        ware_house_export_sheet=None
-        ware_house_import_sheet=None
-        ware_house_sheet_line=None
-        ware_house_sheet_line=WareHouseSheetLine()
         material_request=None
-        if 'material_request_id' in kwargs:
-            material_request=MaterialRequestRepo(request=self.request).material_request(material_request_id=kwargs['material_request_id'])
+
+        ware_house_export_sheet_id=kwargs['ware_house_export_sheet_id'] if 'ware_house_export_sheet_id' in kwargs else None
+        ware_house_import_sheet_id=kwargs['ware_house_import_sheet_id'] if 'ware_house_import_sheet_id' in kwargs else None
+        material_request_id=kwargs['material_request_id'] if 'material_request_id' in kwargs else None
+        ware_house_id=kwargs['ware_house_id'] if 'ware_house_id' in kwargs else None
+        
+        material_request=MaterialRequestRepo(request=self.request).material_request(material_request_id=material_request_id)
+        ware_house=WareHouseRepo(request=self.request).ware_house(ware_house_id=ware_house_id)
         
         if material_request is None:
             return None
+        
+
+        # create new sheet line
+        sheet_line=WareHouseSheetLine()
+        sheet_line.material=material_request.material
+        sheet_line.quantity=material_request.quantity
+        sheet_line.unit_name=material_request.unit_name
+        sheet_line.unit_price=material_request.unit_price
+        sheet_line.description=f"""مربوط به پروژه  <a href="{material_request.project.get_absolute_url()}">{material_request.project.title}</a> """
             
-        if 'ware_house_export_sheet_id' in kwargs and kwargs['ware_house_export_sheet_id']==0 and 'ware_house_id' in kwargs:
-            ware_house_export_sheet=WareHouseExportSheet()
-            ware_house_export_sheet.ware_house_id=kwargs['ware_house_id']
-            ware_house_export_sheet.creator=self.me_employee
-            ware_house_export_sheet.save()
-            ware_house_sheet_line.ware_house_sheet=ware_house_export_sheet
-            ware_house_sheet_line.material=material_request.material
-            ware_house_sheet_line.quantity=material_request.quantity
-            ware_house_sheet_line.unit_name=material_request.unit_name
-            ware_house_sheet_line.unit_price=material_request.unit_price
-            ware_house_sheet_line.save()
-            return ware_house_export_sheet
-
-        if 'ware_house_import_sheet_id' in kwargs and kwargs['ware_house_import_sheet_id']==0 and 'ware_house_id' in kwargs:
-            ware_house_import_sheet=WareHouseImportSheet()
-            ware_house_import_sheet.ware_house_id=kwargs['ware_house_id']
-            ware_house_import_sheet.creator=self.me_employee
-            ware_house_import_sheet.save()
-            ware_house_sheet_line.ware_house_sheet=ware_house_import_sheet
-            ware_house_sheet_line.material=material_request.material
-            ware_house_sheet_line.quantity=material_request.quantity
-            ware_house_sheet_line.unit_name=material_request.unit_name
-            ware_house_sheet_line.unit_price=material_request.unit_price
-            ware_house_sheet_line.save()
-            return ware_house_import_sheet
-
-        if 'ware_house_export_sheet_id' in kwargs and not kwargs['ware_house_export_sheet_id']==0:
-            ware_house_export_sheet_id=kwargs['ware_house_export_sheet_id']
-            ware_house_export_sheet=WareHouseExportSheetRepo(request=self.request).ware_house_export_sheet(pk=ware_house_export_sheet_id)
-            if ware_house_export_sheet is None:
-                    return None
-            ware_house_sheet_line=WareHouseSheetLine()
-            ware_house_sheet_line.ware_house_sheet=ware_house_export_sheet
-            ware_house_sheet_line.material=material_request.material
-            ware_house_sheet_line.unit_price=material_request.unit_price
-            ware_house_sheet_line.unit_name=material_request.unit_name
-            ware_house_sheet_line.save()
+        # create new ware_house_export_sheet
+        if ware_house_export_sheet_id is not None and ware_house_export_sheet_id==0  and ware_house is not None:
+            sheet=WareHouseExportSheet()
+            sheet.description=f"""مربوط به پروژه  <a href="{material_request.project.get_absolute_url()}">{material_request.project.title}</a> """
+            sheet.date_exported=timezone.now()
+            sheet.ware_house=ware_house
+            sheet.save()
+        # create new ware_house_import_sheet
+        if ware_house_import_sheet_id is not None and ware_house_import_sheet_id==0  and ware_house is not None:
+            sheet=WareHouseImportSheet()
+            sheet.description=f"""مربوط به پروژه  <a href="{material_request.project.get_absolute_url()}">{material_request.project.title}</a> """
+            sheet.date_imported=timezone.now()
+            sheet.ware_house=ware_house
+            sheet.save()
 
 
-        if 'ware_house_import_sheet_id' in kwargs and not kwargs['ware_house_export_sheet_id']==0:
-            ware_house_import_sheet_id=kwargs['ware_house_import_sheet_id']
-            ware_house_import_sheet=WareHouseImportSheetRepo(request=self.request).ware_house_import_sheet(pk=ware_house_import_sheet_id)
-            if ware_house_import_sheet is None:
-                    return None
-            ware_house_sheet_line=WareHouseSheetLine()
-            ware_house_sheet_line.ware_house_sheet=ware_house_import_sheet
-            ware_house_sheet_line.material=material_request.material
-            ware_house_sheet_line.unit_price=material_request.unit_price
-            ware_house_sheet_line.unit_name=material_request.unit_name
-            ware_house_sheet_line.save()
+
+        # ADD to existing export Sheet
+        if ware_house_export_sheet_id is not None and ware_house_export_sheet_id>0:  
+            sheet=WareHouseExportSheetRepo(request=self.request).ware_house_export_sheet(pk=ware_house_export_sheet_id)          
+            sheet_line.ware_house_sheet_id=ware_house_export_sheet_id
+
+        # ADD to existing import Sheet
+        if ware_house_import_sheet_id is not None and ware_house_import_sheet_id>0:
+            sheet=WareHouseImportSheetRepo(request=self.request).ware_house_import_sheet(pk=ware_house_import_sheet_id)
+            sheet_line.ware_house_sheet_id=ware_house_import_sheet_id
+
 
         
         
+        sheet.creator=self.me_employee
+        sheet_line.ware_house_sheet=sheet
 
 
         if 'date_exported' in kwargs:
-            ware_house_sheet_line.date_exported=kwargs['date_exported']
+            sheet_line.ware_house_sheet.date_exported=kwargs['date_exported']
+        if 'date_imported' in kwargs:
+            sheet_line.ware_house_sheet.date_imported=kwargs['date_imported']
         if 'employee_id' in kwargs:
-            ware_house_sheet_line.employee_id=kwargs['employee_id']
+            sheet_line.employee_id=kwargs['employee_id']
         if 'description' in kwargs:
-            ware_house_sheet_line.description=kwargs['description']
+            sheet_line.description=kwargs['description']
 
-        ware_house_sheet_line.save()    
-        if material_request is not None and ware_house_sheet_line is not None:
-            return ware_house_sheet_line
+        sheet.save()
+        sheet_line.save()
+        material_request.ware_house_sheet=sheet
+        material_request.save()
+        return sheet
 
     
     def ware_house_sheet(self, *args, **kwargs):
@@ -501,7 +498,7 @@ class WareHouseImportSheetRepo():
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=WareHouseImportSheet.objects
-    def ware_house_export_sheet(self, *args, **kwargs):
+    def ware_house_import_sheet(self, *args, **kwargs):
         pk=0
         if 'ware_house_export_sheet_id' in kwargs:
             return self.objects.filter(pk=kwargs['ware_house_export_sheet_id']).first()
@@ -567,7 +564,7 @@ class EmployeeRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.profile=ProfileRepo(*args, **kwargs).me
+        self.profile=ProfileRepo(request=self.request).me
         if self.user is None:
             self.objects=Employee.objects.filter(id=0)
         elif self.user.has_perm(APP_NAME+".view_employee"):

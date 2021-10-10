@@ -13,6 +13,25 @@
 
 
 <div class="row">
+
+    {% if me_employee %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body farsi text-right">
+
+                <a href="{{me_employee.get_absolute_url}}">
+                    <img src="{{me_employee.profile.image}}" class="rounded-circle" width=48 alt="">
+                    {{me_employee.profile.name}}
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+
+    </div>
+    {% endif %}
+
+
     {% if carousels %}
 
     <div class="col-12">

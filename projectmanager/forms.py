@@ -1,3 +1,4 @@
+from django.db.models.fields import BooleanField
 from core.settings import SITE_URL
 from django import forms
 from .apps import APP_NAME
@@ -11,6 +12,7 @@ class AddOrganizationUnitForm(forms.Form):
     organization_unit_id=forms.IntegerField( required=False)
     parent_id=forms.IntegerField(required=False)
     employer_id=forms.IntegerField(required=False)
+    is_ware_house=forms.BooleanField(required=False)
     title=forms.CharField(max_length=50, required=True)
 
 class AddMaterialForm(forms.Form):

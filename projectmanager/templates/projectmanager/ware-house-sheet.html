@@ -62,8 +62,11 @@
 
                 {% if ware_house_sheet.date_imported %}
                 <p class="text-left">
+                    <small class="text-muted">
+                        تاریخ ورود به انبار :
 
-                    تاریخ ورود به انبار :
+                    </small>
+
                     {{ware_house_sheet.date_imported|to_persian_datetime|safe}}
                 </p>
 
@@ -73,10 +76,25 @@
 
                 {% if ware_house_sheet.date_exported %}
                 <p class="text-left">
+                    <small class="text-muted">
+                        تاریخ خروج از انبار :
 
-                    تاریخ خروج از انبار :
+                    </small>
+
                     {{ware_house_sheet.date_exported|to_persian_datetime|safe}}
                 </p>
+
+                {% endif %}
+
+                {% if ware_house_sheet.date_added %}
+                <p class="text-left">
+                    <small class="text-muted">
+                        تاریخ ثبت در سیستم :
+
+                    </small>
+                    {{ware_house_sheet.date_added|to_persian_datetime|safe}}
+                </p>
+
 
                 {% endif %}
                 <p class="text-left">
@@ -86,7 +104,67 @@
                     </a>
                 </p>
             </div>
+            {% if ware_house_sheet.creator %}
+            <div class="col-md-4">
+                <div class="farsi text-right">
+                    <small class="text-muted">
+
+                        ثبت کننده :
+                    </small>
+                    <a href="{{ware_house_sheet.creator.get_absolute_url}}">
+                        <img src="{{ware_house_sheet.creator.profile.image}}" class="rounded-circle" width=48 alt="">
+                        {{ware_house_sheet.creator.profile.name}}
+                    </a>
+
+
+                </div>
+            </div>
+            {% endif %}
+            {% if ware_house_sheet.tahvil_dahandeh %}
+            <div class="col-md-4">
+                <div class="farsi text-right">
+                    <small class="text-muted">
+
+                        تحویل دهنده :
+                    </small>
+                    <a href="{{ware_house_sheet.tahvil_dahandeh.get_absolute_url}}">
+                        <img src="{{ware_house_sheet.tahvil_dahandeh.profile.image}}" class="rounded-circle" width=48
+                            alt="">
+                        {{ware_house_sheet.tahvil_dahandeh.profile.name}}
+                    </a>
+
+
+                </div>
+            </div>
+            {% endif %}
+
+
+
+            {% if ware_house_sheet.tahvil_girandeh %}
+            <div class="col-md-4">
+
+
+                <div class="farsi text-right">
+                    <small class="text-muted">
+
+                        تحویل گیرنده :
+                    </small>
+                    <a href="{{ware_house_sheet.tahvil_girandeh.get_absolute_url}}">
+                        <img src="{{ware_house_sheet.tahvil_girandeh.profile.image}}" class="rounded-circle" width=48
+                            alt="">
+                        {{ware_house_sheet.tahvil_girandeh.profile.name}}
+                    </a>
+
+
+                </div>
+            </div>
+            {% endif %}
+
+
+
+
         </div>
+    </div>
 
 
 
@@ -96,155 +174,40 @@
 
 
 
-        <table class="table table-striped">
-            <thead>
-
-
-
-                <th>
-                    متریال
-                </th>
-                <th>
-                    تعداد
-                </th>
-                <th>
-                    قیمت واحد
-                </th>
-                <th>
-                    جمع
-                </th>
-                <th>
-
-                </th>
-                <th>
-
-                </th>
-            </thead>
-            <tbody>
-                {% for sheet_line in ware_house_sheet.sheet_lines %}
-                <tr>
-
-
-
-                    <td>
-
-                        <a target="_blank" href="{{sheet_line.material.get_absolute_url}}">
-                            <img src="{{sheet_line.material.thumbnail}}" class="ml-2 rounded" width="32" alt="">
-                            {{sheet_line.material.title}}
-                        </a>
-                    </td>
-
-                    <td>
-                        {{sheet_line.quantity}}
-                        <small>
-
-                            {{sheet_line.unit_name}}
-                        </small>
-
-                    </td>
-                    <td>
-                        {{sheet_line.unit_price|to_price_pure}}
-
-                    </td>
-                    <td>
-                        {{sheet_line.line_total|to_price}}
-
-                    </td>
-                    <td>
-                        {% if sheet_line.description %}
-                        <small class="text-secondary">
-                            {{sheet_line.description}}
-
-                        </small>
-                        {% endif %}
-                    </td>
-                    <td>
-
-
-                        {% if perms.projectmanager.change_warehousesheetline %}
-                        <a href="{{sheet_line.get_edit_url}}" target="_blank" title="ویرایش">
-                            <i class="material-icons">
-                                edit
-                            </i>
-                        </a>
-
-
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                {% if add_material_request_form %}
-
-                <tr v-for="material_request in material_requests">
-                    <td>
-                        <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
-                            <i class="material-icons">
-                                ballot
-                            </i>
-                        </a>
-                    </td>
-
-                    <td>
-                        <small v-text="material_request.persian_date_added">
-
-                        </small>
-                    </td>
-                    <td>
-                        <a target="_blank" :href="material_request.handler.get_absolute_url">
-                            <img :src="material_request.handler.profile.image" class="ml-2 rounded" width="32" alt="">
-                            <span v-text="material_request.handler.profile.name">
-                            </span>
-                        </a>
-                    </td>
-                    <td>
-                        <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32" alt="">
-
-                        <a target="_blank" :href="material_request.material.get_absolute_url"
-                            v-text="material_request.material.title">
-
-                        </a>
-                    </td>
-                    <td>
-                        <span v-text="material_request.quantity"></span>
-                        <small v-text="material_request.unit_name">
-
-                        </small>
-
-                    </td>
-                    <td>
-                        <span v-text="to_price(material_request.unit_price,'')"></span>
-
-                    </td>
-                    <td>
-                        <span
-                            v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
-
-                    </td>
-                    <td>
-                        <span v-html="material_request.get_status_tag"></span>
-
-
-                        {% if perms.projectmanager.change_materialrequest %}
-                        <a title="ویرایش" target="_blank" :href="material_request.get_edit_url">
-                            <i class="material-icons">edit</i>
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
 
 
 
 
+
+</div>
+</div>
+<div class="row">
+    {% if ware_house_sheet.description %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="title">
+                    توضیحات
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="farsi text-right">
+
+                    {{ware_house_sheet.description|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-md-12">
+        {% include "projectmanager/includes/ware-house-sheet-lines-app/template.html" %}
 
     </div>
 </div>
-
 {% endblock content %}
 
 
 {% block script %}
+{% include "projectmanager/includes/ware-house-sheet-lines-app/script.html" %}
 
 {% endblock script %}

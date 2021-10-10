@@ -33,16 +33,21 @@
                             انبار
                         </th>
                         {% endif %}
+                        {% if not ware_house_sheet %}
                         <th>
                             تاریخ درخواست
                         </th>
+
                         <th>
                             پرسنل
                         </th>
+                        {% endif %}
+                        {% if not ware_house_sheet %}
 
                         <th>
                             ورود/خروج
                         </th>
+                        {% endif %}
                         {% if not material %}
 
                         <th>
@@ -80,6 +85,8 @@
                             </td>
                             {% endif %}
 
+
+                            {% if not ware_house_sheet %}
                             <td>
                                 {% if ware_house_sheet_line.ware_house_sheet.date_imported %}
 
@@ -97,6 +104,7 @@
                                 {% endif %}
 
                             </td>
+
                             <td>
                                 {% if ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh %}
 
@@ -118,12 +126,17 @@
                                 {% endif %}
                             </td>
 
+                            {% endif %}
+
+                            {% if not ware_house_sheet %}
+
                             <td>
 
                                 <span class="badge badge-{{ware_house_sheet_line.ware_house_sheet.get_status_color}}">
                                     {{ware_house_sheet_line.ware_house_sheet.direction}}
                                 </span>
                             </td>
+                            {% endif %}
                             {% if not material %}
 
 
@@ -154,7 +167,12 @@
 
                             </td>
                             <td>
-
+                                {% if ware_house_sheet_line.description %}
+                                <small class="text-secondary">
+                                    {{ware_house_sheet_line.description|safe}}
+        
+                                </small>
+                                {% endif %}
                                 {% if perms.projectmanager.change_materialrequest %}
                                 {{ware_house_sheet_line.get_edit_btn|safe}}
 

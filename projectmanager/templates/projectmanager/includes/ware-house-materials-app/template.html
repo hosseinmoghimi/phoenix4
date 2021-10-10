@@ -22,7 +22,7 @@
                 <th>نقطه خرید</th>
                 <th>حداقل موجودی</th>
                 <th>موجودی</th>
-                <th>قیمت</th>
+                <th> میانگین قیمت</th>
                 <th>وضعیت</th>
             </thead>
             <tbody>
@@ -47,12 +47,20 @@
                     {% endif %}
                     <td>
                         {{ware_house_material.order_point}}
+                        <span class="badge badge-primary px-2 py-2">
+                            {{ware_house_material.unit_name}}
 
+
+                        </span>
                     </td>
 
                     <td>
                         {{ware_house_material.minimum}}
+                        <span class="badge badge-primary px-2 py-2">
+                            {{ware_house_material.unit_name}}
 
+
+                        </span>
                     </td>
 
                     <td>
@@ -63,6 +71,7 @@
 
                         </span>
                     </td>
+
                     <td>
                         {{ware_house_material.average_unit_price|to_price}}
 

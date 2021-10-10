@@ -177,13 +177,14 @@ class OrganizationUnitApi(APIView):
                 log+=1
                 organization_unit_id=add_organization_unit_form.cleaned_data['organization_unit_id']
                 project_id=add_organization_unit_form.cleaned_data['project_id']
+                is_ware_house=add_organization_unit_form.cleaned_data['is_ware_house']
                 title=add_organization_unit_form.cleaned_data['title']
                 parent_id=add_organization_unit_form.cleaned_data['parent_id']
                 employer_id=add_organization_unit_form.cleaned_data['employer_id']
                 if organization_unit_id is not None and project_id is not None:
                     organization_unit=ProjectRepo(request=request).add_organization_unit(organization_unit_id=organization_unit_id,project_id=project_id)
                 else:
-                    organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(parent_id=parent_id,employer_id=employer_id,title=title)
+                    organization_unit=OrganizationUnitRepo(request=request).add_organization_unit(is_ware_house=is_ware_house,parent_id=parent_id,employer_id=employer_id,title=title)
                 if organization_unit is not None:
                     context['organization_unit']=OrganizationUnitSerializer(organization_unit).data
                     context['result']=SUCCEED

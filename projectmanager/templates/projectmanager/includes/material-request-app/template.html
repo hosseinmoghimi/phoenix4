@@ -235,20 +235,18 @@
         </div>
         <div class="card-body">
 
-
-
-            {% for ware_house_sheet in material_request.warehousesheet_set.all %}
+            {% if material_request.ware_house_sheet %}
             <p>
 
-                <a class="btn btn-primary" href="{{ware_house_sheet.get_absolute_url}}">
+                <a class="btn btn-primary" href="{{material_request.ware_house_sheet.get_absolute_url}}">
                     <i class="material-icons">
                         ballot
                     </i>
                     برگه انبار شماره
-                    {{ware_house_sheet.pk}}
+                    {{material_request.ware_house_sheet.pk}}
                 </a>
                 {% if perms.projectmanager.change_warehousesheet %}
-                <a title="ویرایش" target="_blank" href="{{ware_house_sheet.get_edit_url}}">
+                <a title="ویرایش" target="_blank" href="{{material_request.ware_house_sheet.get_edit_url}}">
                     <i class="material-icons">
                         edit
                     </i>
@@ -260,29 +258,30 @@
                     خروج از انبار :
                     <small class="text-secondary">
 
-                        {{ware_house_sheet.date_exported|to_persian_datetime|safe}}
+                        {{material_request.ware_house_sheet.date_exported|to_persian_datetime|safe}}
                     </small>
                 </span>
 
-                <a class="btn btn-primary" href="{{ware_house_sheet.ware_house.get_absolute_url}}">
+                <a class="btn btn-primary" href="{{material_request.ware_house_sheet.ware_house.get_absolute_url}}">
                     <i class="material-icons">
                         store
                     </i>
-                    {{ware_house_sheet.ware_house.title}}
+                    {{material_request.ware_house_sheet.ware_house.title}}
                 </a>
 
 
 
-                <a class="btn btn-primary" href="{{ware_house_sheet.ware_house.employer.get_absolute_url}}">
+                <a class="btn btn-primary"
+                    href="{{material_request.ware_house_sheet.ware_house.employer.get_absolute_url}}">
                     <i class="material-icons">
                         apartment
                     </i>
-                    {{ware_house_sheet.ware_house.employer.title}}
+                    {{material_request.ware_house_sheet.ware_house.employer.title}}
                 </a>
 
-   
+
             </p>
-            {% empty %}
+            {% elif add_material_request_to_ware_house_sheet_form %}
 
             <p v-if="ware_house_sheet">
 
@@ -294,10 +293,9 @@
                     <span v-text=ware_house_sheet.id></span>
                 </a>
             </p>
-            {% if add_material_request_to_ware_house_sheet_form %}
             {% include "projectmanager/includes/material-request-app/add-to-ware-house-sheet-form.html"%}
             {% endif %}
-            {% endfor %}
+
 
 
         </div>

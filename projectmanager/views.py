@@ -1,6 +1,8 @@
 import json
 
 from django.http.response import Http404
+
+from projectmanager.models import OrganizationUnit
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
@@ -16,7 +18,7 @@ from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
 from django.views import View
 from django.shortcuts import render
-from projectmanager.enums import ProjectStatusEnum, SignatureStatusEnum, UnitNameEnum
+from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
 TEMPLATE_ROOT = APP_NAME+"/"
@@ -28,6 +30,10 @@ def getContext(request):
     context['layout_parent']="material-kit-pro/layout.html"
     context['layout_parent']="phoenix/layout.html"
     context["layout"] = TEMPLATE_ROOT+"layout.html"
+    me_employee=EmployeeRepo(request=request).me
+    print(me_employee)
+    print(10*"#$")
+    context["me_employee"] =me_employee
     context["admin_utility"] = AdminUtility(request=request)
     context['search_action'] = reverse(APP_NAME+":search")
     context['search_form'] = SearchForm()
@@ -348,8 +354,7 @@ class OrganizationUnitViews(View):
         context.update(PageContext(request=request, page=page))
         context['organization_unit'] = organization_unit
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
-        context['organization_units'] = organization_unit.childs()
-        organization_units = organization_unit.childs()
+        organization_units=OrganizationUnit.objects.filter(employer=organization_unit.employer).filter(parent=organization_unit)
         context['organization_units'] = organization_units
         context['add_employee_form'] = AddEmployerForm()
         all_profiles = ProfileRepo(user=request.user).objects.all()
@@ -433,6 +438,8 @@ class WareHouseSheetViews(View):
         context = getContext(request)
         ware_house_sheet=WareHouseSheetRepo(request=request).ware_house_sheet(*args, **kwargs)
         context['ware_house_sheet']=ware_house_sheet
+        context['ware_house']=ware_house_sheet.ware_house
+        context['ware_house_sheet_lines']=ware_house_sheet.sheet_lines()
         return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
     
 
@@ -506,7 +513,7 @@ class MaterialRequestViews(View):
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         
         context['add_signature_form']=AddSignatureForm()
-        if request.user.has_perm(APP_NAME+".add_warehousesheet"):
+        if request.user.has_perm(APP_NAME+".add_warehousesheet") and material_request.status==RequestStatusEnum.ACCEPTED:
             context['add_material_request_to_ware_house_sheet_form']=AddMaterialRequestToWareHouseSheetForm()
             context["ware_houses"]=material_request.project.contractor.ware_houses()
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
@@ -597,9 +604,6 @@ class ServiceRequestViews(View):
         context['service_requests'] = service_requests
         context['service_requests_s'] = json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
         return render(request, TEMPLATE_ROOT+"service-requests.html", context)
-
-    
-
   
 
 class EventViews(View):

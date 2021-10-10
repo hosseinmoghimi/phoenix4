@@ -253,6 +253,7 @@ class Project(ProjectManagerPage):
 
 
 class Material(ProjectManagerPage):
+    code=models.CharField(_("code"),null=True,blank=True, max_length=50)
     unit_name = models.CharField(
         _("unit_name"), choices=UnitNameEnum.choices, default=UnitNameEnum.ADAD, max_length=50)
     unit_price = models.IntegerField(_("unit_price"), default=0)
@@ -393,10 +394,13 @@ class OrganizationUnit(ProjectManagerPage):
     def full_title(self):
         if self.parent is None:
             return self.title
-        return self.title+" " + OrganizationUnit.objects.get(pk=self.parent.id).full_title
+        return self.title+" , " + OrganizationUnit.objects.get(pk=self.parent.id).full_title
 
     def childs(self):
         return OrganizationUnit.objects.filter(parent_id=self.id)
+
+    def __str__(self):
+        return f" {self.full_title} : {self.employer.title}"
 
 
 class EmployeeSpeciality(ProjectManagerPage):
@@ -477,7 +481,7 @@ class MaterialRequest(Request):
         "متریال"), on_delete=models.PROTECT)
     # sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
     class_name = 'materialrequest'
-    ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("برگه انبار"), null=True,blank=True,on_delete=models.CASCADE)
+    ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("برگه انبار"), null=True,blank=True,on_delete=models.SET_NULL)
     class Meta:
         verbose_name = _("درخواست متریال")
         verbose_name_plural = _("درخواست های متریال")
@@ -641,6 +645,9 @@ class WareHouse(OrganizationUnit):
 
     def sheets(self):
         return WareHouseSheet.objects.filter(ware_house=self)
+    
+    def __str__(self):
+        return f"انبار : {self.title} : {self.employer.title}"
 
 
 class WareHouseSheet(models.Model):
@@ -789,6 +796,22 @@ class WareHouseSheetLine(models.Model):
         return self.ware_house_sheet.get_absolute_url()
         # return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
 
+    def save(self,*args, **kwargs):
+        ware_house=self.ware_house_sheet.ware_house
+        material=self.material
+        q=WareHouseMaterial.objects.filter(ware_house=ware_house).filter(material=material)
+        if len(q)==0:
+            wm=WareHouseMaterial()
+            wm.ware_house=ware_house
+            wm.material=material
+            wm.minimum=5
+            wm.order_point=10
+            wm.unit_name=material.unit_name
+            wm.unit_price=material.unit_price
+            wm.code=material.code
+            wm.save()
+        return super(WareHouseSheetLine,self).save(*args, **kwargs)
+
 
 class WareHouseMaterial(models.Model):
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
@@ -816,13 +839,11 @@ class WareHouseMaterial(models.Model):
         for line in lines_p:
             sum_quantity+=line.quantity
             sum_price+=line.quantity*line.unit_price
-            all_q+=line.quantity
         for line in lines_n:
             sum_quantity-=line.quantity
-            sum_price+=line.quantity*line.unit_price
-            all_q+=line.quantity
+            sum_price-=line.quantity*line.unit_price
         self.sum_quantity_origin=sum_quantity
-        self.unit_price_origin=sum_price/all_q
+        self.unit_price_origin=(0 if sum_quantity==0 else sum_price/sum_quantity)
         self.save()
 
     def sum_quantity(self):
