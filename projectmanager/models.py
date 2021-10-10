@@ -598,7 +598,7 @@ class RequestSignature(models.Model):
         """
 
     def __str__(self):
-        return str(self.pk)
+        return f"""{self.request.project} : {self.employee.profile.name} : {self.status} """
 
     def get_absolute_url(self):
         return reverse("RequestSignature_detail", kwargs={"pk": self.pk})

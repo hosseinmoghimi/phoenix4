@@ -91,10 +91,14 @@
         text-align: right;
     }
 </style>
-<title>{{app.title}}
+<title> 
+    {{app.title}}
 
 
     {% if page.title %}
     | {{page.title}}
+    {% endif %}
+    {% if page_title %}
+    | {{page_title}}
     {% endif %}
 </title>

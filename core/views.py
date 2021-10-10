@@ -44,6 +44,7 @@ def PageContext(request, page):
         return {}
     context = {}
     context['page'] = page
+
     context['parent_id'] = page.id
     from authentication.repo import ProfileRepo
     profile=ProfileRepo(request=request).me

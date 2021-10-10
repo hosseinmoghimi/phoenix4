@@ -436,6 +436,7 @@ class WareHouseSheetViews(View):
         context = getContext(request)
         ware_house_sheet=WareHouseSheetRepo(request=request).ware_house_sheet(*args, **kwargs)
         context['ware_house_sheet']=ware_house_sheet
+        context['page_title']="برگه انبار شماره "+str(ware_house_sheet.pk)
         context['ware_house']=ware_house_sheet.ware_house
         context['ware_house_sheet_lines']=ware_house_sheet.sheet_lines()
         return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
