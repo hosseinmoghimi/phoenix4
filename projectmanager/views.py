@@ -31,8 +31,6 @@ def getContext(request):
     context['layout_parent']="phoenix/layout.html"
     context["layout"] = TEMPLATE_ROOT+"layout.html"
     me_employee=EmployeeRepo(request=request).me
-    print(me_employee)
-    print(10*"#$")
     context["me_employee"] =me_employee
     context["admin_utility"] = AdminUtility(request=request)
     context['search_action'] = reverse(APP_NAME+":search")

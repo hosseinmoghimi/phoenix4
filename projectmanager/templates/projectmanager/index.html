@@ -17,12 +17,46 @@
     {% if me_employee %}
     <div class="col-md-4">
         <div class="card">
+            <div class="card-header">
+                <h5 class="text-center">
+                    مشخصات پرسنلی من
+                </h5>
+            </div>
             <div class="card-body farsi text-right">
+                <div class="media">
+                    <a href="{{me_employee.get_absolute_url}}">
+                        <img src="{{me_employee.profile.image}}" class="rounded-circle" width="96" alt="">
+                    </a>
+                    <div class="media-body mr-2">
+                        <div class="mb-2 mt-2">
 
-                <a href="{{me_employee.get_absolute_url}}">
-                    <img src="{{me_employee.profile.image}}" class="rounded-circle" width=48 alt="">
-                    {{me_employee.profile.name}}
-                </a>
+                            <a href="{{me_employee.get_absolute_url}}">
+                                <h5>
+
+                                    {{me_employee.profile.name}}
+                                </h5>
+                            </a>
+                        </div>
+                        <div>
+                            <small class="text-muted">
+                                واحد سازمانی :
+                            </small>
+                            <a href="{{me_employee.organization_unit.get_absolute_url}}">
+                                {{me_employee.organization_unit.title}}
+                            </a>
+                        </div>
+                        <div>
+                            <small class="text-muted">
+                                سازمان :
+                            </small>
+                            <a href="{{me_employee.organization_unit.employer.get_absolute_url}}">
+                                {{me_employee.organization_unit.employer.title}}
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
