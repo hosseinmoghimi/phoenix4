@@ -73,6 +73,7 @@ class Icon(models.Model):
             return f'<span  style="{icon_style}" class="{text_color}">{self.icon_svg}</span>'
         return ''
 
+
 class Tag(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     title = models.CharField(_("عنوان"), max_length=50)
@@ -86,6 +87,7 @@ class Tag(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":tag", kwargs={"pk": self.pk})
+
 
 class Image(models.Model):
     title = models.CharField(
@@ -162,6 +164,7 @@ class Image(models.Model):
 
     def get_absolute_url(self):
         return MEDIA_URL+str(self.image_main_origin)
+
 
 class BasicPage(models.Model):
     title = models.CharField(_("عنوان"), max_length=300)
@@ -563,9 +566,11 @@ class Document(Icon):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
 
+
 class PageDocument(Document):
     page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     
+
 class PageComment(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     page=models.ForeignKey("basicpage", verbose_name=_("page"), on_delete=models.CASCADE)
@@ -577,6 +582,7 @@ class PageComment(models.Model):
     class Meta:
         verbose_name = _("PageComment")
         verbose_name_plural = _("PageComments")
+
 
 class Parameter(models.Model):
     app_name=models.CharField(_("app_name"),choices=AppNameEnum.choices,null=True,blank=True,max_length=20)
@@ -611,6 +617,7 @@ class Parameter(models.Model):
             self.value_origin=self.value_origin.replace('height="450"','height="400"') 
         super(Parameter,self).save()
 
+
 class PageImage(models.Model):
     page=models.ForeignKey("basicpage", verbose_name=_("page"),on_delete=models.CASCADE)
     image=models.ForeignKey("image", verbose_name=_("image"), on_delete=models.CASCADE)
@@ -624,6 +631,7 @@ class PageImage(models.Model):
 
     def get_absolute_url(self):
         return reverse("PageImage_detail", kwargs={"pk": self.pk})
+
 
 class Picture(models.Model):
     app_name=models.CharField(_("app_name"), max_length=50)
@@ -657,6 +665,7 @@ class Picture(models.Model):
     def get_absolute_url(self):
         return reverse("Picture_detail", kwargs={"pk": self.pk})
 
+
 class SocialLink(Link):
     app_name=models.CharField(_('اپلیکیشن'),max_length=50,null=True,blank=True)
     profile = models.ForeignKey("authentication.Profile", null=True,
@@ -675,7 +684,6 @@ class SocialLink(Link):
 
     def __str__(self):
         return self.title
-
 
 
 class NavLink(Link):

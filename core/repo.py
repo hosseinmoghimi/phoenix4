@@ -149,8 +149,24 @@ class BasicPageRepo:
         else:
             likes.delete()
             return None
+    
+    def edit_page(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_basicpage"):
+            return
+        page=self.page(*args, **kwargs)
+        if page is None:
+            return
+        if 'description' in kwargs and kwargs['description']  is not None and not kwargs['description'] == "" :
+            page.description=kwargs['description']
+
+        if 'short_description' in kwargs and kwargs['short_description']  is not None and not kwargs['short_description'] == "":
+            page.short_description=kwargs['short_description']
+        page.save()
+        return page
 
 
+    def edit(self,*args, **kwargs):
+        return self.edit_page(*args, **kwargs)
 
 
 

@@ -1,11 +1,11 @@
-from core.models import PageLike
+from core.models import BasicPage, PageLike
 from core.serializers import BasicPageSerializer, PageCommentSerializer, PageDocumentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, ParameterSerializer, TagSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .forms import *
 from .repo import BasicPageRepo, DocumentRepo, PageCommentRepo, PageImageRepo, PageLinkRepo, ParameterRepo, TagRepo
 from .constants import SUCCEED, FAILED
-
+from utility.utils import str_to_html
 
 class BasicApi(APIView):
     def change_parameter(self, request, *args, **kwargs):
@@ -121,10 +121,7 @@ class BasicApi(APIView):
                 log += 1
                 comment = add_page_comment_form.cleaned_data['comment']
                 page_id = add_page_comment_form.cleaned_data['page_id']
-                comment1=comment.splitlines()
-                comment=""
-                for line in comment1:
-                    comment=comment+line+"<br>"
+                comment=str_to_html(comment)
                 page_comment = PageCommentRepo(request=request).add_comment(
                     comment=comment, page_id=page_id)
                 if page_comment is not None:
@@ -252,6 +249,33 @@ class PageApi(APIView):
                 if my_like is not None:    
                     context['my_like'] = PageLikeSerializer(my_like).data
                 context['likes_count'] = page_repo.page(page_id=page_id).likes_count()
+                context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
+    def edit_page_description(self,request,*args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log += 1
+            edit_page_description_form = EditPageDescriptionForm(request.POST)
+            if edit_page_description_form.is_valid():
+                log += 1
+                
+                page_id = edit_page_description_form.cleaned_data['page_id']
+                description = edit_page_description_form.cleaned_data['description']
+                short_description = edit_page_description_form.cleaned_data['short_description']
+
+                short_description=str_to_html(short_description)
+                description=str_to_html(description)
+                
+                page=BasicPageRepo(request=request).edit_page(
+                    page_id=page_id,        
+                    description=description,
+                    short_description=short_description            
+                    )
+                if page is not None:    
+                    context['page'] = BasicPageSerializer(page).data
                 context['result'] = SUCCEED
         context['log'] = log
         return JsonResponse(context)

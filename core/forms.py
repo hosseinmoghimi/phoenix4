@@ -4,6 +4,11 @@ class AddPageForm(forms.Form):
     parent_id=forms.IntegerField(required=False)
     title=forms.CharField(max_length=100, required=True)
     
+class EditPageDescriptionForm(forms.Form):
+    page_id=forms.IntegerField(required=True)
+    description=forms.CharField(required=False,max_length=1000)
+    short_description=forms.CharField(required=False,max_length=1000)
+    
 
 class DeletePageImageForm(forms.Form):
     page_id=forms.IntegerField(required=True)

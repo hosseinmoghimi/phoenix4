@@ -828,12 +828,13 @@ class WareHouseMaterial(models.Model):
     description=models.CharField(_("description"),null=True,blank=True, max_length=500)
 
     class_name="warehousematerial"
+
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    
     def calculate_sums(self):
         sum_quantity=0
         sum_price=0
-        all_q=0
         lines_p=WareHouseSheetLine.objects.filter(ware_house_sheet__ware_house=self.ware_house).filter(material=self.material).filter(ware_house_sheet__direction=WareHouseSheetDirectionEnum.IMPORT)
         lines_n=WareHouseSheetLine.objects.filter(ware_house_sheet__ware_house=self.ware_house).filter(material=self.material).filter(ware_house_sheet__direction=WareHouseSheetDirectionEnum.EXPORT)
         for line in lines_p:

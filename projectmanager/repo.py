@@ -739,15 +739,18 @@ class ServiceRequestRepo():
             return objects.filter(pk=kwargs['title']).first()
 
    
-    def add_signature(self,service_request_id,status,description=None,*args, **kwargs):
-        service_request_id
+    def add_signature(self,*args, **kwargs):
+        status=kwargs['status'] if 'status' in kwargs else SignatureStatusEnum.DEFAULT
+        description=kwargs['description'] if 'description' in kwargs else ""
+        service_request=self.service_request(*args, **kwargs)        
         me_employee=EmployeeRepo(request=self.request).me
-        service_request=self.service_request(service_request_id=service_request_id)
-        if service_request is None or me_employee is None:
+
+
+        if service_request is None or  me_employee is None:
             return
         if self.user.has_perm(APP_NAME+".add_requestsignature"):
             pass
-        if service_request.project in me_employee.my_projects():
+        elif service_request.project in me_employee.my_projects():
             pass
         else:
             return
@@ -757,7 +760,7 @@ class ServiceRequestRepo():
         service_request.status=status
         service_request.save()
 
-        signature.request_id=service_request_id
+        signature.request=service_request
         signature.status=status
         signature.date_added=timezone.now()
         signature.employee=me_employee
