@@ -244,7 +244,7 @@ class PageApi(APIView):
                 page_id = toggle_like_page_form.cleaned_data['page_id']
                 page_repo=BasicPageRepo(request=request)
                 my_like = page_repo.toggle_like(
-                    page_id=page_id,                    
+                    page_id=page_id,
                     )
                 if my_like is not None:    
                     context['my_like'] = PageLikeSerializer(my_like).data
@@ -268,11 +268,11 @@ class PageApi(APIView):
 
                 short_description=str_to_html(short_description)
                 description=str_to_html(description)
-                
+
                 page=BasicPageRepo(request=request).edit_page(
-                    page_id=page_id,        
+                    page_id=page_id,
                     description=description,
-                    short_description=short_description            
+                    short_description=short_description
                     )
                 if page is not None:    
                     context['page'] = BasicPageSerializer(page).data

@@ -722,7 +722,7 @@ class ServiceRequestRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = ServiceRequest.objects
+        self.objects = ServiceRequest.objects.filter(project__archive=False).order_by('-date_added')
         self.me=ProfileRepo(user=self.user).me
         self.employee=EmployeeRepo(request=self.request).me
 
@@ -770,7 +770,7 @@ class ServiceRequestRepo():
 
     
     def service_requests(self,*args, **kwargs):
-        objects=ServiceRequest.objects.filter(project__archive=False)
+        objects=self.objects
         if 'project_id' in kwargs:
             objects=objects.filter(project_id=kwargs['project_id'])
         if 'service_id' in kwargs:
@@ -902,11 +902,11 @@ class MaterialRequestRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = MaterialRequest.objects
+        self.objects = MaterialRequest.objects.filter(project__archive=False).order_by('-date_added')
         self.employee=EmployeeRepo(request=self.request).me
 
     def material_request(self, *args, **kwargs):
-        objects = MaterialRequest.objects
+        objects = self.objects
         if 'pk' in kwargs:
             return objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
@@ -917,7 +917,7 @@ class MaterialRequestRepo():
             return objects.filter(pk=kwargs['title']).first()
 
     def list(self, *args, **kwargs):
-        objects=self.objects.filter(project__archive=False)
+        objects=self.objects
         if 'project_id' in kwargs:
             objects=objects.filter(project_id=kwargs['project_id'])
         if 'material_id' in kwargs:
