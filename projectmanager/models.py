@@ -225,7 +225,7 @@ class Project(ProjectManagerPage):
 
     def sum_material_requests(self):
         sum = 0
-        for material_request in self.request_set.filter(request_type=RequestTypeEnum.MATERIAL_REQUEST):
+        for material_request in MaterialRequest.objects.filter(project=self):
             sum += material_request.quantity*material_request.unit_price
         return sum
 

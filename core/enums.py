@@ -100,6 +100,7 @@ class IconsEnum(TextChoices):
 
 
 class ParametersEnum(TextChoices):
+    SHOW_ARCHIVES="نمایش فایل های آرشیو شده",_("نمایش فایل های آرشیو شده")
     VISITOR_COUNTER="VISITOR_COUNTER",_("VISITOR_COUNTER")
     GOOGLE_API_KEY='GOOGLE_API_KEY',_('GOOGLE_API_KEY')
     GOOGLE_GPS_X='GOOGLE_GPS_X',_('GOOGLE_GPS_X')

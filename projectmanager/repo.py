@@ -4,9 +4,15 @@ from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, Signature
 from authentication.repo import ProfileRepo
 from django.db.models import Q,Sum
 from .apps import APP_NAME
-from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
+from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
+from core.repo import ParameterRepo
+from .enums import ParametersEnum
 
-
+def show_archives(request):
+        parameter_repo = ParameterRepo(request=request,app_name=APP_NAME)
+        show_archives=parameter_repo.parameter(ParametersEnum.SHOW_ARCHIVES).value
+        show_archives=(show_archives=="True")
+        return show_archives
 class ProjectRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -30,8 +36,11 @@ class ProjectRepo():
                 for proj in employee.my_projects():
                     lisst.append(proj.id)
             self.objects=Project.objects.filter(id__in=lisst)
-
-        self.objects=self.objects.filter(archive=False)
+        
+        if_show_archives=show_archives(request=self.request)
+        self.objects=self.objects.all()
+        if not if_show_archives:
+            self.objects=self.objects.filter(archive=False)
     def add_location(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_location"):
             return None
@@ -722,7 +731,11 @@ class ServiceRequestRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = ServiceRequest.objects.filter(project__archive=False).order_by('-date_added')
+        
+        self.objects = ServiceRequest.objects.order_by('-date_added')
+        if_show_archives=show_archives(request=self.request)
+        if not if_show_archives:
+            self.objects = self.objects.filter(project__archive=False)
         self.me=ProfileRepo(user=self.user).me
         self.employee=EmployeeRepo(request=self.request).me
 
@@ -902,7 +915,11 @@ class MaterialRequestRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = MaterialRequest.objects.filter(project__archive=False).order_by('-date_added')
+            
+        self.objects = MaterialRequest.objects.order_by('-date_added')
+        if_show_archives=show_archives(request=self.request)
+        if not if_show_archives:
+            self.objects = self.objects.filter(project__archive=False)
         self.employee=EmployeeRepo(request=self.request).me
 
     def material_request(self, *args, **kwargs):
@@ -977,14 +994,7 @@ class MaterialRequestRepo():
             return signature
 
     def material_requests(self,*args, **kwargs):
-        objects=MaterialRequest.objects.filter(project__archive=False)
-        if 'project_id' in kwargs:
-            objects=objects.filter(project_id=kwargs['project_id'])
-        if 'material_id' in kwargs:
-            objects=objects.filter(material_id=kwargs['material_id'])
-        if 'employee_id' in kwargs:
-            objects=objects.filter(handler_id=kwargs['employee_id'])
-        return objects
+        return self.list(*args, **kwargs)
 
 
 class LocationRepo():

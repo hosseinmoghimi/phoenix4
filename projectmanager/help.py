@@ -21,5 +21,10 @@ sidebar_links = [
         'title': 'افزودن پرسنل',
         'template': 'add_employee'
     },
+    {
+        'app_name': APP_NAME,
+        'title': 'افزودن برگه انبارداری',
+        'template': 'add-material-sheet'
+    },
 
 ]

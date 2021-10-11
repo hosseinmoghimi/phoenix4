@@ -22,15 +22,15 @@
                 </div>
 
                 <div class="col-3">
-                    <span v-show="show_detail" title="حذف جزئیات" class="material-icons text-muted" style="cursor: pointer;"
-                        @click="show_detail=false">
+                    <span v-show="show_detail" title="حذف جزئیات" class="material-icons text-muted"
+                        style="cursor: pointer;" @click="show_detail=false">
                         loupe
                     </span>
 
-                    <span v-show="!show_detail" title="نمایش جزئیات" class="material-icons text-primary" style="cursor: pointer;"
-                    @click="show_detail=true">
-                    loupe
-                </span>
+                    <span v-show="!show_detail" title="نمایش جزئیات" class="material-icons text-primary"
+                        style="cursor: pointer;" @click="show_detail=true">
+                        loupe
+                    </span>
 
                 </div>
             </div>
@@ -54,11 +54,15 @@
                         <a title="جزئیات" href="{{project.get_absolute_url}}">
                             <h5>
                                 {{project.title}}
-
+                                {% if project.archive %}
+                                <span class="material-icons" title="آرشیو شده">
+                                    archive
+                                </span>
+                                {% endif %}
                             </h5>
                         </a>
                         {% if project.sub_title %}
-                        <h6 v-show="show_detail" class="text-secondary">
+                        <h6 v-show="show_detail" class="text-secondary mb-3">
                             <small>
 
                                 {{project.sub_title}}
