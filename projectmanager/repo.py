@@ -739,7 +739,8 @@ class ServiceRequestRepo():
             return objects.filter(pk=kwargs['title']).first()
 
    
-    def add_signature(self,service_request_id,status,description=None):
+    def add_signature(self,service_request_id,status,description=None,*args, **kwargs):
+        service_request_id
         me_employee=EmployeeRepo(request=self.request).me
         service_request=self.service_request(service_request_id=service_request_id)
         if service_request is None or me_employee is None:
