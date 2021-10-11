@@ -12,7 +12,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwoaaa" data-parent="#accordion">
             <div class="card-body farsi text-right">
                 {% if page.description %}
-                {{page.description|safe}}
+               {{page.description|safe}}
                 {% endif %}
                 {% if perms.core.change_basicpage %}
                 <span title="ویرایش" style="cursor: pointer;" class="text-primary" v-if="!show_form" @click="show_form=true">

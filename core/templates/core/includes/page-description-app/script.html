@@ -17,6 +17,8 @@
                     // description: false,
                 }
                 $.post(url_edit_page_description, payload).done((data) => {
+                    page_description_app.short_description=data.page.short_description
+
                 })
             },
 
@@ -39,6 +41,7 @@
                     description: this.description,
                 }
                 $.post(url_edit_page_description, payload).done((data) => {
+                    page_description_app.description=data.page.description
                 })
 
             },

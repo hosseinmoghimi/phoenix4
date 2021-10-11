@@ -69,11 +69,7 @@
                                         ballot
                                     </i>
                                 </a>
-                                {% if material_request.project.archive %}
-                                <span class="material-icons" title="آرشیو شده">
-                                    archive
-                                </span>
-                                {% endif %}
+                              
                             </td>
                             <td>
                                 <small>
@@ -96,7 +92,12 @@
 
 
                                     {{material_request.project.title}}
-                                </a>
+                                    {% if material_request.project.archive %}
+                                    <span class="material-icons text-danger" title="آرشیو شده">
+                                        archive
+                                    </span>
+                                    {% endif %}
+                                  </a>
                             </td>
                             {% endif %}
 

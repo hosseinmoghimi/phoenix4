@@ -35,6 +35,11 @@
                 <a href="{{material_request.project.get_absolute_url}}">
 
                     {{material_request.project.full_title}}
+                    {% if material_request.project.archive %}
+                    <span class="material-icons text-danger" title="آرشیو شده">
+                        archive
+                    </span>
+                    {% endif %}
                 </a>
             </h6>
 

@@ -266,8 +266,8 @@ class PageApi(APIView):
                 description = edit_page_description_form.cleaned_data['description']
                 short_description = edit_page_description_form.cleaned_data['short_description']
 
-                short_description=str_to_html(short_description)
-                description=str_to_html(description)
+                # short_description=str_to_html(short_description)
+                # description=str_to_html(description)
 
                 page=BasicPageRepo(request=request).edit_page(
                     page_id=page_id,
