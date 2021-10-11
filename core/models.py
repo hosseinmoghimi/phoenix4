@@ -137,12 +137,19 @@ class Image(models.Model):
 
 
         image = PilImage.open(self.image_main_origin)
-    
+
+        width11, height11= image.size
+        ratio11=float(height11)/float(width11)
+
         output = BytesIO()
-        
-        THUMBNAIL_DIMENSION=250
+        from .repo import ParameterRepo
+        THUMBNAIL_DIMENSION=ParameterRepo(app_name=APP_NAME).parameter(name="عرض تصاویر کوچک").value
+        try:
+            a=THUMBNAIL_DIMENSION+100
+        except:
+            THUMBNAIL_DIMENSION=250
         #Resize/modify the image
-        image = image.resize( (THUMBNAIL_DIMENSION,THUMBNAIL_DIMENSION),PilImage.ANTIALIAS )
+        image = image.resize( (THUMBNAIL_DIMENSION,int(ratio11*float(THUMBNAIL_DIMENSION))),PilImage.ANTIALIAS )
         
         #after modifications, save it to the output
         image.save(output, format='JPEG', quality=95)
