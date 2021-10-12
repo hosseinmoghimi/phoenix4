@@ -31,7 +31,7 @@ def getContext(request, *args, **kwargs):
     vertical_navs=NavLinkRepo(request=request,app_name=APP_NAME).list()
     context['vertical_navs']=vertical_navs
     if me_customer is not None:
-        context['profile_button']={
+        context['profile_button1']={
             'url':me_customer.get_absolute_url(),
             'title':me_customer.title,
             'icon':"shopping_cart",
@@ -39,7 +39,7 @@ def getContext(request, *args, **kwargs):
         }
     
     if me_supplier is not None:
-        context['profile_button']={
+        context['profile_button1']={
             'url':me_supplier.get_absolute_url(),
             'title':me_supplier.title,
             'icon':"store",

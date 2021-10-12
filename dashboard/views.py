@@ -30,4 +30,7 @@ class BasicViews():
         from phoenix.server_settings import apps
         my_apps=apps
         context['my_apps']=my_apps
+        for my_app in my_apps:
+            if my_app['name']==app_name:
+                context['my_app']=my_app
         return render(request,TEMPLATE_ROOT+"parameters.html",context)

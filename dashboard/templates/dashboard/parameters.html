@@ -25,6 +25,14 @@
 </div>
 
 <div id="app">
+    <div class="text-center">
+
+        <a href="{{my_app.home_url}}" class="btn btn-success">
+            <i class="material-icons">
+                home
+            </i>
+            {{my_app.title}}</a>
+    </div>
     <form @submit.prevent="change_parameter(parameter.id,parameter.name,parameter.value)" v-for="parameter in parameters">
         <div class="row">
             <div class="col-md-4">
