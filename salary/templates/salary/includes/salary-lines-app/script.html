@@ -1,0 +1,49 @@
+<script>
+    let total_positives = parseInt(`{{employee_salary.total_positives}}`)
+    let total_negatives = parseInt(`{{employee_salary.total_negatives}}`)
+    let url_add_salary_line = "{% url 'salary:add_salary_line' %}"
+    let salary_lines_app = new Vue({
+        el: "#salary-lines-app",
+        data: {
+            negative_lines: [],
+            positive_lines: [],
+            kosurat_title: "",
+            mazaya_title: "",
+            kosurat_amount: "",
+            mazaya_amount: "",
+            total_positives: total_positives,
+            total_negatives: total_negatives,
+        },
+        methods: {
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            add_salary_line: function (direction) {
+                //direction=1=>mazaya
+                //direction=0=>kosurat
+                let title = this.kosurat_title
+                let amount = this.kosurat_amount
+                if (direction) {
+                    title = this.mazaya_title
+                    amount = this.mazaya_amount
+                }
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    direction: direction,
+                    title: title,
+                    amount: amount
+                }
+                $.post(url_add_salary_line, payload).done((data) => {
+                    if (typeof data.negative_line != 'undefined') {
+                        salary_lines_app.total_negatives += data.negative_line.amount
+                        salary_lines_app.negative_lines.push(data.negative_line)
+                    }
+                    if (typeof data.positive_line != 'undefined') {
+                        salary_lines_app.total_positives += data.positive_line.amount
+                        salary_lines_app.positive_lines.push(data.positive_line)
+                    }
+                })
+            },
+        }
+    })
+</script>

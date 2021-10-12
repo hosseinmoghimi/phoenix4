@@ -52,14 +52,47 @@
                     </td>
                 </tr>
                 {% endfor %}
+                <tr v-for="employee_salary in employee_salaries">
+                    <td>
+                        <a title="جزئیات" :href="employee_salary.get_absolute_url">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+
+                        </a>
+                    </td>
+                    <td>
+                        <a :href="employee_salary.employee.get_absolute_url">
+                            <span v-text="employee_salary.employee.profile.name"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="employee_salary.month_name"></span>
+
+                    </td>
+                    <td>
+                        <span v-text="employee_salary.year"></span>
+                    </td>
+                    <td>
+                        {% if perms.salary.change_employeesalary %}
+                        {{employee_salary.get_edit_btn|safe}}
+                        <a :href="employee_salary.get_edit_url">
+                            <i class="material-icons">
+                                edit
+                            </i>
+
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
             </tbody>
         </table>
 
     </div>
     <div class="card-footer">
         {% if add_employee_salary_form %}
-     {% include "salary/includes/employee-salaries-app/form.html" %}
-          
+        {% include "salary/includes/employee-salaries-app/form.html" %}
+
         {% endif %}
     </div>
 </div>

@@ -13,4 +13,5 @@ urlpatterns = [
 
 
     path('add_employee_salary/',apis.EmployeeSalaryApi().add_employee_salary,name="add_employee_salary"),
+    path('add_salary_line/',apis.EmployeeSalaryApi().add_salary_line,name="add_salary_line"),
 ]
