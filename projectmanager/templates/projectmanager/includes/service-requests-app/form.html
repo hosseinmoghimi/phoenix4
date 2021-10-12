@@ -80,6 +80,20 @@
                     </div>
                 </div>
             </form>
+
+
+            {% if copy_project_request_form %}
+
+            <form action="{% url 'projectmanager:copy_project_request' destination_project_id=project.id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="request_type" value="service">
+                <h4>کپی درخواست سرویس ها از یک پروژه دیگر</h4>
+                <!-- <input type="hidden" name="destination_project_id"> -->
+                <input type="number" class="form-control" placeholder="شناسه پروژه مبدا" name="source_project_id">
+                <button class="btn btn-warning" type="submit">تایید</button>
+            </form>
+            {% endif %}
+
         </div>
         <div class="col-4">
             <div v-for="service in services">

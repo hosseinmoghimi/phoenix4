@@ -17,7 +17,7 @@ from core.repo import ParameterRepo, PictureRepo, TagRepo
 from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
 from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
@@ -125,6 +125,22 @@ class BasicViews(View):
 
 
 class ProjectViews(View):
+    def copy_project_request(self,request,*args, **kwargs):
+        if 'destination_project_id' in kwargs:
+            destination_project_id=kwargs['destination_project_id']
+            if request.method=='POST':
+                copy_project_request_form=CopyProjectRequestForm(request.POST)
+                if copy_project_request_form.is_valid():
+                    source_project_id=copy_project_request_form.cleaned_data['source_project_id']
+                    request_type=copy_project_request_form.cleaned_data['request_type']
+                    project=ProjectRepo(request=request).copy_project_request(
+                        destination_project_id=destination_project_id,
+                        source_project_id=source_project_id,
+                        request_type=request_type
+                        )
+                    if project is not None:
+                        return redirect(project.get_absolute_url())
+        raise Http404
     def projects_chart(self, request, *args, **kwargs):
         context = getContext(request)
         if 'pk' in kwargs and kwargs['pk']>0:
@@ -266,12 +282,13 @@ class ProjectViews(View):
         context['all_locations']=LocationRepo(request=request).list().order_by('title')
         if request.user.has_perm(APP_NAME+'.change_project'):
             context['add_location_form'] = AddLocationForm()
-        
-        if request.user.has_perm(APP_NAME+'.change_project'):
+            context['copy_project_request_form']=CopyProjectRequestForm()
             context['add_existing_location_form'] = AddExistingLocationForm()
+            context['edit_project_form']=EditProjectForm()
+            context['add_material_request_form'] = AddMaterialRequestForm()
+            context['add_service_request_form'] = AddServiceRequestForm()
         if request.user.has_perm(APP_NAME+'.add_event'):
             context['add_event_form'] = AddEventForm()
-        context['edit_project_form']=EditProjectForm()
         context['events'] = project.event_set.all().order_by('event_datetime')
         organization_units = project.organization_units.all()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
@@ -288,8 +305,7 @@ class ProjectViews(View):
         services = ServiceRepo(request=request).list()
         context['services_s'] = json.dumps(
             ServiceSerializer(services, many=True).data)
-        context['add_material_request_form'] = AddMaterialRequestForm()
-        context['add_service_request_form'] = AddServiceRequestForm()
+        
         context['employers']=EmployerRepo(request=request).list()
         context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
         context['add_project_form'] = AddProjectForm()

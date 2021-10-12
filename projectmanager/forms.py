@@ -59,6 +59,9 @@ class EditProjectForm(forms.Form):
     status=forms.CharField(max_length=50, required=False)
     archive=forms.BooleanField(required=False)
 
+class CopyProjectRequestForm(forms.Form):
+    source_project_id=forms.IntegerField(required=True)
+    request_type=forms.CharField(max_length=50,required=True)
 
 class AddSignatureForm(forms.Form):
     service_request_id=forms.IntegerField(required=False)

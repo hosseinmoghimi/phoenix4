@@ -53,6 +53,40 @@ class ProjectRepo():
         project.save()
         return location
 
+    def copy_project_request(self,*args, **kwargs):
+        destination_project_id=kwargs['destination_project_id'] if 'destination_project_id' in kwargs else None
+        source_project_id=kwargs['source_project_id'] if 'source_project_id' in kwargs else None
+        request_type=kwargs['request_type'] if 'request_type' in kwargs else None
+        destination_project=self.project(pk=destination_project_id)
+        source_project=self.project(pk=source_project_id)
+        if destination_project is None or source_project is None:
+            return
+        if request_type=="service":
+            for source_service_request in ServiceRequest.objects.filter(project=source_project):
+                
+                ServiceRequestRepo(request=self.request).add_service_request(
+                    service_id=source_service_request.service_id,
+                    project_id=destination_project_id,
+                    quantity=source_service_request.quantity,
+                    handler_id=source_service_request.handler_id,
+                    employee_id=source_service_request.handler_id,
+                    unit_name=source_service_request.unit_name,
+                    unit_price=source_service_request.unit_price,
+                    description=source_service_request.description
+                )
+
+        if request_type=="material":
+            for source_material_request in MaterialRequest.objects.filter(project=source_project):
+                MaterialRequestRepo(request=self.request).add_material_request(
+                    material_id=source_material_request.material_id,
+                    project_id=destination_project_id,
+                    quantity=source_material_request.quantity,
+                    handler_id=source_material_request.handler_id,
+                    unit_name=source_material_request.unit_name,
+                    unit_price=source_material_request.unit_price,
+                    description=source_material_request.description
+                )
+        return destination_project    
 
     # def edit_project_timing(self,project_id,percentage_completed,start_date,end_date):
     def edit_project(self,*args, **kwargs):
@@ -810,6 +844,8 @@ class ServiceRequestRepo():
         if 'employee_id' in kwargs:
             handler_id = kwargs['employee_id']
             employee_id = kwargs['employee_id']
+        if 'handler_id' in kwargs:
+            handler_id = kwargs['handler_id']
             if not employee_id==0:
                 new_service_request.employee_id=employee_id
         if 'service_id' in kwargs:

@@ -29,6 +29,7 @@ urlpatterns = [
     path('ware_house/<int:pk>/',views.WareHouseViews().ware_house,name="warehouse"),
     path('ware_house_import_sheet/<int:pk>/',views.WareHouseSheetViews().ware_house_import_sheet,name="warehouseimportsheet"),
     path('ware_house_export_sheet/<int:pk>/',views.WareHouseSheetViews().ware_house_export_sheet,name="warehouseexportsheet"),
+    path('copy_project_request/<int:destination_project_id>/',views.ProjectViews().copy_project_request,name="copy_project_request"),
     
     path('materials/',views.MaterialViews().materials,name="materials"),
     path('services/',views.ServiceViews().services,name="services"),
