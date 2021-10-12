@@ -1,0 +1,52 @@
+{% if add_employee_salary_form %}
+
+
+<form @submit.prevent="add_employee_salary()">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="year" class="">سال</label>
+
+                <input type="number" v-model="year" id="year" class="form-control">
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="month_name" class="">ماه</label>
+                <select v-model="month_name" id="month_name" class="form-control">
+                    {% for month in month_names %}
+
+                    <option value="{{month}}">{{month}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="employee_id" class="">پرسنل</label>
+                <select v-model="employee_id" id="employee_id" class="form-control">
+                    {% for employee in employees %}
+
+                    <option value="{{employee.id}}">{{employee.profile.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-3">
+            <button class="btn btn-success btn-block mt-4" type="submit">
+                افزودن
+            </button>
+        </div>
+
+
+    </div>
+</form>
+{% endif %}

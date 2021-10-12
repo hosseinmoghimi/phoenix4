@@ -23,6 +23,8 @@ class PersianCalendar:
         a=self.from_gregorian(value)
         return f'<span title="{value.strftime("%Y/%m/%d %H:%M:%S") }">{str(a)}</span>'
     def to_gregorian(self,persian_date_input):
+        if persian_date_input is None or persian_date_input=="" :
+            return None
         return self.parse(persian_date_input).date
         
     def __init__(self,date=None):
@@ -34,6 +36,8 @@ class PersianCalendar:
             self.persian_date=self.from_gregorian(greg_date_time=self.date)
     
     def parse(self,value,add_time_zone=False):
+        if value=="":
+            return None
         shamsi_date_time=value
 
         year_=int(shamsi_date_time[0:4])

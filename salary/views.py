@@ -1,11 +1,13 @@
 from django.shortcuts import render,reverse
 from django.http import Http404
+from salary.forms import AddEmployeeSalaryForm
 from salary.repo import EmployeeSalaryRepo
 from .apps import APP_NAME
 from django.views import View
+from projectmanager.repo import EmployeeRepo
 from core.views import  PageContext,CoreContext
 from core.repo import ParameterRepo,PictureRepo,ParametersEnum
-
+from utility.persian import PERSIAN_MONTH_NAMES
 TEMPLATE_ROOT="salary/"
 LAYOUT_PARENT="phoenix/layout.html"
 
@@ -53,11 +55,17 @@ class SalaryViews(View):
         context['negative_lines']=negative_lines
         context['positive_lines']=positive_lines
         return render(request,TEMPLATE_ROOT+"salary-line.html",context)
+
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
         employee_salaries=EmployeeSalaryRepo(request=request).list(*args, **kwargs)
         context['employee_salaries']=employee_salaries
+        if request.user.has_perm(APP_NAME+".add_employeesalary"):
+            context['add_employee_salary_form']=AddEmployeeSalaryForm()
+            context['month_names']=PERSIAN_MONTH_NAMES
+            employees=EmployeeRepo(request=request).list()
+            context['employees']=employees
         return render(request,TEMPLATE_ROOT+"index.html",context)
     def search(self,request,*args, **kwargs):
         context=getContext(request=request)
