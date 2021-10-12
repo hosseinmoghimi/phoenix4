@@ -1,4 +1,4 @@
-from utility.persian2 import PersianCalendar
+from utility.persian import PersianCalendar
 from utility.qrcode import generate_qrcode
 from core.settings import ADMIN_URL, MEDIA_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL
 from market.enums import DegreeLevelEnum, EmployeeEnum, OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum

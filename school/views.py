@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from core.views import CoreContext
+from django.shortcuts import render,reverse
+from core.views import CoreContext,ParametersEnum,ParameterRepo
 from school.repo import ActiveCourseRepo, BookRepo, ClassRoomRepo, CourseRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
 from .apps import APP_NAME
 from django.views import View
@@ -10,6 +10,12 @@ LAYOUT_PARENT="phoenix/layout.html"
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
+    parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+    context['app'] = {
+        'home_url': reverse(APP_NAME+":home"),
+        'tel': parameter_repo.get(ParametersEnum.TEL).value,
+        'title': parameter_repo.get(ParametersEnum.TITLE).value,
+    }
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):

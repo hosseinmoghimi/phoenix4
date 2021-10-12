@@ -1,9 +1,24 @@
 from django.utils import timezone
 import datetime
 from khayyam import *
-from .persian2 import PersianCalendar
+PERSIAN_MONTH_NAMES=[
+'فروردین',
+'اردیبهشت',
+'خرداد',
+'تیر',
+'مرداد',
+'شهریور',
+'مهر',
+'آبان',
+'آذر',
+ 'دی',
+ 'بهمن',
+ 'اسفند'
+]
 
-class PersianCalendar2:
+
+
+class PersianCalendar:
     def tag(self,value):
         a=self.from_gregorian(value)
         return f'<span title="{value.strftime("%Y/%m/%d %H:%M:%S") }">{str(a)}</span>'
@@ -26,7 +41,7 @@ class PersianCalendar2:
         day_=int(shamsi_date_time[8:10])
         padding=shamsi_date_time.find(':')
         if not padding==-1:
-            padding-=2;
+            padding-=2
             hour_=int(shamsi_date_time[padding:padding+2])
             
             padding+=3
@@ -65,4 +80,3 @@ class PersianCalendar2:
         return a.strftime("%Y/%m/%d %H:%M:%S")
     def from_gregorian_date(self,greg_date):
         return JalaliDate.to_jalali(greg_date).strftime("%Y/%m/%d") 
-        

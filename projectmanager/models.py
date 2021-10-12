@@ -110,6 +110,9 @@ class Employee(models.Model):
         verbose_name = _("Employee")
         verbose_name_plural = _("Employees")
 
+    def get_salary_url(self):
+        return reverse("salary:employee",kwargs={'employee_id':self.pk})
+    
     def __str__(self):
         return f"""{self.organization_unit.title} : {self.profile.name}"""
 

@@ -1,4 +1,4 @@
-from utility.persian2 import PersianCalendar
+from utility.persian import PersianCalendar
 from django.utils import timezone
 from core import repo as CoreRepo
 from messenger.repo import NotificationRepo

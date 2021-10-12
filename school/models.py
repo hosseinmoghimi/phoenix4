@@ -1,15 +1,11 @@
 # Create your models here.
-from datetime import datetime
 
-from django.db.models.fields import CharField
 from core.models import BasicPage
 from django.db import models
-from django.db.models import Sum
 from django.shortcuts import reverse
 
 from core.settings import ADMIN_URL, STATIC_URL
 from .apps import APP_NAME
-from utility.persian import PersianCalendar
 from django.utils.translation import gettext as _
 from .settings import *
 from .enums import *

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'realestate',
     'tinymce',
     'school',
+    'salary',
     'accounting',
     'resume',
     'vehicles',

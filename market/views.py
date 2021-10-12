@@ -1,5 +1,5 @@
 from core.constants import CURRENCY
-from utility.persian2 import PersianCalendar
+from utility.persian import PersianCalendar
 from django.http.response import Http404
 from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ProductSpecificationSerializer, ShopSerializer
 import json

@@ -9,7 +9,7 @@ from .forms import *
 from .serializers import *
 from core.enums import ParametersEnum, MainPicEnum
 # from web.repo import NavBarLinkRepo
-from core.views import CoreContext
+from core.views import CoreContext,ParameterRepo
 
 TEMPLATE_ROOT = APP_NAME+"/"
 
@@ -32,6 +32,14 @@ def getContext(request):
         # 'navbar_links': navbar_links,
         # 'navbar_buttons': navbar_buttons,
         # 'social_links': CoreRepo.SocialLinkRepo(user=user).list_for_app(app_name=APP_NAME),
+        # 'our_team_title': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_title(),
+        # 'our_team_link': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_link(),
+    }
+    parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+    context['app'] = {
+        'home_url': reverse(APP_NAME+":home"),
+        'tel': parameter_repo.get(ParametersEnum.TEL).value,
+        'title': parameter_repo.get(ParametersEnum.TITLE).value,
         'theme_color': parameter_repo.get(ParametersEnum.THEME_COLOR),
         'about_us_short': parameter_repo.get(ParametersEnum.ABOUT_US_SHORT),
         'NAV_TEXT_COLOR': parameter_repo.get(ParametersEnum.NAV_TEXT_COLOR),
@@ -41,14 +49,10 @@ def getContext(request):
         'favicon': picture_repo.get(name=MainPicEnum.FAVICON),
         'loading': picture_repo.get(name=MainPicEnum.LOADING),
         'pretitle': parameter_repo.get(ParametersEnum.PRE_TILTE),
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
         'address': parameter_repo.get(ParametersEnum.ADDRESS),
         'mobile': parameter_repo.get(ParametersEnum.MOBILE),
         'email': parameter_repo.get(ParametersEnum.EMAIL),
         'tel': parameter_repo.get(ParametersEnum.TEL),
-        'url': parameter_repo.get(ParametersEnum.URL),
-        # 'our_team_title': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_title(),
-        # 'our_team_link': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_link(),
     }
     context['APP_NAME'] = APP_NAME
     return context

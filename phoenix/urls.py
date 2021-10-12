@@ -12,6 +12,7 @@ from django.conf.urls import url
 urlpatterns = [
     # path('phoenix4/', include('market.urls')),#for bad redirect
     path('market/', include('market.urls')),
+    path('salary/', include('salary.urls')),
     path('bms/', include('bms.urls')),
     path('school/', include('school.urls')),
     path('vehicles/', include('vehicles.urls')),

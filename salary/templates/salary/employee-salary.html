@@ -1,0 +1,171 @@
+{% extends "salary/layout.html" %}
+{% load to_price %}
+{% block content %}
+<h4 class="text-center">
+</h4>
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <h4>
+
+                        <a href="{{employee_salary.employee.get_absolute_url}}">
+                            {{employee_salary.employee.profile.name}}
+                        </a>
+                        {% if perms.salary.change_employeesalary %}
+                        {{employee_salary.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                </div>
+                <p>
+
+                    {{employee_salary.month_name}}
+                    {{employee_salary.year}}
+                </p>
+                <p>
+                   قابل پرداخت :  {{employee_salary.total|to_price}}
+                </p>
+                <p>
+                    <a href="{{employee_salary.get_print_url}}">
+
+                        <i class="material-icons">
+                            print
+                        </i>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    مزایا
+                </h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            عنوان
+                        </th>
+                        <th>
+                            مبلغ
+                        </th>
+                        <th>
+                            توضیحات
+                        </th>
+                        <th>
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for line in positive_lines %}
+
+                        <tr>
+                            <td>
+                                <a title="جزئیات" href="{{line.get_absolute_url}}">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+
+                                    {{line.title}}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="text-success">
+
+                                    {{line.amount|to_price}}
+                                </div>
+                            </td>
+                            <td>
+                                {% if perms.salary.change_salaryline %}
+                                {{line.get_edit_btn|safe}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer">
+                <p>
+                    جمع :
+                    {{employee_salary.total_positives|to_price}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    کسورات
+                </h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            عنوان
+                        </th>
+                        <th>
+                            مبلغ
+                        </th>
+                        <th>
+                            توضیحات
+                        </th>
+                        <th>
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for line in negative_lines %}
+
+                        <tr>
+                            <td>
+                                <a title="جزئیات" href="{{line.get_absolute_url}}">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+
+                                    {{line.title}}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="text-danger">
+
+                                    {{line.amount|to_price}}
+                                </div>
+                            </td>
+                            <td>
+                                {% if perms.salary.change_salaryline %}
+                                {{line.get_edit_btn|safe}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer">
+                <p>
+                    جمع :
+                    {{employee_salary.total_negatives|to_price}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
