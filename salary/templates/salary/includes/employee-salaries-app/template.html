@@ -1,3 +1,4 @@
+{% load to_price %}
 <div class="card" id="employee-salaries-app">
     <div class="card-header">
         <h4 class="text-center">
@@ -14,9 +15,11 @@
                     پرسنل
                 </th>
                 <th>
-                    ماه
+                    پرداختی
                 </th>
                 <th>
+                    ماه
+                    /
                     سال
                 </th>
             </thead>
@@ -33,15 +36,40 @@
                         </a>
                     </td>
                     <td>
-                        <a href="{{employee_salary.employee.get_absolute_url}}">
-                            {{employee_salary.employee.profile.name}}
-                        </a>
+                        <div class="media">
+                            <a href="{{employee_salary.employee.get_absolute_url}}">
+                                <img src="{{employee_salary.employee.profile.image}}" class="rounded-circle" width="48" alt="">
+                               </a>
+
+                               <div class="media-body">
+                                <div>
+                                    <a href="{{employee_salary.employee.get_absolute_url}}">
+                                           {{employee_salary.employee.profile.name}}
+                                       </a>
+                                   </div>
+
+                                   <div class="small">
+                                    <a href="{{employee_salary.employee.organization_unit.get_absolute_url}}">
+                                           {{employee_salary.employee.organization_unit.title}}
+                                       </a>
+                                       <span class="text-muted">
+
+                                           /
+                                        </span>
+                                        <a href="{{employee_salary.employee.organization_unit.employer.get_absolute_url}}">
+                                            {{employee_salary.employee.organization_unit.employer.title}}
+                                        </a>
+                                   </div>
+                               </div>
+                        </div>
+                       
+                    </td>
+                    <td>
+                        {{employee_salary.total|to_price}}
+                        
                     </td>
                     <td>
                         {{employee_salary.month_name}}
-
-                    </td>
-                    <td>
                         {{employee_salary.year}}
                     </td>
                     <td>

@@ -98,6 +98,34 @@ class Employer(models.Model):
                 list1.append(proj.pk)
         return Project.objects.filter(pk__in=list1)
 
+class EmployeeDocument(models.Model):
+    employee = models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
+    document=models.ForeignKey("core.document",null=True,blank=True, verbose_name=_("سند"), on_delete=models.PROTECT)
+
+    class_name="employeedocument"
+
+    class Meta:
+        verbose_name = _("EmployeeDocument")
+        verbose_name_plural = _("EmployeeDocuments")
+
+    def __str__(self):
+        return f"""{self.employee.profile.name} : {self.document.title}"""
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+
+    def get_edit_btn(self):
+        return f"""
+        <a  target="_blank" title="ویرایش" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
 
 class Employee(models.Model):
     profile = models.ForeignKey("authentication.profile", verbose_name=_(
@@ -105,16 +133,19 @@ class Employee(models.Model):
     organization_unit = models.ForeignKey("organizationunit", verbose_name=_(
         "organizationunit"), on_delete=models.CASCADE)
     class_name = "employee"
-
+    def documents(self):
+        return EmployeeDocument.objects.filter(employee=self)
     class Meta:
         verbose_name = _("Employee")
         verbose_name_plural = _("Employees")
 
+    def get_add_document_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/employeedocument/add/?employee={self.pk}"""
     def get_salary_url(self):
         return reverse("salary:employee",kwargs={'employee_id':self.pk})
     
     def __str__(self):
-        return f"""{self.organization_unit.title} : {self.profile.name}"""
+        return f"""{self.organization_unit.employer.title} : {self.organization_unit.title} : {self.profile.name}"""
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
@@ -124,7 +155,7 @@ class Employee(models.Model):
 
     def get_edit_btn(self):
         return f"""
-        <a  target="_blank" title="ویرایش {self.title}" href="{self.get_edit_url()}">
+        <a  target="_blank" title="ویرایش {self.profile.name}" href="{self.get_edit_url()}">
             <i class="material-icons">
                 edit
             </i>

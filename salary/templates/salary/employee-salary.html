@@ -12,13 +12,23 @@
                 <div class="card-body">
                     <div>
                         <h4>
-                            <a href="{{employee_salary.employee.get_absolute_url}}">
+                            <a href="{{employee_salary.employee.get_salary_url}}">
                                 {{employee_salary.employee.profile.name}}
                             </a>
                             {% if perms.salary.change_employeesalary %}
                             {{employee_salary.get_edit_btn|safe}}
                             {% endif %}
                         </h4>
+
+                        <h5>
+                            <a href="{{employee_salary.employee.get_absolute_url}}">
+                            پروفایل
+                            </a>
+                            {% if perms.projectmanager.change_employee %}
+                            {{employee_salary.employee.get_edit_btn|safe}}
+                            {% endif %}
+                        </h5>
+
                     </div>
                     <p>
                         {{employee_salary.month_name}}

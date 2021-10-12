@@ -3,7 +3,7 @@
 
 <form @submit.prevent="add_employee_salary()">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="year" class="">سال</label>
 
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="month_name" class="">ماه</label>
                 <select v-model="month_name" id="month_name" class="form-control">
@@ -22,12 +22,12 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-5">
             <div class="form-group">
                 <label for="employee_id" class="">پرسنل</label>
                 <select v-model="employee_id" id="employee_id" class="form-control">
                     {% for employee in employees %}
-                    <option value="{{employee.id}}">{{employee.profile.name}}</option>
+                    <option value="{{employee.id}}">{{employee.profile.name}} @ {{employee.organization_unit.employer.title}}:{{employee.organization_unit.title}}</option>
                     {% endfor %}
                 </select>
             </div>
