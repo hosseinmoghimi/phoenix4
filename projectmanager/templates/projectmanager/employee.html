@@ -84,25 +84,26 @@
 <div class="col-sm-6 mb-3">
     <div class="card h-100">
         <div class="card-body">
-            <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>مدارک پرسنلی
+            <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>مدارک
+                پرسنلی
             </h6>
 
             {% for employee_doc in employee.documents %}
             <div class="mx-3 text-right farsi rtl">
-              <a href="{{employee_doc.document.get_download_url}}">
-<i class="material-icons">
-    get_app
-</i>
-                  <small class="text-center">{{employee_doc.document.title}}</small>
+                <a href="{{employee_doc.document.get_download_url}}">
+                    <i class="material-icons">
+                        get_app
+                    </i>
+                    <small class="text-center">{{employee_doc.document.title}}</small>
                 </a>
-             
+
             </div>
-           
+
             {% endfor %}
             <a target="_blank" href="{{employee.get_add_document_url}}">
 
                 <small class="text-center">افزودن مدارک</small>
-              </a>
+            </a>
 
 
         </div>

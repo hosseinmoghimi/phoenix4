@@ -1,6 +1,6 @@
 {% load to_price %}
 <div id="add-to-cart-app">
-    <div class="mb-3 farsi" v-for="shop in shops">
+    <div class="mb-3 farsi" v-for="shop in shops" v-if="shop.available>0">
 
         <add-to-cart-component :shop="shop"></add-to-cart-component>
 

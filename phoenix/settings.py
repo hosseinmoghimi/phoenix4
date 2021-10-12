@@ -161,6 +161,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SESSION_COOKIE_AGE = 3600 # one hour in seconds
 
 if SERVER_ON_AZURE:
     from . import settings_azure as server_settings
@@ -177,6 +178,7 @@ MEDIA_ROOT=server_settings.MEDIA_ROOT
 STATIC_URL = server_settings.STATIC_URL
 MEDIA_URL = server_settings.MEDIA_URL
 MYSQL = server_settings.MYSQL
+SESSION_COOKIE_AGE = server_settings.SESSION_COOKIE_AGE
 SITE_URL = server_settings.SITE_URL
 DATABASES = server_settings.DATABASES
 
