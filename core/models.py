@@ -371,7 +371,7 @@ class Link(Icon):
     url = models.CharField(_("آدرس لینک"), max_length=2000, default="#")
     profile_adder = models.ForeignKey(
         "authentication.Profile", verbose_name=_("پروفایل"),null=True,blank=True, on_delete=models.CASCADE)
-    new_tab=models.BooleanField(_('در صفحه جدید باز شود؟'),default=False)
+    new_tab=models.BooleanField(_('در صفحه جدید باز شود؟'),default=True)
     date_added = models.DateTimeField(
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(

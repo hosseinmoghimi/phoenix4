@@ -21,7 +21,10 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6 text-left">
+                                    {% if slider.title %}
+                                      
                                     <h1 class="title">{{slider.title}}</h1>
+                                    {% endif %}
 
                                     {% if slider.body %}
                                     <div class="farsi">
@@ -34,8 +37,8 @@
                                         {% for link in slider.links.all %}
 
 
-                                        <a href="{{link.url}}" target="{{link.target}}"
-                                            class="farsi mx-2 btn btn-{{link.color}} btn-lg">
+                                        <a href="{{link.url}}"  target="{{link.target}}"
+                                            class="farsi mx-2 my-2 btn btn-{{link.color}} btn-lg">
                                             {{link.title}}
                                         </a>
                                         {% endfor %}

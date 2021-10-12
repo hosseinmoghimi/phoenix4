@@ -272,7 +272,7 @@ class PageLinkRepo:
         self.objects=PageLink.objects
     def add_page_link(self,title,url,page_id,*args, **kwargs):
         new_page_link=PageLink(title=title,page_id=page_id,url=url,icon_fa="fa fa-tag")
-        
+        new_page_link.new_tab=True
         new_page_link.save()
         return new_page_link
 
