@@ -1,6 +1,7 @@
 from django.shortcuts import render,reverse
 from django.http import Http404
-from salary.forms import AddEmployeeSalaryForm
+from salary.enums import SalaryTitleEnum
+from salary.forms import AddEmployeeSalaryForm, AddSalaryLineForm
 from salary.models import SalaryLine
 from salary.repo import EmployeeSalaryRepo
 from .apps import APP_NAME
@@ -8,6 +9,7 @@ from django.views import View
 from projectmanager.repo import EmployeeRepo
 from core.views import  PageContext,CoreContext
 from core.repo import ParameterRepo,PictureRepo,ParametersEnum
+import json
 from utility.persian import PERSIAN_MONTH_NAMES
 TEMPLATE_ROOT="salary/"
 LAYOUT_PARENT="phoenix/layout.html"
@@ -34,7 +36,15 @@ class SalaryViews(View):
         positive_lines=employee_salary.positive_lines()
         context['negative_lines']=negative_lines
         context['positive_lines']=positive_lines
+        if request.user.has_perm(APP_NAME+".add_salaryline"):
+            context['add_salary_line_form']=AddSalaryLineForm()
+            titles=[]
+            for i in SalaryTitleEnum.choices:
+                titles.append(i[0])
+            context['line_titles']=titles
+            context['salary_line_titles']=json.dumps(titles)
         return render(request,TEMPLATE_ROOT+"employee-salary.html",context)
+
     def print(self,request,*args, **kwargs):
         employee_salary=EmployeeSalaryRepo(request=request).employee_salary(*args, **kwargs)
         if employee_salary is None:

@@ -113,11 +113,25 @@ class SalaryLine(models.Model):
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
     def get_edit_btn(self):
         return f"""
              <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
-                <i class="material-icons">
+                <i class="material-icons text-warning">
                     edit
+                </i>
+            </a>
+        """
+    def can_be_deleted(self):
+        return True
+
+    def get_delete_btn(self):
+        return f"""
+             <a href="{self.get_delete_url()}" target="_blank" title="حذف">
+                <i class="material-icons text-danger">
+                    delete_forever
                 </i>
             </a>
         """

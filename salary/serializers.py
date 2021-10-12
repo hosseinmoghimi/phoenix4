@@ -12,4 +12,4 @@ class EmployeeSalarySerializer(serializers.ModelSerializer):
 class SalaryLineSerializer(serializers.ModelSerializer):
     class Meta:
         model=SalaryLine
-        fields=['id','amount','direction','title','get_edit_url','get_absolute_url']
+        fields=['id','amount','direction','title','description','get_edit_url','get_absolute_url']

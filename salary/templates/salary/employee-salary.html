@@ -27,8 +27,7 @@
                     <p>
                         قابل پرداخت : 
                         <span class="badge badge-primary px-3">
-                            <span class="h4" >
-                        {{employee_salary.total|to_price}}
+                            <span class="h4" v-text="to_price(total_positives-total_negatives,'{{CURRENCY}}')">
 
                             </span>
             

@@ -96,6 +96,7 @@ class SalaryLineRepo:
             return
         employee_salary_id=kwargs['employee_salary_id'] if 'employee_salary_id' in kwargs else 0
         amount=kwargs['amount'] if 'amount' in kwargs else ""
+        description=kwargs['description'] if 'description' in kwargs else ""
         title=kwargs['title'] if 'title' in kwargs else None
         direction=kwargs['direction'] if 'direction' in kwargs else 0
         
@@ -103,6 +104,7 @@ class SalaryLineRepo:
         salary_line.employee_salary_id=employee_salary_id
         salary_line.amount=amount
         salary_line.title=title
+        salary_line.description=description
         salary_line.direction=direction
         
         salary_line.save()

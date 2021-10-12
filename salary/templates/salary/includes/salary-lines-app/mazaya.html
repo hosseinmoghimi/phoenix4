@@ -41,9 +41,23 @@
                         </div>
                     </td>
                     <td>
-                        {% if perms.salary.change_salaryline %}
-                        {{line.get_edit_btn|safe}}
+                        {% if line.description %}
+                          <small class="text-muted">
+                              {{line.description}}
+                            </small>
+                            {% endif %}
+                        </td>
+                        <td> 
+                                 {% if perms.salary.delete_salaryline and line.can_be_deleted  %}
+                        {{line.get_delete_btn|safe}}
                         {% endif %}
+                            {% if perms.salary.change_salaryline %}
+                            {{line.get_edit_btn|safe}}
+                            {% endif %}
+
+                            
+                  
+
                     </td>
                 </tr>
                 {% endfor %}
@@ -58,16 +72,20 @@
                         </a>
                     </td>
                     <td>
-                        <div class="text-danger">
+                        <div class="text-success">
                             <span v-text="to_price(line.amount,'{{CURRENCY}}')"></span>
 
                         </div>
                     </td>
                     <td>
+                        <small class="text-muted" v-text="line.description"></small>
+
+                    </td>
+                    <td>
                         {% if perms.salary.change_salaryline %}
                         <a title="ویرایش" target="_blank" :href="line.get_edit_url">
                             <i class="material-icons">
-                                ballot
+                                edit
                             </i>
                         </a>
                         {% endif %}
@@ -76,13 +94,20 @@
 
             </tbody>
         </table>
+<div>
+    {% if add_salary_line_form %}
+    {% include "salary/includes/salary-lines-app/add-positive-form.html" %}
+    {% endif %}
+</div>
+
+
 
     </div>
     <div class="card-footer">
         <p>
             جمع :
-            <span class="badge badge-success px-3" >
-            <span class="h4" v-text="to_price(total_positives,'{{CURRENCY}}')"></span>
+            <span class="badge badge-success px-3">
+                <span class="h4" v-text="to_price(total_positives,'{{CURRENCY}}')"></span>
 
 
             </span>
