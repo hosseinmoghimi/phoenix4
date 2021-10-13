@@ -120,6 +120,20 @@
         </div>
         <div class="section section-comments">
             <div class="row">
+                <div class="col-md-4">
+                    {% include "web/includes/page-links-app/template.html" %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "web/includes/page-documents-app/template.html" %}
+                </div>
+                <div class="col-md-4">
+                    {% include "web/includes/page-tags-app/template.html" %}
+                </div>
+            </div>
+        </div>
+        <div class="section section-comments">
+            <div class="row">
                 <div class="col-md-8 ml-auto mr-auto">
                     {% include "web/includes/page-comments-app/template.html" %}
                 </div>
@@ -191,6 +205,10 @@
     let page_comment_component_template = `{% include "web/includes/page-comments-app/component.html" %}`
 </script>
 {% include "core/includes/page-comments-app/script.html" %}
+
+{% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
 {% endblock %}
 
 

@@ -4,7 +4,7 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
     let material_request_id = parseInt("{{material_request.id}}")
-    let url_add_signature = "{% url 'projectmanager:add_signature' %}"
+    let url_add_signature = "{% url 'projectmanager:api_add_signature' %}"
     let url_add_material_request_to_ware_house_sheet = "{% url 'projectmanager:add_material_request_to_ware_house_sheet' %}"
     let material_request_app = new Vue({
         el: "#material-request-app",

@@ -8,7 +8,7 @@
 <form action="{% url 'projectmanager:add_signature' %}" method="POST">
     <div class="row">
         <div class="col-md-6 mb-3">
-            <input type="hidden" name="material_request_id" value="{{material_request.id}}">
+            <input type="hidden" name="service_request_id" value="{{service_request.id}}">
             {% csrf_token %}
             <div class="farsi text-right">
                 پاراف

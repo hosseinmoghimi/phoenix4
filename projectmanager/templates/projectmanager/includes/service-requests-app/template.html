@@ -25,9 +25,12 @@
                         <th>
                             تاریخ درخواست
                         </th>
+                        {% if not employee %}
+
                         <th>
                             پرسنل
                         </th>
+                        {% endif %}
                         {% if not project %}
 
                         <th>
@@ -70,6 +73,7 @@
                                     {{service_request.date_added|to_persian_date|safe}}
                                 </small>
                             </td>
+                            {% if not employee %}
 
                             <td>
 
@@ -79,6 +83,7 @@
                                     {{service_request.handler.profile.name}}
                                 </a>
                             </td>
+                            {% endif %}
 
                             {% if not project %}
 
@@ -121,7 +126,7 @@
                             </td>
                             <td>
                                 {{service_request.get_status_tag|safe}}
-                             
+
 
                                 {% if perms.projectmanager.change_servicerequest %}
                                 {{service_request.get_edit_btn|safe}}
@@ -184,7 +189,7 @@
                             <td>
                                 <span v-html="service_request.get_status_tag"></span>
 
-                             
+
                                 {% if perms.projectmanager.change_servicerequest %}
                                 <a title="ویرایش" target="_blank" :href="service_request.get_edit_url">
                                     <i class="material-icons">edit</i>
@@ -198,7 +203,7 @@
                 </table>
 
                 {% if add_service_request_form %}
-              {% include "projectmanager/includes/service-requests-app/form.html" %}
+                {% include "projectmanager/includes/service-requests-app/form.html" %}
                 {% endif %}
             </div>
             <div class="card-footer ">

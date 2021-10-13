@@ -600,6 +600,17 @@ class Parameter(models.Model):
         if self.value_origin is None:
             return ''
         return self.value_origin
+    @property
+    def boolesan_value(self):
+        if self.value_origin is None:
+            return False
+        if self.value_origin =='True':
+            return True
+        if self.value_origin =='1':
+            return True
+        if self.value_origin =='true':
+            return True
+        return False
     def get_edit_btn(self):
         return f"""
          <a target="_blank" title="ویرایش {self.name}" class="text-primary" 

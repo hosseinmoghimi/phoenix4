@@ -17,7 +17,7 @@
 
 
         </div>
-        <div id="collapseMaterials" class="collapse" aria-labelledby="headingmaterials" data-parent="#accordion">
+        <div id="collapseMaterials" class="collapse {% if material %}show{% endif %}" aria-labelledby="headingmaterials" data-parent="#accordion">
             <div class="card-body">
                 <input type="text" placeholder="جستجو ... " class="form-control" @input="search()" v-model="search_for">
                 <hr>

@@ -36,10 +36,12 @@ urlpatterns = [
     path('servicerequest/<int:pk>/',views.ServiceRequestViews().service_request,name="servicerequest"),
     path('event/<int:pk>/',views.EventViews().event,name="event"),
     path('location/<int:pk>/',views.LoactionViews().location,name="location"),
+    path('add_signature/',views.RequestViews().add_signature,name="add_signature"),
     
     
     path('add_event/',apis.EventApi().add_event,name="add_event"),
     path('add_signature/',apis.ProjectApi().add_signature,name="add_signature"),
+    path('api/add_signature/',apis.ProjectApi().add_signature,name="api_add_signature"),
     path('edit_project/',apis.ProjectApi().edit_project,name="edit_project"),
     path('add_employer/',apis.OrganizationUnitApi().add_employer,name="add_employer"),
     path('add_employee/',apis.OrganizationUnitApi().add_employee,name="add_employee"),

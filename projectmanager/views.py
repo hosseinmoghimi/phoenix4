@@ -326,6 +326,34 @@ class ProjectViews(View):
         context['projects_s'] = json.dumps(ProjectSerializer(projects,many=True).data)
         return render(request, TEMPLATE_ROOT+"projects.html", context)
 
+class RequestViews(View):
+  
+    def add_signature(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            add_signature_form=AddSignatureForm(request.POST)
+            if add_signature_form.is_valid():
+                log=3
+                status=add_signature_form.cleaned_data['status']
+                description=add_signature_form.cleaned_data['description']
+                material_request_id=add_signature_form.cleaned_data['material_request_id']
+                service_request_id=add_signature_form.cleaned_data['service_request_id']
+                if material_request_id is not None:
+                    log=4
+                    repo=MaterialRequestRepo(request=request)
+                    signature=repo.add_signature(material_request_id=material_request_id,status=status,description=description)
+                    if signature is not None:
+                        log=5
+                        return MaterialRequestViews().material_request(request=request,pk=material_request_id)
+                if service_request_id is not None:
+                    log=6
+                    signature=ServiceRequestRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
+                    if signature is not None:
+                        log=7
+                        return ServiceRequestViews().service_request(request=request,pk=service_request_id)
+        raise Http404
+
 
 class OrganizationUnitViews(View):
     def organization_units_chart(self, request, *args, **kwargs):

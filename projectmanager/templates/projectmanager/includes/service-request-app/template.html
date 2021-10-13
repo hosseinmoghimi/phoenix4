@@ -199,11 +199,19 @@
           
         </div>
         <div class="card-footer">
-              {% if add_signature_form %}
+            {% if add_signature_form %}
 
 
-            {% include "projectmanager/includes/material-request-app/add-signature-form.html" %}
-            {% else %}
+          {% include "projectmanager/includes/service-request-app/add-signature-form.html" %}
+          {% endif %}
+         
+          {% if add_signature_form_ %}
+
+
+          {% include "projectmanager/includes/material-request-app/add-signature-form-.html" %}
+          {% endif %}
+         
+            {% if not add_signature_form and not add_signature_form_ %}
             <p>
                 شما مجوز لازم برای امضای این درخواست را ندارید.
             </p>
