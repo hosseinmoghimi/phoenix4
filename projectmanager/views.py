@@ -466,7 +466,7 @@ class WareHouseViews(View):
         ware_house_materials=WareHouseMaterialRepo(request=request).list(ware_house=ware_house)
         context['ware_house_materials']=ware_house_materials
         context['ware_house_sheets_s']=ware_house_sheets_s
-        context['ware_house_sheet_lines']=WareHouseSheetLineRepo(request=request).list(ware_house_id=ware_house.id)
+        context['ware_house_sheet_lines']=WareHouseSheetLineRepo(request=request).list(ware_house_id=ware_house.id).order_by('material_id')
 
         return render(request, TEMPLATE_ROOT+"ware-house.html", context)
  
