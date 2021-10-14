@@ -42,6 +42,8 @@
 
                 
             </p>
+            {% if user.is_authenticated %}
+              
             <div class="menu_links">
                 {% for app in apps %}
                   
@@ -56,6 +58,7 @@
                     
                 </a>
             </div>
+            {% endif %}
             <div class="menu_icon">
                 <span class="icon"></span>
             </div>
