@@ -157,10 +157,38 @@ class WorkGroup(models.Model):
         verbose_name_plural = _("WorkGroups")
 
     def __str__(self):
-        return self.name
+        return self.title
 
+   
     def get_absolute_url(self):
-        return reverse("WorkGroup_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
+                <i class="material-icons text-warning">
+                    edit
+                </i>
+            </a>
+        """
+    def can_be_deleted(self):
+        return True
+
+    def get_delete_btn(self):
+        return f"""
+             <a href="{self.get_delete_url()}" target="_blank" title="حذف">
+                <i class="material-icons text-danger">
+                    delete_forever
+                </i>
+            </a>
+        """
+
 
 
 class WorkSite(models.Model):
@@ -171,54 +199,146 @@ class WorkSite(models.Model):
     class Meta:
         verbose_name = _("WorkSite")
         verbose_name_plural = _("WorkSites")
-
+    def childs(self):
+        return WorkSite.objects.filter(parent=self)
+    @property
     def full_title(self):
         if self.parent is None:
             return self.title
         else:
-            return self.parent.full_title()+" / "+self.title
+            return self.parent.full_title+" / "+self.title
 
     def __str__(self):
         return self.full_title
 
     def get_absolute_url(self):
-        return reverse("WorkSite_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
+                <i class="material-icons text-warning">
+                    edit
+                </i>
+            </a>
+        """
+    def can_be_deleted(self):
+        return True
+
+    def get_delete_btn(self):
+        return f"""
+             <a href="{self.get_delete_url()}" target="_blank" title="حذف">
+                <i class="material-icons text-danger">
+                    delete_forever
+                </i>
+            </a>
+        """
+
 
 
 class WorkDay(models.Model):
     work_site=models.ForeignKey("worksite",null=True,blank=True, verbose_name=_("محل کار"), on_delete=models.CASCADE)
     work_group=models.ForeignKey("workgroup", verbose_name=_("گروه کاری"), on_delete=models.CASCADE)
-    attendance_date=models.DateField(_("روز"), auto_now=False, auto_now_add=False)
-    date_entered=models.TimeField(_("ورود"), auto_now=False, auto_now_add=False)
-    date_exited=models.TimeField(_("خروج"), auto_now=False, auto_now_add=False)
+    work_date=models.DateField(_("روز"), auto_now=False, auto_now_add=False)
+    work_start=models.TimeField(_("ورود"), auto_now=False, auto_now_add=False)
+    work_end=models.TimeField(_("خروج"), auto_now=False, auto_now_add=False)
     
     class_name="workday"
     
-    def persian_attendance_date(self):
-        return PersianCalendar().from_gregorian_date(self.attendance_date)
+    def persian_work_date(self):
+        return PersianCalendar().from_gregorian(self.work_date)[:10]
+    # def persian_work_start(self):
+    #     return PersianCalendar().from_gregorian(self.work_start)
+    # def persian_work_end(self):
+    #     return PersianCalendar().from_gregorian(self.work_end)
+
     class Meta:
         verbose_name = _("WorkDay")
         verbose_name_plural = _("WorkDays")
 
     def __str__(self):
-        return f"""{self.work_group.title} @ {self.persian_attendance_date()}"""
+        return f"""{self.work_group.title} @ {self.persian_work_date()} , {self.work_start}~{self.work_end}"""
  
     def get_absolute_url(self):
-        return reverse("WorkDay_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
+                <i class="material-icons text-warning">
+                    edit
+                </i>
+            </a>
+        """
+    def can_be_deleted(self):
+        return True
+
+    def get_delete_btn(self):
+        return f"""
+             <a href="{self.get_delete_url()}" target="_blank" title="حذف">
+                <i class="material-icons text-danger">
+                    delete_forever
+                </i>
+            </a>
+        """
 
 
 class Attendance(models.Model):
-    work_day=models.ForeignKey("workday", verbose_name=_("employee"), on_delete=models.CASCADE)
+    work_day=models.ForeignKey("workday", verbose_name=_("work_day"), on_delete=models.CASCADE)
     employee=models.ForeignKey("projectmanager.employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     date_entered=models.DateTimeField(_("ورود"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_exited=models.DateTimeField(_("خروج"),null=True,blank=True, auto_now=False, auto_now_add=False)
     
+    class_name="attendance"
     class Meta:
         verbose_name = _("Attendance")
         verbose_name_plural = _("Attendances")
 
+    def persian_date_entered(self):
+        return PersianCalendar().from_gregorian(self.date_entered)
+    def persian_date_exited(self):
+        return PersianCalendar().from_gregorian(self.date_exited)
     def __str__(self):
-        return self.name
+        return f"""{self.employee.profile.name} , {self.work_day} , {self.date_entered.time()}~{self.date_exited.time()}"""
 
     def get_absolute_url(self):
-        return reverse("Attendance_detail", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
+                <i class="material-icons text-warning">
+                    edit
+                </i>
+            </a>
+        """
+    def can_be_deleted(self):
+        return True
+
+    def get_delete_btn(self):
+        return f"""
+             <a href="{self.get_delete_url()}" target="_blank" title="حذف">
+                <i class="material-icons text-danger">
+                    delete_forever
+                </i>
+            </a>
+        """
+

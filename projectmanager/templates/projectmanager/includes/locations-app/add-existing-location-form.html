@@ -1,0 +1,22 @@
+{% load static %}
+<form v-if="show_add_location_form" @submit.prevent="add_existing_location">
+    <h5>
+        انتخاب موقعیت مکانی از قبل موجود
+    </h5>
+    <select name="" class="form-control" v-model="location_id">
+        {% for location in all_locations %}
+
+        <option value="{{location.id}}">{{location.title}}</option>
+        {% endfor %}
+    </select>
+    <button @click="show_add_location_form=false" v-if="show_add_location_form"
+        class="btn btn-secondary">
+        انصراف
+    </button>
+
+    <button v-if="!waiting" v-if="new_location" class="btn btn-success btn-round"
+        type="submit">افزودن</button> <br>
+
+
+
+</form>

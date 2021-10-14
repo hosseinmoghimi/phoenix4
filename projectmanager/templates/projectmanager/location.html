@@ -60,6 +60,16 @@
                                 </a>
                             </li>
                             {% endfor %}
+
+                            {% for page in location.worksite_set.all %}
+                            <li class="nav-item text-right">
+                                <a  class="farsi" href="{{page.get_absolute_url}}">
+                                  
+                                    {{page.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+
                         </ul>
                     </div>
                     <p>

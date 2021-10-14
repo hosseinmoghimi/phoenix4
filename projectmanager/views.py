@@ -404,6 +404,8 @@ class OrganizationUnitViews(View):
         organization_units=OrganizationUnit.objects.filter(employer=organization_unit.employer).filter(parent=organization_unit)
         context['organization_units'] = organization_units
         context['add_employee_form'] = AddEmployerForm()
+        context['employees']=organization_unit.employee_set.all()
+        context['employees_s']=json.dumps(EmployeeSerializer(organization_unit.employee_set.all(),many=True).data)
         all_profiles = ProfileRepo(user=request.user).objects.all()
         context['all_profiles_s'] = json.dumps(
             ProfileSerializer(all_profiles, many=True).data)

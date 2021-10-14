@@ -1,4 +1,4 @@
-<div id="accordion">
+<div id="accordion-page-links">
 
     <div class="card mb-3" id="page-links-app">
         <div class="card-header"  id="headinglinks">
@@ -9,7 +9,8 @@
                 </button>
             </h5>
         </div>
-        <div id="collapselinks" class="collapse {% if page.links.all %}show{% endif %}" aria-labelledby="headinglinks" data-parent="#accordion">
+        <div id="collapselinks" class="collapse {% if page.links.all %}show{% endif %}" 
+        aria-labelledby="headinglinks" data-parent="#accordion-page-links">
 
             <div class="card-body">
                 {% for link in page.links.all %}

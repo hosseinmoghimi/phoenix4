@@ -425,18 +425,21 @@ class OrganizationUnit(ProjectManagerPage):
 
     def employees(self):
         return self.employee_set.all()
-
+   
+    @property
+    def parent_unit(self):
+        return OrganizationUnit.objects.get(pk=self.parent.id)
     @property
     def full_title(self):
         if self.parent is None:
             return self.title
-        return self.title+" , " + OrganizationUnit.objects.get(pk=self.parent.id).full_title
+        return  self.parent_unit.full_title+" , " +self.title
 
     def childs(self):
         return OrganizationUnit.objects.filter(parent_id=self.id)
 
     def __str__(self):
-        return f" {self.full_title} : {self.employer.title}"
+        return f"{self.employer.title} : {self.full_title}"
 
 
 class EmployeeSpeciality(ProjectManagerPage):

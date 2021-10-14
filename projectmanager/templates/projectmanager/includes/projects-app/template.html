@@ -2,7 +2,7 @@
 {% load to_price %}
 
 
-<div id="accordion">
+<div id="accordion-projects">
 
 
     <div class="card mb-3" id="projects-app">
@@ -38,8 +38,8 @@
 
 
         </div> 
-        <div id="collapseProjectsApp" class="collapse {% if project %}show{% endif %} " aria-labelledby="headingProjectsApp"
-            data-parent="#accordion">
+        <div id="collapseProjectsApp" class="collapse  {% if project or organization_unit %}show{% endif %} " aria-labelledby="headingProjectsApp"
+            data-parent="#accordion-projects">
 
             <div class="card-body">
                 {% for project in projects %}

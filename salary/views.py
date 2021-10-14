@@ -3,10 +3,11 @@ from django.http import Http404
 from salary.enums import SalaryTitleEnum
 from salary.forms import AddEmployeeSalaryForm, AddSalaryLineForm
 from salary.models import SalaryLine
-from salary.repo import EmployeeSalaryRepo
+from salary.repo import EmployeeSalaryRepo,WorkGroupRepo,WorkSiteRepo
 from .apps import APP_NAME
 from django.views import View
 from projectmanager.repo import EmployeeRepo
+from projectmanager.serializers import EmployeeSerializer2
 from core.views import  PageContext,CoreContext
 from core.repo import ParameterRepo,PictureRepo,ParametersEnum
 import json
@@ -85,3 +86,27 @@ class BasicViews(View):
         employee_salaries=EmployeeSalaryRepo(request=request).list()
         context['employee_salaries']=employee_salaries
         return render(request,TEMPLATE_ROOT+"search.html",context)
+    
+
+class WorkGroupViews(View):
+    def work_group(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        work_group=WorkGroupRepo(request=request).work_group(*args, **kwargs)
+        employees=work_group.employees()
+        context['work_group']=work_group
+        context['employees']=employees
+        context['employees_s']=json.dumps(EmployeeSerializer2(employees,many=True).data)
+        context['organization_unit']="a"
+        return render(request,TEMPLATE_ROOT+"work-group.html",context)
+class WorkSiteViews(View):
+    def work_site(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        work_site_repo=WorkSiteRepo(request=request)
+        work_site=work_site_repo.work_site(*args, **kwargs)
+        if work_site is None:
+            work_sites=work_site_repo.list().filter(parent=None)
+        else:
+            work_sites=work_site.childs()
+        context['work_site']=work_site
+        context['work_sites']=work_sites
+        return render(request,TEMPLATE_ROOT+"work-site.html",context)

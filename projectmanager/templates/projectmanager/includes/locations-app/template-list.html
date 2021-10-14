@@ -7,7 +7,7 @@
 
     <div class="card card-stats" id="locations-app">
         <div class="card-header card-header-warning card-header-icon" id="headingLocations">
-         
+
             <h3 class="card-title text-center">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseLocations"
                     aria-expanded="true" aria-controls="collapseseLocations">
@@ -19,12 +19,17 @@
 
         <div id="collapseseLocations" class="collapse" aria-labelledby="headingLocations" data-parent="#accordion">
             <div class="card-body ">
-                
+
                 <ul class="nav flex-column">
                     {% for location in locations %}
 
                     <li class="nav-item mb-2">
-                        <a class="nav-link" href="{{location.get_absolute_url}}">{{location.title}}</a>
+                        <a class="nav-link" href="{{location.get_absolute_url}}">
+                            
+                            <i class="material-icons">
+                                place
+                            </i>
+                            {{location.title}}</a>
                     </li>
 
                     {% endfor %}
@@ -76,9 +81,14 @@
 
             </div>
             <div class="card-footer">
-                <a target="_blank" href="{% url 'help:help' app_name='projectmanager' template='add_location' %}">
-                    <i class="material-icons" aria-hidden="true">help</i>
-                    راهنما</a>
+                <p>
+
+                    <a target="_blank" href="{% url 'help:help' app_name='projectmanager' template='add_location' %}">
+                        <i class="material-icons" aria-hidden="true">help</i>
+                        راهنما
+
+                    </a>
+                </p>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-<div id="accordion">
+<div id="accordion-page-documents">
 
     <div id="page-documents-app" class="card mb-3">
         <div class="card-header" id="headingdocuments">
@@ -10,7 +10,8 @@
             </h5>
         </div>
 
-        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}" aria-labelledby="headingdocuments" data-parent="#accordion">
+        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}" 
+        aria-labelledby="headingdocuments" data-parent="#accordion-page-documents">
 
             <div class="card-body">
                 {% for document in page.documents.all %}

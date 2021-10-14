@@ -160,3 +160,10 @@ class MaterialRequestFullSerializer(serializers.ModelSerializer):
     class Meta:
         model=MaterialRequest
         fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
+
+class EmployeeSerializer2(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    organization_unit=OrganizationUnitSerializer()
+    class Meta:
+        model=Employee
+        fields=['id','get_absolute_url','profile','organization_unit']
