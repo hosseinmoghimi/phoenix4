@@ -187,40 +187,7 @@
                 </table>
 
             </div>
-            <div class="card-footer ">
-
-
-
-                {% if material1 %}
-                <p>
-
-                    <span>
-                        <span class="text-secondary">
-
-                            تعداد کل درخواست شده :
-                        </span>
-                        <span>
-                            {{material.count_requested|to_price_pure}}
-                        </span>
-                    </span>
-
-
-
-                    <span class="mr-4">
-                        <span class="text-secondary">
-
-                            مبلغ کل درخواست شده :
-                        </span>
-                        <span>
-
-                            {{material.sum_price_requested|to_price}}
-                        </span>
-                    </span>
-
-                </p>
-                {% endif %}
-
-            </div>
+      
         </div>
     </div>
 </div>
