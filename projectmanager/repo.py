@@ -320,6 +320,7 @@ class WareHouseSheetRepo():
             sheet.description=f"""مربوط به پروژه  <a href="{material_request.project.get_absolute_url()}">{material_request.project.title}</a> """
             sheet.date_exported=timezone.now()
             sheet.ware_house=ware_house
+            material_request.status=RequestStatusEnum.EXPORT_FROM_WARE_HOUSE
             sheet.save()
         # create new ware_house_import_sheet
         if ware_house_import_sheet_id is not None and ware_house_import_sheet_id==0  and ware_house is not None:
@@ -327,6 +328,7 @@ class WareHouseSheetRepo():
             sheet.description=f"""مربوط به پروژه  <a href="{material_request.project.get_absolute_url()}">{material_request.project.title}</a> """
             sheet.date_imported=timezone.now()
             sheet.ware_house=ware_house
+            material_request.status=RequestStatusEnum.IMPORT_TO_WARE_HOUSE
             sheet.save()
 
 
@@ -335,11 +337,13 @@ class WareHouseSheetRepo():
         if ware_house_export_sheet_id is not None and ware_house_export_sheet_id>0:  
             sheet=WareHouseExportSheetRepo(request=self.request).ware_house_export_sheet(pk=ware_house_export_sheet_id)          
             sheet_line.ware_house_sheet_id=ware_house_export_sheet_id
+            material_request.status=RequestStatusEnum.EXPORT_FROM_WARE_HOUSE
 
         # ADD to existing import Sheet
         if ware_house_import_sheet_id is not None and ware_house_import_sheet_id>0:
             sheet=WareHouseImportSheetRepo(request=self.request).ware_house_import_sheet(pk=ware_house_import_sheet_id)
             sheet_line.ware_house_sheet_id=ware_house_import_sheet_id
+            material_request.status=RequestStatusEnum.IMPORT_TO_WARE_HOUSE
 
 
         
