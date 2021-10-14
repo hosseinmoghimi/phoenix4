@@ -345,13 +345,14 @@ class RequestViews(View):
                     signature=repo.add_signature(material_request_id=material_request_id,status=status,description=description)
                     if signature is not None:
                         log=5
-                        return MaterialRequestViews().material_request(request=request,pk=material_request_id)
+                        return redirect(reverse(APP_NAME+":materialrequest",kwargs={'pk':material_request_id})) 
                 if service_request_id is not None:
                     log=6
                     signature=ServiceRequestRepo(request=request).add_signature(service_request_id=service_request_id,status=status,description=description)
                     if signature is not None:
                         log=7
-                        return ServiceRequestViews().service_request(request=request,pk=service_request_id)
+                        return redirect(reverse(APP_NAME+":servicerequest",kwargs={'pk':service_request_id})) 
+
         raise Http404
 
 
