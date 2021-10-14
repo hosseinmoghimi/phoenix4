@@ -1,0 +1,52 @@
+{% load to_price %}
+{% load to_persian_date %}
+<table class="table table-striped rtl farsi">
+    <thead class="text-right">
+        <th>سفارش</th>
+        <th>تعداد</th>
+        <th>قیمت واحد</th>
+        <th>مبلغ</th>
+        <th>تاریخ فروش</th>
+    </thead>
+    <tbody class="text-right">
+        {% for order_line in order_lines %}
+
+        <tr>
+            <td>
+                <a href="{{order_line.order.get_absolute_url}}">
+                    <i class="material-icons">
+                        ballot
+                    </i>
+                    سفارش شماره {{order_line.order.pk}}
+                </a>
+            </td>
+
+
+            <td>
+                {{order_line.quantity|floatformat}}
+                <span class="badge badge-rose">{{order_line.unit_name}}</span>
+            </td>
+
+
+
+            <td>
+                {{order_line.unit_price|to_price}}
+            </td>
+
+
+
+            <td>
+                {{order_line.total|to_price}}
+            </td>
+
+
+            <td>
+                <small>
+
+                    {{order_line.order.date_ordered|to_persian_datetime|safe}}
+                </small>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,226 @@
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+<div id="accordion">
+
+
+    <div class="card" id="ware-house-sheet-lines-app">
+        <div class="card-header" id="headingWareHouseSheetLines">
+
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseWareHouseSheetLines"
+                    aria-expanded="true" aria-controls="collapseWareHouseSheetLines">
+                    ریز برگه های انبار
+
+                </button>
+            </h5>
+
+
+        </div>
+        <div id="collapseWareHouseSheetLines" class="collapse {% if ware_house_sheet%}show{% endif %}"
+            aria-labelledby="headingWareHouseSheetLines" data-parent="#accordion">
+
+            <div class="card-body">
+
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+
+                        </th>
+                        {% if not ware_house %}
+
+                        <th>
+                            انبار
+                        </th>
+                        {% endif %}
+                        {% if not ware_house_sheet %}
+                        <th>
+                            تاریخ درخواست
+                        </th>
+
+                        <th>
+                            پرسنل
+                        </th>
+                        {% endif %}
+                        {% if not ware_house_sheet %}
+
+                        <th>
+                            ورود/خروج
+                        </th>
+                        {% endif %}
+                        {% if not material %}
+
+                        <th>
+                            متریال
+                        </th>
+                        {% endif %}
+                        <th>
+                            تعداد
+                        </th>
+                        <th>
+                            قیمت واحد
+                        </th>
+                        <th>
+                            جمع
+                        </th>
+                        <th>
+                            توضیحات
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for ware_house_sheet_line in ware_house_sheet_lines %}
+                        <tr>
+                            <td>
+                                <a target="_blank" href="{{ware_house_sheet_line.get_absolute_url}}" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+
+                            </td>
+
+                            {% if not ware_house %}
+
+                            <td>
+                                <a href="{{ware_house_sheet_line.ware_house_sheet.ware_house.get_absolute_url}}">
+                                    {{ware_house_sheet_line.ware_house_sheet.ware_house.title}}
+                                </a>
+                            </td>
+                            {% endif %}
+
+
+                            {% if not ware_house_sheet %}
+                            <td>
+                                {% if ware_house_sheet_line.ware_house_sheet.date_imported %}
+
+                                <small>
+
+                                    {{ware_house_sheet_line.ware_house_sheet.date_imported|to_persian_date|safe}}
+                                </small>
+                                {% endif %}
+                                {% if ware_house_sheet_line.ware_house_sheet.date_exported %}
+
+                                <small>
+
+                                    {{ware_house_sheet_line.ware_house_sheet.date_exported|to_persian_date|safe}}
+                                </small>
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {% if ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh %}
+
+                                <a target="_blank"
+                                    href="{{ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.get_absolute_url}}">
+                                    <img src="{{ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.image}}"
+                                        class="ml-2 rounded-circle" width="32" alt="">
+                                    {{ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.name}}
+                                </a>
+                                {% endif %}
+                                {% if ware_house_sheet_line.ware_house_sheet.tahvil_girandeh %}
+
+                                <a target="_blank"
+                                    href="{{ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.get_absolute_url}}">
+                                    <img src="{{ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.image}}"
+                                        class="ml-2 rounded-circle" width="32" alt="">
+                                    {{ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.name}}
+                                </a>
+                                {% endif %}
+                            </td>
+
+                            {% endif %}
+
+                            {% if not ware_house_sheet %}
+
+                            <td>
+
+                                <span class="badge badge-{{ware_house_sheet_line.ware_house_sheet.get_status_color}}">
+                                    {{ware_house_sheet_line.ware_house_sheet.direction}}
+                                </span>
+                            </td>
+                            {% endif %}
+                            {% if not material %}
+
+
+                            <td>
+
+                                <a target="_blank" href="{{ware_house_sheet_line.material.get_absolute_url}}">
+                                    <img src="{{ware_house_sheet_line.material.thumbnail}}" class="ml-2 rounded"
+                                        width="32" alt="">
+                                    {{ware_house_sheet_line.material.title}}
+                                </a>
+                            </td>
+                            {% endif %}
+
+                            <td>
+                                {{ware_house_sheet_line.quantity}}
+                                <small>
+
+                                    {{ware_house_sheet_line.unit_name}}
+                                </small>
+
+                            </td>
+                            <td>
+                                {{ware_house_sheet_line.unit_price|to_price_pure}}
+
+                            </td>
+                            <td>
+                                {{ware_house_sheet_line.line_total|to_price}}
+
+                            </td>
+                            <td>
+                                {% if ware_house_sheet_line.description %}
+                                <small class="text-secondary">
+                                    {{ware_house_sheet_line.description|safe}}
+        
+                                </small>
+                                {% endif %}
+                                {% if perms.projectmanager.change_materialrequest %}
+                                {{ware_house_sheet_line.get_edit_btn|safe}}
+
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer ">
+
+
+
+                {% if material1 %}
+                <p>
+
+                    <span>
+                        <span class="text-secondary">
+
+                            تعداد کل درخواست شده :
+                        </span>
+                        <span>
+                            {{material.count_requested|to_price_pure}}
+                        </span>
+                    </span>
+
+
+
+                    <span class="mr-4">
+                        <span class="text-secondary">
+
+                            مبلغ کل درخواست شده :
+                        </span>
+                        <span>
+
+                            {{material.sum_price_requested|to_price}}
+                        </span>
+                    </span>
+
+                </p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>

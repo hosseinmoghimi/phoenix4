@@ -1,0 +1,122 @@
+{% load to_price %}
+{% load to_persian_date %}
+<div class="table-responsive rtl farsi">
+    <table class="table table-shopping">
+        <thead>
+            <tr>
+                <th class="farsi text-right">سفارش</th>
+                <th class="farsi text-right">وضعیت</th>
+                <th class="farsi text-right">فروشنده</th>
+                <th class="farsi text-right">مشتری</th>
+                <th class="farsi text-right">تاریخ سفارش</th>
+                <th class="farsi text-right">جمع کل</th>
+
+                {% if perms.market.change_order %}
+
+                <th class="farsi text-right"></th>
+                {% endif %}
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+
+            <tr>
+
+                <td class="farsi text-right">
+                    <a href="{{order.get_absolute_url}}">
+                        <i class="material-icons">
+
+                            ballot
+                        </i>
+
+                        سفارش
+                        {{order.pk}}
+                    </a>
+
+                </td>
+
+                <td class="farsi text-right">
+
+                    {{order.get_status_tag|safe}}
+                </td>
+
+                <td class="small text-right">
+                    <a href="{{order.supplier.get_absolute_url}}">
+                        <img src="{{order.supplier.image}}" class="rounded-circle" width="32" alt="">
+
+                        {{order.supplier.title}}
+                    </a>
+                </td>
+
+
+                <td class="small text-right">
+                    <a href="{{order.customer.get_absolute_url}}">
+                        <img src="{{order.customer.profile.image}}" class="rounded-circle" width="32" alt="">
+                        {{order.customer.title}}
+                    </a>
+                </td>
+
+
+                <td class="small text-right">
+                    <small>
+
+                        {{order.date_ordered|to_persian_datetime|safe}}
+                    </small>
+
+                </td>
+                <td class=" text-right">
+                    {{order.total|to_price_pure}}
+                    <span class="farsi">{{CURRENCY}}</span>
+
+                </td>
+                {% if perms.market.change_order %}
+
+                <td>
+                    {% if order.get_financial_report %}
+
+                    <a title="گزارش مالی" href="{{order.get_financial_report.get_absolute_url}}">
+                        <i class="material-icons text-success">request_quote</i>
+                    </a>
+                    {% endif %}
+                    <a title="جزئیات سفارش" href="{{order.get_absolute_url}}">
+                        <i class="material-icons text-primary">
+
+                            ballot
+                        </i>
+
+
+                    </a>
+
+                    <a title="چاپ فاکتور" target="_blank" href="{{order.get_invoice_url}}">
+                        <i class="material-icons text-info">print</i>
+                    </a>
+                    <a title="ویرایش" target="_blank" href="{{order.get_edit_url}}">
+                        <i class="material-icons text-warning">
+                            edit
+                        </i>
+                    </a>
+                    {% if perms.market.delete_order %}
+
+                    <a title="حذف سفارش" target="_blank" href="{{order.get_delete_url}}">
+                        <i class="material-icons text-danger">
+                            delete
+                        </i>
+                    </a>
+                    {% endif %}
+
+                </td>
+                {% endif %}
+
+            </tr>
+
+            {% endfor %}
+
+
+
+
+
+
+        </tbody>
+    </table>
+</div>

@@ -30,6 +30,7 @@
         <div class="col-md-4 mb-5">
             <div class="card mb-5">
                 <div class="card-body">
+                    {% include "core/includes/page-like-app/template.html" %}
                     <p>
                         <span class="small text-secondary">
                             وضعیت:
@@ -47,7 +48,13 @@
 
 
                         <a href="{{project.employer.get_absolute_url}}">
-                            {{project.employer.title}}
+                            <span class="material-icons text-danger">
+                                store
+                            </span>
+                            <span class="text-danger">
+
+                                {{project.employer.title}}
+                            </span>
                         </a>
                     </p>
 
@@ -58,7 +65,16 @@
                         </span>
 
                         <a href="{{project.contractor.get_absolute_url}}">
-                            {{project.contractor.title}}
+
+
+
+                            <span class="material-icons text-success">
+                                engineering
+                            </span>
+                            <span class="text-success">
+
+                                {{project.contractor.title}}
+                            </span>
                         </a>
                     </p>
                     <P>
@@ -67,9 +83,11 @@
 
                         </span>
 
-                        <span class="text-primary">
+                        <span class=" badge badge-primary px-2 py-2">
+                            <span class="h5">
 
-                            {{project.sum_total|to_price}}
+                                {{project.sum_total|to_price}}
+                            </span>
                         </span>
                     </P>
                     <p>
@@ -106,7 +124,7 @@
                         </span>
 
                         <span class="text-primary">
-                            {{project.weight}} 
+                            {{project.weight}}
 
                         </span>
                         <br>
@@ -116,7 +134,7 @@
                         </span>
 
                         <span class="text-primary">
-                            {{project.sum_weight}} 
+                            {{project.sum_weight}}
                         </span>
 
 
@@ -133,6 +151,19 @@
                             نمودار
                         </a>
                     </p>
+
+                    <p>
+
+                        <a href="{{project.get_event_chart_url}}">
+                            نمودار رویداد های پروژه
+                        </a>
+                    </p>
+                    <p>
+
+                        <a href="{{project.get_guantt_chart_url}}">
+                            نمودار نمودار گانت زیر پروژه ها
+                        </a>
+                    </p>
                 </div>
             </div>
 
@@ -144,13 +175,13 @@
             {% include "projectmanager/includes/organization-units-app/template.html" %}
             {% include "core/includes/page-links-app/template.html" %}
             {% include "core/includes/page-documents-app/template.html" %}
-
+            {% include "core/includes/page-tags-app/template.html" %}
         </div>
         <div class="col-md-12 mb-5">
             {% include "core/includes/page-description-app/short-description.html" %}
         </div>
 
-        
+
         <div class="col-md-12 mb-5">
             {% include "core/includes/page-description-app/full-description.html" %}
         </div>
@@ -181,6 +212,9 @@
         <div class="col-md-12 mb-5">
             {% include "core/includes/page-comments-app/template.html" %}
         </div>
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-related-app/template.html" %}
+        </div>
     </div>
 
 
@@ -192,6 +226,8 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
+
     let page_id = parseInt("{{page.id}}")
     let parent_id = parseInt("{{parent_id}}")
     let project_id = parseInt("{{parent_id}}")
@@ -207,6 +243,10 @@
 {% include "projectmanager/includes/organization-units-app/script.html" %}
 {% include "projectmanager/includes/events-app/script.html" %}
 {% include "projectmanager/includes/project-edit-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-description-app/script.html" %}
+{% include "core/includes/page-like-app/script.html" %}
 {% include "projectmanager/includes/locations-app/script.html" %}
 
 {% endblock %}

@@ -1,59 +1,58 @@
 {% extends "authentication/profile.html" %}
-
 {% block card %}
+<table class="my-4">
+    <tr>
+        <td class="text-left">
+            <small class="text-muted">
+                کارفرما :
 
-<p class="text-secondary mb-1">
-    <a href="{{employee.organization_unit.get_absolute_url}}">
-        {{employee.organization_unit.title}}
-    </a>
-</p>
-<button class="btn btn-outline-primary">Follow</button>
+            </small>
+        </td>
+
+
+        <td class="text-right">
+            <a href="{{employee.organization_unit.employer.get_absolute_url}}">
+                <span class="material-icons text-danger">
+                    store
+                </span>
+                {{employee.organization_unit.employer.title}}
+            </a>
+        </td>
+
+    </tr>
+    <tr>
+        <td class="text-left">
+            <small class="text-muted">
+                واحد سازمانی :
+
+            </small>
+        </td>
+
+
+        <td class="text-right">
+            <a href="{{employee.organization_unit.get_absolute_url}}">
+                <i class="material-icons text-success">
+                    apartment
+                </i>
+                {{employee.organization_unit.title}}
+            </a>
+        </td>
+
+    </tr>
+</table>
+
+<a class="btn btn-outline-primary" href="{{employee.get_dashboard_url}}">دشبورد</a>
+<a class="btn btn-outline-primary" href="{{employee.get_salary_url}}">حقوق</a>
 <a class="btn btn-outline-danger" href="{{employee.get_edit_url}}">
-
-
-    ویرایش</a>
+    ویرایش
+</a>
 {% endblock %}
-
-
-{% block list %}
-<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-    <h6 class="mb-0">
-        <span class="material-icons">
-            apartment
-        </span>
-        شاغل در
-    </h6>
-
-    <span class="text-secondary">
-        <a href="{{employee.organization_unit.employer.get_absolute_url}}">
-            {{employee.organization_unit.employer.title}}
-        </a>
-    </span>
-</li>
-
-<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-    <h6 class="mb-0">
-        <span class="material-icons">
-            apartment
-        </span>
-        واحد سازمانی
-    </h6>
-
-    <span class="text-secondary">
-        <a href="{{employee.organization_unit.get_absolute_url}}">
-            {{employee.organization_unit.title}}
-        </a>
-    </span>
-</li>
-
-{% endblock %}
-
 {% block table %}
-
 <div class="col-sm-6 mb-3">
     <div class="card h-100">
         <div class="card-body">
-            <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>تخصص ها</h6>
+            <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>تخصص ها
+            </h6>
 
             {% for speciality in employee.employeespeciality_set.all %}
             <div class="mx-3 text-right farsi rtl">
@@ -77,6 +76,34 @@
             </div>
             {% endfor %}
 
+
+
+        </div>
+    </div>
+</div>
+<div class="col-sm-6 mb-3">
+    <div class="card h-100">
+        <div class="card-body">
+            <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>مدارک
+                پرسنلی
+            </h6>
+
+            {% for employee_doc in employee.documents %}
+            <div class="mx-3 text-right farsi rtl">
+                <a href="{{employee_doc.document.get_download_url}}">
+                    <i class="material-icons">
+                        get_app
+                    </i>
+                    <small class="text-center">{{employee_doc.document.title}}</small>
+                </a>
+
+            </div>
+
+            {% endfor %}
+            <a target="_blank" href="{{employee.get_add_document_url}}">
+
+                <small class="text-center">افزودن مدارک</small>
+            </a>
 
 
         </div>

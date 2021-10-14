@@ -1,0 +1,202 @@
+{% load to_price %}
+<div id="shops-app">
+    <h4>کالاهای موجود برای فروش</h4>
+
+    <div class="col-md-12">
+        <table class="table farsi text-right">
+            <thead>
+                <th class="text-right">
+                    فروشنده
+                </th>
+                <th class="text-right">
+                    سطح فروش
+                </th>
+
+
+
+                <th class="text-right">
+                    موجودی انبار
+                </th>
+
+                <th class="text-right">
+                    ویژگی ها
+                </th>
+
+
+                <th class="text-right">
+                    قیمت
+                </th>
+
+
+
+                <th class="text-right">
+                </th>
+
+            </thead>
+            {% for shop in supplier_shops %}
+            <tr>
+                <td class="text-right">
+                    <div>
+
+                        <a href="{{shop.supplier.get_absolute_url}}">
+                            <img src="{{shop.supplier.image}}" width="32" class="rounded-circle" alt="">
+                            {{shop.supplier.title}}
+                        </a>
+                    </div>
+                    <div>
+                        <i class="material-icons">
+                            public
+                        </i>
+                        {{shop.supplier.region}}
+                    </div>
+
+                </td>
+
+
+                <td class="text-right">
+                    <span class="badge badge-primary">
+
+                        {{shop.level}}
+                    </span>
+                </td>
+                <td class="text-right">
+
+                    {{shop.available}}
+                    <span class="badge badge-danger">
+
+                        {{shop.unit_name}}
+                    </span>
+                </td>
+
+
+
+
+                <td class="text-right">
+                    {% for specification in shop.specifications.all %}
+
+
+
+
+                    <span class="btn-group ltr">
+                        <button class="btn btn-round btn-warning btn-sm">
+
+                            {{specification.value}}
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button class="btn btn-info btn-sm">
+                            {{specification.name}}
+                        </button>
+                    </span>
+
+                    {% endfor %}
+
+                </td>
+                <td class="text-right">
+                    <div>
+
+                        {{shop.unit_price|to_price}}
+                    </div>
+                    <div style="text-decoration: line-through;font-size: 16px;color: #9a9a9a;">
+                        <small>
+
+                            {{shop.old_price|to_price}}
+                        </small>
+                    </div>
+                </td>
+                {% if perms.market.change_shop %}
+                <td class="text-right">
+                    <a target="_blank" title="ویرایش" href="{{shop.get_edit_url}}">
+                        <i class="material-icons">
+                            settings
+                        </i>
+                    </a>
+                </td>
+                {% endif %}
+
+            </tr>
+            {% endfor %}
+            <tr v-for="shop in shops">
+                <td class="text-right">
+                    <div>
+
+                        <a href="{{shop.supplier.get_absolute_url}}">
+                            <img :src="shop.supplier.image" width="32" class="rounded-circle" alt="">
+                            <span v-text="shop.supplier.title">
+
+                            </span>
+                        </a>
+
+                    </div>
+                    <div>
+                        <i class="material-icons">
+                            public
+                        </i>
+                        <span v-text="shop.supplier.region">
+
+                        </span>
+                    </div>
+
+                </td>
+
+
+                <td class="text-right">
+                    <span class="badge badge-primary" v-text="shop.level">
+
+                    </span>
+                </td>
+                <td class="text-right">
+                    <span v-text="shop.available">
+
+                    </span>
+                    <span class="badge badge-danger">
+                        <span v-text="shop.unit_name">
+
+                        </span>
+                    </span>
+                </td>
+                <td class="text-right">
+                    <template v-for="specification in shop.specifications">
+                        <div class="btn-group ltr">
+
+                            <button class="btn btn-round btn-warning btn-sm">
+                                <span v-text="specification.value"></span>
+
+                                <div class="ripple-container"></div>
+                            </button>
+                            <button class="btn  btn-info btn-sm">
+                                <span v-text="specification.name"></span>
+
+                            </button>
+                        </div>
+                    </template>
+                </td>
+
+
+                <td class="text-right">
+                    <span v-text="to_price(shop.unit_price)">
+
+                    </span>
+                </td>
+
+
+
+
+                {% if perms.market.change_shop %}
+                <td class="text-right">
+                    <a target="_blank" :href="shop.get_edit_url">
+                        <i class="material-icons">
+                            settings
+                        </i>
+                    </a>
+                </td>
+                {% endif %}
+
+            </tr>
+
+        </table>
+    </div>
+    {% if add_shop_form %}
+
+    {% include "market/includes/product-shops-app/form.html" %}
+    {% endif %}
+</div>

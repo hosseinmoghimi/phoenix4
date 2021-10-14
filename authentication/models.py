@@ -24,16 +24,17 @@ def save_profile_receiver(sender,instance,*args, **kwargs):
     #         profile.save()
     #     except:
     #         pass
-    # try:
-    #     from market.models import Customer
-    #     customers=Customer.objects.filter(profile=profile)
-    #     if len(customers)==0:
-    #         customer=Customer()
-    #         customer.profile=profile
-    #         customer.title=instance.first_name+" "+instance.last_name
-    #         customer.save()
-    # except:
-    #     pass
+    try:
+        from market.models import Customer,ShopRegion
+        customers=Customer.objects.filter(profile=profile)
+        if len(customers)==0:
+            customer=Customer()
+            customer.profile=profile
+            customer.region=ShopRegion.objects.first()
+            customer.title=instance.first_name+" "+instance.last_name
+            customer.save()
+    except:
+        pass
     
 
 post_save.connect(create_profile_receiver, sender=settings.AUTH_USER_MODEL)
@@ -53,7 +54,7 @@ class Profile(models.Model):
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
     enabled=models.BooleanField(_("enabled"),default=True)
     def get_edit_url_panel(self):
-        return reverse(APP_NAME+":edit_profile_view",kwargs={'pk':self.pk})
+        return reverse(APP_NAME+":edit_profile_view",kwargs={'profile_id':self.pk})
     @property
     def first_name(self):
         return self.user.first_name
@@ -122,6 +123,8 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":profile", kwargs={"pk": self.pk})
+    def get_reset_password_url(self):
+        return reverse(APP_NAME+":reset_password_view", kwargs={"profile_id": self.pk})
 
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"

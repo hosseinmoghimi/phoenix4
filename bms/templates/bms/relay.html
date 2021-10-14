@@ -1,0 +1,183 @@
+{% extends "bms/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+{% block content_bms %}
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header card-header-icon card-header-warning">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h4 class="card-title">
+                    {{relay.name}}
+                </h4>
+            </div>
+
+            <div class="card-body">
+                <p>
+
+
+                    {% if relay.is_protected %}
+                    <span class="material-icons text-primary mx-2" title="locked">
+                        lock
+                    </span>
+                    {% endif %}
+                    {% if relay.current_state %}
+                    <span class="material-icons text-danger mx-2" title="power on">
+                        power
+                    </span>
+                    {% else %}
+                    <span class="material-icons text-secondary mx-2" title="power off">
+                        power_off
+                    </span>
+                    {% endif %}
+                </p>
+<p>
+    <a href="{{relay.feeder.get_absolute_url}}">
+        {{relay.feeder.name}}
+    </a>
+</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header card-header-icon card-header-warning">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h4 class="card-title">
+                    لاگ
+                </h4>
+            </div>
+
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>
+                            عنوان
+                        </th>
+                        <th>
+                            پروفایل
+
+                        </th>
+                        <th>
+                            فیدر
+
+                        </th>
+                        <th>
+                            فرمان
+
+                        </th>
+
+                        <th>
+                            رله
+
+                        </th>
+                        <th>
+                            زمان
+
+                        </th>
+                    </thead>
+                    {% for log in logs %}
+                    <tr>
+                        <td>
+                            {% if log.succeed %}
+                            <span class="material-icons text-success">
+                                check_circle
+                            </span>
+                            {% else %}
+
+                            <span class="material-icons text-secondary">
+                                sms_failed
+                            </span>
+                            {% endif %}
+                            
+                            {{log.title}}
+                        </td>
+                        <td>
+                            <a title="{{log.profile.name}}" href="{{log.profile.get_absolute_url}}">
+                                <img src="{{log.profile.image}}" width="32" class="rounded-circle" alt="">
+                                {{log.profile.name}}
+                            </a>
+                        </td>
+
+                        <td>
+                            <a target="_blank" href="{{log.relay.feeder.get_absolute_url}}">
+                                {{log.relay.feeder.name}}
+
+                            </a>
+
+
+                        </td>
+
+
+                        <td>
+                            <a title="{{log.command.name}}" href="{{log.command.get_absolute_url}}">
+
+                                {{log.command.name}}
+
+                            </a>
+
+                        </td>
+
+
+
+                        <td>
+                            <a target="_blank" href="{{log.relay.get_absolute_url}}">
+
+                                {{log.relay.name}}
+                            </a>
+
+
+                        </td>
+
+
+                        <td>
+                            <small>
+
+                                {{log.date_added|to_persian_datetime|safe}}
+                            </small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+
+
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% block script_bms %}
+
+{% endblock %}

@@ -1,4 +1,16 @@
-{% extends "dashboard/layout.html" %}
+{% extends "phoenix/layout.html" %}
+{% load static %}
+
+{% block head111 %}
+  <link rel="stylesheet" href="{% static 'leo/css/font-farsi.css' %}">
+  <link rel="stylesheet" href="{% static 'leo/css/leo.css' %}">
+  <style>
+      h1,h2,h3,h4,h5,h6,p,input,select,*{
+          font-family: "HMFONT";
+      }
+  </style>
+{% endblock %}
+
 
 {% block content %}
 

@@ -5,6 +5,7 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
     let status = "{{project.status}}"
+    let weight = parseInt("{{project.weight}}")
     let url_edit_project = "{% url 'projectmanager:edit_project' %}"
     let employer_id = 0
     try {
@@ -20,6 +21,7 @@
     } catch (error) {
 
     }
+    let title="{{project.title}}"
     let project_app = new Vue({
         el: "#project-app",
         data: {
@@ -32,6 +34,9 @@
             employer_id: employer_id,
             contractor_id: contractor_id,
             SUCCEED: false,
+            archive: false,
+            title:title,
+            weight:weight,
         },
         components: {
             DatePicker: VuePersianDatetimePicker
@@ -39,18 +44,20 @@
         methods: {
             edit_project: function () {
                 project_app.waiting = true
-
                 let payload = {
                     project_id: project.id,
                     percentage_completed: this.percentage_completed,
                     start_date: this.start_date,
                     end_date: this.end_date,
                     status: this.status,
+                    archive: this.archive,
                     employer_id: this.employer_id,
+                    title:this.title,
                     contractor_id: this.contractor_id,
+                    weight: this.weight,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                //console.log(payload)
+                // console.log(payload)
 
 
                 var posting = $.post(url_edit_project, payload);
@@ -60,8 +67,9 @@
                 })
                 // Put the results in a div
                 posting.done(function (data) {
+
                     project_app.waiting = false
-                    //console.log(data)
+                    // console.log(data)
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)
                         // project_timing_app.add_service_form_title = ""

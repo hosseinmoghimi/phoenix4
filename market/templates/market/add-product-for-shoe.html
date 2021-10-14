@@ -1,0 +1,39 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" filter-color="rose"
+    style="background-image: url('{{supplier.image_header}}');">
+    <div class="container">
+        <div class="row title-row">
+            <div class="col-md-4 mr-auto">
+                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
+                    <span class="farsi">
+
+                        0 در سبد خرید
+                    </span>
+                    <i class="material-icons mx-2">shopping_cart</i>
+
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "market/includes/add-product-batch-app/template.html" %}
+
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+{% block script %}
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "market/includes/add-product-batch-app/script.html" %}
+
+{% endblock %}

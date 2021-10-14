@@ -134,6 +134,9 @@ collectstatic :
 python manage.py collectstatic
 ```
 
+https://tonyteaches.tech/django-nginx-uwsgi-tutorial/
+
+
 
 ```bash
 cp ./server/phoenix.ini /etc/uwsgi/sites/phoenix.ini
@@ -219,6 +222,6 @@ systemctl start emperor.uwsgi.service
 
 restart service:
 ```bash
-systemctl restart emperor.uwsgi.service
+sudo systemctl restart emperor.uwsgi.service
 sudo /etc/init.d/nginx restart
 ```

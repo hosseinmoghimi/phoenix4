@@ -1,3 +1,4 @@
+from stock.serializers import AgentSerializer, StockSerializer
 from .utils import AdminUtility
 from core.settings import SITE_URL
 from .forms import *
@@ -7,8 +8,9 @@ from django.shortcuts import render
 from django.shortcuts import reverse
 from django.views import View
 from .apps import APP_NAME
-from .repo import DocumentRepo, StockRepo
+from .repo import AgentRepo, DocumentRepo, StockRepo
 from core.views import CoreContext
+import json
 import os
 from django.http import HttpResponse,Http404
 TEMPLATE_ROOT=APP_NAME+'/'
@@ -23,8 +25,9 @@ def getContext(request):
         'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value,
         'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value,
     }
-    context['stock1']=ParameterRepo(app_name=APP_NAME,user=request.user).get(name=ParametersEnum.STOCK1)
-    context['stock2']=ParameterRepo(app_name=APP_NAME,user=request.user).get(name=ParametersEnum.STOCK2)
+    parameter_repo=ParameterRepo(app_name=APP_NAME,request=request)
+    context['stock1']=parameter_repo.parameter(name=ParametersEnum.STOCK1)
+    context['stock2']=parameter_repo.parameter(name=ParametersEnum.STOCK2)
     return context
 class BasicViews(View):
     def search(self,request,*args, **kwargs):
@@ -35,12 +38,20 @@ class BasicViews(View):
                 context=getContext(request)
                 stocks=StockRepo(request=request).list(search_for=search_for)
                 context['stocks']=stocks
+                agents=AgentRepo(request=request).list()
+                context['agents']=agents
+                context['agents_s']=json.dumps(AgentSerializer(agents,many=True).data)
+                context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
                 return render(request,TEMPLATE_ROOT+'index.html',context)
         return self.home(request=request,*args, **kwargs)
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         stocks=StockRepo(request=request).list()
+        agents=AgentRepo(request=request).list()
         context['stocks']=stocks
+        context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
+        context['agents']=agents
+        context['agents_s']=json.dumps(AgentSerializer(agents,many=True).data)
         context['add_stock_form']=AddStockForm()
         return render(request,TEMPLATE_ROOT+'index.html',context)
 class StockViews(View):
@@ -65,7 +76,6 @@ class DocumentViews(View):
     def get_download_response(self,request,*args, **kwargs):
         document=DocumentRepo(request=request).document(*args, **kwargs)
         file_path = str(document.file.path)
-        # print(file_path)
         # return JsonResponse({'download:':str(file_path)})
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:

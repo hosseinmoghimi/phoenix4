@@ -1,0 +1,126 @@
+{% load to_price %}
+<div class="card" id="employee-salaries-app">
+    <div class="card-header">
+        <h4 class="text-center">
+            لیست حقوق پرسنل
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+
+                </th>
+                <th>
+                    پرسنل
+                </th>
+                <th>
+                    پرداختی
+                </th>
+                <th>
+                    ماه
+                    /
+                    سال
+                </th>
+            </thead>
+            <tbody>
+                {% for employee_salary in employee_salaries %}
+
+                <tr>
+                    <td>
+                        <a title="جزئیات" href="{{employee_salary.get_absolute_url}}">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+
+                        </a>
+                    </td>
+                    <td>
+                        <div class="media">
+                            <a href="{{employee_salary.employee.get_absolute_url}}">
+                                <img src="{{employee_salary.employee.profile.image}}" class="rounded-circle" width="48" alt="">
+                               </a>
+
+                               <div class="media-body">
+                                <div>
+                                    <a href="{{employee_salary.employee.get_absolute_url}}">
+                                           {{employee_salary.employee.profile.name}}
+                                       </a>
+                                   </div>
+
+                                   <div class="small">
+                                    <a href="{{employee_salary.employee.organization_unit.get_absolute_url}}">
+                                           {{employee_salary.employee.organization_unit.title}}
+                                       </a>
+                                       <span class="text-muted">
+
+                                           /
+                                        </span>
+                                        <a href="{{employee_salary.employee.organization_unit.employer.get_absolute_url}}">
+                                            {{employee_salary.employee.organization_unit.employer.title}}
+                                        </a>
+                                   </div>
+                               </div>
+                        </div>
+                       
+                    </td>
+                    <td>
+                        {{employee_salary.total|to_price}}
+                        
+                    </td>
+                    <td>
+                        {{employee_salary.month_name}}
+                        {{employee_salary.year}}
+                    </td>
+                    <td>
+                        {% if perms.salary.change_employeesalary %}
+                        {{employee_salary.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr v-for="employee_salary in employee_salaries">
+                    <td>
+                        <a title="جزئیات" :href="employee_salary.get_absolute_url">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+
+                        </a>
+                    </td>
+                    <td>
+                        <a :href="employee_salary.employee.get_absolute_url">
+                            <span v-text="employee_salary.employee.profile.name"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="employee_salary.month_name"></span>
+
+                    </td>
+                    <td>
+                        <span v-text="employee_salary.year"></span>
+                    </td>
+                    <td>
+                        {% if perms.salary.change_employeesalary %}
+                        {{employee_salary.get_edit_btn|safe}}
+                        <a :href="employee_salary.get_edit_url">
+                            <i class="material-icons">
+                                edit
+                            </i>
+
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="card-footer">
+        {% if add_employee_salary_form %}
+        {% include "salary/includes/employee-salaries-app/form.html" %}
+
+        {% endif %}
+    </div>
+</div>

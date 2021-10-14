@@ -1,0 +1,163 @@
+{% extends "bms/layout.html" %}
+{% load static %}
+
+{% block content_bms %}
+<div class="row">
+    <p>
+        <a href="{% url 'bms:export' %}" class="btn btn-success">
+            Export
+        </a>
+    </p>
+</div>
+<div class="row" id="app23">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header card-header-icon card-header-success">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    سناریو ها
+                </h3>
+            </div>
+
+            <div class="card-body">
+                {% for scenario in scenarioes %}
+                {% include "bms/includes/scenario.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% for feeder in feeders %}
+    <div class="col-md-4">
+        {% include "bms/includes/feeder.html" %}
+    </div>
+
+
+    {% endfor %}
+
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header pb-0">
+              <h6>نظرة عامة على الطلبات</h6>
+              <p class="text-sm">
+                <i class="material-icons text-sm text-success" aria-hidden="true">north</i>
+                <span class="font-weight-bold">24%</span> هذا الشهر
+              </p>
+            </div>
+            <div class="card-body p-3">
+              <div class="timeline timeline-one-side">
+                <div class="timeline-block mb-3">
+                  <span class="timeline-step">
+                    <i class="material-icons text-success text-gradient text-lg">notifications</i>
+                  </span>
+                  <div class="timeline-content">
+                    <h6 class="text-dark text-sm font-weight-bold mb-0">$2400, تغييرات في التصميم</h6>
+                    <p class="text-secondary text-xs mt-1 mb-0">22 ديسمبر 7:20 مساءً</p>
+                  </div>
+                </div>
+                <div class="timeline-block mb-3">
+                  <span class="timeline-step">
+                    <i class="material-icons text-danger text-gradient text-lg">code</i>
+                  </span>
+                  <div class="timeline-content">
+                    <h6 class="text-dark text-sm font-weight-bold mb-0">طلب جديد # 1832412</h6>
+                    <p class="text-secondary text-xs mt-1 mb-0">21 ديسمبر 11 م</p>
+                  </div>
+                </div>
+                <div class="timeline-block mb-3">
+                  <span class="timeline-step">
+                    <i class="material-icons text-info text-gradient text-lg">shopping_cart</i>
+                  </span>
+                  <div class="timeline-content">
+                    <h6 class="text-dark text-sm font-weight-bold mb-0">مدفوعات الخادم لشهر أبريل</h6>
+                    <p class="text-secondary text-xs mt-1 mb-0">21 ديسمبر 9:34 مساءً</p>
+                  </div>
+                </div>
+                <div class="timeline-block mb-3">
+                  <span class="timeline-step">
+                    <i class="material-icons text-warning text-gradient text-lg">credit_card</i>
+                  </span>
+                  <div class="timeline-content">
+                    <h6 class="text-dark text-sm font-weight-bold mb-0">تمت إضافة بطاقة جديدة للأمر رقم 4395133</h6>
+                    <p class="text-secondary text-xs mt-1 mb-0">20 ديسمبر 2:20 صباحًا</p>
+                  </div>
+                </div>
+                <div class="timeline-block mb-3">
+                  <span class="timeline-step">
+                    <i class="material-icons text-primary text-gradient text-lg">vpn_key</i>
+                  </span>
+                  <div class="timeline-content">
+                    <h6 class="text-dark text-sm font-weight-bold mb-0">فتح الحزم من أجل التطوير</h6>
+                    <p class="text-secondary text-xs mt-1 mb-0">18 ديسمبر ، 4:54 صباحًا</p>
+                  </div>
+                </div>
+                <div class="timeline-block">
+                  <span class="timeline-step">
+                    <i class="material-icons text-dark text-gradient text-lg">bug_report</i>
+                  </span>
+                  <div class="timeline-content">
+                    <h6 class="text-dark text-sm font-weight-bold mb-0">طلب جديد # 9583120</h6>
+                    <p class="text-secondary text-xs mt-1 mb-0">17 ديسمبر</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% block script_bms %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    $("#nav-item-bms-index").addClass("active")
+
+    let url_run_scenario = "{% url 'bms:run_scenario' %}"
+    let url_execute_command = "{% url 'bms:execute_command' %}"
+    let app = new Vue({
+        el: "#app23",
+        data: {
+            pin: "",
+        },
+        methods: {
+            run_scenario: function (scenario_id) {
+                let url = url_run_scenario
+                let payload = {
+                    scenario_id: scenario_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                })
+            },
+            execute_command: function (command_id) {
+                let url = url_execute_command
+                let payload = {
+                    command_id: command_id,
+                    pin: this.pin,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                })
+            },
+
+        }
+    })
+</script>
+{% endblock %}

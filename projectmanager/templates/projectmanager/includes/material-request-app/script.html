@@ -4,7 +4,8 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
     let material_request_id = parseInt("{{material_request.id}}")
-    let url_add_signature = "{% url 'projectmanager:add_signature' %}"
+    let url_add_signature = "{% url 'projectmanager:api_add_signature' %}"
+    let url_add_material_request_to_ware_house_sheet = "{% url 'projectmanager:add_material_request_to_ware_house_sheet' %}"
     let material_request_app = new Vue({
         el: "#material-request-app",
         data: {
@@ -12,13 +13,38 @@
             add_signature_form_status: "",
             add_signature_form_description: "",
             waiting: false,
-            event_datetime: current_datetime
+            event_datetime: current_datetime,
+            ware_house_export_sheet_id: "",
+            ware_house_import_sheet_id :"",
+            add_to_sheet_description: "",
+            ware_house_sheet:null,
+            ware_house_id:"",
         },
         components: {
             DatePicker: VuePersianDatetimePicker
 
         },
         methods: {
+            add_material_request_to_ware_house_sheet: function () {
+                material_request_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    material_request_id: material_request_id,
+                    ware_house_import_sheet_id: this.ware_house_import_sheet_id,
+                    ware_house_export_sheet_id: this.ware_house_export_sheet_id,
+                    ware_house_id: this.ware_house_id,
+                    description: this.add_to_sheet_description,
+                }
+                // console.log(payload)
+                let posting = $.post(url_add_material_request_to_ware_house_sheet, payload)
+                posting.done((data) => {
+                    // console.log(data)
+                    material_request_app.waiting = false
+                    if (data.result === 'SUCCEED') {
+                        material_request_app.ware_house_sheet=(data.ware_house_sheet)
+                    }
+                })
+            },
             add_signature: function () {
                 material_request_app.waiting = true
                 let payload = {
@@ -30,6 +56,7 @@
                 //console.log(payload)
                 let posting = $.post(url_add_signature, payload)
                 posting.done((data) => {
+                // console.log(data)
                     material_request_app.waiting = false
                     if (data.result === 'SUCCEED') {
                         material_request_app.signatures.push(data.signature)

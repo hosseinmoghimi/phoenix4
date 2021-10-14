@@ -31,6 +31,9 @@
 
                 <tr>
                     <td>
+                        <span class="material-icons">
+                            paid
+                        </span>
                         <span>{{payment.title}}</span>
                     </td>
 
@@ -51,12 +54,23 @@
                     </td>
                     <td>
                         {% if payment.image_origin %}
-                          
+
                         <a class="mx-3" href="{{payment.image}}" target="_blank">
-                            تصویر
+                            <span class="material-icons text-danger">
+                                collections
+                            </span>
+
+                            <span class="text-danger">
+
+                                تصویر
+                            </span>
                         </a>
                         {% else %}
                         <a class="mx-3 text-secondary" target="_blank">
+                            <span class="material-icons text-secondary">
+                                collections
+                            </span>
+
                             تصویر
                         </a>
                         {% endif %}
@@ -64,7 +78,7 @@
                         {% if perms.stock.change_payment %}
 
                         <a title="ویرایش" target="_blank" href="{{payment.get_edit_url}}">
-                            <i class="material-icons">
+                            <i class="material-icons text-warning">
                                 edit
                             </i>
 
@@ -76,6 +90,10 @@
                 {% endfor %}
                 <tr v-for="payment in payments">
                     <td>
+                        <span class="material-icons">
+                            paid
+                        </span>
+
                         <span v-text="payment.title"></span>
                     </td>
 
@@ -94,14 +112,29 @@
                             <span v-text="payment.persian_date_paid"></span>
                         </small>
                     </td>
-                    <td> <a class="mx-3" :href="payment.image" target="_blank">
-                            تصویر
-                        </a>
+                    <td> <a class="mx-3" v-if="payment.image!='/media/'" :href="payment.image" target="_blank">
+                            <span class="material-icons text-danger">
+                                collections
+                            </span>
 
+                            <span class="text-primary">
+
+                                تصویر
+                            </span>
+                        </a>
+                        <a target="_blank" v-if="payment.image==='/media/'" class="mx-3 text-secondary docs-creator">
+                            <span class="material-icons text-secondary">
+                                collections
+                            </span>
+                            <span class="text-secondary">
+
+                                تصویر
+                            </span>
+                        </a>
                         {% if perms.stock.change_payment %}
 
                         <a title="ویرایش" target="_blank" :href="payment.get_edit_url">
-                            <i class="material-icons">
+                            <i class="material-icons text-warning">
                                 edit
                             </i>
 

@@ -14,9 +14,17 @@
             </h5>
 
         </div>
-        <div id="collapseevents" class="collapse  {% if events %}show{% endif %}" aria-labelledby="headingevents" data-parent="#accordion">
+        <div id="collapseevents" class="collapse  {% if events %}show{% endif %}" aria-labelledby="headingevents"
+            data-parent="#accordion">
 
             <div class="card-body">
+                <p>
+
+                    <a href="{{project.get_event_chart_url}}">
+                        نمودار رویداد های پروژه
+                    </a>
+                </p>
+                
                 <table class="table table-striped">
                     <thead>
                         <th>
@@ -25,11 +33,17 @@
                         <th>
                             زمان
                         </th>
+                        <th>
+                            شروع
+                        </th>
+                        <th>
+                            پایان
+                        </th>
                     </thead>
                     <tbody>
                         {% for event in events %}
                         <tr>
-                          
+
                             <td>
                                 <a href="{{event.get_absolute_url}}">
                                     {{event.title}}
@@ -41,23 +55,49 @@
                                     {{event.event_datetime|to_persian_datetime|safe}}
                                 </small>
                             </td>
-                            
+
+                            <td>
+                                <small>
+
+                                    {{event.start_datetime|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+
+                            <td>
+                                <small>
+
+                                    {{event.end_datetime|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+
                         </tr>
                         {% endfor %}
 
                         <tr v-for="event in events">
                             <td>
+                            <a :href="event.get_absolute_url">
+                                <span v-text="event.title">
+
+
+                                </span>
+                            </a>
+                              
+                            </td>
+                            <td>
                                 <small v-text="event.persian_event_datetime">
 
                                 </small>
                             </td>
+
                             <td>
-                                <a :href="event.get_absolute_url">
-                                    <span v-text="event.title">
+                                <small v-text="event.persian_start_datetime">
 
+                                </small>
+                            </td>
+                            <td>
+                                <small v-text="event.persian_end_datetime">
 
-                                    </span>
-                                </a>
+                                </small>
                             </td>
                         </tr>
 
@@ -70,8 +110,36 @@
 
                         <div class="row">
                             <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">.... </label>
+                                    <date-picker v-model="event_datetime"></date-picker>
 
-                                <date-picker v-model="event_datetime"></date-picker>
+                                    <small id="emailHelp" class="form-text farsi text-muted">
+                                        شناسه صفحه مرتبط را وارد کنید.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">شروع</label>
+                                    <date-picker v-model="start_datetime"></date-picker>
+
+                                    <small id="emailHelp" class="form-text farsi text-muted">
+                                        شناسه صفحه مرتبط را وارد کنید.
+                                    </small>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">پایان</label>
+                                    <date-picker v-model="end_datetime"></date-picker>
+
+                                    <small id="emailHelp" class="form-text farsi text-muted">
+                                        شناسه صفحه مرتبط را وارد کنید.
+                                    </small>
+                                </div>
                             </div>
                             <div class="col-md-7">
                                 <input required type="text" placeholder="شرح رویداد" class="form-control"
@@ -82,7 +150,7 @@
 
 
 
-                    <button v-if="!waiting"  class="btn btn-success" type="submit">
+                                <button v-if="!waiting" class="btn btn-success" type="submit">
                                     <i class="material-icons">add</i>
                                 </button>
                             </div>

@@ -1,0 +1,42 @@
+{% extends "school/layout.html" %}
+{% block content %}
+<h3 class="text-center">
+    واحد درسی 
+</h3>
+<div class="card">
+    <div class="card-body">
+        <div class="mb-3">
+            <h4>
+
+                <a href="{{course.get_absolute_url}}">
+                    {{course.title}}
+                </a>
+                {% if perms.school.change_course %}
+                {{course.get_edit_btn|safe}}
+
+                {% endif %}
+            </h4>
+        </div>
+
+
+
+        <div class="mb-3">
+            {% for book in course.books.all %}
+            <h4>
+                <small class="text-muted">
+                    کتاب
+                </small>
+                <a href="{{book.get_absolute_url}}">
+
+                    {{book.title}}
+                </a>
+                {% if perms.school.change_book %}
+                {{book.get_edit_btn|safe}}
+
+                {% endif %}
+            </h4>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

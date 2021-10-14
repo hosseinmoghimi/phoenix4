@@ -1,42 +1,241 @@
 {% extends "market/layout.html" %}
-
-{% block market_content %}
-<div class="row">
-
-
-  <h3>
-    categories
-  </h3>
+{% load to_price %}
+{% load static %}
 
 
+{% block page_header %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{shop_header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <div class="brand">
+                    <h1 class="title text-center">{{shop_header_title.value}}
+                        {% if perms.core.change_parameter %}
+                        {{shop_header_title.get_edit_btn|safe}}
+                        {% endif %}
+                    </h1>
+                    <h4 class="text-center">{{shop_header_slogan.value}}
+                        {% if perms.core.change_parameter %}
 
-  <ul>
-    {% for category in categories %}
-    <li>
-      <a href="{{category.get_absolute_url}}">
-        {{category.title}}
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
+                        {{shop_header_slogan.get_edit_btn|safe}}
 
-  <h3>
-    products
-  </h3>
+                        {% endif %}
+                    </h4>
+                    {% if perms.core.change_picture %}
+                    <div class="text-center">
+                        {{shop_header_image.get_edit_btn|safe}}
+                    </div>
 
-  <ul>
-    {% for product in products %}
-    <li>
-      <a href="{{product.get_absolute_url}}">
-        {{product.title}}
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}
 
+{% block content %}
+<div class="main {{main_class}}">
 
-{% block market_script %}
+    {% if top_products %}
 
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title text-center">محصولات برتر</h2>
+            <div class="row">
+                {% for product in top_products %}
+
+                <div class="col-md-4">
+                    <div class="card card-product card-plain">
+                        <div class="card-header card-header-image">
+                            <a href="{{product.get_absolute_url}}">
+                                <img src="{{product.thumbnail}}" alt="">
+                            </a>
+                        </div>
+                        <div class="card-body text-center">
+                            <h4 class="card-title">
+                                <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                            </h4>
+
+                            <div class="card-description">
+
+                                {% if product.short_description %}
+
+                                {{product.short_description|safe}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="price-container">
+                                <span class="price price-old mx-2 farsi"> {{product.old_price|to_price_pure}}</span>
+                                <span class="price price-new mx-2 farsi"> {{product.unit_price|to_price}}</span>
+                            </div>
+                            <div class="stats mr-auto">
+                                <button type="button" rel="tooltip" title="" class="btn btn-just-icon btn-link btn-rose"
+                                    data-original-title="Saved to Wishlist">
+                                    <i class="material-icons">favorite</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div><!-- section -->
+
+    {% endif %}
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title text-center">{{category.title}}</h2>
+            <div class="row">
+                <div class="col-md-3">
+
+                    {% include "market/includes/sidebar.html" %}
+                </div>
+                <div class="col-md-9">
+
+                    {% include "market/includes/list-app/template.html" %}
+
+                </div>
+                <br>
+            </div>
+
+            {% if offers %}
+
+            <h2 class="section-title text-center">جشنواره ها</h2>
+            <div class="row">
+                {% for offer in offers %}
+
+                <div class="col-md-{{offer.col}}">
+                    <div class="card card-background" style="background-image: url('{{offer.thumbnail}}')">
+                        <div class="card-body">
+                            <h6 class="card-category text-info">{{offer.sub_title}}</h6>
+                            <a href="{{offer.get_absolute_url}}">
+                                <h3 class="card-title">{{offer.title}}</h3>
+                            </a>
+                            <div class="card-description">
+                                {% if offer.short_description %}
+
+                                {{offer.short_description}}
+                                {% endif %}
+                            </div>
+                            <a href="{{offer.get_absolute_url}}" class="farsi btn btn-white btn-round">
+                                <i class="material-icons">reply</i> ادامه مطلب
+                            </a>
+
+                            {% if perms.market.change_offer %}
+
+                            <a target="_blank" href="{{offer.get_edit_url}}" class="farsi btn btn-info btn-round">
+                                <i class="material-icons">edit</i> ویرایش
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div> <!-- end card -->
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div><!-- section -->
+
+</div>
+
+<div>
+
+    {% if blogs %}
+
+    <div class="section section-blog">
+        <div class="container">
+            <h2 class="section-title text-center">مقاله ها</h2>
+            <div class="row">
+                {% for blog in blogs %}
+
+                <div class="col-md-4">
+                    <div class="card card-blog">
+                        <div class="card-header card-header-image">
+                            <a href="{{blog.get_absolute_url}}">
+                                <img src="{{blog.thumbnail}}" alt="">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-category text-rose">{{blog.sub_title}}</h6>
+                            <h4 class="card-title">
+                                <a href="{{blog.get_absolute_url}}">{{blog.title}}</a>
+                            </h4>
+                            <div class="card-description">
+                                {% if blog.short_description %}
+
+                                {{blog.short_description}}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div><!-- section -->
+
+    {% endif %}
+
+    <div class="subscribe-line subscribe-line-image" data-parallax="true"
+        style="background-image: url(&apos;../assets/img/examples/ecommerce-header.jpg&apos;);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 ml-auto mr-auto">
+                    <div class="text-center">
+                        <h3 class="title text-center">مشترک شوید</h3>
+                        <p class="description text-center">
+                            با اشتراک در مجموعه ما از تخفیف ها و جشنواره ها خبردار شوید.
+                        </p>
+                    </div>
+                    <div class="card card-raised card-form-horizontal">
+                        <div class="card-body">
+                            <form method="" action="">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="material-icons">phone</i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control farsi "
+                                                placeholder="شماره همراه شما 09... ">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button type="button" class="btn btn-rose btn-block farsi">ثبت شماره
+                                            همراه</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+
+<script>
+    let category_id = 0
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% if add_product_form or add_category_form %}
+{% include "market/includes/list-app/script.html" %}
+
+{% endif %}
 {% endblock %}

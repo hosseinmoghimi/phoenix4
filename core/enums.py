@@ -1,8 +1,8 @@
+from core.settings import SITE_URL
 from django.db.models import TextChoices
 from django.utils.translation import gettext as _
 from enum import Enum
 
-   
 
 class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")
@@ -21,6 +21,7 @@ class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
     web='web',_('web')
     stock='stock',_('stock')
+    calendar='calendar',_('calendar')
     resume='resume',_('resume')
     realestate='realestate',_('realestate')
     projectmanager='projectmanager',_('projectmanager')
@@ -99,6 +100,7 @@ class IconsEnum(TextChoices):
 
 
 class ParametersEnum(TextChoices):
+    SHOW_ARCHIVES="نمایش فایل های آرشیو شده",_("نمایش فایل های آرشیو شده")
     VISITOR_COUNTER="VISITOR_COUNTER",_("VISITOR_COUNTER")
     GOOGLE_API_KEY='GOOGLE_API_KEY',_('GOOGLE_API_KEY')
     GOOGLE_GPS_X='GOOGLE_GPS_X',_('GOOGLE_GPS_X')
@@ -170,6 +172,12 @@ my_apps=[
             'title':'خیریه',
             'color':'primary',
             'url':'/charity/'
+        },
+        {
+            'name':'todocalendar',
+            'title':'سررسید',
+            'color':'primary',
+            'url':'/calendar/'
         },
         {
             'name':'drassistant',

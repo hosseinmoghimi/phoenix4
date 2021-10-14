@@ -1,0 +1,91 @@
+{% load to_price %}
+<div class="card">
+    <div class="card-header">
+        <h4>
+            موجودی متریال انبار
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                {% if not ware_house %}
+
+                <th>انبار</th>
+                {% endif %}
+                {% if not material %}
+
+                <th>متریال</th>
+                {% endif %}
+                <th>نقطه خرید</th>
+                <th>حداقل موجودی</th>
+                <th>موجودی</th>
+                <th> میانگین قیمت</th>
+                <th>وضعیت</th>
+            </thead>
+            <tbody>
+                {% for ware_house_material in ware_house_materials %}
+
+                <tr>
+                    {% if not ware_house %}
+                    <td>
+
+                        <a href="{{ware_house_material.ware_house.get_absolute_url}}">
+                            {{ware_house_material.ware_house.title}}
+                        </a>
+                    </td>
+                    {% endif %}
+                    {% if not material %}
+
+                    <td>
+                        <a href="{{ware_house_material.material.get_absolute_url}}">
+                            {{ware_house_material.material.title}}
+                        </a>
+                    </td>
+                    {% endif %}
+                    <td>
+                        {{ware_house_material.order_point}}
+                        <span class="badge badge-primary px-2 py-2">
+                            {{ware_house_material.unit_name}}
+
+
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ware_house_material.minimum}}
+                        <span class="badge badge-primary px-2 py-2">
+                            {{ware_house_material.unit_name}}
+
+
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ware_house_material.sum_quantity}}
+                        <span class="badge badge-primary px-2 py-2">
+                            {{ware_house_material.unit_name}}
+
+
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ware_house_material.average_unit_price|to_price}}
+
+                    </td>
+                    <td>
+                        {{ware_house_material.get_status_tag|safe}}
+                        {% if perms.projectmanager.change_warehousematerial %}
+                        {{ware_house_material.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

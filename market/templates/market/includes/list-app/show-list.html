@@ -1,0 +1,75 @@
+<div id="show-list-app" class="row">
+
+    <div class="col-md-4" v-for="product in products">
+        <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+            <div class="card-header card-header-image">
+                <a :href="product.get_absolute_url">
+                    <img :src="product.thumbnail" alt="">
+                </a>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="card-title">
+                    <a :href="product.get_absolute_url">
+
+                        <span v-text="product.title"></span>
+                    </a>
+                </h4>
+                <h4>
+                    <small>
+                        کد : 
+                    </small>
+                <span v-text="product.barcode"></span>
+                </h4>
+                <div class="card-description">
+
+
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="price-container">
+                    <span class="price price-old mx-2 farsi">
+                        <span v-text="product.old_price"></span>
+
+
+                    </span>
+                    <span class="price price-new mx-2 farsi">
+
+                        <span v-text="product.unit_price"></span>
+
+                    </span>
+                </div>
+                <div class="stats mr-auto">
+                    <button type="button" rel="tooltip" title="" class="btn btn-just-icon btn-link btn-rose"
+                        data-original-title="Saved to Wishlist">
+                        <i class="material-icons">favorite</i>
+                    </button>
+                </div>
+            </div>
+        </div> <!-- end card -->
+    </div>
+    <div class="col-md-4" v-for="category in categories">
+        <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+            <div class="card-header card-header-image">
+                <a :href="category.get_absolute_url">
+                    <img :src="category.thumbnail" alt="">
+                </a>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="card-title">
+                    <a :href="category.get_absolute_url">
+                        <span v-text="category.title"></span>
+                        
+                    </a>
+                </h4>
+
+                <div class="card-description">
+                  
+                    
+                </div>
+            </div>
+          
+            
+        </div> <!-- end card -->
+    </div>
+
+</div>

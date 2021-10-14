@@ -9,6 +9,8 @@ class SearchForm(forms.Form):
 class AddStockForm(forms.Form):
     first_name=forms.CharField(max_length=50, required=True)
     last_name=forms.CharField(max_length=50,required=True)
+    stock1=forms.IntegerField(required=True)
+    stock2=forms.IntegerField(required=True)
 class AddDocumentForm(forms.Form):
     stock_id=forms.IntegerField(required=True)
     title=forms.CharField(max_length=100,required=True)

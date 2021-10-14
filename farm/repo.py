@@ -418,6 +418,7 @@ class EmployeeRepo():
         objects=self.objects.all()
         return objects
     def employee(self,*args, **kwargs):
+        pk=0
         if 'employee_id' in kwargs:
             pk=kwargs['employee_id']
         elif 'pk' in kwargs:

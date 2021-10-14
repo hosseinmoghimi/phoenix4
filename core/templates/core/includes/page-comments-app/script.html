@@ -1,9 +1,12 @@
 <script>
+
+    // let page_comment_component_template = `{1% include "core/includes/page-comments-app/component.html" %}`
+
+
     let url_add_page_comment = "{% url 'core:add_page_comment' %}"
     let page_comments = JSON.parse(`{{page_comments_s|escapejs}}`)
     let url_delete_page_comment = "{% url 'core:delete_page_comment' %}"
 
-    let page_comment_template = `{% include "core/includes/page-comments-app/component.html" %}`
     let page_comment_component = Vue.component('page-comment-component', {
         data: function () {
             return {
@@ -12,7 +15,7 @@
         },
         methods: {
             delete_comment: function (page_comment_id) {
-                this.confirm_delete=false
+                this.confirm_delete = false
 
                 let url = url_delete_page_comment
                 let payload = {
@@ -26,7 +29,7 @@
                         page_comments_app.page_comments = page_comments_app.page_comments.filter((page_comment) => {
                             return (page_comment.id != page_comment_id)
                         })
-                        page_comment_component.confirm_delete=false
+                        page_comment_component.confirm_delete = false
                     }
                 })
             },
@@ -34,7 +37,7 @@
 
         },
         props: ['page_comment'],
-        template: page_comment_template,
+        template: page_comment_component_template,
     })
 
 
@@ -50,6 +53,7 @@
         methods: {
             add_comment: function () {
                 let url = url_add_page_comment
+                this.comment=$("#comment_inputed").val()
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     page_id: page_id,

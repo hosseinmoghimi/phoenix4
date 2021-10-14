@@ -1,0 +1,81 @@
+<tr class="farsi">
+    <td>
+        <div class="img-container">
+            <a :title="cart_line.shop.product.title" :href="cart_line.shop.product.get_absolute_url">
+            <img class="rounded" :src="cart_line.shop.product.thumbnail" alt="...">
+            </a>
+        </div>
+    </td>
+    <td class="td-name">
+        <a :href="cart_line.shop.product.get_absolute_url">
+            <div class="text-right">
+
+                <span v-text="cart_line.shop.product.title"></span>
+            </div>
+        </a>
+        <br />
+        <a :href="cart_line.shop.supplier.get_absolute_url">
+            <div class="text-right">
+
+                <small>
+                    <span v-text="cart_line.shop.supplier.title"></span>
+                </small>
+            </div>
+        </a>
+    </td>
+
+    
+    <td class="td-name">
+
+        <div v-for="specification in cart_line.shop.specifications" class="text-right">
+            <span class="btn-group ltr">
+
+                <button class="btn btn-round  btn-warning btn-sm">
+                    <span v-text="specification.value"></span>
+                    
+                    <div class="ripple-container"></div>
+                </button>
+                <button class="btn btn-info btn-sm">
+                    <span v-text="specification.name"></span>
+
+                </button>
+            </span>
+        </div>
+
+    </td>
+
+    
+    <td class="td-number text-right">
+        <span v-text="to_price(cart_line.shop.unit_price)"></span>
+        <small class="text-muted">{{CURRENCY}}</small>
+    </td>
+    <td class="td-number">
+
+        <div class="btn-group btn-group-sm ltr">
+            <button class="btn btn-round btn-success" @click="add_quantity(1)"> <i class="material-icons">add</i>
+            </button>
+
+            <button class="btn btn-round btn-light">
+                <span v-text="to_price(cart_line.quantity)"></span>
+
+            </button>
+
+            <button class="btn btn-round btn-danger" @click="add_quantity(-1)"> <i class="material-icons">remove</i>
+            </button>
+        </div>
+        <div class="text-center">
+            <span class="farsi" v-text="cart_line.shop.unit_name">
+
+            </span>
+        </div>
+    </td>
+    <td class="td-number">
+        <span v-text="to_price(cart_line.shop.unit_price*cart_line.quantity)"></span>
+        <small class="text-muted">{{CURRENCY}}</small>
+    </td>
+    <td class="td-actions farsi">
+        <button type="button" rel="tooltip" data-placement="left" title="حذف" class="btn btn-link">
+            <i class="material-icons">close</i>
+        </button>
+    </td>
+</tr>

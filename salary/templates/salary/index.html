@@ -1,0 +1,20 @@
+{% extends "salary/layout.html" %}
+{% load to_price %}
+{% load static %}
+{% block content %}
+<h4 class="text-center">
+</h4>
+<div class="row">
+    <div class="col-md-12">
+
+     {% include "salary/includes/employee-salaries-app/template.html" %}
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "salary/includes/employee-salaries-app/script.html" %}
+  
+{% endblock script %}

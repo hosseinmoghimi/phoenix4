@@ -1,9 +1,90 @@
+from django.http import request
 from .models import *
 from .constants import *
 from authentication.repo import ProfileRepo
 from django.db.models import Q
 from .enums import ParametersEnum
 from authentication.repo import ProfileRepo
+class TagRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        self.objects=Tag.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(title__contains=search_for))
+        return objects
+    def tag(self,*args, **kwargs):
+        pk=0
+        if 'tag_id' in kwargs:
+            pk=kwargs['tag_id']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'title' in kwargs:
+            return self.objects.filter(title=kwargs['title']).first()
+        return self.objects.filter(pk=pk).first()
+    
+    def add_page_tag(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_basicpage"):
+            return None
+        title=None
+        page_id=None
+        tag=None
+        page=None
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        if 'title' in kwargs:
+            title=kwargs['title']
+        if title is not None:
+            # tag=Tag.objects.get_or_create(title=title).tag
+            tag=Tag.objects.filter(title=title).first()
+            if tag is None:
+                tag=Tag(title=title)
+                tag.save()
+        if page_id is not None:
+            page=BasicPage.objects.filter(pk=page_id).first()
+
+        if tag in page.tags.all():
+            return None
+        page.tags.add(tag)
+        return tag
+        
+        
+
+    def remove_page_tag(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_basicpage"):
+            return None
+        tag_id=None
+        page_id=None
+        tag=None
+        page=None
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        if 'tag_id' in kwargs:
+            tag_id=kwargs['tag_id']
+        if tag_id is not None:
+            # tag=Tag.objects.get_or_create(title=title).tag
+            tag=Tag.objects.filter(pk=tag_id).first()
+            if tag is None:
+                return False
+        if page_id is not None:
+            page=BasicPage.objects.filter(pk=page_id).first()
+
+        if page is None or not tag in page.tags.all():
+            return False
+        page.tags.remove(tag)
+        return True
+        
+        
 class BasicPageRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -24,14 +105,79 @@ class BasicPageRepo:
         new_page.class_name=new_page.parent.class_name
         new_page.save()
         return new_page
+    def add_related_page(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_page"):
+            return None
+        page_id=0
+        related_page_id=0
+        bidirectional=True
+        add_or_remove=True
+        if 'page_id' in kwargs:
+            page_id=kwargs['page_id']
+        if 'related_page_id' in kwargs:
+            related_page_id=kwargs['related_page_id']
+        if 'bidirectional' in kwargs:
+            bidirectional=kwargs['bidirectional']
+        if 'add_or_remove' in kwargs:
+            add_or_remove=kwargs['add_or_remove']
+        if add_or_remove is None:
+            add_or_remove=True
+        page=self.page(page_id=page_id)
+        related_page=self.page(page_id=related_page_id)
+        if page is None or related_page is None:
+            return None
+        if add_or_remove:
+            page.related_pages.add(related_page)
+            if bidirectional:
+                related_page.related_pages.add(page)
+            return related_page
+        else:
+            page.related_pages.remove(related_page)
+            if bidirectional:
+                related_page.related_pages.remove(page)
+            return related_page
+
+
+    def toggle_like(self,*args, **kwargs):
+        page=self.page(*args, **kwargs)
+        profile=ProfileRepo(request=self.request).me
+        likes=PageLike.objects.filter(page=page).filter(profile=profile)
+        if len(likes)==0 and profile is not None and page is not None:
+            my_like=PageLike(page=page,profile=profile)
+            my_like.save()
+            return my_like
+        else:
+            likes.delete()
+            return None
+    
+    def edit_page(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_basicpage"):
+            return
+        page=self.page(*args, **kwargs)
+        if page is None:
+            return
+        if 'description' in kwargs and kwargs['description']  is not None and not kwargs['description'] == "" :
+            page.description=kwargs['description']
+
+        if 'short_description' in kwargs and kwargs['short_description']  is not None and not kwargs['short_description'] == "":
+            page.short_description=kwargs['short_description']
+        page.save()
+        return page
+
+
+    def edit(self,*args, **kwargs):
+        return self.edit_page(*args, **kwargs)
+
+
+
 
     def page(self,*args, **kwargs):
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
-        if 'project_id' in kwargs:
-            return self.objects.filter(pk=kwargs['project_id']).first()
+        if 'page_id' in kwargs:
+            return self.objects.filter(pk=kwargs['page_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
 
@@ -42,6 +188,8 @@ class BasicPageRepo:
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
         return objects.all()
+
+
 class PageCommentRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -79,6 +227,39 @@ class PageCommentRepo:
             return self.objects.filter(pk=kwargs['title']).first()
 
 
+class NavLinkRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'app_name' in kwargs:
+            app_name=kwargs['app_name']
+            self.objects=NavLink.objects.filter(Q(app_name=app_name)).order_by("priority")
+        else:
+            self.objects=NavLink.objects.all().order_by("priority")
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'app_name' in kwargs:
+            app_name=kwargs['app_name']
+            objects=objects.filter(Q(app_name=app_name))
+        return objects
+    def nav_link(self,*args, **kwargs):
+        pk=0
+        if 'nav_link_id' in kwargs:
+            pk=kwargs['nav_link_id']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'title' in kwargs:
+            return self.objects.filter(title=kwargs['title']).first()
+        return self.objects.filter(pk=pk).first()
+    
+
 class PageLinkRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -91,7 +272,7 @@ class PageLinkRepo:
         self.objects=PageLink.objects
     def add_page_link(self,title,url,page_id,*args, **kwargs):
         new_page_link=PageLink(title=title,page_id=page_id,url=url,icon_fa="fa fa-tag")
-        
+        new_page_link.new_tab=True
         new_page_link.save()
         return new_page_link
 
@@ -104,6 +285,7 @@ class PageLinkRepo:
             return self.objects.filter(pk=kwargs['page_link_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
+
 
 class PageImageRepo:
     def __init__(self,*args, **kwargs):
@@ -122,8 +304,17 @@ class PageImageRepo:
         
         new_page_image.save()
         return new_page_image
+    def delete_page_image(self,image_id,page_id,*args, **kwargs):
+        if self.user.has_perm(APP_NAME+".delete_pageimage"):
+                
+            pi=PageImage.objects.filter(image_id=image_id).filter(page_id=page_id)
+            if len(pi)>0:
+                pi.delete()
+                if 'delete_image' in kwargs and kwargs['delete_image']:
+                    Image.objects.filter(pk=image_id).delete()
 
-   
+                return True
+  
 
 class ParameterRepo:
     def __init__(self,*args, **kwargs):
@@ -141,15 +332,26 @@ class ParameterRepo:
         
         self.objects=Parameter.objects.filter(Q(app_name=None)|Q(app_name=self.app_name))
     
-    def change_parameter(self,parameter_id,parameter_value):
-        if self.user.has_perm(APP_NAME+'.change_parameter'):
-            try:
-                parameter=Parameter.objects.get(pk=parameter_id)
-            except:
+    def change_parameter(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+'.change_parameter'):
+            return None
+        parameter_id=kwargs['parameter_id'] if 'parameter_id' in kwargs else None
+        parameter_name=kwargs['parameter_name'] if 'parameter_name' in kwargs else None
+        parameter_value=kwargs['parameter_value'] if 'parameter_value' in kwargs else None
+        app_name=kwargs['app_name'] if 'app_name' in kwargs else None
+        if parameter_id is not None:
+            parameter=Parameter.objects.filter(pk=parameter_id).first()
+            if parameter is None:
                 return None
-            parameter.value_origin=parameter_value
-            parameter.save()
-            return parameter
+        elif parameter_name is not None and app_name is not None:
+            parameter=Parameter.objects.filter(app_name=app_name).filter(name=parameter_name).first()
+            if parameter is None:
+                parameter=Parameter(app_name=app_name,name=parameter_name,value_origin="")
+                parameter.save()
+        
+        parameter.value_origin=parameter_value
+        parameter.save()
+        return parameter
 
     
     def set(self,name,value=None):
@@ -165,6 +367,8 @@ class ParameterRepo:
         Parameter(name=name,value_origin=value,app_name=self.app_name).save()
     
     
+    def parameter(self,*args, **kwargs):
+        return self.get(*args, **kwargs)
 
     def get(self,name):
         try:
@@ -173,6 +377,10 @@ class ParameterRepo:
             self.set(name=name)
             parameter=self.objects.filter(app_name=self.app_name).get(name=name)
         return parameter
+
+    def list(self,*args, **kwargs):
+        return self.objects.all()
+
 
 class DocumentRepo:
     def __init__(self,*args, **kwargs):
@@ -186,11 +394,15 @@ class DocumentRepo:
         self.profile=ProfileRepo(user=self.user).me
         self.objects=Document.objects.order_by('priority')
 
-    def document(self,document_id):
-        try:
-            return self.objects.get(pk=document_id)
-        except:
-            return None
+    def document(self,*args, **kwargs):
+        
+        if 'document_id' in kwargs:
+            pk = kwargs['document_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
 
     def add_page_document(self,title,file,priority=1000,page_id=None):
         
@@ -234,6 +446,9 @@ class PictureRepo:
         if pk>0:
             picture= self.objects.filter(app_name=self.app_name).filter(pk=pk).first()
         return picture
+
+    def picture(self,*args, **kwargs):
+        return self.get(*args, **kwargs)
 
 
 class LinkRepo:

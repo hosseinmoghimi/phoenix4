@@ -17,30 +17,10 @@
 
 
         </div>
-        <div id="collapseMaterials" class="collapse" aria-labelledby="headingmaterials" data-parent="#accordion">
+        <div id="collapseMaterials" class="collapse {% if material %}show{% endif %}" aria-labelledby="headingmaterials" data-parent="#accordion">
             <div class="card-body">
-                {% for material in materials %}
-                <a href="{{material.get_absolute_url}}">
-                    <div class="media">
-                        <img class="ml-3 rounded" width="48" src="{{material.thumbnail}}" alt="">
-                        <div class="media-body farsi my-auto">
-
-                            <h6>
-                                {{material.title}}
-
-                            </h6>
-                            {% if material.short_description %}
-                            <small class="text-secondary text-right">
-
-                                {{material.short_description|safe}}
-                            </small>
-                            {% endif %}
-
-                        </div>
-                    </div>
-                </a>
-
-                {% endfor %}
+                <input type="text" placeholder="جستجو ... " class="form-control" @input="search()" v-model="search_for">
+                <hr>
                 <div v-for="material in materials">
                     <a :href="material.get_absolute_url">
                         <div class="media">

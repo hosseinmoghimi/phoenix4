@@ -1,0 +1,23 @@
+<script>
+    let all_shops = JSON.parse(`{{shops_s|escapejs}}`)
+
+
+    
+    let shops_app = new Vue({
+        el: "#shops-app",
+        mounted: function () {
+
+        },
+        data: {
+            
+            shops: [],
+            
+        },
+        methods: {
+            to_price: function (value) {
+                return to_price(value, "{{CURRENCY}}")
+            },
+        
+        }
+    })
+</script>

@@ -1,0 +1,49 @@
+<div class="card">
+    <div class="card-header card-header-icon card-header-success">
+        <div class="card-icon">
+            <i class="material-icons">
+                settings
+            </i>
+        </div>
+        <a href="{{feeder.get_absolute_url}}">
+        <h4 class="card-title">
+              {{feeder.name}}
+
+            </h4>
+        </a>
+    </div>
+
+
+
+    <div class="card-body">
+        <p>
+            
+            {% if perms.bms.change_feeder %}
+
+            {{feeder.get_edit_btn|safe}}
+
+            {% endif %}
+        </p>
+        <input  type="password" class="d-inline form-control mb-3" v-model="pin" placeholder="pin">
+        {% for relay in feeder.relay_set.all %}
+        {% if relay.enabled %}
+        {% for command in relay.command_set.all %}
+        {% if profile in command.profiles.all %}
+
+        <div class="mb-2">
+
+                <button @click="execute_command({{command.id}})" class="btn btn-{{command.color}} btn-block" type="submit">{{command.name}}</button>
+
+
+        </div>
+
+        {% endif %}
+        {% endfor %}
+
+
+        {% endif %}
+        {% endfor %}
+
+
+    </div>
+</div>

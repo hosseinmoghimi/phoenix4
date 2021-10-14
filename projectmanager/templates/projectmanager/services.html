@@ -1,0 +1,77 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<div>
+
+
+    
+
+
+    <div class="row">
+        <div class="col-md-12 mb-5">
+
+            <div class="card" id="services-app">
+                <div class="card-header">
+                    <h3 class="text-center">
+                        سرویس ها
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <input type="text" placeholder="جستجو ... " class="form-control" @input="search()"
+                        v-model="search_for">
+                    <hr>
+                    <div v-for="service in services">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" :href="service.get_absolute_url">
+                                    <span v-text="service.title">
+
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let services = JSON.parse("{{services_s|escapejs}}")
+
+
+    let services_app = new Vue({
+        el: "#services-app",
+        data: {
+            services: [],
+            search_for: "",
+        },
+        methods: {
+            search: function () {
+                // if(services_app.search_for===""){
+                //     services_app.services=[]
+                // }
+                // else{
+
+                services_app.services = services.filter(
+                    item => item.title.toUpperCase().includes(services_app.search_for.toUpperCase())
+                )
+                // }
+            },
+        }
+    })
+</script>
+
+
+{% endblock %}

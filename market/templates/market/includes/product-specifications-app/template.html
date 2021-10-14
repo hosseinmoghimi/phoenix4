@@ -1,0 +1,41 @@
+<div id="product-specifications-app" class="farsi">
+    <table class=" mx-3 table table-striped">
+
+        <tr v-for="specification in specifications">
+            <td class="text-left text-muted">
+                <span v-text="specification.name"></span>
+            </td>
+            <td class="text-right">
+                <span v-text="specification.value"></span>
+            </td>
+            {% if add_product_specification_form %}
+            <td class="text-right">
+                <a target="_blank" title="ویرایش" :href="specification.get_edit_url">
+
+                    <i class="material-icons text-warning">
+                        edit
+                    </i>
+                </a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+    {% if add_product_specification_form %}
+
+    <form @submit.prevent="add_specification">
+        <div class="">
+            <input required placeholder="نام ویژگی جدید" type="text" v-model="new_spec_name" class="form-control">
+        </div>
+        <div class="">
+            <input required placeholder="مقدار ویژگی جدید" type="text" v-model="new_spec_value" class="form-control">
+        </div>
+        <div class="">
+            <button class="btn btn-success" type="submit">
+                <i class="material-icons" aria-hidden="true">settings</i>
+                افزودن ویژگی جدید
+            </button>
+        </div>
+    </form>
+
+    {% endif %}
+</div>

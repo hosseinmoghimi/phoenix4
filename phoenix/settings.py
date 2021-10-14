@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djecrety',
-    # 'tinymce',
+    'django_cleanup.apps.CleanupConfig',
     'django.contrib.sites',   # <--
     # 'social_app',   # <--
     'django.contrib.humanize',
@@ -39,13 +39,19 @@ INSTALLED_APPS = [
     'allauth.account',   # <--
     'allauth.socialaccount',   # <--
     'allauth.socialaccount.providers.google', 
-
-#    "pinax.forums",  
+    'todocalendar',
+    'bms',  
+    'mafia',
+    'messenger',
     'realestate',
     'tinymce',
+    'school',
+    'salary',
     'accounting',
     'resume',
+    'vehicles',
     'help',
+    'map',
     'stock',
     'authentication',
     'core',
@@ -155,6 +161,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SESSION_COOKIE_AGE = 3600 # one hour in seconds
 
 if SERVER_ON_AZURE:
     from . import settings_azure as server_settings
@@ -171,6 +178,7 @@ MEDIA_ROOT=server_settings.MEDIA_ROOT
 STATIC_URL = server_settings.STATIC_URL
 MEDIA_URL = server_settings.MEDIA_URL
 MYSQL = server_settings.MYSQL
+SESSION_COOKIE_AGE = server_settings.SESSION_COOKIE_AGE
 SITE_URL = server_settings.SITE_URL
 DATABASES = server_settings.DATABASES
 
@@ -178,7 +186,9 @@ YEAR_ADDED=server_settings.YEAR_ADDED
 ALLOWED_HOSTS=server_settings.ALLOWED_HOSTS
 PUSHER_IS_ENABLE=server_settings.PUSHER_IS_ENABLE
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
-
+QRCODE_ROOT=os.path.join(MEDIA_ROOT,'qr_code')
+SITE_FULL_BASE_ADDRESS=server_settings.SITE_FULL_BASE_ADDRESS
+QRCODE_URL=SITE_URL+"qrcode/"
 if SERVER_ON_HEROKU:
     import django_heroku
     django_heroku.settings(locals())

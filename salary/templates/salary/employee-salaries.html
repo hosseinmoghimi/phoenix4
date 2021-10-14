@@ -1,0 +1,86 @@
+{% extends "salary/layout.html" %}
+{% block content %}
+<h4 class="text-center">
+</h4>
+<div class="row">
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+        <div>
+          <h4>
+
+            <a href="{{employee_salary.get_absolute_url}}">
+              {{employee_salary.employee.profile.name}}
+            </a>
+            {% if perms.salary.change_employeesalary %}
+            {{employee_salary.get_edit_btn|safe}}
+
+            {% endif %}
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    مزایا
+                </h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+
+                        </th>
+                        <th>
+                            پرسنل
+                        </th>
+                        <th>
+                            حقوق پایه
+                        </th>
+                        <th>
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for employee_salary in employee_salaries %}
+
+                        <tr>
+                            <td>
+                                <a title="جزئیات" href="{{employee_salary.get_absolute_url}}">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{employee_salary.employee.get_absolute_url}}">
+                                    {{employee_salary.employee.profile.name}}
+                                </a>
+                            </td>
+                            <td>
+                                {{employee_salary.base_salary|to_price}}
+                            </td>
+                            <td>
+                                {% if perms.salary.change_employeesalary %}
+                                {{employee_salary.get_edit_btn|safe}}
+
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

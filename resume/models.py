@@ -189,8 +189,8 @@ class ResumeSkill(models.Model):
 class ResumeFact(models.Model):
     resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=500)
-    color=models.CharField(_("color"), max_length=50)
-    icon=models.CharField(_("icon"),choices=IconEnum.choices, max_length=100)
+    color=models.CharField(_("color"),null=True,blank=True, max_length=50)
+    icon=models.CharField(_("icon"),choices=IconEnum.choices,null=True,blank=True, max_length=100)
     count=models.IntegerField(_("count"),default=10)
     class_name="resumefact"
     def get_edit_btn(self):
@@ -201,7 +201,10 @@ class ResumeFact(models.Model):
             </i>
         </a>
         """
-
+    def get_icon_tag(self):
+        return f"""
+        <i class="bi bi-emoji-smile"></i>
+        """
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 

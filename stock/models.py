@@ -12,12 +12,11 @@ IMAGE_FOLDER = APP_NAME+'/img/'
 
 
 class Stock(models.Model):
-    is_agent=models.BooleanField(_("نماینده است؟"),default=False)
     profile = models.ForeignKey("authentication.profile", related_name="stock_set", verbose_name=_(
         "profile"), on_delete=models.CASCADE)
     father_name = models.CharField(
         _("نام پدر"), null=True, blank=True, max_length=50)
-    agent = models.ForeignKey("authentication.profile", related_name="stock_agent_set", verbose_name=_(
+    agent = models.ForeignKey("agent", verbose_name=_(
         "agent"), on_delete=models.CASCADE)
     stock1 = models.IntegerField(_("stock1"), default=0)
     stock2 = models.IntegerField(_("stock2"), default=0)
@@ -69,6 +68,51 @@ class Stock(models.Model):
                 </i>
             </a>
         """
+
+
+class Agent(models.Model):
+    profile = models.ForeignKey("authentication.profile", verbose_name=_(
+        "profile"), on_delete=models.CASCADE)
+    father_name = models.CharField(
+        _("نام پدر"), null=True, blank=True, max_length=50)
+    
+    date_added = models.DateTimeField(
+        _("date_added"), auto_now=False, auto_now_add=True)
+    date_updated = models.DateTimeField(
+        _("date_updated"), auto_now=True, auto_now_add=False)
+    account_no = models.CharField(
+        _("شماره حساب"), null=True, blank=True, max_length=50)
+    melli_code = models.CharField(
+        _("کد ملی"), null=True, blank=True, max_length=50)
+    sh_sh = models.CharField(
+        _("شماره شناسنامه"), null=True, blank=True, max_length=50)
+    address = models.CharField(
+        _("آدرس"), null=True, blank=True, max_length=100)
+    description = models.TextField(_("توضیحات"), null=True, blank=True)
+    class_name = "agent"
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    
+    class Meta:
+        verbose_name = _("Agent")
+        verbose_name_plural = _("Agents")
+
+    def __str__(self):
+        return self.profile.name
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":agent", kwargs={"agent_id": self.pk})
+
+    def get_edit_btn(self):
+        return f"""
+            <a target="_blank" href="{self.get_edit_url()}">
+                <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        """
+
 
 
 class Payment(models.Model):

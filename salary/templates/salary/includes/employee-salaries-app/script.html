@@ -1,0 +1,25 @@
+<script>
+    let url_add_employee_salary ="{% url 'salary:add_employee_salary' %}"
+    let employee_salaries_app = new Vue({
+        el: "#employee-salaries-app",
+        data: {
+            employee_id: "{{employee.id}}",
+            month_name: "",
+            year: "1401",
+            employee_salaries :[],
+        },
+        methods: {
+            add_employee_salary: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    employee_id: this.employee_id,
+                    year: this.year,
+                    month_name: this.month_name,
+                }
+                $.post(url_add_employee_salary, payload).done((data) => {
+                    employee_salaries_app.employee_salaries.push(data.employee_salary)
+                })
+            },
+        }
+    })
+</script>

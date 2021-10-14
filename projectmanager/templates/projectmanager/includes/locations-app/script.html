@@ -39,6 +39,7 @@ let url_add_existing_loaction="{% url 'projectmanager:add_existing_location' %}"
                     if (data.result === 'SUCCEED') {
 
                         locations_app.locations.push(data.location)
+                        locations_app.show_add_location_form=false
                         locations_app.new_location_title=""
                         locations_app.new_location=""
                     }

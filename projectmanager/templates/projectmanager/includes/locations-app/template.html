@@ -61,9 +61,9 @@
 
                 {% if add_existing_location_form %}
                 <form v-if="show_add_location_form" @submit.prevent="add_existing_location">
-                    <h4>
+                    <h5>
                         انتخاب موقعیت مکانی از قبل موجود
-                    </h4>
+                    </h5>
                     <select name="" class="form-control" v-model="location_id">
                         {% for location in all_locations %}
 
@@ -85,9 +85,9 @@
                 {% endif %}
                 {% if add_location_form %}
                 <form v-if="show_add_location_form" @submit.prevent="add_location">
-                    <h4>
+                    <h5>
                         افزودن موقعیت مکانی جدید
-                    </h4>
+                    </h5>
                     <input placeholder="عنوان نقطه" required type="text" class="form-control"
                         v-model="new_location_title">
                     <input placeholder="موقعیت" required type="text" class="form-control" v-model="new_location">

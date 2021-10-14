@@ -1,0 +1,14 @@
+<div>
+    {% if perms.bms.change_scenario %}
+    {{scenario.get_edit_btn|safe}}
+
+    {% endif %}
+</div>
+<div>
+
+    <form @submit.prevent="run_scenario({{scenario.id}})">
+        <button class="btn btn-{{scenario.color}} btn-block" type="submit">{{scenario.name}}</button>
+    </form>
+
+
+</div>

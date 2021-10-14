@@ -1,0 +1,125 @@
+{% extends "school/layout.html" %}
+{% block content %}
+<h4 class="text-center">
+</h4>
+<div class="row">
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+        {% for school in schools %}
+        <div>
+          <h4>
+
+            <a href="{{school.get_absolute_url}}">
+              {{school.title}}
+            </a>
+            {% if perms.school.change_school %}
+            {{school.get_edit_btn|safe}}
+
+            {% endif %}
+          </h4>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+        {% for classroom in classrooms %}
+        <div>
+          <h4>
+
+            <a href="{{classroom.get_absolute_url}}">
+              {{classroom.title}}
+            </a>
+            {% if perms.school.change_classroom %}
+            {{classroom.get_edit_btn|safe}}
+
+            {% endif %}
+          </h4>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+        {% for teacher in teachers %}
+        <div>
+          <h4>
+
+            <a href="{{teacher.get_absolute_url}}">
+              {{teacher.profile.name}}
+            </a>
+            {% if perms.school.change_teacher %}
+            {{teacher.get_edit_btn|safe}}
+
+            {% endif %}
+          </h4>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+        {% for student in students %}
+        <div>
+          <h4>
+
+            <a href="{{student.get_absolute_url}}">
+              {{student.profile.name}}
+            </a>
+            {% if perms.school.change_student %}
+            {{student.get_edit_btn|safe}}
+
+            {% endif %}
+          </h4>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+        {% for book in books %}
+        <div>
+          <h4>
+
+            <a href="{{book.get_absolute_url}}">
+              {{book.title}}
+            </a>
+            {% if perms.school.change_book %}
+            {{book.get_edit_btn|safe}}
+
+            {% endif %}
+          </h4>
+        </div>
+        {% endfor %}
+
+
+
+     
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}

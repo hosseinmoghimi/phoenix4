@@ -2,7 +2,7 @@ from core.errors import LEO_ERRORS
 from django import template
 register = template.Library()
 from utility.currency import to_price as to_price_origin
-from utility.num import to_horuf as to_horuf_num
+from utility.num import to_horuf as to_horuf_num,to_tartib as to_tartib_
 
 @register.filter
 def to_price(value):
@@ -12,6 +12,13 @@ def to_price(value):
 @register.filter
 def to_horuf(value):
     return to_horuf_num(value)
+
+
+
+
+@register.filter
+def to_tartib(value):
+    return to_tartib_(value)
 
 
 
@@ -27,7 +34,8 @@ def to_price_pure(value):
         a=separate(value)
         return sign+a
     except:
-        return LEO_ERRORS.error_to_price_template_tag
+        # return LEO_ERRORS.error_to_price_template_tag
+        return ""
 
 
 def separate(price):

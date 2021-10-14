@@ -1,0 +1,194 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" filter-color="rose"
+    style="background-image: url('{{supplier.image_header}}');">
+    <div class="container">
+        <div class="row title-row">
+            <div class="col-md-4 mr-auto">
+                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
+                    <span class="farsi">
+
+                        0 در سبد خرید
+                    </span>
+                    <i class="material-icons mx-2">shopping_cart</i>
+
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section" id="products-app">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="px-3 text-center">
+
+                        <img src="{{category.image}}" class="w-80 mx-5">
+                    </div>
+
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <h5>
+                        افزودن کالا
+                        در دسته
+                    </h5>
+                    <a href="{{category.get_absolute_url}}">
+                        <h2 class="title">
+                            {{category.title}}
+
+                        </h2>
+                    </a>
+                    <h3 class="main-price">{{supplier.region.name}}</h3>
+
+
+                    <div>
+                        <form @submit.prevent="add_product()">
+
+                            <input v-model="new_product_title" required type="text" class="farsi form-control"
+                                placeholder="نام کالا">
+                            <input type="text" class="form-control farsi" v-model="specification_name"
+                                placeholder="عنوان ویژگی">
+                            <input type="text" class="form-control farsi" v-model="specification_value"
+                                placeholder="مقدار ویژگی">
+
+                            <button type="submit" class="farsi btn btn-success">
+                                افزودن
+                            </button>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="related-products">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="title text-center">محصولات افزوده شده</h3>
+
+                    <div class="table-responsive rtl farsi">
+                        <table class="table table-shopping">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-right">محصول</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr v-for="product in products">
+                                    <td>
+                                        <div class="img-container">
+                                            <img class="rounded" :src="product.thumbnail" alt="...">
+                                        </div>
+                                    </td>
+                                    <td class="td-name text-right">
+                                        <a :href="product.get_absolute_url">
+                                            <h5>
+                                                <span v-text="product.title"></span>
+                                            </h5>
+
+                                        </a>
+                                        <br />
+                                        <small>{{shop.product.category.title}}</small>
+                                    </td>
+
+
+
+
+                                </tr>
+
+                                <!-- <tr>
+                      <td colspan="6"></td>
+                      <td colspan="2" class="text-right">
+                        <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
+                      </td>
+                    </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+{% block script %}
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let url_add_product = "{% url 'market:add_product' %}"
+    let category_id = parseInt("{{category.id}}")
+    let products_app = new Vue({
+        el: "#products-app",
+        data: {
+            products: [],
+            new_product_title: "",
+            waiting: false,
+            specification_name: "سایز",
+            specification_value: "",
+
+        }
+        ,
+        methods: {
+            add_product: function () {
+                const specification_values = this.specification_value.split(" ");
+                specification_values.forEach
+                specifications = []
+                specification_values.forEach(value => {
+                    specifications.push(
+                        {
+                            name: this.specification_name,
+                            value: value
+                        }
+                    )
+
+                });
+                specifications = JSON.stringify(specifications)
+                products_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.new_product_title,
+                    category_id: category_id,
+                    specifications: specifications,
+                }
+
+                let aa = this
+                let posting = $.post(url_add_product, payload)
+                posting.done((data) => {
+                    products_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        // products_app.new_product_title = ""
+                        
+                        products_app.products.push(data.product)
+
+                    }
+                })
+            }
+        }
+    })
+</script>
+{% endblock %}

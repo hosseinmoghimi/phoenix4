@@ -1,7 +1,7 @@
 from .models import *
 from core import enums as CoreEnums
 from rest_framework import serializers
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
         
 class FarmSerializer(serializers.ModelSerializer):
     class Meta:

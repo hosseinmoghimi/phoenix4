@@ -1,0 +1,52 @@
+<template>
+
+    <tr class="farsi">
+        <td>
+            <div class="img-container">
+                <img class="rounded" :src="order_line.product.thumbnail" alt="...">
+            </div>
+        </td>
+        <td class="td-name">
+            <a :href="order_line.product.get_absolute_url">
+                <div class="text-right">
+                    <span v-text="order_line.product.title"></span>
+                    <small class="mx-2 text-muted" v-text="order_line.product.barcode"></small>
+                </div>
+            </a>
+            <div class="farsi text-right ">
+                <small class="text-muted">
+                    <input type="text" placeholder="توضیحات" class="farsi form-control" 
+                    v-model="order_line.description">
+
+                </small>
+            </div>
+        </td>
+
+        <td class="td-number text-right">
+            <input type="number" placeholder="قیمت واحد" class="farsi form-control" 
+            v-model="order_line.unit_price">
+            <small class="text-muted">{{CURRENCY}}</small>
+        </td>
+        <td class="td-number">
+
+            <button class="btn btn-link btn-danger" @click="order_line.quantity+=order_line.quantity>0?-1:0">-</button>
+            <input type="number" placeholder="تعداد" min="0" style="text-align: center;width: 50px;display: inline;" class="farsi form-control" 
+            v-model="order_line.quantity">
+
+            <button class="btn btn-link btn-success" @click="order_line.quantity++">+</button>
+
+
+            <span class="farsi badge badge-rose" v-text="order_line.unit_name"></span>
+
+        </td>
+        <td class="td-number">
+            <span v-text="to_price(order_line.unit_price*order_line.quantity)"></span>
+            <small class="text-muted">{{CURRENCY}}</small>
+        </td>
+        <td class="td-actions farsi">
+            <button type="button" rel="tooltip" data-placement="left" title="حذف" class="btn btn-link">
+                <i class="material-icons">close</i>
+            </button>
+        </td>
+    </tr>
+   

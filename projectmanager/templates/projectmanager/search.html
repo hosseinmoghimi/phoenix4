@@ -28,7 +28,31 @@
                 </h4>
             </div>
             <div class="card-body">
+                {% if tags %}
 
+
+
+
+
+                <h5 class="mt-4">
+                    برچسب ها :
+                </h5>
+                {% for tag in tags %}
+                <p class="mr-5">
+                    <a href="{{tag.get_absolute_url}}">
+
+                        {{tag.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+
+
+                {% endif %}
 
 
 
@@ -174,20 +198,44 @@
                 <h5 class="mt-4">
                     رویداد ها :
                 </h5>
-                {% for page in events %}
-                <p class="mr-5">
-                    <a href="{{page.get_absolute_url}}">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            زمان
+                        </th>
+                        <th>
+                            پروژه
+                        </th>
+                        <th>
+                            رویداد
+                        </th>
+                    </thead>
+                    <tbody>
 
+                        {% for page in events %}
+                        <tr>
+                            <td>
+                                <small>
+                                    {{page.persian_event_datetime}}
+                                </small>
+                            </td>
+                            <td>
+                                <a href="{{page.project_related.get_absolute_url}}">
+                                    {{page.project_related.title}}
 
-                        <small>
-                            {{page.persian_event_datetime}}
-                        </small>
-                        &nbsp;
-                        &nbsp;
-                        {{page.title}}
-                    </a>
-                </p>
-                {% endfor %}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{page.get_absolute_url}}">
+                                    {{page.title}}
+
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
 
                 {% endif %}
 
@@ -209,16 +257,8 @@
 </script>
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "projectmanager/includes/organization-units-app/script.html" %}
-{% include "projectmanager/includes/employers-app/script.html" %}
-{% include "projectmanager/includes/materials-app/script.html" %}
-{% include "projectmanager/includes/projects-app/script.html" %}
-{% include "projectmanager/includes/services-app/script.html" %}
-{% include "projectmanager/includes/events-app/script.html" %}
 
-<script>
 
-    $(".carousel-item:first").addClass('active')
-    $(".carousel-indicators:childs:first").addClass('active')
-</script>
+
+
 {% endblock %}

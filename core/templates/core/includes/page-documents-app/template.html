@@ -17,8 +17,8 @@
                 <div>
 
                     <h6>
-                        {{document.get_icon_tag|safe}}
                         <a class="mr-2" target="_blank" href="{{document.get_download_url}}">
+                        {{document.get_icon_tag|safe}}
                             {{document.title}}
                         </a>
                         {% if perms.core.change_document %}

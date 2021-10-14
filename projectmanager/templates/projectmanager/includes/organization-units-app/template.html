@@ -1,107 +1,62 @@
 {% load static %}
-
-
 <div id="accordion">
-
-<div class="card mb-3" id="organization-unit-app">
-    <div class="card-header" id="headingOrgUnits">
-
-        <h5 class="card-title text-center farsi">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOrgUnits"
-            aria-expanded="true" aria-controls="collapseOrgUnits">
-            واحد های سازمانی
-        </button>
-
-        </h5>
-
-
-    </div>
-    <div id="collapseOrgUnits" class="collapse" aria-labelledby="headingOrgUnits" data-parent="#accordion">
-    
-    <div class="card-body">
-        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-        <div class="mb-3" v-for="organization_unit in organization_units">
-            <div class="media">
-
-                <i class="material-icons">
-                    apartment
-                </i>
-
-                <div class="media-body farsi mr-2">
-                    <a :href="organization_unit.get_absolute_url">
-
-                        <h5>
-                            <span v-text="organization_unit.title">
-
-                            </span>
-                            <small>
-                                <a :href="organization_unit.employer.get_absolute_url">
-
-                                    <small>
-                                        (
-
-                                    </small>
-                                    <span v-html="organization_unit.employer.title"></span>
-                                    <small>
-
-                                        )
-                                    </small>
-                                </a>
-                            </small>
-                        </h5>
-                    </a>
-
-                    <!-- <div v-html="organization_unit.short_description"></div> -->
-                    <div v-for="employee in organization_unit.employees">
-                        <a :href="employee.get_absolute_url">
-                            <span v-text="employee.profile.name"></span>
-                            <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
-                        </a>
-                    </div>
-                    <button v-if="show_select_btn()" class="btn btn-success"
-                        @click="add_organization_unit_to_project(organization_unit.id)">
+    <div class="card mb-3" id="organization-unit-app">
+        <div class="card-header" id="headingOrgUnits">
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOrgUnits" aria-expanded="true"
+                    aria-controls="collapseOrgUnits">
+                    واحد های سازمانی
+                </button>
+            </h5>
+        </div>
+        <div id="collapseOrgUnits" class="collapse" aria-labelledby="headingOrgUnits" data-parent="#accordion">
+            <div class="card-body">
+                <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+                <div class="mb-3" v-for="organization_unit in organization_units">
+                    <div class="media">
                         <i class="material-icons">
-                            add
+                            apartment
                         </i>
-
-                    </button>
+                        <div class="media-body farsi mr-2">
+                            <a :href="organization_unit.get_absolute_url">
+                                <h5>
+                                    <span v-text="organization_unit.title">
+                                    </span>
+                                    <small>
+                                        <a :href="organization_unit.employer.get_absolute_url">
+                                            <small>
+                                                (
+                                            </small>
+                                            <span v-html="organization_unit.employer.title"></span>
+                                            <small>
+                                                )
+                                            </small>
+                                        </a>
+                                    </small>
+                                </h5>
+                            </a>
+                            <!-- <div v-html="organization_unit.short_description"></div> -->
+                            <div v-for="employee in organization_unit.employees">
+                                <div class="text-left">
+                                    <a :href="employee.get_absolute_url" class="text-left ltr">
+                                        <span v-text="employee.profile.name"></span>
+                                        <img :src="employee.profile.image" class="rounded-circle" width="48" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <button v-if="show_select_btn()" class="btn btn-success"
+                                @click="add_organization_unit_to_project(organization_unit.id)">
+                                <i class="material-icons">
+                                    add
+                                </i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="card-footer ">
+           {% include "projectmanager/includes/organization-units-app/form.html" %}
             </div>
         </div>
-
     </div>
-    <div class="card-footer ">
-
-        {% if add_organization_unit_form %}
-
-        <form @submit.prevent="add_organization_unit()">
-            <div class="row">
-                <div class="col-8">
-                    <input @input="filter()" required type="text" v-model="new_organization_unit_title"
-                        class="farsi form-control" placeholder="واحد سازمانی جدید">
-
-                </div>
-                <div class="col-4">
-                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-                    <button v-if="show_add_btn()" class="btn btn-outline-primary" type="submit">
-                        <i class="material-icons">
-                            add
-                        </i>
-                    </button>
-
-                </div>
-            </div>
-
-        </form>
-        {% endif %}
-
-
-
-
-    </div>
-</div>
-</div>
 </div>

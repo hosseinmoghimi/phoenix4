@@ -1,0 +1,72 @@
+<div id="product-images-app">
+
+    <div class="tab-content">
+        <a target="_blank" :href="selected_image.image">
+
+            <img class="w-100" :src="selected_image.image">
+        </a>
+    </div>
+    <div class="row">
+        <div class="col-2" v-for="image in images">
+            <!-- <div class="nav-link"> -->
+            <img style="cursor: pointer;" :src="image.thumbnail" class="w-100" @click="select_image(image)">
+            <!-- </div> -->
+        </div>
+    </div>
+
+   
+    {% if add_page_image_form %}
+    <p>
+
+        <button @click="show_add_page_image_form=true" v-if="!show_add_page_image_form" class="btn btn-success mt-4">
+            افزودن تصویر
+        </button>
+    </p>
+
+    <form id="add-page-image-form" v-if="show_add_page_image_form" @submit.prevent="add_page_image()"
+        enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-8">
+                <input required type="text" v-model="add_page_image_form_title" class="farsi form-control"
+                    placeholder="عنوان تصویر جدید">
+
+
+                <span class="btn btn-raised btn-round btn-default btn-file">
+                    <span class="fileinput-new farsi">انتخاب تصویر</span>
+
+                    <input type="file" v-on:change="document_file=true" name="">
+                    <div class="ripple-container"></div>
+                </span>
+
+
+            </div>
+            <div class="col-4">
+                <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
+                <button @click="show_add_page_image_form=false" class="farsi btn btn-secondary btn-block"
+                    type="reset">انصراف</button>
+
+            </div>
+        </div>
+
+    </form>
+    {% endif %}
+
+    {% if delete_page_image_form %}
+    <div class="text-right">
+        
+    <button @click="show_delete_page_image_form=true" v-if="!show_delete_page_image_form" class="btn btn-danger mt-4 farsi">
+        حذف تصویر
+    </button>
+    <button @click="show_delete_page_image_form=false" v-if="show_delete_page_image_form"  class="btn btn-secondary mt-4 farsi">
+        انصراف </button>
+    <form @submit.prevent="delete_page_image()" v-if="show_delete_page_image_form">
+        <button type="submit" class="btn btn-danger mt-4 farsi">
+            حذف تصویر
+        </button>
+
+    </form>
+
+</div>
+    {% endif %}
+
+</div>

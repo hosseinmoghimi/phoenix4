@@ -8,13 +8,20 @@
     <div class="col-md-4">
 
 
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header card-header-success card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
+                <div
+                    class="icon icon-lg icon-shape bg-gradient-info shadow text-center border-radius-xl mt-n4 position-absolute">
+                    <i class="material-icons text-white opacity-10">
                         pets
                     </i>
                 </div>
+
+                <!-- <div class="card-icon">
+                    <i class="material-icons">
+                        pets
+                    </i>
+                </div> -->
                 <h3 class="card-title">
                     عملیات
 
@@ -29,20 +36,20 @@
         </div>
     </div>
 
-    
-    
+
+
     {% include "farm/includes/add-animal-app/template.html" %}
     <div class="col-md-4">
     </div>
     <div class="col-12">
-    {% include "farm/includes/animals-app/template.html" %}
+        {% include "farm/includes/animals-app/template.html" %}
 
-      
+
     </div>
     <div class="col-12">
-    {% include "farm/includes/farms-app/template.html" %}
+        {% include "farm/includes/farms-app/template.html" %}
 
-      
+
     </div>
 
 </div>

@@ -1,6 +1,6 @@
 from rest_framework import fields, serializers
 from .models import BankAccount, FinancialAccount, Transaction
-from authentication.serilizers import ProfileSerializer
+from authentication.serializers import ProfileSerializer
 class FinancialAccountSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:

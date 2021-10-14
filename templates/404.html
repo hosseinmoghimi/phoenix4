@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404</title>
     <link rel="stylesheet" href="{% static 'leo/css/font-farsi.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
 </head>
 
 <body>
@@ -27,10 +28,10 @@
         <a class="bg_links logo"></a>
         <link rel="stylesheet" href="{% static '404.css' %}">
         <!-- <link rel="stylesheet" href="{% static 'admin/css/farsi-font.css' %}"> -->
-     
+
     </div>
     <!-- end about -->
-
+   
     <nav>
         <div class="menu">
             <p class="website_name">
@@ -38,12 +39,22 @@
 
                     {{app.title.value}}
                 </a>
-            
+
+                
             </p>
             <div class="menu_links">
-                <a href="{% url 'web:home' %}" class="link">about</a>
-                <a href="{% url 'web:home' %}" class="link">projects</a>
-                <a href="{% url 'web:home' %}" class="link">contacts</a>
+                {% for app in apps %}
+                  
+                <a href="{{app.home_url}}" class="link farsi">{{app.title}}</a>
+                {% endfor %}
+                <a href="{{profile.get_absolute_url}}" class="link farsi">
+                    <img src="{{profile.image}}" alt="" class="rounded-circle" width="48">
+                    <span class="farsi">
+                        
+                        {{profile.name}}
+                    </span>
+                    
+                </a>
             </div>
             <div class="menu_icon">
                 <span class="icon"></span>
@@ -92,8 +103,8 @@
             <div class="text">
                 <article>
                     <p class="farsi">متاسفانه<br>صفحه مورد نظر شما پیدا نشد.</p>
-                   <a  class="farsi" href="{% url 'web:home' %}">
-                    <button> برو به {{app.title.value}}</button></a>
+                    <a class="farsi" href="{{SITE_URL}}">
+                        <button> خانه </button></a>
                 </article>
             </div>
 

@@ -1,0 +1,80 @@
+{% if DEBUG %}
+<script>
+    /*
+    must be initialized:
+                    drivers_s
+                    work_shifts_s
+                    vehicle_id
+                    areas
+    */
+</script>
+{% endif %}
+<script>
+    
+    let maintenances = JSON.parse(`{{maintenances_s|escapejs}}`)
+</script>
+{% if add_maintenance_form %}
+<script>
+
+    let service_mans = JSON.parse(`{{service_mans_s|escapejs}}`)
+    // let maintenance_types = JSON.parse(`{{maintenance_types|escapejs}}`)
+     data= {
+        maintenances: maintenances,
+            service_mans: service_mans,
+            event_datetime: current_datetime,
+            service_man_id: "",
+            maintenance_type: "",
+            // maintenance_types: maintenance_types,
+            paid: "",
+            description: "",
+            title:"",
+            kilometer:"",
+        }
+</script>
+{% else %}
+<script>
+    data= {
+        maintenances: maintenances,
+          
+        }
+</script>
+{% endif %}
+<script>
+
+
+    let maintenances_app = new Vue({
+        el: "#maintenances-app",
+        data: data,
+        components: {
+            DatePicker: VuePersianDatetimePicker
+
+        },
+        methods: {
+            to_price: value => to_price(value),
+            add_maintenance: function () {
+                let url_add_maintenance = "{% url 'vehicles:add_maintenance' %}"
+                let payload = {
+                    vehicle_id: vehicle_id,
+                    service_man_id: this.service_man_id,
+                    event_datetime: this.event_datetime,
+                    kilometer: this.kilometer,
+                    paid: this.paid,
+                    title: this.title,
+                    maintenance_type: this.maintenance_type,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+
+                }
+                let posting = $.post(url_add_maintenance, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === "SUCCEED") {
+                        maintenances_app.maintenances.push(data.maintenance)
+                    }
+
+                })
+                console.log(payload)
+            },
+        }
+    })
+</script>

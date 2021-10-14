@@ -6,7 +6,10 @@
 
 {% block messenger_content %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+        {% include "messenger/includes/channels-app/template.html" %}
+    </div>
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
 
@@ -70,10 +73,14 @@
             </div>
         </div>
     </div>
+
 </div>
 {% endblock %}
 
 
 {% block messenger_script %}
+<script src="{% static 'vendor/js/vue.min.s' %}"></script>
+
+{% include "messenger/includes/channels-app/script.html" %}
 
 {% endblock %}

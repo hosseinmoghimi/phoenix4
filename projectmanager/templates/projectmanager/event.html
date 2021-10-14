@@ -76,6 +76,7 @@
             <div class="row">
                 <div class="col-6 mb-5">
                     {% include "core/includes/page-links-app/template.html" %}
+                    {% include "core/includes/page-tags-app/template.html" %}
 
                 </div>
 
@@ -114,13 +115,17 @@
 <script>
     let parent_id = parseInt("{{parent_id}}")
     let page_id = parseInt("{{page.id}}")
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
 
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
 
 {% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-comments-app/script.html" %}
 
+{% include "core/includes/page-description-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
 {% include "projectmanager/includes/locations-app/script.html" %}
 

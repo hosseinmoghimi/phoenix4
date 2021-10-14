@@ -5,7 +5,7 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
     let service_request_id=parseInt("{{service_request.id}}")
-    let url_add_signature = "{% url 'projectmanager:add_signature' %}"
+    let url_add_signature = "{% url 'projectmanager:api_add_signature' %}"
     let service_request_app = new Vue({
         el: "#service-request-app",
         data: {
@@ -31,7 +31,9 @@
                 //console.log(payload)
                 let posting = $.post(url_add_signature, payload)
                 posting.done((data) => {
-                    //console.log(data)
+                    
+                    service_request_app.waiting = false
+                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         service_request_app.signatures.push(data.signature)
                         service_request_app.add_signature_form_description = ""

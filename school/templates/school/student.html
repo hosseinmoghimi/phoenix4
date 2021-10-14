@@ -1,0 +1,23 @@
+{% extends "school/layout.html" %}
+{% block content %}
+<h4 class="text-center">
+  دانش آموز : 
+  {{student.profile.name}}...
+</h4>
+<div class="card">
+  <div class="card-body">
+    <div>
+        <h4>
+
+            <a href="{{student.get_absolute_url}}">
+                {{student.profile.name}}
+            </a>
+            {% if perms.school.change_student %}
+            {{student.get_edit_btn|safe}}
+           
+            {% endif %}
+        </h4>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,88 @@
+{% load static %}
+<div id="cart-app">
+
+    <div class="table-responsive rtl">
+        <table class="table table-shopping">
+            <thead>
+                <tr>
+                    <th class="text-center farsi"></th>
+                    <th class=" text-right farsi">محصول</th>
+                    <th class=" text-right farsi">مشخصات</th>
+                    <th class="text-right farsi">قیمت جزء</th>
+                    <th class="text-right farsi">تعداد</th>
+                    <th class="text-right farsi">مبلغ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <template v-for="cart_line in cart_lines">
+
+                    <cart-line-component :cart_line="cart_line"></cart-line-component>
+                </template>
+
+
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="td-total farsi text-muted">
+                        جمع کل
+                    </td>
+                    <td colspan="1" class="td-price farsi">
+                        <span v-text="to_price(total)">
+
+                        </span>
+                        <small class="text-muted">{{CURRENCY}}</small>
+                    </td>
+                    <td colspan="2" class="text-left">
+                        <button type="button" @click="checkout()" class="btn btn-info btn-round farsi"
+                            v-if="!checkout_done">تایید و ادامه فرآیند خرید<i
+                                class="material-icons">keyboard_arrow_right</i></button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    {% for order in cart.orders %}
+
+    <form v-if="checkout_done" action="{% url 'market:confirm_cart' %}" method="POST">
+        <h4>
+            آدرس تحویل بسته را برای سفارش از
+            {{order.supplier.title}}
+            وارد کنید
+        </h4>
+        {% csrf_token %}
+        <input type="hidden"  name="supplier_id" value="{{order.supplier.id}}">
+        <hr>
+
+        <div class="form-check" class="my-5 mx-3">
+            سفارش را خودم تحویل میگیرم . ارسال نشود.
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox"
+                    value="" unchecked>
+
+              
+                <span class="form-check-sign">
+                    <span class="check"></span>
+                </span>
+            </label>
+        </div>
+
+        <div class="form-group bmd-form-group">
+            <label for="address{{order.id}}" class="bmd-label-floating">آدرس تحویل</label>
+            <input type="text" name="address" required id="address{{order.id}}" class="form-control text-right farsi" >
+        </div>
+
+
+
+        <button type="submit" class="btn btn-info btn-round farsi">تایید سفارش {{order.supplier.title}}<i
+                class="material-icons" aria-hidden="true">keyboard_arrow_left</i></button>
+    </form>
+
+    {% endfor %}
+
+
+
+</div>

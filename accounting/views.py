@@ -13,12 +13,14 @@ TEMPLATE_ROOT=APP_NAME+"/"
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     parameter_repo = ParameterRepo(app_name=APP_NAME)
+    context['layout_parent']="phoenix/layout.html"
     context['app']={
         'home_url': reverse(APP_NAME+":home"),
         'tel': parameter_repo.get(ParametersEnum.TEL).value,
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
     }
     return context
+
 class AssetViews(View):
     def asset(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -36,6 +38,7 @@ class BasicViews(View):
         assets=AssetRepo(request=request).list()
         context['assets']=assets
         return render(request,TEMPLATE_ROOT+"index.html",context)
+
 class TransactionViews(View):
     def transactions(self,request,*args, **kwargs):
         context=getContext(request=request)

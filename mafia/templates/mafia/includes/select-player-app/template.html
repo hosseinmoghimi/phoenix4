@@ -1,0 +1,55 @@
+<div class="card" id="select-player-app">
+    <div class="card-header">
+        <h5 class="text-center">
+            لیست بازیکنان
+        </h5>
+    </div>
+
+    <div class="card-body">
+        <div>
+
+            {% for player in players %}
+            <div class="media mb-3">
+                <img src="{{player.image}}" class="rounded-circle" width="48" alt="">
+                <div class="media-body mr-2 text-right farsi">
+                    <div>
+
+                        <a class="" href="{{player.get_absolute_url}}">
+                            {{player.name}}</a>
+                    </div>
+                    <div>
+
+                        <span class="small text-muted">{{player.bio}}</span>
+                    </div>
+                </div>
+            </div>
+
+            </p>
+            {% endfor %}
+
+            <div class="media mb-3" v-for="player in players">
+                <img :src="player.image" class="rounded-circle" width="48" alt="">
+                <div class="media-body mr-2 text-right farsi">
+                    <div>
+
+                        <a :href="player.get_absolute_url">
+                            <span v-text="player.profile.name"></span>
+
+                        </a>
+                    </div>
+                    <div>
+
+                        <span class="small text-muted" v-text="player.profile.bio"></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card-footer">
+       {% include "mafia/includes/create-player-app/template.html" %}
+    </div>
+</div>

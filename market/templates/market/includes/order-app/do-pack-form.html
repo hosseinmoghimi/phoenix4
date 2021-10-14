@@ -1,0 +1,41 @@
+{% if do_pack_form %}
+<form action="{% url 'market:do_pack_order' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{order.id}}">
+    <h3>
+        بسته بندی کردن سفارش توسط {{order.supplier.title}}
+    </h3>
+    <div class="row rtl">
+        <div class="col-4">
+
+            <select name="ware_house_id" required id="" class="form-control farsi">
+                <option value="" disabled selected>انبار را برای خروج سفارش انتخاب کنید</option>
+                {% for ware_house in ware_houses %}
+                <option value="{{ware_house.id}}">{{ware_house.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-4">
+            <div class="form-group label-floating is-empty bmd-form-group">
+                <label class="bmd-label-floating">تعداد بسته</label>
+                <input type="number" name="count_of_packs" value="1" class="form-control">
+                <span class="material-input"></span>
+            </div>
+        </div>
+        <div class="col-8">
+
+            <div class="form-group label-floating is-empty bmd-form-group">
+                <!-- <label class="bmd-label-floating">توضیحات</label> -->
+                <input type="text" placeholder="توضیحات" name="description" class="form-control farsi">
+                <span class="material-input"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-success farsi">سفارش را بسته بندی کردم</button>
+        </div>
+    </div>
+
+
+</form>
+{% endif %}

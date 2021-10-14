@@ -1,0 +1,122 @@
+{% load to_price %}
+
+{% if add_product_form or add_category_form %}
+{% include "market/includes/list-app/add-list.html" %}
+
+{% endif %}
+
+<div class="row">
+    {% for category in categories %}
+
+    <div class="col-md-4 col-6">
+        <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+            <div class="card-header card-header-image">
+                <a href="{{category.get_absolute_url}}">
+                    <img src="{{category.thumbnail}}" alt="">
+                </a>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="card-title">
+                    <a href="{{category.get_absolute_url}}">{{category.title}}</a>
+                </h4>
+
+                <div class="card-description">
+
+                    {% if category.short_description %}
+
+                    {{category.short_description|safe}}
+                    {% endif %}
+                </div>
+            </div>
+
+
+        </div> <!-- end card -->
+    </div>
+    {% endfor %}
+
+
+    {% for product in products %}
+
+    <div class="col-md-4 col-6">
+        <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+            <div class="card-header card-header-image">
+                <a href="{{product.get_absolute_url}}">
+                    <img src="{{product.thumbnail}}" alt="">
+                </a>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="card-title">
+                    <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                </h4>
+                {% if product.barcode %}
+                <!-- <h4 class="card-title">
+                    <small class="text-muted">
+                        کد :
+                    </small>
+                    {{product.barcode}}
+                </h4> -->
+                {% endif %}
+                {% if product.brand %}
+                <div class="text-canter farsi">
+                    <a title="{{product.brand.title}}" target="_blank" href="{{product.brand.get_absolute_url}}"
+                        class="docs-creator">
+                        <img src="{{product.brand.image}}" height="32" alt="{{product.brand.title}}">
+
+                    </a>
+
+                </div>
+                {% endif %}
+                {% if product.model_name %}
+                <!-- <h5 class="text-center farsi">
+                    <small class="text-muted">
+                        مدل :
+                    </small>
+                    {{product.model_name}}
+                </h5> -->
+                
+                {% endif %}
+                <div class="card-description">
+
+                    {% if product.short_description %}
+
+                    {{product.short_description|safe}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="price-container">
+                    {% if product.old_price %}
+
+                    <span class="price price-old mx-2 farsi">
+                        {{product.old_price|to_price_pure}}
+                    </span>
+                    {% endif %}
+                    <span class="price price-new mx-2 farsi"> {{product.unit_price|to_price}}</span>
+                </div>
+                <div class="stats mr-auto">
+                    <button type="button" rel="tooltip" title="" class="btn btn-just-icon btn-link btn-rose"
+                        data-original-title="Saved to Wishlist">
+                        <i class="material-icons">favorite</i>
+                    </button>
+                </div>
+            </div>
+        </div> <!-- end card -->
+    </div>
+    {% endfor %}
+
+
+
+
+    <div class="col-md-12"></div>
+
+</div>
+{% if add_product_form or add_category_form %}
+{% include "market/includes/list-app/show-list.html" %}
+
+{% endif %}
+<!-- <div class="row">
+    <div class="col-md-3 ml-auto mr-auto">
+        <button rel="tooltip" class="btn btn-rose btn-round" data-original-title="" title="">Load
+            more...</button>
+    </div>
+</div> -->

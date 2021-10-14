@@ -1,0 +1,39 @@
+{% load static %}
+<!-- bms  -->
+<li class="nav-item ">
+    <a class="nav-link" data-toggle="collapse" href="#BMS_Pages">
+       
+        <p>
+            <img class="ml-2" src="{% static 'bms/png/bms.png' %}" width="32" height="32" alt="">
+            
+            ساختمان هوشمند
+            <b class="caret"></b>
+        </p>
+    </a>
+    <div class="collapse" id="BMS_Pages">
+        <ul class="nav">
+            <li class="nav-item " id="nav-item-bms-index">
+                <a class="nav-link" href="{% url 'bms:home' %}">
+                    <span class="sidebar-mini">
+                        <i class="material-icons" aria-hidden="true">table_view</i>
+                    </span>
+                    <span class="sidebar-normal">خانه</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item " id="nav-item-bms-logs">
+                <a class="nav-link" href="{% url 'bms:logs' %}">
+                    <span class="sidebar-mini">
+                        <i class="material-icons" aria-hidden="true">table_view</i>
+                    </span>
+
+                    <span class="sidebar-normal">لاگ</span>
+                </a>
+            </li>
+
+
+
+        </ul>
+    </div>
+</li>

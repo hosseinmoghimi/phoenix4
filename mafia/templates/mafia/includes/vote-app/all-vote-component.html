@@ -1,0 +1,27 @@
+    <div class="row">
+        <div class="col-2">
+            <button @click="count--" class="btn btn-block btn-danger">-</button>
+        </div>
+        <div class="col-1 text-center">
+            <span v-text="count"></span>
+
+
+        </div>
+        <div class="col-2">
+            <button @click="count++" class="btn btn-block btn-success">+</button>
+
+        </div>
+        <div class="col-7">
+
+            <button class="btn btn-block btn-danger text-center" @click="add_all_vote()">
+                <span class="material-icons">
+                    shuffle
+                </span>
+                رای دادن به
+                <span v-text="game_role.player.profile.name"></span>
+                <img :src="game_role.player.profile.image" class="rounded-circle pull-left" width="32" alt="">
+            </button>
+        </div>
+    </div>
+
+

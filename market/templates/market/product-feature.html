@@ -1,0 +1,194 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load static %}
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" filter-color="rose"
+    style="background-image: url('{{product.image_header}}');">
+    <div class="container">
+        <div class="row title-row">
+            <div class="col-md-4 mr-auto" id="cart-app">
+                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
+                    <span class="farsi">
+
+                        <span v-text="in_cart"></span>
+
+
+                    </span>
+                    <i class="material-icons mx-2">shopping_cart</i>
+
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    {% include "market/includes/product-images-app/template.html" %}
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <span class="farsi">
+                        {{product.category.get_breadcrumb|safe}}
+                    </span>
+                    <h2 class="title">{{product_feature.title}}
+                        {% if perms.market.change_product %}
+                        {{product_feature.get_edit_btn|safe}}
+                        {% endif %}
+                    </h2>
+                 
+
+                  
+
+                    <!-- <h3 class="main-price">$335</h3> -->
+                    <div id="accordion" role="tablist">
+                   
+
+                        {% if product_feature.short_description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingShortDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseShortDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کوتاه
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseShortDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingShortDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{product_feature.short_description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        {% if product_feature.description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کامل
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{product_feature.description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                    </div>
+
+
+
+
+
+              
+
+
+                </div>
+
+
+
+              
+
+            </div>
+        </div>
+        <div class="features text-center">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="info">
+                        <div class="icon icon-info">
+                            <i class="material-icons">local_shipping</i>
+                        </div>
+                        <h4 class="info-title">
+                            <a href="{{product_feature.get_absolute_url}}">
+
+                                {{product_feature.title}}
+                            </a>
+                        </h4>
+                        {% if product_feature.short_description %}
+
+                        <div class="farsi text-muted small">{{product_feature.short_description|safe}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="related-products">
+            <h3 class="title text-center">محصولات دارای این ویژگی</h3>
+            <div class="row">
+                {% for related_product in product_feature.product_set.all %}
+
+                <div class="col-lg-3 col-md-6 mr-auto ml-auto">
+                    <div class="card card-product">
+                        <div class="card-header card-header-image">
+                            <a href="{{related_product.get_absolute_url}}">
+                                <img class="img" src="{{related_product.thumbnail}}">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-category text-rose">{{related_product.sub_title}}</h6>
+                            <h4 class="card-title">
+                                <a href="{{related_product.get_absolute_url}}">{{related_product.title}}</a>
+                            </h4>
+                            <div class="card-description">
+                                {% if related_product.short_description %}
+
+                                {{related_product.short_description|safe}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer justify-content-between">
+                            <div class="price">
+                                <h4>$1,459</h4>
+                            </div>
+                            <div class="stats">
+                                <button type="button" rel="tooltip" title="Saved to Wishlist"
+                                    class="btn btn-just-icon btn-link btn-rose">
+                                    <i class="material-icons">favorite</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "market/includes/product-images-app/script.html" %}
+
+{% endblock %}

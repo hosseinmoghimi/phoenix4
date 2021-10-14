@@ -1,0 +1,80 @@
+<div id="add-stock-app">
+    {% if add_stock_form %}
+    <div class="text-center">
+
+        <button @click="show_add_form=true" v-if="!show_add_form" class="btn btn-info">
+            <i class="material-icons">
+                add
+            </i>
+            <span class="farsi">
+
+                افزودن سهامدار جدید
+            </span>
+        </button>
+    </div>
+
+    <form v-show="show_add_form" @submit.prevent="add_stock()">
+        <div class="row">
+
+            <div class="col-md-4">
+                <h6 class=" text-right farsi">
+
+                    نام :
+                </h6>
+                <input type="text" required v-model="first_name" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <h6 class=" text-right farsi">
+
+                    نام خانوادگی :
+                </h6>
+                <input type="text" required v-model="last_name" class="form-control">
+            </div>
+
+
+            <div class="col-md-4">
+                <h6 class=" text-right farsi">
+
+                    نماینده
+                </h6>
+                <select v-model="agent_id" class="form-control">
+                    <template v-for="agent in agents">
+
+                        <option :value="agent.id">
+                            <span v-text="agent.profile.name"></span>
+                        </option>
+                    </template>
+
+                </select>
+            </div>
+
+
+            <div class="col-md-4">
+                <h6 class=" text-right farsi">
+
+                    تعداد
+                    {{stock1.value}}
+                </h6>
+                <input type="number" min="0" required v-model="stock1" class="form-control">
+            </div>
+
+
+            <div class="col-md-4">
+                <h6 class=" text-right farsi">
+
+                    تعداد
+                    {{stock2.value}}
+                </h6>
+                <input type="number" min="0" required v-model="stock2" class="form-control">
+            </div>
+
+
+            <div class="col-md-4 text-center">
+                <button class="btn btn-success" type="submit">Add</button>
+                <button class="btn btn-secondary" @click="show_add_form=false">Cancel</button>
+
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>

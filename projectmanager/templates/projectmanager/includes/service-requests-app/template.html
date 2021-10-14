@@ -13,22 +13,36 @@
             </h5>
         </div>
 
-        <div id="collapsservicerequests" class="collapse {% if service_requests %}show{% endif %}" aria-labelledby="headingservicerequests"
-            data-parent="#accordion">
+        <div id="collapsservicerequests" class="collapse {% if service_requests %}show{% endif %}"
+            aria-labelledby="headingservicerequests" data-parent="#accordion">
 
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
                         <th>
+
+                        </th>
+                        <th>
                             تاریخ درخواست
                         </th>
+                        {% if not employee %}
+
                         <th>
                             پرسنل
                         </th>
+                        {% endif %}
+                        {% if not project %}
+
+                        <th>
+
+                            پروژه
+                        </th>
+                        {% endif %}
+
                         <th>
                             سرویس
                         </th>
-                        
+
 
                         <th>
                             تعداد
@@ -47,23 +61,43 @@
                         {% for service_request in service_requests %}
                         <tr>
                             <td>
+                                <a target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
+                            <td>
                                 <small>
 
                                     {{service_request.date_added|to_persian_date|safe}}
                                 </small>
                             </td>
-                            
+                            {% if not employee %}
+
                             <td>
 
-                                <a target="_blank" href="{{service_request.employee.get_absolute_url}}">
-                                    <img src="{{service_request.employee.profile.image}}" class="ml-2 rounded" width="32"
-                                        alt="">
-                                    {{service_request.employee.profile.name}}
+                                <a target="_blank" href="{{service_request.handler.get_absolute_url}}">
+                                    <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded-circle"
+                                        width="32" alt="">
+                                    {{service_request.handler.profile.name}}
                                 </a>
                             </td>
-                            
-                            
-                            
+                            {% endif %}
+
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" href="{{service_request.project.get_absolute_url}}">
+                                    <img src="{{service_request.project.thumbnail}}" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    {{service_request.project.title}}
+                                </a>
+                            </td>
+                            {% endif %}
+
+
                             <td>
 
                                 <a target="_blank" href="{{service_request.service.get_absolute_url}}">
@@ -72,7 +106,8 @@
                                     {{service_request.service.title}}
                                 </a>
                             </td>
-                            
+
+
                             <td>
                                 {{service_request.quantity}}
                                 <small>
@@ -91,11 +126,7 @@
                             </td>
                             <td>
                                 {{service_request.get_status_tag|safe}}
-                                <a target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        description
-                                    </i>
-                                </a>
+
 
                                 {% if perms.projectmanager.change_servicerequest %}
                                 {{service_request.get_edit_btn|safe}}
@@ -104,19 +135,29 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% if add_service_request_form %}
 
                         <tr v-for="service_request in service_requests">
+                            <td>
+                                <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
+
                             <td>
                                 <small v-text="service_request.persian_date_added">
 
                                 </small>
                             </td>
                             <td>
-                                
-                                <a target="_blank" :href="service_request.employee.get_absolute_url">
-                                <img :src="service_request.employee.profile.image" class="ml-2 rounded" width="32" alt="">
-                                   <span v-text="service_request.employee.profile.name">
-</span>
+
+                                <a target="_blank" :href="service_request.handler.get_absolute_url">
+                                    <img :src="service_request.handler.profile.image" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    <span v-text="service_request.handler.profile.name">
+                                    </span>
                                 </a>
                             </td>
 
@@ -148,11 +189,7 @@
                             <td>
                                 <span v-html="service_request.get_status_tag"></span>
 
-                                <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        description
-                                    </i>
-                                </a>
+
                                 {% if perms.projectmanager.change_servicerequest %}
                                 <a title="ویرایش" target="_blank" :href="service_request.get_edit_url">
                                     <i class="material-icons">edit</i>
@@ -160,110 +197,22 @@
                                 {% endif %}
                             </td>
                         </tr>
+
+                        {% endif %}
                     </tbody>
                 </table>
 
                 {% if add_service_request_form %}
-                <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-
-                <button v-if="!waiting && !show_add_service_request_form" @click="show_add_service_request_form=true"
-                    class="btn btn-success">
-                    <i class="material-icons text-light">
-                        add
-                    </i>
-                </button>
-                <div class="row" v-if="show_add_service_request_form">
-                    <div class="col-8">
-                        <form @submit.prevent="add_service_request()">
-
-                            <input @input="filter_list" required type="text" v-model="add_service_request_form_title"
-                                class="farsi form-control" placeholder="سرویس">
-                            <p class="text-right">
-                                <span v-text="add_service_request_form_title"></span>
-                                <!--  -->
-                                <span>هر </span>
-                                <span v-text="add_service_request_form_unit_name"></span>
-                                <span v-text="to_price(add_service_request_form_unit_price,'')"></span>
-                                <small>
-
-                                    {{CURRENCY}}
-                                </small>
-                            </p>
-                            <div class="row">
-
-                                
-                                <div class="col-lg-4">
-                                    <select v-model="add_service_request_form_employee_id" class="form-control farsi"
-                                        id="">
-                                        <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
-                                        {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.profile.name}}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                </div>
-
-                                <div class="col-lg-2">
-                                    <input required type="number" min="0" placeholder="تعداد" class="form-control"
-                                        v-model="add_service_request_form_quantity">
-                                </div>
-
-
-                                <div class="col-lg-3">
-                                    <select v-model="add_service_request_form_unit_name" class="form-control farsi"
-                                        id="">
-                                        <option disabled selected>نام واحد</option>
-                                        {% for unit_name in unit_names2 %}
-                                        <option value="{{unit_name}}">{{unit_name}}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                </div>
-                                <div class="col-lg-3">
-                                    <input required type="number" v-model="add_service_request_form_unit_price"
-                                        class="farsi form-control" placeholder="قیمت واحد">
-                                </div>
-
-                                <div class="col-12">
-                                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-
-                                    <button class="btn btn-secondary" @click="show_add_service_request_form=false"
-                                        type="reset">Cancel</button>
-                                    <button v-if="!waiting" class="btn btn-primary" type="submit">
-                                        <i class="material-icons">
-                                            add
-                                        </i>
-                                        افزودن</button>
-
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-4">
-                        <div v-for="service in services">
-                            <button class="btn btn-secondary btn-block my-2" @click="select_service(service)"
-                                v-text="service.title"></button>
-                            <a :href="service.get_absolute_url" title="نمایش کامل ">
-
-                                <i class="material-icons">description</i>
-                            </a>
-                        </div>
-                    </div>
-
-
-                </div>
-
+                {% include "projectmanager/includes/service-requests-app/form.html" %}
                 {% endif %}
             </div>
             <div class="card-footer ">
+                {% if project %}
+
                 <p>
 
                     <span class="small text-secondary">
-                        مجموع سرویس ها :
+                        مجموع هزینه سرویس های ارائه شده :
                     </span>
                     <span v-text="to_price(sum_service_requests,'{{CURRENCY}}')">
 
@@ -277,6 +226,7 @@
 
 
 
+                {% endif %}
             </div>
         </div>
     </div>
