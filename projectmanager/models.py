@@ -98,6 +98,7 @@ class Employer(models.Model):
                 list1.append(proj.pk)
         return Project.objects.filter(pk__in=list1)
 
+
 class EmployeeDocument(models.Model):
     employee = models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     document=models.ForeignKey("core.document",null=True,blank=True, verbose_name=_("سند"), on_delete=models.PROTECT)
@@ -126,6 +127,7 @@ class EmployeeDocument(models.Model):
             </i>
         </a>
         """
+
 
 class Employee(models.Model):
     profile = models.ForeignKey("authentication.profile", verbose_name=_(

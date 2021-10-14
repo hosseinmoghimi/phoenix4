@@ -1,10 +1,9 @@
-
-from django.db.models.fields import CharField
+from projectmanager.repo import Employee
 from core.models import BasicPage
 from django.db import models
 from django.shortcuts import reverse
-from utility.persian import PERSIAN_MONTH_NAMES
-from core.settings import ADMIN_URL, STATIC_URL
+from utility.persian import PERSIAN_MONTH_NAMES, PersianCalendar
+from core.settings import ADMIN_URL
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
 from .settings import *
@@ -135,3 +134,91 @@ class SalaryLine(models.Model):
                 </i>
             </a>
         """
+
+
+class WorkGroup(models.Model):
+    title=models.CharField(_("عنوان"), max_length=50)
+    organization_units=models.ManyToManyField("projectmanager.organizationunit",blank=True, verbose_name=_("واحد های سازمانی"))
+    employees_origin=models.ManyToManyField("projectmanager.employee",blank=True, verbose_name=_("employees"))
+    
+    class_name="workgroup"
+    def employees(self):
+        l=[]
+        for em in self.employees_origin.all():
+            l.append(em.pk)
+        for org in self.organization_units.all():
+            for em in org.employee_set.all():
+                l.append(em.pk)
+        
+        return Employee.objects.filter(id__in=l)
+
+    class Meta:
+        verbose_name = _("WorkGroup")
+        verbose_name_plural = _("WorkGroups")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("WorkGroup_detail", kwargs={"pk": self.pk})
+
+
+class WorkSite(models.Model):
+    parent=models.ForeignKey("worksite",null=True,blank=True, verbose_name=_("والد"), on_delete=models.CASCADE) 
+    title=models.CharField(_("عنوان"), max_length=50)
+    location=models.ForeignKey("projectmanager.location",null=True,blank=True, verbose_name=_("location"), on_delete=models.CASCADE)
+    class_name="worksite"
+    class Meta:
+        verbose_name = _("WorkSite")
+        verbose_name_plural = _("WorkSites")
+
+    def full_title(self):
+        if self.parent is None:
+            return self.title
+        else:
+            return self.parent.full_title()+" / "+self.title
+
+    def __str__(self):
+        return self.full_title
+
+    def get_absolute_url(self):
+        return reverse("WorkSite_detail", kwargs={"pk": self.pk})
+
+
+class WorkDay(models.Model):
+    work_site=models.ForeignKey("worksite",null=True,blank=True, verbose_name=_("محل کار"), on_delete=models.CASCADE)
+    work_group=models.ForeignKey("workgroup", verbose_name=_("گروه کاری"), on_delete=models.CASCADE)
+    attendance_date=models.DateField(_("روز"), auto_now=False, auto_now_add=False)
+    date_entered=models.TimeField(_("ورود"), auto_now=False, auto_now_add=False)
+    date_exited=models.TimeField(_("خروج"), auto_now=False, auto_now_add=False)
+    
+    class_name="workday"
+    
+    def persian_attendance_date(self):
+        return PersianCalendar().from_gregorian_date(self.attendance_date)
+    class Meta:
+        verbose_name = _("WorkDay")
+        verbose_name_plural = _("WorkDays")
+
+    def __str__(self):
+        return f"""{self.work_group.title} @ {self.persian_attendance_date()}"""
+ 
+    def get_absolute_url(self):
+        return reverse("WorkDay_detail", kwargs={"pk": self.pk})
+
+
+class Attendance(models.Model):
+    work_day=models.ForeignKey("workday", verbose_name=_("employee"), on_delete=models.CASCADE)
+    employee=models.ForeignKey("projectmanager.employee", verbose_name=_("employee"), on_delete=models.CASCADE)
+    date_entered=models.DateTimeField(_("ورود"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_exited=models.DateTimeField(_("خروج"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    
+    class Meta:
+        verbose_name = _("Attendance")
+        verbose_name_plural = _("Attendances")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Attendance_detail", kwargs={"pk": self.pk})
