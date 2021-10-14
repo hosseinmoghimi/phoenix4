@@ -25,6 +25,8 @@ TEMPLATE_ROOT = APP_NAME+"/"
 
 
 def getContext(request):
+    if request.user is None or not request.user.is_authenticated:
+        raise Http404
     context = DefaultContext(request=request, app_name=APP_NAME)
     context['layout_parent']="material-dashboard-5-rtl/layout.html"
     context['layout_parent']="material-kit-pro/layout.html"
