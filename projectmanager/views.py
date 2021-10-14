@@ -326,6 +326,7 @@ class ProjectViews(View):
         context['projects_s'] = json.dumps(ProjectSerializer(projects,many=True).data)
         return render(request, TEMPLATE_ROOT+"projects.html", context)
 
+
 class RequestViews(View):
   
     def add_signature(self,request,*args, **kwargs):
@@ -503,16 +504,19 @@ class MaterialViews(View):
         context = getContext(request)
         context['material'] = material
         materials= material.childs()
-        context['materials'] =materials
-        material_requests=material.materialrequest_set.all()
-        context['material_requests'] = material_requests
+        context['materials'] =materials 
         
-        ware_house_sheet_lines=WareHouseSheetLineRepo(request=request).list(material_id=material.id)
-        context['ware_house_sheet_lines']=ware_house_sheet_lines
+        if request.user.has_perm(APP_NAME+".view_warehousesheetline"):
+            ware_house_sheet_lines=WareHouseSheetLineRepo(request=request).list(material_id=material.id)
+            context['ware_house_sheet_lines']=ware_house_sheet_lines
 
-        ware_house_materials=WareHouseMaterialRepo(request=request).list(material_id=material.id)
-        context['ware_house_materials']=ware_house_materials
-        context['material_requests']=MaterialRequestRepo(request=request).material_requests(material_id=material.id)
+        if request.user.has_perm(APP_NAME+".view_warehousematerial"):
+            ware_house_materials=WareHouseMaterialRepo(request=request).list(material_id=material.id)
+            context['ware_house_materials']=ware_house_materials
+        if request.user.has_perm(APP_NAME+".view_materialrequest"):
+            material_requests=material.materialrequest_set.all()
+            context['material_requests'] = material_requests
+            context['material_requests']=MaterialRequestRepo(request=request).material_requests(material_id=material.id)
       
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
         
