@@ -1,6 +1,15 @@
 {% if add_maintenance_form %}
+ 
+<p>
 
-<form @submit.prevent="add_maintenance()">
+    <button @click="show_form=!show_form" class="btn btn-success">
+        <span class="material-icons">
+
+            add
+        </span>
+    </button>
+</p>
+<form v-show="show_form" @submit.prevent="add_maintenance()">
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -17,7 +26,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="end_datetimesdfd">عنوان</label>
-                <input type="text" v-model="title" id="end_datetimesdfd">
+                <input type="text" class="form-control" v-model="title" id="end_datetimesdfd">
                 <small id="emailHelp12" class="form-text farsi text-muted">
                     عنوان سرویس را وارد کنید.
                 </small>
@@ -54,7 +63,7 @@
             <div class="form-group">
                 <label for="maintenance_type">سرویس</label>
 
-                <select v-model="maintenance_type" id="maintenance_type">
+                <select v-model="maintenance_type" class="form-control" id="maintenance_type">
                     {% for maintenance_type in maintenance_types %}
 
 
@@ -81,7 +90,7 @@
 
                         <option :value="service_man.id">
                             <span v-text="service_man.name"></span>
-                             (<small class="mx-2 px-2" v-text="service_man.profile.name"></small>)
+                            (<small class="mx-2 px-2" v-text="service_man.profile.name"></small>)
                         </option>
                     </template>
                 </select>

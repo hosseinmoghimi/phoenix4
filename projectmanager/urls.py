@@ -2,17 +2,21 @@ from django.shortcuts import render
 from .apps import APP_NAME
 from . import views,apis
 from django.urls import path,include
+
+
+from django.contrib.auth.decorators import login_required
+
 app_name=APP_NAME
 urlpatterns = [
-    path('',views.BasicViews().home,name="home"),
-    path('search/',views.BasicViews().search,name="search"),
-    path('projects/',views.ProjectViews().projects,name="projects"),
-    path('material_requests/',views.MaterialRequestViews().material_requests,name="material_requests"),
-    path('service_requests/',views.ServiceRequestViews().service_requests,name="service_requests"),
-    path('project/<int:pk>/',views.ProjectViews().project,name="project"),
-    path('dashboard/<int:employee_id>/',views.EmployeeViews().dashboard,name="dashboard"),
-    path('guantt/<int:project_id>/',views.ProjectViews().guantt,name="guantt"),
-    path('project_events_chart/<int:project_id>/',views.EventViews().project_events_chart,name="project_events_chart"),
+    path('',(views.BasicViews().home),name="home"),
+    path('search/',(views.BasicViews().search),name="search"),
+    path('projects/',(views.ProjectViews().projects),name="projects"),
+    path('material_requests/',(views.MaterialRequestViews().material_request)s,name="material_requests"),
+    path('service_requests/',(views.ServiceRequestViews().service_requests),name="service_requests"),
+    path('project/<int:pk>/',(views.ProjectViews().project),name="project"),
+    path('dashboard/<int:employee_id>/',(views.EmployeeViews().dashboard),name="dashboard"),
+    path('guantt/<int:project_id>/',(views.ProjectViews().guantt),name="guantt"),
+    path('project_events_chart/<int:project_id>/',(views.EventViews().project_events_chart),name="project_events_chart"),
     path('project_events_chart2/<int:project_id>/',views.EventViews().project_events_chart2,name="project_events_chart2"),
     path('project_events_chart3/<int:project_id>/',views.EventViews().project_events_chart3,name="project_events_chart3"),
     path('project-materials-order/<int:pk>/',views.ProjectViews().project_materials_order,name="project_materials_order"),
@@ -31,8 +35,8 @@ urlpatterns = [
     path('ware_house_export_sheet/<int:pk>/',views.WareHouseSheetViews().ware_house_export_sheet,name="warehouseexportsheet"),
     path('copy_project_request/<int:destination_project_id>/',views.ProjectViews().copy_project_request,name="copy_project_request"),
     
-    path('materials/',views.MaterialViews().materials,name="materials"),
-    path('services/',views.ServiceViews().services,name="services"),
+    path('materials/',(views.MaterialViews().materials),name="materials"),
+    path('services/',(views.ServiceViews().services),name="services"),
     path('servicerequest/<int:pk>/',views.ServiceRequestViews().service_request,name="servicerequest"),
     path('event/<int:pk>/',views.EventViews().event,name="event"),
     path('location/<int:pk>/',views.LoactionViews().location,name="location"),

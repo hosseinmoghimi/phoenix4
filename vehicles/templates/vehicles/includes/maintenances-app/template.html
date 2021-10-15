@@ -8,7 +8,9 @@
     <div class="card-body">
         <table class="table table-striped">
             <thead>
+                <th>
 
+                </th>
                 <th>
                     سرویس کار
                 </th>
@@ -39,29 +41,37 @@
             </thead>
             <tbody>
                 <tr v-for="maintenance in maintenances">
+                    <td>
+                        <a target="_blank" title="جزئیات" :href="maintenance.get_absolute_url">
 
+
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                        </a>
+                    </td>
                     <td>
                         <div class="media">
                             <a :href="maintenance.service_man.get_absolute_url">
                                 <img :src="maintenance.service_man.profile.image" class="rounded-circle" width="48">
-    
+
                             </a>
                             <div class="media-body">
                                 <div>
                                     <a :href="maintenance.service_man.get_absolute_url">
                                         <span v-text="maintenance.service_man.name"></span>
-            
+
                                     </a>
                                 </div>
                                 <div>
                                     <a :href="maintenance.service_man.profile.get_absolute_url">
-            
+
                                         <small v-text="maintenance.service_man.profile.name"></small>
                                     </a>
                                 </div>
                             </div>
                         </div>
-                    
+
 
                     </td>
                     {% if not vehicle %}
@@ -110,13 +120,7 @@
                         </div>
                     </td>
                     <td>
-                        <a target="_blank" title="جزئیات" :href="maintenance.get_absolute_url">
 
-
-                            <i class="material-icons">
-                                ballot
-                            </i>
-                        </a>
 
                         <a target="_blank" title="ویرایش" :href="maintenance.get_edit_url">
 
@@ -129,12 +133,10 @@
                 </tr>
             </tbody>
         </table>
-
-
-        {% if add_maintenance_form %}
-        {% include "vehicles/includes/maintenances-app/form.html" %}
-
-        {% endif %}
-
     </div>
+    {% if add_maintenance_form %}
+    <div class="card-footer ">
+        {% include "vehicles/includes/maintenances-app/form.html" %}
+    </div>
+    {% endif %}
 </div>

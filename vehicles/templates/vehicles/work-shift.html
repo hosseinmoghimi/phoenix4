@@ -10,17 +10,17 @@
 
             <div class="card-header">
                 <h3 class="title text-center">
-                    سرویس
+                    work_shift
                 </h3>
             </div>
             <div class="card-body">
                 <ul class="nav flex-column" style="padding-right:10px">
                     <li class="nav-item">
-                        <a class="nav-link farsi docs-creator" href="{{maintenance.get_absolute_url}}">
-                            {{maintenance.title}}
+                        <a class="nav-link farsi docs-creator" href="{{work_shift.get_absolute_url}}">
+                            {{work_shift.name}}
                         </a>
-                        {% if perms.vehicles.change_maintenance %}
-                        <a title="ویرایش" target="_blank" href="{{maintenance.get_edit_url}}">
+                        {% if perms.vehicles.change_workshift %}
+                        <a title="ویرایش" target="_blank" href="{{work_shift.get_edit_url}}">
                             <i class="material-icons">
                                 edit
                             </i>
@@ -32,33 +32,26 @@
 
         </div>
     </div>
+    <div class="col-md-12">
 
-    <div class="col-md-8">
         <div class="card">
             <div class="card-header"></div>
-            <div class="card-body farsi text-right">
-                <div>
+            <div class="card-body">
+                <p>
 
-
-                    <a href="{{maintenance.service_man.get_absolute_url}}">
-
-                        {{maintenance.service_man.name}}
+                    <a href="{{work_shift.driver.get_absolute_url}}">
+                        <img src="{{work_shift.driver.profile.image}}"
+                         width="48" class="rounded-circle" alt="">
+                        {{work_shift.driver.profile.name}}
                     </a>
-                </div>
-                <div>
-                    <a href="{{maintenance.service_man.profile.get_absolute_url}}">
-
-                        {{maintenance.service_man.profile.name}}
-                    </a>
-                </div>
-
+                </p>
             </div>
             <div class="card-footer"></div>
         </div>
     </div>
     <div class="col-md-12">
-        {% include "vehicles/includes/maintenances-app/template.html" %}
 
+{% include "vehicles/includes/vehicle-work-events-app/template.html" %}
     </div>
 </div>
 {% endblock content %}
@@ -66,7 +59,7 @@
 
 {% block script %}
 <script>
-    let maintenance_id = parseInt("{{maintenance.id}}")
+    let vehicle_id = parseInt("{{vehicle.id}}")
 </script>
 
 <script src="{% static 'persian/moment.js' %}"></script>
@@ -74,7 +67,9 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "vehicles/includes/maintenances-app/script.html" %}
+
+{% include "vehicles/includes/vehicle-work-events-app/script.html" %}
+
 
 
 {% endblock script %}

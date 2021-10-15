@@ -125,6 +125,7 @@ class WorkShift(models.Model):
     income=models.IntegerField(_("درآمد"),default=0)
     outcome=models.IntegerField(_("هزینه"),default=0)
     description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
+    class_name="workshift"
     def persian_start_time(self):
         return PersianCalendar().from_gregorian(self.start_time)
     def persian_end_time(self):
@@ -137,7 +138,7 @@ class WorkShift(models.Model):
         return f'{self.vehicle.name} {self.start_time}'
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":work_shift", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":workshift", kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/workshift/{self.pk}/change/'
     def get_edit_btn(self):
@@ -255,6 +256,7 @@ class Maintenance(VehicleEvent):
 class VehicleWorkEvent(VehicleEvent):
     work_shift=models.ForeignKey("workshift", verbose_name=_("work_shift"), on_delete=models.CASCADE)
     event_type=models.CharField(_("event_type"),choices=WorkEventEnum.choices, max_length=50)
+    class_name="vehicleworkevent"
     def get_icon(self):
         icon="settings"
         color="primary"
@@ -286,6 +288,6 @@ class VehicleWorkEvent(VehicleEvent):
         return f'{self.work_shift} {self.event_type}'
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":vehicle_work_event", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":vehicleworkevent", kwargs={"pk": self.pk})
     def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/event/{self.pk}/change/'
+        return f'{ADMIN_URL}{APP_NAME}/vehicleworkevent/{self.pk}/change/'

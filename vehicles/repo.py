@@ -210,6 +210,13 @@ class WorkShiftRepo():
             objects = objects.filter(area_id=kwargs['area_id'])
         if 'driver_id' in kwargs:
             objects = objects.filter(driver_id=kwargs['driver_id'])
+        if 'vehicle_work_event_id' in kwargs:
+            vehicle_work_event_id=kwargs['vehicle_work_event_id']
+            vehicle_work_event=VehicleWorkEvent.objects.filter(pk=vehicle_work_event_id).first()
+            if vehicle_work_event is None:
+                return []
+            
+            objects = vehicle_work_event.workshift_set.all()
         return objects
 
     def work_shift(self, *args, **kwargs):
@@ -262,6 +269,8 @@ class VehicleWorkEventRepo():
         objects = self.objects.all()
         if 'vehicle_id' in kwargs:
             objects = objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'work_shift_id' in kwargs:
+            objects = objects.filter(work_shift_id=kwargs['work_shift_id'])
         return objects
 
     def vehicle_work_event(self, *args, **kwargs):

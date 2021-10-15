@@ -8,10 +8,10 @@ from .apps import APP_NAME
 from django.views import View
 import json
 
-
 TEMPLATE_FOLDER="vehicles/"
 LAYOUT_PARENT="phoenix/layout.html"
 
+# @login_required
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
@@ -41,7 +41,6 @@ class BasicViews(View):
         context['drivers']=drivers
 
         return render(request,TEMPLATE_FOLDER+"index.html",context)
-
 
 
 class VehicleViews(View):
@@ -100,8 +99,6 @@ class VehicleViews(View):
         return render(request,TEMPLATE_FOLDER+"vehicle.html",context)
 
 
-
-
 class AreaViews(View):
     def area(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -119,6 +116,42 @@ class AreaViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
+
+
+class VehicleWorkEventViews(View):
+    def vehicle_work_event(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+        vehicle_work_event=VehicleWorkEventRepo(request=request).vehicle_work_event(*args, **kwargs)
+        context['vehicle_work_event']=vehicle_work_event
+        
+        # work_shifts=WorkShiftRepo(request=request).list(vehicle_work_event_id=vehicle_work_event.id)
+        work_shifts=[vehicle_work_event.work_shift]
+        context['work_shifts']=work_shifts 
+        context['work_shifts_s']=json.dumps(WorkShiftSerializer(work_shifts,many=True).data) 
+
+        return render(request,TEMPLATE_FOLDER+"vehicle-work-event.html",context)
+
+
+class WorkShiftViews(View):
+    def work_shift(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        area=AreaRepo(request=request).area(*args, **kwargs)
+        context['area']=area
+
+
+        
+        work_shift=WorkShiftRepo(request=request).work_shift(*args, **kwargs)
+        context['work_shift']=work_shift 
+        
+        vehicle_work_events=VehicleWorkEventRepo(request=request).list(work_shift_id=work_shift.id)
+
+        context['vehicle_work_events']=vehicle_work_events
+        context['vehicle_work_events_s']=json.dumps(VehicleWorkEventSerializer(vehicle_work_events,many=True).data)
+
+        return render(request,TEMPLATE_FOLDER+"work-shift.html",context)
 
 
 class MaintenanceViews(View):
@@ -156,6 +189,8 @@ class DriverViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"driver.html",context)
+
+
 class ServiceManViews(View):
     def service_man(self,request,*args, **kwargs):
         context=getContext(request=request)

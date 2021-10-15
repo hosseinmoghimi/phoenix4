@@ -13,6 +13,8 @@ TEMPLATE_ROOT="authentication/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     return context
+
+
 def ProfileContext(request,*args, **kwargs):
     context=getContext(request=request)
     if 'profile' in kwargs:
@@ -23,10 +25,14 @@ def ProfileContext(request,*args, **kwargs):
         selected_profile=ProfileRepo(request=request).profile(pk=kwargs['pk'])
     context['selected_profile']=selected_profile
     return context
+
+
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"index.html",context)
+
+
 class ProfileViews(View):
     def upload_profile_image(self,request,*args, **kwargs):
         profile_id=0
@@ -62,12 +68,16 @@ class ProfileViews(View):
         context=getContext(request)
         context['layout']="base-layout.html"
         return render(request,TEMPLATE_ROOT+"profile2.html",context)
+
+
 class AuthenticationViews(View):
+    
     def profiles(self,request,*args, **kwargs):
         context=getContext(request)
         profiles=ProfileRepo(request=request).list()
         context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"profiles.html",context)
+    
     def login(self,request,*args, **kwargs):
         if request.method=='POST':
             login_form=LoginForm(request.POST)
@@ -90,7 +100,10 @@ class AuthenticationViews(View):
                     return render(request,TEMPLATE_ROOT+'login.html',context)
         else:
             context=getContext(request)
+            back_url=request.GET.get('next','/')
+            context['back_url']=back_url
             return render(request,TEMPLATE_ROOT+"login.html",context)
+            
     def register(self,request,*args, **kwargs):
         context=getContext(request=request)
         if request.method=='POST':
