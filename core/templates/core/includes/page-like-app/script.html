@@ -1,4 +1,5 @@
 <script>
+    let urlـtoggle_like = "{% url 'core:toggle_like' %}"
     let likes_count = parseInt("{{page.likes_count}}")
     let my_like = JSON.parse(`{{my_like|escapejs}}`)
     let page_like_app = new Vue({
@@ -9,13 +10,12 @@
         },
         methods: {
             toggle_like: function () {
-                let url = "{% url 'core:toggle_like' %}"
                 let payload = {
                     page_id: page_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
                 // console.log(payload)
-                let posting = $.post(url, payload)
+                let posting = $.post(urlـtoggle_like, payload)
                 posting.done((data) => {
                     // console.log(data)
                     if (data.result==="SUCCEED")

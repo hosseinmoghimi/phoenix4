@@ -46,6 +46,7 @@
                     </h6>
                 </div>
             </div>
+                {% if add_page_document_form %}
             <div class="card-footer">
 
                 <p class="text-right" v-if="!show_add_document_form">
@@ -58,7 +59,6 @@
                     </a>
                 </p>
 
-                {% if add_page_document_form %}
 
                 <form id="add-document-form" v-if="show_add_document_form" @submit.prevent="add_page_document()"
                     enctype="multipart/form-data">
@@ -86,9 +86,9 @@
                     </div>
 
                 </form>
-                {% endif %}
 
             </div>
+                {% endif %}
         </div>
     </div>
 </div>

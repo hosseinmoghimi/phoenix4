@@ -1,7 +1,7 @@
 <div id="accordion-page-links">
 
     <div class="card mb-3" id="page-links-app">
-        <div class="card-header"  id="headinglinks">
+        <div class="card-header" id="headinglinks">
             <h5 class="text-center">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapselinks" aria-expanded="true"
                     aria-controls="collapselinks">
@@ -9,8 +9,8 @@
                 </button>
             </h5>
         </div>
-        <div id="collapselinks" class="collapse {% if page.links.all %}show{% endif %}" 
-        aria-labelledby="headinglinks" data-parent="#accordion-page-links">
+        <div id="collapselinks" class="collapse {% if page.links.all %}show{% endif %}" aria-labelledby="headinglinks"
+            data-parent="#accordion-page-links">
 
             <div class="card-body">
                 {% for link in page.links.all %}
@@ -45,6 +45,7 @@
                     </h6>
                 </div>
             </div>
+            {% if add_page_link_form %}
             <div class="card-footer">
 
                 <p class="text-right" v-if="!show_add_link">
@@ -57,7 +58,6 @@
                     </a>
                 </p>
 
-                {% if add_page_link_form %}
 
                 <form v-if="show_add_link" @submit.prevent="add_page_link()">
                     <div class="row">
@@ -77,9 +77,9 @@
                     </div>
 
                 </form>
-                {% endif %}
 
             </div>
+            {% endif %}
         </div>
     </div>
 
