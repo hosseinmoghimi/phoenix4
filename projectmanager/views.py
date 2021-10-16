@@ -2,7 +2,6 @@ import json
 
 from django.http.response import Http404
 
-from projectmanager.models import OrganizationUnit
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
@@ -376,12 +375,23 @@ class OrganizationUnitViews(View):
     def getOrgUnitContext(self,request,organization_unit,*args, **kwargs):
         context={}
         context['organization_unit'] = organization_unit
-        if request.user.has_perm(APP_NAME+".add_organizationunit"):
+        employee_repo=EmployeeRepo(request=request)
+        me_employee=employee_repo.me
+        can_change=False
+        if me_employee in employee_repo.list(organization_unit_id=organization_unit.id):
+            can_change=True
+        elif request.user.has_perm(APP_NAME+".change_organizationunit"):
+            can_change=True
+            pass
+        else:
+            raise Http404
+
+        if request.user.has_perm(APP_NAME+".add_organizationunit") or can_change:
             context['add_organization_unit_form'] = AddOrganizationUnitForm()
             all_profiles = ProfileRepo(user=request.user).objects.all()
             context['all_profiles_s'] = json.dumps(
                 ProfileSerializer(all_profiles, many=True).data)
-        if request.user.has_perm(APP_NAME+".add_employee"):
+        if request.user.has_perm(APP_NAME+".add_employee") or can_change:
             context['add_employee_form'] = AddEmployeeForm()
         organization_units = organization_unit.childs()
         context['organization_units'] = organization_units 

@@ -614,7 +614,7 @@ class EmployeeRepo():
         elif self.user.has_perm(APP_NAME+".view_employee"):
             self.objects = Employee.objects
         elif self.profile is not None:
-            self.objects=Employee.objects.filter(id=0)
+            self.objects=Employee.objects.filter(profile=self.profile)
             self.me=Employee.objects.filter(profile=self.profile).first()
         else:
             self.objects=Employee.objects.filter(id=0)
