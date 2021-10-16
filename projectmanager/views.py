@@ -6,7 +6,7 @@ from projectmanager.models import OrganizationUnit
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
-from .serializers import EmployeeSerializer, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
+from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from .utils import AdminUtility
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
@@ -376,19 +376,23 @@ class OrganizationUnitViews(View):
     def getOrgUnitContext(self,request,organization_unit,*args, **kwargs):
         context={}
         context['organization_unit'] = organization_unit
-        context['add_organization_unit_form'] = AddOrganizationUnitForm()
-        context['organization_units'] = organization_unit.childs()
+        if request.user.has_perm(APP_NAME+".add_organizationunit"):
+            context['add_organization_unit_form'] = AddOrganizationUnitForm()
+            all_profiles = ProfileRepo(user=request.user).objects.all()
+            context['all_profiles_s'] = json.dumps(
+                ProfileSerializer(all_profiles, many=True).data)
+        if request.user.has_perm(APP_NAME+".add_employee"):
+            context['add_employee_form'] = AddEmployeeForm()
         organization_units = organization_unit.childs()
-        context['organization_units'] = organization_units
-        context['add_employee_form'] = AddEmployerForm()
-        all_profiles = ProfileRepo(user=request.user).objects.all()
-        context['all_profiles_s'] = json.dumps(
-            ProfileSerializer(all_profiles, many=True).data)
+        context['organization_units'] = organization_units 
         context['organization_units_s'] = json.dumps(
             OrganizationUnitSerializer(organization_units, many=True).data)
         context['all_organization_units_s'] = json.dumps(
             OrganizationUnitSerializer(organization_units, many=True).data)
-
+        employees=EmployeeRepo(request=request).list(organization_unit_id=organization_unit.id)
+        context['employees']=employees
+        context['employees_s']=json.dumps(EmployeeSerializer2(employees,many=True).data)
+        
         context['projects'] = organization_unit.project_set.all()
         return context
 
@@ -398,22 +402,7 @@ class OrganizationUnitViews(View):
         page = organization_unit
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
-        context['organization_unit'] = organization_unit
-        context['add_organization_unit_form'] = AddOrganizationUnitForm()
-        organization_units=OrganizationUnit.objects.filter(employer=organization_unit.employer).filter(parent=organization_unit)
-        context['organization_units'] = organization_units
-        context['add_employee_form'] = AddEmployerForm()
-        context['employees']=organization_unit.employee_set.all()
-        context['employees_s']=json.dumps(EmployeeSerializer(organization_unit.employee_set.all(),many=True).data)
-        all_profiles = ProfileRepo(user=request.user).objects.all()
-        context['all_profiles_s'] = json.dumps(
-            ProfileSerializer(all_profiles, many=True).data)
-        context['organization_units_s'] = json.dumps(
-            OrganizationUnitSerializer(organization_units, many=True).data)
-        context['all_organization_units_s'] = json.dumps(
-            OrganizationUnitSerializer(organization_units, many=True).data)
-
-        context['projects'] = organization_unit.project_set.all()
+        context.update(self.getOrgUnitContext(request=request, organization_unit=organization_unit))
         return render(request, TEMPLATE_ROOT+"organization-unit.html", context)
 
     def employer(self, request, *args, **kwargs):
@@ -455,7 +444,20 @@ class EmployeeViews(View):
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)
 
-
+    def employees(self, request, *args, **kwargs):
+        # employer_id=kwargs['employer_id'] if 'employer_id' in kwargs else 0
+        # organization_unit_id=kwargs['organization_unit_id'] if 'organization_unit_id' in kwargs else 0
+        employees = EmployeeRepo(request=request).list(*args, **kwargs)
+        organization_unit=OrganizationUnitRepo(request=request).organization_unit(*args, **kwargs)
+        employer=EmployerRepo(request=request).employer(*args, **kwargs)
+        context = getContext(request)
+        context['employees'] = employees
+        context['employees_s']=json.dumps(EmployeeSerializer2(employees,many=True).data)
+        context['organization_unit'] = organization_unit
+        context['employer'] = employer
+        # context['selected_profile'] = employee.profile
+        return render(request, TEMPLATE_ROOT+"employees.html", context)
+   
 class WareHouseViews(View):
     
     def ware_house(self, request, *args, **kwargs):

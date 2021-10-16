@@ -48,6 +48,8 @@ class Employer(models.Model):
     fax = models.CharField(_("fax"), null=True, blank=True, max_length=50)
     description = models.TextField(_("description"), null=True, blank=True)
 
+    def get_employees_url(self):
+        return reverse(APP_NAME+":employees",kwargs={'employer_id':self.pk,'organization_unit_id':0})
     def logo(self):
         if self.logo_origin:
             return f"{MEDIA_URL}{self.logo_origin}"

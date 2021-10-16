@@ -36,53 +36,53 @@
 <div>
     <div class="row ">
         <div class="col-md-4">
-            
-        {% if me_employee %}
-        <div class="card mb-3">
-            <div class="card-header">
-                <h5 class="text-center">
-                    مشخصات پرسنلی من
-                </h5>
-            </div>
-            <div class="card-body farsi text-right">
-                <div class="media">
-                    <a href="{{me_employee.get_absolute_url}}">
-                        <img src="{{me_employee.profile.image}}" class="rounded-circle" width="96" alt="">
-                    </a>
-                    <div class="media-body mr-2">
-                        <div class="mb-2 mt-2">
 
-                            <a href="{{me_employee.get_absolute_url}}">
-                                <h5>
-
-                                    {{me_employee.profile.name}}
-                                </h5>
-                            </a>
-                        </div>
-                        <div>
-                            <small class="text-muted">
-                                واحد سازمانی :
-                            </small>
-                            <a href="{{me_employee.organization_unit.get_absolute_url}}">
-                                {{me_employee.organization_unit.title}}
-                            </a>
-                        </div>
-                        <div>
-                            <small class="text-muted">
-                                سازمان :
-                            </small>
-                            <a href="{{me_employee.organization_unit.employer.get_absolute_url}}">
-                                {{me_employee.organization_unit.employer.title}}
-                            </a>
-                        </div>
-
-                    </div>
+            {% if me_employee %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="text-center">
+                        مشخصات پرسنلی من
+                    </h5>
                 </div>
+                <div class="card-body farsi text-right">
+                    <div class="media">
+                        <a href="{{me_employee.get_absolute_url}}">
+                            <img src="{{me_employee.profile.image}}" class="rounded-circle" width="96" alt="">
+                        </a>
+                        <div class="media-body mr-2">
+                            <div class="mb-2 mt-2">
 
+                                <a href="{{me_employee.get_absolute_url}}">
+                                    <h5>
+
+                                        {{me_employee.profile.name}}
+                                    </h5>
+                                </a>
+                            </div>
+                            <div>
+                                <small class="text-muted">
+                                    واحد سازمانی :
+                                </small>
+                                <a href="{{me_employee.organization_unit.get_absolute_url}}">
+                                    {{me_employee.organization_unit.title}}
+                                </a>
+                            </div>
+                            <div>
+                                <small class="text-muted">
+                                    سازمان :
+                                </small>
+                                <a href="{{me_employee.organization_unit.employer.get_absolute_url}}">
+                                    {{me_employee.organization_unit.employer.title}}
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
-    
-    {% endif %}
+
+            {% endif %}
 
             <div class="card mb-3" id="services-app">
                 <div class="card-header card-header-success" id="headingServices">
@@ -100,6 +100,20 @@
         </div>
         <div class="col-md-4">
             {% include "projectmanager/includes/employers-app/template.html" %}
+            <div class="card mb-3" id="employees-app">
+                <div class="card-header card-header-success" id="headingEmployees">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:employees' organization_unit_id=0 employer_id=0 %}"
+                            class="btn btn-link">
+                            پرسنل
+                        </a>
+                    </h5>
+                </div>
+
+
+
+            </div>
+
             <div class="card mb-3" id="services-app">
                 <div class="card-header card-header-success" id="headingServices">
                     <h5 class="card-title text-center farsi">
@@ -112,6 +126,7 @@
 
 
             </div>
+
 
 
 

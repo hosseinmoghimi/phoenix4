@@ -25,6 +25,7 @@ urlpatterns = [
     path('organization_units_chart/<int:employer_id>/',login_required(views.OrganizationUnitViews().organization_units_chart),name="organization_units_chart"),
     path('employer/<int:pk>/',login_required(views.OrganizationUnitViews().employer),name="employer"),
     path('employee/<int:pk>/',login_required(views.EmployeeViews().employee),name="employee"),
+    path('employees/<int:employer_id>/<int:organization_unit_id>/',login_required(views.EmployeeViews().employees),name="employees"),
     path('organizationunit/<int:pk>/',login_required(views.OrganizationUnitViews().organization_unit),name="organizationunit"),
     path('material/<int:pk>/',login_required(views.MaterialViews().material),name="material"),
     path('materialrequest/<int:pk>/',login_required(views.MaterialRequestViews().material_request),name="materialrequest"),

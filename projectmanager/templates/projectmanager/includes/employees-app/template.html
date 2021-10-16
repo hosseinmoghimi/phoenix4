@@ -17,7 +17,7 @@
         <div id="collapseEmployees" class="collapse {% if organization_unit %}show{% endif %}"
             aria-labelledby="headingEmployees" data-parent="#accordion-employees">
             <div class="card-body">
-              
+
                 <div v-for="employee in employees" class="mb-3">
                     <a :href="employee.get_absolute_url">
                         <div class="media">
@@ -27,15 +27,15 @@
                                 <h5 v-text="employee.profile.name">
 
                                 </h5>
-<div>
-    <a :href="employee.organization_unit.get_absolute_url">
-        <small v-text=employee.organization_unit.title></small>
-    </a>
-    /
-    <a :href="employee.organization_unit.employer.get_absolute_url">
-        <small v-text=employee.organization_unit.employer.title></small>
-    </a>
-</div>
+                                <div>
+                                    <a :href="employee.organization_unit.employer.get_absolute_url">
+                                        <small v-text=employee.organization_unit.employer.title></small>
+                                    </a>
+                                    /
+                                    <a :href="employee.organization_unit.get_absolute_url">
+                                        <small v-text=employee.organization_unit.title></small>
+                                    </a>
+                                </div>
 
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                 </div>
 
             </div>
-                {% if add_employee_form %}
+            {% if add_employee_form %}
             <div class="card-footer ">
 
                 <button class="btn btn-primary" v-if="!show_add_form" @click="show_add_form=true">
@@ -97,7 +97,7 @@
 
 
             </div>
-                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

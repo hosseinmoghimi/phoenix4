@@ -197,17 +197,15 @@ class OrganizationUnitRepo():
             self.objects=OrganizationUnit.objects.filter(id=0)
 
     def organization_unit(self, *args, **kwargs):
-        pk=0
-        if 'pk' in kwargs:
-            return self.objects.filter(pk=kwargs['pk']).first()
-        if 'id' in kwargs:
-            return self.objects.filter(pk=kwargs['id']).first()
-        if 'new_organization_id' in kwargs:
-            return self.objects.filter(pk=kwargs['new_organization_id']).first()
         if 'organization_unit_id' in kwargs:
-            return self.objects.filter(pk=kwargs['organization_unit_id']).first()
-        if 'title' in kwargs:
-            return self.objects.filter(pk=kwargs['title']).first()
+            q=Q(pk=kwargs['organization_unit_id'])
+        elif 'id' in kwargs:
+            q=Q(pk=kwargs['id'])
+        elif 'pk' in kwargs:
+            q=Q(pk=kwargs['pk'])
+        elif 'title' in kwargs:
+            q=Q(title=kwargs['title'])
+        return self.objects.filter(q).first()
 
     def get(self, *args, **kwargs):
         return self.organization_unit(*args, **kwargs)
@@ -636,11 +634,10 @@ class EmployeeRepo():
 
     def list(self, *args, **kwargs):
         objects = self.objects
-        if 'search_for' in kwargs:
-            objects = objects.filter(title__contains=kwargs['search_for'])
-        if 'for_home' in kwargs:
-            objects = objects.filter(
-                Q(for_home=kwargs['for_home']) | Q(parent=None))
+        if 'organization_unit_id' in kwargs and not kwargs['organization_unit_id']==0:
+            objects = objects.filter(organization_unit_id=kwargs['organization_unit_id'])
+        if 'employer_id' in kwargs and not kwargs['employer_id']==0:
+            objects = objects.filter(organization_unit__employer_id=kwargs['employer_id'])
         return objects.all()
 
     def add_employee(self, *args, **kwargs):
@@ -679,13 +676,14 @@ class EmployerRepo():
             self.objects=Employer.objects.filter(id=0)
 
     def employer(self, *args, **kwargs):
-        if 'pk' in kwargs:
-            return self.objects.filter(pk=kwargs['pk']).first()
-        if 'id' in kwargs:
-            return self.objects.filter(pk=kwargs['id']).first()
+        pk=0
         if 'employer_id' in kwargs:
-            return self.objects.filter(pk=kwargs['employee_id']).first()
-
+            pk=kwargs['employer_id']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        return self.objects.filter(pk=pk).first()
     def get(self, *args, **kwargs):
         return self.organization_unit(*args, **kwargs)
 
