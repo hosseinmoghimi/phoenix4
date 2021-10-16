@@ -14,7 +14,7 @@
     }
 
     .card {
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+        box-shadow: 0 1px 3px 0 rgba(241, 11, 11, 0.1), 0 1px 2px 0 rgba(0, 0, 0, .06);
     }
 
     .card {
@@ -76,7 +76,6 @@
                         class="mr-2">{{selected_profile.name}}</a></li>
                 <li class="breadcrumb-item"><a href="{{selected_profile.get_edit_url_panel}}" class="mr-2">ویرایش</a>
                 </li>
-
                 <li class="breadcrumb-item"><a href="{% url 'authentication:logout' %}" class="mr-2">خروج</a>
                 </li>
 
@@ -97,7 +96,15 @@
                                     {% if selected_profile.bio %}
                                     {{selected_profile.bio}}
                                     {%endif %}</p>
-
+                                {% if perms.authentication.change_profile and selected_profile.user is not None %}
+                                <form class="my-2" action="{% url 'authentication:login_as_user' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="username" value="{{selected_profile.user.username}}">
+                                    <button class="btn btn-block btn-outline-success farsi" type="submit">ورود به عنوان
+                                        {{selected_profile.name}}
+                                    </button>
+                                </form>
+                                {% endif %}
                                 <a class="btn btn-outline-danger" href="{{selected_profile.get_edit_url}}">
 
 

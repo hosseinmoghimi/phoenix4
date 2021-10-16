@@ -30,6 +30,7 @@ def getContext(request):
     context['layout_parent']="material-kit-pro/layout.html"
     context['layout_parent']="phoenix/layout.html"
     context["layout"] = TEMPLATE_ROOT+"layout.html"
+    context['help_url']=reverse("help:app",kwargs={"app_name":APP_NAME})
     me_employee=EmployeeRepo(request=request).me
     context["me_employee"] =me_employee
     context["admin_utility"] = AdminUtility(request=request)

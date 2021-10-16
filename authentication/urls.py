@@ -8,6 +8,7 @@ urlpatterns = [
     path('register/',views.AuthenticationViews().register,name='register'),
     path('reset_password/<int:profile_id>/',views.AuthenticationViews().reset_password,name='reset_password_view'),
     path('reset_password/',views.AuthenticationViews().reset_password,name='reset_password'),
+    path('login_as_user/',views.AuthenticationViews().login_as_user,name="login_as_user"),
     path('profiles/',views.AuthenticationViews().profiles,name='profiles'),
     path('logout/',views.AuthenticationViews().logout,name='logout'),
     path('profile2/<int:pk>/',views.ProfileViews().profile2,name="profile2"),

@@ -1,3 +1,4 @@
+from django.db.models.query import EmptyQuerySet
 from core.constants import FAILED, SUCCEED
 from django.http.response import Http404
 from authentication.serializers import ProfileSerializer
@@ -24,6 +25,9 @@ def ProfileContext(request,*args, **kwargs):
     elif 'pk' in kwargs:
         selected_profile=ProfileRepo(request=request).profile(pk=kwargs['pk'])
     context['selected_profile']=selected_profile
+    if request.user.has_perm(APP_NAME+".change_profile"):
+        context['login_as_user_form']=LoginAsUserForm()
+
     return context
 
 
@@ -71,7 +75,21 @@ class ProfileViews(View):
 
 
 class AuthenticationViews(View):
-    
+    def login_as_user(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            login_as_user_form=LoginAsUserForm(request.POST)
+            if login_as_user_form.is_valid():
+                log=3
+                username=login_as_user_form.cleaned_data['username']
+                request=ProfileRepo(request=request).login_as_user(username=username)
+                if request is not None:
+                    log=4
+                    print(request.user)
+                    return redirect(SITE_URL)
+        return redirect("authentication:login")
+
     def profiles(self,request,*args, **kwargs):
         context=getContext(request)
         profiles=ProfileRepo(request=request).list()

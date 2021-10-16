@@ -103,7 +103,14 @@ class ProfileRepo():
             if user.is_authenticated:
                 return request
         return None
-
+    def login_as_user(self,username):
+        if not self.user.has_perm(APP_NAME+".change_profile"):
+            return
+        user=User.objects.filter(username=username).first()
+        if user is None:
+            return None
+        login(request=self.request,user=user,backend='django.contrib.auth.backends.ModelBackend')
+        return self.request
         
     def list(self,*args, **kwargs):
         if self.user.has_perm(APP_NAME+".view_profile"):
