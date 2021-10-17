@@ -1,6 +1,8 @@
+from django.http import request
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
 from vehicles.enums import VehicleColorEnum, VehicleTypeEnum
+from vehicles.serializers import VehicleWorkEventSerializer
 from .models import Trip, Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
 from .apps import APP_NAME
 from django.utils import timezone
@@ -364,3 +366,24 @@ class VehicleWorkEventRepo():
             if event_type is not None and not event_type == "":
                 objects = objects.filter(event_type=event_type)
         return objects
+
+
+    def add_vehicle_work_event(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_vehicleworkevent"):
+            return
+        work_shift_id=kwargs["work_shift_id"] if "work_shift_id" in kwargs else 0
+        event_type=kwargs["event_type"] if "event_type" in kwargs else ""
+        vehicle_id=kwargs["vehicle_id"] if "vehicle_id" in kwargs else 0
+        event_datetime=kwargs["event_datetime"] if "event_datetime" in kwargs else timezone.now()
+        description=kwargs["description"] if "description" in kwargs else ""
+        kilometer=kwargs["kilometer"] if "kilometer" in kwargs else 0
+        work_shift=WorkShiftRepo(request=self.request).work_shift(pk=work_shift_id)
+        vehicle_work_event=VehicleWorkEvent()
+        vehicle_work_event.work_shift_id=work_shift_id
+        vehicle_work_event.event_type=event_type
+        vehicle_work_event.vehicle_id=work_shift.vehicle_id
+        vehicle_work_event.event_datetime=event_datetime
+        vehicle_work_event.description=description
+        vehicle_work_event.kilometer=kilometer
+        vehicle_work_event.save()
+        return vehicle_work_event

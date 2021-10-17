@@ -20,6 +20,7 @@ urlpatterns = [
 
 
     path("add_work_shift/",apis.WorkShiftApi().add_work_shift,name='add_work_shift'),
+    path("add_vehicle_work_event/",apis.VehicleWorkEventApi().add_vehicle_work_event,name='add_vehicle_work_event'),
     path("add_new_trip/",apis.TripApi().add_new_trip,name='add_new_trip'),
     path("add_maintenance/",apis.MaintenanceApi().add_maintenance,name='add_maintenance'),
     path("add_new_vehicle/",apis.VehicleApi().add_new_vehicle,name='add_new_vehicle'),

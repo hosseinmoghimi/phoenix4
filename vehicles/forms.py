@@ -27,4 +27,14 @@ class AddVehicleForm(forms.Form):
 
 class AddTripForm(forms.Form):
     title=forms.CharField( max_length=100, required=True)
+
+class AddVehicleWorkEventForm(forms.Form):
+    work_shift_id=forms.IntegerField(required=True)
+    event_type=forms.CharField( max_length=50, required=True)
+    vehicle_id=forms.IntegerField(required=True)
+    event_datetime=forms.CharField( max_length=50, required=True)
+    kilometer=forms.IntegerField( required=True)
+     
+    description=forms.CharField( max_length=5000, required=False)
+
     

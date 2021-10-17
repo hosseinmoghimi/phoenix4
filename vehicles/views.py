@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from core.views import CoreContext
-from vehicles.enums import MaintenanceEnum
-from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddWorkShiftForm
+from vehicles.enums import MaintenanceEnum, WorkEventEnum
+from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, ServiceManRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, ServiceManSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -68,6 +68,13 @@ class VehicleViews(View):
         context['drivers_s']=drivers_s
 
 
+        
+        maintenances=MaintenanceRepo(request=request).list(*args, **kwargs)
+        context['maintenances']=maintenances
+        maintenances_s=json.dumps(MaintenanceSerializer(maintenances,many=True).data)
+        context['maintenances_s']=maintenances_s
+        if request.user.has_perm(APP_NAME+".add_maintenance"):
+            context['add_maintenance_form']=AddMaintenanceForm()
         
 
         
@@ -159,6 +166,7 @@ class VehicleWorkEventViews(View):
         work_shifts=[vehicle_work_event.work_shift]
         context['work_shifts']=work_shifts 
         context['work_shifts_s']=json.dumps(WorkShiftSerializer(work_shifts,many=True).data) 
+        # context['add_work_shift_form']=1
 
         return render(request,TEMPLATE_FOLDER+"vehicle-work-event.html",context)
 
@@ -171,7 +179,10 @@ class WorkShiftViews(View):
         area=AreaRepo(request=request).area(*args, **kwargs)
         context['area']=area
 
+        
 
+
+        context['event_types']=(i[0] for i in WorkEventEnum.choices)
         
         work_shift=WorkShiftRepo(request=request).work_shift(*args, **kwargs)
         context['work_shift']=work_shift 
@@ -180,6 +191,9 @@ class WorkShiftViews(View):
 
         context['vehicle_work_events']=vehicle_work_events
         context['vehicle_work_events_s']=json.dumps(VehicleWorkEventSerializer(vehicle_work_events,many=True).data)
+        
+        if request.user.has_perm(APP_NAME+".add_vehicleworkevent"):
+            context['add_vehicle_work_event_form']=AddVehicleWorkEventForm()
 
         return render(request,TEMPLATE_FOLDER+"work-shift.html",context)
 

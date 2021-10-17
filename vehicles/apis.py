@@ -4,8 +4,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 
-from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, WorkShiftRepo
-from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, WorkShiftSerializer
+from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -44,6 +44,43 @@ class WorkShiftApi(APIView):
                     log=4
                     work_shift=WorkShiftSerializer(work_shift).data
                     context['work_shift']=work_shift
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+
+class VehicleWorkEventApi(APIView):
+    def add_vehicle_work_event(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_vehicle_work_event_form=AddVehicleWorkEventForm(request.POST)
+            if add_vehicle_work_event_form.is_valid():
+                log=3
+                
+                work_shift_id=add_vehicle_work_event_form.cleaned_data['work_shift_id']
+                event_type=add_vehicle_work_event_form.cleaned_data['event_type']
+                vehicle_id=add_vehicle_work_event_form.cleaned_data['vehicle_id']
+                event_datetime=add_vehicle_work_event_form.cleaned_data['event_datetime']
+                kilometer=add_vehicle_work_event_form.cleaned_data['kilometer']
+                description=add_vehicle_work_event_form.cleaned_data['description']
+
+              
+                event_datetime=PersianCalendar().to_gregorian(event_datetime)
+                vehicle_work_event=VehicleWorkEventRepo(request=request).add_vehicle_work_event(
+                    work_shift_id=work_shift_id,
+                    event_type=event_type,
+                    event_datetime=event_datetime,
+                    description=description,
+                    kilometer=kilometer,
+                    )
+                
+                if vehicle_work_event is not None:
+                    log=4
+                    vehicle_work_event=VehicleWorkEventSerializer(vehicle_work_event).data
+                    context['vehicle_work_event']=vehicle_work_event
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

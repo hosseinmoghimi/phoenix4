@@ -17,7 +17,7 @@
                 <ul class="nav flex-column" style="padding-right:10px">
                     <li class="nav-item">
                         <a class="nav-link farsi docs-creator" href="{{vehicle_work_event.get_absolute_url}}">
-                            {{vehicle_work_event}}
+                            {{vehicle_work_event.event_type}}
                         </a>
                         {% if perms.vehicles.change_vehicleworkevent %}
                         <a title="ویرایش" target="_blank" href="{{vehicle_work_event.get_edit_url}}">

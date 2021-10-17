@@ -67,10 +67,13 @@
         </table>
 
 
-        {% if add_work_shift_form %}
-        {% include "vehicles/includes/vehicle-work-events-app/form.html" %}
-
-        {% endif %}
 
     </div>
+    {% if add_vehicle_work_event_form %}
+    <div class="card-footer">
+
+        {% include "vehicles/includes/vehicle-work-events-app/form.html" %}
+    </div>
+
+    {% endif %}
 </div>
