@@ -4,8 +4,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 
-from vehicles.repo import MaintenanceRepo, WorkShiftRepo
-from vehicles.serializers import MaintenanceSerializer, WorkShiftSerializer
+from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, WorkShiftRepo
+from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -83,6 +83,52 @@ class MaintenanceApi(APIView):
                     log=4
                     maintenance=MaintenanceSerializer(maintenance).data
                     context['maintenance']=maintenance
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+class VehicleApi(APIView):
+    def add_new_vehicle(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_vehicle_form=AddVehicleForm(request.POST)
+            if add_vehicle_form.is_valid():
+                log=3
+                
+                name=add_vehicle_form.cleaned_data['name']
+                vehicle=VehicleRepo(request=request).add_vehicle(
+                    name=name,
+                )
+                
+                if vehicle is not None:
+                    log=4
+                    context['vehicle']=VehicleSerializer(vehicle).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+class TripApi(APIView):
+    def add_new_trip(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_trip_form=AddTripForm(request.POST)
+            if add_trip_form.is_valid():
+                log=3
+                
+                title=add_trip_form.cleaned_data['title']
+                trip=TripRepo(request=request).add_trip(
+                    title=title,
+                )
+                
+                if trip is not None:
+                    log=4
+                    context['trip']=TripSerializer(trip).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Area, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
+
+from projectmanager.serializers import LocationSerializer
+from .models import Area, Trip, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
 from authentication.serializers import ProfileSerializer
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -50,3 +52,11 @@ class VehicleWorkEventSerializer(serializers.ModelSerializer):
         model=VehicleWorkEvent
         fields=['id','vehicle','event_type','work_shift','get_absolute_url','persian_event_datetime']
 
+class TripSerializer(serializers.ModelSerializer):
+    driver=DriverSerializer()
+    vehicle=VehicleSerializer()
+    source=LocationSerializer()
+    destination=LocationSerializer()
+    class Meta:
+        model=Trip
+        fields=['id','title','vehicle','driver','distance','cost','source','destination','get_absolute_url','persian_trip_datetime','get_edit_url']

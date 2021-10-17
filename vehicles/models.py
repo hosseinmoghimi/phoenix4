@@ -1,3 +1,4 @@
+from django.db.models.base import Model
 from django.db.models.fields import CharField
 from core.models import BasicPage
 from django.db import models
@@ -16,6 +17,33 @@ class VehiclePage(BasicPage):
         self.app_name=APP_NAME
         return super(VehiclePage,self).save(*args, **kwargs)
 
+class Trip(models.Model):
+    title=models.CharField(_("title"), max_length=200)
+    source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
+    destination=models.ForeignKey("projectmanager.location",related_name="trip_desctination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
+    driver=models.ForeignKey("driver", verbose_name=_("driver"), on_delete=models.CASCADE)
+    distance=models.IntegerField(_("distance"),default=5)
+    cost=models.IntegerField(_("cost"))
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    date_tripped=models.DateTimeField(_("date_tripped"), auto_now=False, auto_now_add=False)
+    vehicle=models.ForeignKey("vehicle", verbose_name=_("vehicle"), on_delete=models.CASCADE)
+    description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
+    class_name="trip"
+
+    class Meta:
+        verbose_name = _("Trip")
+        verbose_name_plural = _("Trips")
+
+    def __str__(self):
+        return self.title
+
+    def persian_trip_datetime(self):
+        return PersianCalendar().from_gregorian(self.date_tripped)
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
 
 class Vehicle(models.Model):
     name=models.CharField(_("نام"), max_length=50)
@@ -23,7 +51,7 @@ class Vehicle(models.Model):
     brand=models.CharField(_("برند"),choices=VehicleBrandEnum.choices,default=VehicleBrandEnum.TOYOTA, max_length=50)
     model_name=models.CharField(_("مدل"),null=True,blank=True, max_length=50)
     color=models.CharField(_("رنگ"),choices=VehicleColorEnum.choices,default=VehicleColorEnum.SEFID, max_length=50)
-    year=models.IntegerField(_("سال تولید"),default=2012)
+    year=models.IntegerField(_("سال تولید"),default=2015)
     plaque=models.CharField(_("پلاک"),null=True,blank=True, max_length=50)
     owner=models.CharField(_("مالک"), max_length=50,null=True,blank=True)
     driver=models.CharField(_("راننده"), max_length=50,null=True,blank=True)

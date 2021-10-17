@@ -79,6 +79,10 @@
         {% include "vehicles/includes/work-shifts-app/template.html" %}
     </div>
 
+    <div class="col-md-12">
+        {% include "vehicles/includes/trips-app/template.html" %}
+
+    </div>
 </div>
 {% endblock content %}
 
@@ -95,5 +99,6 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "vehicles/includes/work-shifts-app/script.html" %}
 
+{% include "vehicles/includes/trips-app/script.html" %}
 
 {% endblock script %}

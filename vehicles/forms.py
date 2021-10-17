@@ -20,3 +20,11 @@ class AddMaintenanceForm(forms.Form):
     paid=forms.IntegerField(required=True)
     maintenance_type=forms.CharField( max_length=100, required=False)
     kilometer=forms.IntegerField( required=False)
+
+class AddVehicleForm(forms.Form):
+    name=forms.CharField( max_length=100, required=True)
+    
+
+class AddTripForm(forms.Form):
+    title=forms.CharField( max_length=100, required=True)
+    

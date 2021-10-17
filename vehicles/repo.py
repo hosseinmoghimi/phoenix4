@@ -1,6 +1,7 @@
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
-from .models import Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
+from vehicles.enums import VehicleColorEnum, VehicleTypeEnum
+from .models import Trip, Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
 from .apps import APP_NAME
 from django.utils import timezone
 now=timezone.now()
@@ -30,6 +31,68 @@ class VehicleRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_vehicle(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_vehicle"):
+            return
+        vehicle=Vehicle()
+        vehicle.name=kwargs['name'] if 'name' in kwargs else None
+        vehicle.vehicle_type =kwargs['vehicle_type'] if 'vehicle_type' in kwargs else VehicleTypeEnum.SEDAN
+        vehicle.color =kwargs['color'] if 'color' in kwargs else VehicleColorEnum.SEFID
+        vehicle.year =kwargs['year'] if 'year' in kwargs else 2015
+        vehicle.kilometer =kwargs['kilometer'] if 'kilometer' in kwargs else 0
+        
+        vehicle.save()
+        return vehicle
+
+class TripRepo():
+
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Trip.objects
+        self.me = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects=self.objects
+        if 'vehicle_id' in kwargs:
+            objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'driver_id' in kwargs:
+            objects=objects.filter(driver_id=kwargs['driver_id'])
+        if 'destination_id' in kwargs:
+            objects=objects.filter(destination_id=kwargs['destination_id'])
+        if 'source_id' in kwargs:
+            objects=objects.filter(source_id=kwargs['source_id'])
+        return objects.all()
+
+    def trip(self, *args, **kwargs):
+        if 'trip_id' in kwargs:
+            pk = kwargs['trip_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+    def add_trip(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_trip"):
+            return
+        trip=Trip()
+        trip.title=kwargs['title'] if 'title' in kwargs else None
+        trip.vehicle_id=kwargs['vehicle_id'] if 'vehicle_id' in kwargs else None
+        trip.source_id =kwargs['source_id'] if 'source_id' in kwargs else None
+        trip.destination_id =kwargs['destination_id'] if 'destination_id' in kwargs else None
+        trip.driver_id =kwargs['driver_id'] if 'driver_id' in kwargs else None
+        trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
+        trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
+        trip.date_tripped =kwargs['date_tripped'] if 'date_tripped' in kwargs else timezone.now()
+        
+        trip.save()
+        return trip
 
 class ServiceManRepo():
     def __init__(self, *args, **kwargs):

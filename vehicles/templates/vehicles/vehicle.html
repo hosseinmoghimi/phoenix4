@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-md-4">
         <div class="card">
-            
+
             <div class="card-header">
                 <h3 class="title text-center">
                     ماشین
@@ -25,12 +25,16 @@
                                 edit
                             </i>
                         </a>
-                      {% endif %}
+                        {% endif %}
                     </li>
                 </ul>
             </div>
 
         </div>
+    </div>
+    <div class="col-md-12">
+
+        {% include "vehicles/includes/trips-app/template.html" %}
     </div>
     <div class="col-md-12">
         {% include "vehicles/includes/work-shifts-app/template.html" %}
@@ -49,7 +53,7 @@
 
 {% block script %}
 <script>
-    let vehicle_id=parseInt("{{vehicle.id}}")
+    let vehicle_id = parseInt("{{vehicle.id}}")
 </script>
 
 <script src="{% static 'persian/moment.js' %}"></script>
@@ -61,5 +65,6 @@
 {% include "vehicles/includes/vehicle-work-events-app/script.html" %}
 {% include "vehicles/includes/maintenances-app/script.html" %}
 
+{% include "vehicles/includes/trips-app/script.html" %}
 
 {% endblock script %}

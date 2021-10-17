@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum
-from vehicles.forms import AddMaintenanceForm, AddWorkShiftForm
-from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, ServiceManRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, ServiceManSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddWorkShiftForm
+from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, ServiceManRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, ServiceManSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
 from django.views import View
 import json
@@ -28,6 +28,9 @@ class BasicViews(View):
 
         vehicles=VehicleRepo(request=request).list()
         context['vehicles']=vehicles
+        context['vehicles_s']=json.dumps(VehicleSerializer(vehicles,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_vehicle"):
+            context['add_vehicle_form']=AddVehicleForm()
 
         areas=AreaRepo(request=request).list(*args, **kwargs)
         context['areas']=areas
@@ -39,6 +42,12 @@ class BasicViews(View):
 
         drivers=DriverRepo(request=request).list(*args, **kwargs)
         context['drivers']=drivers
+
+        trips=TripRepo(request=request).list(*args, **kwargs)
+        context['trips']=trips
+        context['trips_s']=json.dumps(TripSerializer(trips,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_trip"):
+            context['add_trip_form']=AddTripForm()
 
         return render(request,TEMPLATE_FOLDER+"index.html",context)
 
@@ -77,6 +86,12 @@ class VehicleViews(View):
 
 
         
+        trips=TripRepo(request=request).list(*args, **kwargs)
+        context['trips']=trips
+        context['trips_s']=json.dumps(TripSerializer(trips,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_trip"):
+            context['add_trip_form']=AddTripForm()
+
 
         if request.user.has_perm(APP_NAME+".add_workshif"):
             context['add_work_shift_form']=AddWorkShiftForm()
@@ -116,6 +131,21 @@ class AreaViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
+
+class TripViews(View):
+    def trip(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        trip=TripRepo(request=request).trip(*args, **kwargs)
+        context['trip']=trip
+
+
+        
+        
+        
+
+        return render(request,TEMPLATE_FOLDER+"trip.html",context)
 
 
 class VehicleWorkEventViews(View):
@@ -180,6 +210,12 @@ class DriverViews(View):
         driver=DriverRepo(request=request).driver(*args, **kwargs)
         context['driver']=driver
 
+
+        trips=TripRepo(request=request).list(*args, **kwargs)
+        context['trips']=trips
+        context['trips_s']=json.dumps(TripSerializer(trips,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_trip"):
+            context['add_trip_form']=AddTripForm()
 
         
         work_shifts=WorkShiftRepo(request=request).list(*args, **kwargs)

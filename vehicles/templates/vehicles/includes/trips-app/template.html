@@ -1,0 +1,119 @@
+<div class="card" id="trips-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            سفر ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    title
+                </th>
+                <th>
+                    source
+                </th>
+                <th>
+                    destination
+                </th>
+                <th>
+                    driver
+                </th>
+                <th>
+                    vehicle
+                </th>
+                <th>
+                    cost
+                </th>
+                <th>
+                    distance
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="trip in trips">
+                    <td>
+                        <a :href="trip.get_absolute_url">
+
+                            <span v-text="trip.title"></span>
+                        </a>
+
+                    </td>
+                    <td>
+                        <a :href="trip.source.get_absolute_url">
+
+                            <span v-text="trip.source.title"></span>
+                        </a>
+
+
+                    </td>
+                    <td>
+
+                        <a :href="trip.destination.get_absolute_url">
+
+                            <span v-text="trip.destination.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a :href="trip.driver.get_absolute_url">
+
+                            <span v-text="trip.driver.profile.name"></span>
+                        </a>
+
+                    </td>
+                    <td>
+
+                        <a :href="trip.vehicle.get_absolute_url">
+
+                            <span v-text="trip.vehicle.name"></span>
+                        </a>
+
+                    </td>
+                    <td>
+                        <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span> 
+
+
+                    </td>
+                    <td>
+                        <small class="text-muted">km</small>
+                        <span v-text="trip.distance"></span> 
+                    </td>
+                    <td>
+                        {% if perms.vehicles.change_trip %}
+                        <a title="edit" target="_blank" :href="trip.get_edit_url">
+                            <i class="material-icons text-warning">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    {% if add_trip_form %}
+
+    <div class="card-footer">
+        <form @submit.prevent="add_trip()">
+            <div class="row">
+                <div class="col-9">
+                    <input type="text" v-model="new_trip_title" id="" class="form-control farsi">
+
+                </div>
+                <div class="col-3">
+
+                    <button class="btn btn-success btn-sm" type="submit">
+
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
