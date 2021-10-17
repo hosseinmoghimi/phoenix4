@@ -8,25 +8,25 @@
         <table class="table table-striped">
             <thead>
                 <th>
-                    title
+                    عنوان
                 </th>
                 <th>
-                    source
+                    مبدا
                 </th>
                 <th>
-                    destination
+                    مقصد
                 </th>
                 <th>
-                    driver
+                    راننده
                 </th>
                 <th>
-                    vehicle
+                    وسیله
                 </th>
                 <th>
-                    cost
+                    هزینه
                 </th>
                 <th>
-                    distance
+                    فاصله
                 </th>
                 <th>
 
@@ -36,6 +36,9 @@
                 <tr v-for="trip in trips">
                     <td>
                         <a :href="trip.get_absolute_url">
+                            <i class="material-icons">
+                                ballot
+                            </i>
 
                             <span v-text="trip.title"></span>
                         </a>
@@ -43,7 +46,9 @@
                     </td>
                     <td>
                         <a :href="trip.source.get_absolute_url">
-
+                            <i class="material-icons">
+                                place
+                            </i>
                             <span v-text="trip.source.title"></span>
                         </a>
 
@@ -52,13 +57,18 @@
                     <td>
 
                         <a :href="trip.destination.get_absolute_url">
+                            <i class="material-icons">
+                                place
+                            </i>
 
                             <span v-text="trip.destination.title"></span>
                         </a>
                     </td>
                     <td>
                         <a :href="trip.driver.get_absolute_url">
-
+                            <span class="material-icons">
+                                badge
+                                </span>
                             <span v-text="trip.driver.profile.name"></span>
                         </a>
 
@@ -66,19 +76,21 @@
                     <td>
 
                         <a :href="trip.vehicle.get_absolute_url">
-
+                            <i class="material-icons">
+                                commute
+                            </i>
                             <span v-text="trip.vehicle.name"></span>
                         </a>
 
                     </td>
                     <td>
-                        <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span> 
+                        <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span>
 
 
                     </td>
                     <td>
                         <small class="text-muted">km</small>
-                        <span v-text="trip.distance"></span> 
+                        <span v-text="trip.distance"></span>
                     </td>
                     <td>
                         {% if perms.vehicles.change_trip %}

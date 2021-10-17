@@ -1,25 +1,21 @@
 {% extends "vehicles/layout.html" %}
 {% load static %}
 {% block content %}
-<h4 class="text-center">
+<h3 class="text-center my-3">
     سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
-</h4>
+</h3>
 <div class="row">
     <div class="col-md-4">
         <div class="card">
 
             <div class="card-header">
-                <h3 class="title text-center">
+                <h4 class="title text-center">
                     سرویس کار
-                </h3>
+                </h4>
             </div>
             <div class="card-body">
-                <ul class="nav flex-column" style="padding-right:10px">
-                    <li class="nav-item">
-                        <a class="nav-link farsi docs-creator" href="{{service_man.get_absolute_url}}">
-                            <img src="{{service_man.profile.image}}" class="rounded-circle" width="48" alt="">
-                            {{service_man.profile.name}}
-                        </a>
+                <h4>
+                    {{service_man.name}}
                         {% if perms.vehicles.change_serviceman %}
                         <a title="ویرایش" target="_blank" href="{{service_man.get_edit_url}}">
                             <i class="material-icons">
@@ -27,6 +23,14 @@
                             </i>
                         </a>
                         {% endif %}
+
+                </h4>
+                <ul class="nav flex-column" style="padding-right:10px">
+                    <li class="nav-item">
+                        <a class="nav-link farsi docs-creator" href="{{service_man.profile.get_absolute_url}}">
+                            <img src="{{service_man.profile.image}}" class="rounded-circle" width="48" alt="">
+                            {{service_man.profile.name}}
+                        </a>
                     </li>
                 </ul>
             </div>

@@ -23,6 +23,7 @@ class WorkEventEnum(TextChoices):
     # aaaa=aaaa,_("aaaa")
 class VehicleBrandEnum(TextChoices):
     TOYOTA='تویوتا',_('تویوتا')
+    PEUGEOT='پژو',_('پژو')
     BENZ='بنز',_('بنز')
     ISUZU='ایسوزو',_('ایسوزو')
     SCANIA='اسکانیا',_('اسکانیا')
