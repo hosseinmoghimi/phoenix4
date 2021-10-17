@@ -32,4 +32,9 @@
     })
 </script>
 {% include "projectmanager/includes/materials-app/script.html" %}
+<script>
+    $(document).ready(()=>{
+        materials_app.materials=materials.filter(m=>m.parent_id ===null)
+    })
+</script>
 {% endblock %}
