@@ -1,5 +1,6 @@
 from django.db.models.base import Model
 from django.db.models.fields import CharField
+from core.enums import ColorEnum
 from core.models import BasicPage
 from django.db import models
 from django.db.models import Sum
@@ -34,8 +35,33 @@ class Passenger(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 
+class TripCategory(models.Model):
+    title=models.CharField(_("عنوان"), max_length=50)
+    color=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
+    class_name="tripcategory"
+    def get_badge(self):
+        return f"""
+            <span class="badge badge-{self.color}">{self.title}</span>
+        """
+    
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':self.pk,'driver_id':0,'vehicle_id':0,'trip_path_id':0})
+    class Meta:
+        verbose_name = _("TripCategory")
+        verbose_name_plural = _("TripCategorys")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_category_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
 class Trip(models.Model):
     title=models.CharField(_("title"), max_length=200)
+    category=models.ForeignKey("tripcategory",null=True,blank=True, verbose_name=_("نوع سفر"), on_delete=models.SET_NULL)
     vehicle=models.ForeignKey("vehicle", verbose_name=_("vehicle"), on_delete=models.CASCADE)
     driver=models.ForeignKey("driver", verbose_name=_("driver"), on_delete=models.CASCADE)
     distance=models.IntegerField(_("distance"),default=5)
@@ -73,6 +99,8 @@ class TripPath(models.Model):
     source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
     destination=models.ForeignKey("projectmanager.location",related_name="trip_desctination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
     cost=models.IntegerField(_("هزینه"),default=0)
+    distance=models.IntegerField(_("فاصله"),default=0)
+    duration=models.IntegerField(_("مدت زمان تقریبی"),default=0)
     class_name="trippath"
 
     class Meta:
@@ -83,7 +111,9 @@ class TripPath(models.Model):
         return f"مسیر {self.source} به {self.destination}"
     def __str__(self):
         return self.title
-
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':0,'trip_path_id':self.pk})
+    
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_path_id": self.pk})
     def get_edit_url(self):
@@ -108,6 +138,9 @@ class Vehicle(models.Model):
         verbose_name = _("Vehicle")
         verbose_name_plural = _("Vehicles")
 
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':self.pk,'trip_path_id':0})
+    
     def __str__(self):
         return self.brand +' ' +self.name
 
@@ -180,6 +213,9 @@ class Driver(models.Model):
         verbose_name = _("Driver")
         verbose_name_plural = _("Drivers")
 
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':self.pk,'vehicle_id':0,'trip_path_id':0})
+    
     def __str__(self):
         return self.profile.name
 

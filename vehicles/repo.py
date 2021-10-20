@@ -96,7 +96,7 @@ class TripRepo():
 
     def list(self, *args, **kwargs):
         objects=self.objects
-        if 'passenger_id' in kwargs:
+        if 'passenger_id' in kwargs and kwargs['passenger_id']>0:
             passenger_id=kwargs['passenger_id']
             trips_ids=[]
             passenger=PassengerRepo(request=self.request).passenger(pk=passenger_id)
@@ -104,7 +104,7 @@ class TripRepo():
                 if passenger in trip.passengers.all():
                     trips_ids.append(trip.id)
             return self.objects.filter(id__in=trips_ids)
-        if 'trip_path_id' in kwargs:
+        if 'trip_path_id' in kwargs and kwargs['trip_path_id']>0:
             trip_path_id=kwargs['trip_path_id']
             trips_ids=[]
             trip_path=TripPathRepo(request=self.request).trip_path(pk=trip_path_id)
@@ -113,14 +113,16 @@ class TripRepo():
                     trips_ids.append(trip.id)
             return self.objects.filter(id__in=trips_ids)
 
-        if 'vehicle_id' in kwargs:
+        if 'vehicle_id' in kwargs and kwargs['vehicle_id']>0:
             objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
-        if 'driver_id' in kwargs:
+        if 'category_id' in kwargs and kwargs['category_id']>0:
+            objects=objects.filter(category_id=kwargs['category_id'])
+        if 'driver_id' in kwargs and kwargs['driver_id']>0:
             objects=objects.filter(driver_id=kwargs['driver_id'])
-        if 'destination_id' in kwargs:
-            objects=objects.filter(destination_id=kwargs['destination_id'])
-        if 'source_id' in kwargs:
-            objects=objects.filter(source_id=kwargs['source_id'])
+        # if 'destination_id' in kwargs:
+        #     objects=objects.filter(destination_id=kwargs['destination_id'])
+        # if 'source_id' in kwargs:
+        #     objects=objects.filter(source_id=kwargs['source_id'])
         return objects.all()
 
     def trip(self, *args, **kwargs):

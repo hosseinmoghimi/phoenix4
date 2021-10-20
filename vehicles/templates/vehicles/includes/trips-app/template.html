@@ -14,7 +14,7 @@
                     مسیر ها
                 </th>
                 <th>
-                
+
                     وسیله
                 </th>
                 <td>
@@ -39,6 +39,11 @@
                             </i>
 
                             <span v-text="trip.title"></span>
+                        </a>
+                        <a v-if="trip.category" :href="trip.category.get_trips_url">
+                            <span :class="'badge badge-'+trip.category.color">
+                                <span v-text="trip.category.title"></span>
+                            </span>
                         </a>
 
                     </td>

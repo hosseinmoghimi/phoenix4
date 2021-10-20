@@ -1,6 +1,13 @@
 from core import enums as CoreEnums
 from django.db.models import TextChoices
 from django.utils.translation import gettext as _
+
+
+# 
+# class TripCategoryEnum(TextChoices):
+#     INNER="داخلی",_("داخلی")
+#     OUTER="خارجی",_("خارجی")
+
 class MaintenanceEnum(TextChoices):
     WASH="شستشو",_("شستشو")
     NEW_WATER='آب رادیات جدید',_('آب رادیات جدید')

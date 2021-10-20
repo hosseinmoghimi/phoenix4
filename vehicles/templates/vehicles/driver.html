@@ -13,7 +13,7 @@
                     راننده
                 </h3>
             </div>
-            <div class="card-body">
+            <div class="card-body farsi text-right">
                 <ul class="nav flex-column" style="padding-right:10px">
                     <li class="nav-item">
                         <a class="nav-link farsi docs-creator" href="{{driver.get_absolute_url}}">
@@ -29,6 +29,15 @@
                         {% endif %}
                     </li>
                 </ul>
+
+                <div class="my-3">
+                    <a href="{{driver.get_trips_url}}">
+                        <i class="material-icons">
+                            commute
+                        </i>
+                        سفرها
+                    </a>
+                </div>
             </div>
 
         </div>

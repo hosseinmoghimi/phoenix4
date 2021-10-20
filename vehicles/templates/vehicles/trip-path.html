@@ -49,10 +49,18 @@
                         {{trip_path.destination.title}}
                     </a>
                 </div>
-                 
+
                 <div class="my-3">
-هزینه:
-                        {{trip_path.cost|to_price}}
+                    هزینه:
+                    {{trip_path.cost|to_price}}
+                </div>
+                <div class="my-3">
+                    <a href="{{trip_path.get_trips_url}}">
+                        <i class="material-icons">
+                            commute
+                        </i>
+                        سفرها
+                    </a>
                 </div>
             </div>
         </div>
@@ -60,8 +68,8 @@
     <div class="col-md-12">
         {% include "vehicles/includes/trips-app/template.html" %}
     </div>
-   
- 
+
+
 
 
 
