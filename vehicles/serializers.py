@@ -1,7 +1,8 @@
+from django.db.models.query_utils import PathInfo
 from rest_framework import serializers
 
 from projectmanager.serializers import LocationSerializer
-from .models import Area, Trip, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
+from .models import Area, Trip, TripPath, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
 from authentication.serializers import ProfileSerializer
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -52,11 +53,17 @@ class VehicleWorkEventSerializer(serializers.ModelSerializer):
         model=VehicleWorkEvent
         fields=['id','vehicle','event_type','work_shift','get_absolute_url','persian_event_datetime']
 
-class TripSerializer(serializers.ModelSerializer):
-    driver=DriverSerializer()
-    vehicle=VehicleSerializer()
+class TripPathSerializer(serializers.ModelSerializer):
     source=LocationSerializer()
     destination=LocationSerializer()
     class Meta:
+        model=TripPath
+        fields=['id','title','source','destination','cost','get_absolute_url','get_edit_url']
+
+class TripSerializer(serializers.ModelSerializer):
+    driver=DriverSerializer()
+    vehicle=VehicleSerializer()
+    paths=TripPathSerializer(many=True)
+    class Meta:
         model=Trip
-        fields=['id','title','vehicle','driver','distance','cost','source','destination','get_absolute_url','persian_trip_datetime','get_edit_url']
+        fields=['id','title','vehicle','driver','distance','cost','paths','get_absolute_url','persian_date_started','persian_date_ended','get_edit_url']

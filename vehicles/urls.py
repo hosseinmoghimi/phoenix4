@@ -17,6 +17,9 @@ urlpatterns = [
     path("service_man/<int:service_man_id>/",views.ServiceManViews().service_man,name="service_man"),
     path("work_shift/<int:pk>/",views.WorkShiftViews().work_shift,name="workshift"),
     path("trip/<int:trip_id>/",views.TripViews().trip,name="trip"),
+    path("trips/",views.TripViews().trips,name="trips"),
+    path("passenger/<int:passenger_id>/",views.PassengerViews().passenger,name="passenger"),
+    path("trip_path/<int:trip_path_id>/",views.TripViews().trip_path,name='trippath'),
 
 
     path("add_work_shift/",apis.WorkShiftApi().add_work_shift,name='add_work_shift'),

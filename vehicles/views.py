@@ -2,7 +2,7 @@ from django.shortcuts import render
 from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
 from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm
-from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, ServiceManRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, ServiceManSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
 from django.views import View
@@ -139,20 +139,42 @@ class AreaViews(View):
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
 
+class PassengerViews(View):
+    def passenger(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        passenger=PassengerRepo(request=request).passenger(*args, **kwargs)
+        context['passenger']=passenger
+        trips=TripRepo(request=request).list(*args, **kwargs)
+        context['trips']=trips
+        trips_s=json.dumps(TripSerializer(trips,many=True).data)
+        context['trips_s']=trips_s
+        return render(request,TEMPLATE_FOLDER+"passenger.html",context)
+
 class TripViews(View):
     def trip(self,request,*args, **kwargs):
         context=getContext(request=request)
-
-
         trip=TripRepo(request=request).trip(*args, **kwargs)
         context['trip']=trip
-
-
-        
-        
-        
-
+        context['vehicle']=trip.vehicle
         return render(request,TEMPLATE_FOLDER+"trip.html",context)
+    def trips(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        trips=TripRepo(request=request).list(*args, **kwargs)
+        context['trips']=trips
+        trips_s=json.dumps(TripSerializer(trips,many=True).data)
+        context['trips_s']=trips_s
+        return render(request,TEMPLATE_FOLDER+"trips.html",context)
+
+
+    def trip_path(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        trip_path=TripPathRepo(request=request).trip_path(*args, **kwargs)
+        context['trip_path']=trip_path
+        trips=TripRepo(request=request).list(*args, **kwargs)
+        context['trips']=trips
+        trips_s=json.dumps(TripSerializer(trips,many=True).data)
+        context['trips_s']=trips_s
+        return render(request,TEMPLATE_FOLDER+"trip-path.html",context)
 
 
 class VehicleWorkEventViews(View):

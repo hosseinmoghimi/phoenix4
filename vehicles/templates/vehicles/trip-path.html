@@ -1,0 +1,85 @@
+{% extends "vehicles/layout.html" %}
+
+{% load to_persian_date %}
+{% load static %}
+{% load to_price %}
+{% block content %}
+<h4 class="text-center">
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+</h4>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{trip_path.title}}
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                <div class="my-3">
+                    عنوان :
+                    <a class="h4" href="{{trip_path.get_absolute_url}}">
+
+                        {{trip_path.title}}
+                    </a>
+                    {% if perms.vehicles.change_trippath %}
+                    <a target="_blank" href="{{trip_path.get_edit_url}}">
+
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="my-3">
+                    مبدا :
+                    <a href="{{trip_path.source.get_absolute_url}}">
+                        <i class="material-icons">
+                            place
+                        </i>
+                        {{trip_path.source.title}}
+                    </a>
+                </div>
+                <div class="my-3">
+                    مقصد :
+                    <a href="{{trip_path.destination.get_absolute_url}}">
+                        <i class="material-icons">
+                            place
+                        </i>
+                        {{trip_path.destination.title}}
+                    </a>
+                </div>
+                 
+                <div class="my-3">
+هزینه:
+                        {{trip_path.cost|to_price}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        {% include "vehicles/includes/trips-app/template.html" %}
+    </div>
+   
+ 
+
+
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let trip_path_id = parseInt("{{trip_path.id}}")
+</script>
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% include "vehicles/includes/trips-app/script.html" %}
+
+{% endblock script %}

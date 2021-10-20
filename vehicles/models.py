@@ -16,19 +16,44 @@ class VehiclePage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(VehiclePage,self).save(*args, **kwargs)
+class Passenger(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    class_name="passenger"
+    
+
+    class Meta:
+        verbose_name = _("Passenger")
+        verbose_name_plural = _("Passengers")
+
+    def __str__(self):
+        return self.profile.name
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"passenger_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
 
 class Trip(models.Model):
     title=models.CharField(_("title"), max_length=200)
-    source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
-    destination=models.ForeignKey("projectmanager.location",related_name="trip_desctination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
+    vehicle=models.ForeignKey("vehicle", verbose_name=_("vehicle"), on_delete=models.CASCADE)
     driver=models.ForeignKey("driver", verbose_name=_("driver"), on_delete=models.CASCADE)
     distance=models.IntegerField(_("distance"),default=5)
     cost=models.IntegerField(_("cost"))
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    date_tripped=models.DateTimeField(_("date_tripped"), auto_now=False, auto_now_add=False)
-    vehicle=models.ForeignKey("vehicle", verbose_name=_("vehicle"), on_delete=models.CASCADE)
-    description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
+    date_started=models.DateTimeField(_("شروع سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_ended=models.DateTimeField(_("پایان سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    paths=models.ManyToManyField("trippath",blank=True, verbose_name=_("مسیر های سرویس"))
+    passengers=models.ManyToManyField("passenger", verbose_name=_("مسافر ها"))
+    delay=models.IntegerField(_("تاخیر"),default=0)
+    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=5000)
     class_name="trip"
+
+
+    def persian_date_started(self):
+        return PersianCalendar().from_gregorian(self.date_started)
+    def persian_date_ended(self):
+        return PersianCalendar().from_gregorian(self.date_ended)
 
     class Meta:
         verbose_name = _("Trip")
@@ -36,11 +61,31 @@ class Trip(models.Model):
 
     def __str__(self):
         return self.title
-
-    def persian_trip_datetime(self):
-        return PersianCalendar().from_gregorian(self.date_tripped)
+ 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
+class TripPath(models.Model):
+    
+    source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
+    destination=models.ForeignKey("projectmanager.location",related_name="trip_desctination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
+    cost=models.IntegerField(_("هزینه"),default=0)
+    class_name="trippath"
+
+    class Meta:
+        verbose_name = _("TripPath")
+        verbose_name_plural = _("TripPaths")
+    @property
+    def title(self):
+        return f"مسیر {self.source} به {self.destination}"
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_path_id": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 

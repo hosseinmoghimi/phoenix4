@@ -1,10 +1,12 @@
 from django.contrib import admin
 
-from vehicles.models import Area, Driver, Maintenance, ServiceMan, Trip, Vehicle, VehicleEvent, VehicleLocation, VehicleWorkEvent, WorkShift
+from vehicles.models import Area, Driver, Maintenance, Passenger, ServiceMan, Trip, TripPath, Vehicle, VehicleEvent, VehicleLocation, VehicleWorkEvent, WorkShift
 
 # Register your models here.
 admin.site.register(Vehicle)
+admin.site.register(Passenger)
 admin.site.register(Driver)
+admin.site.register(TripPath)
 admin.site.register(Area)
 admin.site.register(VehicleLocation)
 admin.site.register(VehicleEvent)

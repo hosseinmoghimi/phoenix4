@@ -1,1 +1,153 @@
-{{trip.title}}
+{% extends "vehicles/layout.html" %}
+
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+<h4 class="text-center">
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+</h4>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{trip.title}}
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                <div class="my-3">
+                    عنوان :
+                    <a class="h4" href="{{trip.get_absolute_url}}">
+
+                        {{trip.title}}
+                    </a>
+                    {% if perms.vehicles.change_trip %}
+                    <a target="_blank" href="{{trip.get_edit_url}}">
+
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="my-3">
+                    مبدا :
+                    <a href="{{trip.source.get_absolute_url}}">
+                        <i class="material-icons">
+                            place
+                        </i>
+                        {{trip.source.title}}
+                    </a>
+                </div>
+                <div class="my-3">
+                    مقصد :
+                    <a href="{{trip.destination.get_absolute_url}}">
+                        <i class="material-icons">
+                            place
+                        </i>
+                        {{trip.destination.title}}
+                    </a>
+                </div>
+                <div class="my-3">
+                    زمان شروع:
+                        {{trip.date_started|to_persian_datetime|safe}}
+                </div>
+                <div class="my-3">
+                    زمان خاتمه :
+                        {{trip.date_ended|to_persian_datetime|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% include "vehicles/includes/vehicle-app/vehicle.html" %}
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+
+            <div class="card-header">
+                <h3 class="title text-center">
+                    راننده
+                </h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav flex-column" style="padding-right:10px">
+                    <li class="nav-item">
+                        <a class="nav-link farsi docs-creator" href="{{trip.driver.get_absolute_url}}">
+                            <img src="{{trip.driver.profile.image}}" class="rounded-circle" width="48" alt="">
+                            {{trip.driver.profile.name}}
+                        </a>
+                        {% if perms.vehicles.change_driver %}
+                        <a title="ویرایش" target="_blank" href="{{trip.driver.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+                    </li>
+
+
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="col-md-4">
+        <div class="card">
+
+            <div class="card-header">
+                <h3 class="title text-center">
+                    مسافر ها
+                </h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav flex-column" style="padding-right:10px">
+                    {% for passenger in trip.passengers.all %}
+
+
+                    <li class="nav-item">
+                        <a class="nav-link farsi docs-creator" href="{{passenger.get_absolute_url}}">
+                            <img src="{{passenger.profile.image}}" class="rounded-circle" width="48" alt="">
+                            {{passenger.profile.name}}
+                        </a>
+                        {% if perms.vehicles.change_passenger %}
+                        <a title="ویرایش" target="_blank" href="{{passenger.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let vehicle_id = parseInt("{{vehicle.id}}")
+</script>
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "vehicles/includes/work-shifts-app/script.html" %}
+
+{% include "vehicles/includes/trips-app/script.html" %}
+
+{% endblock script %}
