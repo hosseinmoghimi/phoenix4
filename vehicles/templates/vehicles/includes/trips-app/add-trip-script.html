@@ -24,10 +24,12 @@
             vehicles: vehicles
         },
         methods: {
-            
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
             add_new_trip: function () {
-              
-               
+
+
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     vehicle_id: this.vehicle_id,
@@ -45,10 +47,10 @@
             },
             add_path: function () {
                 add_trip_app.all_paths.forEach(path => {
-                    if (path.id == add_trip_app.path_id)
+                    if (path.id == add_trip_app.path_id) {
                         add_trip_app.paths.push(path)
-                    add_trip_app.cost = add_trip_app.cost + path.cost
-
+                        add_trip_app.cost = add_trip_app.cost + path.cost
+                    }
                 })
 
                 add_trip_app.all_paths = []
