@@ -158,6 +158,8 @@ class EventApi(APIView):
                 start_datetime=PersianCalendar().to_gregorian(start_datetime)
                 end_datetime=PersianCalendar().to_gregorian(end_datetime)
                 event=EventRepo(request=request).add_event(start_datetime=start_datetime,end_datetime=end_datetime,event_datetime=event_datetime,project_id=project_id,title=title)
+                print(event.persian_start_datetime())
+                print(10*"*****")
                 if event is not None:
                     context['event']=EventSerializer(event).data
                     context['result']=SUCCEED

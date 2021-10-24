@@ -913,12 +913,12 @@ class EventRepo():
     def add_event(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_event"):
             return None
-        if 'event_datetime' in kwargs:
-            event_datetime=kwargs['event_datetime']
         if 'start_datetime' in kwargs:
             start_datetime=kwargs['start_datetime']
         if 'end_datetime' in kwargs:
             end_datetime=kwargs['end_datetime']
+        if 'event_datetime' in kwargs:
+            event_datetime=kwargs['event_datetime']
         else:
             from django.utils import timezone
             event_datetime=timezone.now()

@@ -29,7 +29,8 @@ class PersianCalendar:
         
     def __init__(self,date=None):
         if date is None:
-            self.date=datetime.datetime.today()
+            from django.utils import timezone as timezone1
+            self.date=timezone1.now()
             self.persian_date=self.from_gregorian(greg_date_time=self.date)
         if date is not None:
             self.date=date
