@@ -45,6 +45,9 @@
                                 <span v-text="trip.category.title"></span>
                             </span>
                         </a>
+                         <span :class="'badge badge-'+trip.get_status_color">
+                                <span v-text="trip.status"></span>
+                            </span>
 
                     </td>
                     <td>
@@ -111,26 +114,5 @@
         </table>
 
     </div>
-    {% if add_trip_form %}
-
-    <div class="card-footer">
-        <form @submit.prevent="add_trip()">
-            <div class="row">
-                <div class="col-9">
-                    <input type="text" v-model="new_trip_title" id="" class="form-control farsi">
-
-                </div>
-                <div class="col-3">
-
-                    <button class="btn btn-success btn-sm" type="submit">
-
-                        <span class="material-icons">
-                            add
-                        </span>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    {% endif %}
+  
 </div>

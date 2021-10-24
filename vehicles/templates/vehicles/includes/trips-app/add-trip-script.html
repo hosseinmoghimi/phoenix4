@@ -1,0 +1,73 @@
+<script>
+    let vehicles = JSON.parse(`{{vehicles_s|escapejs}}`)
+    let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
+    let all_paths = JSON.parse(`{{paths_s|escapejs}}`)
+    let passengers = JSON.parse(`{{passengers_s|escapejs}}`)
+
+    let url_add_new_trip = "{% url 'vehicles:add_new_trip' %}"
+
+    let add_trip_app = new Vue({
+        el: "#add-trip-app",
+        data: {
+            all_passengers: passengers,
+            passengers: [],
+            delay: 12,
+            cost: 0,
+            vehicle_id: 0,
+            driver_id: 0,
+            title: "sd",
+            paths: [],
+            path_id: 0,
+            drivers: drivers,
+            all_paths: all_paths,
+            paths: [],
+            vehicles: vehicles
+        },
+        methods: {
+            
+            add_new_trip: function () {
+              
+               
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    vehicle_id: this.vehicle_id,
+                    driver_id: this.driver_id,
+                    delay: this.delay,
+                    cost: this.cost,
+                }
+                $.post(url_add_new_trip, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        trips_app.trips.push(data.trip)
+                        trips_app.new_trip_title = ""
+                    }
+                })
+                console.log(payload)
+            },
+            add_path: function () {
+                add_trip_app.all_paths.forEach(path => {
+                    if (path.id == add_trip_app.path_id)
+                        add_trip_app.paths.push(path)
+                    add_trip_app.cost = add_trip_app.cost + path.cost
+
+                })
+
+                add_trip_app.all_paths = []
+                all_paths.forEach(path1 => {
+                    let sw = true
+                    add_trip_app.paths.forEach(path2 => {
+                        if (path1.id == path2.id)
+                            sw = false
+
+
+                    })
+                    if (sw)
+                        add_trip_app.all_paths.push(path1)
+
+                });
+
+
+            }
+        }
+
+    })
+</script>

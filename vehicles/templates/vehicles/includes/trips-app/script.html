@@ -1,29 +1,15 @@
 <script>
-    let url_add_new_trip = "{% url 'vehicles:add_new_trip' %}"
     let trips = JSON.parse(`{{trips_s|escapejs}}`)
     let trips_app = new Vue({
         el: "#trips-app",
         data: {
             trips: trips,
-            new_trip_title: "",
         },
         methods: {
-            to_price:function(value,currency){
-return to_price(value,currency)
+            to_price: function (value, currency) {
+                return to_price(value, currency)
             },
-            add_trip: function () {
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    title: this.new_trip_title,
-                }
-                $.post(url_add_new_trip, payload).done((data) => {
-                    if (data.result === 'SUCCEED') {
-                        trips_app.trips.push(data.trip)
-                        trips_app.new_trip_title=""
-                    }
-                })
-                console.log(payload)
-            },
+             
         }
     })
 </script>

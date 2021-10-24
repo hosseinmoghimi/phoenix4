@@ -4,9 +4,9 @@
 {% load static %}
 {% load to_price %}
 {% block content %}
-<h4 class="text-center">
+<h3 class="text-center my-4">
     سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
-</h4>
+</h3>
 <div class="row">
     <div class="col-md-4">
         <div class="card">
@@ -65,10 +65,25 @@
             </div>
         </div>
     </div>
+
     <div class="col-md-12">
         {% include "vehicles/includes/trips-app/template.html" %}
     </div>
 
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    ثبت سفر جدید
+                </h4>
+            </div>
+            <div class="card-body">
+                {% include "vehicles/includes/trips-app/add-trip-form.html" %}
+
+            </div>
+        </div>
+
+    </div>
 
 
 
@@ -89,5 +104,17 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 
 {% include "vehicles/includes/trips-app/script.html" %}
+{% include "vehicles/includes/trips-app/add-trip-script.html" %}
+<script>
+    $(document).ready(() => {
 
+        all_paths.forEach(path => {
+            if (path.id == trip_path_id) {
+                add_trip_app.paths.push(path)
+                add_trip_app.cost=path.cost
+
+            }
+        });
+    })
+</script>
 {% endblock script %}

@@ -2,7 +2,7 @@ from django.db.models.query_utils import PathInfo
 from rest_framework import serializers
 
 from projectmanager.serializers import LocationSerializer
-from .models import Area, Trip, TripCategory, TripPath, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
+from .models import Area, Passenger, Trip, TripCategory, TripPath, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
 from authentication.serializers import ProfileSerializer
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -72,4 +72,10 @@ class TripSerializer(serializers.ModelSerializer):
     paths=TripPathSerializer(many=True)
     class Meta:
         model=Trip
-        fields=['id','title','category','vehicle','driver','distance','cost','paths','delay','get_absolute_url','persian_date_started','persian_date_ended','get_edit_url']
+        fields=['id','title','category','get_status_color','status','vehicle','driver','distance','cost','paths','delay','get_absolute_url','persian_date_started','persian_date_ended','get_edit_url']
+
+class PassengerSerilizer(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    class Meta:
+        model=Passenger
+        fields=['id','profile','get_absolute_url','get_edit_url']

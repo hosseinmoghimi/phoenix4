@@ -60,6 +60,7 @@ class TripCategory(models.Model):
 
 
 class Trip(models.Model):
+    status=models.CharField(_("status"), choices=TripStatusEnum.choices,default=TripStatusEnum.REQUESTED, max_length=50)
     title=models.CharField(_("title"), max_length=200)
     category=models.ForeignKey("tripcategory",null=True,blank=True, verbose_name=_("نوع سفر"), on_delete=models.SET_NULL)
     vehicle=models.ForeignKey("vehicle", verbose_name=_("vehicle"), on_delete=models.CASCADE)
@@ -75,6 +76,17 @@ class Trip(models.Model):
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=5000)
     class_name="trip"
 
+    def get_status_color(self):
+        color="primary"
+        if self.status==TripStatusEnum.REQUESTED:
+            color="danger"
+        if self.status==TripStatusEnum.CANCELED:
+            color="secondary"
+        if self.status==TripStatusEnum.APPROVED:
+            color="primary"
+        if self.status==TripStatusEnum.DELIVERED:
+            color="success"
+        return color
 
     def persian_date_started(self):
         return PersianCalendar().from_gregorian(self.date_started)
@@ -97,7 +109,7 @@ class Trip(models.Model):
 class TripPath(models.Model):
     
     source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
-    destination=models.ForeignKey("projectmanager.location",related_name="trip_desctination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
+    destination=models.ForeignKey("projectmanager.location",related_name="trip_destination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
     cost=models.IntegerField(_("هزینه"),default=0)
     distance=models.IntegerField(_("فاصله"),default=0)
     duration=models.IntegerField(_("مدت زمان تقریبی"),default=0)

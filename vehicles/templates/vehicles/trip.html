@@ -30,24 +30,31 @@
                     </a>
                     {% endif %}
                 </div>
-                <div class="my-3">
-                    مبدا :
-                    <a href="{{trip.source.get_absolute_url}}">
+                {% for trip_path in trip.paths.all  %}
+                   <div class="my-3">
+                    <span class="text-muted  ">
+
+                        مبدا :
+                    </span>
+                    <a href="{{trip_path.source.get_absolute_url}}">
                         <i class="material-icons">
                             place
                         </i>
-                        {{trip.source.title}}
+                        {{trip_path.source.title}}
                     </a>
-                </div>
-                <div class="my-3">
-                    مقصد :
-                    <a href="{{trip.destination.get_absolute_url}}">
+             <span class="text-muted mx-2">
+
+                 مقصد :
+             </span>
+                    <a href="{{trip_path.destination.get_absolute_url}}">
                         <i class="material-icons">
                             place
                         </i>
-                        {{trip.destination.title}}
+                        {{trip_path.destination.title}}
                     </a>
                 </div>
+                {% endfor %}
+               
                 <div class="my-3">
                     زمان شروع:
                         {{trip.date_started|to_persian_datetime|safe}}

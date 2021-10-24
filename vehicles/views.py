@@ -3,7 +3,7 @@ from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
 from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, ServiceManSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
 from django.views import View
 import json
@@ -164,7 +164,26 @@ class TripViews(View):
         trips_s=json.dumps(TripSerializer(trips,many=True).data)
         context['trips_s']=trips_s
         return render(request,TEMPLATE_FOLDER+"trips.html",context)
+    def add_trip_context(self,request,*args, **kwargs):
+        context={}
 
+        vehicles=VehicleRepo(request=request).list(*args, **kwargs)
+        vehicles_s=json.dumps(VehicleSerializer(vehicles,many=True).data)
+        context['vehicles_s']=vehicles_s
+
+        passengers=PassengerRepo(request=request).list(*args, **kwargs)
+        passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
+        context['passengers_s']=passengers_s
+
+        
+        drivers=DriverRepo(request=request).list(*args, **kwargs)
+        drivers_s=json.dumps(DriverSerializer(drivers,many=True).data)
+        context['drivers_s']=drivers_s
+
+        paths=TripPathRepo(request=request).list(*args, **kwargs)
+        paths_s=json.dumps(TripPathSerializer(paths,many=True).data)
+        context['paths_s']=paths_s
+        return context
 
     def trip_path(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -174,6 +193,8 @@ class TripViews(View):
         context['trips']=trips
         trips_s=json.dumps(TripSerializer(trips,many=True).data)
         context['trips_s']=trips_s
+        context['add_trip_form']=AddTripForm()
+        context.update(self.add_trip_context(request=request))
         return render(request,TEMPLATE_FOLDER+"trip-path.html",context)
 
 
