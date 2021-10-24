@@ -5,8 +5,8 @@
 
 
 
-    <button v-if="!waiting && !show_add_service_request_form"
-        @click="show_add_service_request_form=true" class="btn btn-success">
+    <button v-if="!waiting && !show_add_service_request_form" @click="show_add_service_request_form=true"
+        class="btn btn-success">
         <i class="material-icons text-light">
             add
         </i>
@@ -15,9 +15,8 @@
         <div class="col-8">
             <form @submit.prevent="add_service_request()">
 
-                <input @input="filter_list" required type="text"
-                    v-model="add_service_request_form_title" class="farsi form-control"
-                    placeholder="سرویس">
+                <input @input="filter_list" required type="text" v-model="add_service_request_form_title"
+                    class="farsi form-control" placeholder="سرویس">
                 <p class="text-right">
                     <span v-text="add_service_request_form_title"></span>
                     <!--  -->
@@ -33,8 +32,8 @@
 
 
                     <div class="col-lg-4">
-                        <select v-model="add_service_request_form_employee_id"
-                            class="form-control farsi" id="" required>
+                        <select v-model="add_service_request_form_employee_id" class="form-control farsi" id=""
+                            required>
                             <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
                             {% for employee in employees %}
                             <option value="{{employee.id}}">{{employee.profile.name}}</option>
@@ -50,8 +49,7 @@
 
 
                     <div class="col-lg-3">
-                        <select v-model="add_service_request_form_unit_name" class="form-control farsi"
-                            id="">
+                        <select v-model="add_service_request_form_unit_name" class="form-control farsi" id="">
                             <option disabled selected>نام واحد</option>
                             {% for unit_name in unit_names2 %}
                             <option value="{{unit_name}}">{{unit_name}}</option>
@@ -69,13 +67,12 @@
 
 
 
-                        <button class="btn btn-outline-secondary"
-                            @click="show_add_service_request_form=false" type="reset">Cancel</button>
+                        <button class="btn btn-outline-secondary" @click="show_add_service_request_form=false"
+                            type="reset">Cancel</button>
                         <button v-if="!waiting" class="btn btn-primary" type="submit">
-                            <i class="material-icons">
-                                add
-                            </i>
-                            افزودن</button>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            افزودن
+                        </button>
 
                     </div>
                 </div>
@@ -84,7 +81,8 @@
 
             {% if copy_project_request_form %}
 
-            <form action="{% url 'projectmanager:copy_project_request' destination_project_id=project.id %}" method="POST">
+            <form action="{% url 'projectmanager:copy_project_request' destination_project_id=project.id %}"
+                method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="request_type" value="service">
                 <h4>کپی درخواست سرویس ها از یک پروژه دیگر</h4>
