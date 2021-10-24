@@ -2,6 +2,7 @@
 
 {% load to_persian_date %}
 {% load static %}
+{% load to_price %}
 {% block content %}
 <h4 class="text-center">
     سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
@@ -30,8 +31,8 @@
                     </a>
                     {% endif %}
                 </div>
-                {% for trip_path in trip.paths.all  %}
-                   <div class="my-3">
+                {% for trip_path in trip.paths.all %}
+                <div class="my-3">
                     <span class="text-muted  ">
 
                         مبدا :
@@ -42,10 +43,10 @@
                         </i>
                         {{trip_path.source.title}}
                     </a>
-             <span class="text-muted mx-2">
+                    <span class="text-muted mx-2">
 
-                 مقصد :
-             </span>
+                        مقصد :
+                    </span>
                     <a href="{{trip_path.destination.get_absolute_url}}">
                         <i class="material-icons">
                             place
@@ -54,15 +55,30 @@
                     </a>
                 </div>
                 {% endfor %}
-               
+
                 <div class="my-3">
                     زمان شروع:
-                        {{trip.date_started|to_persian_datetime|safe}}
+                    {{trip.date_started|to_persian_datetime|safe}}
                 </div>
                 <div class="my-3">
                     زمان خاتمه :
-                        {{trip.date_ended|to_persian_datetime|safe}}
+                    {{trip.date_ended|to_persian_datetime|safe}}
                 </div>
+                <div class="my-3">
+                    هزینه :
+                    <span class="badge badge-success">
+
+                        {{trip.cost|to_price}}
+                    </span>
+                </div>
+                <div class="my-3">
+                    تاخیر :
+                    <span class="text-danger">
+
+                        {{trip.delay}} دقیقه
+                    </span>
+                </div>
+
             </div>
         </div>
     </div>
