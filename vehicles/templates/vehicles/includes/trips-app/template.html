@@ -45,9 +45,9 @@
                                 <span v-text="trip.category.title"></span>
                             </span>
                         </a>
-                         <span :class="'badge badge-'+trip.get_status_color">
-                                <span v-text="trip.status"></span>
-                            </span>
+                        <span :class="'badge badge-'+trip.get_status_color">
+                            <span v-text="trip.status"></span>
+                        </span>
 
                     </td>
                     <td>
@@ -93,7 +93,15 @@
                     </td>
                     <td>
                         <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span>
+                        <div>
+                            <span v-if="trip.delay>0" class="badge badge-danger">
 
+                                <span v-text="trip.delay"></span>
+                                <small class="">
+                                    دقیقه
+                                </small>
+                            </span>
+                        </div>
 
                     </td>
                     <td>
@@ -114,5 +122,5 @@
         </table>
 
     </div>
-  
+
 </div>
