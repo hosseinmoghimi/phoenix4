@@ -29,10 +29,14 @@ class AddTripForm(forms.Form):
     title=forms.CharField( max_length=100, required=True)
     passengers=forms.CharField( max_length=5500, required=False)
     paths=forms.CharField( max_length=5500, required=False)
+    start_datetime=forms.CharField( max_length=50, required=False)
+    end_datetime=forms.CharField( max_length=50, required=False)
     vehicle_id=forms.IntegerField(required=False)
     driver_id=forms.IntegerField(required=False)
     delay=forms.IntegerField(required=False)
-    
+    cost=forms.IntegerField(required=True)
+    delay=forms.IntegerField(required=False)
+
 class AddVehicleWorkEventForm(forms.Form):
     work_shift_id=forms.IntegerField(required=True)
     event_type=forms.CharField( max_length=50, required=True)

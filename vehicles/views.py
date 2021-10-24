@@ -25,6 +25,10 @@ def getContext(request,*args, **kwargs):
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
+        
+        trip_paths=TripPathRepo(request=request).list()
+        context['trip_paths']=trip_paths
+        context['trip_paths_s']=json.dumps(TripPathSerializer(trip_paths,many=True).data)
 
         vehicles=VehicleRepo(request=request).list()
         context['vehicles']=vehicles

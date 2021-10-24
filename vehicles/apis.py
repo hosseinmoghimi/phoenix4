@@ -1,9 +1,10 @@
 
+from django.utils import timezone
 from utility.persian import PersianCalendar
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-
+import json
 from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
@@ -159,8 +160,32 @@ class TripApi(APIView):
                 log=3
                 
                 title=add_trip_form.cleaned_data['title']
+                vehicle_id=add_trip_form.cleaned_data['vehicle_id']
+                driver_id=add_trip_form.cleaned_data['driver_id']
+                paths=add_trip_form.cleaned_data['paths']
+                cost=add_trip_form.cleaned_data['cost']
+                delay=add_trip_form.cleaned_data['delay']
+                start_datetime=add_trip_form.cleaned_data['start_datetime']
+                end_datetime=add_trip_form.cleaned_data['end_datetime']
+                if start_datetime is None or start_datetime=="":
+                    start_datetime=timezone.now()
+                else:
+                    start_datetime=PersianCalendar().from_gregorian(start_datetime)
+                
+                if end_datetime is None or end_datetime=="":
+                    end_datetime=timezone.now()
+                else:
+                    end_datetime=PersianCalendar().from_gregorian(end_datetime)
+                paths=json.loads(paths)
                 trip=TripRepo(request=request).add_trip(
                     title=title,
+                    vehicle_id=vehicle_id,
+                    driver_id=driver_id,
+                    paths=paths,
+                    cost=cost,
+                    delay=delay,
+                    start_datetime=start_datetime,
+                    end_datetime=end_datetime,
                 )
                 
                 if trip is not None:

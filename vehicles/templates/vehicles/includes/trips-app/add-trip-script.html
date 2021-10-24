@@ -11,11 +11,11 @@
         data: {
             all_passengers: passengers,
             passengers: [],
-            delay: 12,
+            delay: 0,
             cost: 0,
             vehicle_id: 0,
             driver_id: 0,
-            title: "sd",
+            title: "بازدید 1",
             paths: [],
             path_id: 0,
             drivers: drivers,
@@ -28,16 +28,24 @@
                 return to_price(value, currency)
             },
             add_new_trip: function () {
-
-
+                let paths_ = []
+                this.paths.forEach(path => {
+                    paths_.push({
+                        id: path.id
+                    })
+                });
+                let paths = JSON.stringify(paths_)
                 let payload = {
+                    title:this.title,
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     vehicle_id: this.vehicle_id,
                     driver_id: this.driver_id,
                     delay: this.delay,
                     cost: this.cost,
+                    paths: paths,
                 }
                 $.post(url_add_new_trip, payload).done((data) => {
+                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         trips_app.trips.push(data.trip)
                         trips_app.new_trip_title = ""

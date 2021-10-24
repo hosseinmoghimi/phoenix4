@@ -375,7 +375,7 @@ class Maintenance(VehicleEvent):
 
 
 class VehicleWorkEvent(VehicleEvent):
-    work_shift=models.ForeignKey("workshift", verbose_name=_("work_shift"), on_delete=models.CASCADE)
+    work_shift=models.ForeignKey("workshift", verbose_name=_("شیفت کاری"), on_delete=models.CASCADE)
     event_type=models.CharField(_("event_type"),choices=WorkEventEnum.choices, max_length=50)
     class_name="vehicleworkevent"
     def get_icon(self):

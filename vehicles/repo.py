@@ -140,11 +140,18 @@ class TripRepo():
         trip=Trip()
         trip.title=kwargs['title'] if 'title' in kwargs else None
         trip.vehicle_id=kwargs['vehicle_id'] if 'vehicle_id' in kwargs else None
-        trip.source_id =kwargs['source_id'] if 'source_id' in kwargs else None
-        trip.destination_id =kwargs['destination_id'] if 'destination_id' in kwargs else None
+        # trip.source_id =kwargs['source_id'] if 'source_id' in kwargs else None
+        # trip.destination_id =kwargs['destination_id'] if 'destination_id' in kwargs else None
         trip.driver_id =kwargs['driver_id'] if 'driver_id' in kwargs else None
         trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
         trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
+        trip.delay =kwargs['delay'] if 'delay' in kwargs else 0
+        trip.save()
+
+        paths =kwargs['paths'] if 'paths' in kwargs else []
+        for path in paths:
+            path1=TripPathRepo(request=self.request).trip_path(pk=path['id'])
+            trip.paths.add(path1)
         trip.date_tripped =kwargs['date_tripped'] if 'date_tripped' in kwargs else timezone.now()
         
         trip.save()

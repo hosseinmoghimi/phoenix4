@@ -75,14 +75,14 @@
             <div>
                 <div class="alert alert-info">
                     <h5>
-مسیر های سفر
+                        مسیر های سفر
 
-</h5>
+                    </h5>
                     <a v-for="path in paths" target="_blank" :href="path.get_absolute_url">
                         <h6>
                             <span v-text="path.title"></span> (
 
-                            <span v-text="to_price(path.cost,'{{CURRECY}}')"></span> 
+                            <span v-text="to_price(path.cost,'{{CURRECY}}')"></span>
                             )
 
                         </h6>
@@ -92,7 +92,7 @@
         </div>
 
         <div class="col-md-4">
-            <button @click="add_trip()" class="btn btn-success">
+            <button @click="add_new_trip()" class="btn btn-success">
                 تایید و ثبت سفر
             </button>
         </div>
