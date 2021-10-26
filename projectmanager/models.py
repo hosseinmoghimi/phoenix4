@@ -282,6 +282,17 @@ class Project(ProjectManagerPage):
     def sub_projects(self):
         return Project.objects.filter(parent_id=self.id).order_by('priority')
 
+    def all_childs(self):
+        # childs=[self]
+        # for p in self.sub_projects():
+        #     childs.append
+        # return childs
+        pages=[self]
+        for page in Project.objects.filter(parent=self):
+            for page1 in page.all_childs():
+                pages.append(page1)
+        return pages
+
     def employees(self):
         employees = []
         for org in self.organization_units.all():

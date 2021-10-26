@@ -149,7 +149,7 @@ class ProjectViews(View):
             pk=0
 
         project=(ProjectRepo(request=request).project(pk=pk))
-        pages=project.sub_projects()
+        pages=project.all_childs()
         # pages_s = BasicPageSerializer(pages, many=True).data
         
         pages_s=[]
