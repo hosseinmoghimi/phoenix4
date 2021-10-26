@@ -8,7 +8,14 @@
 </h4>
 <div class="row">
  
-
+<div class="col-md-3">
+</div>
+<div class="col-md-6">
+    
+    {% include "vehicles/includes/trips-app/filter-trips-form.html" %}
+</div>
+<div class="col-md-3">
+</div>
 <div class="col-md-12">
     {% include "vehicles/includes/trips-app/template-desc.html" %}
 </div>
@@ -32,5 +39,5 @@
 
 
 {% include "vehicles/includes/trips-app/script.html" %}
-
+{% include "vehicles/includes/trips-app/filter-script.html" %}
 {% endblock script %}

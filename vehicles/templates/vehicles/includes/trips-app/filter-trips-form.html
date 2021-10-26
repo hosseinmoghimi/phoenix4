@@ -1,0 +1,55 @@
+{% if filter_trips_form %}
+<div class="card" id="filter-trips-app">
+    <div class="card-header">
+        <h4 class="title farsi">
+            گزارش گیری سفر ها
+        </h4>
+    </div>
+    <div class="card-body farsi text-right">
+
+        <form @submit.prevent="filter()">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="title">عنوان سفر</label>
+                        <input required type="text" id="title" v-model="title" class="form-control">
+                        <small id="emailHele324345" class="form-text farsi text-muted">
+                            عنوان سفر را وارد کنید.
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+
+                        صفحه
+                        <span v-text="current_page"></span>
+                        
+                        از
+                        <span v-text="total_pages"></span>
+                    </div>
+
+                    <button :disabled=" current_page >= total_pages" class="btn btn-success"
+                        @click="goto_page(current_page+1)">صفحه بعد</button>
+                    <button :disabled="2> current_page " class="btn btn-success" @click="goto_page(current_page-1)">صفحه
+                        قبل</button>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="item_per_page">نمایش چند آیتم در هر صفحه</label>
+                        <input required @input="item_per_page_changed()" type="number" id="item_per_page" v-model="item_per_page" class="form-control">
+
+                        <small id="sdfewertsdf" class="form-text farsi text-muted">
+                            تعداد هر آیتم در صفحه را وارد کنید.
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+{% endif %}

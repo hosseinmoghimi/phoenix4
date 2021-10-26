@@ -63,7 +63,7 @@ class PersianCalendar:
         return self
     def from_gregorian(self,greg_date_time,add_time_zone=True):
         if greg_date_time is None:
-            greg_date_time=datetime.datetime.now()
+            return None
         year_=greg_date_time.year
         month_=greg_date_time.month
         day_=greg_date_time.day

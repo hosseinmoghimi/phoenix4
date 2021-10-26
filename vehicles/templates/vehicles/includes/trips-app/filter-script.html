@@ -1,0 +1,46 @@
+<script>
+    let item_per_page = 5
+    let total_pages = Math.ceil((all_trips.length) / item_per_page)
+    let filter_trips_app = new Vue({
+        el: "#filter-trips-app",
+        data: {
+            driver_id: 0,
+            vehicle_id: 0,
+            title: "aaa",
+            total_pages: total_pages,
+            current_page: 1,
+            item_per_page: item_per_page
+
+        },
+        methods: {
+            item_per_page_changed: function () {
+                this.total_pages = Math.ceil((all_trips.length) / this.item_per_page)
+                this.item_per_page = parseInt(this.item_per_page)
+                if (this.current_page > this.total_pages) {
+                    this.current_page = this.total_pages
+                }
+                this.filter()
+            },
+            goto_page: function (page) {
+                if (this.total_pages >= page && page >= 1) {
+                    this.current_page = page
+                }
+                let start1 = 1 + filter_trips_app.item_per_page * (filter_trips_app.current_page - 1)
+                let end1 = start1 + filter_trips_app.item_per_page - 1
+                this.filter()
+            },
+            filter: function () {
+                let start1 = filter_trips_app.item_per_page * (filter_trips_app.current_page - 1)
+                let end1 = start1 + filter_trips_app.item_per_page
+                trips_app.trips = all_trips.slice(start1, end1)
+            },
+        }
+    })
+</script>
+<script>
+    $(document).ready(() => {
+        let start1 = filter_trips_app.item_per_page * (filter_trips_app.current_page - 1)
+        let end1 = start1 + filter_trips_app.item_per_page
+        trips_app.trips = all_trips.slice(start1, end1)
+    })
+</script>

@@ -25,6 +25,15 @@ class AddVehicleForm(forms.Form):
     name=forms.CharField( max_length=100, required=True)
     
 
+class FilterTripsForm(forms.Form):
+    title=forms.CharField( max_length=100, required=False)
+    start_report_datetime=forms.CharField( max_length=100, required=False)
+    end_report_datetime=forms.CharField( max_length=100, required=False)
+    driver_id=forms.IntegerField( required=False)
+    vehicle_id=forms.IntegerField( required=False)
+    driver_id=forms.IntegerField( required=False)
+    
+
 class AddTripForm(forms.Form):
     title=forms.CharField( max_length=100, required=True)
     passengers=forms.CharField( max_length=5500, required=False)

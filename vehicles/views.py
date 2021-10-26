@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm
+from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -143,6 +143,7 @@ class AreaViews(View):
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
 
+
 class PassengerViews(View):
     def passenger(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -153,6 +154,7 @@ class PassengerViews(View):
         trips_s=json.dumps(TripSerializer(trips,many=True).data)
         context['trips_s']=trips_s
         return render(request,TEMPLATE_FOLDER+"passenger.html",context)
+
 
 class TripViews(View):
     def trip(self,request,*args, **kwargs):
@@ -167,6 +169,7 @@ class TripViews(View):
         context['trips']=trips
         trips_s=json.dumps(TripSerializer(trips,many=True).data)
         context['trips_s']=trips_s
+        context['filter_trips_form']=FilterTripsForm()
         return render(request,TEMPLATE_FOLDER+"trips.html",context)
     def add_trip_context(self,request,*args, **kwargs):
         context={}

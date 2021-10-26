@@ -95,7 +95,6 @@
                         <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span>
                         <div>
                             <span v-if="trip.delay>0" class="badge badge-danger">
-
                                 <span v-text="trip.delay"></span>
                                 <small class="">
                                     دقیقه
@@ -121,6 +120,21 @@
             </tbody>
         </table>
 
+    </div>
+    <div class="card-footer">
+        <div class="text-right ">
+            <a class="btn btn-link btn-info btn-sm"
+                href="{% url 'vehicles:trips' driver_id=0 vehicle_id=0 trip_path_id=0  category_id=0 %}">
+                <i class="material-icons text-light ">
+                    ballot
+                </i>
+                <span class="text-right text-light farsi">
+
+                    گزارش همه سفر ها
+                </span>
+
+            </a>
+        </div>
     </div>
 
 </div>

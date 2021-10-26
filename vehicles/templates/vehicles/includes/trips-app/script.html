@@ -1,9 +1,9 @@
 <script>
-    let trips = JSON.parse(`{{trips_s|escapejs}}`)
+    let all_trips = JSON.parse(`{{trips_s|escapejs}}`)
     let trips_app = new Vue({
         el: "#trips-app",
         data: {
-            trips: trips,
+            trips: all_trips,
         },
         methods: {
             to_price: function (value, currency) {
