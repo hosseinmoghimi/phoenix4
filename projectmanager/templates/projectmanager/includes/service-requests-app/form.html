@@ -81,7 +81,7 @@
 
             {% if copy_project_request_form %}
 
-            <form action="{% url 'projectmanager:copy_project_request' destination_project_id=project.id %}"
+            <form class="mt-5" action="{% url 'projectmanager:copy_project_request' destination_project_id=project.id %}"
                 method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="request_type" value="service">
