@@ -155,26 +155,31 @@ class ProjectViews(View):
         pages_s=[]
         # pages_s = BasicPageSerializer(pages, many=True).data
         from utility.currency import to_price
+        pages2=[project]
+        
         for page in pages:
+            pages2.append(page)
+        
+        for page in pages2:
             pages_s.append({
                 'title':f"""{page.title}""",
                 'parent_id':page.parent_id,
                 'parent':page.parent_id,
                 'get_absolute_url':page.get_absolute_url(),
                 'id':page.id,
-                'sub_title':f"""<div class="small"><span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total())}</div>""",
+                'sub_title':f"""<div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total())}</div>""",
 
             })
+        # page=project
+        # pages_s.append({
+        #     'title':f"""{page.title}""",
+        #     'parent_id':page.parent_id,
+        #     'parent':page.parent_id,
+        #     'get_absolute_url':page.get_absolute_url(),
+        #     'id':page.id,
+        #     'sub_title':f"""<div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total())}</div>""",
 
-        pages_s.append({
-            'title':f"""{project.title}""",
-            'parent_id':project.parent_id,
-            'parent':project.parent_id,
-            'get_absolute_url':project.get_absolute_url(),
-            'id':project.id,
-            'sub_title':f"""<div class="small"><span class="badge badge-{project.get_status_color()}">{project.status}</span></div><div class="small">{to_price(project.sum_total())}</div>""",
-
-        })
+        # })
         context['pages_s'] = json.dumps(pages_s)
 
         return render(request, "phoenix/pages-chart.html", context)
