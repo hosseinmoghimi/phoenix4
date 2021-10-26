@@ -2,16 +2,16 @@
 <html>
 
 <head>
-<title>
-  {{title}}
-</title>
+  <title>
+    {{title}}
+  </title>
   {% include "phoenix/includes/head-google.html" %}
 
-<style>
-  a{
-    text-decoration: none;
-  }
-</style>
+  <style>
+    a {
+      text-decoration: none;
+    }
+  </style>
 
   <script type="text/javascript">
 
@@ -61,12 +61,12 @@
       // manager='manager'
       // tooltip='tooltip'
       // data.addRow([{'v':name, 'f':caption}, manager, tooltip])
-      
+
       pages.forEach(page => {
         // //console.log(element)
         id = page.id.toString(10)
-        caption = '<a href="'+page.get_absolute_url+'">'+page.title+'</a>'
-        manager = page.parent_id?page.parent_id.toString(10):null
+        caption = '<a target="_blank" href="' + page.get_absolute_url + '">' + page.title + '</a>'+page.sub_title
+        manager = page.parent_id ? page.parent_id.toString(10) : null
         tooltip = page.title
         data.addRow([{ 'v': id, 'f': caption }, manager, tooltip])
       });
@@ -79,13 +79,16 @@
     }
   </script>
 
+  <link href="{% static 'vendor/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
 </head>
 
 <body style="background-color: #f1f1ff;">
 
   <div style="margin-top: 2em;">
     <div style="text-align: center;"><a style="text-align: center;" href="{{SITE_URL}}">home</a></div>
-    
+
     <h3 style="text-align: center;">{{title}}</h3>
   </div>
 
