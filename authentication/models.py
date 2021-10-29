@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from .apps import APP_NAME
 IMAGE_FOLDER=APP_NAME+"/images/"
-CREATE_PROFILE_ON_USER_ADD=False
+CREATE_PROFILE_ON_USER_ADD=True
 
 if CREATE_PROFILE_ON_USER_ADD:
     from django.db.models.signals import post_save

@@ -8,18 +8,7 @@
 
     <div class="col-md-12">
 
-        {% include "stock/includes/agents-app/template.html" %}
-
-
-        {% if add_stock_form %}
-
-        {% include "stock/includes/add-stock-app/template.html" %}
-
-
-        {% endif %}
-
         {% include "stock/includes/stocks-app/template.html" %}
-
 
     </div>
 </div>
@@ -27,14 +16,14 @@
 {% block script %}
 
 <script>
-    let agents = JSON.parse(`{{agents_s|escapejs}}`)
+
+
     let stocks = JSON.parse(`{{stocks_s|escapejs}}`)
+    let agents = []
 
 </script>
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "stock/includes/add-stock-app/script.html" %}
 {% include "stock/includes/stocks-app/script.html" %}
-{% include "stock/includes/agents-app/script.html" %}
 
 {% endblock %}

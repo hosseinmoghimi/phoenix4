@@ -1,6 +1,6 @@
 <script>
-    let stocks_list_app = new Vue({
-        el: "#stocks-list-app",
+    let stocks_app = new Vue({
+        el: "#stocks-app",
         data: {
             stocks: stocks,
             agents: agents,
@@ -19,7 +19,7 @@
 
 
 
-                    if (stock.profile.name.includes(stocks_list_app.search_for))
+                    if (stock.profile.name.includes(stocks_app.search_for))
                         return true
 
 
