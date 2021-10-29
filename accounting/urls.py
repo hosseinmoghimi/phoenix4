@@ -9,6 +9,8 @@ urlpatterns = [
     path('financial_account/<int:pk>/',views.TransactionViews().financial_account,name="financial_account"),
     path('asset/<int:asset_id>/',views.AssetViews().asset,name="asset"),
     path('transaction/<int:pk>/',views.TransactionViews().transaction,name="transaction"),
+    path('money_transaction/<int:pk>/',views.TransactionViews().transaction,name="moneytransaction"),
+    path('asset_transaction/<int:pk>/',views.TransactionViews().transaction,name="assettransaction"),
     path('transactions/<int:financial_account_id>/',views.TransactionViews().transactions,name="transactions"),
    
 ]

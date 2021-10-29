@@ -8,10 +8,11 @@ from .apps import APP_NAME
 from core.views import CoreContext, TEMPLATE_ROOT
 from django.views import View
 from .repo import CarRepo, PropertyRepo
-TEMPLATE_ROOT=APP_NAME+"2/"
-
+TEMPLATE_ROOT=APP_NAME+"/"
+layout_parent="realestate/layout.html"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
+    context['layout_parent']=layout_parent
     parameter_repo = ParameterRepo(app_name=APP_NAME)
     context['admin_utility']=AdminUtility()
     context['app'] = {

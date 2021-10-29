@@ -1,0 +1,27 @@
+{% extends "realestate/layout.html" %}
+{% block content %}
+
+<div class="row">
+      <h5>
+          <a href="{{property.get_absolute_url}}">
+            {{property.title}}
+          </a>
+      </h5>
+
+      <a target="_blank" href="{{property.get_edit_url}}">
+      
+        <i class="material-icons">
+            edit
+        </i>
+      </a>
+
+</div>
+  
+{% endblock content %}
+
+
+{% block script %}
+  <script>
+
+  </script>
+{% endblock script %}

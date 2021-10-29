@@ -98,9 +98,9 @@ class BankAccount(models.Model):
 
 class Transaction(models.Model):
     title = models.CharField(_("title"), max_length=50)
-    pay_from = models.ForeignKey("FinancialAccount", related_name="pay_from", verbose_name=_(
+    pay_from = models.ForeignKey("FinancialAccount", related_name="pay_from_set", verbose_name=_(
         "pay_from"), on_delete=models.CASCADE)
-    pay_to = models.ForeignKey("FinancialAccount", related_name="pay_to", verbose_name=_(
+    pay_to = models.ForeignKey("FinancialAccount", related_name="pay_to_set", verbose_name=_(
         "pay_to"), on_delete=models.CASCADE)
     amount = models.IntegerField(_("amount"), default=0)
     date_added = models.DateTimeField(
@@ -122,3 +122,30 @@ class Transaction(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+"transaction", kwargs={"pk": self.pk})
+
+class AssetTransaction(Transaction):
+    asset = models.ForeignKey("asset", verbose_name=_("asset"), on_delete=models.CASCADE)
+    class_name="assettransaction"
+    
+
+    class Meta:
+        verbose_name = _("AssetTransaction")
+        verbose_name_plural = _("AssetTransactions")
+
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+
+
+class MoneyTransaction(Transaction):
+    class_name="moneytransaction"
+    
+
+    class Meta:
+        verbose_name = _("MoneyTransaction")
+        verbose_name_plural = _("MoneyTransactions")
+
+ 
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
