@@ -113,7 +113,7 @@ class Transaction(models.Model):
         _("date_paid"), auto_now=False, auto_now_add=False)
     creator = models.ForeignKey("authentication.profile", verbose_name=_(
         "ثبت کننده"), on_delete=models.CASCADE)
-    rest=10
+    rest=0
     direction=None
     def get_color(self):
         if self.direction:
