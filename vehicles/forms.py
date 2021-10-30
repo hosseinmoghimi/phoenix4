@@ -22,7 +22,7 @@ class AddMaintenanceForm(forms.Form):
     kilometer=forms.IntegerField( required=False)
 
 class AddVehicleForm(forms.Form):
-    name=forms.CharField( max_length=100, required=True)
+    title=forms.CharField( max_length=100, required=True)
     
 
 class FilterTripsForm(forms.Form):

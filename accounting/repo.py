@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.utils import translation
 from resume.apps import APP_NAME
-from accounting.models import Asset, BankAccount, FinancialAccount, Transaction
+from accounting.models import Asset, BankAccount, FinancialAccount, MarketOrderTransaction, Transaction
 from authentication.repo import ProfileRepo
 from django.db.models import Q
 class BankAccountRepo:
@@ -72,6 +72,13 @@ class FinancialAccountRepo:
     def financial_account(self,*args, **kwargs):
         pk=0
         
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+            financial_account=self.objects.filter(profile_id=profile_id).first()
+            if financial_account is None:
+                financial_account=FinancialAccount(profile_id=profile_id)
+                financial_account.save()
+            return financial_account
         if 'financial_account_id' in kwargs:
             pk=kwargs['financial_account_id']
         if 'pk' in kwargs:
@@ -148,3 +155,51 @@ class TransactionRepo:
             transaction.creator=self.profile
             transaction.save()
             return transaction
+
+
+ 
+class MarketOrderTransactionRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=MarketOrderTransaction.objects.order_by('date_paid')
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        
+
+
+        return objects
+    def transaction(self,*args, **kwargs):
+        pk=0
+        
+        if 'transaction_id' in kwargs:
+            pk=kwargs['transaction_id']
+        if 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        transaction= self.objects.filter(pk=pk).first()
+        return transaction
+    def add_transaction(self,*args, **kwargs):
+        if self.user.has_perm(APP_NAME+".add_transaction"):
+            transaction=MarketOrderTransaction()
+            transaction.pay_to_id=kwargs['pay_to_id']
+            transaction.title=kwargs['title']
+            transaction.pay_from_id=kwargs['pay_from_id']
+            transaction.order_id=kwargs['order_id']
+            transaction.amount=kwargs['amount']
+            date_paid=kwargs['date_paid']
+            if date_paid is None:
+                date_paid=timezone.now()
+            transaction.date_paid=date_paid
+            transaction.creator=self.profile
+            transaction.save()
+            return transaction
+
+

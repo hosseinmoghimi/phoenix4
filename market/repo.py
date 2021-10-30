@@ -1,3 +1,4 @@
+from accounting.repo import MarketOrderTransactionRepo,FinancialAccountRepo
 from utility.persian import PersianCalendar
 from django.utils import timezone
 from core import repo as CoreRepo
@@ -488,6 +489,15 @@ class OrderRepo:
                     NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} بسته بندی شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.supplier.title} در {order.count_of_packs} بسته آماده ارسال می باشد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
                     
             if order is not None:
+                
+                # financial_account_repo=FinancialAccountRepo(request=self.request)
+                # market_order_transaction_repo=MarketOrderTransactionRepo(request=self.request)
+                # pay_to_id=financial_account_repo.financial_account(profile_id=order.customer.profile.id).id
+                # pay_from_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+                # title="بسته بندی سفارش"
+                # market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.sum_total(),date_paid=order.date_ordered)
+            
+
                 return order
 
     def do_cancel(self, order_id, description):
@@ -505,6 +515,17 @@ class OrderRepo:
                     order.customer.profile.name()+' # انصراف '+PersianCalendar().from_gregorian(order.date_cancelled)+' : '+str(description)
             order.save()
             if order is not None:
+
+
+                
+                # financial_account_repo=FinancialAccountRepo(request=self.request)
+                # market_order_transaction_repo=MarketOrderTransactionRepo(request=self.request)
+                # pay_to_id=financial_account_repo.financial_account(profile_id=order.customer.profile.id).id
+                # pay_from_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+                # title=" سفارش"
+                # market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.sum_total(),date_paid=order.date_ordered)
+            
+
                 return order
     
     def confirm_order(self, order_id, description):
@@ -520,6 +541,14 @@ class OrderRepo:
                 order.description = order.description+'   @ ' + \
                     order.profile.full_name()+' # تایید مجدد '+PersianCalendar().from_gregorian(timezone.now())+' : '+str(description)
             order.save()
+            
+            # financial_account_repo=FinancialAccountRepo(request=self.request)
+            # market_order_transaction_repo=MarketOrderTransactionRepo(request=self.request)
+            # pay_to_id=financial_account_repo.financial_account(profile_id=order.customer.profile.id).id
+            # pay_from_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+            # title="پذیرفتن سفارش"
+            # market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.sum_total(),date_paid=order.date_ordered)
+            
             if order is not None:
                 return order
     
@@ -543,6 +572,19 @@ class OrderRepo:
                 if order.supplier.profile is not None:
                     NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
                  
+            
+                financial_account_repo=FinancialAccountRepo(request=self.request)
+                market_order_transaction_repo=MarketOrderTransactionRepo(request=self.request)
+                pay_to_id=financial_account_repo.financial_account(profile_id=order.shipper.profile.id).id
+                pay_from_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+                title=f"انتقال سفارش شماره {order.pk}"
+                market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.lines_total(),date_paid=order.date_shipped)
+            
+            
+
+
+            
+
                 return order
         
 
@@ -570,6 +612,37 @@ class OrderRepo:
                     NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
                 if ware_house is not None:
                     ware_house_repo.add_order_in_ware_house(order=order, ware_house=ware_house, direction=True, description=description)
+
+
+                financial_account_repo=FinancialAccountRepo(request=self.request)
+                market_order_transaction_repo=MarketOrderTransactionRepo(request=self.request)
+
+                pay_to_id=financial_account_repo.financial_account(profile_id=order.customer.profile.id).id
+                pay_from_id=financial_account_repo.financial_account(profile_id=order.shipper.profile.id).id
+                title=f"تحویل سفارش  شماره {order.pk}"
+                market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.sum_total(),date_paid=order.date_shipped)
+            
+
+            
+            
+                # financial_account_repo=FinancialAccountRepo(request=self.request)
+                # market_order_transaction_repo=MarketOrderTransactionRepo(request=self.request)
+                # pay_to_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+                # pay_from_id=financial_account_repo.financial_account(profile_id=order.shipper.profile.id).id
+                # title=f"اجرت ارسال سفارش شماره {order.pk}"
+                # market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.ship_fee,date_paid=order.date_shipped)
+            
+                # pay_to_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+                # pay_from_id=financial_account_repo.financial_account(profile_id=order.shipper.profile.id).id
+                # title=f"ارسال سفارش  شماره {order.pk}"
+                # market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.ship_fee,date_paid=order.date_shipped)
+            
+
+                # pay_to_id=financial_account_repo.financial_account(profile_id=order.supplier.profile.id).id
+                # pay_from_id=financial_account_repo.financial_account(profile_id=order.shipper.profile.id).id
+                # title="تحویل سفارش"
+                # market_order_transaction_repo.add_transaction(title=title,order_id=order.id,pay_to_id=pay_to_id,pay_from_id=pay_from_id,amount=order.ship_fee,date_paid=order.date_shipped)
+            
 
                 return order
 

@@ -136,9 +136,9 @@ class VehicleApi(APIView):
             if add_vehicle_form.is_valid():
                 log=3
                 
-                name=add_vehicle_form.cleaned_data['name']
+                title=add_vehicle_form.cleaned_data['title']
                 vehicle=VehicleRepo(request=request).add_vehicle(
-                    name=name,
+                    title=title,
                 )
                 
                 if vehicle is not None:

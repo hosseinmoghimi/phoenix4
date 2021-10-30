@@ -16,7 +16,7 @@
                     <span class="material-icons">
                         commute
                         </span>
-                    <span class="mr-2" v-text="vehicle.name"></span>
+                    <span class="mr-2" v-text="vehicle.title"></span>
                 </a>
             </li>
 
@@ -29,7 +29,7 @@
         <form @submit.prevent="add_vehicle()">
             <div class="row">
                 <div class="col-9">
-                    <input type="text" v-model="new_vehicle_name" id="" class="form-control farsi">
+                    <input type="text" v-model="new_vehicle_title" id="" class="form-control farsi">
 
                 </div>
                 <div class="col-3">

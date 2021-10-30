@@ -113,6 +113,8 @@ class Transaction(models.Model):
         _("date_paid"), auto_now=False, auto_now_add=False)
     creator = models.ForeignKey("authentication.profile", verbose_name=_(
         "ثبت کننده"), on_delete=models.CASCADE)
+
+    images=models.ManyToManyField("core.image",blank=True, verbose_name=_("images"))
     rest=0
     direction=None
     def get_color(self):
@@ -148,6 +150,9 @@ class Transaction(models.Model):
         mt=MoneyTransaction.objects.filter(pk=self.pk).first()
         if mt is not None:
             return mt
+        mot=MarketOrderTransaction.objects.filter(pk=self.pk).first()
+        if mot is not None:
+            return mot
 
 
     def persian_date_paid(self):
@@ -168,6 +173,9 @@ class Transaction(models.Model):
 
 class TransactionMixin():
     def get_icon(self):
+        if self.class_name=="marketordertransaction":
+            type1="سفارش"
+            color="primary"
         if self.class_name=="assettransaction":
             type1="دارایی"
             color="warning"
@@ -179,6 +187,7 @@ class TransactionMixin():
             {type1}
             </span>
             """
+
 
 class AssetTransaction(Transaction,TransactionMixin):
     asset = models.ForeignKey("asset", verbose_name=_("asset"), on_delete=models.CASCADE)
@@ -193,7 +202,22 @@ class AssetTransaction(Transaction,TransactionMixin):
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
 
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
+class MarketOrderTransaction(Transaction,TransactionMixin):
+    class_name="marketordertransaction"
+    order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _("MarketOrderTransaction")
+        verbose_name_plural = _("MarketOrderTransactions")
+  
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 class MoneyTransaction(Transaction,TransactionMixin):
     class_name="moneytransaction"
@@ -206,3 +230,5 @@ class MoneyTransaction(Transaction,TransactionMixin):
  
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'

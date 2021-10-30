@@ -5,18 +5,18 @@
         el: "#vehicles-app",
         data: {
             vehicles: vehicles,
-            new_vehicle_name: "",
+            new_vehicle_title: "",
         },
         methods: {
             add_vehicle: function () {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    name: this.new_vehicle_name,
+                    title: this.new_vehicle_title,
                 }
                 $.post(url_add_vehicle, payload).done((data) => {
                     if (data.result === 'SUCCEED') {
                         vehicles_app.vehicles.push(data.vehicle)
-                        vehicles_app.new_vehicle_name=""
+                        vehicles_app.new_vehicle_title=""
                     }
                 })
                 console.log(payload)

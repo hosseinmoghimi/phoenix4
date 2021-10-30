@@ -24,6 +24,13 @@
                     {{transaction.get_sub_transaction.asset.title}}
                 </a>
                 {% endif %}
+                {% if transaction.get_sub_transaction.order %}
+
+                <a href="{{transaction.get_sub_transaction.order.get_absolute_url}}">
+                    سفارش شماره
+                    {{transaction.get_sub_transaction.order.pk}}
+                </a>
+                {% endif %}
 
                 {% if transaction.get_sub_transaction.paymet_method %}
 

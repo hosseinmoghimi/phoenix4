@@ -37,7 +37,7 @@ class VehicleRepo():
         if not self.user.has_perm(APP_NAME+".add_vehicle"):
             return
         vehicle=Vehicle()
-        vehicle.name=kwargs['name'] if 'name' in kwargs else None
+        vehicle.title=kwargs['title'] if 'title' in kwargs else None
         vehicle.vehicle_type =kwargs['vehicle_type'] if 'vehicle_type' in kwargs else VehicleTypeEnum.SEDAN
         vehicle.color =kwargs['color'] if 'color' in kwargs else VehicleColorEnum.SEFID
         vehicle.year =kwargs['year'] if 'year' in kwargs else 2015
