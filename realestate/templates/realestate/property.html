@@ -201,7 +201,8 @@
 
                                 </div>
                                 <div class="farsi rtl tag_price mt-3">
-                                    {{property.price|to_million_price}}
+                                    {{property.price|to_horuf}} {{CURRENCY}}
+                                    <!-- {{property.price|to_price_pure}}  -->
                                 </div>
                                 {% if property.address %}
                                 <div class="listing_location d-flex flex-row align-items-start justify-content-start">

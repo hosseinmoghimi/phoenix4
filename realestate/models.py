@@ -40,10 +40,7 @@ class Property(Asset):
         return super(Property,self).save(*args, **kwargs)
 
     def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":property", kwargs={"pk": self.pk})
-
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/' 
 class Car(Asset):
     brand=models.CharField(_("brand"),choices=CarBrandEnum.choices, max_length=50)
     product=models.CharField(_("محصول"), max_length=50)

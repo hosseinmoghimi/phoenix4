@@ -1,9 +1,9 @@
-{% extends "accounting/layout.html" %}
+{% extends "accounting/wide-layout.html" %}
 {% load static %}
 {% load to_price %}
 {% load to_transaction_color %}
 {% load to_persian_date %}
-{% block accounting_content %}
+{% block  content %}
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -20,6 +20,12 @@
                     </span>
                 </p>
                 {% include "accounting/includes/transactions-app/template.html" %}
+                <p>
+
+                    <span class="alert alert-{{financial_account.total|to_transaction_color}}">
+                        مانده : {{financial_account.total|to_price}}
+                    </span>
+                </p>
             </div>
         </div>
     </div>
@@ -28,7 +34,7 @@
 {% endblock %}
 
 
-{% block accounting_script %}
+{% block script %}
 {% include "accounting/includes/transactions-app/script.html" %}
 
 {% endblock %}

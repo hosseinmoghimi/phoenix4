@@ -1,5 +1,6 @@
 {% load static %}
 {% load to_million_price %}
+{% load to_price %}
 <div class="home">
 
     <div class="home_slider_container">
@@ -22,7 +23,7 @@
                                             </h1>
                                         </a>
                                     </div>
-                                    <div class="home_price_tag farsi rtl">{{property.price|to_million_price}} </div>
+                                    <div class="home_price_tag farsi rtl">{{property.price|to_horuf}} {{CURRENCY}} </div>
                                     <div class="ltr listing_info" style="background-color: inherit;">
                                         <ul class="d-flex flex-row align-items-center justify-content-start flex-wrap" style="margin-bottom: 0;">
                                             <li

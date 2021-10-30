@@ -5,6 +5,7 @@ from core.models import BasicPage
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
+from accounting.models import Asset
 
 from core.settings import ADMIN_URL, STATIC_URL
 from .apps import APP_NAME
@@ -132,29 +133,25 @@ class TripPath(models.Model):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 
-class Vehicle(models.Model):
-    name=models.CharField(_("نام"), max_length=50)
+class Vehicle(Asset):
     vehicle_type=models.CharField(_("نوع وسیله "),choices=VehicleTypeEnum.choices,default=VehicleTypeEnum.SEDAN, max_length=50)
     brand=models.CharField(_("برند"),choices=VehicleBrandEnum.choices,default=VehicleBrandEnum.TOYOTA, max_length=50)
     model_name=models.CharField(_("مدل"),null=True,blank=True, max_length=50)
     color=models.CharField(_("رنگ"),choices=VehicleColorEnum.choices,default=VehicleColorEnum.SEFID, max_length=50)
-    year=models.IntegerField(_("سال تولید"),default=2015)
     plaque=models.CharField(_("پلاک"),null=True,blank=True, max_length=50)
-    owner=models.CharField(_("مالک"), max_length=50,null=True,blank=True)
     driver=models.CharField(_("راننده"), max_length=50,null=True,blank=True)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
     kilometer=models.IntegerField(_("کیلومتر"),default=0)
-    description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
+    def save(self,*args, **kwargs):
+        self.class_name="vehicle"
+        self.app_name=APP_NAME
+        return super(Vehicle,self).save(*args, **kwargs)
     class Meta:
         verbose_name = _("Vehicle")
         verbose_name_plural = _("Vehicles")
 
     def get_trips_url(self):
         return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':self.pk,'trip_path_id':0})
-    
-    def __str__(self):
-        return self.brand +' ' +self.name
+     
 
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/vehicle/{self.pk}/change/'

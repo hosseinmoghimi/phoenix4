@@ -92,12 +92,38 @@ class TransactionRepo:
         if 'user' in kwargs:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=Transaction.objects.all()
+        self.objects=Transaction.objects.order_by('date_paid')
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'financial_account_id' in kwargs:
             financial_account_id=kwargs['financial_account_id']
             objects=objects.filter(Q(pay_to_id=financial_account_id)|Q(pay_from_id=financial_account_id))
+        if 'pay_to_id' in kwargs and 'pay_from_id' in kwargs:
+            pay_to_id=kwargs['pay_to_id']
+            pay_from_id=kwargs['pay_from_id']
+            objects1=objects.filter(pay_to_id=pay_to_id).filter(pay_from_id=pay_from_id)
+            objects2=objects.filter(pay_from_id=pay_to_id).filter(pay_to_id=pay_from_id)
+            list_id=[]
+            list_final=[]
+            for transaction in objects1:
+                transaction.calculate_rest(*args, **kwargs) 
+                list_id.append(transaction.pk)
+                list_final.append(transaction)
+            for transaction in objects2:
+                transaction.calculate_rest(*args, **kwargs)
+                print(kwargs)
+                list_id.append(transaction.pk)
+                list_final.append(transaction)
+            # return list_final 
+            
+            objects= self.objects.filter(id__in=list_id)
+            for transaction in objects:
+                transaction.calculate_rest(*args, **kwargs)
+            return objects
+            
+
+
+
         return objects
     def transaction(self,*args, **kwargs):
         pk=0

@@ -15,15 +15,18 @@ from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
 
 class Asset(models.Model):
-    app_name=models.CharField(_("app_name"), max_length=50)
-    class_name=models.CharField(_("class_name"), max_length=50)
+    app_name=models.CharField(_("app_name"),blank=True, max_length=50)
+    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
     title=models.CharField(_("title"), max_length=50)
     price=models.IntegerField(_("price"),default=0)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     year=models.IntegerField(_("سال ساخت"))
     image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"Property",null=True,blank=True, height_field=None, width_field=None, max_length=None)
+    owner=models.CharField(_("مالک"), max_length=50,null=True,blank=True)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=5000)
-
+    
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
@@ -37,7 +40,7 @@ class Asset(models.Model):
     def get_edit_url(self):
         return f"{ADMIN_URL}{self.app_name}/{self.class_name}/{self.pk}/change/"
     def get_absolute_url(self):
-        return reverse(self.app_name+":"+self.class_name, kwargs={"pk": self.pk})
+        return reverse(self.app_name+":"+self.class_name, kwargs={self.class_name+"_id": self.pk})
     def get_edit_btn(self):
         return f"""
         <a href="{self.get_edit_url()}" target="_blank">
@@ -74,7 +77,7 @@ class FinancialAccount(models.Model):
         return self.profile.name
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":financial_account", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":financial_account", kwargs={"financial_account_id": self.pk})
 
 
 class BankAccount(models.Model):
@@ -103,12 +106,49 @@ class Transaction(models.Model):
     pay_to = models.ForeignKey("FinancialAccount", related_name="pay_to_set", verbose_name=_(
         "pay_to"), on_delete=models.CASCADE)
     amount = models.IntegerField(_("amount"), default=0)
+    description=models.CharField(_("description"),blank=True,null=True, max_length=5000)
     date_added = models.DateTimeField(
         _("date_added"), auto_now=False, auto_now_add=True)
     date_paid = models.DateTimeField(
         _("date_paid"), auto_now=False, auto_now_add=False)
     creator = models.ForeignKey("authentication.profile", verbose_name=_(
         "ثبت کننده"), on_delete=models.CASCADE)
+    rest=10
+    direction=None
+    def get_color(self):
+        if self.direction:
+            return "success"
+        if not self.direction:
+            return "danger"
+    def get_transaction2_url(self):
+        return reverse(APP_NAME+":transactions2",kwargs={'pay_to_id':self.pay_to.id,'pay_from_id':self.pay_from.id})
+    def calculate_direction(self,financial_account_id):
+        if self.pay_from.id==financial_account_id:
+            self.direction=True 
+        if self.pay_to.id==financial_account_id:
+            self.direction=False
+        return self.direction
+    def calculate_rest(self,pay_to_id,pay_from_id):
+        self.calculate_direction(financial_account_id=pay_from_id)
+        list1=Transaction.objects.filter(pay_to__id=pay_to_id).filter(pay_from__id=pay_from_id).filter(date_paid__lte=self.date_paid)
+        list2=Transaction.objects.filter(pay_to__id=pay_from_id).filter(pay_from__id=pay_to_id).filter(date_paid__lte=self.date_paid)
+        self.rest=0
+        for i in list1:
+            self.rest+=i.amount
+        for i in list2:
+            self.rest-=i.amount
+        return self.rest
+
+
+
+    def get_sub_transaction(self):
+        at=AssetTransaction.objects.filter(pk=self.pk).first()
+        if at is not None:
+            return at
+        mt=MoneyTransaction.objects.filter(pk=self.pk).first()
+        if mt is not None:
+            return mt
+
 
     def persian_date_paid(self):
         return PersianCalendar().from_gregorian(self.date_paid)
@@ -120,10 +160,27 @@ class Transaction(models.Model):
     def __str__(self):
         return self.title
 
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/' 
     def get_absolute_url(self):
         return reverse(APP_NAME+"transaction", kwargs={"pk": self.pk})
 
-class AssetTransaction(Transaction):
+
+class TransactionMixin():
+    def get_icon(self):
+        if self.class_name=="assettransaction":
+            type1="دارایی"
+            color="warning"
+        if self.class_name=="moneytransaction":
+            type1="پول"
+            color="success"
+        return f"""
+            <span class="badge badge-{color}">
+            {type1}
+            </span>
+            """
+
+class AssetTransaction(Transaction,TransactionMixin):
     asset = models.ForeignKey("asset", verbose_name=_("asset"), on_delete=models.CASCADE)
     class_name="assettransaction"
     
@@ -138,9 +195,9 @@ class AssetTransaction(Transaction):
 
 
 
-class MoneyTransaction(Transaction):
+class MoneyTransaction(Transaction,TransactionMixin):
     class_name="moneytransaction"
-    
+    paymet_method=models.CharField(_("paymet_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
 
     class Meta:
         verbose_name = _("MoneyTransaction")
