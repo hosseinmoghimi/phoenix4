@@ -5,32 +5,13 @@
     سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
 </h4>
 <div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            
-            <div class="card-header">
-                <h3 class="title text-center">
-                    ماشین
-                </h3>
-            </div>
-            <div class="card-body">
-                <ul class="nav flex-column" style="padding-right:10px">
-                    <li class="nav-item">
-                        <a class="nav-link farsi docs-creator" href="{{vehicle.get_absolute_url}}">
-                            {{vehicle.name}}
-                        </a>
-                        {% if perms.vehicles.change_vehicle %}
-                        <a title="ویرایش" target="_blank" href="{{vehicle.get_edit_url}}">
-                            <i class="material-icons">
-                                edit
-                            </i>
-                        </a>
-                      {% endif %}
-                    </li>
-                </ul>
-            </div>
+     <div class="col-md-4">
+        {% include "vehicles/includes/vehicle-app/vehicle.html" %}
+    </div>
 
-        </div>
+    <div class="col-md-12">
+
+        {% include "vehicles/includes/trips-app/template.html" %}
     </div>
     <div class="col-md-12">
         {% include "vehicles/includes/work-shifts-app/template.html" %}
@@ -49,7 +30,7 @@
 
 {% block script %}
 <script>
-    let vehicle_id=parseInt("{{vehicle.id}}")
+    let vehicle_id = parseInt("{{vehicle.id}}")
 </script>
 
 <script src="{% static 'persian/moment.js' %}"></script>
@@ -61,5 +42,6 @@
 {% include "vehicles/includes/vehicle-work-events-app/script.html" %}
 {% include "vehicles/includes/maintenances-app/script.html" %}
 
+{% include "vehicles/includes/trips-app/script.html" %}
 
 {% endblock script %}

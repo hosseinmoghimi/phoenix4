@@ -1,0 +1,48 @@
+<div class="card" id="vehicles-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            ماشین آلات
+        </h4>
+    </div>
+    <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+
+
+
+
+
+            <li class="nav-item" v-for="vehicle in vehicles">
+                <a class="nav-link farsi docs-creator" :href="vehicle.get_absolute_url">
+                    <span class="material-icons">
+                        commute
+                        </span>
+                    <span class="mr-2" v-text="vehicle.name"></span>
+                </a>
+            </li>
+
+
+        </ul>
+    </div>
+    {% if add_vehicle_form %}
+
+    <div class="card-footer">
+        <form @submit.prevent="add_vehicle()">
+            <div class="row">
+                <div class="col-9">
+                    <input type="text" v-model="new_vehicle_name" id="" class="form-control farsi">
+
+                </div>
+                <div class="col-3">
+
+                    <button class="btn btn-success btn-sm" type="submit">
+
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>

@@ -37,8 +37,8 @@
 
                     نمودار</a>
             </h6>
-            
-{% include "core/includes/page-like-app/template.html" %}
+
+            {% include "core/includes/page-like-app/template.html" %}
             <div class="mb-3 py-3">
 
                 <img src="{{material.image}}" class="rounded w-100" alt="">
@@ -67,23 +67,29 @@
 
         </div>
 
-       
+        {% if ware_house_materials %}
+
         <div class="col-md-12">
             {% include "projectmanager/includes/ware-house-materials-app/template.html" %}
 
         </div>
+        {% endif %}
+        {% if ware_house_sheet_lines %}
 
         <div class="col-md-12">
             {% include "projectmanager/includes/ware-house-sheet-lines-app/template.html" %}
 
         </div>
+        {% endif %}
 
+        {% if material_requests %}
 
         <div class="col-md-12">
             {% include "projectmanager/includes/material-requests-app/template.html" %}
 
         </div>
-     
+        {% endif %}
+
         <div class="col-md-12">
             {% include "core/includes/page-images-app/template.html" %}
 
@@ -103,7 +109,7 @@
 
 {% block script %}
 <script>
-    
+
     let parent_id = parseInt("{{material.id}}")
     let page_id = parseInt("{{material.id}}")
     let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`

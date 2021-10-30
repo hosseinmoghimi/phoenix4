@@ -5,6 +5,9 @@ class ResetPasswordForm(forms.Form):
     old_password=forms.CharField(max_length=150, required=False)
     new_password=forms.CharField(max_length=150, required=True)
 
+class LoginAsUserForm(forms.Form):
+    username=forms.CharField(required=True,max_length=200)
+
 class UploadProfileImageForm(forms.Form):
     # profile_id=forms.IntegerField(required=True)
     image=forms.ImageField(required=True)

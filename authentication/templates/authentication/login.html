@@ -6,7 +6,7 @@
 
 <form class="form-signin text-center" action="{% url 'authentication:login' %}" method="POST">
     {% csrf_token %}
-
+<input type="hidden" name="back_url" value="{{back_url}}">
 
 
     <h4 class="mb-3 fw-normal text-center">نام کاربری و کلمه عبور را وارد کنید.</h4>

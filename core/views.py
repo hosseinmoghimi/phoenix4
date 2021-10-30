@@ -16,6 +16,8 @@ from phoenix.server_settings import apps
 def CoreContext(request, *args, **kwargs):
     context = {}
     app_name = 'core'
+    context['wide_layout_parent']="phoenix/wide-layout.html"
+    context['help_title']="راهنما"
     if 'app_name' in kwargs:
         app_name = kwargs['app_name']
     context['user'] = request.user

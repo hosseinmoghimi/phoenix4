@@ -1,0 +1,19 @@
+{% extends "realestate/layout.html" %}
+{% block content %}
+
+    {% for property in properties %}
+    <a href="{{property.get_absolute_url}}">
+        <h5>
+            {{property.title}}
+        </h5>
+    </a>
+    {% endfor %}
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+
+</script>
+{% endblock script %}

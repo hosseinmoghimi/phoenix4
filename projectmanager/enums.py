@@ -18,6 +18,7 @@ class SignatureStatusEnum(TextChoices):
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     PURCHASING='درحال خرید',_('درحال خرید')
     REQUESTED='درخواست شده',_('درخواست شده')
+    PAID='تسویه شده',_('تسویه شده')
 
 
 class ProjectStatusEnum(TextChoices):
@@ -28,6 +29,7 @@ class ProjectStatusEnum(TextChoices):
     ACCEPTED='پذیرفته شده',_('پذیرفته شده')
     REQUESTED='درخواست شده',_('درخواست شده')
     CANCELED='کنسل شده',_('کنسل شده')
+    PAID='تسویه شده',_('تسویه شده')
 
 class RequestStatusEnum(TextChoices):
 

@@ -7,10 +7,10 @@
 <div class="row">
     <div class="col-md-4">
         <div class="card">
-            
+
             <div class="card-header">
                 <h3 class="title text-center">
-                     سرویس
+                    سرویس
                 </h3>
             </div>
             <div class="card-body">
@@ -25,7 +25,7 @@
                                 edit
                             </i>
                         </a>
-                      {% endif %}
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -33,7 +33,29 @@
         </div>
     </div>
 
-    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header"></div>
+            <div class="card-body farsi text-right">
+                <div>
+
+
+                    <a href="{{maintenance.service_man.get_absolute_url}}">
+
+                        {{maintenance.service_man.name}}
+                    </a>
+                </div>
+                <div>
+                    <a href="{{maintenance.service_man.profile.get_absolute_url}}">
+
+                        {{maintenance.service_man.profile.name}}
+                    </a>
+                </div>
+
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
     <div class="col-md-12">
         {% include "vehicles/includes/maintenances-app/template.html" %}
 
@@ -44,7 +66,7 @@
 
 {% block script %}
 <script>
-    let maintenance_id=parseInt("{{maintenance.id}}")
+    let maintenance_id = parseInt("{{maintenance.id}}")
 </script>
 
 <script src="{% static 'persian/moment.js' %}"></script>

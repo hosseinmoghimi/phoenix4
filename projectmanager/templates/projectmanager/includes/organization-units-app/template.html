@@ -1,5 +1,5 @@
 {% load static %}
-<div id="accordion">
+<div id="accordion-org-units">
     <div class="card mb-3" id="organization-unit-app">
         <div class="card-header" id="headingOrgUnits">
             <h5 class="card-title text-center farsi">
@@ -9,12 +9,13 @@
                 </button>
             </h5>
         </div>
-        <div id="collapseOrgUnits" class="collapse" aria-labelledby="headingOrgUnits" data-parent="#accordion">
+        <div id="collapseOrgUnits" class="collapse {% if organization_unit %}show{% endif %}" 
+        aria-labelledby="headingOrgUnits" data-parent="#accordion-org-units">
             <div class="card-body">
                 <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
                 <div class="mb-3" v-for="organization_unit in organization_units">
                     <div class="media">
-                        <i class="material-icons">
+                        <i class="material-icons text-primary">
                             apartment
                         </i>
                         <div class="media-body farsi mr-2">

@@ -1,37 +1,12 @@
 {% extends "vehicles/layout.html" %}
+{% load static %}
 {% block content %}
-<h4 class="text-center">
+<h3 class="text-center my-3">
   سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
-</h4>
+</h3>
 <div class="row">
   <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="title text-center">
-          ماشین آلات
-        </h3>
-      </div>
-      <div class="card-body">
-        <ul class="nav flex-column" style="padding-right:10px">
-
-          {% for vehicle in vehicles %}
-
-
-
-          <li class="nav-item">
-            <a class="nav-link farsi docs-creator" href="{{vehicle.get_absolute_url}}">
-              {{vehicle.name}}
-            </a>
-          </li>
-          {% endfor %}
-
-
-
-
-
-        </ul>
-      </div>
-    </div>
+    {% include "vehicles/includes/vehicles-app/template.html" %}
   </div>
 
 
@@ -39,9 +14,9 @@
     <div class="card">
 
       <div class="card-header">
-        <h3 class="title text-center">
+        <h4 class="title text-center">
           محدوده ها
-        </h3>
+        </h4>
       </div>
       <div class="card-body">
         <ul class="nav flex-column" style="padding-right:10px">
@@ -63,9 +38,9 @@
     <div class="card">
 
       <div class="card-header">
-        <h3 class="title text-center">
-          راننده
-        </h3>
+        <h4 class="title text-center">
+          راننده ها
+        </h4>
       </div>
       <div class="card-body">
         <ul class="nav flex-column" style="padding-right:10px">
@@ -90,9 +65,9 @@
     <div class="card">
 
       <div class="card-header">
-        <h3 class="title text-center">
-          سرویس کار
-        </h3>
+        <h4 class="title text-center">
+          سرویس کار ها
+        </h4>
       </div>
       <div class="card-body">
         <ul class="nav flex-column" style="padding-right:10px">
@@ -128,5 +103,20 @@
     </div>
   </div>
 
+  <div class="col-md-12">
+    {% include "vehicles/includes/trips-app/template.html" %}
+  </div>
+  <div class="col-md-12">
+    {% include "vehicles/includes/trip-paths-app/template.html" %}
+  </div>
+
 </div>
 {% endblock content %}
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "vehicles/includes/vehicles-app/script.html" %}
+{% include "vehicles/includes/trips-app/script.html" %}
+
+{% include "vehicles/includes/trip-paths-app/script.html" %}
+{% endblock script %}

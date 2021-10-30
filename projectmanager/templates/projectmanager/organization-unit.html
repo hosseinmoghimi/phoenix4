@@ -10,8 +10,7 @@
 
         </small>
 
-        {{organization_unit.full_title}}
-        {{organization_unit.employer.title}}
+        {{organization_unit.title}}
         {% if perms.projectmanager.change_organizationunit %}
         <a title="ویرایش" target="_blank" href="{{organization_unit.get_edit_url}}">
             <i class="material-icons">
@@ -49,21 +48,28 @@
                     </p>
                 </div>
             </div>
+
+            {% include "projectmanager/includes/employees-app/template.html" %}
+
         </div>
         <div class="col-md-4">
             {% include "projectmanager/includes/organization-units-app/template.html" %}
         </div>
+       
         <div class="col-md-4">
-            {% include "projectmanager/includes/employees-app/template.html" %}
-        </div>
-        <div class="col-md-4">
+            {% if projects %}
+              
             {% include "projectmanager/includes/projects-app/template.html" %}
+            {% endif %}
         </div>
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
         </div>
         <div class="col-md-4">
             {% include "core/includes/page-documents-app/template.html" %}
+        </div>
+        <div class="col-md-4">
+            {% include "core/includes/page-tags-app/template.html" %}
         </div>
         <div class="col-12">
             {% include "core/includes/page-images-app/template.html" %}
@@ -83,10 +89,11 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
-{% include "projectmanager/includes/employees-app/script.html" %}
 {% include "projectmanager/includes/organization-units-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "core/includes/page-related-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+{% include "projectmanager/includes/employees-app/script.html" %}
 
 {% endblock %}

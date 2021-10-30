@@ -1,6 +1,6 @@
 {% load static %}
 
-<div id="accordion">
+<div id="accordion-employees">
     <div class="card mb-3" id="employees-app">
         <div class="card-header" id="headingEmployees">
 
@@ -14,26 +14,11 @@
 
 
         </div>
-        <div id="collapseEmployees" class="collapse" aria-labelledby="headingEmployees" data-parent="#accordion">
+        <div id="collapseEmployees" class="collapse {% if organization_unit %}show{% endif %}"
+            aria-labelledby="headingEmployees" data-parent="#accordion-employees">
             <div class="card-body">
-                {% for employee in organization_unit.employee_set.all %}
-                <a href="{{employee.get_absolute_url}}">
-                    <div class="media">
-                        <img class="rounded-circle mr-3" width="64" src="{{employee.profile.image}}" alt="">
-                        <div class="media-body farsi">
 
-                            <h5>
-                                {{employee.profile.name}}
-
-                            </h5>
-
-
-                        </div>
-                    </div>
-                </a>
-
-                {% endfor %}
-                <div v-for="employee in employees">
+                <div v-for="employee in employees" class="mb-3">
                     <a :href="employee.get_absolute_url">
                         <div class="media">
                             <img class="rounded-circle mr-3 " width="64" :src="employee.profile.image" alt="">
@@ -42,7 +27,15 @@
                                 <h5 v-text="employee.profile.name">
 
                                 </h5>
-
+                                <div>
+                                    <a :href="employee.organization_unit.employer.get_absolute_url">
+                                        <small v-text=employee.organization_unit.employer.title></small>
+                                    </a>
+                                    /
+                                    <a :href="employee.organization_unit.get_absolute_url">
+                                        <small v-text=employee.organization_unit.title></small>
+                                    </a>
+                                </div>
 
                             </div>
                         </div>
@@ -71,9 +64,9 @@
                 </div>
 
             </div>
+            {% if add_employee_form %}
             <div class="card-footer ">
 
-                {% if add_employee_form %}
                 <button class="btn btn-primary" v-if="!show_add_form" @click="show_add_form=true">
                     <i class="material-icons">
                         add
@@ -101,10 +94,10 @@
                     </div>
 
                 </form>
-                {% endif %}
 
 
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

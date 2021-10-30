@@ -3,8 +3,20 @@ sidebar_links = [
 
     {
         'app_name': APP_NAME,
-        'title': 'خانه',
-        'template': 'index'
+        'title': 'مدیریت پروژه',
+        'template': 'index',
+        'childs': [
+            {
+                'app_name': APP_NAME,
+                'title': 'لیست 1',
+                'template': 'add_location'
+            },
+            {
+                'app_name': APP_NAME,
+                'title': 'لیست 2',
+                'template': 'add_location'
+            },
+        ]
     },
     {
         'app_name': APP_NAME,

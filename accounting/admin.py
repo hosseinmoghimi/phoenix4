@@ -1,7 +1,8 @@
-from accounting.models import Asset, BankAccount, FinancialAccount, Transaction
+from accounting.models import Asset, AssetTransaction, BankAccount, FinancialAccount, MoneyTransaction, Transaction
 from django.contrib import admin
 
 admin.site.register(BankAccount)
 admin.site.register(FinancialAccount)
-admin.site.register(Transaction)
+admin.site.register(MoneyTransaction)
 admin.site.register(Asset)
+admin.site.register(AssetTransaction)

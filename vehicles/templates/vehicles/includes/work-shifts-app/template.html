@@ -8,6 +8,9 @@
     <div class="card-body">
         <table class="table table-striped">
             <thead>
+                <th>
+
+                </th>
                 {% if not area %}
 
                 <th>
@@ -39,6 +42,15 @@
             </thead>
             <tbody>
                 <tr v-for="work_shift in work_shifts">
+                    <td>
+                        <a target="_blank" title="جزئیات" :href="work_shift.get_absolute_url">
+
+
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                        </a>
+                    </td>
                     {% if not area %}
 
                     <td>
@@ -102,13 +114,7 @@
 
                     </td>
                     <td>
-                        <a target="_blank" title="جزئیات" :href="work_shift.get_absolute_url">
 
-
-                            <i class="material-icons">
-                                ballot
-                            </i>
-                        </a>
 
                         <a target="_blank" title="ویرایش" :href="work_shift.get_edit_url">
 
@@ -123,10 +129,13 @@
         </table>
 
 
-        {% if add_work_shift_form %}
-        {% include "vehicles/includes/work-shifts-app/form.html" %}
-
-        {% endif %}
 
     </div>
+    {% if add_work_shift_form %}
+    <div class="card-footer">
+
+        {% include "vehicles/includes/work-shifts-app/form.html" %}
+
+    </div>
+    {% endif %}
 </div>

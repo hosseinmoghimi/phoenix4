@@ -1,6 +1,9 @@
+from django.http import request
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
-from .models import Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
+from vehicles.enums import VehicleColorEnum, VehicleTypeEnum
+from vehicles.serializers import VehicleWorkEventSerializer
+from .models import Passenger, Trip, TripPath, Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
 from .apps import APP_NAME
 from django.utils import timezone
 now=timezone.now()
@@ -24,6 +27,173 @@ class VehicleRepo():
     def vehicle(self, *args, **kwargs):
         if 'vehicle_id' in kwargs:
             pk = kwargs['vehicle_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+    def add_vehicle(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_vehicle"):
+            return
+        vehicle=Vehicle()
+        vehicle.name=kwargs['name'] if 'name' in kwargs else None
+        vehicle.vehicle_type =kwargs['vehicle_type'] if 'vehicle_type' in kwargs else VehicleTypeEnum.SEDAN
+        vehicle.color =kwargs['color'] if 'color' in kwargs else VehicleColorEnum.SEFID
+        vehicle.year =kwargs['year'] if 'year' in kwargs else 2015
+        vehicle.kilometer =kwargs['kilometer'] if 'kilometer' in kwargs else 0
+        
+        vehicle.save()
+        return vehicle
+
+class PassengerRepo():
+
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Passenger.objects
+        self.me = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects=self.objects
+        if 'passenger_id' in kwargs:
+            objects=objects.filter(passenger_id=kwargs['passenger_id'])
+        if 'driver_id' in kwargs:
+            objects=objects.filter(driver_id=kwargs['driver_id'])
+        if 'destination_id' in kwargs:
+            objects=objects.filter(destination_id=kwargs['destination_id'])
+        if 'source_id' in kwargs:
+            objects=objects.filter(source_id=kwargs['source_id'])
+        return objects.all()
+
+    def passenger(self, *args, **kwargs):
+        if 'passenger_id' in kwargs:
+            pk = kwargs['passenger_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+
+class TripRepo():
+
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Trip.objects
+        self.me = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects=self.objects
+        if 'passenger_id' in kwargs and kwargs['passenger_id']>0:
+            passenger_id=kwargs['passenger_id']
+            trips_ids=[]
+            passenger=PassengerRepo(request=self.request).passenger(pk=passenger_id)
+            for trip in self.objects.all():
+                if passenger in trip.passengers.all():
+                    trips_ids.append(trip.id)
+            return self.objects.filter(id__in=trips_ids)
+        if 'trip_path_id' in kwargs and kwargs['trip_path_id']>0:
+            trip_path_id=kwargs['trip_path_id']
+            trips_ids=[]
+            trip_path=TripPathRepo(request=self.request).trip_path(pk=trip_path_id)
+            for trip in self.objects.all():
+                if trip_path in trip.paths.all():
+                    trips_ids.append(trip.id)
+            return self.objects.filter(id__in=trips_ids)
+
+        if 'vehicle_id' in kwargs and kwargs['vehicle_id']>0:
+            objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'category_id' in kwargs and kwargs['category_id']>0:
+            objects=objects.filter(category_id=kwargs['category_id'])
+        if 'driver_id' in kwargs and kwargs['driver_id']>0:
+            objects=objects.filter(driver_id=kwargs['driver_id'])
+        # if 'destination_id' in kwargs:
+        #     objects=objects.filter(destination_id=kwargs['destination_id'])
+        # if 'source_id' in kwargs:
+        #     objects=objects.filter(source_id=kwargs['source_id'])
+        return objects.all()
+
+    def trip(self, *args, **kwargs):
+        if 'trip_id' in kwargs:
+            pk = kwargs['trip_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+    def add_trip(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_trip"):
+            return
+        trip=Trip()
+        trip.title=kwargs['title'] if 'title' in kwargs else None
+        trip.vehicle_id=kwargs['vehicle_id'] if 'vehicle_id' in kwargs else None
+        # trip.source_id =kwargs['source_id'] if 'source_id' in kwargs else None
+        # trip.destination_id =kwargs['destination_id'] if 'destination_id' in kwargs else None
+        trip.driver_id =kwargs['driver_id'] if 'driver_id' in kwargs else None
+        trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
+        trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
+        trip.delay =kwargs['delay'] if 'delay' in kwargs else 0
+        trip.save()
+
+        paths =kwargs['paths'] if 'paths' in kwargs else []
+        for path in paths:
+            path1=TripPathRepo(request=self.request).trip_path(pk=path['id'])
+            trip.paths.add(path1)
+        trip.date_tripped =kwargs['date_tripped'] if 'date_tripped' in kwargs else timezone.now()
+        
+        trip.save()
+        return trip
+   
+
+class TripPathRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = TripPath.objects
+        self.me = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects=self.objects
+        if 'passenger_id' in kwargs:
+            passenger_id=kwargs['passenger_id']
+            trips_ids=[]
+            passenger=PassengerRepo(request=self.request).passenger(pk=passenger_id)
+            for trip in self.objects.all():
+                if passenger in trip.passengers.all():
+                    trips_ids.append(trip.id)
+            return self.objects.filter(id__in=trips_ids)
+            
+        if 'vehicle_id' in kwargs:
+            objects=objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'driver_id' in kwargs:
+            objects=objects.filter(driver_id=kwargs['driver_id'])
+        if 'destination_id' in kwargs:
+            objects=objects.filter(destination_id=kwargs['destination_id'])
+        if 'source_id' in kwargs:
+            objects=objects.filter(source_id=kwargs['source_id'])
+        return objects.all()
+
+    def trip_path(self, *args, **kwargs):
+        if 'trip_path_id' in kwargs:
+            pk = kwargs['trip_path_id']
         elif 'pk' in kwargs:
             pk = kwargs['pk']
         elif 'id' in kwargs:
@@ -210,6 +380,13 @@ class WorkShiftRepo():
             objects = objects.filter(area_id=kwargs['area_id'])
         if 'driver_id' in kwargs:
             objects = objects.filter(driver_id=kwargs['driver_id'])
+        if 'vehicle_work_event_id' in kwargs:
+            vehicle_work_event_id=kwargs['vehicle_work_event_id']
+            vehicle_work_event=VehicleWorkEvent.objects.filter(pk=vehicle_work_event_id).first()
+            if vehicle_work_event is None:
+                return []
+            
+            objects = vehicle_work_event.workshift_set.all()
         return objects
 
     def work_shift(self, *args, **kwargs):
@@ -262,6 +439,8 @@ class VehicleWorkEventRepo():
         objects = self.objects.all()
         if 'vehicle_id' in kwargs:
             objects = objects.filter(vehicle_id=kwargs['vehicle_id'])
+        if 'work_shift_id' in kwargs:
+            objects = objects.filter(work_shift_id=kwargs['work_shift_id'])
         return objects
 
     def vehicle_work_event(self, *args, **kwargs):
@@ -292,3 +471,24 @@ class VehicleWorkEventRepo():
             if event_type is not None and not event_type == "":
                 objects = objects.filter(event_type=event_type)
         return objects
+
+
+    def add_vehicle_work_event(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_vehicleworkevent"):
+            return
+        work_shift_id=kwargs["work_shift_id"] if "work_shift_id" in kwargs else 0
+        event_type=kwargs["event_type"] if "event_type" in kwargs else ""
+        vehicle_id=kwargs["vehicle_id"] if "vehicle_id" in kwargs else 0
+        event_datetime=kwargs["event_datetime"] if "event_datetime" in kwargs else timezone.now()
+        description=kwargs["description"] if "description" in kwargs else ""
+        kilometer=kwargs["kilometer"] if "kilometer" in kwargs else 0
+        work_shift=WorkShiftRepo(request=self.request).work_shift(pk=work_shift_id)
+        vehicle_work_event=VehicleWorkEvent()
+        vehicle_work_event.work_shift_id=work_shift_id
+        vehicle_work_event.event_type=event_type
+        vehicle_work_event.vehicle_id=work_shift.vehicle_id
+        vehicle_work_event.event_datetime=event_datetime
+        vehicle_work_event.description=description
+        vehicle_work_event.kilometer=kilometer
+        vehicle_work_event.save()
+        return vehicle_work_event

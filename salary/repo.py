@@ -1,5 +1,5 @@
 from django.utils import timezone
-from salary.models import EmployeeSalary, SalaryLine
+from salary.models import EmployeeSalary, SalaryLine,WorkGroup,WorkDay,WorkSite
 from utility.persian import PERSIAN_MONTH_NAMES
 from .apps import APP_NAME
 from authentication.repo import ProfileRepo
@@ -123,4 +123,77 @@ class SalaryLineRepo:
         elif 'id' in kwargs:
             pk=kwargs['id']
         return objects.filter(pk=pk).first()
+
+
+
+
+class WorkGroupRepo:
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = WorkGroup.objects
+        self.me=ProfileRepo(user=self.user).me
+
+    def list(self,*args, **kwargs):
+        objects= self.objects.all()
+        if 'employee_salary_id' in kwargs:
+            employee_salary_id=kwargs['employee_salary_id']
+            objects=objects.filter(employee_salary_id=employee_salary_id)
+        return objects
+      
+  
+    
+    def work_group(self,*args, **kwargs):
+        objects=self.objects.all()
+        pk=0
+        if 'work_group_id' in kwargs:
+            pk=kwargs['work_group_id']
+        
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return objects.filter(pk=pk).first()
+
+
+
+
+class WorkSiteRepo:
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = WorkSite.objects
+        self.me=ProfileRepo(user=self.user).me
+
+    def list(self,*args, **kwargs):
+        objects= self.objects.all()
+        if 'employee_salary_id' in kwargs:
+            employee_salary_id=kwargs['employee_salary_id']
+            objects=objects.filter(employee_salary_id=employee_salary_id)
+        return objects
+      
+  
+    
+    def work_site(self,*args, **kwargs):
+        objects=self.objects.all()
+        pk=0
+        if 'work_site_id' in kwargs:
+            pk=kwargs['work_site_id']
+        
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return objects.filter(pk=pk).first()
+
 

@@ -54,12 +54,22 @@
                         <ul class="nav flex-column mb-4">
                             {% for page in pages %}
                             <li class="nav-item text-right">
-                                <a  class="farsi" href="{{page.get_absolute_url}}">
-                                  
+                                <a class="farsi" href="{{page.get_absolute_url}}">
+
                                     {{page.title}}
                                 </a>
                             </li>
                             {% endfor %}
+
+                            {% for page in location.worksite_set.all %}
+                            <li class="nav-item text-right">
+                                <a class="farsi" href="{{page.get_absolute_url}}">
+
+                                    {{page.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+
                         </ul>
                     </div>
                     <p>
@@ -92,6 +102,38 @@
                 </div>
             </div>
         </div>
+
+        {% if location.trip_source_set.all or location.trip_destination_set.all%}
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="title">
+                        مسیر های سفر
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h4>مبدا :</h4>
+                    {% for trip_path in location.trip_source_set.all %}
+                    <a href="{{trip_path.get_absolute_url}}">
+
+                        <h5 class="mr-5">{{trip_path.title}}</h5>
+                    </a>
+
+                    {% endfor %}
+                    <h4>مقصد :</h4>
+
+                    {% for trip_path in location.trip_destination_set.all %}
+                    <a href="{{trip_path.get_absolute_url}}">
+
+
+                        <h5 class="mr-5">{{trip_path.title}}</h5>
+                    </a>
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
 
 

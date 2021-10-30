@@ -1,5 +1,5 @@
 from utility.persian import PersianCalendar
-from projectmanager.serializers import EmployeeSerializer, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, RequestSignatureSerializer, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
+from projectmanager.serializers import EmployeeSerializer, EmployeeSerializer2, EventSerializer, MaterialRequestSerializer,EmployerSerializer, MaterialSerializer, OrganizationUnitSerializer, LocationSerializer, ProjectSerializer, RequestSignatureSerializer, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -224,7 +224,7 @@ class OrganizationUnitApi(APIView):
                 profile_id=add_employee_form.cleaned_data['profile_id']
                 employee=OrganizationUnitRepo(request=request).add_employee(username=username,password=password,first_name=first_name,last_name=last_name,profile_id=profile_id,organization_unit_id=organization_unit_id)
                 if employee is not None:
-                    context['employee']=EmployeeSerializer(employee).data
+                    context['employee']=EmployeeSerializer2(employee).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

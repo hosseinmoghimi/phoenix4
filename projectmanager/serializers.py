@@ -17,6 +17,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model=Project
         fields=['id','title','get_status_color','employer','contractor','full_title','status','sum_total','get_absolute_url','get_edit_url','short_description','thumbnail','persian_start_date','persian_end_date','percentage_completed']
 
+
 class ProjectSerializerForGuantt(serializers.ModelSerializer):
     class Meta:
         model=Project
@@ -26,10 +27,7 @@ class ProjectSerializerForGuantt(serializers.ModelSerializer):
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model=Material
-        fields=['id','title','full_title','get_absolute_url','unit_price','unit_name','get_edit_url','short_description','thumbnail']
-
-
-
+        fields=['id','title','full_title','get_absolute_url','unit_price','unit_name','get_edit_url','short_description','thumbnail','parent_id']
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -44,6 +42,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model=Employee
         fields=['id','get_absolute_url','profile']
+
+
 class MaterialRequestSerializer(serializers.ModelSerializer):
     material=MaterialSerializer()
     project=ProjectSerializer()
@@ -52,10 +52,12 @@ class MaterialRequestSerializer(serializers.ModelSerializer):
         model=MaterialRequest
         fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
 
+
 class EventSerializerForChart(serializers.ModelSerializer):
     class Meta:
         model=Event
         fields=['id','title','get_absolute_url','start_datetime2','end_datetime2']
+
 
 class ServiceRequestSerializer(serializers.ModelSerializer):
     service=ServiceSerializer()
@@ -64,14 +66,19 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model=ServiceRequest
         fields=['id','service','handler','quantity','persian_date_added','get_edit_url','get_status_tag','project','unit_name','unit_price','get_absolute_url']
+
+
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model=Event
-        fields=['id','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','start_datetime','end_datetime']
+        fields=['id','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime']
+
+
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model=Location
         fields=['id','location','title','get_edit_url','get_absolute_url']
+
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
     employees=EmployeeSerializer(many=True)
@@ -79,11 +86,14 @@ class OrganizationUnitSerializer(serializers.ModelSerializer):
     class Meta:
         model=OrganizationUnit
         fields=['id','employer','title','employees','get_absolute_url','get_edit_url','short_description','thumbnail']
+
+
 class RequestSignatureSerializer(serializers.ModelSerializer):
     employee=EmployeeSerializer()
     class Meta:
         model=RequestSignature
         fields=['id','status','employee','get_edit_url','description','persian_date_added','get_status_color']
+
 
 class WareHouseSerializer(serializers.ModelSerializer):
     employees=EmployeeSerializer(many=True)
@@ -103,9 +113,6 @@ class WareHouseSheetLineSerializer(serializers.ModelSerializer):
         'get_absolute_url']
 
 
-
-
-
 class WareHouseImportSheetSerializer(serializers.ModelSerializer):
     creator=EmployeeSerializer()
     ware_house=WareHouseSerializer()
@@ -121,7 +128,6 @@ class WareHouseImportSheetSerializer(serializers.ModelSerializer):
         ,'delivery','transferee']
 
 
-
 class WareHouseExportSheetSerializer(serializers.ModelSerializer):
     creator=EmployeeSerializer()
     ware_house=WareHouseSerializer()
@@ -135,7 +141,6 @@ class WareHouseExportSheetSerializer(serializers.ModelSerializer):
         'persian_date_imported','persian_date_exported',
         'persian_date_added','get_status_color','get_absolute_url'
         ,'tahvil_dahandeh','tahvil_girandeh']
-
 
 
 class WareHouseSheetSerializer(serializers.ModelSerializer):
@@ -160,3 +165,19 @@ class MaterialRequestFullSerializer(serializers.ModelSerializer):
     class Meta:
         model=MaterialRequest
         fields=['id','material','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
+
+
+class OrganizationUnitSerializer2(serializers.ModelSerializer):
+    employer=EmployerSerializer()
+    class Meta:
+        model=OrganizationUnit
+        fields=['id','employer','title','get_absolute_url','get_edit_url','short_description','thumbnail']
+
+
+class EmployeeSerializer2(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    organization_unit=OrganizationUnitSerializer2()
+    class Meta:
+        model=Employee
+        fields=['id','get_absolute_url','profile','organization_unit']
+        

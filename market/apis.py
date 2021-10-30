@@ -66,6 +66,7 @@ class ShopApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+
 class OrderApi(APIView):
     def edit_order_line(self,request,*args, **kwargs):
         context={}

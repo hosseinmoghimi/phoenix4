@@ -1,8 +1,11 @@
+from django.db.models.base import Model
 from django.db.models.fields import CharField
+from core.enums import ColorEnum
 from core.models import BasicPage
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
+from accounting.models import Asset
 
 from core.settings import ADMIN_URL, STATIC_URL
 from .apps import APP_NAME
@@ -15,28 +18,140 @@ class VehiclePage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(VehiclePage,self).save(*args, **kwargs)
+class Passenger(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    class_name="passenger"
+    
+
+    class Meta:
+        verbose_name = _("Passenger")
+        verbose_name_plural = _("Passengers")
+
+    def __str__(self):
+        return self.profile.name
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"passenger_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 
-class Vehicle(models.Model):
-    name=models.CharField(_("نام"), max_length=50)
+class TripCategory(models.Model):
+    title=models.CharField(_("عنوان"), max_length=50)
+    color=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
+    class_name="tripcategory"
+    def get_badge(self):
+        return f"""
+            <span class="badge badge-{self.color}">{self.title}</span>
+        """
+    
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':self.pk,'driver_id':0,'vehicle_id':0,'trip_path_id':0})
+    class Meta:
+        verbose_name = _("TripCategory")
+        verbose_name_plural = _("TripCategorys")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_category_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
+class Trip(models.Model):
+    status=models.CharField(_("status"), choices=TripStatusEnum.choices,default=TripStatusEnum.REQUESTED, max_length=50)
+    title=models.CharField(_("title"), max_length=200)
+    category=models.ForeignKey("tripcategory",null=True,blank=True, verbose_name=_("نوع سفر"), on_delete=models.SET_NULL)
+    vehicle=models.ForeignKey("vehicle", verbose_name=_("vehicle"), on_delete=models.CASCADE)
+    driver=models.ForeignKey("driver", verbose_name=_("driver"), on_delete=models.CASCADE)
+    distance=models.IntegerField(_("distance"),default=5)
+    cost=models.IntegerField(_("cost"))
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    date_started=models.DateTimeField(_("شروع سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_ended=models.DateTimeField(_("پایان سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    paths=models.ManyToManyField("trippath",blank=True, verbose_name=_("مسیر های سرویس"))
+    passengers=models.ManyToManyField("passenger", verbose_name=_("مسافر ها"))
+    delay=models.IntegerField(_("تاخیر"),default=0)
+    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=5000)
+    class_name="trip"
+
+    def get_status_color(self):
+        color="primary"
+        if self.status==TripStatusEnum.REQUESTED:
+            color="danger"
+        if self.status==TripStatusEnum.CANCELED:
+            color="secondary"
+        if self.status==TripStatusEnum.APPROVED:
+            color="primary"
+        if self.status==TripStatusEnum.DELIVERED:
+            color="success"
+        return color
+
+    def persian_date_started(self):
+        return PersianCalendar().from_gregorian(self.date_started)
+    def persian_date_ended(self):
+        return PersianCalendar().from_gregorian(self.date_ended)
+
+    class Meta:
+        verbose_name = _("Trip")
+        verbose_name_plural = _("Trips")
+
+    def __str__(self):
+        return self.title
+ 
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
+class TripPath(models.Model):
+    
+    source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
+    destination=models.ForeignKey("projectmanager.location",related_name="trip_destination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
+    cost=models.IntegerField(_("هزینه"),default=0)
+    distance=models.IntegerField(_("فاصله"),default=0)
+    duration=models.IntegerField(_("مدت زمان تقریبی"),default=0)
+    class_name="trippath"
+
+    class Meta:
+        verbose_name = _("TripPath")
+        verbose_name_plural = _("TripPaths")
+    @property
+    def title(self):
+        return f"مسیر {self.source} به {self.destination}"
+    def __str__(self):
+        return self.title
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':0,'trip_path_id':self.pk})
+    
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_path_id": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+
+
+class Vehicle(Asset):
     vehicle_type=models.CharField(_("نوع وسیله "),choices=VehicleTypeEnum.choices,default=VehicleTypeEnum.SEDAN, max_length=50)
     brand=models.CharField(_("برند"),choices=VehicleBrandEnum.choices,default=VehicleBrandEnum.TOYOTA, max_length=50)
     model_name=models.CharField(_("مدل"),null=True,blank=True, max_length=50)
     color=models.CharField(_("رنگ"),choices=VehicleColorEnum.choices,default=VehicleColorEnum.SEFID, max_length=50)
-    year=models.IntegerField(_("سال تولید"),default=2012)
     plaque=models.CharField(_("پلاک"),null=True,blank=True, max_length=50)
-    owner=models.CharField(_("مالک"), max_length=50,null=True,blank=True)
     driver=models.CharField(_("راننده"), max_length=50,null=True,blank=True)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
     kilometer=models.IntegerField(_("کیلومتر"),default=0)
-    description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
+    def save(self,*args, **kwargs):
+        self.class_name="vehicle"
+        self.app_name=APP_NAME
+        return super(Vehicle,self).save(*args, **kwargs)
     class Meta:
         verbose_name = _("Vehicle")
         verbose_name_plural = _("Vehicles")
 
-    def __str__(self):
-        return self.brand +' ' +self.name
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':self.pk,'trip_path_id':0})
+     
 
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/vehicle/{self.pk}/change/'
@@ -107,6 +222,9 @@ class Driver(models.Model):
         verbose_name = _("Driver")
         verbose_name_plural = _("Drivers")
 
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':self.pk,'vehicle_id':0,'trip_path_id':0})
+    
     def __str__(self):
         return self.profile.name
 
@@ -125,6 +243,7 @@ class WorkShift(models.Model):
     income=models.IntegerField(_("درآمد"),default=0)
     outcome=models.IntegerField(_("هزینه"),default=0)
     description=models.CharField(_("توضیحات"), null=True,blank=True,max_length=500)
+    class_name="workshift"
     def persian_start_time(self):
         return PersianCalendar().from_gregorian(self.start_time)
     def persian_end_time(self):
@@ -137,7 +256,7 @@ class WorkShift(models.Model):
         return f'{self.vehicle.name} {self.start_time}'
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":work_shift", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":workshift", kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/workshift/{self.pk}/change/'
     def get_edit_btn(self):
@@ -253,8 +372,9 @@ class Maintenance(VehicleEvent):
 
 
 class VehicleWorkEvent(VehicleEvent):
-    work_shift=models.ForeignKey("workshift", verbose_name=_("work_shift"), on_delete=models.CASCADE)
+    work_shift=models.ForeignKey("workshift", verbose_name=_("شیفت کاری"), on_delete=models.CASCADE)
     event_type=models.CharField(_("event_type"),choices=WorkEventEnum.choices, max_length=50)
+    class_name="vehicleworkevent"
     def get_icon(self):
         icon="settings"
         color="primary"
@@ -286,6 +406,6 @@ class VehicleWorkEvent(VehicleEvent):
         return f'{self.work_shift} {self.event_type}'
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":vehicle_work_event", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":vehicleworkevent", kwargs={"pk": self.pk})
     def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/event/{self.pk}/change/'
+        return f'{ADMIN_URL}{APP_NAME}/vehicleworkevent/{self.pk}/change/'

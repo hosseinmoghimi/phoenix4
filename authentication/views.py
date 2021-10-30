@@ -1,3 +1,4 @@
+from django.db.models.query import EmptyQuerySet
 from core.constants import FAILED, SUCCEED
 from django.http.response import Http404
 from authentication.serializers import ProfileSerializer
@@ -13,6 +14,8 @@ TEMPLATE_ROOT="authentication/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     return context
+
+
 def ProfileContext(request,*args, **kwargs):
     context=getContext(request=request)
     if 'profile' in kwargs:
@@ -22,11 +25,18 @@ def ProfileContext(request,*args, **kwargs):
     elif 'pk' in kwargs:
         selected_profile=ProfileRepo(request=request).profile(pk=kwargs['pk'])
     context['selected_profile']=selected_profile
+    if request.user.has_perm(APP_NAME+".change_profile"):
+        context['login_as_user_form']=LoginAsUserForm()
+
     return context
+
+
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"index.html",context)
+
+
 class ProfileViews(View):
     def upload_profile_image(self,request,*args, **kwargs):
         profile_id=0
@@ -62,12 +72,30 @@ class ProfileViews(View):
         context=getContext(request)
         context['layout']="base-layout.html"
         return render(request,TEMPLATE_ROOT+"profile2.html",context)
+
+
 class AuthenticationViews(View):
+    def login_as_user(self,request,*args, **kwargs):
+        log=1
+        if request.method=='POST':
+            log=2
+            login_as_user_form=LoginAsUserForm(request.POST)
+            if login_as_user_form.is_valid():
+                log=3
+                username=login_as_user_form.cleaned_data['username']
+                request=ProfileRepo(request=request).login_as_user(username=username)
+                if request is not None:
+                    log=4
+                    print(request.user)
+                    return redirect(SITE_URL)
+        return redirect("authentication:login")
+
     def profiles(self,request,*args, **kwargs):
         context=getContext(request)
         profiles=ProfileRepo(request=request).list()
         context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"profiles.html",context)
+    
     def login(self,request,*args, **kwargs):
         if request.method=='POST':
             login_form=LoginForm(request.POST)
@@ -90,7 +118,10 @@ class AuthenticationViews(View):
                     return render(request,TEMPLATE_ROOT+'login.html',context)
         else:
             context=getContext(request)
+            back_url=request.GET.get('next','/')
+            context['back_url']=back_url
             return render(request,TEMPLATE_ROOT+"login.html",context)
+            
     def register(self,request,*args, **kwargs):
         context=getContext(request=request)
         if request.method=='POST':

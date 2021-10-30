@@ -6,39 +6,41 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from .apps import APP_NAME
 IMAGE_FOLDER=APP_NAME+"/images/"
+CREATE_PROFILE_ON_USER_ADD=True
 
-from django.db.models.signals import post_save
+if CREATE_PROFILE_ON_USER_ADD:
+    from django.db.models.signals import post_save
 
-def create_profile_receiver(sender,instance,created,*args, **kwargs):  
-    if created:
-        profile=Profile(user_id=instance.id)
+    def create_profile_receiver(sender,instance,created,*args, **kwargs):  
+        if created:
+            profile=Profile(user_id=instance.id)
+            profile.save()
+
+    def save_profile_receiver(sender,instance,*args, **kwargs):    
+        profile=instance.profile
         profile.save()
+        # if profile.region is None:
+        #     try:
+        #         from core.models import Region
+        #         profile.region=Region.objects.first()
+        #         profile.save()
+        #     except:
+        #         pass
+        try:
+            from market.models import Customer,ShopRegion
+            customers=Customer.objects.filter(profile=profile)
+            if len(customers)==0:
+                customer=Customer()
+                customer.profile=profile
+                customer.region=ShopRegion.objects.first()
+                customer.title=instance.first_name+" "+instance.last_name
+                customer.save()
+        except:
+            pass
+        
 
-def save_profile_receiver(sender,instance,*args, **kwargs):    
-    profile=instance.profile
-    profile.save()
-    # if profile.region is None:
-    #     try:
-    #         from core.models import Region
-    #         profile.region=Region.objects.first()
-    #         profile.save()
-    #     except:
-    #         pass
-    try:
-        from market.models import Customer,ShopRegion
-        customers=Customer.objects.filter(profile=profile)
-        if len(customers)==0:
-            customer=Customer()
-            customer.profile=profile
-            customer.region=ShopRegion.objects.first()
-            customer.title=instance.first_name+" "+instance.last_name
-            customer.save()
-    except:
-        pass
-    
-
-post_save.connect(create_profile_receiver, sender=settings.AUTH_USER_MODEL)
-post_save.connect(save_profile_receiver, sender=settings.AUTH_USER_MODEL)
+    post_save.connect(create_profile_receiver, sender=settings.AUTH_USER_MODEL)
+    post_save.connect(save_profile_receiver, sender=settings.AUTH_USER_MODEL)
 
 
 

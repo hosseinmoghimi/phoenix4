@@ -1,5 +1,8 @@
+from django.db.models.query_utils import PathInfo
 from rest_framework import serializers
-from .models import Area, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
+
+from projectmanager.serializers import LocationSerializer
+from .models import Area, Passenger, Trip, TripCategory, TripPath, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
 from authentication.serializers import ProfileSerializer
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -25,7 +28,7 @@ class WorkShiftSerializer(serializers.ModelSerializer):
     area=AreaSerializer()
     class Meta:
         model=WorkShift
-        fields=['id','vehicle','income','outcome','driver','persian_start_time','persian_end_time','area','get_edit_url']
+        fields=['id','vehicle','income','outcome','driver','persian_start_time','persian_end_time','area','get_absolute_url','get_edit_url']
 
 
 class ServiceManSerializer(serializers.ModelSerializer):
@@ -50,3 +53,29 @@ class VehicleWorkEventSerializer(serializers.ModelSerializer):
         model=VehicleWorkEvent
         fields=['id','vehicle','event_type','work_shift','get_absolute_url','persian_event_datetime']
 
+class TripPathSerializer(serializers.ModelSerializer):
+    source=LocationSerializer()
+    destination=LocationSerializer()
+    class Meta:
+        model=TripPath
+        fields=['id','title','source','destination','distance','duration','cost','get_absolute_url','get_edit_url']
+
+class TripCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TripCategory
+        fields=['id','title','color','get_trips_url','get_edit_url']
+
+class TripSerializer(serializers.ModelSerializer):
+    driver=DriverSerializer()
+    vehicle=VehicleSerializer()
+    category=TripCategorySerializer()
+    paths=TripPathSerializer(many=True)
+    class Meta:
+        model=Trip
+        fields=['id','title','category','get_status_color','status','vehicle','driver','distance','cost','paths','delay','get_absolute_url','persian_date_started','persian_date_ended','get_edit_url']
+
+class PassengerSerilizer(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    class Meta:
+        model=Passenger
+        fields=['id','profile','get_absolute_url','get_edit_url']

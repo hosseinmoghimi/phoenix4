@@ -1,5 +1,5 @@
 {% load static %}
-<div id="accordion">
+<div id="accordion-page-tags">
 
     <div class="card" id="page-tags-app">
         <div class="card-header" id="headingPageTags">
@@ -12,7 +12,8 @@
 
         </div>
 
-        <div id="collapsePageTags" class="collapse" aria-labelledby="headingPageTags" data-parent="#accordion">
+        <div id="collapsePageTags" class="collapse {% if page.tags.all %}show{% endif %}" aria-labelledby="headingPageTags" 
+        data-parent="#accordion-page-tags">
 
 
             <div class="card-body">

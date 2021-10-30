@@ -48,6 +48,8 @@ class Employer(models.Model):
     fax = models.CharField(_("fax"), null=True, blank=True, max_length=50)
     description = models.TextField(_("description"), null=True, blank=True)
 
+    def get_employees_url(self):
+        return reverse(APP_NAME+":employees",kwargs={'employer_id':self.pk,'organization_unit_id':0})
     def logo(self):
         if self.logo_origin:
             return f"{MEDIA_URL}{self.logo_origin}"
@@ -98,6 +100,7 @@ class Employer(models.Model):
                 list1.append(proj.pk)
         return Project.objects.filter(pk__in=list1)
 
+
 class EmployeeDocument(models.Model):
     employee = models.ForeignKey("employee", verbose_name=_("employee"), on_delete=models.CASCADE)
     document=models.ForeignKey("core.document",null=True,blank=True, verbose_name=_("سند"), on_delete=models.PROTECT)
@@ -126,6 +129,7 @@ class EmployeeDocument(models.Model):
             </i>
         </a>
         """
+
 
 class Employee(models.Model):
     profile = models.ForeignKey("authentication.profile", verbose_name=_(
@@ -278,6 +282,17 @@ class Project(ProjectManagerPage):
     def sub_projects(self):
         return Project.objects.filter(parent_id=self.id).order_by('priority')
 
+    def all_childs(self):
+        # childs=[self]
+        # for p in self.sub_projects():
+        #     childs.append
+        # return childs
+        pages=[self]
+        for page in Project.objects.filter(parent=self):
+            for page1 in page.all_childs():
+                pages.append(page1)
+        return pages
+
     def employees(self):
         employees = []
         for org in self.organization_units.all():
@@ -423,18 +438,21 @@ class OrganizationUnit(ProjectManagerPage):
 
     def employees(self):
         return self.employee_set.all()
-
+   
+    @property
+    def parent_unit(self):
+        return OrganizationUnit.objects.get(pk=self.parent.id)
     @property
     def full_title(self):
         if self.parent is None:
             return self.title
-        return self.title+" , " + OrganizationUnit.objects.get(pk=self.parent.id).full_title
+        return  self.parent_unit.full_title+" , " +self.title
 
     def childs(self):
         return OrganizationUnit.objects.filter(parent_id=self.id)
 
     def __str__(self):
-        return f" {self.full_title} : {self.employer.title}"
+        return f"{self.employer.title} : {self.full_title}"
 
 
 class EmployeeSpeciality(ProjectManagerPage):

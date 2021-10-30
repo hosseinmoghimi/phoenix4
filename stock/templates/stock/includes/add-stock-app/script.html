@@ -20,8 +20,10 @@
                     last_name: this.last_name,
                     stock1: this.stock1,
                     stock2: this.stock2,
+                    agent_id:this.agent_id
                 }
                 let posting = $.post(url, payload)
+                console.log(payload)
                 posting.done((data) => {
                     console.log(data)
                     if (data.result === 'SUCCEED'){
@@ -31,7 +33,9 @@
                         // stocks_list_app.stocks.push(data.stock)
                         stocks=stocks.reverse()
                         stocks.push(data.stock)
-                        stocks=stocks.reverse()
+                        stocks=stocks.reverse() 
+
+                        stocks_app.stocks=stocks 
                     }
                 })
             },

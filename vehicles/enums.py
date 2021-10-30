@@ -1,6 +1,17 @@
 from core import enums as CoreEnums
 from django.db.models import TextChoices
 from django.utils.translation import gettext as _
+
+
+# 
+# class TripCategoryEnum(TextChoices):
+#     INNER="داخلی",_("داخلی")
+#     OUTER="خارجی",_("خارجی")
+class TripStatusEnum(TextChoices):
+    REQUESTED="درخواست شده",_("درخواست شده")
+    APPROVED="تأیید شده",_("تأیید شده")
+    CANCELED="کنسل شده",_("کنسل شده")
+    DELIVERED="تحویل شده",_("تحویل شده")
 class MaintenanceEnum(TextChoices):
     WASH="شستشو",_("شستشو")
     NEW_WATER='آب رادیات جدید',_('آب رادیات جدید')
@@ -23,6 +34,7 @@ class WorkEventEnum(TextChoices):
     # aaaa=aaaa,_("aaaa")
 class VehicleBrandEnum(TextChoices):
     TOYOTA='تویوتا',_('تویوتا')
+    PEUGEOT='پژو',_('پژو')
     BENZ='بنز',_('بنز')
     ISUZU='ایسوزو',_('ایسوزو')
     SCANIA='اسکانیا',_('اسکانیا')

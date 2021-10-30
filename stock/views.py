@@ -38,10 +38,10 @@ class BasicViews(View):
                 context=getContext(request)
                 stocks=StockRepo(request=request).list(search_for=search_for)
                 context['stocks']=stocks
-                agents=AgentRepo(request=request).list()
+                context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
+                agents=AgentRepo(request=request).list(search_for=search_for)
                 context['agents']=agents
                 context['agents_s']=json.dumps(AgentSerializer(agents,many=True).data)
-                context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
                 return render(request,TEMPLATE_ROOT+'index.html',context)
         return self.home(request=request,*args, **kwargs)
     def home(self,request,*args, **kwargs):
@@ -71,7 +71,8 @@ class StockViews(View):
         context=getContext(request)
         stocks=StockRepo(request=request).list(*args, **kwargs)
         context['stocks']=stocks
-        return render(request,TEMPLATE_ROOT+'index.html',context)
+        context['stocks_s']=json.dumps(StockSerializer(stocks,many=True).data)
+        return render(request,TEMPLATE_ROOT+'agent.html',context)
 class DocumentViews(View):
     def get_download_response(self,request,*args, **kwargs):
         document=DocumentRepo(request=request).document(*args, **kwargs)

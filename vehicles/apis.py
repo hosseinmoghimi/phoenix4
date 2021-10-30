@@ -1,11 +1,12 @@
 
+from django.utils import timezone
 from utility.persian import PersianCalendar
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-
-from vehicles.repo import MaintenanceRepo, WorkShiftRepo
-from vehicles.serializers import MaintenanceSerializer, WorkShiftSerializer
+import json
+from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -49,6 +50,43 @@ class WorkShiftApi(APIView):
         return JsonResponse(context)
     
 
+class VehicleWorkEventApi(APIView):
+    def add_vehicle_work_event(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_vehicle_work_event_form=AddVehicleWorkEventForm(request.POST)
+            if add_vehicle_work_event_form.is_valid():
+                log=3
+                
+                work_shift_id=add_vehicle_work_event_form.cleaned_data['work_shift_id']
+                event_type=add_vehicle_work_event_form.cleaned_data['event_type']
+                vehicle_id=add_vehicle_work_event_form.cleaned_data['vehicle_id']
+                event_datetime=add_vehicle_work_event_form.cleaned_data['event_datetime']
+                kilometer=add_vehicle_work_event_form.cleaned_data['kilometer']
+                description=add_vehicle_work_event_form.cleaned_data['description']
+
+              
+                event_datetime=PersianCalendar().to_gregorian(event_datetime)
+                vehicle_work_event=VehicleWorkEventRepo(request=request).add_vehicle_work_event(
+                    work_shift_id=work_shift_id,
+                    event_type=event_type,
+                    event_datetime=event_datetime,
+                    description=description,
+                    kilometer=kilometer,
+                    )
+                
+                if vehicle_work_event is not None:
+                    log=4
+                    vehicle_work_event=VehicleWorkEventSerializer(vehicle_work_event).data
+                    context['vehicle_work_event']=vehicle_work_event
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+
 class MaintenanceApi(APIView):
     def add_maintenance(self,request):
         context={'result':FAILED}
@@ -83,6 +121,76 @@ class MaintenanceApi(APIView):
                     log=4
                     maintenance=MaintenanceSerializer(maintenance).data
                     context['maintenance']=maintenance
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+class VehicleApi(APIView):
+    def add_new_vehicle(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_vehicle_form=AddVehicleForm(request.POST)
+            if add_vehicle_form.is_valid():
+                log=3
+                
+                name=add_vehicle_form.cleaned_data['name']
+                vehicle=VehicleRepo(request=request).add_vehicle(
+                    name=name,
+                )
+                
+                if vehicle is not None:
+                    log=4
+                    context['vehicle']=VehicleSerializer(vehicle).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+class TripApi(APIView):
+    def add_new_trip(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_trip_form=AddTripForm(request.POST)
+            if add_trip_form.is_valid():
+                log=3
+                
+                title=add_trip_form.cleaned_data['title']
+                vehicle_id=add_trip_form.cleaned_data['vehicle_id']
+                driver_id=add_trip_form.cleaned_data['driver_id']
+                paths=add_trip_form.cleaned_data['paths']
+                cost=add_trip_form.cleaned_data['cost']
+                delay=add_trip_form.cleaned_data['delay']
+                start_datetime=add_trip_form.cleaned_data['start_datetime']
+                end_datetime=add_trip_form.cleaned_data['end_datetime']
+                if start_datetime is None or start_datetime=="":
+                    start_datetime=timezone.now()
+                else:
+                    start_datetime=PersianCalendar().from_gregorian(start_datetime)
+                
+                if end_datetime is None or end_datetime=="":
+                    end_datetime=timezone.now()
+                else:
+                    end_datetime=PersianCalendar().from_gregorian(end_datetime)
+                paths=json.loads(paths)
+                trip=TripRepo(request=request).add_trip(
+                    title=title,
+                    vehicle_id=vehicle_id,
+                    driver_id=driver_id,
+                    paths=paths,
+                    cost=cost,
+                    delay=delay,
+                    start_datetime=start_datetime,
+                    end_datetime=end_datetime,
+                )
+                
+                if trip is not None:
+                    log=4
+                    context['trip']=TripSerializer(trip).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

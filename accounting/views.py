@@ -58,6 +58,27 @@ class TransactionViews(View):
         context['total']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
+    def transactions2(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        # financial_account=None
+        # pay_from_id=0
+        # pay_to_id=0
+        # if 'pay_from_id' in kwargs:
+        #     pay_from_id=kwargs['pay_from_id']
+        # if 'pay_to_id' in kwargs:
+        #     pay_to_id=kwargs['pay_to_id']
+        # financial_account=FinancialAccountRepo(request=request).financial_account(financial_account_id=financial_account_id)
+        transactions=TransactionRepo(request=request).list(*args, **kwargs)
+        context['transactions']=transactions
+        total=0
+        # for transaction in transactions:
+        #     if transaction.pay_to_id==financial_account_id:
+        #         total-=transaction.amount
+        #     if transaction.pay_from_id==financial_account_id:
+        #         total+=transaction.amount
+        context['total']=total
+        return render(request,TEMPLATE_ROOT+"transactions.html",context)
+    
     def transaction(self,request,*args, **kwargs):
         context=getContext(request=request)
         transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
@@ -68,5 +89,6 @@ class TransactionViews(View):
         financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)
         context['financial_account']=financial_account
         context['transactions']=financial_account.transactions()
+        context['transactions']=TransactionRepo(request=request).list(*args, **kwargs)
         
         return render(request,TEMPLATE_ROOT+"financial-account.html",context)

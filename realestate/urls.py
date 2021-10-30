@@ -5,7 +5,7 @@ app_name=APP_NAME
 urlpatterns = [
     path('',views.BasicViews().home,name='home'),
     path('property_media/<int:pk>/',views.PropertyViews().property_media,name='property_media'),
-    path('property/<int:pk>/',views.PropertyViews().property,name='property'),
+    path('property/<int:property_id>/',views.PropertyViews().property,name='property'),
     path('car/<int:pk>/',views.CarViews().car,name='car'),
     path('agent/<int:pk>/',views.BasicViews().agent,name='agent'),
 

@@ -1,0 +1,32 @@
+<table class="table table-striped">
+<thead>
+    <th>
+        نماینده
+    </th>
+    
+    <th>
+        
+    </th>
+</thead>
+<tbody>
+    <tr v-for="agent in agents">
+        <td>
+            <a :href="agent.get_absolute_url">
+                <img :src="agent.profile.image" class="rounded-circle" width="32" alt="">
+                <span v-text="agent.profile.name"></span>
+            </a>
+        </td>
+       
+        <td>
+            {% if perms.stock.change_agent %}
+
+            <a target="_blank" title="ویرایش" :href="agent.get_edit_url">
+                <i class="material-icons text-warning">
+                    edit
+                </i>
+            </a>
+            {% endif %}
+        </td>
+    </tr>
+</tbody>
+</table>

@@ -20,3 +20,39 @@ class AddMaintenanceForm(forms.Form):
     paid=forms.IntegerField(required=True)
     maintenance_type=forms.CharField( max_length=100, required=False)
     kilometer=forms.IntegerField( required=False)
+
+class AddVehicleForm(forms.Form):
+    name=forms.CharField( max_length=100, required=True)
+    
+
+class FilterTripsForm(forms.Form):
+    title=forms.CharField( max_length=100, required=False)
+    start_report_datetime=forms.CharField( max_length=100, required=False)
+    end_report_datetime=forms.CharField( max_length=100, required=False)
+    driver_id=forms.IntegerField( required=False)
+    vehicle_id=forms.IntegerField( required=False)
+    driver_id=forms.IntegerField( required=False)
+    
+
+class AddTripForm(forms.Form):
+    title=forms.CharField( max_length=100, required=True)
+    passengers=forms.CharField( max_length=5500, required=False)
+    paths=forms.CharField( max_length=5500, required=False)
+    start_datetime=forms.CharField( max_length=50, required=False)
+    end_datetime=forms.CharField( max_length=50, required=False)
+    vehicle_id=forms.IntegerField(required=False)
+    driver_id=forms.IntegerField(required=False)
+    delay=forms.IntegerField(required=False)
+    cost=forms.IntegerField(required=True)
+    delay=forms.IntegerField(required=False)
+
+class AddVehicleWorkEventForm(forms.Form):
+    work_shift_id=forms.IntegerField(required=True)
+    event_type=forms.CharField( max_length=50, required=True)
+    vehicle_id=forms.IntegerField(required=True)
+    event_datetime=forms.CharField( max_length=50, required=True)
+    kilometer=forms.IntegerField( required=True)
+     
+    description=forms.CharField( max_length=5000, required=False)
+
+    

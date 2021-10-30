@@ -1,0 +1,149 @@
+<div class="card" id="trips-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            سفر ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+                <th>
+                    مسیر ها
+                </th>
+                <th>
+
+                    وسیله
+                </th>
+                <th>
+                    شروع / پایان
+                </th>
+                <th>
+                    تاخیر
+                </th>
+                <th>
+                    هزینه
+                </th>
+                <th>
+                    فاصله
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                <template v-for="trip in trips">
+
+                    <tr>
+                        <td>
+                            <a :href="trip.get_absolute_url">
+                                <i class="material-icons">
+                                    ballot
+                                </i>
+
+                                <span v-text="trip.title"></span>
+                            </a>
+
+
+                            <a v-if="trip.category" :href="trip.category.get_trips_url">
+                                <span :class="'badge badge-'+trip.category.color">
+                                    <span v-text="trip.category.title"></span>
+                                </span>
+                            </a>
+                            <span :class="'badge badge-'+trip.get_status_color">
+                                <span v-text="trip.status"></span>
+                            </span>
+
+                        </td>
+                        <td>
+                            <div v-for="path in trip.paths">
+
+                                <a :href="path.get_absolute_url">
+                                    <i class="material-icons">
+                                        place
+                                    </i>
+                                    <span v-text="path.title"></span>
+                                </a>
+
+                            </div>
+
+
+
+                        </td>
+                        <td>
+                            <div>
+
+                                <a :href="trip.vehicle.get_absolute_url">
+                                    <i class="material-icons">
+                                        commute
+                                    </i>
+                                    <span v-text="trip.vehicle.name"></span>
+                                </a>
+                            </div>
+                            <div>
+                                <a :href="trip.driver.get_absolute_url">
+                                    <span class="material-icons">
+                                        badge
+                                    </span>
+                                    <span v-text="trip.driver.profile.name"></span>
+                                </a>
+
+                            </div>
+
+                        </td>
+                        <td>
+                            <div class="small text-muted" v-text="trip.persian_date_started"></div>
+                            <div class="small text-muted" v-text="trip.persian_date_ended"></div>
+
+                        </td>
+                        <td>
+                            <span v-if="trip.delay>0" class="badge badge-danger">
+                                <span v-text="trip.delay"></span>
+                                <small class="">
+                                    دقیقه
+                                </small>
+                            </span>
+                        </td>
+                        <td>
+                            <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span>
+
+
+                        </td>
+                        <td>
+                            <small class="text-muted">km</small>
+                            <span v-text="trip.distance"></span>
+                        </td>
+                        <td>
+                            {% if perms.vehicles.change_trip %}
+                            <a title="ویرایش" target="_blank" :href="trip.get_edit_url">
+                                <i class="material-icons text-warning">
+                                    edit
+                                </i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">
+                            <div class="text-muted">
+
+                                توضیحات : <span v-text="trip.description"></span>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="8"></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+
+    </div>
+     
+</div>

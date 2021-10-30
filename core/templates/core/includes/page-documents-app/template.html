@@ -1,4 +1,4 @@
-<div id="accordion">
+<div id="accordion-page-documents">
 
     <div id="page-documents-app" class="card mb-3">
         <div class="card-header" id="headingdocuments">
@@ -10,7 +10,8 @@
             </h5>
         </div>
 
-        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}" aria-labelledby="headingdocuments" data-parent="#accordion">
+        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}" 
+        aria-labelledby="headingdocuments" data-parent="#accordion-page-documents">
 
             <div class="card-body">
                 {% for document in page.documents.all %}
@@ -45,6 +46,7 @@
                     </h6>
                 </div>
             </div>
+                {% if add_page_document_form %}
             <div class="card-footer">
 
                 <p class="text-right" v-if="!show_add_document_form">
@@ -57,7 +59,6 @@
                     </a>
                 </p>
 
-                {% if add_page_document_form %}
 
                 <form id="add-document-form" v-if="show_add_document_form" @submit.prevent="add_page_document()"
                     enctype="multipart/form-data">
@@ -68,7 +69,7 @@
 
 
                             <span class="btn btn-raised btn-round btn-default btn-file">
-                                <span class="fileinput-new">انتخاب فایل</span>
+                                <span class="fileinput-new farsi">انتخاب فایل</span>
 
                                 <input type="file" v-on:change="document_file=true" name="">
                                 <div class="ripple-container"></div>
@@ -85,9 +86,9 @@
                     </div>
 
                 </form>
-                {% endif %}
 
             </div>
+                {% endif %}
         </div>
     </div>
 </div>

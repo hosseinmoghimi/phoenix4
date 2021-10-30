@@ -11,15 +11,22 @@
         <ul class="navbar-nav mr-auto">
             {% block navbar %}
             {% endblock %}
+            {% if help_url %}
+              
             <li class="nav-item my-auto mx-2">
-                <a class="nav-link farsi " href="{% url 'help:home' app_name=APP_NAME %}">
+                <a class="nav-link farsi " href="{{help_url}}">
                     <i class="material-icons" aria-hidden="true">help</i>
-                    راهنما
+                    {% if help_title %}
+                    {{help_title}}
+                      {% else %}
+                      راهنما
+                    {% endif %}
                 </a>
             </li>
+            {% endif %}
             {% if perms.core.change_parameter %}
             <li class="nav-item my-auto mx-2">
-                <a class="nav-link farsi " href="{{ADMIN_URL}}{{APP_NAME}}/">
+                <a target="_blank" class="nav-link farsi " href="{{ADMIN_URL}}{{APP_NAME}}/">
                     <i class="material-icons" aria-hidden="true">settings</i>
                     مدیریت
                 </a>
