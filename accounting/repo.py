@@ -111,7 +111,6 @@ class TransactionRepo:
                 list_final.append(transaction)
             for transaction in objects2:
                 transaction.calculate_rest(*args, **kwargs)
-                print(kwargs)
                 list_id.append(transaction.pk)
                 list_final.append(transaction)
             # return list_final 
