@@ -498,7 +498,10 @@ class Request(models.Model):
     class_name = 'request'
     def persian_date_requested(self):
         return PersianCalendar().from_gregorian(self.date_requested)
-
+    def total(self):
+        total=0
+        total=self.unit_price*self.quantity
+        return total
 
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)

@@ -30,6 +30,13 @@
             show_add_material_request_form: false,
             add_material_request_form_employee_id: ""
         },
+        mounted:function(){
+            this.sum_material_requests=0
+            material_requests.forEach(material_request => {
+                this.sum_material_requests+=material_request.total
+                
+            });
+        },
         methods: {
             to_price: function (value, CURRENCY) {
                 return to_price(value, CURRENCY)
