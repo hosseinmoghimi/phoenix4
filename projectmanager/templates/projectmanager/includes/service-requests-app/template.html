@@ -38,10 +38,12 @@
                             پروژه
                         </th>
                         {% endif %}
-
-                        <th>
-                            سرویس
-                        </th>
+{% if not service %}
+  
+<th>
+    سرویس
+</th>
+{% endif %}
 
 
                         <th>
@@ -82,15 +84,27 @@
                                     </span>
                                 </a>
                             </td>
-
+                            {% if not service %}
+                              
                             <td>
                                 <img :src="service_request.service.thumbnail" class="ml-2 rounded" width="32" alt="">
-
+                                
                                 <a target="_blank" :href="service_request.service.get_absolute_url"
-                                    v-text="service_request.service.title">
-
-                                </a>
+                                v-text="service_request.service.title">
+                                
+                            </a>
                             </td>
+                            {% endif %}
+                            {% if not project %}
+                              
+                            <td>
+                                
+                                <a target="_blank" :href="service_request.project.get_absolute_url"
+                                v-text="service_request.project.title">
+                                
+                            </a>
+                            </td>
+                            {% endif %}
 
                             <td>
                                 <span v-text="service_request.quantity"></span>
