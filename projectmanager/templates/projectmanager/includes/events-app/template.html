@@ -104,60 +104,7 @@
                     </tbody>
                 </table>
                 <div>
-                    {% if add_event_form %}
-
-                    <form @submit.prevent="add_event">
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">.... </label>
-                                    <date-picker v-model="event_datetime"></date-picker>
-
-                                    <small id="emailHelp" class="form-text farsi text-muted">
-                                        شناسه صفحه مرتبط را وارد کنید.
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">شروع</label>
-                                    <date-picker v-model="start_datetime"></date-picker>
-
-                                    <small id="emailHelp" class="form-text farsi text-muted">
-                                        شناسه صفحه مرتبط را وارد کنید.
-                                    </small>
-                                </div>
-
-
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">پایان</label>
-                                    <date-picker v-model="end_datetime"></date-picker>
-
-                                    <small id="emailHelp" class="form-text farsi text-muted">
-                                        شناسه صفحه مرتبط را وارد کنید.
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <input required type="text" placeholder="شرح رویداد" class="form-control"
-                                    v-model="add_event_form_title">
-                            </div>
-                            <div class="col-1">
-                                <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-
-                                <button v-if="!waiting" class="btn btn-success" type="submit">
-                                    <i class="material-icons">add</i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-                    {% endif %}
+                  {% include "projectmanager/includes/events-app/add-event-form.html" %}
                 </div>
             </div>
             <div class="card-footer">
