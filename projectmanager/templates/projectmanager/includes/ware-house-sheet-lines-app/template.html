@@ -105,7 +105,7 @@
 
                             <td>
 
-                                <a target="_blank"
+                                <a v-if="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh" target="_blank"
                                     :href="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.get_absolute_url">
                                     <img :src="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.image"
                                         class="ml-2 rounded-circle" width="32" alt="">
@@ -114,7 +114,7 @@
 
                                 </a>
 
-                                <a target="_blank"
+                                <a  v-if="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh" target="_blank"
                                     :href="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.get_absolute_url">
                                     <img :src="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.image"
                                         class="ml-2 rounded-circle" width="32" alt="">

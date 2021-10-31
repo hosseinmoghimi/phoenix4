@@ -586,6 +586,9 @@ class MaterialViews(View):
         material_requests=MaterialRequestRepo(request=request).list(material_id=material.id)
         context['material_requests']=material_requests
         context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        ware_house_sheet_lines=material.warehousesheetline_set.all()
+        context['ware_house_sheet_lines']=ware_house_sheet_lines
+        context['ware_house_sheet_lines_s']=json.dumps(WareHouseSheetLineSerializer(ware_house_sheet_lines,many=True).data)
         
         return render(request, TEMPLATE_ROOT+"material.html", context)
 
