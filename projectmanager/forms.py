@@ -36,7 +36,7 @@ class AddEventForm(forms.Form):
     event_datetime=forms.CharField( max_length=20, required=False)
     start_datetime=forms.CharField( max_length=20, required=False)
     end_datetime=forms.CharField( max_length=20, required=False)
-    title=forms.CharField(max_length=50, required=True)
+    title=forms.CharField(max_length=500, required=True)
 
 
 class AddMaterialRequestForm(forms.Form):
