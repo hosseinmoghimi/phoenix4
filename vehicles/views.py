@@ -162,6 +162,15 @@ class TripViews(View):
         trip=TripRepo(request=request).trip(*args, **kwargs)
         context['trip']=trip
         context['vehicle']=trip.vehicle
+        passengers=trip.passengers.all()
+        context['passengers']=passengers
+        passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
+        context['passengers_s']=passengers_s
+        all_passengers=PassengerRepo(request=request).list()
+        context['all_passengers']=all_passengers
+        all_passengers_s=json.dumps(PassengerSerilizer(all_passengers,many=True).data)
+        context['all_passengers_s']=all_passengers_s
+
         return render(request,TEMPLATE_FOLDER+"trip.html",context)
     def trips(self,request,*args, **kwargs):
         context=getContext(request=request)

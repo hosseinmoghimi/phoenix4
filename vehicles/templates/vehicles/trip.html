@@ -120,37 +120,7 @@
 
 
     <div class="col-md-4">
-        <div class="card">
-
-            <div class="card-header">
-                <h3 class="title text-center">
-                    مسافر ها
-                </h3>
-            </div>
-            <div class="card-body">
-                <ul class="nav flex-column" style="padding-right:10px">
-                    {% for passenger in trip.passengers.all %}
-
-
-                    <li class="nav-item">
-                        <a class="nav-link farsi docs-creator" href="{{passenger.get_absolute_url}}">
-                            <img src="{{passenger.profile.image}}" class="rounded-circle" width="48" alt="">
-                            {{passenger.profile.name}}
-                        </a>
-                        {% if perms.vehicles.change_passenger %}
-                        <a title="ویرایش" target="_blank" href="{{passenger.get_edit_url}}">
-                            <i class="material-icons">
-                                edit
-                            </i>
-                        </a>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-
-                </ul>
-            </div>
-
-        </div>
+       {% include "vehicles/includes/passengers-app/template.html" %}
     </div>
 
 
@@ -161,7 +131,7 @@
 
 {% block script %}
 <script>
-    let vehicle_id = parseInt("{{vehicle.id}}")
+    let trip_id = parseInt("{{trip.id}}")
 </script>
 
 <script src="{% static 'persian/moment.js' %}"></script>
@@ -172,5 +142,6 @@
 {% include "vehicles/includes/work-shifts-app/script.html" %}
 
 {% include "vehicles/includes/trips-app/script.html" %}
+{% include "vehicles/includes/passengers-app/script.html" %}
 
 {% endblock script %}

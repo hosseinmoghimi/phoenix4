@@ -510,6 +510,7 @@ class EmployeeViews(View):
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"employees.html", context)
    
+
 class WareHouseViews(View):
     
     def ware_house(self, request, *args, **kwargs):
@@ -758,7 +759,9 @@ class ServiceViews(View):
         service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)
         context['service'] = service
-        context['service_requests']=ServiceRequestRepo(request=request).service_requests(service_id=service.id)
+        service_requests=ServiceRequestRepo(request=request).service_requests(service_id=service.id)
+        context['service_requests']=service_requests
+        context['service_requests_s']=json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
         context['services'] = service.childs()
         context.update(PageContext(request=request, page=service))
         context['add_service_form'] = AddServiceForm()

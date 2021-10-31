@@ -24,6 +24,10 @@ class AddMaintenanceForm(forms.Form):
 class AddVehicleForm(forms.Form):
     title=forms.CharField( max_length=100, required=True)
     
+class AddPassengerToTripForm(forms.Form):
+    passenger_id=forms.IntegerField( required=True)
+    trip_id=forms.IntegerField( required=True)
+    
 
 class FilterTripsForm(forms.Form):
     title=forms.CharField( max_length=100, required=False)

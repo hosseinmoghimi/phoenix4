@@ -74,7 +74,18 @@
                                 <small v-text="material_request.persian_date_requested">
                                 </small>
                             </td>
-                          
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" :href="material_request.project.get_absolute_url"
+                                    v-text="material_request.project.title">
+
+                                </a>
+                            </td>
+                            {% endif %}
+                            {% if not material %}
+
                             <td>
                                 <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32" alt="">
 
@@ -83,6 +94,9 @@
 
                                 </a>
                             </td>
+                            {% endif %}
+                            
+
                             <td>
                                 <span v-text="material_request.quantity"></span>
                                 <small v-text="material_request.unit_name">

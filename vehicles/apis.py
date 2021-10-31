@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
 from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.serializers import MaintenanceSerializer, PassengerSerilizer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -191,6 +191,30 @@ class TripApi(APIView):
                 if trip is not None:
                     log=4
                     context['trip']=TripSerializer(trip).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def add_passenger_to_trip(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_passenger_to_trip_form=AddPassengerToTripForm(request.POST)
+            if add_passenger_to_trip_form.is_valid():
+                log=3
+                
+                trip_id=add_passenger_to_trip_form.cleaned_data['trip_id']
+                passenger_id=add_passenger_to_trip_form.cleaned_data['passenger_id']
+                passenger=TripRepo(request=request).add_passenger_to_trip(
+                    passenger_id=passenger_id,
+                    trip_id=trip_id,
+                )
+                
+                if passenger is not None:
+                    log=4
+                    context['passenger']=PassengerSerilizer(passenger).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
