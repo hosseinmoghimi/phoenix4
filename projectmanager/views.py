@@ -5,7 +5,7 @@ from django.http.response import Http404
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
-from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
+from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetLineSerializer, WareHouseSheetSerializer
 from .utils import AdminUtility
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
@@ -543,7 +543,9 @@ class WareHouseSheetViews(View):
         context['ware_house_sheet']=ware_house_sheet
         context['page_title']="برگه انبار شماره "+str(ware_house_sheet.pk)
         context['ware_house']=ware_house_sheet.ware_house
-        context['ware_house_sheet_lines']=ware_house_sheet.sheet_lines()
+        ware_house_sheet_lines=ware_house_sheet.sheet_lines()
+        context['ware_house_sheet_lines']=ware_house_sheet_lines
+        context['ware_house_sheet_lines_s']=json.dumps(WareHouseSheetLineSerializer(ware_house_sheet_lines,many=True).data)
         return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
     
 

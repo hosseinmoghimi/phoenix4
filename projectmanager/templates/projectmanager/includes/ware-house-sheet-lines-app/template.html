@@ -1,7 +1,7 @@
 {% load static %}
 {% load to_persian_date %}
 {% load to_price %}
-<div id="accordion">
+<div id="accordion1a">
 
 
     <div class="card" id="ware-house-sheet-lines-app">
@@ -17,8 +17,8 @@
 
 
         </div>
-        <div id="collapseWareHouseSheetLines" class="collapse {% if ware_house_sheet%}show{% endif %}"
-            aria-labelledby="headingWareHouseSheetLines" data-parent="#accordion">
+        <div id="collapseWareHouseSheetLines" class="collapse {% if ware_house_sheet %}show{% endif %}"
+            aria-labelledby="headingWareHouseSheetLines" data-parent="#accordion1a">
 
             <div class="card-body">
 
@@ -68,10 +68,9 @@
                         </th>
                     </thead>
                     <tbody>
-                        {% for ware_house_sheet_line in ware_house_sheet_lines %}
-                        <tr>
+                        <tr v-for="ware_house_sheet_line in ware_house_sheet_lines">
                             <td>
-                                <a target="_blank" href="{{ware_house_sheet_line.get_absolute_url}}" title="نمایش کامل">
+                                <a target="_blank" :href="ware_house_sheet_line.get_absolute_url" title="نمایش کامل">
                                     <i class="material-icons">
                                         ballot
                                     </i>
@@ -82,8 +81,8 @@
                             {% if not ware_house %}
 
                             <td>
-                                <a href="{{ware_house_sheet_line.ware_house_sheet.ware_house.get_absolute_url}}">
-                                    {{ware_house_sheet_line.ware_house_sheet.ware_house.title}}
+                                <a :href="ware_house_sheet_line.ware_house_sheet.ware_house.get_absolute_url">
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.ware_house.title"></span>
                                 </a>
                             </td>
                             {% endif %}
@@ -91,42 +90,37 @@
 
                             {% if not ware_house_sheet %}
                             <td>
-                                {% if ware_house_sheet_line.ware_house_sheet.date_imported %}
 
                                 <small>
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.persian_date_imported"></span>
 
-                                    {{ware_house_sheet_line.ware_house_sheet.date_imported|to_persian_date|safe}}
                                 </small>
-                                {% endif %}
-                                {% if ware_house_sheet_line.ware_house_sheet.date_exported %}
 
                                 <small>
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.persian_date_exported"></span>
 
-                                    {{ware_house_sheet_line.ware_house_sheet.date_exported|to_persian_date|safe}}
                                 </small>
-                                {% endif %}
 
                             </td>
 
                             <td>
-                                {% if ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh %}
 
                                 <a target="_blank"
-                                    href="{{ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.get_absolute_url}}">
-                                    <img src="{{ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.image}}"
+                                    :href="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.get_absolute_url">
+                                    <img :src="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.image"
                                         class="ml-2 rounded-circle" width="32" alt="">
-                                    {{ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.name}}
+                                    <span
+                                        v-text="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.name"></span>
+
                                 </a>
-                                {% endif %}
-                                {% if ware_house_sheet_line.ware_house_sheet.tahvil_girandeh %}
 
                                 <a target="_blank"
-                                    href="{{ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.get_absolute_url}}">
-                                    <img src="{{ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.image}}"
+                                    :href="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.get_absolute_url">
+                                    <img :src="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.image"
                                         class="ml-2 rounded-circle" width="32" alt="">
-                                    {{ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.name}}
+                                    <span
+                                        v-text="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.name"></span>
                                 </a>
-                                {% endif %}
                             </td>
 
                             {% endif %}
@@ -135,8 +129,8 @@
 
                             <td>
 
-                                <span class="badge badge-{{ware_house_sheet_line.ware_house_sheet.get_status_color}}">
-                                    {{ware_house_sheet_line.ware_house_sheet.direction}}
+                                <span :class="'badge badge-'+ware_house_sheet_line.ware_house_sheet.get_status_color">
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.direction"></span>
                                 </span>
                             </td>
                             {% endif %}
@@ -145,49 +139,47 @@
 
                             <td>
 
-                                <a target="_blank" href="{{ware_house_sheet_line.material.get_absolute_url}}">
-                                    <img src="{{ware_house_sheet_line.material.thumbnail}}" class="ml-2 rounded"
-                                        width="32" alt="">
-                                    {{ware_house_sheet_line.material.title}}
+                                <a target="_blank" :href="ware_house_sheet_line.material.get_absolute_url">
+                                    <img :src="ware_house_sheet_line.material.thumbnail" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    <span v-text="ware_house_sheet_line.material.title"></span>
                                 </a>
                             </td>
                             {% endif %}
 
                             <td>
-                                {{ware_house_sheet_line.quantity}}
-                                <small>
+                                <span v-text="ware_house_sheet_line.quantity"></span>
+                            <small>
+                                <span v-text="ware_house_sheet_line.unit_name"></span>
+                            </small>
 
-                                    {{ware_house_sheet_line.unit_name}}
-                                </small>
+                        </td>
+                        <td>
+                            <span v-text="to_price(ware_house_sheet_line.unit_price,'')"></span>
 
-                            </td>
-                            <td>
-                                {{ware_house_sheet_line.unit_price|to_price_pure}}
+                        </td>
+                        <td>
+                            <span v-text="to_price(ware_house_sheet_line.line_total,'{{CURRENCY}}')"></span>
 
-                            </td>
-                            <td>
-                                {{ware_house_sheet_line.line_total|to_price}}
+                        </td>
+                        <td>
+                            <small class="text-secondary">
+                                <span v-html="ware_house_sheet_line.description"></span>
 
-                            </td>
-                            <td>
-                                {% if ware_house_sheet_line.description %}
-                                <small class="text-secondary">
-                                    {{ware_house_sheet_line.description|safe}}
-        
-                                </small>
-                                {% endif %}
-                                {% if perms.projectmanager.change_materialrequest %}
-                                {{ware_house_sheet_line.get_edit_btn|safe}}
+                            </small>
+                            {% if perms.projectmanager.change_materialrequest %}
 
-                                {% endif %}
-                            </td>
+                            {% endif %}
+                        </td>
                         </tr>
-                        {% endfor %}
                     </tbody>
                 </table>
 
             </div>
-      
+            <div class="card-footer text-right farsi">
+                جمع :
+                <span v-text="to_price(sum_total,'{{CURRENCY}}')"></span>
+            </div>
         </div>
     </div>
 </div>

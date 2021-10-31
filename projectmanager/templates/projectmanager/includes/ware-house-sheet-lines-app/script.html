@@ -1,10 +1,22 @@
 <script>
-    let ware_house_sheet_lines_app=new Vue({
-        el:"#ware-house-sheet-lines-app",
-        data:{
-
+    let ware_house_sheet_lines = JSON.parse(`{{ware_house_sheet_lines_s|escapejs}}`)
+    let ware_house_sheet_lines_app = new Vue({
+        el: "#ware-house-sheet-lines-app",
+        data: {
+            ware_house_sheet_lines: ware_house_sheet_lines,
+            sum_total: 0
         },
-        methods:{
+        mounted: function () {
+            this.sum_total = 0
+            ware_house_sheet_lines.forEach(ware_house_sheet_line => {
+                this.sum_total = this.sum_total + ware_house_sheet_line.line_total
+            })
+        },
+        methods: {
+
+            to_price(value, curr) {
+                return to_price(value, curr)
+            },
 
         }
     })

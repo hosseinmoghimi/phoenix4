@@ -180,4 +180,23 @@ class EmployeeSerializer2(serializers.ModelSerializer):
     class Meta:
         model=Employee
         fields=['id','get_absolute_url','profile','organization_unit']
+class WareHouseSheetBriefSerializer(serializers.ModelSerializer):
+    creator=EmployeeSerializer()
+    ware_house=WareHouseSerializer()
+    tahvil_dahandeh=EmployeeSerializer()
+    tahvil_girandeh=EmployeeSerializer()
+    class Meta:
+        model=WareHouseSheet
+        fields=['id','direction','ware_house',
+        'creator','get_edit_url','description',
+        'persian_date_imported','persian_date_exported',
+        'persian_date_added','get_status_color','get_absolute_url'
+        ,'tahvil_dahandeh','tahvil_girandeh']
+     
+class WareHouseSheetLineSerializer(serializers.ModelSerializer):
+    material=MaterialSerializer()
+    ware_house_sheet=WareHouseSheetBriefSerializer()
+    class Meta:
+        model=WareHouseSheetLine
+        fields=['id','material','ware_house_sheet','quantity','unit_price','unit_name','description','line_total','get_edit_url']
         

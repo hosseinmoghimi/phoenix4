@@ -870,7 +870,8 @@ class WareHouseSheetLine(models.Model):
             wm.code=material.code
             wm.save()
         return super(WareHouseSheetLine,self).save(*args, **kwargs)
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
 class WareHouseMaterial(models.Model):
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)
