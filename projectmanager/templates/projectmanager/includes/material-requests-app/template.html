@@ -61,87 +61,7 @@
                         </th>
                     </thead>
                     <tbody>
-                        {% for material_request in material_requests %}
-                        <tr>
-                            <td>
-                                <a target="_blank" href="{{material_request.get_absolute_url}}" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        ballot
-                                    </i>
-                                </a>
-                              
-                            </td>
-                            <td>
-                                <small>
-
-                                    {{material_request.date_added|to_persian_date|safe}}
-                                </small>
-                            </td>
-                            <!-- <td>
-                                <a target="_blank" href="{{material_request.handler.get_absolute_url}}">
-                                    <img src="{{material_request.handler.profile.image}}" class="ml-2 rounded-circle"
-                                        width="32" alt="">
-                                    {{material_request.handler.profile.name}}
-                                </a>
-                            </td> -->
-                            {% if not project %}
-
-                            <td>
-
-                                <a target="_blank" href="{{material_request.project.get_absolute_url}}">
-
-
-                                    {{material_request.project.title}}
-                                    {% if material_request.project.archive %}
-                                    <span class="material-icons text-danger" title="آرشیو شده">
-                                        archive
-                                    </span>
-                                    {% endif %}
-                                  </a>
-                            </td>
-                            {% endif %}
-
-                            {% if not material %}
-
-                            <td>
-
-                                <a target="_blank" href="{{material_request.material.get_absolute_url}}">
-                                    <img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32"
-                                        alt="">
-                                    {{material_request.material.title}}
-                                </a>
-                            </td>
-                            {% endif %}
-
-                            <td>
-                                {{material_request.quantity}}
-                                <small>
-
-                                    {{material_request.unit_name}}
-                                </small>
-
-                            </td>
-                            <td>
-                                {{material_request.unit_price|to_price_pure}}
-
-                            </td>
-                            <td>
-                                {{material_request.line_total|to_price}}
-
-                            </td>
-                            <td>
-                                {{material_request.get_status_tag|safe}}
-
-
-                                {% if perms.projectmanager.change_materialrequest %}
-                                {{material_request.get_edit_btn|safe}}
-
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% if add_material_request_form %}
-
+                     
                         <tr v-for="material_request in material_requests">
                             <td>
                                 <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
@@ -151,7 +71,7 @@
                                 </a>
                             </td>
                             <td>
-                                <small v-text="material_request.persian_date_added">
+                                <small v-text="material_request.persian_date_requested">
                                 </small>
                             </td>
                           
@@ -189,8 +109,7 @@
                                 </a>
                                 {% endif %}
                             </td>
-                        </tr>
-                        {% endif %}
+                        </tr> 
                     </tbody>
                 </table>
 

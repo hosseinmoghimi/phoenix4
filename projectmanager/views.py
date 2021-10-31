@@ -305,8 +305,11 @@ class ProjectViews(View):
         context['employees']=employees
         context['locations']=project.locations.all()
         material_requests=MaterialRequestRepo(request=request).material_requests(project_id=project.id)
+        service_requests=ServiceRequestRepo(request=request).service_requests(project_id=project.id)
         context['material_requests']=material_requests
-        context['service_requests']=ServiceRequestRepo(request=request).service_requests(project_id=project.id)
+        context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        context['service_requests']=service_requests
+        context['service_requests_s']=json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         context['all_locations']=LocationRepo(request=request).list().order_by('title')
@@ -335,7 +338,13 @@ class ProjectViews(View):
         services = ServiceRepo(request=request).list()
         context['services_s'] = json.dumps(
             ServiceSerializer(services, many=True).data)
-        
+        if request.user.has_perm(APP_NAME+".add_materialrequest"):
+            context['materials_s'] = json.dumps(
+                MaterialSerializer(materials, many=True).data)
+            services = ServiceRepo(request=request).list()
+            context['services_s'] = json.dumps(
+                ServiceSerializer(services, many=True).data)
+
         context['employers']=EmployerRepo(request=request).list()
         context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
         context['add_project_form'] = AddProjectForm()
@@ -477,9 +486,12 @@ class EmployeeViews(View):
         context.update(ProfileContext(request=request,profile=employee.profile))
         context['employee'] = employee
         service_requests=ServiceRequestRepo(request=request).service_requests(employee_id=employee.id)
-        context['service_requests']=service_requests
         material_requests=MaterialRequestRepo(request=request).material_requests(employee_id=employee.id)
         context['material_requests']=material_requests
+        context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        context['service_requests']=service_requests
+        context['service_requests_s']=json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
+        
         context['layout'] = "base-layout.html"
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)
@@ -568,6 +580,10 @@ class MaterialViews(View):
         context.update(PageContext(request=request, page=material))
         if request.user.has_perm(APP_NAME+".add_material"):
             context['add_material_form'] = AddMaterialForm()
+        material_requests=MaterialRequestRepo(request=request).list(material_id=material.id)
+        context['material_requests']=material_requests
+        context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        
         return render(request, TEMPLATE_ROOT+"material.html", context)
 
 

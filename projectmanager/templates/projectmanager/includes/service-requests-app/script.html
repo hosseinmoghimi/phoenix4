@@ -1,4 +1,23 @@
 <script>
+let service_requests=JSON.parse("{{service_requests_s|escapejs}}")
+</script>
+{% if add_service_request_form %}
+  <script>
+    let services = JSON.parse(`{{services_s|escapejs}}`)
+
+  </script>
+{% else %}
+
+<script>
+    let services = []
+
+  </script>
+{% endif %}
+
+<script>
+
+
+
     let employees=[]
     try {
         employees=JSON.parse("{{employees_s|escapejs}}")
@@ -7,7 +26,6 @@
         
     }
     let sum_service_requests = parseInt("{{project.sum_service_requests}}")
-    let services = JSON.parse(`{{services_s|escapejs}}`)
     let url_add_service_request = "{% url 'projectmanager:add_service_request' %}"
     let service_requests_app = new Vue({
         el: "#service-requests-app",
@@ -19,7 +37,7 @@
             add_service_request_form_unit_name: "",
             add_service_request_form_quantity: "",
             add_service_request_form_employee_id:0,
-            service_requests: [],
+            service_requests: service_requests,
             waiting: false,
             sum_service_requests: sum_service_requests,
             show_add_service_request_form: false,

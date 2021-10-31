@@ -863,6 +863,10 @@ class ServiceRequestRepo():
             new_service_request.status = kwargs['status']
         if 'status' in kwargs:
             new_service_request.status = kwargs['status']
+        if 'date_requested' in kwargs:
+            new_service_request.date_requested = kwargs['date_requested']
+        else:
+            new_service_request.date_requested = timezone.now()
         if 'service_title' in kwargs:
             service=Service.objects.filter(title=kwargs['service_title']).first()
             if service is None:
@@ -1002,6 +1006,10 @@ class MaterialRequestRepo():
             new_material_request.description = kwargs['description']
         if 'status' in kwargs:
             new_material_request.status = kwargs['status']
+        if 'date_requested' in kwargs:
+            new_material_request.date_requested = kwargs['date_requested']
+        else:
+            new_material_request.date_requested = timezone.now()
         if 'status' in kwargs:
             new_material_request.status = kwargs['status']
         profile = ProfileRepo(user=self.user).me

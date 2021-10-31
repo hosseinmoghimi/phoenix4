@@ -488,13 +488,17 @@ class Request(models.Model):
     description = models.CharField(
         _("توضیحات"), null=True, blank=True, default='', max_length=50)
     creator = models.ForeignKey("employee", related_name="request_createds", verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
-    handler = models.ForeignKey("employee", related_name="request_handeleds", verbose_name=_("پاسخ دهنده"), null=True, blank=True, on_delete=models.PROTECT)
-    date_added = models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
-    date_delivered = models.DateTimeField(_("تاریخ درخواست"), null=True, blank=True, auto_now=False, auto_now_add=False)
+    handler = models.ForeignKey("employee", related_name="request_handeleds", verbose_name=_("پاسخ دهنده درخواست"), null=True, blank=True, on_delete=models.PROTECT)
+    date_added = models.DateTimeField(_("تاریخ ثبت"), auto_now=False, auto_now_add=True)
+    date_requested = models.DateTimeField(_("تاریخ درخواست"), null=True, blank=True, auto_now=False, auto_now_add=False)
+    date_delivered = models.DateTimeField(_("تاریخ تحویل"), null=True, blank=True, auto_now=False, auto_now_add=False)
     status = models.CharField(_("وضعیت"), choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
     request_type = models.CharField(
         _("type"), choices=RequestTypeEnum.choices, max_length=50)
     class_name = 'request'
+    def persian_date_requested(self):
+        return PersianCalendar().from_gregorian(self.date_requested)
+
 
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
