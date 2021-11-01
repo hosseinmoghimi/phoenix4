@@ -1,12 +1,38 @@
 {% extends "accounting/layout.html" %}
 {% load static %}
 {% load to_price %}
+{% load to_persian_date %}
 
 {% block content %}
-<div class="row">
+<div class="row farsi text-right">
     <div class="col-md-4">
-        
+        {{transaction.title}}
     </div>
+    <div class="col-md-4">
+
+        <div>
+            بستانکار :
+            <a href="{{transaction.pay_from.get_absolute_url}}">
+                {{transaction.pay_from.profile.name}}
+            </a>
+
+        </div>
+        <div>
+
+            بدهکار :
+            <a href="{{transaction.pay_to.get_absolute_url}}">
+                {{transaction.pay_to.profile.name}}
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{transaction.amount|to_price}}
+    </div>
+    <div class="col-md-4">
+        تاریخ تراکنش :
+        {{transaction.date_paid|to_persian_datetime|safe}}
+    </div>
+
 </div>
 {% endblock %}
 

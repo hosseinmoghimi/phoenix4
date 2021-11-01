@@ -9,7 +9,10 @@
             <td>
 
                 {{transaction.get_sub_transaction.get_icon|safe}}
-                {{transaction.title}}
+                <a href="{{transaction.get_sub_transaction.get_absolute_url}}">
+
+                    {{transaction.title}}
+                </a>
             </td>
             <td>
                 <a href="{{transaction.pay_from.get_absolute_url}}">

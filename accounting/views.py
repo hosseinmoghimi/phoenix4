@@ -83,11 +83,28 @@ class TransactionViews(View):
         context['total']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
-    def transaction(self,request,*args, **kwargs):
+    def getTransactionContext(self,request,*args, **kwargs):
         context=getContext(request=request)
         transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
         context['transaction']=transaction
+        return context
+    
+    def transaction(self,request,*args, **kwargs):
+        context=self.getTransactionContext(request,*args, **kwargs)
         return render(request,TEMPLATE_ROOT+"transaction.html",context)
+    
+    def money_transaction(self,request,*args, **kwargs):
+        context=self.getTransactionContext(request,*args, **kwargs)
+        return render(request,TEMPLATE_ROOT+"transaction.html",context)
+    
+    def asset_transaction(self,request,*args, **kwargs):
+        context=self.getTransactionContext(request,*args, **kwargs)
+        return render(request,TEMPLATE_ROOT+"transaction.html",context)
+    
+    def market_order_transaction(self,request,*args, **kwargs):
+        context=self.getTransactionContext(request,*args, **kwargs)
+        return render(request,TEMPLATE_ROOT+"transaction.html",context)
+    
     def financial_account(self,request,*args, **kwargs):
         context=getContext(request=request)
         financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)
