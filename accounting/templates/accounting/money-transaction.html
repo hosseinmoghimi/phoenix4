@@ -1,0 +1,26 @@
+{% extends "accounting/transaction.html" %}
+
+
+{% block money %}
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+                {{money_transaction.title}}
+
+            </h4>
+        </div>
+        <div class="card-body">
+           
+            <div>
+                <small class="text-muted">
+                    نحوه پرداخت :
+                </small>
+
+                {{money_transaction.payment_method}}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock money %}

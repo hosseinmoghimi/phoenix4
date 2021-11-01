@@ -86,9 +86,86 @@ class FinancialAccountRepo:
         elif 'id' in kwargs:
             pk=kwargs['id']
         financial_account= self.objects.filter(pk=pk).first()
-        return financial_account
-
+        return financial_account 
        
+class MoneyTransactionRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=MoneyTransaction.objects.order_by('date_paid')
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        if 'financial_account_id' in kwargs:
+            financial_account_id=kwargs['financial_account_id']
+            objects=objects.filter(Q(pay_to_id=financial_account_id)|Q(pay_from_id=financial_account_id))
+        if 'pay_to_id' in kwargs and 'pay_from_id' in kwargs:
+            pay_to_id=kwargs['pay_to_id']
+            pay_from_id=kwargs['pay_from_id']
+            objects1=objects.filter(pay_to_id=pay_to_id).filter(pay_from_id=pay_from_id)
+            objects2=objects.filter(pay_from_id=pay_to_id).filter(pay_to_id=pay_from_id)
+            list_id=[]
+            list_final=[]
+            for transaction in objects1:
+                transaction.calculate_rest(*args, **kwargs) 
+                list_id.append(transaction.pk)
+                list_final.append(transaction)
+            for transaction in objects2:
+                transaction.calculate_rest(*args, **kwargs)
+                list_id.append(transaction.pk)
+                list_final.append(transaction)
+            # return list_final 
+            
+            objects= self.objects.filter(id__in=list_id)
+            for transaction in objects:
+                transaction.calculate_rest(*args, **kwargs)
+            return objects
+            
+
+
+
+        return objects
+    def money_transaction(self,*args, **kwargs):
+        pk=0
+        
+        if 'money_transaction_id' in kwargs:
+            pk=kwargs['money_transaction_id']
+        if 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        transaction= self.objects.filter(pk=pk).first()
+        return transaction
+    def add_transaction(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_transaction"):
+            return
+        asset_id=kwargs['asset_id'] if 'asset_id' in kwargs else None
+        if asset_id is not None:
+            #add AssetTransaction
+            return
+        print(kwargs)
+        transaction=MoneyTransaction()
+        transaction.pay_to_id=kwargs['pay_to_id']
+        transaction.pay_from_id=kwargs['pay_from_id']
+        transaction.amount=kwargs['amount']
+        transaction.paymet_method=kwargs['payment_method'] 
+        transaction.title=kwargs['title']
+        transaction.description=kwargs['description']
+        date_paid=kwargs['date_paid'] if 'date_paid' in kwargs else None
+        if date_paid is None:
+            date_paid=timezone.now()
+        transaction.date_paid=date_paid
+        transaction.creator=self.profile
+        transaction.class_name="moneytransaction"
+        transaction.save()
+        return transaction
+
+ 
 class TransactionRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -149,11 +226,12 @@ class TransactionRepo:
         if asset_id is not None:
             #add AssetTransaction
             return
-
+        print(kwargs)
         transaction=MoneyTransaction()
         transaction.pay_to_id=kwargs['pay_to_id']
         transaction.pay_from_id=kwargs['pay_from_id']
         transaction.amount=kwargs['amount']
+        transaction.paymet_method=kwargs['payment_method'] 
         transaction.title=kwargs['title']
         transaction.description=kwargs['description']
         date_paid=kwargs['date_paid'] if 'date_paid' in kwargs else None
@@ -161,6 +239,7 @@ class TransactionRepo:
             date_paid=timezone.now()
         transaction.date_paid=date_paid
         transaction.creator=self.profile
+        transaction.class_name="moneytransaction"
         transaction.save()
         return transaction
 

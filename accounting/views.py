@@ -1,10 +1,14 @@
+from accounting.enums import PaymetMethodEnum
 from accounting.serializers import FinancialAccountSerializer
 from core.enums import ParametersEnum
+from core.forms import AddPageImageForm
 from core.repo import ParameterRepo
 from django.utils import translation
 from accounting.models import FinancialAccount
-from accounting.repo import AssetRepo, FinancialAccountRepo, TransactionRepo
+from accounting.repo import AssetRepo, FinancialAccountRepo, MoneyTransactionRepo, TransactionRepo
 from django.shortcuts import render,reverse
+
+from core.serializers import ImageSerializer
 from .apps import APP_NAME
 from django.views import View
 from core.views import CoreContext
@@ -38,12 +42,18 @@ class BasicViews(View):
         context['accounts']=accounts
         assets=AssetRepo(request=request).list()
         context['assets']=assets
-        financial_accounts=FinancialAccountRepo(request=request).list()
-        financial_accounts_s=json.dumps(FinancialAccountSerializer(financial_accounts,many=True).data)
-        context['financial_accounts_s']=financial_accounts_s
+        context.update(TransactionViews().get_add_transaction_context(request))
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class TransactionViews(View):
+    def get_add_transaction_context(self,request,*args, **kwargs):
+        context={}
+        payment_methods=(i[0] for i in PaymetMethodEnum.choices)
+        context['payment_methods']=payment_methods
+        financial_accounts=FinancialAccountRepo(request=request).list()
+        financial_accounts_s=json.dumps(FinancialAccountSerializer(financial_accounts,many=True).data)
+        context['financial_accounts_s']=financial_accounts_s
+        return context
     def transactions(self,request,*args, **kwargs):
         context=getContext(request=request)
         financial_account=None
@@ -86,7 +96,13 @@ class TransactionViews(View):
     def getTransactionContext(self,request,*args, **kwargs):
         context=getContext(request=request)
         transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
+        transaction=transaction.get_sub_transaction()
         context['transaction']=transaction
+        images=transaction.images.all()
+        context['images_s']=json.dumps(ImageSerializer(images,many=True).data)
+
+        if request.user.has_perm(APP_NAME+".add_pageimage"):
+            context['add_page_image_form'] = AddPageImageForm()
         return context
     
     def transaction(self,request,*args, **kwargs):
@@ -95,7 +111,12 @@ class TransactionViews(View):
     
     def money_transaction(self,request,*args, **kwargs):
         context=self.getTransactionContext(request,*args, **kwargs)
-        return render(request,TEMPLATE_ROOT+"transaction.html",context)
+        # transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
+        # transaction=transaction.get_sub_transaction()
+        # context['transaction']=transaction
+        money_transaction=MoneyTransactionRepo(request=request).money_transaction(*args, **kwargs)
+        context['money_transaction']=money_transaction
+        return render(request,TEMPLATE_ROOT+"money-transaction.html",context)
     
     def asset_transaction(self,request,*args, **kwargs):
         context=self.getTransactionContext(request,*args, **kwargs)

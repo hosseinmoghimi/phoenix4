@@ -1,5 +1,5 @@
 import json
-from core.serializers import BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageLikeSerializer, TagSerializer
+from core.serializers import BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -82,6 +82,8 @@ def PageContext(request, page):
     context['page_tags']=page.tags.all()
     
     context['images_s']=json.dumps(ImageSerializer(page.images(),many=True).data)
+    page_images=page.pageimage_set.all()
+    # context['images_s']=json.dumps(PageImageSerializer(page_images,many=True).data)
     context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
     if page.keywords is not None:
         context['keywords']=page.keywords

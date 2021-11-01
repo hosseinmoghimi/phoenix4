@@ -25,11 +25,13 @@ class TransactionApi(APIView):
                 pay_to_id=add_transaction_form.cleaned_data['pay_to_id']
                 pay_from_id=add_transaction_form.cleaned_data['pay_from_id']
                 description=add_transaction_form.cleaned_data['description']
+                payment_method=add_transaction_form.cleaned_data['payment_method']
                 amount=add_transaction_form.cleaned_data['amount']
                 transaction=TransactionRepo(request=request).add_transaction(
                     title=title,
                     pay_to_id=pay_to_id,
                     pay_from_id=pay_from_id,
+                    payment_method=payment_method,
                     amount=amount,
                     description=description,
                     )

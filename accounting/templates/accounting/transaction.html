@@ -5,38 +5,105 @@
 
 {% block content %}
 <div class="row farsi text-right">
-    <div class="col-md-4">
-        {{transaction.title}}
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{transaction.title}}
 
-        <div>
-            بستانکار :
-            <a href="{{transaction.pay_from.get_absolute_url}}">
-                {{transaction.pay_from.profile.name}}
-            </a>
+                </h4>
+            </div>
+            <div class="card-body">
+                <h4>
 
+                    {{transaction.title}}
+                </h4>
+                {% if perms.accounting.vhange_transaction %}
+                <a href="{{transaction.get_edit_url}}" target="_blank" title="ویرایش">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+
+                {% endif %}
+                <div>
+
+                    <small class="text-muted">
+                        مبلغ تراکنش :
+
+                    </small>
+                    {{transaction.amount|to_price}}
+                </div>
+
+                <div>
+                    <small class="text-muted">
+                        بستانکار :
+                    </small>
+                    <a href="{{transaction.pay_from.get_absolute_url}}">
+                        {{transaction.pay_from.profile.name}}
+                    </a>
+
+                </div>
+                <div>
+                    <small class="text-muted">
+
+                        بدهکار :
+                    </small>
+                    <a href="{{transaction.pay_to.get_absolute_url}}">
+                        {{transaction.pay_to.profile.name}}
+                    </a>
+                </div>
+                <div>
+                    <small class="text-muted">
+                        تاریخ تراکنش :
+                    </small>
+
+                    {{transaction.date_paid|to_persian_datetime|safe}}
+
+                </div>
+
+            </div>
         </div>
-        <div>
+    </div>
+    {% block money %}
 
-            بدهکار :
-            <a href="{{transaction.pay_to.get_absolute_url}}">
-                {{transaction.pay_to.profile.name}}
-            </a>
+    {% endblock money %}
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    تصویر ها
+                </h4>
+            </div>
+            <div class="card-body">
+                 <div class="row">
+            {% for image in transaction.images.all %}
+            <div class="col-md-4 col-lg-3 col-4">
+                <a title="{{image.title}}" href="{{image.image}}" target="_blank">
+
+                    <img src="{{image.thumbnail}}" class="rounded w-100" alt="">
+                </a>
+            </div>
+            {% endfor %}
         </div>
-    </div>
-    <div class="col-md-4">
-        {{transaction.amount|to_price}}
-    </div>
-    <div class="col-md-4">
-        تاریخ تراکنش :
-        {{transaction.date_paid|to_persian_datetime|safe}}
-    </div>
+            </div>
+        </div>
 
+       
+    </div>
+    <div class="col-md-12">
+        {% include "core/includes/page-images-app/template.html" %}
+    </div>
 </div>
 {% endblock %}
 
 
 {% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let page_id=0
+</script>
+{% include "core/includes/page-images-app/script.html" %}
 
 {% endblock %}
