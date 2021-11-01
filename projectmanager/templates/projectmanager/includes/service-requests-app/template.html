@@ -87,6 +87,16 @@
                                 </a>
                             </td>
                             {% endif %}
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" :href="service_request.project.get_absolute_url"
+                                    v-text="service_request.project.title">
+
+                                </a>
+                            </td>
+                            {% endif %}
                             {% if not service %}
 
                             <td>
@@ -94,16 +104,6 @@
 
                                 <a target="_blank" :href="service_request.service.get_absolute_url"
                                     v-text="service_request.service.title">
-
-                                </a>
-                            </td>
-                            {% endif %}
-                            {% if not project %}
-
-                            <td>
-
-                                <a target="_blank" :href="service_request.project.get_absolute_url"
-                                    v-text="service_request.project.title">
 
                                 </a>
                             </td>
