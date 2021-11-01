@@ -6,21 +6,21 @@
     <div class="card">
         <div class="card-header">
             <h4 class="title">
-                {{money_transaction.title}}
+                {{asset_transaction.title}}
 
             </h4>
         </div>
         <div class="card-body">
-           <h5>
-               تراکنش پول
-           </h5>
+            <h5>
+                تراکنش اموال
+            </h5>
             <div>
                 <small class="text-muted">
-                    نحوه پرداخت :
+مورد :
                 </small>
-
-                {{money_transaction.payment_method}}
-
+                <a href="{{asset_transaction.asset.get_absolute_url}}">
+                    {{asset_transaction.asset.title}}
+                </a>
             </div>
         </div>
     </div>
