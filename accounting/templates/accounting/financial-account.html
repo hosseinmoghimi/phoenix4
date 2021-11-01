@@ -3,8 +3,45 @@
 {% load to_price %}
 {% load to_transaction_color %}
 {% load to_persian_date %}
-{% block  content %}
+{% block content %}
 <div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{financial_account.profile.name}}
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for bank_account in financial_account.bankaccount_set.all %}
+                <hr>
+                <div>
+                    <a href="#">
+                        {{bank_account.title}}
+                    </a>
+
+                </div>
+                <div>
+                    <a href="#">
+                        {{bank_account.card_no}}
+                    </a>
+
+                </div>
+                <div>
+                    <a href="#">
+                        {{bank_account.account_no}}
+                    </a>
+                </div>
+                <div>
+
+                    <a href="#">
+                        {{bank_account.shaba_no}}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">

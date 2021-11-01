@@ -83,7 +83,6 @@ class FinancialAccount(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":financial_account", kwargs={"financial_account_id": self.pk})
 
-
 class BankAccount(models.Model):
     title = models.CharField(_("title"), max_length=50)
     owner = models.ForeignKey("FinancialAccount", verbose_name=_(
