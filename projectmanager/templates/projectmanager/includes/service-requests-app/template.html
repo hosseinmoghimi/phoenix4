@@ -38,12 +38,12 @@
                             پروژه
                         </th>
                         {% endif %}
-{% if not service %}
-  
-<th>
-    سرویس
-</th>
-{% endif %}
+                        {% if not service %}
+
+                        <th>
+                            سرویس
+                        </th>
+                        {% endif %}
 
 
                         <th>
@@ -60,7 +60,7 @@
                         </th>
                     </thead>
                     <tbody>
-                        
+
                         <tr v-for="service_request in service_requests">
                             <td>
                                 <a target="_blank" :href="service_request.get_absolute_url" title="نمایش کامل">
@@ -75,34 +75,37 @@
 
                                 </small>
                             </td>
+                            {% if not employee %}
+
                             <td>
 
                                 <a target="_blank" :href="service_request.handler.get_absolute_url">
-                                    <img :src="service_request.handler.profile.image" class="ml-2 rounded" width="32"
-                                        alt="">
+                                    <img :src="service_request.handler.profile.image" class="ml-2 rounded-circle"
+                                        width="32" alt="">
                                     <span v-text="service_request.handler.profile.name">
                                     </span>
                                 </a>
                             </td>
+                            {% endif %}
                             {% if not service %}
-                              
+
                             <td>
                                 <img :src="service_request.service.thumbnail" class="ml-2 rounded" width="32" alt="">
-                                
+
                                 <a target="_blank" :href="service_request.service.get_absolute_url"
-                                v-text="service_request.service.title">
-                                
-                            </a>
+                                    v-text="service_request.service.title">
+
+                                </a>
                             </td>
                             {% endif %}
                             {% if not project %}
-                              
+
                             <td>
-                                
+
                                 <a target="_blank" :href="service_request.project.get_absolute_url"
-                                v-text="service_request.project.title">
-                                
-                            </a>
+                                    v-text="service_request.project.title">
+
+                                </a>
                             </td>
                             {% endif %}
 
@@ -134,7 +137,7 @@
                             </td>
                         </tr>
 
-                        
+
                     </tbody>
                 </table>
 
