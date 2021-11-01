@@ -98,7 +98,7 @@ class TransactionViews(View):
         transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
         transaction=transaction.get_sub_transaction()
         context['transaction']=transaction
-        images=transaction.images.all()
+        images=transaction.images()
         context['images_s']=json.dumps(ImageSerializer(images,many=True).data)
 
         if request.user.has_perm(APP_NAME+".add_pageimage"):

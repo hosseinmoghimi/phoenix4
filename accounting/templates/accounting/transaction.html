@@ -68,30 +68,7 @@
     {% block money %}
 
     {% endblock money %}
-
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="title">
-                    تصویر ها
-                </h4>
-            </div>
-            <div class="card-body">
-                 <div class="row">
-            {% for image in transaction.images.all %}
-            <div class="col-md-4 col-lg-3 col-4">
-                <a title="{{image.title}}" href="{{image.image}}" target="_blank">
-
-                    <img src="{{image.thumbnail}}" class="rounded w-100" alt="">
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-            </div>
-        </div>
-
-       
-    </div>
+ 
     <div class="col-md-12">
         {% include "core/includes/page-images-app/template.html" %}
     </div>
@@ -102,7 +79,7 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let page_id=0
+    let page_id=parseInt("{{transaction.id}}")
 </script>
 {% include "core/includes/page-images-app/script.html" %}
 

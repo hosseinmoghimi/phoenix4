@@ -115,7 +115,7 @@ class Transaction(AccountingPage):
     direction=None
 
     def save(self,*args, **kwargs):
-        return super(AccountingPage,self).save(*args, **kwargs)
+        return super(Transaction,self).save(*args, **kwargs)
 
     def get_color(self):
         if self.direction:

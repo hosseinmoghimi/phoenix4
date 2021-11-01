@@ -32,7 +32,7 @@
                     if (data != 0) {
                         //console.log(data)
                         if (data.result === 'SUCCEED') {
-                            page_images_app.page_images.push(data.page_image)  
+                            page_images_app.images.push(data.page_image.image)  
                             page_images_app.add_page_image_form_title = ''
                             page_images_app.add_page_image_form_file = ''
                             page_images_app.show_add_page_image_form=false
