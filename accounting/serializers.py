@@ -21,3 +21,4 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields=['id','title','pay_to','pay_from','amount','persian_date_paid']
+ 

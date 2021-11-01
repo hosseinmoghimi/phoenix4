@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.utils import translation
 from resume.apps import APP_NAME
-from accounting.models import Asset, BankAccount, FinancialAccount, MarketOrderTransaction, Transaction
+from accounting.models import Asset, BankAccount, FinancialAccount, MarketOrderTransaction, MoneyTransaction, Transaction
 from authentication.repo import ProfileRepo
 from django.db.models import Q
 class BankAccountRepo:
@@ -143,18 +143,26 @@ class TransactionRepo:
         transaction= self.objects.filter(pk=pk).first()
         return transaction
     def add_transaction(self,*args, **kwargs):
-        if self.user.has_perm(APP_NAME+".add_transaction"):
-            transaction=Transaction()
-            transaction.pay_to_id=kwargs['pay_to']
-            transaction.pay_from_id=kwargs['pay_from']
-            transaction.amount=kwargs['amount']
-            date_paid=kwargs['date_paid']
-            if date_paid is None:
-                date_paid=timezone.now()
-            transaction.date_paid=date_paid
-            transaction.creator=self.profile
-            transaction.save()
-            return transaction
+        if not self.user.has_perm(APP_NAME+".add_transaction"):
+            return
+        asset_id=kwargs['asset_id'] if 'asset_id' in kwargs else None
+        if asset_id is not None:
+            #add AssetTransaction
+            return
+
+        transaction=MoneyTransaction()
+        transaction.pay_to_id=kwargs['pay_to_id']
+        transaction.pay_from_id=kwargs['pay_from_id']
+        transaction.amount=kwargs['amount']
+        transaction.title=kwargs['title']
+        transaction.description=kwargs['description']
+        date_paid=kwargs['date_paid'] if 'date_paid' in kwargs else None
+        if date_paid is None:
+            date_paid=timezone.now()
+        transaction.date_paid=date_paid
+        transaction.creator=self.profile
+        transaction.save()
+        return transaction
 
 
  

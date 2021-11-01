@@ -1,0 +1,31 @@
+<script>
+    let financial_accounts = JSON.parse(`{{financial_accounts_s|escapejs}}`)
+    let add_transaction_app = new Vue({
+        el: "#add-transaction-app",
+        data: {
+            financial_accounts: financial_accounts,
+            new_transaction_title: "",
+            new_transaction_amount: "0",
+            pay_from_id: 0,
+            pay_to_id: 0,
+            new_transaction_description: "",
+        },
+        methods: {
+            add_transaction: function () {
+                let url_add_transaction = "{% url 'accounting:add_transaction' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    pay_to_id: this.pay_to_id,
+                    pay_from_id: this.pay_from_id,
+                    amount: this.new_transaction_amount,
+                    title: this.new_transaction_title,
+                    description: this.new_transaction_description,
+                }
+                console.log(payload)
+                $.post(url_add_transaction, payload).done((data) => {
+                    console.log(data)
+                })
+            }
+        },
+    })
+</script>

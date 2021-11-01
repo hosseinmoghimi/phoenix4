@@ -1039,8 +1039,6 @@ class MaterialRequestRepo():
             signature.date_added=timezone.now()
             signature.employee=EmployeeRepo(request=self.request).me
             signature.save()
-            print(signature.status)
-            print(SignatureStatusEnum.DELIVERED)
             if signature.status==SignatureStatusEnum.DELIVERED:
                 material_request.date_delivered=timezone.now()
                 material_request.save()

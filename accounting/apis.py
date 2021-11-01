@@ -11,8 +11,8 @@ from utility.persian import PersianCalendar
 
 
 
-class BaseApi(APIView):
-    def add_document(self,request,*args, **kwargs):
+class TransactionApi(APIView):
+    def add_transaction(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
         log=1
@@ -22,10 +22,17 @@ class BaseApi(APIView):
             if add_transaction_form.is_valid():
                 log+=1
                 title=add_transaction_form.cleaned_data['title']
-                pay_to=add_transaction_form.cleaned_data['pay_to']
-                pay_from=add_transaction_form.cleaned_data['pay_from']
+                pay_to_id=add_transaction_form.cleaned_data['pay_to_id']
+                pay_from_id=add_transaction_form.cleaned_data['pay_from_id']
+                description=add_transaction_form.cleaned_data['description']
                 amount=add_transaction_form.cleaned_data['amount']
-                transaction=TransactionRepo(request=request).add_transaction(title=title,pay_to=pay_to,pay_from=pay_from,amount=amount)
+                transaction=TransactionRepo(request=request).add_transaction(
+                    title=title,
+                    pay_to_id=pay_to_id,
+                    pay_from_id=pay_from_id,
+                    amount=amount,
+                    description=description,
+                    )
                 context['transaction']=TransactionSerializer(transaction).data
                 context['result']=SUCCEED
         context['log']=log

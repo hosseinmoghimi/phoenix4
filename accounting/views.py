@@ -1,3 +1,4 @@
+from accounting.serializers import FinancialAccountSerializer
 from core.enums import ParametersEnum
 from core.repo import ParameterRepo
 from django.utils import translation
@@ -7,7 +8,7 @@ from django.shortcuts import render,reverse
 from .apps import APP_NAME
 from django.views import View
 from core.views import CoreContext
-
+import json
 TEMPLATE_ROOT=APP_NAME+"/"
 
 def getContext(request,*args, **kwargs):
@@ -37,6 +38,9 @@ class BasicViews(View):
         context['accounts']=accounts
         assets=AssetRepo(request=request).list()
         context['assets']=assets
+        financial_accounts=FinancialAccountRepo(request=request).list()
+        financial_accounts_s=json.dumps(FinancialAccountSerializer(financial_accounts,many=True).data)
+        context['financial_accounts_s']=financial_accounts_s
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class TransactionViews(View):
