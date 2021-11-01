@@ -813,6 +813,9 @@ class ServiceRequestRepo():
         signature.date_added=timezone.now()
         signature.employee=me_employee
         signature.save()
+        if signature.status==SignatureStatusEnum.DELIVERED:
+            service_request.date_delivered=timezone.now()
+            service_request.save()
 
         return signature
 
@@ -1036,6 +1039,11 @@ class MaterialRequestRepo():
             signature.date_added=timezone.now()
             signature.employee=EmployeeRepo(request=self.request).me
             signature.save()
+            print(signature.status)
+            print(SignatureStatusEnum.DELIVERED)
+            if signature.status==SignatureStatusEnum.DELIVERED:
+                material_request.date_delivered=timezone.now()
+                material_request.save()
             return signature
 
     def material_requests(self,*args, **kwargs):
