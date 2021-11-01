@@ -91,7 +91,9 @@ class BankAccount(models.Model):
     bank = models.CharField(
         _("bank"), choices=BankNameEnum.choices, max_length=50)
     branch = models.CharField(_("شعبه"), max_length=50)
-
+    account_no=models.CharField(_("شماره حساب"), null=True,blank=True,max_length=50)
+    card_no=models.CharField(_("شماره کارت"), null=True,blank=True,max_length=50)
+    shaba_no=models.CharField(_("شماره شبا"), null=True,blank=True,max_length=50)
     class Meta:
         verbose_name = _("BankAccount")
         verbose_name_plural = _("BankAccounts")
