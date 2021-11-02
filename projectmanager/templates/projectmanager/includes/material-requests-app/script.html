@@ -1,45 +1,46 @@
+<script>
+    
+</script>
 {% if add_material_request_form %}
 <script>
-    let employees=JSON.parse(`{{employees_s|escapejs}}`)
-    let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
     let materials = JSON.parse(`{{materials_s|escapejs}}`)
-</script>
-{% else %}
-<script>
-    let employees=[]
-
-</script>
-{% endif %}
-
-<script>
-
-    let material_requests=JSON.parse(`{{material_requests_s|escapejs}}`)
-    let sum_material_requests = 0
-    try {
-
-        sum_material_requests = parseInt("{{project.sum_material_requests}}")
-    } catch (error) {
-
-    }
-    let material_requests_app = new Vue({
-        el: "#material-requests-app",
-        data: {
-            employees:employees,
+    let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
+    let material_requests_app_data= {
+            employees:JSON.parse(`{{employees_s|escapejs}}`),
             new_material_request_material_id: 1,
             add_material_request_form_title: "",
             materials: materials.slice(0, 6),
             add_material_request_form_unit_price: 0,
             add_material_request_form_unit_name: "",
             add_material_request_form_quantity: "",
-            material_requests:material_requests,
+            material_requests:JSON.parse(`{{material_requests_s|escapejs}}`),
             waiting: false,
-            sum_material_requests: sum_material_requests,
+            sum_material_requests: 0,
             show_add_material_request_form: false,
             add_material_request_form_employee_id: ""
-        },
+        }
+</script>
+{% else %}
+<script>
+    let material_requests_app_data= {
+            materials: materials.slice(0, 6),
+            material_requests:JSON.parse(`{{material_requests_s|escapejs}}`),
+            waiting: false,
+            sum_material_requests: 0,
+            show_add_material_request_form: false,
+        }
+</script>
+{% endif %}
+
+<script>
+
+   
+    let material_requests_app = new Vue({
+        el: "#material-requests-app",
+        data: material_requests_app_data,
         mounted:function(){
             this.sum_material_requests=0
-            material_requests.forEach(material_request => {
+            this.material_requests.forEach(material_request => {
                 this.sum_material_requests+=material_request.total
                 
             });

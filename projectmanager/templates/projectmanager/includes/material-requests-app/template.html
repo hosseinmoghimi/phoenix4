@@ -61,7 +61,7 @@
                         </th>
                     </thead>
                     <tbody>
-                     
+
                         <tr v-for="material_request in material_requests">
                             <td>
                                 <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
@@ -95,7 +95,7 @@
                                 </a>
                             </td>
                             {% endif %}
-                            
+
 
                             <td>
                                 <span v-text="material_request.quantity"></span>
@@ -123,7 +123,7 @@
                                 </a>
                                 {% endif %}
                             </td>
-                        </tr> 
+                        </tr>
                     </tbody>
                 </table>
 
@@ -180,7 +180,9 @@
 
                 </p>
                 {% endif %}
-
+                <p>
+                   جمع :  <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')"></span>
+                </p>
             </div>
         </div>
     </div>
