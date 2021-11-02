@@ -26,7 +26,7 @@ class Property(Asset):
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
-        return STATIC_URL+"realestate2/img/home.webp"
+        return STATIC_URL+"realestate/img/home.webp"
 
     class Meta:
         verbose_name = _("Property")
@@ -55,7 +55,7 @@ class Car(Asset):
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
-        return STATIC_URL+"realestate2/img/car.webp"
+        return STATIC_URL+"realestate/img/car.webp"
     
 
     class Meta:
