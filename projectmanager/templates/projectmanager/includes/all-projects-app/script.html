@@ -15,11 +15,21 @@
                 projects_list_app.projects = projects.filter(item => item.title.includes(projects_list_app.search_for))
             },
             sort:function(field_to_sort){
-                console.log(field_to_sort)
                 if(field_to_sort==='total')
                 {
                     console.log(field_to_sort)
-                    projects_list_app.projects=projects.sort(function(a,b){return a.sum_total-b.sum_total})
+                    let lprojects=projects.sort(function(a,b){return a.sum_total-b.sum_total})
+                    this.projects=lprojects 
+                }
+                if(field_to_sort==='contractor')
+                {
+                    console.log(field_to_sort)
+                    projects_list_app.projects=projects.sort(function(a,b){return a.contractor.title>b.contractor.title})
+                }
+                if(field_to_sort==='employer')
+                {
+                    console.log(field_to_sort)
+                    projects_list_app.projects=projects.sort(function(a,b){return a.employer.title>b.employer.title})
                 }
             }
         }

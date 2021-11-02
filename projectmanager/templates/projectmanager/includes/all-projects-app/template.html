@@ -14,18 +14,24 @@
 
                 </th>
                 <th>
-                    کارفرما
+<span style="cursor: pointer;" @click="sort('employer')">
+    کارفرما
+
+</span>
                 </th>
 
                 <th>
-                    پیمانکار
+                    <span style="cursor: pointer;"  @click="sort('contractor')">
+                    
+                        پیمانکار
+                    </span>
                 </th>
 
                 <th>
                     
+                    <span style="cursor: pointer;"  @click="sort('total')"  >
                     ارزش پروژه
-                    <button @click="sort('total')" class="btn btn-link">
-                    </button>
+                    </span>
                 </th>
 
                 <th>
