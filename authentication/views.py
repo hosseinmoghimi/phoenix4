@@ -94,6 +94,8 @@ class AuthenticationViews(View):
         context=getContext(request)
         profiles=ProfileRepo(request=request).list()
         context['profiles']=profiles
+        profiles_s=json.dumps(ProfileSerializer(profiles,many=True).data)
+        context['profiles_s']=profiles_s
         return render(request,TEMPLATE_ROOT+"profiles.html",context)
     
     def login(self,request,*args, **kwargs):
