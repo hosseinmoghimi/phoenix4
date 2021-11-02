@@ -36,7 +36,7 @@
 <div>
     <div class="row ">
         <div class="col-md-4">
-
+            
             {% if me_employee %}
             <div class="card mb-3">
                 <div class="card-header">
@@ -82,9 +82,14 @@
                 </div>
             </div>
 
-            {% endif %}
+            {% include "projectmanager/includes/favorites-app/template.html" %}
+        
 
-            <div class="card mb-3" id="services-app">
+            {% endif %}
+        </div>   
+        <div class="col-md-4">
+            
+            <div class="card mb-3" id="">
                 <div class="card-header card-header-success" id="headingServices">
                     <h5 class="card-title text-center farsi">
                         <a href="{% url 'projectmanager:projects' %}" class="btn btn-link">
@@ -97,8 +102,7 @@
 
             </div>
             {% include "projectmanager/includes/projects-app/template.html" %}
-        </div>
-        <div class="col-md-4">
+
             {% include "projectmanager/includes/employers-app/template.html" %}
             <div class="card mb-3" id="employees-app">
                 <div class="card-header card-header-success" id="headingEmployees">
@@ -114,21 +118,7 @@
 
             </div>
 
-            <div class="card mb-3" id="services-app">
-                <div class="card-header card-header-success" id="headingServices">
-                    <h5 class="card-title text-center farsi">
-                        <a href="{% url 'projectmanager:services' %}" class="btn btn-link">
-                            سرویس ها
-                        </a>
-                    </h5>
-                </div>
-
-
-
-            </div>
-
-
-
+          
 
 
             {% include "projectmanager/includes/locations-app/template-list.html" %}
@@ -154,6 +144,20 @@
                     </h5>
                 </div>
             </div>
+
+            <div class="card mb-3" id="services-app">
+                <div class="card-header card-header-success" id="headingServices">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:services' %}" class="btn btn-link">
+                            سرویس ها
+                        </a>
+                    </h5>
+                </div>
+
+
+
+            </div>
+
 
 
             <div class="card mb-3">
