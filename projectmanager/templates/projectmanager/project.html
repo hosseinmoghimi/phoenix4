@@ -83,8 +83,15 @@
 
                         </span>
 
-                        <span class=" badge badge-primary px-2 py-2">
-                            <span class="h5">
+                        <span class=" badge badge-primary px-1 py-1">
+                            <span class=" ">
+
+                                {{project.sum_total_self|to_price_pure}}
+                            </span>
+                        </span> 
+                        /
+                         <span class=" badge badge-primary px-1 py-1">
+                            <span class=" ">
 
                                 {{project.sum_total|to_price}}
                             </span>

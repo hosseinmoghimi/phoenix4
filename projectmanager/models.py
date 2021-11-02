@@ -273,6 +273,10 @@ class Project(ProjectManagerPage):
             sum += proj.sum_total()
         return sum
 
+    def sum_total_self(self):
+        sum = self.sum_material_requests()+self.sum_service_requests()
+        return sum
+
     def sum_service_requests(self):
         sum = 0
         for service_request in self.request_set.filter(request_type=RequestTypeEnum.SERVICE_REQUEST):

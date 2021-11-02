@@ -167,7 +167,7 @@ class ProjectViews(View):
                 'parent':page.parent_id,
                 'get_absolute_url':page.get_absolute_url(),
                 'id':page.id,
-                'sub_title':f"""<div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total())}</div>""",
+                'sub_title':f"""<div style="direction:rtl;"><div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total_self(),unit="")}&nbsp;&nbsp;/&nbsp;&nbsp;{to_price(page.sum_total())}</div></div>""",
 
             })
         # page=project
