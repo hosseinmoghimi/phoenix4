@@ -39,7 +39,7 @@ echo "SECRET_KEY = 'yj)%c-)__z_null-_l-ned!$6*cs)_=w@g&t=0vj^wg)knwm3z'" >> phoe
 python manage.py djecrety
 ```
 
-fill and copy this file as /PATH_TO_YOUR_APP_FOLDER/phoenix/settings_server.py
+fill and copy this file as /PATH_TO_YOUR_APP_FOLDER/phoenix/server_settings.py
 ```python
 
 DEBUG=True
