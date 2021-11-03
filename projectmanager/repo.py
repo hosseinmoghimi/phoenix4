@@ -40,6 +40,7 @@ class ProjectRepo():
         self.objects=self.objects.all()
         if not if_show_archives:
             self.objects=self.objects.filter(archive=False)
+        self.objects=self.objects.order_by('-start_date')
     def add_location(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_location"):
             return None
