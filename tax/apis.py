@@ -22,11 +22,13 @@ class TaxApi(APIView):
                 log = 3
                 amount = add_tax_form.cleaned_data['amount']
                 title = add_tax_form.cleaned_data['title']
+                description = add_tax_form.cleaned_data['description']
                 year = add_tax_form.cleaned_data['year']
                 tax = TaxRepo(request=request).add_tax(
                     title=title,
                     amount=amount,
                     year=year,
+                    description=description,
                 )
 
                 if tax is not None:

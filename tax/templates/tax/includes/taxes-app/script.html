@@ -8,6 +8,7 @@
         new_tax_amount: "",
         new_tax_title: "",
         new_tax_year: "1400",
+        new_tax_description:"",
 
     }
 </script>
@@ -37,6 +38,7 @@
                     amount: this.new_tax_amount,
                     title: this.new_tax_title,
                     year: this.new_tax_year,
+                    description:this.new_tax_description,
                 }
                 $.post(url_add_tax, payload).done((data) => {
                     if (data.result === 'SUCCEED') {

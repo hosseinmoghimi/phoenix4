@@ -7,3 +7,4 @@ class AddTaxForm(forms.Form):
     title=forms.CharField(max_length=100, required=True)
     amount=forms.IntegerField(required=True)
     year=forms.IntegerField(required=True)
+    description=forms.CharField(max_length=1000, required=True)

@@ -64,6 +64,9 @@ class TaxRepo():
         if 'title' in kwargs:
             tax.title=kwargs['title']
 
+        if 'description' in kwargs:
+            tax.description=kwargs['description']
+
         if 'year' in kwargs:
             tax.year=kwargs['year']
 
