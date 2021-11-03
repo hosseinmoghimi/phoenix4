@@ -2,9 +2,13 @@
 {% load to_price %}
 {% load to_persian_date %}
 {% load static %}
-
 {% block content %}
-  
+<h4>
+{{tax.title}}
+</h4>
+<h4>
+{{tax.amount|to_price|safe}}
+</h4>
 {% endblock content %}
 
 

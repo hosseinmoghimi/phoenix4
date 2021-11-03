@@ -24,6 +24,8 @@ class TaxPage(CoreBasicPage):
         return super(TaxPage, self).save(*args, **kwargs)
 
 class Tax(TaxPage):
+    year=models.IntegerField(_("سال"))
+    amount=models.IntegerField(_("مبلغ"))
     class_name='tax'
     class Meta:
         verbose_name = _("Tax")

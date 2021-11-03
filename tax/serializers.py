@@ -7,5 +7,5 @@ class TaxSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Tax
-        fields=['id','title','get_edit_url','get_absolute_url']
+        fields=['id','title','amount','year','get_edit_url','get_absolute_url']
 

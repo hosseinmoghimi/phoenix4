@@ -54,3 +54,21 @@ class TaxRepo():
         if 'parent_id' in kwargs:
             objects=objects.filter(parent_id=kwargs['parent_id'])
         return objects.all()
+
+    def add_tax(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_tax"):
+            return 
+
+        tax=Tax()
+
+        if 'title' in kwargs:
+            tax.title=kwargs['title']
+
+        if 'year' in kwargs:
+            tax.year=kwargs['year']
+
+
+        if 'amount' in kwargs:
+            tax.amount=kwargs['amount']
+        tax.save()
+        return tax

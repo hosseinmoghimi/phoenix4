@@ -4,5 +4,6 @@ from django import forms
 from .apps import APP_NAME
 from django.shortcuts import reverse
 class AddTaxForm(forms.Form):
-    parent_id=forms.IntegerField(required=False)
-    title=forms.CharField(max_length=50, required=True)
+    title=forms.CharField(max_length=100, required=True)
+    amount=forms.IntegerField(required=True)
+    year=forms.IntegerField(required=True)
