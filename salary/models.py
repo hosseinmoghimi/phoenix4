@@ -1,3 +1,4 @@
+from rest_framework.fields import DateTimeField
 from projectmanager.repo import Employee
 from core.models import BasicPage
 from django.db import models
@@ -15,6 +16,28 @@ class SalaryPage(BasicPage):
     def save(self, *args, **kwargs):
         self.app_name = APP_NAME
         return super(SalaryPage, self).save(*args, **kwargs)
+
+class Vacation(SalaryPage): 
+    vacation_started=models.DateTimeField(_("vacation_started"), auto_now=False, auto_now_add=False)
+    vacation_ended=models.DateTimeField(_("vacation_ended"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    employee = models.ForeignKey("projectmanager.employee", verbose_name=_(
+        "employee"), on_delete=models.CASCADE)
+    class_name = "vacation"
+
+    def persian_vacation_started(self):
+        return PersianCalendar().from_gregorian(self.vacation_started)
+    def persian_vacation_ended(self):
+        return PersianCalendar().from_gregorian(self.vacation_ended)
+
+    def save(self, *args, **kwargs):
+        self.class_name = "vacation"
+        return super(Vacation, self).save(*args, **kwargs)
+
+
+    class Meta:
+        verbose_name = _("Vacation")
+        verbose_name_plural = _("Vacations")
+
 
 
 class EmployeeSalary(models.Model):

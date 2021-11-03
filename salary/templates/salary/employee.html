@@ -19,6 +19,9 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let employee_id= parseInt("{{employee.id}}")
+</script>
 {% include "salary/includes/employee-salaries-app/script.html" %}
 {% include "salary/includes/vacations-app/script.html" %}
   

@@ -1,12 +1,34 @@
 from django.http.response import JsonResponse
 from core.constants import FAILED,SUCCEED
 from salary.enums import SalaryDirectionEnum
-from salary.forms import AddEmployeeSalaryForm, AddSalaryLineForm
+from salary.forms import AddEmployeeSalaryForm, AddSalaryLineForm, AddVacationForm
 from salary.models import EmployeeSalary
-from salary.repo import EmployeeSalaryRepo, SalaryLineRepo
-from salary.serializers import EmployeeSalarySerializer, SalaryLineSerializer
+from salary.repo import EmployeeSalaryRepo, SalaryLineRepo, VacationRepo
+from salary.serializers import EmployeeSalarySerializer, SalaryLineSerializer, VacationSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
+
+class VacationApi(APIView):
+    def add_vacation(selff,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            add_vacation_form=AddVacationForm(request.POST)
+            if add_vacation_form.is_valid():
+                log=3
+                employee_id=add_vacation_form.cleaned_data['employee_id']
+                title=add_vacation_form.cleaned_data['title']
+                vacation=VacationRepo(request=request).add_vacation(
+                    employee_id=employee_id,
+                    title=title,
+                )
+                if vacation is not None:
+                    context['vacation']=VacationSerializer(vacation).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
 
 class EmployeeSalaryApi(APIView):
     def add_employee_salary(selff,request,*args, **kwargs):

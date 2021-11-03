@@ -1,0 +1,26 @@
+<script>
+    let url_add_vacation ="{% url 'salary:add_vacation' %}"
+    vacations=JSON.parse(`{{vacations_s|escapejs}}`)
+    let vacations_app = new Vue({
+        el: "#vacations-app",
+        data: {
+            employee_id: parseInt("{{employee.id}}"),
+            title: "",
+            vacations :vacations,
+        },
+        methods: {
+            add_vacation: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    employee_id: this.employee_id,
+                    title: this.title,
+                }
+                console.log(payload)
+                $.post(url_add_vacation, payload).done((data) => {
+                    console.log(data)
+                    vacations_app.vacations.push(data.vacation)
+                })
+            },
+        }
+    })
+</script>

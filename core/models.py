@@ -338,7 +338,7 @@ class BasicPage(models.Model):
         app_name=self.app_name
         class_name=self.class_name
         pk=self.pk
-        return reverse(app_name+":"+class_name, kwargs={"pk": pk})
+        return reverse(app_name+":"+self.class_name, kwargs={"pk": pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
     def delete(self,*args, **kwargs):

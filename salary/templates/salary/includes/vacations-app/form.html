@@ -1,0 +1,24 @@
+{% if add_employee_salary_form %}
+
+
+<form @submit.prevent="add_vacation()">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="title" class="">عنوان</label>
+
+                <input type="text" v-model="title" id="title" class="form-control">
+            </div>
+        </div>
+
+        
+
+        <div class="col-md-3">
+            <button class="btn btn-success btn-block mt-4" type="submit">
+                افزودن
+            </button>
+        </div>
+
+    </div>
+</form>
+{% endif %}

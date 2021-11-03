@@ -1,9 +1,10 @@
 from django.shortcuts import render,reverse
 from django.http import Http404
 from salary.enums import SalaryTitleEnum
-from salary.forms import AddEmployeeSalaryForm, AddSalaryLineForm
+from salary.forms import AddEmployeeSalaryForm, AddSalaryLineForm, AddVacationForm
 from salary.models import SalaryLine
-from salary.repo import EmployeeSalaryRepo,WorkGroupRepo,WorkSiteRepo
+from salary.repo import EmployeeSalaryRepo, VacationRepo,WorkGroupRepo,WorkSiteRepo
+from salary.serializers import VacationSerializer
 from .apps import APP_NAME
 from django.views import View
 from projectmanager.repo import EmployeeRepo
@@ -72,6 +73,8 @@ class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
         employee_salaries=EmployeeSalaryRepo(request=request).list(*args, **kwargs)
+        vacations=VacationRepo(request=request).list(*args, **kwargs)
+        context['vacations']=vacations
         employee=EmployeeRepo(request=request).employee(*args, **kwargs)
         context['employee_salaries']=employee_salaries
         context['employee']=employee
@@ -81,6 +84,23 @@ class BasicViews(View):
             employees=EmployeeRepo(request=request).list()
             context['employees']=employees
         return render(request,TEMPLATE_ROOT+"index.html",context)
+    def employee(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        employee_salaries=EmployeeSalaryRepo(request=request).list(*args, **kwargs)
+        vacations=VacationRepo(request=request).list(*args, **kwargs)
+        context['vacations']=vacations
+        vacations_s=json.dumps(VacationSerializer(vacations,many=True).data)
+        context['vacations_s']=vacations_s
+        context['add_vacation_form']=AddVacationForm()
+        employee=EmployeeRepo(request=request).employee(*args, **kwargs)
+        context['employee_salaries']=employee_salaries
+        context['employee']=employee
+        if request.user.has_perm(APP_NAME+".add_employeesalary"):
+            context['add_employee_salary_form']=AddEmployeeSalaryForm()
+            context['month_names']=PERSIAN_MONTH_NAMES
+            employees=EmployeeRepo(request=request).list()
+            context['employees']=employees
+        return render(request,TEMPLATE_ROOT+"employee.html",context)
     def search(self,request,*args, **kwargs):
         context=getContext(request=request)
         employee_salaries=EmployeeSalaryRepo(request=request).list()
@@ -98,6 +118,17 @@ class WorkGroupViews(View):
         context['employees_s']=json.dumps(EmployeeSerializer2(employees,many=True).data)
         context['organization_unit']="a"
         return render(request,TEMPLATE_ROOT+"work-group.html",context)
+
+
+class VacationViews(View):
+    def vacation(self,request,*args, **kwargs):
+        vacation=VacationRepo(request=request).vacation(*args, **kwargs)
+        context=getContext(request=request)
+        context.update(PageContext(request=request,page=vacation))
+        context['vacation']=vacation
+        return render(request,TEMPLATE_ROOT+"vacation.html",context)
+
+
 class WorkSiteViews(View):
     def work_site(self,request,*args, **kwargs):
         context=getContext(request=request)
