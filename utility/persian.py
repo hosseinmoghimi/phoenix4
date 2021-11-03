@@ -68,11 +68,11 @@ class PersianCalendar:
         month_=greg_date_time.month
         day_=greg_date_time.day
         try:
-            hour_=greg_date_time.hour+3
+            hour_=greg_date_time.hour
         except:
             hour_=0
         try:
-            min_=greg_date_time.minute+30
+            min_=greg_date_time.minute
         except:
             min_=0
         try:
@@ -81,7 +81,8 @@ class PersianCalendar:
             sec_=0
             
         sss=TehranTimezone()
-        a=JalaliDatetime(datetime.datetime(year_, month_, day_, hour_, min_, sec_, 0, TehranTimezone()))      
+        delta=datetime.timedelta(hours=3,minutes=30)
+        a=JalaliDatetime(datetime.datetime(year_, month_, day_, hour_, min_, sec_, 0, TehranTimezone())+delta)
         return a.strftime("%Y/%m/%d %H:%M:%S")
     def from_gregorian_date(self,greg_date):
         return JalaliDate.to_jalali(greg_date).strftime("%Y/%m/%d") 
