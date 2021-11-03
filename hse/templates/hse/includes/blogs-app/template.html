@@ -1,0 +1,19 @@
+<div class="card" id="blogs-app">
+    <div class="card-header">
+        <h4 class="title">
+            مالیات ها
+        </h4>
+    </div>
+    <div class="card-body">
+       {% include "hse/includes/blogs-app/table.html" %}
+
+     
+    </div>
+    <div class="card-footer">
+        
+        {% if add_blog_form %}
+       {% include "hse/includes/blogs-app/add-blog-form.html" %}
+          
+        {% endif %}
+    </div>
+</div>

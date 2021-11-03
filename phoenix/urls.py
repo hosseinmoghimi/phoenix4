@@ -18,6 +18,7 @@ urlpatterns = [
     path('tax/', include('tax.urls')),
     path('school/', include('school.urls')),
     path('vehicles/', include('vehicles.urls')),
+    path('hse/', include('hse.urls')),
     path('projectmanager/', include('projectmanager.urls')),
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),

@@ -1,0 +1,49 @@
+{% extends "hse/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h4>
+                    {{blog.title}}
+                </h4>
+                <h6>
+                    {{blog.amount|to_price|safe}}
+                </h6>
+                <div class="farsi text-right">
+                    {{blog.description|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+        {% include "core/includes/page-links-app/template.html" %}
+    </div>
+    <div class="col-md-4">
+
+        {% include "core/includes/page-documents-app/template.html" %}
+    </div>
+    <div class="col-md-12">
+
+        {% include "core/includes/page-images-app/template.html" %}
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let page_id = parseInt("{{blog.id}}")
+</script>
+{% include "core/includes/page-images-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-links-app/script.html" %}
+{% endblock script %}

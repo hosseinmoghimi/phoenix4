@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'resume',
     'vehicles',
     'help',
+    'hse',
     'map',
     'tax',
     'stock',
