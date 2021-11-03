@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'vehicles',
     'help',
     'map',
+    'tax',
     'stock',
     'authentication',
     'core',

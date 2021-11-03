@@ -198,5 +198,5 @@ class WareHouseSheetLineSerializer(serializers.ModelSerializer):
     ware_house_sheet=WareHouseSheetBriefSerializer()
     class Meta:
         model=WareHouseSheetLine
-        fields=['id','material','ware_house_sheet','quantity','unit_price','unit_name','description','line_total','get_edit_url']
+        fields=['id','material','ware_house_sheet','quantity','unit_price','unit_name','description','line_total','get_edit_url','get_absolute_url']
         
