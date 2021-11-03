@@ -36,6 +36,7 @@ class TaxViews(View):
     def tax(self,request,*args, **kwargs):
         context=getContext(request=request)
         tax=TaxRepo(request=request).tax(*args, **kwargs)
+        context.update(PageContext(request=request,page=tax))
         context['tax']=tax
         return render(request,TEMPLATE_ROOT+"tax.html",context)
 

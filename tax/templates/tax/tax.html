@@ -9,9 +9,30 @@
 <h4>
 {{tax.amount|to_price|safe}}
 </h4>
+
+<div class="row">
+    <div class="col-md-4">
+        
+        {% include "core/includes/page-links-app/template.html" %}
+    </div>
+    <div class="col-md-4">
+        
+        {% include "core/includes/page-documents-app/template.html" %}
+    </div>
+    <div class="col-md-12">
+        
+        {% include "core/includes/page-images-app/template.html" %}
+    </div>
+</div>
 {% endblock content %}
 
 
 {% block script %}
-  
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+  <script>
+      let page_id=parseInt("{{tax.id}}")
+  </script>
+{% include "core/includes/page-images-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-links-app/script.html" %}
 {% endblock script %}
