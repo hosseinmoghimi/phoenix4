@@ -72,6 +72,8 @@ class BasicViews(View):
                     request=request).list(search_for=search_for)
                 context['employers'] = EmployerRepo(
                     request=request).list(search_for=search_for)
+                context['employees'] = EmployeeRepo(
+                    request=request).list(search_for=search_for)
                 context['projects'] = ProjectRepo(
                     request=request).list(search_for=search_for)
                 context['tags'] = TagRepo(

@@ -638,6 +638,9 @@ class EmployeeRepo():
             objects = objects.filter(organization_unit_id=kwargs['organization_unit_id'])
         if 'employer_id' in kwargs and not kwargs['employer_id']==0:
             objects = objects.filter(organization_unit__employer_id=kwargs['employer_id'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(profile__user__first_name__contains=search_for)|Q(profile__user__last_name__contains=search_for))
         return objects.all()
 
     def add_employee(self, *args, **kwargs):
