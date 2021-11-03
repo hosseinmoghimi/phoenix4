@@ -68,11 +68,11 @@ class PersianCalendar:
         month_=greg_date_time.month
         day_=greg_date_time.day
         try:
-            hour_=greg_date_time.hour
+            hour_=greg_date_time.hour+3
         except:
             hour_=0
         try:
-            min_=greg_date_time.minute
+            min_=greg_date_time.minute+30
         except:
             min_=0
         try:
