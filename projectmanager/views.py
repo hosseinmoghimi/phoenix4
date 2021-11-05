@@ -415,7 +415,7 @@ class OrganizationUnitViews(View):
 
         employer=(EmployerRepo(request=request).employer(pk=employer_id))
         page=employer
-        pages=employer.organizationunit_set.first().all_sub_pages()
+        pages=employer.organizationunit_set.filter(parent=None).first().all_sub_pages()
         pages_s = BasicPageSerializer(pages, many=True).data
         context['pages_s'] = json.dumps(pages_s)
         return render(request, "phoenix/pages-chart.html", context)
