@@ -1,13 +1,13 @@
 <script>
 
 
-
+    let employers = JSON.parse(`{{employers_s|escapejs}}`)
 
     let employers_app = new Vue({
         el: "#employers-app",
         data: {
             new_employer_title: "",
-            employers: [],
+            employers: employers,
 
             waiting: false,
         },

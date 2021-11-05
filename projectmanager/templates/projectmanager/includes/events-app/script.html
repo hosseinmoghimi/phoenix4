@@ -4,10 +4,11 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 <script>
     let url_add_event = "{% url 'projectmanager:add_event' %}"
+    let events=JSON.parse(`{{events_s|escapejs}}`)
     let events_app = new Vue({
         el: "#events-app",
         data: {
-            events: [],
+            events: events,
             add_event_form_title: "",
             waiting: false,
             event_datetime: current_datetime,

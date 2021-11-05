@@ -5,7 +5,7 @@ from django.http.response import Http404
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
-from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetLineSerializer, WareHouseSheetSerializer
+from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetLineSerializer, WareHouseSheetSerializer
 from .utils import AdminUtility
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
@@ -113,8 +113,10 @@ class BasicViews(View):
         context['projects'] = ProjectRepo(request=request).list(for_home=True)
         context['materials'] = MaterialRepo(
             request=request).list(for_home=True)
-        context['employers'] = EmployerRepo(
+        employers = EmployerRepo(
             request=request).list(for_home=True)
+        context['employers'] = employers
+        context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
         organization_units = OrganizationUnitRepo(
             request=request).list(for_home=True)
         context['organization_units'] = organization_units
@@ -324,7 +326,6 @@ class ProjectViews(View):
             context['add_service_request_form'] = AddServiceRequestForm()
         if request.user.has_perm(APP_NAME+'.add_event'):
             context['add_event_form'] = AddEventForm()
-        context['events'] = project.event_set.all().order_by('event_datetime')
         organization_units = project.organization_units.all()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
         context['organization_units'] = organization_units
@@ -347,11 +348,17 @@ class ProjectViews(View):
             context['services_s'] = json.dumps(
                 ServiceSerializer(services, many=True).data)
 
-        context['employers']=EmployerRepo(request=request).list()
+        employers=EmployerRepo(request=request).list()
+        context['employers'] = employers
+        context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
         context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)
+        # events=EventRepo(request=request).list(project_id=project.id)
+        events = project.event_set.all().order_by('event_datetime')
+        context['events'] = events
+        context['events_s']=json.dumps(EventSerializer(events,many=True).data)
         return render(request, TEMPLATE_ROOT+"project.html", context)
 
 

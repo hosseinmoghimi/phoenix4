@@ -19,36 +19,8 @@
     <div id="collapseEmployers" class="collapse" aria-labelledby="headingEmployers" data-parent="#accordion">
       
     <div class="card-body">
-        {% for employer in employers %}
-        <a href="{{employer.get_absolute_url}}" class="">
-            <div class="media mb-3">
-
-                <i class="material-icons">
-                    apartment
-                </i>
-
-                
-                <div class="media-body farsi mr-2">
-
-                    <h5>
-                        {% if employer.pre_title %}
-                        <small>
-                            {{employer.pre_title}}
-
-                        </small>
-
-                        {% endif %}
-                        {{employer.title}}
-
-                    </h5>
-
-
-                </div>
-            </div>
-        </a>
-
-        {% endfor %}
-        <div v-for="employer in employers">
+    
+        <div v-for="employer in employers" class="mb-3">
             <a :href="employer.get_absolute_url">
                 <div class="media">
 
@@ -56,7 +28,7 @@
                         apartment
                     </i>
 
-                    <div class="media-body farsi">
+                    <div class="media-body farsi mr-2">
 
                         <h5>
                             <small v-text="employer.pre_title">
