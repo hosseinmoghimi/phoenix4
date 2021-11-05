@@ -71,7 +71,7 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model=Event
-        fields=['id','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime']
+        fields=['id','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','get_edit_url']
 
 
 class LocationSerializer(serializers.ModelSerializer):

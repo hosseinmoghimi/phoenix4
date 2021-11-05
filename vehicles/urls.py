@@ -27,4 +27,5 @@ urlpatterns = [
     path("add_new_trip/",login_required(apis.TripApi().add_new_trip),name='add_new_trip'),
     path("add_maintenance/",login_required(apis.MaintenanceApi().add_maintenance),name='add_maintenance'),
     path("add_new_vehicle/",login_required(apis.VehicleApi().add_new_vehicle),name='add_new_vehicle'),
+    path("filter_trip/",login_required(apis.TripApi().filter_trip),name='filter_trip'),
 ]

@@ -1,6 +1,14 @@
 from django import forms
 from django.forms.fields import IntegerField
 
+class FilterTripForm(forms.Form):
+    title=forms.CharField( max_length=50, required=False)
+    vehicle_id=forms.IntegerField(required=False)
+    driver_id=forms.IntegerField( required=False)
+    trip_path_id=forms.IntegerField( required=False)
+    start_date=forms.CharField( max_length=50, required=False)
+    end_date=forms.CharField( max_length=50, required=False)
+
 class AddWorkShiftForm(forms.Form):
     vehicle_id=forms.IntegerField(required=True)
     start_datetime=forms.CharField( max_length=50, required=True)

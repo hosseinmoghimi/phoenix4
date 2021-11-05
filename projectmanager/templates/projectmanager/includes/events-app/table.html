@@ -1,0 +1,105 @@
+{% load to_persian_date %}
+<table class="table table-striped">
+    <thead>
+        <th>
+            رویداد
+        </th>
+        <th>
+            زمان
+        </th>
+        <th>
+            شروع
+        </th>
+        <th>
+            پایان
+        </th>
+        <th>
+
+        </th>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+
+            <td>
+                <a href="{{event.get_absolute_url}}">
+                    {{event.title}}
+                </a>
+            </td>
+            <td>
+                <small>
+
+                    {{event.event_datetime|to_persian_datetime|safe}}
+                </small>
+            </td>
+
+            <td>
+                <small>
+
+                    {{event.start_datetime|to_persian_datetime|safe}}
+                </small>
+            </td>
+
+            <td>
+                <small>
+
+                    {{event.end_datetime|to_persian_datetime|safe}}
+                </small>
+            </td>
+            <td>
+                {% if perms.projectmanager.change_event %}
+
+
+                <a title="ویرایش" href="{{event.get_edit_url}}" target="_blank">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+
+        <tr v-for="event in events">
+            <td>
+                <a :href="event.get_absolute_url">
+                    <span v-text="event.title">
+
+
+                    </span>
+                </a>
+
+            </td>
+            <td>
+                <small v-text="event.persian_event_datetime">
+
+                </small>
+            </td>
+
+            <td>
+                <small v-text="event.persian_start_datetime">
+
+                </small>
+            </td>
+            <td>
+                <small v-text="event.persian_end_datetime">
+
+                </small>
+            </td>
+            <td>
+                {% if perms.projectmanager.change_event %}
+
+
+                <a title="ویرایش" :href="event.get_edit_url" target="_blank">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+
+            </td>
+        </tr>
+
+    </tbody>
+</table>

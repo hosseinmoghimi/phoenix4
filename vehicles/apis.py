@@ -195,6 +195,47 @@ class TripApi(APIView):
         context['log']=log
         return JsonResponse(context)
     
+    def filter_trip(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            filter_trip_form=FilterTripForm(request.POST)
+            if filter_trip_form.is_valid():
+                log=3
+
+                title=filter_trip_form.cleaned_data['title']
+                vehicle_id=filter_trip_form.cleaned_data['vehicle_id']
+                driver_id=filter_trip_form.cleaned_data['driver_id']
+                trip_path_id=filter_trip_form.cleaned_data['trip_path_id']
+                start_date=filter_trip_form.cleaned_data['start_date']
+                end_date=filter_trip_form.cleaned_data['end_date']
+                if start_date is None or start_date=="":
+                    start_date=timezone.now()
+                else:
+                    start_date=PersianCalendar().to_gregorian(start_date)
+                
+                if end_date is None or end_date=="":
+                    end_date=timezone.now()
+                else:
+                    end_date=PersianCalendar().to_gregorian(end_date)
+                trips=TripRepo(request=request).list(
+                    title=title,
+                    vehicle_id=vehicle_id,
+                    driver_id=driver_id,
+                    trip_path_id=trip_path_id,
+                    start_date=start_date,
+                    end_date=end_date,
+                )
+                
+                if trips is not None:
+                    log=4
+                    context['trips']=TripSerializer(trips,many=True).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
     def add_passenger_to_trip(self,request):
         context={'result':FAILED}
         log=1
