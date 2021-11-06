@@ -1,0 +1,35 @@
+<div class="card" id="classrooms-app">
+    <div class="card-header">
+        <h4>
+
+            <a href="{% url 'school:classrooms' %}">
+                کلاس های درس
+            </a>
+
+
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+          
+        <div class="mb-3" v-for="classroom in classrooms">
+            <h4>
+                <small class="text-muted">
+                    کلاس
+                </small>
+                <a :href="classroom.get_absolute_url">
+                    <span v-text="classroom.title"></span>
+                </a>
+                {% if perms.school.change_classroom %}
+                <a target="_blank" title="ویرایش" :href="classroom.get_edit_url">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+            </h4>
+        </div>
+        </div>
+
+    </div>
+</div>

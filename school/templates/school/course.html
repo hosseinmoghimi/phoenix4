@@ -17,9 +17,9 @@
                 {% endif %}
             </h4>
         </div>
-
-
-
+        <h3>
+            کتاب ها
+        </h3>
         <div class="mb-3">
             {% for book in course.books.all %}
             <h4>
@@ -32,6 +32,27 @@
                 </a>
                 {% if perms.school.change_book %}
                 {{book.get_edit_btn|safe}}
+
+                {% endif %}
+            </h4>
+            {% endfor %}
+        </div>
+
+<h3>
+    فعال
+</h3>
+        <div class="mb-3">
+            {% for active_course in course.activecourse_set.all %}
+            <h4>
+                <small class="text-muted">
+                    
+                </small>
+                <a href="{{active_course.get_absolute_url}}">
+
+                    {{active_course.title}}
+                </a>
+                {% if perms.school.change_book %}
+                {{active_course.get_edit_btn|safe}}
 
                 {% endif %}
             </h4>

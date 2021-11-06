@@ -186,6 +186,8 @@ class PageViews(View):
         return render(request, "phoenix/pages-chart.html", context)
 
     def download(self, request, *args, **kwargs):
+        if not request.user.is_authenticated :
+            raise Http404
         if request.user.is_authenticated and request.user.has_perm("core.change_document"):
             document = DocumentRepo(request=request).document(*args, **kwargs)
             return document.download_response()
