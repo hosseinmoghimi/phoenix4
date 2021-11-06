@@ -109,6 +109,9 @@ class BasicViews(View):
             context['add_project_form'] = AddProjectForm()
         if request.user.has_perm(APP_NAME+".add_location"):
             context['add_location_form'] = AddLocationForm()
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
         context['services'] = ServiceRepo(request=request).list(for_home=True)
         context['projects'] = ProjectRepo(request=request).list(for_home=True)
         context['materials'] = MaterialRepo(
@@ -367,6 +370,12 @@ class ProjectViews(View):
 
         context = getContext(request)
         context['statuses']=(i[0] for i in ProjectStatusEnum.choices)
+        
+        
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__class_name="project").filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
+
         employers=EmployerRepo(request=request).list()
         context['employers']=employers
         context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
@@ -562,6 +571,12 @@ class MaterialViews(View):
     def materials(self, request, *args, **kwargs):
         materials = MaterialRepo(request=request).list(*args, **kwargs)
         context = getContext(request)
+        
+        
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__class_name="material").filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
+
         context['materials'] = materials
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
         if request.user.has_perm(APP_NAME+".add_material"):
@@ -785,5 +800,12 @@ class ServiceViews(View):
         services = ServiceRepo(request=request).list(*args, **kwargs)
         context = getContext(request)
         context['services'] = services
+        
+        
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__class_name="service").filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
+
+        
         context['services_s'] = json.dumps(ServiceSerializer(services,many=True).data)
         return render(request, TEMPLATE_ROOT+"services.html", context)

@@ -33,7 +33,6 @@ class TaxApi(APIView):
 
                 if tax is not None:
                     log = 4
-                    print(tax)
                     tax = TaxSerializer(tax).data
                     context['tax'] = tax
                     context['result'] = SUCCEED

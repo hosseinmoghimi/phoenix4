@@ -29,6 +29,9 @@
     <div class="row ">
 
         <div class="col-md-4">
+            {% include "core/includes/page-like-app/template.html" %}
+
+
             <div class="mb-3 py-3">
 
                 <img src="{{service.thumbnail}}" class="rounded w-100" alt="">
@@ -50,7 +53,7 @@
 
 
         <div class="col-md-12">
-         
+
             {% include "projectmanager/includes/service-requests-app/template.html" %}
 
 
@@ -87,11 +90,12 @@
 {% include "core/includes/page-tags-app/script.html" %}
 
 <script>
-    $(document).ready(()=>{
+    $(document).ready(() => {
         $("#collapseMaterials").addClass("show")
 
     })
 </script>
 {% include "projectmanager/includes/service-requests-app/script.html" %}
+{% include "core/includes/page-like-app/script.html" %}
 
 {% endblock %}

@@ -28,7 +28,6 @@ class BlogApi(APIView):
 
                 if blog is not None:
                     log = 4
-                    print(blog)
                     blog = BlogSerializer(blog).data
                     context['blog'] = blog
                     context['result'] = SUCCEED

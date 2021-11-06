@@ -20,10 +20,10 @@
             <div class="card-body text-right farsi">
                 <ul>
 
-                    {% for pagelike in profile.pagelike_set.all %}
+                    {% for favorite_page in favorite_pages %}
                     <li class="mb-2">
-                        <a href="{{pagelike.page.get_absolute_url}}">
-                            {{pagelike.page.title}}
+                        <a href="{{favorite_page.page.get_absolute_url}}">
+                            {{favorite_page.page.title}}
                         </a>
                     </li>
                     {% endfor %}

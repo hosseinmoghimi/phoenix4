@@ -9,10 +9,13 @@
             pay_from_id: 0,
             pay_to_id: 0,
             new_transaction_description: "",
-            payment_method:"",
+            payment_method: "",
+            waiting: false,
+            done: false,
         },
         methods: {
             add_transaction: function () {
+                add_transaction_app.waiting = true
                 let url_add_transaction = "{% url 'accounting:add_transaction' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -21,11 +24,21 @@
                     amount: this.new_transaction_amount,
                     title: this.new_transaction_title,
                     description: this.new_transaction_description,
-                    payment_method:this.payment_method,
+                    payment_method: this.payment_method,
                 }
                 console.log(payload)
                 $.post(url_add_transaction, payload).done((data) => {
-                    console.log(data)
+                    add_transaction_app.amount = ""
+                    add_transaction_app.title = ""
+                    add_transaction_app.description = ""
+                    add_transaction_app.waiting = false
+                    if (data.result === 'SUCCEED') {
+                        add_transaction_app.done = true
+                        setTimeout(() => {
+                            add_transaction_app.done = false
+
+                        }, 3000);
+                    }
                 })
             }
         },

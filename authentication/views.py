@@ -86,7 +86,6 @@ class AuthenticationViews(View):
                 request=ProfileRepo(request=request).login_as_user(username=username)
                 if request is not None:
                     log=4
-                    print(request.user)
                     return redirect(SITE_URL)
         return redirect("authentication:login")
 

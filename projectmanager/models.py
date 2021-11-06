@@ -253,7 +253,6 @@ class Project(ProjectManagerPage):
         return Project.objects.filter(pk=self.parent_id).first()
 
     def save(self, *args, **kwargs):
-
         self.class_name = "project"
         if self.contractor is None and self.parent is not None:
             self.contractor = self.parent_project().contractor
