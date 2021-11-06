@@ -500,6 +500,9 @@ class Document(Icon):
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    
+    profiles=models.ManyToManyField("authentication.profile",related_name="profile_documents", verbose_name=_("profiles"))
+
     def persian_date_added_tag(self):
         value = self.date_added
         a = PersianCalendar().from_gregorian(value)
@@ -573,7 +576,7 @@ class Document(Icon):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
 
-
+    
 class PageDocument(Document):
     page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     

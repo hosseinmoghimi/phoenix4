@@ -186,21 +186,20 @@ class PageViews(View):
         return render(request, "phoenix/pages-chart.html", context)
 
     def download(self, request, *args, **kwargs):
-        if not request.user.is_authenticated :
+        me=ProfileRepo(request=request).me
+        if me is None :
             raise Http404
-        if request.user.is_authenticated and request.user.has_perm("core.change_document"):
-            document = DocumentRepo(request=request).document(*args, **kwargs)
-            return document.download_response()
-
         document = DocumentRepo(request=request).document(*args, **kwargs)
-        if document is None:
-            raise Http404
-
-        if self.access(request=request,*args, **kwargs) and document is not None:
+        if me in document.profiles.all() or request.user.has_perm("core.change_document"):
+            if document is None:
+                raise Http404
             return document.download_response()
+
+        # if self.access(request=request,*args, **kwargs) and document is not None:
+        #     return document.download_response()
         message_view = MessageView()
         message_view.links = []
-        message_view.links.append(Link(title='تلاش مجدد', icon_color="warning",
+        message_view.links.append(Link(title='تلاش مجدد', color="warning",
                                   icon_material="apartment", url=document.get_download_url()))
         message_view.message_color = 'warning'
         message_view.has_home_link = True
@@ -213,7 +212,6 @@ class PageViews(View):
         return message_view.response(request)
 
     def access(self, request, *args, **kwargs):
-        return True
         document = DocumentRepo(request=request).document(pk=pk)
         self.me = ProfileRepo(request=request).me
         if self.me is not None and document.page in self.me.my_pages().all():
