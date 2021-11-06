@@ -190,7 +190,7 @@ class PageViews(View):
         if me is None :
             raise Http404
         document = DocumentRepo(request=request).document(*args, **kwargs)
-        if me in document.profiles.all() or request.user.has_perm("core.change_document"):
+        if request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
             if document is None:
                 raise Http404
             return document.download_response()

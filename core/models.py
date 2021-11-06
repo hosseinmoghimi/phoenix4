@@ -501,8 +501,8 @@ class Document(Icon):
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
     
-    profiles=models.ManyToManyField("authentication.profile",related_name="profile_documents", verbose_name=_("profiles"))
-
+    profiles=models.ManyToManyField("authentication.profile",blank=True,related_name="profile_documents", verbose_name=_("profiles"))
+    is_open=models.BooleanField(_("is_open?"),default=False)
     def persian_date_added_tag(self):
         value = self.date_added
         a = PersianCalendar().from_gregorian(value)
