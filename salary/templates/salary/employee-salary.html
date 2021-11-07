@@ -22,12 +22,22 @@
 
                         <h5>
                             <a href="{{employee_salary.employee.get_absolute_url}}">
-                            پروفایل
-                            </a>
+                                پرسنل
+                                </a>
                             {% if perms.projectmanager.change_employee %}
                             {{employee_salary.employee.get_edit_btn|safe}}
                             {% endif %}
                         </h5>
+
+                        <h5>
+                            <a href="{{employee_salary.employee.profile.get_absolute_url}}">
+                                پروفایل
+                                </a>
+                            {% if perms.projectmanager.change_employee %}
+                            {{employee_salary.employee.get_edit_btn|safe}}
+                            {% endif %}
+                        </h5>
+
 
                     </div>
                     <p>
