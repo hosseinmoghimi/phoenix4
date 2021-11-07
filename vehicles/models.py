@@ -188,7 +188,7 @@ class VehicleLocation(models.Model):
         verbose_name_plural = _("VehicleLocations")
 
     def __str__(self):
-        return f'{self.vehicle.name} @ {self.location.title}'
+        return f'{self.vehicle.title} @ {self.location.title}'
 
     def get_absolute_url(self):
         return reverse("VehicleLocation_detail", kwargs={"pk": self.pk})
@@ -253,7 +253,7 @@ class WorkShift(models.Model):
         verbose_name_plural = _("WorkShifts")
 
     def __str__(self):
-        return f'{self.vehicle.name} {self.start_time}'
+        return f'{self.vehicle.title} {self.start_time}'
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":workshift", kwargs={"pk": self.pk})

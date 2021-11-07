@@ -486,7 +486,10 @@ class PageLink(Link):
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
 
+from django.core.files.storage import FileSystemStorage
 
+upload_storage = FileSystemStorage(location=UPLOAD_ROOT, base_url='/uploads')
+image = models.ImageField() 
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
     title = models.CharField(_('عنوان'), max_length=200)
@@ -494,7 +497,7 @@ class Document(Icon):
     profile = models.ForeignKey("authentication.Profile", verbose_name=_(
         "پروفایل"), on_delete=models.CASCADE)
     file = models.FileField(_("فایل ضمیمه"), null=True, blank=True,
-                            upload_to=APP_NAME+'/Document', max_length=100)
+                            upload_to=APP_NAME+'/documents', storage=upload_storage, max_length=100)
     mirror_link = models.CharField(_('آدرس بیرونی'),null=True,blank=True, max_length=10000)
     date_added = models.DateTimeField(
         _("افزوده شده در"), auto_now=False, auto_now_add=True)

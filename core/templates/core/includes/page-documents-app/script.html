@@ -5,12 +5,13 @@
         data: {
             new_document_title: "",
             documents: [],
-
+            waiting: false,
             new_document_file: '',
             show_add_document_form: false,
         },
         methods: {
             add_page_document: function () {
+                page_documents_app.waiting = true
                 let title = this.new_document_title
                 let formData = new FormData();
                 let file1 = $('#add-document-form')[0].elements[1].files[0]
@@ -26,6 +27,8 @@
                     contentType: false,
                     processData: false,
                     success: function (data) {
+                        page_documents_app.waiting = false
+
                         if (data != 0) {
                             // //console.log(data)
                             if (data.result === 'SUCCEED') {

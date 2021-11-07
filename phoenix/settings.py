@@ -183,8 +183,8 @@ MYSQL = server_settings.MYSQL
 SESSION_COOKIE_AGE = server_settings.SESSION_COOKIE_AGE
 SITE_URL = server_settings.SITE_URL
 DATABASES = server_settings.DATABASES
-
 YEAR_ADDED=server_settings.YEAR_ADDED
+UPLOAD_ROOT=server_settings.UPLOAD_ROOT
 ALLOWED_HOSTS=server_settings.ALLOWED_HOSTS
 PUSHER_IS_ENABLE=server_settings.PUSHER_IS_ENABLE
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
