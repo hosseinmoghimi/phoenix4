@@ -18,10 +18,16 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = Teacher
         fields=['id','profile','get_absolute_url','get_edit_url']
 
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields=['id','title','get_absolute_url','get_edit_url']
+
 class ClassRoomSerializer(serializers.ModelSerializer):
+    school=SchoolSerializer()
     class Meta:
         model = ClassRoom
-        fields=['id','title','get_absolute_url','get_edit_url']
+        fields=['id','title','school','get_absolute_url','get_edit_url']
 
 
 
@@ -35,11 +41,6 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields=['id','title','get_absolute_url','get_edit_url']
 
-
-class SchoolSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = School
-        fields=['id','title','get_absolute_url','get_edit_url']
 
 class MajorSerializer(serializers.ModelSerializer):
     class Meta:
