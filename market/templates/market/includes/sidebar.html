@@ -159,34 +159,22 @@
                 </div>
                 <div id="collapseTwo44" class="collapse" role="tabpanel" aria-labelledby="headingTwo44">
                     <div class="card-body mr-5">
-                        {% for ware_house in ware_houses %}
-
-
-
                         <div class="form-check">
                             <label class="form-check-label">
-
-
-                                <a href="{{ware_house.get_absolute_url}}">
-                                    {{ware_house.name}}
-                                </a>
-
-
-                            </label>
-                        </div>
-
-                        {% endfor %}
-                        <div class="form-check">
-                            <label class="form-check-label">
-
-
                                 <a href="{% url 'market:ware_houses' %}">
                                     لیست انبار ها
                                 </a>
-
-
                             </label>
                         </div>
+                        {% for ware_house in ware_houses %}
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <a href="{{ware_house.get_absolute_url}}">
+                                    {{ware_house.name}}
+                                </a>
+                            </label>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
