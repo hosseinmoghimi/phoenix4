@@ -284,6 +284,16 @@ class DriverRepo():
         return self.objects.filter(pk=pk).first()
 
 
+    def add_driver(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_driver"):
+            return
+        driver=Driver()
+        driver.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
+        driver.start_date=kwargs['start_date'] if 'start_date' in kwargs else timezone.now()
+        driver.end_date=kwargs['end_date'] if 'end_date' in kwargs else timezone.now()
+        driver.save()
+        return driver
+
 class MaintenanceRepo():
     def __init__(self, *args, **kwargs):
         self.request = None

@@ -8,6 +8,10 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     
     path("",login_required(views.BasicViews().home),name="home"),
+    
+    path("areas/",login_required(views.AreaViews().areas),name="areas"),
+    path("area/<int:area_id>/",login_required(views.AreaViews().area),name="area"),
+
     path("drivers/",login_required(views.DriverViews().drivers),name="drivers"),
     path("driver/<int:driver_id>/",login_required(views.DriverViews().driver),name="driver"),
     
@@ -18,7 +22,6 @@ urlpatterns = [
     path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),
     
     path("vehicle_work_event/<int:pk>/",login_required(views.VehicleWorkEventViews().vehicle_work_event),name="vehicleworkevent"),
-    path("area/<int:area_id>/",login_required(views.AreaViews().area),name="area"),
     path("vehicleevent/<int:pk>/",login_required(views.AreaViews().area),name="vehicleevent"),
     path("maintenance/<int:maintenance_id>/",login_required(views.MaintenanceViews().maintenance),name="maintenance"),
     path("service_man/<int:service_man_id>/",login_required(views.ServiceManViews().service_man),name="service_man"),
@@ -30,6 +33,7 @@ urlpatterns = [
     path("add_work_shift/",login_required(apis.WorkShiftApi().add_work_shift),name='add_work_shift'),
     path("add_vehicle_work_event/",login_required(apis.VehicleWorkEventApi().add_vehicle_work_event),name='add_vehicle_work_event'),
     path("add_new_trip/",login_required(apis.TripApi().add_new_trip),name='add_new_trip'),
+    path("add_new_driver/",login_required(apis.DriverApi().add_new_driver),name='add_new_driver'),
     path("add_maintenance/",login_required(apis.MaintenanceApi().add_maintenance),name='add_maintenance'),
     path("add_new_vehicle/",login_required(apis.VehicleApi().add_new_vehicle),name='add_new_vehicle'),
     path("filter_trip/",login_required(apis.TripApi().filter_trip),name='filter_trip'),

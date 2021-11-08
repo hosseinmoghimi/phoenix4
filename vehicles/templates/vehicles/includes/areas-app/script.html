@@ -1,21 +1,21 @@
 <script>
-    let url_add_driver = "{% url 'vehicles:add_new_driver' %}"
-    let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
-    let drivers_app = new Vue({
-        el: "#drivers-app",
+    let url_add_area = "{% url 'vehicles:add_new_driver' %}"
+    let areas = JSON.parse(`{{areas_s|escapejs}}`)
+    let areas_app = new Vue({
+        el: "#areas-app",
         data: {
-            drivers: drivers,
+            areas: areas,
             profile_id:0,
         },
         methods: {
-            add_driver: function () {
+            add_area: function () {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     profile_id: this.profile_id,
                 }
-                $.post(url_add_driver, payload).done((data) => {
+                $.post(url_add_area, payload).done((data) => {
                     if (data.result === 'SUCCEED') {
-                        drivers_app.drivers.push(data.driver)
+                        areas_app.areas.push(data.area)
                     }
                 })
                 console.log(payload)

@@ -5,8 +5,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
-from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import MaintenanceSerializer, PassengerSerilizer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.repo import DriverRepo, MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -260,3 +260,28 @@ class TripApi(APIView):
         context['log']=log
         return JsonResponse(context)
     
+class DriverApi(APIView):
+    def add_new_driver(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_driver_form=AddDriverForm(request.POST)
+            if add_driver_form.is_valid():
+                log=3
+                
+                profile_id=add_driver_form.cleaned_data['profile_id']
+              
+                driver=DriverRepo(request=request).add_driver(
+                    profile_id=profile_id,
+                )
+                
+                if driver is not None:
+                    log=4
+                    context['driver']=DriverSerializer(driver).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   

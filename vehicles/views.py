@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from authentication.repo import ProfileRepo
+from authentication.serializers import ProfileSerializer
 from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
 from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
@@ -35,6 +37,7 @@ class BasicViews(View):
         context['vehicles']=vehicles 
         areas=AreaRepo(request=request).list(*args, **kwargs)
         context['areas']=areas
+        context['areas_s']=json.dumps(AreaSerializer(areas,many=True).data)
 
 
         
@@ -158,6 +161,18 @@ class AreaViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
+
+    def areas(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        areas=AreaRepo(request=request).list(*args, **kwargs)
+        context['areas']=areas
+        areas_s=json.dumps(AreaSerializer(areas,many=True).data)
+        context['areas_s']=areas_s
+
+ 
+        return render(request,TEMPLATE_FOLDER+"areas.html",context)
 
 
 class PassengerViews(View):
@@ -324,8 +339,10 @@ class DriverViews(View):
         context['drivers_s']=json.dumps(DriverSerializer(drivers,many=True).data)
  
         if request.user.has_perm(APP_NAME+".add_driver"):
-            context['add_friver_form']=AddDriverForm()
-
+            context['add_driver_form']=AddDriverForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
+            context['profiles_s']=json.dumps(ProfileSerializer(profiles,many=True).data)
          
 
         return render(request,TEMPLATE_FOLDER+"drivers.html",context)
