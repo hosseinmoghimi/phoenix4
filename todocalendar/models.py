@@ -19,7 +19,7 @@ class CalendarPage(BasicPage):
 
 class Appointment(CalendarPage):
     appointment_date=models.DateTimeField(_("appointment_date"), auto_now=False, auto_now_add=False)    
-    persons=models.ManyToManyField("authentication.profile",blank=True, verbose_name=_("profile"))
+    persons=models.ManyToManyField("authentication.profile",blank=True, verbose_name=_("persons"))
     location=models.CharField(_("location"),blank=True,null=True, max_length=50)
     # importance=models.IntegerField(_("اولویت"),default=1)
     class Meta:
