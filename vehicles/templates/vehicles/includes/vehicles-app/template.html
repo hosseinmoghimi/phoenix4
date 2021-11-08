@@ -1,7 +1,10 @@
 <div class="card" id="vehicles-app">
     <div class="card-header">
         <h4 class="title text-center">
-            ماشین آلات
+            <a href="{% url 'vehicles:vehicles' %}">
+
+                ماشین آلات
+            </a>
         </h4>
     </div>
     <div class="card-body">
@@ -15,7 +18,7 @@
                 <a class="nav-link farsi docs-creator" :href="vehicle.get_absolute_url">
                     <span class="material-icons">
                         commute
-                        </span>
+                    </span>
                     <span class="mr-2" v-text="vehicle.title"></span>
                 </a>
             </li>

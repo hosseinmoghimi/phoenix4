@@ -8,16 +8,21 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     
     path("",login_required(views.BasicViews().home),name="home"),
+    path("drivers/",login_required(views.DriverViews().drivers),name="drivers"),
     path("driver/<int:driver_id>/",login_required(views.DriverViews().driver),name="driver"),
+    
+    path("vehicles/",login_required(views.VehicleViews().vehicles),name="vehicles"),
     path("vehicle/<int:vehicle_id>/",login_required(views.VehicleViews().vehicle),name="vehicle"),
+    
+    path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/",login_required(views.TripViews().trips),name="trips"),
+    path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),
+    
     path("vehicle_work_event/<int:pk>/",login_required(views.VehicleWorkEventViews().vehicle_work_event),name="vehicleworkevent"),
     path("area/<int:area_id>/",login_required(views.AreaViews().area),name="area"),
     path("vehicleevent/<int:pk>/",login_required(views.AreaViews().area),name="vehicleevent"),
     path("maintenance/<int:maintenance_id>/",login_required(views.MaintenanceViews().maintenance),name="maintenance"),
     path("service_man/<int:service_man_id>/",login_required(views.ServiceManViews().service_man),name="service_man"),
     path("work_shift/<int:pk>/",login_required(views.WorkShiftViews().work_shift),name="workshift"),
-    path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),
-    path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/",login_required(views.TripViews().trips),name="trips"),
     path("passenger/<int:passenger_id>/",login_required(views.PassengerViews().passenger),name="passenger"),
     path("trip_path/<int:trip_path_id>/",login_required(views.TripViews().trip_path),name='trippath'),
 

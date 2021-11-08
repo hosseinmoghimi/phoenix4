@@ -1,0 +1,24 @@
+<div class="card" id="drivers-app">
+
+    <div class="card-header">
+        <h4 class="title text-center">
+            <a href="{% url 'vehicles:drivers' %}">
+
+                راننده ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+
+            <li class="nav-item" v-for="driver in drivers">
+                <a class="nav-link farsi docs-creator" :href="driver.get_absolute_url">
+                    <img :src="driver.profile.image" class="rounded-circle" width="48" alt="">
+                    <span v-text="driver.profile.name"></span>
+                </a>
+
+            </li>
+        </ul>
+    </div>
+
+</div>
