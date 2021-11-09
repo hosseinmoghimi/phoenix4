@@ -1,11 +1,22 @@
 from django import forms
 from django.forms.fields import IntegerField
 
+
 class SearchForm(forms.Form):
     search_for=forms.CharField( max_length=50, required=True)
 
+
+class AddTripPathForm(forms.Form):
+    source_id=forms.IntegerField(  required=True)
+    destination_id=forms.IntegerField(  required=True)
+    cost=forms.IntegerField(required=False)
+    duration=forms.IntegerField(required=False)
+    distance=forms.IntegerField(required=False)
+
+
 class AddDriverForm(forms.Form):
     profile_id=forms.IntegerField(  required=True)
+
 
 class FilterTripForm(forms.Form):
     title=forms.CharField( max_length=50, required=False)
@@ -14,6 +25,7 @@ class FilterTripForm(forms.Form):
     trip_path_id=forms.IntegerField( required=False)
     start_date=forms.CharField( max_length=50, required=False)
     end_date=forms.CharField( max_length=50, required=False)
+
 
 class AddWorkShiftForm(forms.Form):
     vehicle_id=forms.IntegerField(required=True)
@@ -25,6 +37,7 @@ class AddWorkShiftForm(forms.Form):
     outcome=forms.IntegerField( required=True)
     description=forms.CharField( max_length=5000, required=False)
 
+
 class AddMaintenanceForm(forms.Form):
     vehicle_id=forms.IntegerField(required=True)
     service_man_id=forms.IntegerField(required=False)
@@ -35,13 +48,15 @@ class AddMaintenanceForm(forms.Form):
     maintenance_type=forms.CharField( max_length=100, required=False)
     kilometer=forms.IntegerField( required=False)
 
+
 class AddVehicleForm(forms.Form):
     title=forms.CharField( max_length=100, required=True)
-    
+
+
 class AddPassengerToTripForm(forms.Form):
     passenger_id=forms.IntegerField( required=True)
     trip_id=forms.IntegerField( required=True)
-    
+
 
 class FilterTripsForm(forms.Form):
     title=forms.CharField( max_length=100, required=False)
@@ -50,7 +65,7 @@ class FilterTripsForm(forms.Form):
     driver_id=forms.IntegerField( required=False)
     vehicle_id=forms.IntegerField( required=False)
     driver_id=forms.IntegerField( required=False)
-    
+
 
 class AddTripForm(forms.Form):
     title=forms.CharField( max_length=100, required=True)
@@ -64,6 +79,7 @@ class AddTripForm(forms.Form):
     cost=forms.IntegerField(required=True)
     delay=forms.IntegerField(required=False)
 
+
 class AddVehicleWorkEventForm(forms.Form):
     work_shift_id=forms.IntegerField(required=True)
     event_type=forms.CharField( max_length=50, required=True)
@@ -73,4 +89,3 @@ class AddVehicleWorkEventForm(forms.Form):
      
     description=forms.CharField( max_length=5000, required=False)
 
-    

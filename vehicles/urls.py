@@ -20,6 +20,9 @@ urlpatterns = [
     
     path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/",login_required(views.TripViews().trips),name="trips"),
     path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),
+
+    path("trip_paths/",login_required(views.TripViews().trip_paths),name='trippaths'),
+    path("trip_path/<int:trip_path_id>/",login_required(views.TripViews().trip_path),name='trippath'),
     
     path("vehicle_work_event/<int:pk>/",login_required(views.VehicleWorkEventViews().vehicle_work_event),name="vehicleworkevent"),
     path("vehicleevent/<int:pk>/",login_required(views.AreaViews().area),name="vehicleevent"),
@@ -27,10 +30,10 @@ urlpatterns = [
     path("service_man/<int:service_man_id>/",login_required(views.ServiceManViews().service_man),name="service_man"),
     path("work_shift/<int:pk>/",login_required(views.WorkShiftViews().work_shift),name="workshift"),
     path("passenger/<int:passenger_id>/",login_required(views.PassengerViews().passenger),name="passenger"),
-    path("trip_path/<int:trip_path_id>/",login_required(views.TripViews().trip_path),name='trippath'),
 
     path("add_passenger_to_trip/",login_required(apis.TripApi().add_passenger_to_trip),name='add_passenger_to_trip'),
     path("add_work_shift/",login_required(apis.WorkShiftApi().add_work_shift),name='add_work_shift'),
+    path("add_trip_path/",login_required(apis.TripApi().add_trip_path),name='add_trip_path'),
     path("add_vehicle_work_event/",login_required(apis.VehicleWorkEventApi().add_vehicle_work_event),name='add_vehicle_work_event'),
     path("add_new_trip/",login_required(apis.TripApi().add_new_trip),name='add_new_trip'),
     path("add_new_driver/",login_required(apis.DriverApi().add_new_driver),name='add_new_driver'),

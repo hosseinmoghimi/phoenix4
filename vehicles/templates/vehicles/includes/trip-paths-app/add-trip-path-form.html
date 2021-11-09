@@ -1,0 +1,60 @@
+<form @submit.prevent="add_trip_path()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">مبدا</label>
+                <select  required type="text" v-model="source_id" id="" class="form-control farsi">
+                    {% for location in locations %}
+                    <option value="{{location.id}}">{{location.title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">مقصد</label>
+                <select  required type="text" v-model="destination_id" id="" class="form-control farsi">
+                    {% for location in locations %}
+                    <option value="{{location.id}}">{{location.title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">هزینه</label>
+                <input required type="number" v-model="cost" class="form-control farsi" id="">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">زمان</label>
+                <input  required type="number" v-model="duration" class="form-control farsi" id="">
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">فاصله</label>
+                <input required  type="number" v-model="distance" class="form-control farsi" id="">
+            </div>
+        </div>
+
+
+
+        <div class="col-3">
+
+            <button class="btn btn-success btn-sm" type="submit">
+
+                <span class="material-icons">
+                    add
+                </span>
+                افزودن
+            </button>
+        </div>
+    </div>
+</form>

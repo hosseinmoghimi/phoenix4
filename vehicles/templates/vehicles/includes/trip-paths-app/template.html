@@ -1,7 +1,9 @@
 <div class="card" id="trip-paths-app">
     <div class="card-header">
         <h4 class="title">
-            مسیر های سفر
+            <a href="{% url 'vehicles:trippaths' %}">
+                مسیر های سفر
+            </a>
         </h4>
     </div>
 
@@ -63,4 +65,12 @@
             </tbody>
         </table>
     </div>
+    
+    {% if add_trip_path_form %}
+
+    <div class="card-footer">
+       {% include "vehicles/includes/trip-paths-app/add-trip-path-form.html" %}
+    </div>
+    {% endif %}
+
 </div>

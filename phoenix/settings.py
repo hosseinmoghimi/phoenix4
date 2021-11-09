@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'mafia',
     'messenger',
     'realestate',
+    'library',
     'tinymce',
     'school',
     'salary',

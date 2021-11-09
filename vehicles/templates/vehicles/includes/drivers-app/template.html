@@ -27,11 +27,13 @@
         <form @submit.prevent="add_driver()">
             <div class="row">
                 <div class="col-9">
-                    <select type="text" v-model="profile_id" id="" 
-                    class="form-control farsi">
-                <option value="{{profile.id}}">{{profile.name}}</option>    
-                </select>
-<input type="number" v-model="profile_id" id="">
+                    <select type="text" v-model="profile_id" id="" class="form-control farsi">
+                        {% for profile in profiles %}
+                          
+                        <option value="{{profile.id}}">{{profile.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" v-model="profile_id" id="">
                 </div>
                 <div class="col-3">
 

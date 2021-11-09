@@ -1,0 +1,35 @@
+<div class="card" id="locations-app">
+    <div class="card-header">
+        <h4 class="title">
+            <a href="{% url 'map:locations' %}">
+
+                موقعیت ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+       
+        <ul>
+            <li v-for="location in locations" class="text-right">
+                <a :href="location.get_absolute_url" class="text-right farsi">
+                    <span v-text="location.title"></span>
+                </a>
+
+            </li>
+        </ul>
+    </div>
+    {% if add_location_form %}
+      <div class="card-footer">
+        <p>
+
+            <button @click="show_add_location_form=true" v-if="!show_add_location_form" class="btn btn-success">
+                <i class="material-icons">
+                    add
+                </i>
+            </button>
+        </p>
+        
+        {% include "map/includes/locations-app/add-new-location-form.html" %}
+      </div>
+    {% endif %}
+</div>

@@ -5,8 +5,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
-from vehicles.repo import DriverRepo, MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.repo import DriverRepo, MaintenanceRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -191,6 +191,37 @@ class TripApi(APIView):
                 if trip is not None:
                     log=4
                     context['trip']=TripSerializer(trip).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def add_trip_path(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_trip_path_form=AddTripPathForm(request.POST)
+            if add_trip_path_form.is_valid():
+                log=3
+                
+                source_id=add_trip_path_form.cleaned_data['source_id']
+                destination_id=add_trip_path_form.cleaned_data['destination_id']
+                duration=add_trip_path_form.cleaned_data['duration']
+                distance=add_trip_path_form.cleaned_data['distance']
+                cost=add_trip_path_form.cleaned_data['cost']
+                 
+                trip_path=TripPathRepo(request=request).add_trip_path(
+                    source_id=source_id,
+                    destination_id=destination_id,
+                    duration=duration,
+                    distance=distance,
+                    cost=cost,
+                )
+                
+                if trip_path is not None:
+                    log=4
+                    context['trip_path']=TripPathSerializer(trip_path).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

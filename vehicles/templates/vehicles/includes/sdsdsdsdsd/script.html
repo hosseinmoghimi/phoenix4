@@ -1,0 +1,25 @@
+<script>
+    let url_add_trip_path = "{% url 'vehicles:add_new_trip_path' %}"
+    let trip_paths = JSON.parse(`{{trip_paths_s|escapejs}}`)
+    let trip_paths_app = new Vue({
+        el: "#trip-paths-app",
+        data: {
+            trip_paths: trip_paths,
+            profile_id:0,
+        },
+        methods: {
+            add_trip_path: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    profile_id: this.profile_id,
+                }
+                $.post(url_add_trip_path, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        trip_paths_app.trip_paths.push(data.trip_path)
+                    }
+                })
+                console.log(payload)
+            },
+        }
+    })
+</script>

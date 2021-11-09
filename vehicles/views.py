@@ -1,9 +1,10 @@
+from projectmanager.repo import LocationRepo
 from django.shortcuts import render
 from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
 from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
+from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -243,6 +244,21 @@ class TripViews(View):
         context['add_trip_form']=AddTripForm()
         context.update(self.add_trip_context(request=request))
         return render(request,TEMPLATE_FOLDER+"trip-path.html",context)
+
+    def trip_paths(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        trip_paths=TripPathRepo(request=request).list(*args, **kwargs)
+        context['trip_paths']=trip_paths
+        trip_paths_s=json.dumps(TripPathSerializer(trip_paths,many=True).data)
+        context['trip_paths_s']=trip_paths_s
+
+        locations=LocationRepo(request=request).list(*args, **kwargs)
+        context['locations']=locations
+
+        if request.user.has_perm(APP_NAME+".add_trippath"):
+            context['add_trip_path_form']=AddTripPathForm()
+            
+        return render(request,TEMPLATE_FOLDER+"trip-paths.html",context)
 
 
 class VehicleWorkEventViews(View):

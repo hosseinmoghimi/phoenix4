@@ -1,87 +1,15 @@
-{% extends "vehicles/layout.html" %}
+{% extends "map/layout.html" %}
 {% load static %}
 
-{% block content_vehicles %}
-<div class="cd-section" id="blogs">
-
-
-    <!--     *********     BLOGS 2      *********      -->
-    <div class="blogs-2" id="blogs-2">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-10 ml-auto mr-auto">
-            <h2 class="title text-center">
-                لیست ماشین آلات
-            </h2>
-            {% if perms.vehicles.add_vehicle %}
-                     
-            <div class="text-center">
-  
-              {{vehicles_admin.get_add_vehicle|safe}}
-            </div>
-                      {% endif %}
-            <br>
-            <div class="row rtl">
-              {% for vehicle in vehicles %}
-              <div class="col-md-4">
-                <div class="card card-plain card-blog">
-                  <div class="card-header card-header-image">
-                    <a href="{{vehicle.get_absolute_url}}">
-                      <img class="img img-raised" src="{{vehicle.thumbnail}}">
-                    </a>
-                    <div class="colored-shadow"
-                      style="background-image: url(&quot;{{vehicle.thumbnail}}&quot;); opacity: 1;"></div>
-                  </div>
-                  <div class="card-body">
-                    <h6 class="card-category text-info">
-                      {% if vehicle.brand %}
-                      {{vehicle.brand}}
-                      {% else %}
-                      &nbsp;
-                      {% endif %}
-                    </h6>
-                    <h4 class="card-title">
-                      <a href="{{vehicle.get_absolute_url}}">
-                        {{vehicle.name}}
-                      </a>
-                    </h4>
-                    <p class="card-description">
-  
-                      {% if vehicle.description %}
-                      {{vehicle.description}}
-                      {% endif %}
-                    </p>
-                    <p>
-  
-                      <a title="جزئیات" href="{{vehicle.get_absolute_url}}">
-                        <i class="material-icons">description</i>
-                        بیشتر
-                      </a>
-                      {% if perms.vehicles.change_vehicle %}
-                      <a title="ویرایش" class="mr-3" href="{{vehicle.get_edit_url}}">
-                        <i class="material-icons text-warning">settings</i>
-                      </a>
-                      {% endif %}
-  
-                    </p>
-                  </div>
-                </div>
-              </div>
-  
-              {% endfor %}
-  
-  
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--     *********    END BLOGS 2      *********      -->
-  
-  
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    {% include "map/includes/locations-app/template.html" %}
   </div>
+</div>
 {% endblock %}
 
-{% block script_vehicles %}
+{% block script  %}
+{% include "map/includes/locations-app/script.html" %}
 
 {% endblock %}

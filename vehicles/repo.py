@@ -5,7 +5,7 @@ from vehicles.enums import VehicleColorEnum, VehicleTypeEnum
 from vehicles.serializers import VehicleWorkEventSerializer
 from .models import Passenger, Trip, TripPath, Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
 from .apps import APP_NAME
-from django.utils import timezone
+from django.utils import timezone, translation
 now=timezone.now()
 
 class VehicleRepo():
@@ -208,6 +208,22 @@ class TripPathRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_trip_path(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_trippath"):
+            return
+        source_id=kwargs['source_id'] if 'source_id' in kwargs else 0
+        destination_id=kwargs['destination_id'] if 'destination_id' in kwargs else 0
+        duration=kwargs['duration'] if 'duration' in kwargs else 0
+        distance=kwargs['distance'] if 'distance' in kwargs else 0
+        cost=kwargs['cost'] if 'cost' in kwargs else 0
+        trip_path=TripPath()
+        trip_path.source_id=source_id
+        trip_path.destination_id=destination_id
+        trip_path.duration=duration
+        trip_path.distance=distance
+        trip_path.cost=cost
+        trip_path.save()
+        return trip_path
 
 class ServiceManRepo():
     def __init__(self, *args, **kwargs):
