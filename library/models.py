@@ -26,6 +26,10 @@ class LibraryPage(CoreBasicPage):
 class Book(LibraryPage):
     price=models.IntegerField(_("price"))
     year=models.IntegerField(_("year"))
+    shelf=models.CharField(_("shelf"),null=True,blank=True, max_length=50)
+    row=models.CharField(_("row"),null=True,blank=True, max_length=50)
+    col=models.CharField(_("col"),null=True,blank=True, max_length=50)
+
     class Meta:
         verbose_name = _("Book")
         verbose_name_plural = _("Books")

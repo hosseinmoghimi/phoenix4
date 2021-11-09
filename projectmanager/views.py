@@ -272,7 +272,8 @@ class ProjectViews(View):
         
         descriptions = [
             f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به پروژه  {project.full_title}     ({project.id})""",
+            f"""مربوط به پروژه  {project.full_title}     ( کد {project.id} )""",
+            f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
