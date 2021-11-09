@@ -17,9 +17,7 @@
         {{project.full_title}}
         {% if perms.projectmanager.change_project %}
         <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
-            <i class="material-icons">
-                edit
-            </i>
+            <i class="fa fa-edit text-info"></i>
         </a>
         {% endif %}
     </h3>
@@ -30,7 +28,18 @@
         <div class="col-md-4 mb-5">
             <div class="card mb-5">
                 <div class="card-body">
+                    <h5 class=" ">
+
+                        
+                        {{project.title}}
+
                     {% include "core/includes/page-like-app/template.html" %}
+                        {% if perms.projectmanager.change_project %}
+                        <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
+                            <i class="fa fa-edit text-info"></i>
+                        </a>
+                        {% endif %}
+                    </h5>
                     <p>
                         <span class="small text-secondary">
                             وضعیت:

@@ -12,14 +12,12 @@
 
                 <h4>
                     {{book.title}}
-                </h4>
                 {% if perms.library.change_book %}
                 <a href="{{book.get_edit_url}}" title="ویرایش" target="_blank">
-                    <i class="material-icons">
-                        edit
-                    </i>
+                    <i class="fa fa-edit text-info"></i>
                 </a>
                 {% endif %}
+                </h4>
                 <h6>
                     {{book.amount|to_price|safe}}
                 </h6>

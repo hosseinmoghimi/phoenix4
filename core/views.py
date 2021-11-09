@@ -1,5 +1,5 @@
 import json
-from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, TagSerializer
+from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -81,6 +81,9 @@ def PageContext(request, page):
         PageCommentSerializer(page_comments, many=True).data)
     context['page_comments_s'] = page_comments_s
     context['page_tags']=page.tags.all()
+    links=page.links.all()
+    links_s=json.dumps(PageLinkSerializer(links,many=True).data)
+    context['links_s']=links_s
     
     context['images_s']=json.dumps(ImageSerializer(page.images(),many=True).data)
     page_images=page.pageimage_set.all()

@@ -15,19 +15,17 @@
             aria-labelledby="headingdocuments" data-parent="#accordion-page-documents">
 
             <div class="card-body">
-                
+
                 <div v-for="document in documents">
 
                     <h6>
-                        <i class=" text-primary fa fa-tag"></i>
-                        <a class="mr-2" target="_blank" :href="document.get_download_url" v-text="document.title">
-
+                        <a class="mr-2" target="_blank" :href="document.get_download_url">
+                            <i class="fa fa-download text-success" aria-hidden="true"></i>
+                            <span v-text="document.title"></span>
                         </a>
                         {% if perms.core.change_document %}
                         <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
-                            <i class="material-icons">
-                                edit
-                            </i>
+                            <i class="fa fa-edit text-info" ></i>
                         </a>
                         {% endif %}
                     </h6>

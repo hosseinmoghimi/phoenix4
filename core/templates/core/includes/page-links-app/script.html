@@ -1,11 +1,12 @@
 <script>
     let url_add_page_link="{% url 'core:add_page_link' %}"
+    let links=JSON.parse(`{{links_s|escapejs}}`)
     let page_links_app = new Vue({
         el: "#page-links-app",
         data: {
             new_link_title: "",
             new_link_url: "",
-            links: [],
+            links: links,
             show_add_link:false,
         },
         methods: {
