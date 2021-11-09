@@ -1,5 +1,5 @@
 import json
-from core.serializers import BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, TagSerializer
+from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -75,6 +75,7 @@ def PageContext(request, page):
     if request.user.has_perm(APP_NAME+".delete_pageimage"):
         context['delete_page_image_form'] = DeletePageImageForm()
     page_comments = page.pagecomment_set.all()
+    context['documents_s'] = json.dumps(DocumentSerializer(page.documents.all(),many=True).data)
     context['page_comments'] = page_comments
     page_comments_s = json.dumps(
         PageCommentSerializer(page_comments, many=True).data)

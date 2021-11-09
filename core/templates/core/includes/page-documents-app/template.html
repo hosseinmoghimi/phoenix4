@@ -15,21 +15,7 @@
             aria-labelledby="headingdocuments" data-parent="#accordion-page-documents">
 
             <div class="card-body">
-                {% for document in page.documents.all %}
-                <div>
-
-                    <h6>
-                        <a class="mr-2" target="_blank" href="{{document.get_download_url}}">
-                            {{document.get_icon_tag|safe}}
-                            {{document.title}}
-                        </a>
-                        {% if perms.core.change_document %}
-                        {{document.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </h6>
-                </div>
-                {% endfor %}
+                
                 <div v-for="document in documents">
 
                     <h6>

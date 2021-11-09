@@ -1,10 +1,11 @@
 <script>
     let url_add_document = "{% url 'core:add_page_document' %}"
+    let documents=JSON.parse(`{{documents_s|escapejs}}`)
     let page_documents_app = new Vue({
         el: "#page-documents-app",
         data: {
             new_document_title: "",
-            documents: [],
+            documents: documents,
             waiting: false,
             new_document_file: '',
             show_add_document_form: false,

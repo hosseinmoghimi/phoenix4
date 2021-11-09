@@ -364,7 +364,13 @@ class BasicPage(models.Model):
     def save(self,*args, **kwargs):
         return super(BasicPage,self).save()
 
-
+    def documents_set(self):
+        page_documents=self.pagedocument_set.all()
+        ids=[]
+        for pd in page_documents:
+            ids.append(pd.document.id)
+        documents= Document.objects.filter(id__in=ids).all()
+        return documents
 class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)

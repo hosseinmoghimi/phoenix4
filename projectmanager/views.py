@@ -113,7 +113,9 @@ class BasicViews(View):
         favorite_pages=profile.pagelike_set.filter(page__app_name=APP_NAME)
         context['favorite_pages']=favorite_pages
         context['services'] = ServiceRepo(request=request).list(for_home=True)
-        context['projects'] = ProjectRepo(request=request).list(for_home=True)
+        projects= ProjectRepo(request=request).list(for_home=True)
+        context['projects'] = projects
+        context['projects_s']=json.dumps(ProjectSerializer(projects,many=True).data)
         context['materials'] = MaterialRepo(
             request=request).list(for_home=True)
         employers = EmployerRepo(
@@ -359,6 +361,10 @@ class ProjectViews(View):
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)
+        
+        projects= project.sub_projects()
+        context['projects'] = projects
+        context['projects_s']=json.dumps(ProjectSerializer(projects,many=True).data)
         # events=EventRepo(request=request).list(project_id=project.id)
         events = project.event_set.all().order_by('event_datetime')
         context['events'] = events

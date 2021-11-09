@@ -42,6 +42,11 @@
                 </a>
             </td>
             <td>
+                <small class="d-inline text-primary">
+
+                    <i class="fa fa-thumbs-up text-primary" aria-hidden="true"></i>
+                    <span v-text="project.likes_count"></span>
+                </small>
                 <span :class="'badge badge-'+project.get_status_color">
                     <span v-text="project.status"></span>
                 </span>
