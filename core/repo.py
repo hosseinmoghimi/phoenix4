@@ -412,6 +412,7 @@ class DocumentRepo:
 
         document=PageDocument(icon_material="get_app",title=title,file=file,priority=priority,page=page,profile=self.profile)
         document.save()
+        document.profiles.add(self.profile)
         return document
 
 
