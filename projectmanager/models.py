@@ -353,7 +353,7 @@ class Service(ProjectManagerPage):
         super(Service, self).save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _("خدمات")
+        verbose_name = _("Service")
         verbose_name_plural = _("خدمات")
 
 
@@ -390,7 +390,7 @@ class Event(ProjectManagerPage):
         return self.end_datetime.strftime("%Y-%m-%d %H:%M")
 
     class Meta:
-        verbose_name = _("رویداد")
+        verbose_name = _("Event")
         verbose_name_plural = _("رویداد ها")
 
 
@@ -405,7 +405,7 @@ class Location(models.Model):
     class_name = "location"
 
     class Meta:
-        verbose_name = _("لوکیشن")
+        verbose_name = _("Location")
         verbose_name_plural = _("لوکیشن ها")
 
     def __str__(self):
@@ -545,7 +545,7 @@ class MaterialRequest(Request):
     class_name = 'materialrequest'
     ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("برگه انبار"), null=True,blank=True,on_delete=models.SET_NULL)
     class Meta:
-        verbose_name = _("درخواست متریال")
+        verbose_name = _("MaterialRequest")
         verbose_name_plural = _("درخواست های متریال")
 
     def __str__(self):
@@ -591,7 +591,7 @@ class ServiceRequest(Request):
     class_name = 'servicerequest'
 
     class Meta:
-        verbose_name = _("درخواست سرویس")
+        verbose_name = _("ServiceRequest")
         verbose_name_plural = _("درخواست های سرویس")
 
     def __str__(self):

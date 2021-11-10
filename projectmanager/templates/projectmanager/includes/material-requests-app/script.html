@@ -1,5 +1,5 @@
 <script>
-    
+    let material_requests=JSON.parse(`{{material_requests_s|escapejs}}`)
 </script>
 {% if add_material_request_form %}
 <script>
@@ -13,7 +13,7 @@
             add_material_request_form_unit_price: 0,
             add_material_request_form_unit_name: "",
             add_material_request_form_quantity: "",
-            material_requests:JSON.parse(`{{material_requests_s|escapejs}}`),
+            material_requests:material_requests,
             waiting: false,
             sum_material_requests: 0,
             show_add_material_request_form: false,
@@ -23,8 +23,7 @@
 {% else %}
 <script>
     let material_requests_app_data= {
-            materials: materials.slice(0, 6),
-            material_requests:JSON.parse(`{{material_requests_s|escapejs}}`),
+            material_requests:material_requests,
             waiting: false,
             sum_material_requests: 0,
             show_add_material_request_form: false,
