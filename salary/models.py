@@ -1,4 +1,3 @@
-from rest_framework.fields import DateTimeField
 from projectmanager.repo import Employee
 from core.models import BasicPage
 from django.db import models
@@ -16,6 +15,7 @@ class SalaryPage(BasicPage):
     def save(self, *args, **kwargs):
         self.app_name = APP_NAME
         return super(SalaryPage, self).save(*args, **kwargs)
+
 
 class Vacation(SalaryPage): 
     vacation_started=models.DateTimeField(_("vacation_started"), auto_now=False, auto_now_add=False)
