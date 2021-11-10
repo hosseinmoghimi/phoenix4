@@ -57,7 +57,7 @@
                                 <h5 v-text="project.title" class="mx-2">
 
                                 </h5>
-                                <h6  v-if="project.sub_title">
+                                <h6 v-if="project.sub_title">
                                     <span class="text-secondary" v-html="project.sub_title"></span>
 
                                 </h6>
@@ -71,7 +71,7 @@
                         <small>
                             <div class="row rtl">
                                 <div class="col-2">
-                                
+
 
                                     <span title="پیشرفت زیرپروژه">
                                         <span v-text="project.percentage_completed"></span>
@@ -79,7 +79,7 @@
                                     </span>
                                 </div>
                                 <div class="col-2">
-                                
+
 
                                     <span title="پسندیده شده">
                                         <span v-text="project.likes_count" class="text-primary"></span>
@@ -118,9 +118,9 @@
                     </div>
                 </div>
             </div>
+            {% if add_project_form %}
             <div class="card-footer ">
 
-                {% if add_project_form %}
 
                 <form v-cloak @submit.prevent="add_project()">
                     <div class="row">
@@ -146,10 +146,10 @@
                     </div>
 
                 </form>
-                {% endif %}
 
 
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
