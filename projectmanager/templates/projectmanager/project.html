@@ -30,10 +30,10 @@
                 <div class="card-body">
                     <h5 class=" ">
 
-                        
+
                         {{project.title}}
 
-                    {% include "core/includes/page-like-app/template.html" %}
+                        {% include "core/includes/page-like-app/template.html" %}
                         {% if perms.projectmanager.change_project %}
                         <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
                             <i class="fa fa-edit text-info"></i>
@@ -97,9 +97,9 @@
 
                                 {{project.sum_total_self|to_price_pure}}
                             </span>
-                        </span> 
+                        </span>
                         /
-                         <span class=" badge badge-primary px-1 py-1">
+                        <span class=" badge badge-primary px-1 py-1">
                             <span class=" ">
 
                                 {{project.sum_total|to_price}}
@@ -203,11 +203,13 @@
         </div>
 
 
+        {% if edit_project_form %}
 
         <div class="col-md-12 mb-5">
 
             {% include "projectmanager/includes/project-edit-app/template.html" %}
         </div>
+        {% endif %}
         <div class="col-md-12 mb-5">
             {% include "projectmanager/includes/events-app/template.html" %}
         </div>
