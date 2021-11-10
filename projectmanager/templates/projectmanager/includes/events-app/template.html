@@ -18,16 +18,19 @@
             data-parent="#accordion">
 
             <div class="card-body">
+                {% if project %}
+
                 <p>
 
                     <a href="{{project.get_event_chart_url}}">
                         نمودار رویداد های پروژه
                     </a>
                 </p>
-                
-         {% include "projectmanager/includes/events-app/table.html" %}
+                {% endif %}
+
+                {% include "projectmanager/includes/events-app/table.html" %}
                 <div>
-                  {% include "projectmanager/includes/events-app/add-event-form.html" %}
+                    {% include "projectmanager/includes/events-app/add-event-form.html" %}
                 </div>
             </div>
             <div class="card-footer">

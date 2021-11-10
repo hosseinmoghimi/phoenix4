@@ -11,6 +11,7 @@ urlpatterns = [
     path('',login_required(views.BasicViews().home),name="home"),
     path('search/',login_required(views.BasicViews().search),name="search"),
     path('projects/',login_required(views.ProjectViews().projects),name="projects"),
+    path('events/',login_required(views.EventViews().events),name="events"),
     path('material_requests/',login_required(views.MaterialRequestViews().material_requests),name="material_requests"),
     path('service_requests/',login_required(views.ServiceRequestViews().service_requests),name="service_requests"),
     path('project/<int:pk>/',login_required(views.ProjectViews().project),name="project"),

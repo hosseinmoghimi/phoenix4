@@ -953,7 +953,9 @@ class EventRepo():
         objects = self.objects.filter(title__contains=search_for)
         return objects
 
-
+    def list(self,*args, **kwargs):
+        objects=self.objects.all().order_by('-event_datetime')
+        return objects
 class MaterialRequestRepo():
     def __init__(self, *args, **kwargs):
         self.request = None

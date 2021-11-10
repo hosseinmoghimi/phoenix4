@@ -1,0 +1,19 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+<div>
+    
+ {% include "projectmanager/includes/events-app/template.html" %}
+</div>
+{% endblock %}
+
+
+{% block script %} 
+<script src="{% static 'vendor/js/vue.min.js' %}"></script> 
+{% include "projectmanager/includes/events-app/script.html" %}
+
+                  
+{% endblock %}

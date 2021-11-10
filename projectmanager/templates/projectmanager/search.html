@@ -254,22 +254,22 @@
                     </thead>
                     <tbody>
 
-                        {% for page in events %}
+                        {% for event in events %}
                         <tr>
                             <td>
                                 <small>
-                                    {{page.persian_event_datetime}}
+                                    {{event.persian_event_datetime}}
                                 </small>
                             </td>
                             <td>
-                                <a href="{{page.project_related.get_absolute_url}}">
-                                    {{page.project_related.title}}
+                                <a href="{{event.project_related.get_absolute_url}}">
+                                    {{event.project_related.title}}
 
                                 </a>
                             </td>
                             <td>
-                                <a href="{{page.get_absolute_url}}">
-                                    {{page.title}}
+                                <a href="{{event.get_absolute_url}}">
+                                    {{event.title}}
 
                                 </a>
                             </td>

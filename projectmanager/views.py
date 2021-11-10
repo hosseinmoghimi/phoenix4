@@ -24,14 +24,19 @@ TEMPLATE_ROOT = APP_NAME+"/"
 
 
 def getContext(request):
+    me_employee=EmployeeRepo(request=request).me
+    if me_employee is None:
+        raise Http404
+        # mv=MessageView()
+        # mv.message_text_html="دسترسی غیر مجاز"
+        # return mv.response(request=request)
     context = DefaultContext(request=request, app_name=APP_NAME)
+    context["me_employee"] =me_employee
     context['layout_parent']="material-dashboard-5-rtl/layout.html"
     context['layout_parent']="material-kit-pro/layout.html"
     context['layout_parent']="phoenix/layout.html"
     context["layout"] = TEMPLATE_ROOT+"layout.html"
     context['help_url']=reverse("help:app",kwargs={"app_name":APP_NAME})
-    me_employee=EmployeeRepo(request=request).me
-    context["me_employee"] =me_employee
     context["admin_utility"] = AdminUtility(request=request)
     context['search_action'] = reverse(APP_NAME+":search")
     context['search_form'] = SearchForm()
@@ -41,6 +46,7 @@ def getContext(request):
         'tel': parameter_repo.get(ParametersEnum.TEL).value,
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
     }
+
     return context
 
 
@@ -779,6 +785,15 @@ class EventViews(View):
             context['add_existing_location_form'] = AddExistingLocationForm()
         return render(request, TEMPLATE_ROOT+"event.html", context)
 
+    def events(self, request, *args, **kwargs):
+
+        context = getContext(request)
+        events = EventRepo(request=request).list(*args, **kwargs)
+        context['events'] = events
+        context['events_s']=json.dumps(EventSerializer(events,many=True).data)
+        # if request.user.has_perm(APP_NAME+'.add_event'):
+        #     context['add_event_form'] = AddEventForm()
+        return render(request, TEMPLATE_ROOT+"events.html", context)
 
     def project_events_chart(self, request, *args, **kwargs):
         context=self.eventsContext(request=request,*args, **kwargs)

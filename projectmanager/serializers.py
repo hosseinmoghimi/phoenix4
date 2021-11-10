@@ -71,11 +71,17 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         model=ServiceRequest
         fields=['id','service','handler','total','quantity','persian_date_requested','persian_date_added','get_edit_url','get_status_tag','project','unit_name','unit_price','get_absolute_url']
 
+class ProjectBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Project
+        fields=['id', 'title', 'get_absolute_url']
+
 
 class EventSerializer(serializers.ModelSerializer):
+    project_related=ProjectBriefSerializer()
     class Meta:
         model=Event
-        fields=['id','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','get_edit_url']
+        fields=['id','project_related','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','get_edit_url']
 
 
 class LocationSerializer(serializers.ModelSerializer):
