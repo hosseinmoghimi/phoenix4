@@ -337,8 +337,6 @@ class ProjectViews(View):
             context['copy_project_request_form']=CopyProjectRequestForm()
             context['add_existing_location_form'] = AddExistingLocationForm()
             context['edit_project_form']=EditProjectForm()
-            context['add_material_request_form'] = AddMaterialRequestForm()
-            context['add_service_request_form'] = AddServiceRequestForm()
         if request.user.has_perm(APP_NAME+'.add_event'):
             context['add_event_form'] = AddEventForm()
         organization_units = project.organization_units.all()
@@ -350,19 +348,17 @@ class ProjectViews(View):
             OrganizationUnitRepo(request=request).list(), many=True).data)
         context['unit_names'] = (i[0] for i in UnitNameEnum.choices)
         context['unit_names2'] = (i[0] for i in UnitNameEnum.choices)
-        materials = MaterialRepo(request=request).list()
-        context['materials_s'] = json.dumps(
-            MaterialSerializer(materials, many=True).data)
-        services = ServiceRepo(request=request).list()
-        context['services_s'] = json.dumps(
-            ServiceSerializer(services, many=True).data)
-        if request.user.has_perm(APP_NAME+".add_materialrequest"):
-            context['materials_s'] = json.dumps(
-                MaterialSerializer(materials, many=True).data)
+        
+        if request.user.has_perm(APP_NAME+".add_serviverequest"):
             services = ServiceRepo(request=request).list()
-            context['services_s'] = json.dumps(
-                ServiceSerializer(services, many=True).data)
-
+            context['services_s'] = json.dumps(ServiceSerializer(services, many=True).data)
+            context['add_service_request_form'] = AddServiceRequestForm()
+        if request.user.has_perm(APP_NAME+".add_materialrequest"):
+            materials = MaterialRepo(request=request).list()
+            context['materials_s'] = json.dumps(MaterialSerializer(materials, many=True).data)
+            services = ServiceRepo(request=request).list()
+            context['services_s'] = json.dumps(ServiceSerializer(services, many=True).data)
+            context['add_material_request_form'] = AddMaterialRequestForm()
         employers=EmployerRepo(request=request).list()
         context['employers'] = employers
         context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
