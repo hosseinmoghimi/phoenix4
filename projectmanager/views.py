@@ -476,7 +476,9 @@ class OrganizationUnitViews(View):
         context['employees']=employees
         context['employees_s']=json.dumps(EmployeeSerializer2(employees,many=True).data)
         
-        context['projects'] = organization_unit.project_set.all()
+        projects = organization_unit.project_set.all()
+        context['projects'] = projects
+        context['projects_s']=json.dumps(ProjectSerializer(projects,many=True).data)
         return context
 
     def organization_unit(self, request, *args, **kwargs):
@@ -485,6 +487,7 @@ class OrganizationUnitViews(View):
         page = organization_unit
         context = getContext(request)
         context.update(PageContext(request=request, page=page))
+        
         context.update(self.getOrgUnitContext(request=request, organization_unit=organization_unit))
         return render(request, TEMPLATE_ROOT+"organization-unit.html", context)
 
@@ -492,7 +495,7 @@ class OrganizationUnitViews(View):
         employer = EmployerRepo(request=request).employer(*args, **kwargs)
         if employer is None:
             mv=MessageView()
-            mv.message_text = "اصلاعات ناصحیح"
+            mv.message_text = "اطلاعات ناصحیح"
             mv.header_text = "خطای 452"
             return mv.response(request=request)
         context = getContext(request)
