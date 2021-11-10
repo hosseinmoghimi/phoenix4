@@ -4,6 +4,12 @@
         <th>
             رویداد
         </th>
+        {% if not project %}
+          
+        <th>
+            پروژه
+        </th>
+        {% endif %}
         <th>
             زمان
         </th>
@@ -31,6 +37,17 @@
                 </a>
 
             </td>
+            {% if not project %}
+          
+            <td>
+                <a v-if="event.project_related" :href="event.project_related.get_absolute_url">
+                    <span v-text="event.project_related.title">
+                    </span>
+                </a>
+
+            </td>
+            {% endif %}
+
             <td>
                 <small v-text="event.persian_event_datetime">
 
@@ -38,11 +55,16 @@
             </td>
 
             <td>
+                <div>
+                    
                 <small v-text="event.persian_start_datetime">
 
                 </small>
-            </td>
-            <td>
+                </div>
+                <div>
+                    
+                </div>
+             
                 <small v-text="event.persian_end_datetime">
 
                 </small>
