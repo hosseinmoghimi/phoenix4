@@ -55,7 +55,7 @@ def PageContext(request, page):
         my_like={'id':0}
     context['my_like'] =json.dumps(PageLikeSerializer(my_like).data)
     context['related_pages'] = page.related_pages.all()
-    if request.user.has_perm(APP_NAME+".add_pagelink"):
+    if request.user.has_perm(APP_NAME+".add_link"):
         context['add_page_link_form'] = AddPageLinkForm()
     if request.user.has_perm(APP_NAME+".change_page"):
         context['add_page_tag_form'] = AddPageTagForm()
@@ -63,7 +63,7 @@ def PageContext(request, page):
     if ProfileRepo(request=request).me is not None:
         context['add_page_comment_form'] = AddPageCommentForm()
 
-    if request.user.has_perm(APP_NAME+".add_pagedocument"):
+    if request.user.has_perm(APP_NAME+".add_document"):
         context['add_page_document_form'] = AddPageDocumentForm()
 
     if request.user.has_perm(APP_NAME+".add_pageimage"):
