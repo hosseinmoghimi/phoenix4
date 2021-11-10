@@ -1,38 +1,40 @@
 <script>
-    
+
     let total_positives = parseInt(`{{employee_salary.total_positives}}`)
     let total_negatives = parseInt(`{{employee_salary.total_negatives}}`)
 </script>
 {% if add_salary_line_form %}
 <script>
-    let salary_line_titles=JSON.parse(`{{salary_line_titles|escapejs}}`)
-    let salary_lines_app_data={
-          negative_lines: [],
-          positive_lines: [],
-          salary_line_titles:salary_line_titles,
-          kosurat_title: "",
-          mazaya_title: "",
-          kosurat_amount: "",
-          mazaya_amount: "",
-          show_positive_form: false,
-          show_negative_form: false,
-          total_positives: total_positives,
-          total_negatives: total_negatives,
-          mazaya_description:"",
-          kosurat_description:"",
-      }
+    let salary_line_titles = JSON.parse(`{{salary_line_titles|escapejs}}`)
+    let salary_lines_app_data = {
+        negative_lines: [],
+        positive_lines: [],
+        salary_line_titles: salary_line_titles,
+        kosurat_title: "",
+        mazaya_title: "",
+        kosurat_amount: "",
+        mazaya_amount: "",
+        show_positive_form: false,
+        show_negative_form: false,
+        total_positives: total_positives,
+        total_negatives: total_negatives,
+        mazaya_description: "",
+        kosurat_description: "",
+    }
 </script>
-{% else %} 
+{% else %}
 <script>
-    let salary_lines_app_data={
-        
-          total_positives: total_positives,
-          total_negatives: total_negatives,
-      }
+    let salary_lines_app_data = {
+
+        negative_lines: [],
+        positive_lines: [],
+        total_positives: total_positives,
+        total_negatives: total_negatives,
+    }
 </script>
 {% endif %}
 <script>
-    let employee_salary_id=parseInt("{{employee_salary.id}}")
+    let employee_salary_id = parseInt("{{employee_salary.id}}")
     let url_add_salary_line = "{% url 'salary:add_salary_line' %}"
     let salary_lines_app = new Vue({
         el: "#salary-lines-app",
@@ -46,7 +48,7 @@
                 //direction=0=>kosurat
                 let title = this.kosurat_title
                 let amount = this.kosurat_amount
-                let description=this.kosurat_description
+                let description = this.kosurat_description
                 if (direction) {
                     title = this.mazaya_title
                     amount = this.mazaya_amount
@@ -57,8 +59,8 @@
                     direction: direction,
                     title: title,
                     amount: amount,
-                    description:description,
-                    employee_salary_id:employee_salary_id
+                    description: description,
+                    employee_salary_id: employee_salary_id
                 }
                 console.log(payload)
                 $.post(url_add_salary_line, payload).done((data) => {
