@@ -215,7 +215,10 @@
                                             <ul>
                                                 {% for description in order.descriptions %}
                                                 <li>
-                                                    {{description|safe}}
+                                                    <small>
+
+                                                        {{description|safe}}
+                                                    </small>
                                                 </li>
                                                 {% endfor %}
                                             </ul>

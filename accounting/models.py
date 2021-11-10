@@ -37,7 +37,7 @@ class Asset(models.Model):
 
     class Meta:
         verbose_name = _("Asset")
-        verbose_name_plural = _("Assets")
+        verbose_name_plural = _("دارایی ها")
 
     def __str__(self):
         return self.title
@@ -75,7 +75,7 @@ class FinancialAccount(models.Model):
 
     class Meta:
         verbose_name = _("FinancialAccount")
-        verbose_name_plural = _("FinancialAccounts")
+        verbose_name_plural = _("حساب های مالی")
 
     def __str__(self):
         return self.profile.name
@@ -84,18 +84,19 @@ class FinancialAccount(models.Model):
         return reverse(APP_NAME+":financial_account", kwargs={"financial_account_id": self.pk})
 
 class BankAccount(models.Model):
-    title = models.CharField(_("title"), max_length=50)
+    title = models.CharField(_("عنوان"), max_length=50)
     owner = models.ForeignKey("FinancialAccount", verbose_name=_(
-        "owner"), on_delete=models.CASCADE)
+        "صاحب حساب"), on_delete=models.CASCADE)
     bank = models.CharField(
-        _("bank"), choices=BankNameEnum.choices, max_length=50)
+        _("بانک"), choices=BankNameEnum.choices, max_length=50)
     branch = models.CharField(_("شعبه"), max_length=50)
     account_no=models.CharField(_("شماره حساب"), null=True,blank=True,max_length=50)
     card_no=models.CharField(_("شماره کارت"), null=True,blank=True,max_length=50)
     shaba_no=models.CharField(_("شماره شبا"), null=True,blank=True,max_length=50)
+    class_name="bankaccount"
     class Meta:
         verbose_name = _("BankAccount")
-        verbose_name_plural = _("BankAccounts")
+        verbose_name_plural = _("حساب های بانکی")
 
     def __str__(self):
         return self.title
@@ -104,6 +105,9 @@ class BankAccount(models.Model):
         return reverse("BankAccount_detail", kwargs={"pk": self.pk})
 
 
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+ 
 class Transaction(AccountingPage):
     pay_from = models.ForeignKey("FinancialAccount", related_name="pay_from_set", verbose_name=_(
         "pay_from"), on_delete=models.CASCADE)
@@ -161,7 +165,7 @@ class Transaction(AccountingPage):
 
     class Meta:
         verbose_name = _("Transaction")
-        verbose_name_plural = _("Transactions")
+        verbose_name_plural = _("تراکنش ها")
 
     def __str__(self):
         return self.title
@@ -198,7 +202,7 @@ class AssetTransaction(Transaction,TransactionMixin):
 
     class Meta:
         verbose_name = _("AssetTransaction")
-        verbose_name_plural = _("AssetTransactions")
+        verbose_name_plural = _("انتقال دارایی ها")
 
     def save(self,*args, **kwargs):
         self.class_name="assettransaction"
@@ -213,15 +217,17 @@ class MarketOrderTransaction(Transaction,TransactionMixin):
         return super(MarketOrderTransaction,self).save(*args, **kwargs)
     class Meta:
         verbose_name = _("MarketOrderTransaction")
-        verbose_name_plural = _("MarketOrderTransactions")
-  
+        verbose_name_plural = _("تراکنش های صورت حساب فروش")
+
+
+
 
 class MoneyTransaction(Transaction,TransactionMixin):
     payment_method=models.CharField(_("payment_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
 
     class Meta:
         verbose_name = _("MoneyTransaction")
-        verbose_name_plural = _("MoneyTransactions")
+        verbose_name_plural = _("تراکنش های پولی")
 
     def save(self,*args, **kwargs):
         self.class_name="moneytransaction"

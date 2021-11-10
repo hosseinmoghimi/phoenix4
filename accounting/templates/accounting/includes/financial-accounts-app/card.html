@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="title">
+            {{financial_account.profile.name}}
+        </h4>
+    </div>
+    <div class="card-body farsi text-right">
+        <div>
+            <a href="{{financial_account.profile.get_absolute_url}}">{{financial_account.profile.name}}</a>
+        </div>
+        {% for bank_account in financial_account.bankaccount_set.all %}
+        <hr>
+        <div>
+            {{bank_account.title}}
+            {% if perms.accounting.change_bankaccount %}
+            <a href="{{bank_account.get_edit_url}}" target="_blank" title="ویرایش">
+                <i class="fa fa-edit"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% if bank_account.card_no %}
+
+        <div>
+            {{bank_account.card_no}}
+
+        </div>
+        {% endif %}
+        {% if bank_account.account_no %}
+
+        <div>
+            {{bank_account.account_no}}
+        </div>
+        {% endif %}
+        {% if bank_account.shaba_no %}
+
+        <div>
+
+            {{bank_account.shaba_no}}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+
+        {% if perms.accounting.add_bankaccount %}
+        <a href="{{ADMIN_URL}}{{APP_NAME}}/bankaccount/add/?owner={{financial_account.id}}" target="_blank" title="افزودن">
+            <i class="fa fa-plus"></i>افزودن حساب بانکی جدید
+        </a>
+        {% endif %}
+
+    </div>
+</div>

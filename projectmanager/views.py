@@ -230,7 +230,8 @@ class ProjectViews(View):
         
         descriptions = [
             f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به پروژه  {project.full_title}     ({project.id})""",
+            f"""مربوط به {project.full_title}     ({project.id})""",
+            f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
             ]
             
         total_for_pay = tax+lines_total
@@ -248,7 +249,7 @@ class ProjectViews(View):
         context['order_lines'] = order_lines
         context['order'] = order
         context['project'] = project
-        return render(request, TEMPLATE_ROOT+"order.html", context)
+        return render(request, TEMPLATE_ROOT+"invoice.html", context)
 
     def project_services_order(self, request, *args, **kwargs):
         context = getContext(request)
@@ -274,8 +275,10 @@ class ProjectViews(View):
         
         descriptions = [
             f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به پروژه  {project.full_title}     ( کد {project.id} )""",
+            f"""مربوط به {project.full_title}     ( کد {project.id} )""",
+            f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
             f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
+
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
@@ -292,7 +295,7 @@ class ProjectViews(View):
         context['order'] = order
         context['order_lines'] = order_lines
         context['project'] = project
-        return render(request, TEMPLATE_ROOT+"order.html", context)
+        return render(request, TEMPLATE_ROOT+"invoice.html", context)
 
     def project(self, request, *args, **kwargs):
         project = ProjectRepo(request=request).project(*args, **kwargs)
