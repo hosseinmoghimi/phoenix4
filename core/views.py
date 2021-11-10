@@ -54,7 +54,9 @@ def PageContext(request, page):
     if my_like is None:
         my_like={'id':0}
     context['my_like'] =json.dumps(PageLikeSerializer(my_like).data)
-    context['related_pages'] = page.related_pages.all()
+    related_pages = page.related_pages.all()
+    context['related_pages'] = related_pages
+    context['related_pages_s'] = json.dumps(BasicPageSerializer(related_pages,many=True).data)
     if request.user.has_perm(APP_NAME+".add_link"):
         context['add_page_link_form'] = AddPageLinkForm()
     if request.user.has_perm(APP_NAME+".change_page"):

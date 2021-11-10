@@ -1,10 +1,11 @@
 <script>
+    let related_pages=JSON.parse(`{{related_pages_s|escapejs}}`)
     let related_pages_app = new Vue({
         el: "#related-pages-app",
         data: {
             bidirectional: true,
             related_page_id: "",
-            related_pages: [],
+            related_pages: related_pages,
             show_add_form: false,
             add: true,
             button_text: "افزودن رابطه"

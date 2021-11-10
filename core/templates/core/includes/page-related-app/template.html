@@ -18,26 +18,7 @@
 
             <div class="card-body">
                 <div class="row">
-                    {% for related_page in related_pages %}
-                    <div class="col-md-4 mb-3">
-
-                        <h6 class="text-muted text-center">
-                            {{related_page.class_name_farsi}}
-                        </h6>
-                        <a href="{{related_page.get_absolute_url}}">
-
-                            <h4 class="text-center">
-                                {{related_page.title}}
-                            </h4>
-                            {% if related_page.sub_title %}
-
-                            <h6 class="text-muted">
-                                {{related_page.sub_title}}
-                            </h6>
-                            {% endif %}
-                        </a>
-                    </div>
-                    {% endfor %}
+             
                     <div class="col-md-4 mb-3" v-for="related_page in related_pages">
 
                         <h6 class="text-muted text-center">
