@@ -16,6 +16,11 @@
                 </a>
             </td>
             <td>
+                <span v-text="book.shelf"></span>/
+                <span v-text="book.row"></span>/
+                <span v-text="book.col"></span>
+            </td>
+            <td>
 {% if perms.library.change_book %}
   <a :href="book.get_edit_url" title="ویرایش" target="_blank">
       <i class="material-icons">

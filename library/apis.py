@@ -23,12 +23,18 @@ class BookApi(APIView):
                 title = add_book_form.cleaned_data['title'] 
                 price = add_book_form.cleaned_data['price'] 
                 year = add_book_form.cleaned_data['year'] 
+                shelf = add_book_form.cleaned_data['shelf'] 
+                col = add_book_form.cleaned_data['col'] 
+                row = add_book_form.cleaned_data['row'] 
                 description = add_book_form.cleaned_data['description'] 
                 book = BookRepo(request=request).add_book(
                     title=title,
                     year=year,
                     price=price,                  
                     description=description,
+                    row=row,
+                    col=col,
+                    shelf=shelf
                 )
 
                 if book is not None:

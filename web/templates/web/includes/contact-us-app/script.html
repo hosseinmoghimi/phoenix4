@@ -11,6 +11,7 @@
             message: "",
             subject:"",
             full_name:"",
+            done:false
         },
         methods: {
             send_message: function () {
@@ -29,6 +30,15 @@
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     console.log(data)
+                    if(data.result==='SUCCEED'){
+                        contact_us_app.subject=""
+                        contact_us_app.message=""
+                        contact_us_app.done=true
+                        setTimeout(() => {
+                        contact_us_app.done=false
+                            
+                        }, 3000);
+                    }
                 })
             }
         }

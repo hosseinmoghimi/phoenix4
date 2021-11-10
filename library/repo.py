@@ -72,5 +72,15 @@ class BookRepo():
 
         if 'price' in kwargs:
             book.price=kwargs['price']
+
+        if 'shelf' in kwargs:
+            book.shelf=kwargs['shelf']
+
+        if 'row' in kwargs:
+            book.row=kwargs['row']
+
+
+        if 'col' in kwargs:
+            book.col=kwargs['col']
         book.save()
         return book

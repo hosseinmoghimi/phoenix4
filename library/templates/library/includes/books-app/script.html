@@ -9,6 +9,9 @@
         new_book_title: "",
         new_book_year: "1400",
         new_book_description:"",
+        new_book_shelf:0,
+        new_book_col:0,
+        new_book_row:0,
 
     }
 </script>
@@ -33,8 +36,13 @@
                     price: this.new_book_price,
                     year: this.new_book_year,
                     title: this.new_book_title,
+                    shelf: this.new_book_shelf,
+                    col: this.new_book_col,
+                    row: this.new_book_row,
                 }
+                console.log(payload)
                 $.post(url_add_book, payload).done((data) => {
+                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         books_app.books.push(data.book)
                     }

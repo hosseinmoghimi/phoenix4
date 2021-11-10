@@ -12,7 +12,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="amount_input">قیمت</label>
-                <input type="text" v-model="new_book_price" class="form-control farsi" required id="amount_input">
+                <input type="number" v-model="new_book_price" class="form-control farsi" required id="amount_input">
             </div>
         </div>
         <div class="col-md-4">
@@ -21,10 +21,31 @@
                 <input type="text" v-model="new_book_year" class="form-control farsi" required id="year_input">
             </div>
         </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="title_input">ممد</label>
+                <input type="text" v-model="new_book_shelf" class="form-control farsi" required id="title_in234put">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="amount_input">ردیف</label>
+                <input type="text" v-model="new_book_row" class="form-control farsi" required id="amount_545input">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="year_input">ستون</label>
+                <input type="text" v-model="new_book_col" class="form-control farsi" required id="year_inpu34t">
+            </div>
+        </div>
+
         <div class="col-md-12">
             <div class="form-group">
                 <label for="description_input">توضیحات</label>
-                <input type="text"   v-model="new_book_description" class="form-control farsi" required id="description_input">
+                <input type="text"   v-model="new_book_description" class="form-control farsi" id="description_input">
             </div>
         </div>
 
