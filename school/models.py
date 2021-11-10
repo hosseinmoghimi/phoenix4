@@ -3,7 +3,6 @@
 from core.models import BasicPage
 from django.db import models
 from django.shortcuts import reverse
-
 from core.settings import ADMIN_URL, STATIC_URL
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
@@ -29,7 +28,7 @@ class School(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"school_id": self.pk})
 
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
@@ -43,9 +42,26 @@ class School(models.Model):
         """
 
 
+class Major(SchoolPage):
+       
+
+    class Meta:
+        verbose_name = _("Major")
+        verbose_name_plural = _("Majors")
+
+    def save(self,*args, **kwargs):
+        self.class_name='major'
+        return super(Major,self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
 class Course(models.Model):
     class_name="course"
     title=models.CharField(_("نام واحد درسی "), max_length=100)
+    major=models.ForeignKey("major", verbose_name=_("رشته تحصیلی"), on_delete=models.CASCADE)
+    level=models.IntegerField(_("level"))
     books=models.ManyToManyField("book", verbose_name=_("books"),blank=True)
     
 
@@ -55,7 +71,7 @@ class Course(models.Model):
 
     
     def __str__(self):
-        return self.title
+        return self.title+" "+str(self.level)+" "+str(self.major)
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})

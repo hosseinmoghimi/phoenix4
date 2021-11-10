@@ -5,8 +5,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
-from vehicles.repo import MaintenanceRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import MaintenanceSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.repo import DriverRepo, MaintenanceRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -136,9 +136,9 @@ class VehicleApi(APIView):
             if add_vehicle_form.is_valid():
                 log=3
                 
-                name=add_vehicle_form.cleaned_data['name']
+                title=add_vehicle_form.cleaned_data['title']
                 vehicle=VehicleRepo(request=request).add_vehicle(
-                    name=name,
+                    title=title,
                 )
                 
                 if vehicle is not None:
@@ -195,3 +195,124 @@ class TripApi(APIView):
         context['log']=log
         return JsonResponse(context)
     
+    def add_trip_path(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_trip_path_form=AddTripPathForm(request.POST)
+            if add_trip_path_form.is_valid():
+                log=3
+                
+                source_id=add_trip_path_form.cleaned_data['source_id']
+                destination_id=add_trip_path_form.cleaned_data['destination_id']
+                duration=add_trip_path_form.cleaned_data['duration']
+                distance=add_trip_path_form.cleaned_data['distance']
+                cost=add_trip_path_form.cleaned_data['cost']
+                 
+                trip_path=TripPathRepo(request=request).add_trip_path(
+                    source_id=source_id,
+                    destination_id=destination_id,
+                    duration=duration,
+                    distance=distance,
+                    cost=cost,
+                )
+                
+                if trip_path is not None:
+                    log=4
+                    context['trip_path']=TripPathSerializer(trip_path).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def filter_trip(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            filter_trip_form=FilterTripForm(request.POST)
+            if filter_trip_form.is_valid():
+                log=3
+
+                title=filter_trip_form.cleaned_data['title']
+                vehicle_id=filter_trip_form.cleaned_data['vehicle_id']
+                driver_id=filter_trip_form.cleaned_data['driver_id']
+                trip_path_id=filter_trip_form.cleaned_data['trip_path_id']
+                start_date=filter_trip_form.cleaned_data['start_date']
+                end_date=filter_trip_form.cleaned_data['end_date']
+                if start_date is None or start_date=="":
+                    start_date=timezone.now()
+                else:
+                    start_date=PersianCalendar().to_gregorian(start_date)
+                
+                if end_date is None or end_date=="":
+                    end_date=timezone.now()
+                else:
+                    end_date=PersianCalendar().to_gregorian(end_date)
+                trips=TripRepo(request=request).list(
+                    title=title,
+                    vehicle_id=vehicle_id,
+                    driver_id=driver_id,
+                    trip_path_id=trip_path_id,
+                    start_date=start_date,
+                    end_date=end_date,
+                )
+                
+                if trips is not None:
+                    log=4
+                    context['trips']=TripSerializer(trips,many=True).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def add_passenger_to_trip(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_passenger_to_trip_form=AddPassengerToTripForm(request.POST)
+            if add_passenger_to_trip_form.is_valid():
+                log=3
+                
+                trip_id=add_passenger_to_trip_form.cleaned_data['trip_id']
+                passenger_id=add_passenger_to_trip_form.cleaned_data['passenger_id']
+                passenger=TripRepo(request=request).add_passenger_to_trip(
+                    passenger_id=passenger_id,
+                    trip_id=trip_id,
+                )
+                
+                if passenger is not None:
+                    log=4
+                    context['passenger']=PassengerSerilizer(passenger).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+class DriverApi(APIView):
+    def add_new_driver(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_driver_form=AddDriverForm(request.POST)
+            if add_driver_form.is_valid():
+                log=3
+                
+                profile_id=add_driver_form.cleaned_data['profile_id']
+              
+                driver=DriverRepo(request=request).add_driver(
+                    profile_id=profile_id,
+                )
+                
+                if driver is not None:
+                    log=4
+                    context['driver']=DriverSerializer(driver).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   

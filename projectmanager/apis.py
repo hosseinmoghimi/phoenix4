@@ -8,7 +8,7 @@ from .forms import *
 
 
 class LocationApi(APIView):
-    def add_location(self,request):
+    def add_location(self,request,*args, **kwargs):
         log=1
         user=request.user
         if request.method=='POST':

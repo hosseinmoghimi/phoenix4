@@ -1,0 +1,37 @@
+<div class="card" id="passengers-app">
+
+    <div class="card-header">
+        <h3 class="title text-center">
+            مسافر ها
+        </h3>
+    </div>
+    <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+          
+            <li class="nav-item" v-for="passenger in passengers">
+                <a class="nav-link farsi docs-creator" :href="passenger.get_absolute_url">
+                    <img :src="passenger.profile.image" class="rounded-circle" width="48" alt="">
+                    <span v-text="passenger.profile.name"></span>
+                </a>
+                {% if perms.vehicles.change_passenger %}
+                <a title="ویرایش" target="_blank" :href="passenger.get_edit_url">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+            </li>
+
+
+        </ul>
+    </div>
+<div class="card-footer">
+    <form @submit.prevent="add_passenger_to_trip()">
+        <select class="form-control" v-model="passenger_id" id="">
+            <option :value="passenger.id" v-for="passenger in all_passengers" v-text="passenger.profile.name">
+            </option>
+        </select>
+        <button type="submit" class="btn btn-block btn-primary">افزودن به سفر</button>
+    </form>
+</div>
+</div>

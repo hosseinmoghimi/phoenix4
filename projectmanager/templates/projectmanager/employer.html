@@ -105,7 +105,7 @@
 
                                 <a class="btn btn-outline-success farsi" href="{{employer.get_employees_url}}">لیست
                                     پرسنل </a>
-                                <a class="btn btn-outline-danger" href="{{employer.get_edit_url}}">ویرایش</a>
+                                <a class="btn btn-outline-danger" target="_blank" href="{{employer.get_edit_url}}">ویرایش</a>
                             </div>
                         </div>
                     </div>
@@ -139,9 +139,12 @@
                                 </span>
                                 ایمیل
                             </h6>
-                            <span class="text-secondary">
-                                {{employer.email}}
-                            </span>
+                            <a target="_blank" href="mailto:{{employer.email}}">
+
+                                <span class="text-secondary">
+                                    {{employer.email}}
+                                </span>
+                            </a>
                         </li>
                         {% endif %}
 
@@ -154,9 +157,12 @@
                                 </span>
                                 تلفن تماس
                             </h6>
-                            <span class="text-secondary">
-                                {{employer.tel}}
-                            </span>
+                            <a href="tel:{{employer.tel}}" >
+
+                                <span class="text-secondary farsi">
+                                    {{employer.tel}}
+                                </span>
+                            </a>
                         </li>
                         {% endif %}
 
@@ -173,7 +179,7 @@
                                 </span>
                                 فکس
                             </h6>
-                            <span class="text-secondary">
+                            <span class="text-secondary farsi">
                                 {{employer.fax}}
                             </span>
                         </li>
@@ -201,7 +207,7 @@
                                 </span>
                                 کد پستی
                             </h6>
-                            <span class="text-secondary">
+                            <span class="text-secondary farsi">
                                 {{employer.postal_code}}
                             </span>
                         </li>
@@ -257,82 +263,6 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="row gutters-sm">
-                    <div class="col-sm-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h6 class="d-flex align-items-center mb-3"><i
-                                        class="material-icons text-info mr-2">assignment</i>
-                                    کارفرمای پروژه های
-                                </h6>
-                                {% for project in employer.root_projects_out %}
-
-                                <div class="text-right">
-                                    <small>
-                                        <div class="row">
-                                            <div class="col-6"> <a href="{{project.get_absolute_url}}">
-
-                                                    {{project.title}}
-                                                </a></div>
-
-                                            <div class="col-6 text-left ltr">
-
-                                                <small class="text-secondary">
-                                                    {{project.percentage_completed}} %
-                                                </small>
-
-                                            </div>
-                                        </div>
-
-
-                                    </small>
-                                </div>
-                                <div class="progress mb-3" style="height: 5px">
-                                    <div class="progress-bar bg-primary" role="progressbar"
-                                        style="width: {{project.percentage_completed}}%"
-                                        aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
-                                        aria-valuemax="100"></div>
-                                </div>
-                                {% endfor %}
-
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h6 class="d-flex align-items-center mb-3"><i
-                                        class="material-icons text-info mr-2">assignment</i>
-                                    پیمانکار پروژه های
-                                </h6>
-                                {% for project in employer.root_projects_in %}
-
-                                <div class="text-right">
-                                    <small>
-
-                                        <a href="{{project.get_absolute_url}}">
-
-                                            {{project.title}}
-                                        </a>
-                                        <small class="text-secondary">
-                                            {{project.percentage_completed}} %
-                                        </small>
-                                    </small>
-                                </div>
-
-
-                                <div class="progress mb-3" style="height: 5px">
-                                    <div class="progress-bar bg-primary" role="progressbar"
-                                        style="width: {{project.percentage_completed}}%"
-                                        aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
-                                        aria-valuemax="100"></div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="card mb-3">
                     <div class="card-body">
                         <p>
@@ -420,6 +350,82 @@
                             </div>
                             <hr>
                         </template>
+                    </div>
+                </div>
+                <div class="row gutters-sm">
+                    <div class="col-sm-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="d-flex align-items-center mb-3"><i
+                                        class="material-icons text-info mr-2">assignment</i>
+                                    کارفرمای پروژه های
+                                </h6>
+                                {% for project in employer.root_projects_out %}
+
+                                <div class="text-right">
+                                    <small>
+                                        <div class="row">
+                                            <div class="col-6"> <a href="{{project.get_absolute_url}}">
+
+                                                    {{project.title}}
+                                                </a></div>
+
+                                            <div class="col-6 text-left ltr">
+
+                                                <small class="text-secondary">
+                                                    {{project.percentage_completed}} %
+                                                </small>
+
+                                            </div>
+                                        </div>
+
+
+                                    </small>
+                                </div>
+                                <div class="progress mb-3" style="height: 5px">
+                                    <div class="progress-bar bg-primary" role="progressbar"
+                                        style="width: {{project.percentage_completed}}%"
+                                        aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
+                                        aria-valuemax="100"></div>
+                                </div>
+                                {% endfor %}
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="d-flex align-items-center mb-3"><i
+                                        class="material-icons text-info mr-2">assignment</i>
+                                    پیمانکار پروژه های
+                                </h6>
+                                {% for project in employer.root_projects_in %}
+
+                                <div class="text-right">
+                                    <small>
+
+                                        <a href="{{project.get_absolute_url}}">
+
+                                            {{project.title}}
+                                        </a>
+                                        <small class="text-secondary">
+                                            {{project.percentage_completed}} %
+                                        </small>
+                                    </small>
+                                </div>
+
+
+                                <div class="progress mb-3" style="height: 5px">
+                                    <div class="progress-bar bg-primary" role="progressbar"
+                                        style="width: {{project.percentage_completed}}%"
+                                        aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
+                                        aria-valuemax="100"></div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

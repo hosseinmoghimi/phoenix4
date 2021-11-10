@@ -17,6 +17,8 @@ class AppointmentRepo():
 
   
 
+    def add_appointment(self, *args, **kwargs):        
+        pass
     def appointment(self, *args, **kwargs):        
         if 'appointment_id' in kwargs:
             pk=kwargs['appointment_id']

@@ -39,9 +39,8 @@
                         <select v-model="add_material_request_form_employee_id" class="form-control farsi" id=""
                             required>
                             <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
-                            {% for employee in employees %}
-                            <option value="{{employee.id}}">{{employee.profile.name}}</option>
-                            {% endfor %}
+                            <option v-for="employee in employees" :value="employee.id" v-text="employee.profile.name">
+                                </option>
                         </select>
 
                     </div>

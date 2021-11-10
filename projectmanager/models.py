@@ -253,7 +253,6 @@ class Project(ProjectManagerPage):
         return Project.objects.filter(pk=self.parent_id).first()
 
     def save(self, *args, **kwargs):
-
         self.class_name = "project"
         if self.contractor is None and self.parent is not None:
             self.contractor = self.parent_project().contractor
@@ -271,6 +270,10 @@ class Project(ProjectManagerPage):
         sum = self.sum_material_requests()+self.sum_service_requests()
         for proj in self.sub_projects():
             sum += proj.sum_total()
+        return sum
+
+    def sum_total_self(self):
+        sum = self.sum_material_requests()+self.sum_service_requests()
         return sum
 
     def sum_service_requests(self):
@@ -488,13 +491,20 @@ class Request(models.Model):
     description = models.CharField(
         _("توضیحات"), null=True, blank=True, default='', max_length=50)
     creator = models.ForeignKey("employee", related_name="request_createds", verbose_name=_("ثبت کننده"), on_delete=models.PROTECT)
-    handler = models.ForeignKey("employee", related_name="request_handeleds", verbose_name=_("پاسخ دهنده"), null=True, blank=True, on_delete=models.PROTECT)
-    date_added = models.DateTimeField(_("تاریخ درخواست"), auto_now=False, auto_now_add=True)
-    date_delivered = models.DateTimeField(_("تاریخ درخواست"), null=True, blank=True, auto_now=False, auto_now_add=False)
+    handler = models.ForeignKey("employee", related_name="request_handeleds", verbose_name=_("پاسخ دهنده درخواست"), null=True, blank=True, on_delete=models.PROTECT)
+    date_added = models.DateTimeField(_("تاریخ ثبت"), auto_now=False, auto_now_add=True)
+    date_requested = models.DateTimeField(_("تاریخ درخواست"), null=True, blank=True, auto_now=False, auto_now_add=False)
+    date_delivered = models.DateTimeField(_("تاریخ تحویل"), null=True, blank=True, auto_now=False, auto_now_add=False)
     status = models.CharField(_("وضعیت"), choices=RequestStatusEnum.choices,default=RequestStatusEnum.REQUESTED, max_length=50)
     request_type = models.CharField(
         _("type"), choices=RequestTypeEnum.choices, max_length=50)
     class_name = 'request'
+    def persian_date_requested(self):
+        return PersianCalendar().from_gregorian(self.date_requested)
+    def total(self):
+        total=0
+        total=self.unit_price*self.quantity
+        return total
 
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
@@ -863,7 +873,8 @@ class WareHouseSheetLine(models.Model):
             wm.code=material.code
             wm.save()
         return super(WareHouseSheetLine,self).save(*args, **kwargs)
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
 class WareHouseMaterial(models.Model):
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)

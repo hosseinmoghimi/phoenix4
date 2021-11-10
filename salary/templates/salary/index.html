@@ -9,6 +9,10 @@
 
      {% include "salary/includes/employee-salaries-app/template.html" %}
     </div>
+    <div class="col-md-12">
+
+     {% include "salary/includes/vacations-app/template.html" %}
+    </div>
 
 </div>
 {% endblock content %}
@@ -16,5 +20,6 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "salary/includes/employee-salaries-app/script.html" %}
+{% include "salary/includes/vacations-app/script.html" %}
   
 {% endblock script %}

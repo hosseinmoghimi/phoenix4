@@ -1,0 +1,37 @@
+{% load static %}
+
+{% load to_persian_date %}
+<div id="accordionerh">
+
+    <div class="card" id="favorites-app">
+        <div class="card-header" id="headingfavorites">
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapsefavorites"
+                    aria-expanded="true" aria-controls="collapsefavorites">
+                    برگزیده ها
+                </button>
+
+            </h5>
+
+        </div>
+        <div id="collapsefavorites" class="collapse  {% if events34 %}show{% endif %}"
+            aria-labelledby="headingfavorites" data-parent="#accordionerh">
+
+            <div class="card-body text-right farsi">
+                <ul>
+
+                    {% for favorite_page in favorite_pages %}
+                    <li class="mb-2">
+                        <a href="{{favorite_page.page.get_absolute_url}}">
+                            {{favorite_page.page.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+</div>

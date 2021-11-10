@@ -1,0 +1,76 @@
+{% load to_price %}
+<div class="card" id="vacations-app">
+    <div class="card-header">
+        <h4 class="text-center">
+            لیست مرخصی پرسنل
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                
+                <th>
+                    پرسنل
+                </th>
+                <th>
+                  عنوان مرخصی
+                </th>
+                <th>
+شروع / پایان
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+               
+                <tr v-for="vacation in vacations">
+                    <td>
+                        <a  :href="vacation.employee.get_absolute_url">
+                          
+
+                            <span v-text="vacation.employee.profile.name"></span>
+                        </a>
+                    </td> 
+                    <td>
+                        <a title="جزئیات" :href="vacation.get_absolute_url">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+
+                            <span v-text="vacation.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <div class="small text-muted">
+                            <span v-text="vacation.persian_vacation_started"></span>
+                        </div>
+                        <div class="small text-muted">
+                            <span v-text="vacation.persian_vacation_ended"></span>
+                        </div>
+
+                    </td>
+                   
+                    <td>
+                        {% if perms.salary.change_vacation %}
+                        {{employee_salary.get_edit_btn|safe}}
+                        <a :href="vacation.get_edit_url">
+                            <i class="material-icons">
+                                edit
+                            </i>
+
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="card-footer">
+        {% if add_vacation_form %}
+        {% include "salary/includes/vacations-app/form.html" %}
+
+        {% endif %}
+    </div>
+</div>

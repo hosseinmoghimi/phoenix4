@@ -14,40 +14,20 @@
             aria-labelledby="headingpageimages" data-parent="#accordion-page-images">
             <div class="card-body">
                 <div class="row">
-                    {% for page_image in page.pageimage_set.all %}
-
-                    <div class="col-md-4">
-                        <h6 class="text-center mt-4 mb-2">{{page_image.image.title}}
-                            {% if perms.core.change_pageimage %}
-
-                            <a title="ویرایش" target="_blank" href="{{page_image.image.get_edit_url}}">
-                                <i class="material-icons">
-                                    edit
-                                </i>
-                            </a>
-                            {% endif %}
-                        </h6>
-                        <a target="_blank" href="{{page_image.image.image}}">
-
-                            <img class="rounded" src="{{page_image.image.thumbnail}}" width="100%"
-                                alt="{{page_image.image.title}}">
-                        </a>
-
-                    </div>
-                    {% endfor %}
+                
 
 
 
 
 
-                    <div class="col-md-4" v-for="page_image in page_images">
+                    <div class="col-md-4" v-for="image in images">
 
 
                         <h6 class="text-center mt-4 mb-2">
-                            <span v-text="page_image.image.title"></span>
-                            {% if perms.core.change_pageimage %}
+                            <span v-text="image.title"></span>
+                            {% if perms.core.change_image %}
 
-                            <a title="edit" target="_blank" :href="page_image.image.get_edit_url">
+                            <a title="edit" target="_blank" :href="image.get_edit_url">
                                 <i class="material-icons">
                                     edit
                                 </i>
@@ -55,9 +35,9 @@
                             {% endif %}
 
                         </h6>
-                        <a target="_blank" :href="page_image.image.image">
+                        <a target="_blank" :href="image.image">
 
-                            <img :src="page_image.image.thumbnail" width="100%" :alt="page_image.image.title"
+                            <img :src="image.thumbnail" width="100%" :alt="image.title"
                                 class="rounded">
                         </a>
 

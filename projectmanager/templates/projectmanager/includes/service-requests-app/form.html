@@ -17,17 +17,8 @@
 
                 <input @input="filter_list" required type="text" v-model="add_service_request_form_title"
                     class="farsi form-control" placeholder="سرویس">
-                <p class="text-right">
-                    <span v-text="add_service_request_form_title"></span>
-                    <!--  -->
-                    <span>هر </span>
-                    <span v-text="add_service_request_form_unit_name"></span>
-                    <span v-text="to_price(add_service_request_form_unit_price,'')"></span>
-                    <small>
-
-                        {{CURRENCY}}
-                    </small>
-                </p>
+               
+                    
                 <div class="row">
 
 
@@ -35,9 +26,7 @@
                         <select v-model="add_service_request_form_employee_id" class="form-control farsi" id=""
                             required>
                             <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
-                            {% for employee in employees %}
-                            <option value="{{employee.id}}">{{employee.profile.name}}</option>
-                            {% endfor %}
+                            <option v-for="employee in employees" :value="employee.id" v-text="employee.profile.name"></option>
                         </select>
 
                     </div>

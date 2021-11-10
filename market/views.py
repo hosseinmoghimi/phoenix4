@@ -116,6 +116,8 @@ class ShopViews(View):
         return redirect(shop.product.get_absolute_url())
 
     def shops(self, request, *args, **kwargs):
+        if not request.user.has_perm(APP_NAME+".view_shop"):
+            raise Http404
         supplier=SupplierRepo(request=request).supplier(*args, **kwargs)
         if supplier is None:
             raise Http404

@@ -1,0 +1,57 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="title">
+            <small class="text-muted">
+                دوره
+            </small>
+            <a href="{{active_course.get_absolute_url}}">
+
+                {{active_course.title}}
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <h4>
+
+                {% if perms.school.change_activecourse %}
+                <a href="active_course.get_edit_url}}" target="_blank" title="ویرایش">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+            </h4>
+
+            <h4>
+
+                <small class="text-muted">
+                    درس
+                </small>
+                <a href="{{active_course.course.get_absolute_url}}">
+                    {{active_course.course.title}}
+                </a>
+            </h4>
+
+            <h4>
+                <small class="text-muted">
+                    رشته
+                </small>
+                <a href="{{active_course.course.major.get_absolute_url}}">
+                    {{active_course.course.major.title}}
+                </a>
+            </h4>
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>

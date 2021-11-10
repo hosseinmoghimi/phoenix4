@@ -21,7 +21,9 @@ class UnitNameEnum(TextChoices):
 
 class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
+    tax='tax',_('tax')
     web='web',_('web')
+    salary='salary',_('salary')
     stock='stock',_('stock')
     calendar='calendar',_('calendar')
     resume='resume',_('resume')

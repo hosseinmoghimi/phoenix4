@@ -1,5 +1,5 @@
 import json
-from core.serializers import BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageLikeSerializer, TagSerializer
+from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
 from .apps import APP_NAME
@@ -75,13 +75,19 @@ def PageContext(request, page):
     if request.user.has_perm(APP_NAME+".delete_pageimage"):
         context['delete_page_image_form'] = DeletePageImageForm()
     page_comments = page.pagecomment_set.all()
+    context['documents_s'] = json.dumps(DocumentSerializer(page.documents.all(),many=True).data)
     context['page_comments'] = page_comments
     page_comments_s = json.dumps(
         PageCommentSerializer(page_comments, many=True).data)
     context['page_comments_s'] = page_comments_s
     context['page_tags']=page.tags.all()
+    links=page.links.all()
+    links_s=json.dumps(PageLinkSerializer(links,many=True).data)
+    context['links_s']=links_s
     
     context['images_s']=json.dumps(ImageSerializer(page.images(),many=True).data)
+    page_images=page.pageimage_set.all()
+    # context['images_s']=json.dumps(PageImageSerializer(page_images,many=True).data)
     context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
     if page.keywords is not None:
         context['keywords']=page.keywords
@@ -184,19 +190,20 @@ class PageViews(View):
         return render(request, "phoenix/pages-chart.html", context)
 
     def download(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.has_perm("core.change_document"):
-            document = DocumentRepo(request=request).document(*args, **kwargs)
-            return document.download_response()
-
-        document = DocumentRepo(request=request).document(*args, **kwargs)
-        if document is None:
+        me=ProfileRepo(request=request).me
+        if me is None :
             raise Http404
-
-        if self.access(request=request,*args, **kwargs) and document is not None:
+        document = DocumentRepo(request=request).document(*args, **kwargs)
+        if request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
+            if document is None:
+                raise Http404
             return document.download_response()
+
+        # if self.access(request=request,*args, **kwargs) and document is not None:
+        #     return document.download_response()
         message_view = MessageView()
         message_view.links = []
-        message_view.links.append(Link(title='تلاش مجدد', icon_color="warning",
+        message_view.links.append(Link(title='تلاش مجدد', color="warning",
                                   icon_material="apartment", url=document.get_download_url()))
         message_view.message_color = 'warning'
         message_view.has_home_link = True
@@ -209,7 +216,6 @@ class PageViews(View):
         return message_view.response(request)
 
     def access(self, request, *args, **kwargs):
-        return True
         document = DocumentRepo(request=request).document(pk=pk)
         self.me = ProfileRepo(request=request).me
         if self.me is not None and document.page in self.me.my_pages().all():

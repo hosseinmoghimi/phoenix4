@@ -65,7 +65,7 @@
       pages.forEach(page => {
         // //console.log(element)
         id = page.id.toString(10)
-        caption = '<a target="_blank" href="' + page.get_absolute_url + '">' + page.title + '</a>'+page.sub_title
+        caption = '<a target="_blank" href="' + page.get_absolute_url + '">' + page.title + '</a>'+(typeof page.sub_title==='undefined'?'':page.sub_title)
         manager = page.parent_id ? page.parent_id.toString(10) : null
         tooltip = page.title
         data.addRow([{ 'v': id, 'f': caption }, manager, tooltip])
@@ -91,7 +91,7 @@
 <body style="background-color: #f1f1ff;">
 
   <div style="margin-top: 2em;">
-    <div style="text-align: center;"><a style="text-align: center;" href="{{SITE_URL}}">home</a></div>
+    <div style="text-align: center;"><a style="text-align: center;" href="{{SITE_URL}}{{APP_NAME}}">خانه</a></div>
 
     <h3 style="text-align: center;">{{title}}</h3>
   </div>

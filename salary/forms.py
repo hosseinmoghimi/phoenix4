@@ -14,3 +14,6 @@ class AddSalaryLineForm(forms.Form):
     amount=forms.IntegerField(required=True)
     title=forms.CharField(max_length=500,required=True)
     description=forms.CharField( max_length=2000, required=False)
+class AddVacationForm(forms.Form):
+    title=forms.CharField(max_length=500,required=True)
+    employee_id=forms.IntegerField(required=True)

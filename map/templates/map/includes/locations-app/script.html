@@ -1,0 +1,45 @@
+<script>
+    let locations = JSON.parse(`{{locations_s|escapejs}}`)
+    let url_add_loaction="{% url 'map:add_location' %}"
+    let locations_app = new Vue({
+        el: "#locations-app",
+        data: {
+            locations: locations,
+            show_add_location_form: false,
+            new_location_title: "",
+            new_location: "",
+            waiting:false,
+        },
+        methods:{
+            add_location: function () {
+                locations_app.waiting = true
+                let payload = {
+                    location: locations_app.new_location,
+                    title: locations_app.new_location_title,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                // //console.log(payload)
+                var posting = $.post(url_add_loaction, payload);
+                posting.fail(function (xhr, status, error) {
+                    locations_app.waiting = false
+                    showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                })
+                // Put the results in a div
+                posting.done(function (data) {
+                    locations_app.waiting = false
+                    // //console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        locations_app.locations.push(data.location)
+                        locations_app.new_location_title=""
+                        locations_app.new_location=""
+                    }
+                    else {
+                    }
+                })
+
+            },
+
+      
+        }
+    })
+</script>

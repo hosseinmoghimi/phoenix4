@@ -1,13 +1,18 @@
+from accounting.enums import PaymetMethodEnum
+from accounting.serializers import FinancialAccountSerializer
 from core.enums import ParametersEnum
+from core.forms import AddPageImageForm
 from core.repo import ParameterRepo
 from django.utils import translation
 from accounting.models import FinancialAccount
-from accounting.repo import AssetRepo, FinancialAccountRepo, TransactionRepo
+from accounting.repo import AssetRepo, AssetTransactionRepo, FinancialAccountRepo, MoneyTransactionRepo, TransactionRepo
 from django.shortcuts import render,reverse
+from core.views import PageContext
+from core.serializers import ImageSerializer
 from .apps import APP_NAME
 from django.views import View
 from core.views import CoreContext
-
+import json
 TEMPLATE_ROOT=APP_NAME+"/"
 
 def getContext(request,*args, **kwargs):
@@ -37,9 +42,18 @@ class BasicViews(View):
         context['accounts']=accounts
         assets=AssetRepo(request=request).list()
         context['assets']=assets
+        context.update(TransactionViews().get_add_transaction_context(request))
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class TransactionViews(View):
+    def get_add_transaction_context(self,request,*args, **kwargs):
+        context={}
+        payment_methods=(i[0] for i in PaymetMethodEnum.choices)
+        context['payment_methods']=payment_methods
+        financial_accounts=FinancialAccountRepo(request=request).list()
+        financial_accounts_s=json.dumps(FinancialAccountSerializer(financial_accounts,many=True).data)
+        context['financial_accounts_s']=financial_accounts_s
+        return context
     def transactions(self,request,*args, **kwargs):
         context=getContext(request=request)
         financial_account=None
@@ -79,11 +93,49 @@ class TransactionViews(View):
         context['total']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
+    def getTransactionContext(self,request,*args, **kwargs):
+        transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
+        context=PageContext(request=request,page=transaction)
+        transaction=transaction.get_sub_transaction()
+        context['transaction']=transaction
+        images=transaction.images()
+        context['images_s']=json.dumps(ImageSerializer(images,many=True).data)
+
+        if request.user.has_perm(APP_NAME+".add_pageimage"):
+            context['add_page_image_form'] = AddPageImageForm()
+        return context
+    
     def transaction(self,request,*args, **kwargs):
         context=getContext(request=request)
-        transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
-        context['transaction']=transaction
+
+        context.update(self.getTransactionContext(request,*args, **kwargs))
         return render(request,TEMPLATE_ROOT+"transaction.html",context)
+    
+    def money_transaction(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+        context.update(self.getTransactionContext(request,*args, **kwargs))
+        # transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
+        # transaction=transaction.get_sub_transaction()
+        # context['transaction']=transaction
+        money_transaction=MoneyTransactionRepo(request=request).money_transaction(*args, **kwargs)
+        context['money_transaction']=money_transaction
+        return render(request,TEMPLATE_ROOT+"money-transaction.html",context)
+    
+    def asset_transaction(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+        context.update(self.getTransactionContext(request,*args, **kwargs))
+        asset_transaction=AssetTransactionRepo(request=request).asset_transaction(*args, **kwargs)
+        context['asset_transaction']=asset_transaction
+        return render(request,TEMPLATE_ROOT+"asset-transaction.html",context)
+    
+    def market_order_transaction(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+        context.update(self.getTransactionContext(request,*args, **kwargs))
+        return render(request,TEMPLATE_ROOT+"transaction.html",context)
+    
     def financial_account(self,request,*args, **kwargs):
         context=getContext(request=request)
         financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)

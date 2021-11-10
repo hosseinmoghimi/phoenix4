@@ -16,24 +16,8 @@
 
 
             <div class="card-body">
-                {% for page_comment in page.pagecomment_set.all1 %}
-                <div class="py-3">
-
-                    <div class="media">
-                        <img src="{{page_comment.profile.image}}" class="rounded-circle" width="64" alt="">
-                        <div class="media-body">
-                            <h6 class="small">{{page_comment.profile.name}}
-                                <span class="text-secondary mx-3 small">
-
-                                    {{page_comment.date_added|to_persian_datetime|safe}}
-                                </span>
-                            </h6>
-                            <div class="text-secondary text-right">{{page_comment.comment}}</div>
-                        </div>
-                    </div>
-                </div>
-               
-                {% endfor %}
+              
+                
                 <div class="py-3" v-for="page_comment in page_comments">
                     <page-comment-component :page_comment="page_comment">
                     </page-comment-component>

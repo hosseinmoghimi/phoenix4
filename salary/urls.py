@@ -9,9 +9,10 @@ app_name=APP_NAME
 urlpatterns = [
     path('',login_required(views.BasicViews().home),name='home'),
     path('search/',login_required(views.BasicViews().search),name='search'),
-    path('employee/<int:employee_id>/',login_required(views.BasicViews().home),name='employee'),
+    path('employee/<int:employee_id>/',login_required(views.BasicViews().employee),name='employee'),
     path('employee_salary/<int:employee_id>/',login_required(views.SalaryViews().employee_salary),name='employee_salary'),
     path('employee__salary/<int:pk>/',login_required(views.SalaryViews().employee_salary),name='employeesalary'),
+    path('vacation/<int:pk>/',login_required(views.VacationViews().vacation),name='vacation'),
     path('print/<int:pk>/',login_required(views.SalaryViews().print),name='print'),
     path('salary_line/<int:pk>/',login_required(views.SalaryViews().salary_line),name='salaryline'),
     path('work_group/<int:pk>/',login_required(views.WorkGroupViews().work_group),name='workgroup'),
@@ -20,4 +21,5 @@ urlpatterns = [
 
     path('add_employee_salary/',login_required(apis.EmployeeSalaryApi().add_employee_salary),name="add_employee_salary"),
     path('add_salary_line/',login_required(apis.EmployeeSalaryApi().add_salary_line),name="add_salary_line"),
+    path('add_vacation/',login_required(apis.VacationApi().add_vacation),name="add_vacation"),
 ]

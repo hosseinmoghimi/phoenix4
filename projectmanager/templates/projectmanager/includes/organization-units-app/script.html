@@ -44,7 +44,12 @@
                         //console.log(data)
                         organization_units.push(data.organization_unit)
                         organization_unit_app.new_organization_unit_title = ""
+                        data.organization_unit.employees.forEach(employee => {
+                            service_requests_app.employees.push(employee)
+                            material_requests_app.employees.push(employee)
+                        });
                     }
+
                     organization_unit_app.organization_units = organization_units
                 })
             },

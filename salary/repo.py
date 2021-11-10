@@ -1,5 +1,5 @@
 from django.utils import timezone
-from salary.models import EmployeeSalary, SalaryLine,WorkGroup,WorkDay,WorkSite
+from salary.models import EmployeeSalary, SalaryLine, Vacation,WorkGroup,WorkDay,WorkSite
 from utility.persian import PERSIAN_MONTH_NAMES
 from .apps import APP_NAME
 from authentication.repo import ProfileRepo
@@ -70,6 +70,57 @@ class EmployeeSalaryRepo:
         return self.objects.filter(pk=pk).first()
 
 
+
+class VacationRepo:
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects =  Vacation.objects
+        self.me=ProfileRepo(user=self.user).me
+
+    def vacation(self,*args, **kwargs):
+        objects=self.objects.all()
+        pk=0
+        if 'vacation_id' in kwargs:
+            pk=kwargs['vacation_id'] 
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return objects.filter(pk=pk).first()
+
+
+    def list(self,*args, **kwargs):
+        objects= self.objects.all()
+        if 'employee_id' in kwargs:
+            employee_id=kwargs['employee_id']
+            objects=objects.filter(employee_id=employee_id)
+        if 'employee' in kwargs:
+            employee=kwargs['employee']
+            objects=objects.filter(employee=employee)
+        return objects.all()
+ 
+
+    def add_vacation(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_vacation"):
+            return
+        vacation=Vacation()
+        if 'title' in kwargs:
+            vacation.title = kwargs['title']
+        if 'vacation_started' in kwargs:
+            vacation.vacation_started = kwargs['vacation_started']
+        else:
+            vacation.vacation_started = timezone.now()
+
+        if 'employee_id' in kwargs:
+            vacation.employee_id = kwargs['employee_id']
+        vacation.save()
+        return vacation
 
 
 class SalaryLineRepo:
@@ -195,5 +246,4 @@ class WorkSiteRepo:
         elif 'id' in kwargs:
             pk=kwargs['id']
         return objects.filter(pk=pk).first()
-
 

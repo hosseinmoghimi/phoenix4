@@ -1,9 +1,9 @@
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
 import school
-from .models import ActiveCourse, ClassRoom, Course, School, Session,Student,Teacher,Book
+from .models import ActiveCourse, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
 from .apps import APP_NAME
-
+from django.db.models import Q
 
 class SchoolRepo():
     def __init__(self,*args, **kwargs):
@@ -17,10 +17,44 @@ class SchoolRepo():
         self.objects = School.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])
+        return objects
     def school(self,*args, **kwargs):
         if 'school_id' in kwargs:
             pk=kwargs['school_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+
+
+class MajorRepo():
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Major.objects
+        self.me=ProfileRepo(user=self.user).me
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])
+        return objects
+    def major(self,*args, **kwargs):
+        if 'major_id' in kwargs:
+            pk=kwargs['major_id']
         elif 'pk' in kwargs:
             pk=kwargs['pk']
         elif 'id' in kwargs:
@@ -43,7 +77,12 @@ class BookRepo():
         self.objects = Book.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])
+        return objects
     def book(self,*args, **kwargs):
         if 'book_id' in kwargs:
             pk=kwargs['book_id']
@@ -70,7 +109,12 @@ class ClassRoomRepo():
         self.objects = ClassRoom.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])
+        return objects
     def classroom(self,*args, **kwargs):
         if 'classroom_id' in kwargs:
             pk=kwargs['classroom_id']
@@ -122,7 +166,12 @@ class CourseRepo():
         self.objects = Course.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])
+        return objects
     def course(self,*args, **kwargs):
         if 'course_id' in kwargs:
             pk=kwargs['course_id']
@@ -174,7 +223,12 @@ class TeacherRepo():
         self.objects = Teacher.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
+        return objects
     def teacher(self,*args, **kwargs):
         if 'teacher_id' in kwargs:
             pk=kwargs['teacher_id']
@@ -200,7 +254,12 @@ class StudentRepo():
         self.objects = Student.objects
         self.me=ProfileRepo(user=self.user).me
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
+        return objects
     def student(self,*args, **kwargs):
         if 'student_id' in kwargs:
             pk=kwargs['student_id']

@@ -1,0 +1,50 @@
+{% extends "school/layout.html" %}
+{% load static %}
+{% block content %}
+<h4 class="text-center">
+</h4>
+<div class="row">
+
+
+    <div class="col-md-4">
+        {% include "school/includes/schools-app/template.html" %}
+
+    </div>
+
+    <div class="col-md-4">
+        {% include "school/includes/classrooms-app/template.html" %}
+
+
+    </div>
+
+    <div class="col-md-4">
+        {% include "school/includes/teachers-app/template.html" %}
+
+
+    </div>
+
+
+    <div class="col-md-4">
+        {% include "school/includes/students-app/template.html" %}
+
+    </div>
+
+    <div class="col-md-4">
+        {% include "school/includes/books-app/template.html" %}
+
+
+    </div>
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "school/includes/students-app/script.html" %}
+{% include "school/includes/teachers-app/script.html" %}
+{% include "school/includes/books-app/script.html" %}
+{% include "school/includes/schools-app/script.html" %}
+{% include "school/includes/classrooms-app/script.html" %}
+
+{% endblock script %}

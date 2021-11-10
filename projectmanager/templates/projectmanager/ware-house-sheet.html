@@ -5,185 +5,175 @@
 {% load to_price %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h4 class="text-center">
-            برگه انبار
-            شماره
-            {{ware_house_sheet.id}}
-        </h4>
 
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <h4>
-                    برگه انبار شماره
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    برگه انبار
+                    شماره
                     {{ware_house_sheet.id}}
-                    {% if perms.projectmanager.change_warehousesheet %}
-                    <a title="ویرایش" target="_blank" href="{{ware_house_sheet.get_edit_url}}">
-                        <i class="material-icons">
-                            edit
-                        </i>
-                    </a>
-                    {% endif %}
-                    <span
-                        class="badge badge-{{ware_house_sheet.get_status_color}}">{{ware_house_sheet.direction}}</span>
-
                 </h4>
-                <h5 class="text-right">
-                    انبار :
-                    <a href="{{ware_house_sheet.ware_house.get_absolute_url}}">
-                        <i class="material-icons">
-                            apartment
-                        </i>
-                        {{ware_house_sheet.ware_house.title}}
-                    </a>
 
-                    <a href="{{ware_house_sheet.ware_house.employer.get_absolute_url}}">
-                        <small class="mx-2 text-secondary">
-                            <i class="material-icons">
-                                store
-                            </i>
-                            {{ware_house_sheet.ware_house.employer.title}}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>
+                            برگه انبار شماره
+                            {{ware_house_sheet.id}}
+                            {% if perms.projectmanager.change_warehousesheet %}
+                            <a title="ویرایش" target="_blank" href="{{ware_house_sheet.get_edit_url}}">
+                                <i class="material-icons">
+                                    edit
+                                </i>
+                            </a>
+                            {% endif %}
+                            <span
+                                class="badge badge-{{ware_house_sheet.get_status_color}}">{{ware_house_sheet.direction}}</span>
 
-                        </small>
-                    </a>
+                        </h4>
+                        <h5 class="text-right">
+                            انبار :
+                            <a href="{{ware_house_sheet.ware_house.get_absolute_url}}">
+                                <i class="material-icons">
+                                    apartment
+                                </i>
+                                {{ware_house_sheet.ware_house.title}}
+                            </a>
+
+                            <a href="{{ware_house_sheet.ware_house.employer.get_absolute_url}}">
+                                <small class="mx-2 text-secondary">
+                                    <i class="material-icons">
+                                        store
+                                    </i>
+                                    {{ware_house_sheet.ware_house.employer.title}}
+
+                                </small>
+                            </a>
 
 
 
 
 
-                </h5>
+                        </h5>
 
-                <div class="farsi text-right">
+                        <div class="farsi text-right">
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+                        {% if ware_house_sheet.date_imported %}
+                        <p class="text-left">
+                            <small class="text-muted">
+                                تاریخ ورود به انبار :
+
+                            </small>
+
+                            {{ware_house_sheet.date_imported|to_persian_datetime|safe}}
+                        </p>
+
+
+                        {% endif %}
+
+
+                        {% if ware_house_sheet.date_exported %}
+                        <p class="text-left">
+                            <small class="text-muted">
+                                تاریخ خروج از انبار :
+
+                            </small>
+
+                            {{ware_house_sheet.date_exported|to_persian_datetime|safe}}
+                        </p>
+
+                        {% endif %}
+
+                        {% if ware_house_sheet.date_added %}
+                        <p class="text-left">
+                            <small class="text-muted">
+                                تاریخ ثبت در سیستم :
+
+                            </small>
+                            {{ware_house_sheet.date_added|to_persian_datetime|safe}}
+                        </p>
+
+
+                        {% endif %}
+                        <p class="text-left">
+                            <a href="{{ware_house_sheet.employee.get_absolute_url}}">
+                                {{ware_house_sheet.employee.profile.name}}
+                                <img src="{{ware_house_sheet.employee.profile.image}}" class="rounded-circle" width="48"
+                                    alt="">
+                            </a>
+                        </p>
+                    </div>
+                    {% if ware_house_sheet.creator %}
+                    <div class="col-md-4">
+                        <div class="farsi text-right">
+                            <small class="text-muted">
+
+                                ثبت کننده :
+                            </small>
+                            <a href="{{ware_house_sheet.creator.get_absolute_url}}">
+                                <img src="{{ware_house_sheet.creator.profile.image}}" class="rounded-circle" width=48
+                                    alt="">
+                                {{ware_house_sheet.creator.profile.name}}
+                            </a>
+
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if ware_house_sheet.tahvil_dahandeh %}
+                    <div class="col-md-4">
+                        <div class="farsi text-right">
+                            <small class="text-muted">
+
+                                تحویل دهنده :
+                            </small>
+                            <a href="{{ware_house_sheet.tahvil_dahandeh.get_absolute_url}}">
+                                <img src="{{ware_house_sheet.tahvil_dahandeh.profile.image}}" class="rounded-circle"
+                                    width=48 alt="">
+                                {{ware_house_sheet.tahvil_dahandeh.profile.name}}
+                            </a>
+
+
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+
+                    {% if ware_house_sheet.tahvil_girandeh %}
+                    <div class="col-md-4">
+
+
+                        <div class="farsi text-right">
+                            <small class="text-muted">
+
+                                تحویل گیرنده :
+                            </small>
+                            <a href="{{ware_house_sheet.tahvil_girandeh.get_absolute_url}}">
+                                <img src="{{ware_house_sheet.tahvil_girandeh.profile.image}}" class="rounded-circle"
+                                    width=48 alt="">
+                                {{ware_house_sheet.tahvil_girandeh.profile.name}}
+                            </a>
+
+
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+
+
                 </div>
-
             </div>
-            <div class="col-md-6">
-
-                {% if ware_house_sheet.date_imported %}
-                <p class="text-left">
-                    <small class="text-muted">
-                        تاریخ ورود به انبار :
-
-                    </small>
-
-                    {{ware_house_sheet.date_imported|to_persian_datetime|safe}}
-                </p>
-
-
-                {% endif %}
-
-
-                {% if ware_house_sheet.date_exported %}
-                <p class="text-left">
-                    <small class="text-muted">
-                        تاریخ خروج از انبار :
-
-                    </small>
-
-                    {{ware_house_sheet.date_exported|to_persian_datetime|safe}}
-                </p>
-
-                {% endif %}
-
-                {% if ware_house_sheet.date_added %}
-                <p class="text-left">
-                    <small class="text-muted">
-                        تاریخ ثبت در سیستم :
-
-                    </small>
-                    {{ware_house_sheet.date_added|to_persian_datetime|safe}}
-                </p>
-
-
-                {% endif %}
-                <p class="text-left">
-                    <a href="{{ware_house_sheet.employee.get_absolute_url}}">
-                        {{ware_house_sheet.employee.profile.name}}
-                        <img src="{{ware_house_sheet.employee.profile.image}}" class="rounded-circle" width="48" alt="">
-                    </a>
-                </p>
-            </div>
-            {% if ware_house_sheet.creator %}
-            <div class="col-md-4">
-                <div class="farsi text-right">
-                    <small class="text-muted">
-
-                        ثبت کننده :
-                    </small>
-                    <a href="{{ware_house_sheet.creator.get_absolute_url}}">
-                        <img src="{{ware_house_sheet.creator.profile.image}}" class="rounded-circle" width=48 alt="">
-                        {{ware_house_sheet.creator.profile.name}}
-                    </a>
-
-
-                </div>
-            </div>
-            {% endif %}
-            {% if ware_house_sheet.tahvil_dahandeh %}
-            <div class="col-md-4">
-                <div class="farsi text-right">
-                    <small class="text-muted">
-
-                        تحویل دهنده :
-                    </small>
-                    <a href="{{ware_house_sheet.tahvil_dahandeh.get_absolute_url}}">
-                        <img src="{{ware_house_sheet.tahvil_dahandeh.profile.image}}" class="rounded-circle" width=48
-                            alt="">
-                        {{ware_house_sheet.tahvil_dahandeh.profile.name}}
-                    </a>
-
-
-                </div>
-            </div>
-            {% endif %}
-
-
-
-            {% if ware_house_sheet.tahvil_girandeh %}
-            <div class="col-md-4">
-
-
-                <div class="farsi text-right">
-                    <small class="text-muted">
-
-                        تحویل گیرنده :
-                    </small>
-                    <a href="{{ware_house_sheet.tahvil_girandeh.get_absolute_url}}">
-                        <img src="{{ware_house_sheet.tahvil_girandeh.profile.image}}" class="rounded-circle" width=48
-                            alt="">
-                        {{ware_house_sheet.tahvil_girandeh.profile.name}}
-                    </a>
-
-
-                </div>
-            </div>
-            {% endif %}
-
-
-
-
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-</div>
-<div class="row">
     <div class="col-md-12">
         {% include "projectmanager/includes/ware-house-sheet-lines-app/template.html" %}
 
@@ -210,6 +200,7 @@
 
 
 {% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "projectmanager/includes/ware-house-sheet-lines-app/script.html" %}
 
 {% endblock script %}

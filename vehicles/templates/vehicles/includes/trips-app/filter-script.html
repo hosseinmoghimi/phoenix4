@@ -9,7 +9,13 @@
             title: "aaa",
             total_pages: total_pages,
             current_page: 1,
-            item_per_page: item_per_page
+            item_per_page: item_per_page,
+
+            start_date: current_date,
+            end_date: current_date,
+            vehicle_id: 0,
+            driver_id: 0,
+            trip_path_id: 0,
 
         },
         methods: {
@@ -29,10 +35,32 @@
                 let end1 = start1 + filter_trips_app.item_per_page - 1
                 this.filter()
             },
+            // filter: function () {
+            //     let start1 = filter_trips_app.item_per_page * (filter_trips_app.current_page - 1)
+            //     let end1 = start1 + filter_trips_app.item_per_page
+            //     trips_app.trips = all_trips.slice(start1, end1)
+            // },
             filter: function () {
-                let start1 = filter_trips_app.item_per_page * (filter_trips_app.current_page - 1)
-                let end1 = start1 + filter_trips_app.item_per_page
-                trips_app.trips = all_trips.slice(start1, end1)
+                let url_filter_trip = "{% url 'vehicles:filter_trip' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.title,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+                    vehicle_id: this.vehicle_id,
+                    driver_id: this.driver_id,
+                    trip_path_id: this.trip_path_id,
+
+                }
+                console.log(payload)
+                let posting=$.post(url_filter_trip,payload)
+                posting.done((data)=>{
+                    console.log(data)
+                    if(data.result==='SUCCEED')
+                    trips_app.trips=data.trips
+
+                   
+                })
             },
         }
     })

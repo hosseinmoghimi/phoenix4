@@ -5,7 +5,7 @@ from django.http.response import Http404
 from .apps import APP_NAME
 from .forms import *
 from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
-from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetSerializer
+from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetLineSerializer, WareHouseSheetSerializer
 from .utils import AdminUtility
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
@@ -72,6 +72,8 @@ class BasicViews(View):
                     request=request).list(search_for=search_for)
                 context['employers'] = EmployerRepo(
                     request=request).list(search_for=search_for)
+                context['employees'] = EmployeeRepo(
+                    request=request).list(search_for=search_for)
                 context['projects'] = ProjectRepo(
                     request=request).list(search_for=search_for)
                 context['tags'] = TagRepo(
@@ -107,12 +109,19 @@ class BasicViews(View):
             context['add_project_form'] = AddProjectForm()
         if request.user.has_perm(APP_NAME+".add_location"):
             context['add_location_form'] = AddLocationForm()
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
         context['services'] = ServiceRepo(request=request).list(for_home=True)
-        context['projects'] = ProjectRepo(request=request).list(for_home=True)
+        projects= ProjectRepo(request=request).list(for_home=True)
+        context['projects'] = projects
+        context['projects_s']=json.dumps(ProjectSerializer(projects,many=True).data)
         context['materials'] = MaterialRepo(
             request=request).list(for_home=True)
-        context['employers'] = EmployerRepo(
+        employers = EmployerRepo(
             request=request).list(for_home=True)
+        context['employers'] = employers
+        context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
         organization_units = OrganizationUnitRepo(
             request=request).list(for_home=True)
         context['organization_units'] = organization_units
@@ -167,7 +176,7 @@ class ProjectViews(View):
                 'parent':page.parent_id,
                 'get_absolute_url':page.get_absolute_url(),
                 'id':page.id,
-                'sub_title':f"""<div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total())}</div>""",
+                'sub_title':f"""<div style="direction:rtl;"><div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total_self(),unit="")}&nbsp;&nbsp;/&nbsp;&nbsp;{to_price(page.sum_total())}</div></div>""",
 
             })
         # page=project
@@ -265,7 +274,8 @@ class ProjectViews(View):
         
         descriptions = [
             f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به پروژه  {project.full_title}     ({project.id})""",
+            f"""مربوط به پروژه  {project.full_title}     ( کد {project.id} )""",
+            f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
             ]
         total_for_pay = tax+lines_total
         print_date = PersianCalendar().date
@@ -305,8 +315,11 @@ class ProjectViews(View):
         context['employees']=employees
         context['locations']=project.locations.all()
         material_requests=MaterialRequestRepo(request=request).material_requests(project_id=project.id)
+        service_requests=ServiceRequestRepo(request=request).service_requests(project_id=project.id)
         context['material_requests']=material_requests
-        context['service_requests']=ServiceRequestRepo(request=request).service_requests(project_id=project.id)
+        context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        context['service_requests']=service_requests
+        context['service_requests_s']=json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         context['all_locations']=LocationRepo(request=request).list().order_by('title')
@@ -319,7 +332,6 @@ class ProjectViews(View):
             context['add_service_request_form'] = AddServiceRequestForm()
         if request.user.has_perm(APP_NAME+'.add_event'):
             context['add_event_form'] = AddEventForm()
-        context['events'] = project.event_set.all().order_by('event_datetime')
         organization_units = project.organization_units.all()
         context['add_organization_unit_form'] = AddOrganizationUnitForm()
         context['organization_units'] = organization_units
@@ -335,12 +347,28 @@ class ProjectViews(View):
         services = ServiceRepo(request=request).list()
         context['services_s'] = json.dumps(
             ServiceSerializer(services, many=True).data)
-        
-        context['employers']=EmployerRepo(request=request).list()
+        if request.user.has_perm(APP_NAME+".add_materialrequest"):
+            context['materials_s'] = json.dumps(
+                MaterialSerializer(materials, many=True).data)
+            services = ServiceRepo(request=request).list()
+            context['services_s'] = json.dumps(
+                ServiceSerializer(services, many=True).data)
+
+        employers=EmployerRepo(request=request).list()
+        context['employers'] = employers
+        context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
         context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
         context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)
+        
+        projects= project.sub_projects()
+        context['projects'] = projects
+        context['projects_s']=json.dumps(ProjectSerializer(projects,many=True).data)
+        # events=EventRepo(request=request).list(project_id=project.id)
+        events = project.event_set.all().order_by('event_datetime')
+        context['events'] = events
+        context['events_s']=json.dumps(EventSerializer(events,many=True).data)
         return render(request, TEMPLATE_ROOT+"project.html", context)
 
 
@@ -349,6 +377,12 @@ class ProjectViews(View):
 
         context = getContext(request)
         context['statuses']=(i[0] for i in ProjectStatusEnum.choices)
+        
+        
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__class_name="project").filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
+
         employers=EmployerRepo(request=request).list()
         context['employers']=employers
         context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
@@ -397,7 +431,7 @@ class OrganizationUnitViews(View):
 
         employer=(EmployerRepo(request=request).employer(pk=employer_id))
         page=employer
-        pages=employer.organizationunit_set.first().all_sub_pages()
+        pages=employer.organizationunit_set.filter(parent=None).first().all_sub_pages()
         pages_s = BasicPageSerializer(pages, many=True).data
         context['pages_s'] = json.dumps(pages_s)
         return render(request, "phoenix/pages-chart.html", context)
@@ -477,9 +511,12 @@ class EmployeeViews(View):
         context.update(ProfileContext(request=request,profile=employee.profile))
         context['employee'] = employee
         service_requests=ServiceRequestRepo(request=request).service_requests(employee_id=employee.id)
-        context['service_requests']=service_requests
         material_requests=MaterialRequestRepo(request=request).material_requests(employee_id=employee.id)
         context['material_requests']=material_requests
+        context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        context['service_requests']=service_requests
+        context['service_requests_s']=json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
+        
         context['layout'] = "base-layout.html"
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"dashboard.html", context)
@@ -498,6 +535,7 @@ class EmployeeViews(View):
         # context['selected_profile'] = employee.profile
         return render(request, TEMPLATE_ROOT+"employees.html", context)
    
+
 class WareHouseViews(View):
     
     def ware_house(self, request, *args, **kwargs):
@@ -530,7 +568,9 @@ class WareHouseSheetViews(View):
         context['ware_house_sheet']=ware_house_sheet
         context['page_title']="برگه انبار شماره "+str(ware_house_sheet.pk)
         context['ware_house']=ware_house_sheet.ware_house
-        context['ware_house_sheet_lines']=ware_house_sheet.sheet_lines()
+        ware_house_sheet_lines=ware_house_sheet.sheet_lines()
+        context['ware_house_sheet_lines']=ware_house_sheet_lines
+        context['ware_house_sheet_lines_s']=json.dumps(WareHouseSheetLineSerializer(ware_house_sheet_lines,many=True).data)
         return render(request, TEMPLATE_ROOT+"ware-house-sheet.html", context)
     
 
@@ -538,6 +578,12 @@ class MaterialViews(View):
     def materials(self, request, *args, **kwargs):
         materials = MaterialRepo(request=request).list(*args, **kwargs)
         context = getContext(request)
+        
+        
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__class_name="material").filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
+
         context['materials'] = materials
         context['materials_s'] = json.dumps(MaterialSerializer(materials,many=True).data)
         if request.user.has_perm(APP_NAME+".add_material"):
@@ -568,6 +614,13 @@ class MaterialViews(View):
         context.update(PageContext(request=request, page=material))
         if request.user.has_perm(APP_NAME+".add_material"):
             context['add_material_form'] = AddMaterialForm()
+        material_requests=MaterialRequestRepo(request=request).list(material_id=material.id)
+        context['material_requests']=material_requests
+        context['material_requests_s']=json.dumps(MaterialRequestSerializer(material_requests,many=True).data)
+        ware_house_sheet_lines=material.warehousesheetline_set.all()
+        context['ware_house_sheet_lines']=ware_house_sheet_lines
+        context['ware_house_sheet_lines_s']=json.dumps(WareHouseSheetLineSerializer(ware_house_sheet_lines,many=True).data)
+        
         return render(request, TEMPLATE_ROOT+"material.html", context)
 
 
@@ -742,7 +795,9 @@ class ServiceViews(View):
         service = ServiceRepo(request=request).service(*args, **kwargs)
         context = getContext(request)
         context['service'] = service
-        context['service_requests']=ServiceRequestRepo(request=request).service_requests(service_id=service.id)
+        service_requests=ServiceRequestRepo(request=request).service_requests(service_id=service.id)
+        context['service_requests']=service_requests
+        context['service_requests_s']=json.dumps(ServiceRequestSerializer(service_requests,many=True).data)
         context['services'] = service.childs()
         context.update(PageContext(request=request, page=service))
         context['add_service_form'] = AddServiceForm()
@@ -752,5 +807,12 @@ class ServiceViews(View):
         services = ServiceRepo(request=request).list(*args, **kwargs)
         context = getContext(request)
         context['services'] = services
+        
+        
+        profile=ProfileRepo(request=request).me
+        favorite_pages=profile.pagelike_set.filter(page__class_name="service").filter(page__app_name=APP_NAME)
+        context['favorite_pages']=favorite_pages
+
+        
         context['services_s'] = json.dumps(ServiceSerializer(services,many=True).data)
         return render(request, TEMPLATE_ROOT+"services.html", context)

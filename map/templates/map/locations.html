@@ -1,0 +1,21 @@
+{% extends "map/layout.html" %}
+{% load static %}
+{% load to_price %}
+
+{% block content %}
+  <h3>
+      نقشه و مکان یابی
+  </h3>
+  <div class="row">
+      <div class="col-md-12">
+         {% include "map/includes/locations-app/template.html" %}
+      </div>
+  </div>
+{% endblock content %}
+
+
+
+{% block script  %}
+{% include "map/includes/locations-app/script.html" %}
+
+{% endblock %}

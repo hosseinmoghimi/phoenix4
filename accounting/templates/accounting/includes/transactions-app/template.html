@@ -9,7 +9,10 @@
             <td>
 
                 {{transaction.get_sub_transaction.get_icon|safe}}
-                {{transaction.title}}
+                <a href="{{transaction.get_sub_transaction.get_absolute_url}}">
+
+                    {{transaction.title}}
+                </a>
             </td>
             <td>
                 <a href="{{transaction.pay_from.get_absolute_url}}">
@@ -24,10 +27,17 @@
                     {{transaction.get_sub_transaction.asset.title}}
                 </a>
                 {% endif %}
+                {% if transaction.get_sub_transaction.order %}
 
-                {% if transaction.get_sub_transaction.paymet_method %}
+                <a href="{{transaction.get_sub_transaction.order.get_absolute_url}}">
+                    سفارش شماره
+                    {{transaction.get_sub_transaction.order.pk}}
+                </a>
+                {% endif %}
 
-                {{transaction.get_sub_transaction.paymet_method}}
+                {% if transaction.get_sub_transaction.payment_method %}
+
+                {{transaction.get_sub_transaction.payment_method}}
                 {% endif %}
                 {% if transaction.description %}
                 <div>

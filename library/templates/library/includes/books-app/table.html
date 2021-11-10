@@ -1,0 +1,29 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+            عنوان
+        </th>
+        <th>
+
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="book in books">
+            <td>
+                <a :href="book.get_absolute_url">
+
+                    <span v-text="book.title"></span>
+                </a>
+            </td>
+            <td>
+{% if perms.library.change_book %}
+  <a :href="book.get_edit_url" title="ویرایش" target="_blank">
+      <i class="material-icons">
+          edit
+      </i>
+  </a>
+{% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>

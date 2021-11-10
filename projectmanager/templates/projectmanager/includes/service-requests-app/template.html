@@ -38,10 +38,12 @@
                             پروژه
                         </th>
                         {% endif %}
+                        {% if not service %}
 
                         <th>
                             سرویس
                         </th>
+                        {% endif %}
 
 
                         <th>
@@ -58,84 +60,6 @@
                         </th>
                     </thead>
                     <tbody>
-                        {% for service_request in service_requests %}
-                        <tr>
-                            <td>
-                                <a target="_blank" href="{{service_request.get_absolute_url}}" title="نمایش کامل">
-                                    <i class="material-icons">
-                                        ballot
-                                    </i>
-                                </a>
-                            </td>
-                            <td>
-                                <small>
-
-                                    {{service_request.date_added|to_persian_date|safe}}
-                                </small>
-                            </td>
-                            {% if not employee %}
-
-                            <td>
-
-                                <a target="_blank" href="{{service_request.handler.get_absolute_url}}">
-                                    <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded-circle"
-                                        width="32" alt="">
-                                    {{service_request.handler.profile.name}}
-                                </a>
-                            </td>
-                            {% endif %}
-
-                            {% if not project %}
-
-                            <td>
-
-                                <a target="_blank" href="{{service_request.project.get_absolute_url}}">
-                                    <img src="{{service_request.project.thumbnail}}" class="ml-2 rounded" width="32"
-                                        alt="">
-                                    {{service_request.project.title}}
-                                </a>
-                            </td>
-                            {% endif %}
-
-
-                            <td>
-
-                                <a target="_blank" href="{{service_request.service.get_absolute_url}}">
-                                    <img src="{{service_request.service.thumbnail}}" class="ml-2 rounded" width="32"
-                                        alt="">
-                                    {{service_request.service.title}}
-                                </a>
-                            </td>
-
-
-                            <td>
-                                {{service_request.quantity}}
-                                <small>
-
-                                    {{service_request.unit_name}}
-                                </small>
-
-                            </td>
-                            <td>
-                                {{service_request.unit_price|to_price_pure}}
-
-                            </td>
-                            <td>
-                                {{service_request.line_total|to_price}}
-
-                            </td>
-                            <td>
-                                {{service_request.get_status_tag|safe}}
-
-
-                                {% if perms.projectmanager.change_servicerequest %}
-                                {{service_request.get_edit_btn|safe}}
-
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% if add_service_request_form %}
 
                         <tr v-for="service_request in service_requests">
                             <td>
@@ -147,19 +71,33 @@
                             </td>
 
                             <td>
-                                <small v-text="service_request.persian_date_added">
+                                <small v-text="service_request.persian_date_requested">
 
                                 </small>
                             </td>
+                            {% if not employee %}
+
                             <td>
 
                                 <a target="_blank" :href="service_request.handler.get_absolute_url">
-                                    <img :src="service_request.handler.profile.image" class="ml-2 rounded" width="32"
-                                        alt="">
+                                    <img :src="service_request.handler.profile.image" class="ml-2 rounded-circle"
+                                        width="32" alt="">
                                     <span v-text="service_request.handler.profile.name">
                                     </span>
                                 </a>
                             </td>
+                            {% endif %}
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" :href="service_request.project.get_absolute_url"
+                                    v-text="service_request.project.title">
+
+                                </a>
+                            </td>
+                            {% endif %}
+                            {% if not service %}
 
                             <td>
                                 <img :src="service_request.service.thumbnail" class="ml-2 rounded" width="32" alt="">
@@ -169,6 +107,7 @@
 
                                 </a>
                             </td>
+                            {% endif %}
 
                             <td>
                                 <span v-text="service_request.quantity"></span>
@@ -198,7 +137,7 @@
                             </td>
                         </tr>
 
-                        {% endif %}
+
                     </tbody>
                 </table>
 
@@ -223,10 +162,26 @@
 
 
                 </p>
+                {% else %}
 
 
+                <p>
 
+                    <span class="small text-secondary">
+                        مجموع هزینه سرویس های ارائه شده :
+                    </span>
+                    <span v-text="to_price(sum_service_requests,'{{CURRENCY}}')">
+
+                    </span>
+                    <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{project.get_services_order_url}}">
+                        <i class="material-icons">print</i>
+                    </a>
+
+
+                </p>
                 {% endif %}
+
+
             </div>
         </div>
     </div>

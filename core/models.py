@@ -338,7 +338,7 @@ class BasicPage(models.Model):
         app_name=self.app_name
         class_name=self.class_name
         pk=self.pk
-        return reverse(app_name+":"+class_name, kwargs={"pk": pk})
+        return reverse(app_name+":"+self.class_name, kwargs={"pk": pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
     def delete(self,*args, **kwargs):
@@ -364,7 +364,13 @@ class BasicPage(models.Model):
     def save(self,*args, **kwargs):
         return super(BasicPage,self).save()
 
-
+    def documents_set(self):
+        page_documents=self.pagedocument_set.all()
+        ids=[]
+        for pd in page_documents:
+            ids.append(pd.document.id)
+        documents= Document.objects.filter(id__in=ids).all()
+        return documents
 class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)
@@ -486,7 +492,10 @@ class PageLink(Link):
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
 
+from django.core.files.storage import FileSystemStorage
 
+upload_storage = FileSystemStorage(location=UPLOAD_ROOT, base_url='/uploads')
+image = models.ImageField() 
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
     title = models.CharField(_('عنوان'), max_length=200)
@@ -494,12 +503,15 @@ class Document(Icon):
     profile = models.ForeignKey("authentication.Profile", verbose_name=_(
         "پروفایل"), on_delete=models.CASCADE)
     file = models.FileField(_("فایل ضمیمه"), null=True, blank=True,
-                            upload_to=APP_NAME+'/Document', max_length=100)
+                            upload_to=APP_NAME+'/documents', storage=upload_storage, max_length=100)
     mirror_link = models.CharField(_('آدرس بیرونی'),null=True,blank=True, max_length=10000)
     date_added = models.DateTimeField(
         _("افزوده شده در"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
+    
+    profiles=models.ManyToManyField("authentication.profile",blank=True,related_name="profile_documents", verbose_name=_("profiles"))
+    is_open=models.BooleanField(_("is_open?"),default=False)
     def persian_date_added_tag(self):
         value = self.date_added
         a = PersianCalendar().from_gregorian(value)
@@ -573,7 +585,7 @@ class Document(Icon):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
 
-
+    
 class PageDocument(Document):
     page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     

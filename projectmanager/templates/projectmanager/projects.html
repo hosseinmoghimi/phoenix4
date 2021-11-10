@@ -1,4 +1,4 @@
-{% extends "projectmanager/layout.html" %}
+{% extends wide_layout_parent %}
 
 {% load static %}
 {% load to_persian_date %}
@@ -12,6 +12,10 @@
         </small>
     </h3>
     <div class="row">
+        <div class="col-md-12">
+            {% include "projectmanager/includes/favorite-pages-app/template.html" %}
+
+        </div>
         <div class="col-md-12">
           {% include "projectmanager/includes/all-projects-app/template.html" %}
         </div>

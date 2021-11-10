@@ -1,0 +1,29 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+            عنوان
+        </th>
+        <th>
+            سال
+        </th>
+        <th>
+            مبلغ
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="tax in taxes">
+            <td>
+                <a :href="tax.get_absolute_url">
+
+                    <span v-text="tax.title"></span>
+                </a>
+            </td>
+            <td>
+                <span v-text="tax.year"></span>
+            </td>
+            <td>
+                <span v-text="tax.amount"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>

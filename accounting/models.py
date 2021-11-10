@@ -1,3 +1,4 @@
+from core.models import BasicPage
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from django.db.models import Q
@@ -13,7 +14,10 @@ from tinymce.models import HTMLField
 from .enums import *
 from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
-
+class AccountingPage(BasicPage):
+    def save(self,*args, **kwargs):
+        self.app_name=APP_NAME
+        return super(AccountingPage,self).save(*args, **kwargs)
 class Asset(models.Model):
     app_name=models.CharField(_("app_name"),blank=True, max_length=50)
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
@@ -79,7 +83,6 @@ class FinancialAccount(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":financial_account", kwargs={"financial_account_id": self.pk})
 
-
 class BankAccount(models.Model):
     title = models.CharField(_("title"), max_length=50)
     owner = models.ForeignKey("FinancialAccount", verbose_name=_(
@@ -87,7 +90,9 @@ class BankAccount(models.Model):
     bank = models.CharField(
         _("bank"), choices=BankNameEnum.choices, max_length=50)
     branch = models.CharField(_("شعبه"), max_length=50)
-
+    account_no=models.CharField(_("شماره حساب"), null=True,blank=True,max_length=50)
+    card_no=models.CharField(_("شماره کارت"), null=True,blank=True,max_length=50)
+    shaba_no=models.CharField(_("شماره شبا"), null=True,blank=True,max_length=50)
     class Meta:
         verbose_name = _("BankAccount")
         verbose_name_plural = _("BankAccounts")
@@ -99,22 +104,20 @@ class BankAccount(models.Model):
         return reverse("BankAccount_detail", kwargs={"pk": self.pk})
 
 
-class Transaction(models.Model):
-    title = models.CharField(_("title"), max_length=50)
+class Transaction(AccountingPage):
     pay_from = models.ForeignKey("FinancialAccount", related_name="pay_from_set", verbose_name=_(
         "pay_from"), on_delete=models.CASCADE)
     pay_to = models.ForeignKey("FinancialAccount", related_name="pay_to_set", verbose_name=_(
         "pay_to"), on_delete=models.CASCADE)
     amount = models.IntegerField(_("amount"), default=0)
-    description=models.CharField(_("description"),blank=True,null=True, max_length=5000)
-    date_added = models.DateTimeField(
-        _("date_added"), auto_now=False, auto_now_add=True)
     date_paid = models.DateTimeField(
         _("date_paid"), auto_now=False, auto_now_add=False)
-    creator = models.ForeignKey("authentication.profile", verbose_name=_(
-        "ثبت کننده"), on_delete=models.CASCADE)
     rest=0
     direction=None
+
+    def save(self,*args, **kwargs):
+        return super(Transaction,self).save(*args, **kwargs)
+
     def get_color(self):
         if self.direction:
             return "success"
@@ -148,6 +151,9 @@ class Transaction(models.Model):
         mt=MoneyTransaction.objects.filter(pk=self.pk).first()
         if mt is not None:
             return mt
+        mot=MarketOrderTransaction.objects.filter(pk=self.pk).first()
+        if mot is not None:
+            return mot
 
 
     def persian_date_paid(self):
@@ -159,15 +165,20 @@ class Transaction(models.Model):
 
     def __str__(self):
         return self.title
-
-    def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/' 
+ 
+ 
     def get_absolute_url(self):
-        return reverse(APP_NAME+"transaction", kwargs={"pk": self.pk})
-
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
 class TransactionMixin():
     def get_icon(self):
+        type1="پول"
+        color="success"
+        if self.class_name=="marketordertransaction":
+            type1="سفارش"
+            color="primary"
         if self.class_name=="assettransaction":
             type1="دارایی"
             color="warning"
@@ -180,29 +191,38 @@ class TransactionMixin():
             </span>
             """
 
+
 class AssetTransaction(Transaction,TransactionMixin):
     asset = models.ForeignKey("asset", verbose_name=_("asset"), on_delete=models.CASCADE)
-    class_name="assettransaction"
     
 
     class Meta:
         verbose_name = _("AssetTransaction")
         verbose_name_plural = _("AssetTransactions")
 
+    def save(self,*args, **kwargs):
+        self.class_name="assettransaction"
+        return super(AssetTransaction,self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+class MarketOrderTransaction(Transaction,TransactionMixin):
+    order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
 
-
+        
+    def save(self,*args, **kwargs):
+        self.class_name="marketordertransaction"
+        return super(MarketOrderTransaction,self).save(*args, **kwargs)
+    class Meta:
+        verbose_name = _("MarketOrderTransaction")
+        verbose_name_plural = _("MarketOrderTransactions")
+  
 
 class MoneyTransaction(Transaction,TransactionMixin):
-    class_name="moneytransaction"
-    paymet_method=models.CharField(_("paymet_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
+    payment_method=models.CharField(_("payment_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
 
     class Meta:
         verbose_name = _("MoneyTransaction")
         verbose_name_plural = _("MoneyTransactions")
 
- 
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+    def save(self,*args, **kwargs):
+        self.class_name="moneytransaction"
+        return super(MoneyTransaction,self).save(*args, **kwargs)

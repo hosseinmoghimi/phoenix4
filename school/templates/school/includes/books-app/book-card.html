@@ -1,0 +1,55 @@
+ 
+<div class="card">
+    <div class="card-header">
+          <h4>
+                کتاب
+                <a href="{{book.get_absolute_url}}">
+                    {{book.title}}
+                </a>
+                {% if perms.school.change_book %}
+                {{book.get_edit_btn|safe}}
+
+                {% endif %}
+            </h4>
+    </div>
+    <div class="card-body">
+   
+        {% for course in book.course_set.all %}
+        <h4>
+            واحد درسی
+
+            <a href="{{course.get_absolute_url}}">
+
+                {{course.title}}
+            </a>
+            {% if perms.school.change_course %}
+            {{course.get_edit_btn|safe}}
+
+            {% endif %}
+        </h4>
+
+
+        {% endfor %}
+
+        <div class="mb-3">
+            {% for document in book.documents.all %}
+            <h4>
+                
+                <a target="_blank" href="{{document.get_download_url}}">
+                    {{document.get_icon_tag|safe}}
+                    {{document.title}}
+                </a>
+                {% if perms.core.change_document %}
+                {{document.get_edit_btn|safe}}
+
+                {% endif %}
+            </h4>
+            {% endfor %}
+        </div>
+
+
+
+
+
+    </div>
+</div>

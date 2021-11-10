@@ -1,0 +1,12 @@
+<script>
+    let majors = JSON.parse(`{{majors_s|escapejs}}`)
+    let majors_app = new Vue({
+        el: "#majors-app",
+        data: {
+            majors: majors,
+        },
+        methods: {
+
+        }
+    })
+</script>

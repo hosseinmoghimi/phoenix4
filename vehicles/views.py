@@ -1,7 +1,10 @@
+from projectmanager.repo import LocationRepo
 from django.shortcuts import render
+from authentication.repo import ProfileRepo
+from authentication.serializers import ProfileSerializer
 from core.views import CoreContext
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddMaintenanceForm, AddTripForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
+from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -31,13 +34,11 @@ class BasicViews(View):
         context['trip_paths_s']=json.dumps(TripPathSerializer(trip_paths,many=True).data)
 
         vehicles=VehicleRepo(request=request).list()
-        context['vehicles']=vehicles
         context['vehicles_s']=json.dumps(VehicleSerializer(vehicles,many=True).data)
-        if request.user.has_perm(APP_NAME+".add_vehicle"):
-            context['add_vehicle_form']=AddVehicleForm()
-
+        context['vehicles']=vehicles 
         areas=AreaRepo(request=request).list(*args, **kwargs)
         context['areas']=areas
+        context['areas_s']=json.dumps(AreaSerializer(areas,many=True).data)
 
 
         
@@ -46,6 +47,8 @@ class BasicViews(View):
 
         drivers=DriverRepo(request=request).list(*args, **kwargs)
         context['drivers']=drivers
+        context['drivers_s']=json.dumps(DriverSerializer(drivers,many=True).data)
+ 
 
         trips=TripRepo(request=request).list(*args, **kwargs)
         context['trips']=trips
@@ -125,6 +128,23 @@ class VehicleViews(View):
         return render(request,TEMPLATE_FOLDER+"vehicle.html",context)
 
 
+    def vehicles(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        vehicles=VehicleRepo(request=request).list(*args, **kwargs)
+        context['vehicles']=vehicles 
+        vehicles_s=json.dumps(VehicleSerializer(vehicles,many=True).data)
+        context['vehicles_s']=vehicles_s
+
+
+        if request.user.has_perm(APP_NAME+".add_vehicle"):
+            context['add_vehicle_form']=AddVehicleForm()
+
+         
+        return render(request,TEMPLATE_FOLDER+"vehicles.html",context)
+
+
 class AreaViews(View):
     def area(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -142,6 +162,18 @@ class AreaViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"area.html",context)
+
+    def areas(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        areas=AreaRepo(request=request).list(*args, **kwargs)
+        context['areas']=areas
+        areas_s=json.dumps(AreaSerializer(areas,many=True).data)
+        context['areas_s']=areas_s
+
+ 
+        return render(request,TEMPLATE_FOLDER+"areas.html",context)
 
 
 class PassengerViews(View):
@@ -162,6 +194,15 @@ class TripViews(View):
         trip=TripRepo(request=request).trip(*args, **kwargs)
         context['trip']=trip
         context['vehicle']=trip.vehicle
+        passengers=trip.passengers.all()
+        context['passengers']=passengers
+        passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
+        context['passengers_s']=passengers_s
+        all_passengers=PassengerRepo(request=request).list()
+        context['all_passengers']=all_passengers
+        all_passengers_s=json.dumps(PassengerSerilizer(all_passengers,many=True).data)
+        context['all_passengers_s']=all_passengers_s
+
         return render(request,TEMPLATE_FOLDER+"trip.html",context)
     def trips(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -203,6 +244,21 @@ class TripViews(View):
         context['add_trip_form']=AddTripForm()
         context.update(self.add_trip_context(request=request))
         return render(request,TEMPLATE_FOLDER+"trip-path.html",context)
+
+    def trip_paths(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        trip_paths=TripPathRepo(request=request).list(*args, **kwargs)
+        context['trip_paths']=trip_paths
+        trip_paths_s=json.dumps(TripPathSerializer(trip_paths,many=True).data)
+        context['trip_paths_s']=trip_paths_s
+
+        locations=LocationRepo(request=request).list(*args, **kwargs)
+        context['locations']=locations
+
+        if request.user.has_perm(APP_NAME+".add_trippath"):
+            context['add_trip_path_form']=AddTripPathForm()
+            
+        return render(request,TEMPLATE_FOLDER+"trip-paths.html",context)
 
 
 class VehicleWorkEventViews(View):
@@ -289,6 +345,23 @@ class DriverViews(View):
         
 
         return render(request,TEMPLATE_FOLDER+"driver.html",context)
+
+    def drivers(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        drivers=DriverRepo(request=request).list(*args, **kwargs)
+        context['drivers']=drivers
+        context['drivers_s']=json.dumps(DriverSerializer(drivers,many=True).data)
+ 
+        if request.user.has_perm(APP_NAME+".add_driver"):
+            context['add_driver_form']=AddDriverForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
+            context['profiles_s']=json.dumps(ProfileSerializer(profiles,many=True).data)
+         
+
+        return render(request,TEMPLATE_FOLDER+"drivers.html",context)
 
 
 class ServiceManViews(View):

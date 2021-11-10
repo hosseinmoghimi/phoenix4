@@ -5,7 +5,7 @@ from vehicles.enums import VehicleColorEnum, VehicleTypeEnum
 from vehicles.serializers import VehicleWorkEventSerializer
 from .models import Passenger, Trip, TripPath, Vehicle, VehicleWorkEvent, Driver, Maintenance, WorkShift, Area, ServiceMan
 from .apps import APP_NAME
-from django.utils import timezone
+from django.utils import timezone, translation
 now=timezone.now()
 
 class VehicleRepo():
@@ -37,7 +37,7 @@ class VehicleRepo():
         if not self.user.has_perm(APP_NAME+".add_vehicle"):
             return
         vehicle=Vehicle()
-        vehicle.name=kwargs['name'] if 'name' in kwargs else None
+        vehicle.title=kwargs['title'] if 'title' in kwargs else None
         vehicle.vehicle_type =kwargs['vehicle_type'] if 'vehicle_type' in kwargs else VehicleTypeEnum.SEDAN
         vehicle.color =kwargs['color'] if 'color' in kwargs else VehicleColorEnum.SEFID
         vehicle.year =kwargs['year'] if 'year' in kwargs else 2015
@@ -133,6 +133,14 @@ class TripRepo():
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+    def add_passenger_to_trip(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_passenger"):
+            return
+        trip=TripRepo(request=self.request).trip(*args, **kwargs)
+        passenger=PassengerRepo(request=self.request).passenger(*args, **kwargs)
+        if trip is not None and passenger is not None:
+            trip.passengers.add(passenger)
+        return passenger
 
     def add_trip(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_trip"):
@@ -200,6 +208,22 @@ class TripPathRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_trip_path(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_trippath"):
+            return
+        source_id=kwargs['source_id'] if 'source_id' in kwargs else 0
+        destination_id=kwargs['destination_id'] if 'destination_id' in kwargs else 0
+        duration=kwargs['duration'] if 'duration' in kwargs else 0
+        distance=kwargs['distance'] if 'distance' in kwargs else 0
+        cost=kwargs['cost'] if 'cost' in kwargs else 0
+        trip_path=TripPath()
+        trip_path.source_id=source_id
+        trip_path.destination_id=destination_id
+        trip_path.duration=duration
+        trip_path.distance=distance
+        trip_path.cost=cost
+        trip_path.save()
+        return trip_path
 
 class ServiceManRepo():
     def __init__(self, *args, **kwargs):
@@ -275,6 +299,16 @@ class DriverRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+
+    def add_driver(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_driver"):
+            return
+        driver=Driver()
+        driver.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
+        driver.start_date=kwargs['start_date'] if 'start_date' in kwargs else timezone.now()
+        driver.end_date=kwargs['end_date'] if 'end_date' in kwargs else timezone.now()
+        driver.save()
+        return driver
 
 class MaintenanceRepo():
     def __init__(self, *args, **kwargs):

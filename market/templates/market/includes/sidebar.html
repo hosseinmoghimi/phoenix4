@@ -39,8 +39,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -52,7 +50,6 @@
                     <h5 class="mb-0">
                         <a data-toggle="collapse" href="#collapseCategory" aria-expanded="true"
                             aria-controls="collapseCategory">
-
                             دسته بندی ها
                             <i class="material-icons">keyboard_arrow_down</i>
                         </a>
@@ -60,32 +57,18 @@
                 </div>
                 <div id="collapseCategory" class="collapse" role="tabpanel" aria-labelledby="headingCategory">
                     <div class="card-body card-refine mr-5">
-
-
                         {% for category in root_categories %}
-
-
-
                         <div class="form-check">
                             <label class="form-check-label">
-
-
                                 <a href="{{category.get_absolute_url}}">
                                     {{category.title}}
                                 </a>
-
-
                             </label>
                         </div>
-
                         {% endfor %}
-
-
                     </div>
                 </div>
             </div>
-
-
             <!-- brands -->
             <div class="card card-collapse">
                 <div class="card-header" role="tab" id="headingTwo4">
@@ -101,35 +84,22 @@
                     <div class="card-body mr-5">
                         <div class="form-check">
                             <label class="form-check-label">
-
-
                                 <a class="my-2" href="{% url 'market:brands' %}">
-                                    
-                                   همه برند ها
+                                    همه برند ها
                                 </a>
-
-
                             </label>
                         </div>
-                          {% for brand in brands %}
-
-
-
+                        {% for brand in brands %}
                         <div class="form-check">
                             <label class="form-check-label">
+                                <a title="{{brand.title}} ({{brand.persian_title}})" class="my-2"
+                                    href="{{brand.get_absolute_url}}">
 
-
-                                <a title="{{brand.title}} ({{brand.persian_title}})" class="my-2" href="{{brand.get_absolute_url}}">
-                                    
-                                    <img src="{{brand.image}}" class="w-100" alt="">
+                                    <img src="{{brand.image}}" class="w-100" alt="{{brand.persian_title}}">
                                 </a>
-
-
                             </label>
                         </div>
-
                         {% endfor %}
-                       
                     </div>
                 </div>
             </div>
@@ -147,27 +117,17 @@
                 <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-body mr-5">
                         {% for supplier in suppliers %}
-
-
-
                         <div class="form-check">
                             <label class="form-check-label">
-
-
                                 <a href="{{supplier.get_absolute_url}}">
                                     {{supplier.title}}
                                 </a>
-
-
                             </label>
                         </div>
-
                         {% endfor %}
-
                     </div>
                 </div>
             </div>
-
             <!-- ware_houses -->
             <div class="card card-collapse">
                 <div class="card-header" role="tab" id="headingTwo44">
@@ -181,40 +141,25 @@
                 </div>
                 <div id="collapseTwo44" class="collapse" role="tabpanel" aria-labelledby="headingTwo44">
                     <div class="card-body mr-5">
-                        {% for ware_house in ware_houses %}
-
-
-
                         <div class="form-check">
                             <label class="form-check-label">
-
-
-                                <a href="{{ware_house.get_absolute_url}}">
-                                    {{ware_house.name}}
-                                </a>
-
-
-                            </label>
-                        </div>
-
-                        {% endfor %}
-                        <div class="form-check">
-                            <label class="form-check-label">
-
-
                                 <a href="{% url 'market:ware_houses' %}">
                                     لیست انبار ها
                                 </a>
-
-
                             </label>
                         </div>
+                        {% for ware_house in ware_houses %}
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <a href="{{ware_house.get_absolute_url}}">
+                                    {{ware_house.name}}
+                                </a>
+                            </label>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
 </div>

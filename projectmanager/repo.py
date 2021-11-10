@@ -40,6 +40,7 @@ class ProjectRepo():
         self.objects=self.objects.all()
         if not if_show_archives:
             self.objects=self.objects.filter(archive=False)
+        self.objects=self.objects.order_by('-start_date')
     def add_location(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_location"):
             return None
@@ -638,6 +639,9 @@ class EmployeeRepo():
             objects = objects.filter(organization_unit_id=kwargs['organization_unit_id'])
         if 'employer_id' in kwargs and not kwargs['employer_id']==0:
             objects = objects.filter(organization_unit__employer_id=kwargs['employer_id'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(profile__user__first_name__contains=search_for)|Q(profile__user__last_name__contains=search_for))
         return objects.all()
 
     def add_employee(self, *args, **kwargs):
@@ -813,6 +817,9 @@ class ServiceRequestRepo():
         signature.date_added=timezone.now()
         signature.employee=me_employee
         signature.save()
+        if signature.status==SignatureStatusEnum.DELIVERED:
+            service_request.date_delivered=timezone.now()
+            service_request.save()
 
         return signature
 
@@ -863,6 +870,10 @@ class ServiceRequestRepo():
             new_service_request.status = kwargs['status']
         if 'status' in kwargs:
             new_service_request.status = kwargs['status']
+        if 'date_requested' in kwargs:
+            new_service_request.date_requested = kwargs['date_requested']
+        else:
+            new_service_request.date_requested = timezone.now()
         if 'service_title' in kwargs:
             service=Service.objects.filter(title=kwargs['service_title']).first()
             if service is None:
@@ -1002,6 +1013,10 @@ class MaterialRequestRepo():
             new_material_request.description = kwargs['description']
         if 'status' in kwargs:
             new_material_request.status = kwargs['status']
+        if 'date_requested' in kwargs:
+            new_material_request.date_requested = kwargs['date_requested']
+        else:
+            new_material_request.date_requested = timezone.now()
         if 'status' in kwargs:
             new_material_request.status = kwargs['status']
         profile = ProfileRepo(user=self.user).me
@@ -1028,6 +1043,9 @@ class MaterialRequestRepo():
             signature.date_added=timezone.now()
             signature.employee=EmployeeRepo(request=self.request).me
             signature.save()
+            if signature.status==SignatureStatusEnum.DELIVERED:
+                material_request.date_delivered=timezone.now()
+                material_request.save()
             return signature
 
     def material_requests(self,*args, **kwargs):

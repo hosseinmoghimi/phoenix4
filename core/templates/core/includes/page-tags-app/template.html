@@ -54,7 +54,7 @@
                     {% if add_page_tag_form %}
 
 
-                    <img src="{% static 'leo/img/loading.gif' %}" v-if="waiting" alt="">
+                    <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
                     <form @submit.prevent="add_page_tag()">
                         <input required type="text" v-model="tag_title" class="form-control" style="width: 8em;"
                             placeholder="تگ جدید">

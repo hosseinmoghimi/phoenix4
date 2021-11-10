@@ -42,12 +42,29 @@
                     {% endif %}
                 </a>
             </h6>
-
+            <p>
+                <small class="text-muted">
+                    تاریخ ثبت :
+                </small>
+                {{material_request.persian_date_added}}
+            </p>
+            <p>
+                <small class="text-muted">
+                    تاریخ درخواست :
+                </small>
+                {{material_request.persian_date_requested}}
+            </p>
+            <p>
+                <small class="text-muted">
+                    تاریخ تحویل :
+                </small>
+                {{material_request.persian_date_delivered}}
+            </p>
             <p>
 
 
                 پرسنل :
-                <a target="_blank" href="{{material_request.employee.get_absolute_url}}">
+                <a target="_blank" href="{{material_request.handler.get_absolute_url}}">
                     <img src="{{material_request.handler.profile.image}}" class="ml-2 rounded-circle" width="32" alt="">
                     {{material_request.handler.profile.name}}
                 </a>

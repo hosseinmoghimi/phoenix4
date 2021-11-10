@@ -64,7 +64,7 @@ def StatusColor(status):
     elif status==ProjectStatusEnum.DENIED:
         color= 'danger'
     elif status==ProjectStatusEnum.DELIVERED:
-        color= 'dark'
+        color= 'success'
     elif status==ProjectStatusEnum.ACCEPTED:
         color= 'success'
     elif status==ProjectStatusEnum.REQUESTED:
@@ -96,5 +96,7 @@ def StatusColor(status):
     elif status==RequestStatusEnum.DENIED:
         color= 'danger'
     elif status==RequestStatusEnum.PURCHASING:
+        color= 'success'
+    elif status==SignatureStatusEnum.PAID:
         color= 'success'
     return color

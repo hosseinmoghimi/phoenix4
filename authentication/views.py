@@ -86,7 +86,6 @@ class AuthenticationViews(View):
                 request=ProfileRepo(request=request).login_as_user(username=username)
                 if request is not None:
                     log=4
-                    print(request.user)
                     return redirect(SITE_URL)
         return redirect("authentication:login")
 
@@ -94,6 +93,8 @@ class AuthenticationViews(View):
         context=getContext(request)
         profiles=ProfileRepo(request=request).list()
         context['profiles']=profiles
+        profiles_s=json.dumps(ProfileSerializer(profiles,many=True).data)
+        context['profiles_s']=profiles_s
         return render(request,TEMPLATE_ROOT+"profiles.html",context)
     
     def login(self,request,*args, **kwargs):

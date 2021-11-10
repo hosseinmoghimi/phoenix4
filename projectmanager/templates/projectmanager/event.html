@@ -21,6 +21,7 @@
         </a>
         {% endif %}
     </h3>
+                  
     <div class="farsi">
         {{event.get_breadcrumb|safe}}
     </div>
@@ -34,6 +35,17 @@
         <div class="col-md-4">
             <div class="card mb-5">
                 <div class="card-body">
+<h5>
+    {{event.title}} {% include "core/includes/page-like-app/template.html" %}
+    {% if perms.projectmanager.change_event %}
+                        <a title="ویرایش" target="_blank" href="{{event.get_edit_url}}">
+                            <i class="fa fa-edit text-info"></i>
+                        </a>
+                        {% endif %}
+</h5>
+    
+
+
                     <p>
                         <span class="small text-secondary">
                             مربوط به پروژه
@@ -128,5 +140,6 @@
 {% include "core/includes/page-description-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
 {% include "projectmanager/includes/locations-app/script.html" %}
-
+{% include "core/includes/page-like-app/script.html" %}
+                  
 {% endblock %}

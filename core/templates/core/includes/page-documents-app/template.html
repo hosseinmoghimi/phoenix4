@@ -1,3 +1,4 @@
+{% load static %}
 <div id="accordion-page-documents">
 
     <div id="page-documents-app" class="card mb-3">
@@ -10,43 +11,27 @@
             </h5>
         </div>
 
-        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}" 
-        aria-labelledby="headingdocuments" data-parent="#accordion-page-documents">
+        <div id="collapsedocuments" class="collapse {% if page.documents.all %}show{% endif %}"
+            aria-labelledby="headingdocuments" data-parent="#accordion-page-documents">
 
             <div class="card-body">
-                {% for document in page.documents.all %}
-                <div>
 
-                    <h6>
-                        <a class="mr-2" target="_blank" href="{{document.get_download_url}}">
-                        {{document.get_icon_tag|safe}}
-                            {{document.title}}
-                        </a>
-                        {% if perms.core.change_document %}
-                        {{document.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </h6>
-                </div>
-                {% endfor %}
                 <div v-for="document in documents">
 
                     <h6>
-                        <i class=" text-primary fa fa-tag"></i>
-                        <a class="mr-2" target="_blank" :href="document.get_download_url" v-text="document.title">
-
+                        <a class="mr-2" target="_blank" :href="document.get_download_url">
+                            <i class="fa fa-download text-success" aria-hidden="true"></i>
+                            <span v-text="document.title"></span>
                         </a>
                         {% if perms.core.change_document %}
                         <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
-                            <i class="material-icons">
-                                edit
-                            </i>
+                            <i class="fa fa-edit text-info" ></i>
                         </a>
                         {% endif %}
                     </h6>
                 </div>
             </div>
-                {% if add_page_document_form %}
+            {% if add_page_document_form %}
             <div class="card-footer">
 
                 <p class="text-right" v-if="!show_add_document_form">
@@ -78,9 +63,11 @@
 
                         </div>
                         <div class="col-4">
-                            <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
-                            <button @click="show_add_document_form=false" class="farsi btn btn-secondary btn-block"
-                                type="reset">انصراف</button>
+                            <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
+
+                            <button class="farsi btn btn-primary btn-block" v-if="!waiting" type="submit">تایید</button>
+                            <button @click="show_add_document_form=false" v-if="!waiting"
+                                class="farsi btn btn-secondary btn-block" type="reset">انصراف</button>
 
                         </div>
                     </div>
@@ -88,7 +75,7 @@
                 </form>
 
             </div>
-                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

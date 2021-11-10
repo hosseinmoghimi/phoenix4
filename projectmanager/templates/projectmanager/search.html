@@ -61,6 +61,48 @@
 
 
 
+                {% if employees %}
+
+
+                <h5 class="mt-4">
+                    پرسنل :
+                </h5>
+                {% for employee in employees %}
+                <p class="mr-5">
+                <div class="media">
+                    <a href="{{employee.get_absolute_url}}">
+                        <img src="{{employee.profile.image}}" class="rounded-circle" width="32" alt="">
+                    </a>
+                    <div class="media-body">
+                        <div>
+
+                            <a href="{{employee.get_absolute_url}}">
+                                {{employee.profile.name}}
+                            </a>
+                        </div>
+
+                        <div class="">
+
+                            <a class="text-muted small" href="{{employee.organization_unit.employer.get_absolute_url}}">
+                                {{employee.organization_unit.employer.title}}
+                            </a>
+                        /
+                            <a class="text-muted small" href="{{employee.organization_unit.get_absolute_url}}">
+                                {{employee.organization_unit.title}}
+                            </a>
+                        </div>
+
+
+                    </div>
+                </div>
+                </p>
+                {% endfor %}
+
+
+
+                {% endif %}
+
+
 
                 {% if projects %}
 
