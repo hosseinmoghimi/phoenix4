@@ -13,3 +13,6 @@ def StatusColor(status):
     elif status==BlogStatusEnum.EXPORT:
         color= 'warning'
     return color
+class MemberShipLevelEnum(TextChoices):
+    REGULAR="عادی",_("عادی")
+    MASTER="استاد",_("استاد")

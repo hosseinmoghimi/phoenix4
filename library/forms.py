@@ -10,5 +10,10 @@ class AddBookForm(forms.Form):
     row=forms.CharField(max_length=100, required=True)
     year=forms.IntegerField(required=True)
     price=forms.IntegerField(required=True)
-    description=forms.CharField(max_length=100, required=False)
+    description=forms.CharField(max_length=1000, required=False)
+
+
+class AddMemberForm(forms.Form):
+    profile_id=forms.IntegerField(required=True)
+    description=forms.CharField(max_length=1000, required=False)
    

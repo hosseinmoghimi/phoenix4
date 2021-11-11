@@ -8,6 +8,13 @@ from django.shortcuts import reverse
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from utility.persian import PersianCalendar
 
+class Admin_Model():
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+
 class LibraryPage(CoreBasicPage):
     def get_status_color(self):
         return StatusColor(self.status)
@@ -37,3 +44,44 @@ class Book(LibraryPage):
     def save(self,*args, **kwargs):
         self.class_name='book'
         return super(Book,self).save(*args, **kwargs)
+
+class Member(models.Model,Admin_Model):
+    profile=models.ForeignKey("authentication.profile",related_name="library_member_set", verbose_name=_("profile"), on_delete=models.CASCADE)
+    membership_started=models.DateTimeField(_("شروع عضویت"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    membership_ended=models.DateTimeField(_("پایان عضویت"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    level=models.CharField(_("level"),choices=MemberShipLevelEnum.choices,default=MemberShipLevelEnum.REGULAR, max_length=50)
+    class_name="member"
+    class Meta:
+        verbose_name = _("Member")
+        verbose_name_plural = _("Members")
+
+    def __str__(self):
+        return self.profile.name
+
+    def persian_membership_started(self):
+        return PersianCalendar().from_gregorian(self.membership_started)[:10]
+
+
+
+    def persian_membership_ended(self):
+        return PersianCalendar().from_gregorian(self.membership_ended)[:10]
+
+
+
+class Lend(models.Model,Admin_Model):
+    member=models.ForeignKey("member", verbose_name=_("member"), on_delete=models.CASCADE)
+    book=models.ForeignKey("book", verbose_name=_("book"), on_delete=models.CASCADE)
+    date_lended=models.DateTimeField(_("تاریخ امانت"), auto_now=False, auto_now_add=False)
+    date_returned=models.DateTimeField(_("تاریخ برگشت"), auto_now=False, auto_now_add=False)
+    class_name="lend"
+    class Meta:
+        verbose_name = _("Lend")
+        verbose_name_plural = _("Lends")
+
+    def __str__(self):
+        return f"{str(self.member)} => {str(self.book)}"
+    
+
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
