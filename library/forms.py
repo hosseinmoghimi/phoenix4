@@ -17,3 +17,13 @@ class AddMemberForm(forms.Form):
     profile_id=forms.IntegerField(required=True)
     description=forms.CharField(max_length=1000, required=False)
    
+
+class LendBookForm(forms.Form):
+    member_id=forms.IntegerField(required=True)
+    book_id=forms.IntegerField(required=True)
+    description=forms.CharField(max_length=1000, required=False)
+   
+class DeliverBookForm(forms.Form):
+    book_id=forms.IntegerField(required=True)
+    description=forms.CharField(max_length=1000, required=False)
+   

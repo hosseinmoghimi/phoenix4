@@ -1,10 +1,10 @@
 from typing import ContextManager
 from utility.persian import PersianCalendar
-from .serializers import BookSerializer, MemberSerializer
+from .serializers import BookSerializer, LendSerializer, MemberSerializer
 from core.constants import SUCCEED, FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import BookRepo, MemberRepo
+from .repo import BookRepo, LendRepo, MemberRepo
 from .forms import *
 
 
@@ -68,6 +68,35 @@ class MemberApi(APIView):
                     log = 4
                     member = MemberSerializer(member).data
                     context['member'] = member
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
+
+    
+
+class LendApi(APIView):
+    def lend_book(self, request):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        user = request.user
+        if request.method == 'POST':
+            log = 2
+            lend_book_form = LendBookForm(request.POST)
+            if lend_book_form.is_valid():
+                log = 3 
+                member_id = lend_book_form.cleaned_data['member_id']
+                book_id = lend_book_form.cleaned_data['book_id']
+                description = lend_book_form.cleaned_data['description'] 
+                lend = LendRepo(request=request).add_lend(
+                    book_id=book_id,
+                    member_id=member_id,
+                    description=description,
+                )
+
+                if lend is not None:
+                    log = 4
+                    context['lend'] = LendSerializer(lend).data
                     context['result'] = SUCCEED
         context['log'] = log
         return JsonResponse(context)

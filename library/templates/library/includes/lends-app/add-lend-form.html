@@ -1,0 +1,43 @@
+{% if add_lend_form %}
+  
+  
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="title_wfdinput">کتاب</label>
+            <input @input="select_book()" type="number" v-model="book_id" class="form-control farsi"
+                required id="tiddftle_input">
+            <div v-if="selected_book" class="my-2 alert alert-warning farsi">
+                <span v-text="selected_book.title"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="title_input">عضو</label>
+            <input @input="select_member()" type="number" v-model="member_id" class="form-control farsi"
+                required id="titwvle_input">
+            <div v-if="selected_member" class="my-2 alert alert-success farsi">
+                <span v-text="selected_member.profile.name"></span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="description_input">توضیحات</label>
+            <input type="text" v-model="description" class="form-control farsi" id="description_input">
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <button class="btn btn-success" @click="lend_book()">امانت دادن</button>
+        <button class="btn btn-warning" @click="return_book()">تحویل گرفتن</button>
+    </div>
+</div>
+
+    {% endif %}

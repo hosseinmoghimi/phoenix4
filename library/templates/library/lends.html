@@ -6,15 +6,9 @@
 <h3>
     کتابخانه
 </h3>
-<div class="row">
-    <div class="col-md-12 mb-5">
+<div class="row"> 
+    <div class="col-md-12">
         {% include "library/includes/lends-app/template.html" %}
-    </div>
-    <div class="col-md-12 mb-5">
-        {% include "library/includes/books-app/template.html" %}
-    </div>
-    <div class="col-md-12 mb-5">
-        {% include "library/includes/members-app/template.html" %}
     </div>
 </div>
 {% endblock content %}
@@ -22,9 +16,6 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-
-{% include "library/includes/books-app/script.html" %}
+ 
 {% include "library/includes/lends-app/script.html" %}
-{% include "library/includes/members-app/script.html" %}
-
 {% endblock script %}

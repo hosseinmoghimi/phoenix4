@@ -1,0 +1,21 @@
+<div id="lends-app">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+                <a href="{% url 'library:lends' %}">
+
+                    امانت و بازگشت کتاب
+                </a>
+            </h4>
+        </div>
+        <div class="card-body">
+
+            {% include "library/includes/lends-app/add-lend-form.html" %}
+            <div class="mb-4"></div>
+            {% include "library/includes/lends-app/table.html" %}
+
+
+        </div>
+    </div>
+
+</div>

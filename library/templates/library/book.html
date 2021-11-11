@@ -21,9 +21,7 @@
                 <h6>
                     {{book.amount|to_price|safe}}
                 </h6>
-                <div class="farsi text-right">
-                    {{book.description|safe}}
-                </div>
+               
             </div>
         </div>
     </div>
@@ -39,6 +37,18 @@
 
         {% include "core/includes/page-images-app/template.html" %}
     </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+               
+                <div class="farsi text-right">
+                    {{book.description|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock content %}
 

@@ -71,13 +71,17 @@ class Member(models.Model,Admin_Model):
 class Lend(models.Model,Admin_Model):
     member=models.ForeignKey("member", verbose_name=_("member"), on_delete=models.CASCADE)
     book=models.ForeignKey("book", verbose_name=_("book"), on_delete=models.CASCADE)
-    date_lended=models.DateTimeField(_("تاریخ امانت"), auto_now=False, auto_now_add=False)
-    date_returned=models.DateTimeField(_("تاریخ برگشت"), auto_now=False, auto_now_add=False)
+    date_lended=models.DateTimeField(_("تاریخ امانت"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    date_returned=models.DateTimeField(_("تاریخ برگشت"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
     class_name="lend"
     class Meta:
         verbose_name = _("Lend")
         verbose_name_plural = _("Lends")
-
+    def persian_date_lended(self):
+        return PersianCalendar().from_gregorian(self.date_lended)[:10]
+    def persian_date_returned(self):
+        return PersianCalendar().from_gregorian(self.date_returned)[:10]
     def __str__(self):
         return f"{str(self.member)} => {str(self.book)}"
     

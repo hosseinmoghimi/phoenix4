@@ -6,10 +6,10 @@ from authentication.repo import ProfileRepo
 from core.enums import ParametersEnum
 
 from core.repo import ParameterRepo
-from .serializers import BookSerializer, MemberSerializer
+from .serializers import BookSerializer, LendSerializer, MemberSerializer
 from .apps import APP_NAME
 from django.shortcuts import render,reverse,redirect
-from .repo import BookRepo, MemberRepo
+from .repo import BookRepo, LendRepo, MemberRepo
 from .forms import *
 import json
 from core.views import CoreContext,PageContext
@@ -35,6 +35,9 @@ class BasicViews(View):
         context['books']=books
         books_s=json.dumps(BookSerializer(books,many=True).data)
         context['books_s']=books_s
+        if request.user.has_perm(APP_NAME+".add_book"):
+            add_book_form=AddBookForm()            
+            context['add_book_form']=add_book_form
 
 
         
@@ -42,17 +45,21 @@ class BasicViews(View):
         context['members']=members
         members_s=json.dumps(MemberSerializer(members,many=True).data)
         context['members_s']=members_s
-
         if request.user.has_perm(APP_NAME+".add_member"):
             add_member_form=AddMemberForm()            
             context['add_member_form']=add_member_form
             profiles=ProfileRepo(request=request).list()
             context['profiles']=profiles
+        
+        lends=LendRepo(request=request).list()
+        context['lends']=lends
+        lends_s=json.dumps(LendSerializer(lends,many=True).data)
+        context['lends_s']=lends_s
+        if request.user.has_perm(APP_NAME+".add_lend"):
+            add_lend_form=LendBookForm()            
+            context['add_lend_form']=add_lend_form
 
 
-        if request.user.has_perm(APP_NAME+".add_book"):
-            add_book_form=AddBookForm()            
-            context['add_book_form']=add_book_form
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 
@@ -86,4 +93,52 @@ class MemberViews(View):
         members_s=json.dumps(MemberSerializer(members,many=True).data)
         context['members_s']=members_s
         return render(request,TEMPLATE_ROOT+"members.html",context)
+
+
+
+
+
+
+class LendViews(View):
+    def lend(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        lend=LendRepo(request=request).lend(*args, **kwargs)
+        context['lend']=lend
+        return render(request,TEMPLATE_ROOT+"lend.html",context)
+
+    def lends(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        
+
+        books=BookRepo(request=request).list()
+        context['books']=books
+        books_s=json.dumps(BookSerializer(books,many=True).data)
+        context['books_s']=books_s
+        if request.user.has_perm(APP_NAME+".add_book"):
+            add_book_form=AddBookForm()            
+            context['add_book_form']=add_book_form
+
+
+        
+        members=MemberRepo(request=request).list()
+        context['members']=members
+        members_s=json.dumps(MemberSerializer(members,many=True).data)
+        context['members_s']=members_s
+        if request.user.has_perm(APP_NAME+".add_member"):
+            add_member_form=AddMemberForm()            
+            context['add_member_form']=add_member_form
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
+
+        lends=LendRepo(request=request).list()
+        context['lends']=lends
+        lends_s=json.dumps(LendSerializer(lends,many=True).data)
+        context['lends_s']=lends_s
+        if request.user.has_perm(APP_NAME+".add_lend"):
+            add_lend_form=LendBookForm()            
+            context['add_lend_form']=add_lend_form
+
+
+        return render(request,TEMPLATE_ROOT+"lends.html",context)
+
 

@@ -1,0 +1,77 @@
+{% extends "library/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h4>
+                    <a href="{{lend.member.get_absolute_url}}">
+                        {{lend.member.profile.name}}
+                    </a>
+                    {% if perms.library.change_member %}
+                    <a href="{{lend.member.get_edit_url}}" title="ویرایش" target="_blank">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                    {% endif %}
+                </h4>
+                <h4>
+                    <a href="{{lend.book.get_absolute_url}}">
+                        {{lend.book.title}}
+                    </a>
+                    {% if perms.library.change_book %}
+                    <a href="{{lend.book.get_edit_url}}" title="ویرایش" target="_blank">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                    {% endif %}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+
+
+                <div class="farsi text-right">
+                    {{lend.date_lended|to_persian_date|safe}}
+                </div>
+                <div class="farsi text-right">
+                    {{lend.date_returned|to_persian_date|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                {% if lend.description %}
+                <div class="farsi text-right my-3">
+
+                    {{lend.description|safe}}
+                </div>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+</script>
+{% endblock script %}

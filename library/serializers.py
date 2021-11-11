@@ -18,9 +18,9 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class LendSerializer(serializers.ModelSerializer):
-    profile=ProfileSerializer()
+    member=MemberSerializer()
     book=BookSerializer()
     class Meta:
         model=Lend
-        fields=['id','profile','book','get_edit_url','get_absolute_url']
+        fields=['id','member','book','persian_date_lended','persian_date_returned','get_edit_url','get_absolute_url']
 

@@ -129,7 +129,7 @@ class MemberRepo():
         member=Member()
         if 'profile_id' in kwargs:
             member.profile_id=kwargs['profile_id']
-            
+
         if 'membership_started' in kwargs:
             member.membership_started=kwargs['membership_started']
         else:
@@ -181,35 +181,32 @@ class LendRepo():
             objects=objects.filter(parent_id=kwargs['parent_id'])
         return objects.all()
 
-    def add_member(self, *args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_book"):
+    def add_lend(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_lend"):
             return 
 
-        book=Book()
+        lend=Lend()
 
-        if 'title' in kwargs:
-            book.title=kwargs['title']
+        if 'book_id' in kwargs:
+            lend.book_id=kwargs['book_id']
 
+        if 'member_id' in kwargs:
+            lend.member_id=kwargs['member_id']
+
+        if 'date_lended' in kwargs:
+            lend.date_lended=kwargs['date_lended']
+        else:
+            lend.date_lended=timezone.now()
+
+        if 'date_returned' in kwargs:
+            lend.date_returned=kwargs['date_returned']
+        else:
+            lend.date_returned=timezone.now()
+
+         
         if 'description' in kwargs:
-            book.description=kwargs['description']
-
-        if 'year' in kwargs:
-            book.year=kwargs['year']
-
-
-        if 'price' in kwargs:
-            book.price=kwargs['price']
-
-        if 'shelf' in kwargs:
-            book.shelf=kwargs['shelf']
-
-        if 'row' in kwargs:
-            book.row=kwargs['row']
-
-
-        if 'col' in kwargs:
-            book.col=kwargs['col']
-        book.save()
-        return book
+            lend.description=kwargs['description']
+        lend.save()
+        return lend
 
 
