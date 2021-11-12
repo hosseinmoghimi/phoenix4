@@ -363,7 +363,8 @@ class ProjectViews(View):
         context['employers'] = employers
         context['employers_s'] = json.dumps(EmployerSerializer(employers,many=True).data)
         context['project_status_enum']=(i[0] for i in ProjectStatusEnum.choices)
-        context['add_project_form'] = AddProjectForm()
+        if request.user.has_perm(APP_NAME+".add_project"):
+            context['add_project_form'] = AddProjectForm()
         context['projects'] = project.sub_projects()
         context['project_s']=json.dumps(ProjectSerializer(project).data)
         
