@@ -140,6 +140,7 @@ class BasicViews(View):
 
 
 class ProjectViews(View):
+
     def copy_project_request(self,request,*args, **kwargs):
         if 'destination_project_id' in kwargs:
             destination_project_id=kwargs['destination_project_id']
@@ -156,6 +157,7 @@ class ProjectViews(View):
                     if project is not None:
                         return redirect(project.get_absolute_url())
         raise Http404
+
     def projects_chart(self, request, *args, **kwargs):
         context = getContext(request)
         if 'pk' in kwargs and kwargs['pk']>0:
@@ -199,8 +201,6 @@ class ProjectViews(View):
 
         return render(request, "phoenix/pages-chart.html", context)
 
-    
-
     def guantt(self, request, *args, **kwargs):
         context = getContext(request=request)
         
@@ -211,7 +211,6 @@ class ProjectViews(View):
 
         return render(request, TEMPLATE_ROOT+"guantt.html", context)
 
-    
     def project_materials_order(self, request, *args, **kwargs):
         context = getContext(request)
         TAX_PERCENT = 0
@@ -375,7 +374,6 @@ class ProjectViews(View):
         context['events'] = events
         context['events_s']=json.dumps(EventSerializer(events,many=True).data)
         return render(request, TEMPLATE_ROOT+"project.html", context)
-
 
     def projects(self, request, *args, **kwargs):
         projects = ProjectRepo(request=request).list(*args, **kwargs)
