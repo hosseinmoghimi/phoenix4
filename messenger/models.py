@@ -1,4 +1,4 @@
-from django.db.models.fields import CharField
+from django.db.models.fields import BooleanField, CharField
 from core.models import BasicPage
 from .apps import APP_NAME
 from django.db import models
@@ -18,7 +18,7 @@ class MessengerPage(BasicPage):
 class Message(models.Model):
     title=models.CharField(_("title"), max_length=50)
     body=models.CharField(_("body"), max_length=50)
-    channel=models.ForeignKey("channel", verbose_name=_(""), on_delete=models.CASCADE)
+    channel=models.ForeignKey("channel", verbose_name=_("channel"), on_delete=models.CASCADE)
     event=models.CharField(_("event"), max_length=50)
     # read=models.BooleanField(_("read?"),default=False)
     # draft=models.BooleanField(_("draft?"),default=True)
@@ -32,6 +32,9 @@ class Message(models.Model):
         verbose_name_plural = _("Messages")
     def perisan_date_send(self):
         return PersianCalendar().from_gregorian(self.date_send)
+    def get_absolute_url(self):
+        return "/Message/"
+    
     # def __str__(self):
     #     return self.title
     # def save(self,*args, **kwargs):
@@ -106,4 +109,7 @@ class Member(models.Model):
         return reverse(APP_NAME+":member", kwargs={"pk": self.pk})
 
 class Notification(Message):
-    pass
+    member=models.ForeignKey("member", verbose_name=_("member"), on_delete=models.CASCADE)
+    read=models.BooleanField(_("read"),default=False)
+    def get_absolute_url(self):
+        return '/Notification/'

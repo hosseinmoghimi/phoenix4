@@ -12,4 +12,5 @@ urlpatterns = [
 
     
     path("send_message/",apis.ChannelApi().send_message,name="send_message"),
+    path("send_notification/",apis.ChannelApi().send_notification,name="send_notification"),
 ]

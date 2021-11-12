@@ -1,6 +1,6 @@
 from authentication.repo import ProfileRepo
 from .serializers import MemberSerializer
-from .repo import MessageRepo,ChannelRepo
+from .repo import MemberRepo, MessageRepo,ChannelRepo
 from django.shortcuts import render
 from .apps import APP_NAME
 from django.views import View
@@ -34,27 +34,33 @@ class MessageViews(View):
         context['message']=message
         return render(request,TEMPLATE_ROOT+"message.html",context)
 
-  
+def GetMemberContext(request):
+    context={}
+    profile=ProfileRepo(request=request).me
+    
+    member=profile.member_set.first()
+    if member is not None:
+        context['member']=member
+        context['member_s']=json.dumps(MemberSerializer(member).data)
+        channels=[]
+        context['channels']=channels
+    return context
 
 class ChannelViews(View):
     def channel(self,request,*args, **kwargs):
         context=getContext(request=request)
         channel=ChannelRepo(request=request).channel(*args, **kwargs)
         context['channel']=channel
-        profile=ProfileRepo(request=request).me
-        
         messages=MessageRepo(request=request).list(channel_id=channel.id,*args, **kwargs).order_by("-id")
         context['messages']=messages
-
-        member=profile.member_set.filter(channel=channel).first()
-        if member is not None:
-            context['member']=member
-            context['member_s']=json.dumps(MemberSerializer(member).data)
+        context.update(GetMemberContext(request=request))
+        members=channel.member_set.all()
+        context['members']=members
         return render(request,TEMPLATE_ROOT+"channel.html",context)
 
     def member(self,request,*args, **kwargs):
         context=getContext(request=request)
-        member=MemberRpo(request=request).member(*args, **kwargs)
+        member=MemberRepo(request=request).member(*args, **kwargs)
         context['member']=member
         return render(request,TEMPLATE_ROOT+"member.html",context)
 

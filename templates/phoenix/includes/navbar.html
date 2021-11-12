@@ -9,17 +9,39 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+
+            {% if PUSHER_IS_ENABLE %}
+            <li class="nav-item my-auto mx-2" id="notifications-app">
+                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownNotification" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons" aria-hidden="true">help</i>
+                    اعلان ها
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownNotification">
+                    <a v-for="notification in notifications" class="dropdown-item"
+                        :href="notification.get_absolute_url">
+
+                        <span v-text="notification.title">
+
+                        </span>
+                    </a>
+
+                </div>
+
+            </li>
+            {% endif %}
+
             {% block navbar %}
             {% endblock %}
             {% if help_url %}
-              
+
             <li class="nav-item my-auto mx-2">
                 <a class="nav-link farsi " href="{{help_url}}">
                     <i class="material-icons" aria-hidden="true">help</i>
                     {% if help_title %}
                     {{help_title}}
-                      {% else %}
-                      راهنما
+                    {% else %}
+                    راهنما
                     {% endif %}
                 </a>
             </li>

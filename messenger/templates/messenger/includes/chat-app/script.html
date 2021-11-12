@@ -2,7 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
     let channel_id = parseInt("{{channel.id}}")
-    let member = JSON.parse("{{member_s|escapejs}}")
+    // let member = JSON.parse("{{member_s|escapejs}}")
     console.log(member)
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
@@ -29,6 +29,7 @@
             message_title: "",
             message_body: "",
             waiting: false,
+            profile_id:"",
         },
         methods: {
             send_message: function () {
@@ -51,7 +52,30 @@
                         chat_app.message_body = ""
                     }
                 })
-            }
+            },
+            send_notification: function () {
+                chat_app.waiting = true
+                let url = "{% url 'messenger:send_message' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    message_title: this.message_title,
+                    message_body: this.message_body,
+                    profile_id: profile_id,
+                    channel_id: channel_id,
+                    event: member.event,
+                }
+                $.post(url, payload).done((data) => {
+                    chat_app.waiting = false
+                    console.log(data)
+                    if (data.result === "SUCCEED") {
+
+
+                        chat_app.message_title = ""
+                        chat_app.message_body = ""
+                    }
+                })
+            },
+       
         }
     });
 </script>

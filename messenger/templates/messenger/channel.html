@@ -77,10 +77,15 @@
         {% include "messenger/includes/chat-app/template.html" %}
 
     </div>
+    <div class="col-12">
+        {% include "messenger/includes/notification-app/template.html" %}
+
+    </div>
 </div>
 {% endblock %}
 
 
 {% block messenger_script %}
 {% include "messenger/includes/chat-app/script.html" %}
+{% include "messenger/includes/notification-app/script.html" %}
 {% endblock %}

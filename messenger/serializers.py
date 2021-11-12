@@ -24,3 +24,7 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields=['id','event','profile','channel']
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields=['id','title','body','get_absolute_url']

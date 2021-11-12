@@ -2,6 +2,9 @@ import json
 from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render
+
+
+
 from .apps import APP_NAME
 from .forms import *
 from .repo import *
@@ -22,7 +25,8 @@ def CoreContext(request, *args, **kwargs):
         app_name = kwargs['app_name']
     context['user'] = request.user
     context['apps']=apps
-    context['profile'] = ProfileRepo(request=request).me
+    profile= ProfileRepo(request=request).me
+    context['profile'] =profile
     context['APP_NAME'] = app_name
     context['current_datetime'] = PersianCalendar(
     ).from_gregorian(timezone.now())
@@ -35,6 +39,15 @@ def CoreContext(request, *args, **kwargs):
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
+
+    if PUSHER_IS_ENABLE and profile is not None:
+        from messenger.views import GetMemberContext
+        from messenger.serializers import NotificationSerializer
+        from messenger.repo import NotificationRepo
+        context.update(GetMemberContext(request=request))
+        notifications=NotificationRepo(request=request).list(member_id=context['member'].id,read=False)
+        notifications_s=json.dumps(NotificationSerializer(notifications,many=True).data)
+        context['notifications_s']=notifications_s
 
     return context
 
@@ -93,6 +106,9 @@ def PageContext(request, page):
     context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
     if page.keywords is not None:
         context['keywords']=page.keywords
+
+
+
     return context
 
 
