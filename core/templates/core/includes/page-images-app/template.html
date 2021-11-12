@@ -1,3 +1,4 @@
+{% load static %}
 <div id="accordion-page-images">
 
     <div class="card" id="page-images-app">
@@ -74,9 +75,12 @@
 
                         </div>
                         <div class="col-4">
+                            <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
+
                             <button class="farsi btn btn-primary btn-block" type="submit">تایید</button>
                             <button @click="show_add_page_image_form=false" class="farsi btn btn-secondary btn-block"
                                 type="reset">انصراف</button>
+
 
                         </div>
                     </div>
