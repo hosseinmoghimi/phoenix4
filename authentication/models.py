@@ -132,6 +132,7 @@ class Profile(models.Model):
         return f"{ADMIN_URL}{APP_NAME}/profile/{self.pk}/change/"
 
 
+
 class ProfileContact(models.Model):
 
     profile=models.ForeignKey("profile", verbose_name=_("profile"), on_delete=models.CASCADE)

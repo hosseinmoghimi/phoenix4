@@ -189,7 +189,22 @@ class BasicPageRepo:
             objects=objects.filter(for_home=kwargs['for_home'])
         return objects.all()
 
+    
+    def my_pages_ids(self):
+        pages_ids=[]
+        if not self.request.user.is_authenticated:
+            return []
+        if self.request.user.has_perm('core.view_basicpage'):
+            return BasicPage.objects.all()
+        from projectmanager.repo import EmployeeRepo
+        employee = EmployeeRepo(request=self.request).me
+        if employee is not None:
+            for page in employee.organization_unit.project_set.all():
+                pages_ids.append(page.id)
+        return pages_ids
+        # return BasicPage.objects.filter(id__in=pages_ids)
 
+    
 class PageCommentRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -270,8 +285,17 @@ class PageLinkRepo:
             self.request=kwargs['request']
             self.user=self.request.user
         self.objects=PageLink.objects
-    def add_page_link(self,title,url,page_id,*args, **kwargs):
-        new_page_link=PageLink(title=title,page_id=page_id,url=url,icon_fa="fa fa-tag")
+        self.profile=ProfileRepo(request=self.request).me
+    def add_page_link(self,title,url,*args, **kwargs):
+        page=BasicPageRepo(request=self.request).page(*args, **kwargs)
+        if page is not None:
+            my_pages_ids=BasicPageRepo(request=self.request).my_pages_ids()
+            
+            if self.user.has_perm(APP_NAME+".add_pagelink") or page.id in my_pages_ids:
+                pass
+            else:
+                return
+        new_page_link=PageLink(title=title,page_id=page.id,url=url,icon_fa="fa fa-tag")
         new_page_link.new_tab=True
         new_page_link.save()
         return new_page_link
@@ -296,11 +320,22 @@ class PageImageRepo:
         if 'request' in kwargs:
             self.request=kwargs['request']
             self.user=self.request.user
+        self.profile=ProfileRepo(request=self.request).me
         self.objects=PageImage.objects
-    def add_page_image(self,title,image,page_id,*args, **kwargs):
+    def add_page_image(self,title,image,*args, **kwargs):
+        
+        page=BasicPageRepo(request=self.request).page(*args, **kwargs)
+        if page is not None:
+            my_pages_ids=BasicPageRepo(request=self.request).my_pages_ids()
+            
+            if self.user.has_perm(APP_NAME+".add_pagelink") or page.id in my_pages_ids:
+                pass
+            else:
+                return
+        
         image=Image(title=title,image_main_origin=image)
         image.save()
-        new_page_image=PageImage(image=image,page_id=page_id)
+        new_page_image=PageImage(image=image,page_id=page.id)
         
         new_page_image.save()
         return new_page_image
@@ -404,11 +439,17 @@ class DocumentRepo:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
-    def add_page_document(self,title,file,priority=1000,page_id=None):
+    def add_page_document(self,title,file,priority=1000,*args, **kwargs):
         
-        page=BasicPage.objects.get(pk=page_id)
-        if page is None:
-            return None
+        page=BasicPageRepo(request=self.request).page(*args, **kwargs)
+        if page is not None:
+            my_pages_ids=BasicPageRepo(request=self.request).my_pages_ids()
+            
+            if self.user.has_perm(APP_NAME+".add_pagelink") or page.id in my_pages_ids:
+                pass
+            else:
+                return
+        
 
         document=PageDocument(icon_material="get_app",title=title,file=file,priority=priority,page=page,profile=self.profile)
         document.save()

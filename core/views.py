@@ -40,7 +40,7 @@ def CoreContext(request, *args, **kwargs):
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
 
-    if PUSHER_IS_ENABLE and profile is not None:
+    if PUSHER_IS_ENABLE and profile is not None and profile.member_set.first() is not None:
         from messenger.views import GetMemberContext
         from messenger.serializers import NotificationSerializer
         from messenger.repo import NotificationRepo
@@ -70,18 +70,18 @@ def PageContext(request, page):
     related_pages = page.related_pages.all()
     context['related_pages'] = related_pages
     context['related_pages_s'] = json.dumps(BasicPageSerializer(related_pages,many=True).data)
-    if request.user.has_perm(APP_NAME+".add_link"):
+    if request.user.has_perm(APP_NAME+".add_link") or page.id in BasicPageRepo(request=request).my_pages_ids():
         context['add_page_link_form'] = AddPageLinkForm()
-    if request.user.has_perm(APP_NAME+".change_page"):
+    if request.user.has_perm(APP_NAME+".change_page") or page.id in BasicPageRepo(request=request).my_pages_ids():
         context['add_page_tag_form'] = AddPageTagForm()
         context['remove_page_tag_form'] = RemovePageTagForm()
     if ProfileRepo(request=request).me is not None:
         context['add_page_comment_form'] = AddPageCommentForm()
 
-    if request.user.has_perm(APP_NAME+".add_document"):
+    if request.user.has_perm(APP_NAME+".add_document") or page.id in BasicPageRepo(request=request).my_pages_ids():
         context['add_page_document_form'] = AddPageDocumentForm()
 
-    if request.user.has_perm(APP_NAME+".add_pageimage"):
+    if request.user.has_perm(APP_NAME+".add_pageimage") or page.id in BasicPageRepo(request=request).my_pages_ids():
         context['add_page_image_form'] = AddPageImageForm()
 
     if request.user.has_perm(APP_NAME+".change_page"):
