@@ -48,7 +48,8 @@ def CoreContext(request, *args, **kwargs):
         notifications=NotificationRepo(request=request).list(member_id=context['member'].id,read=False)
         notifications_s=json.dumps(NotificationSerializer(notifications,many=True).data)
         context['notifications_s']=notifications_s
-
+    else:
+        context['PUSHER_IS_ENABLE'] = False
     return context
 
 

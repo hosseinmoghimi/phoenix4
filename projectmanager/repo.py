@@ -5,7 +5,7 @@ from authentication.repo import ProfileRepo
 from django.db.models import Q,Sum
 from .apps import APP_NAME
 from .models import Location,Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, Location, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
-from core.repo import ParameterRepo
+from core.repo import BasicPageRepo, ParameterRepo
 from .enums import ParametersEnum
 
 def show_archives(request):
@@ -119,10 +119,14 @@ class ProjectRepo():
 
 
     def add_organization_unit(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".change_project"):
-            return None
+
         project=self.project(*args, **kwargs)
+        print(project)
+        if project is None:
+            return None
+        
         organization_unit=OrganizationUnitRepo(user=self.user).organization_unit(*args, **kwargs)
+        print(organization_unit)
         if organization_unit in project.organization_units.all():
             return None
         if project is not None and organization_unit is not None:

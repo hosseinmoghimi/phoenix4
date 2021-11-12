@@ -1,23 +1,41 @@
 <script>
-
-
-
-
     let organization_units = JSON.parse("{{organization_units_s|escapejs}}")
+
+</script>
+{% if add_organization_unit_form %}
+  <script>
     let all_organization_units = JSON.parse("{{all_organization_units_s|escapejs}}")
     let url_add_organization_unit = "{% url 'projectmanager:add_organization_unit' %}"
 
-    let organization_unit_app = new Vue({
-        el: "#organization-unit-app",
-        data: {
+      let organization_unit_app_data= {
             selected_organization_unit_title: "",
             new_organization_unit_title: "",
             new_organization_is_ware_house: false,
             organization_units: organization_units,
-
-
             waiting: false,
-        },
+        }
+  </script>
+{% else %}
+  <script>
+      let organization_unit_app_data= {
+            selected_organization_unit_title: "",
+            new_organization_unit_title: "",
+            new_organization_is_ware_house: false,
+            organization_units: organization_units,
+            waiting: false,
+        }
+  </script>
+{% endif %}
+
+<script>
+
+
+
+
+
+    let organization_unit_app = new Vue({
+        el: "#organization-unit-app",
+        data: organization_unit_app_data,
         methods: {
             show_add_btn: function () {
                 return !this.waiting && (typeof organization_unit_id != 'undefined') && this.new_organization_unit_title
@@ -38,6 +56,7 @@
                     organization_unit_id: organization_unit_id,
                     title: this.new_organization_unit_title,
                 }
+                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {

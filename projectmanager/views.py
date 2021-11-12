@@ -12,7 +12,7 @@ from authentication.views import ProfileContext
 from authentication.serializers import ProfileSerializer
 from core.constants import CURRENCY
 from core.enums import AppNameEnum, ParametersEnum
-from core.repo import ParameterRepo, PictureRepo, TagRepo
+from core.repo import BasicPageRepo, ParameterRepo, PictureRepo, TagRepo
 from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
 from django.views import View
@@ -331,7 +331,9 @@ class ProjectViews(View):
         context['employees_s']=json.dumps(EmployeeSerializer(employees,many=True).data)
         context['project'] = project
         context['all_locations']=LocationRepo(request=request).list().order_by('title')
-        if request.user.has_perm(APP_NAME+'.change_project'):
+        my_pages_ids=BasicPageRepo(request=request).my_pages_ids()
+        
+        if request.user.has_perm(APP_NAME+'.change_project') or project.id in my_pages_ids:
             context['add_location_form'] = AddLocationForm()
             context['copy_project_request_form']=CopyProjectRequestForm()
             context['add_existing_location_form'] = AddExistingLocationForm()
@@ -339,20 +341,19 @@ class ProjectViews(View):
         if request.user.has_perm(APP_NAME+'.add_event'):
             context['add_event_form'] = AddEventForm()
         organization_units = project.organization_units.all()
-        context['add_organization_unit_form'] = AddOrganizationUnitForm()
         context['organization_units'] = organization_units
-        context['organization_units_s'] = json.dumps(
-            OrganizationUnitSerializer(organization_units, many=True).data)
-        context['all_organization_units_s'] = json.dumps(OrganizationUnitSerializer(
-            OrganizationUnitRepo(request=request).list(), many=True).data)
+        context['organization_units_s'] = json.dumps(OrganizationUnitSerializer(organization_units, many=True).data)
+        if request.user.has_perm(APP_NAME+'.add_organizationunit'):
+            context['add_organization_unit_form'] = AddOrganizationUnitForm()
+            context['all_organization_units_s'] = json.dumps(OrganizationUnitSerializer(OrganizationUnitRepo(request=request).list(), many=True).data)
         context['unit_names'] = (i[0] for i in UnitNameEnum.choices)
         context['unit_names2'] = (i[0] for i in UnitNameEnum.choices)
         
-        if request.user.has_perm(APP_NAME+".add_serviverequest"):
+        if request.user.has_perm(APP_NAME+".add_serviverequest") or project.id in my_pages_ids:
             services = ServiceRepo(request=request).list()
             context['services_s'] = json.dumps(ServiceSerializer(services, many=True).data)
             context['add_service_request_form'] = AddServiceRequestForm()
-        if request.user.has_perm(APP_NAME+".add_materialrequest"):
+        if request.user.has_perm(APP_NAME+".add_materialrequest") or project.id in my_pages_ids:
             materials = MaterialRepo(request=request).list()
             context['materials_s'] = json.dumps(MaterialSerializer(materials, many=True).data)
             services = ServiceRepo(request=request).list()
