@@ -56,7 +56,6 @@
                     organization_unit_id: organization_unit_id,
                     title: this.new_organization_unit_title,
                 }
-                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {

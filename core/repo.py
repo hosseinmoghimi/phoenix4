@@ -34,7 +34,10 @@ class TagRepo:
         return self.objects.filter(pk=pk).first()
     
     def add_page_tag(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".change_basicpage"):
+        my_pages=BasicPageRepo(request=self.request).my_pages_ids()
+        if self.user.has_perm(APP_NAME+".change_basicpage") or kwargs['page_id'] in my_pages:
+            pass
+        else:
             return None
         title=None
         page_id=None

@@ -71,18 +71,19 @@ def PageContext(request, page):
     related_pages = page.related_pages.all()
     context['related_pages'] = related_pages
     context['related_pages_s'] = json.dumps(BasicPageSerializer(related_pages,many=True).data)
-    if request.user.has_perm(APP_NAME+".add_link") or page.id in BasicPageRepo(request=request).my_pages_ids():
+    my_pages_ids=BasicPageRepo(request=request).my_pages_ids()
+    if request.user.has_perm(APP_NAME+".add_link") or page.id in my_pages_ids:
         context['add_page_link_form'] = AddPageLinkForm()
-    if request.user.has_perm(APP_NAME+".change_page") or page.id in BasicPageRepo(request=request).my_pages_ids():
+    if request.user.has_perm(APP_NAME+".change_page") or page.id in my_pages_ids:
         context['add_page_tag_form'] = AddPageTagForm()
         context['remove_page_tag_form'] = RemovePageTagForm()
     if ProfileRepo(request=request).me is not None:
         context['add_page_comment_form'] = AddPageCommentForm()
 
-    if request.user.has_perm(APP_NAME+".add_document") or page.id in BasicPageRepo(request=request).my_pages_ids():
+    if request.user.has_perm(APP_NAME+".add_document") or page.id in my_pages_ids:
         context['add_page_document_form'] = AddPageDocumentForm()
 
-    if request.user.has_perm(APP_NAME+".add_pageimage") or page.id in BasicPageRepo(request=request).my_pages_ids():
+    if request.user.has_perm(APP_NAME+".add_pageimage") or page.id in my_pages_ids:
         context['add_page_image_form'] = AddPageImageForm()
 
     if request.user.has_perm(APP_NAME+".change_page"):
