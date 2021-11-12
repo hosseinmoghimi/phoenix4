@@ -90,11 +90,12 @@ class MessageRepo:
             cluster=channel.cluster,
             ssl=True
             )
-        import json
-        sender=(ProfileSerializer(message.sender).data)
+        # import json
+        # sender=(ProfileSerializer(message.sender).data)
         # message_object={'sender':sender,'title':message.title,'body':message.body}
         message_object=MessageSerializer(message).data
-        pusher_client.trigger(channel.name, event, message_object)
+        print(channel.channel_name)
+        pusher_client.trigger(channel.channel_name, event, message_object)
         return message
 
 # class EventRepo:
