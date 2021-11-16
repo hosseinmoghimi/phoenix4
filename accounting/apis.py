@@ -26,13 +26,18 @@ class TransactionApi(APIView):
                 pay_from_id=add_transaction_form.cleaned_data['pay_from_id']
                 description=add_transaction_form.cleaned_data['description']
                 payment_method=add_transaction_form.cleaned_data['payment_method']
+                date_paid=add_transaction_form.cleaned_data['date_paid']
                 amount=add_transaction_form.cleaned_data['amount']
+
+                date_paid=PersianCalendar().to_gregorian(date_paid)
+                
                 transaction=TransactionRepo(request=request).add_transaction(
                     title=title,
                     pay_to_id=pay_to_id,
                     pay_from_id=pay_from_id,
                     payment_method=payment_method,
                     amount=amount,
+                    date_paid=date_paid,
                     description=description,
                     )
                 context['transaction']=TransactionSerializer(transaction).data

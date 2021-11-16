@@ -7,3 +7,4 @@ class AddTransactionForm(forms.Form):
     date_paid=forms.CharField(max_length=20,required=False)
     description=forms.CharField(max_length=2000,required=False)
     payment_method=forms.CharField(max_length=200,required=False)
+    date_paid=forms.CharField(max_length=200,required=False)
