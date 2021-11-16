@@ -3,6 +3,7 @@ from core.constants import FAILED, SUCCEED
 from django.http.response import Http404
 from authentication.serializers import ProfileSerializer
 from core.settings import SITE_URL
+from phoenix.server_settings import ALLOW_REGISTER_ONLINE
 from django.shortcuts import render,redirect
 from .repo import *
 import json
@@ -125,6 +126,9 @@ class AuthenticationViews(View):
             
     def register(self,request,*args, **kwargs):
         context=getContext(request=request)
+        if not ALLOW_REGISTER_ONLINE:
+            return render(request,TEMPLATE_ROOT+"register.html",context)
+
         if request.method=='POST':
             register_form=RegisterForm(request.POST)
             if register_form.is_valid():
