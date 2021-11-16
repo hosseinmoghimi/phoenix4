@@ -169,12 +169,13 @@ class Employee(models.Model):
     def get_dashboard_url(self):
         return reverse(APP_NAME+":dashboard", kwargs={'employee_id': self.pk})
 
-    def my_projects(self):
+    def my_project_ids(self):
         ids = []
         # for org in self.organization_unit_set.all():
         for proj in self.organization_unit.project_set.all():
             ids.append(proj.id)
-        return Project.objects.filter(id__in=ids)
+        return ids
+        # return Project.objects.filter(id__in=ids)
 
 
 class Project(ProjectManagerPage):

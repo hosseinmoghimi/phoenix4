@@ -202,8 +202,8 @@ class BasicPageRepo:
         from projectmanager.repo import EmployeeRepo
         employee = EmployeeRepo(request=self.request).me
         if employee is not None:
-            for page in employee.organization_unit.project_set.all():
-                pages_ids.append(page.id)
+            for project in employee.organization_unit.project_set.all():
+                pages_ids.append(project.id)
         return pages_ids
         # return BasicPage.objects.filter(id__in=pages_ids)
 
