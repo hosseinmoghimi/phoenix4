@@ -661,7 +661,7 @@ class MaterialRequestViews(View):
             return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
         if request.user.has_perm(APP_NAME+".view_materialrequest"):
             pass
-        elif me_employee is not None and material_request.project in me_employee.my_projects():
+        elif me_employee is not None and material_request.project.id in me_employee.my_project_ids():
             pass
         else:
             mv=MessageView()
@@ -732,7 +732,7 @@ class ServiceRequestViews(View):
 
         if request.user.has_perm(APP_NAME+".view_servicerequest"):
             pass
-        elif me_employee is not None and service_request.project in me_employee.my_projects():
+        elif me_employee is not None and service_request.project.id in me_employee.my_project_ids():
             pass
         else:
             mv=MessageView()

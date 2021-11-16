@@ -1,4 +1,5 @@
 from django.db.models.aggregates import Avg
+from django.http import request
 from django.utils import timezone
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum, WareHouseSheetDirectionEnum
 from authentication.repo import ProfileRepo
@@ -34,8 +35,7 @@ class ProjectRepo():
             employees=Employee.objects.filter(profile=self.profile)
             lisst=[]
             for employee in employees:
-                for proj in employee.my_projects():
-                    lisst.append(proj.id)
+                lisst=employee.my_project_ids()
             self.objects=Project.objects.filter(id__in=lisst)
         
         if_show_archives=show_archives(request=self.request)
@@ -808,7 +808,7 @@ class ServiceRequestRepo():
             return
         if self.user.has_perm(APP_NAME+".add_requestsignature"):
             pass
-        elif service_request.project in me_employee.my_projects():
+        elif service_request.project.id in me_employee.my_project_ids():
             pass
         else:
             return
@@ -909,10 +909,15 @@ class EventRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
+        me_employer=EmployeeRepo(request=self.request).me
         if self.user is None:
-            self.objects=Employee.objects.filter(id=0)
+            self.objects=Event.objects.filter(id=0)
         elif self.user.has_perm(APP_NAME+".view_event"):
-            self.objects = Event.objects
+            self.objects=Event.objects.all()
+        elif me_employer is not None:
+            if me_employer is not None:
+                my_project_ids=me_employer.my_project_ids()
+            self.objects = Event.objects.filter(project_related_id__in=my_project_ids)
         elif self.profile is not None:
             self.objects=Event.objects.filter(id=0)
         else:
