@@ -18,6 +18,9 @@ class BankAccountRepo:
     def bank_account(self,*args, **kwargs):
         pk=0
         
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+            return self.objects.filter(owner__profile_id=profile_id).first()
         if 'bank_account_id' in kwargs:
             pk=kwargs['bank_account_id']
         if 'pk' in kwargs:
@@ -26,6 +29,8 @@ class BankAccountRepo:
             pk=kwargs['id']
         bank_account= self.objects.filter(pk=pk).first()
         return bank_account
+    
+
        
 class AssetRepo:
     def __init__(self,*args, **kwargs):

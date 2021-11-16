@@ -14,10 +14,14 @@ from tinymce.models import HTMLField
 from .enums import *
 from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
+
+
 class AccountingPage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(AccountingPage,self).save(*args, **kwargs)
+
+
 class Asset(models.Model):
     app_name=models.CharField(_("app_name"),blank=True, max_length=50)
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
@@ -83,6 +87,7 @@ class FinancialAccount(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":financial_account", kwargs={"financial_account_id": self.pk})
 
+
 class BankAccount(models.Model):
     title = models.CharField(_("عنوان"), max_length=50)
     owner = models.ForeignKey("FinancialAccount", verbose_name=_(
@@ -107,7 +112,8 @@ class BankAccount(models.Model):
 
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
- 
+
+
 class Transaction(AccountingPage):
     pay_from = models.ForeignKey("FinancialAccount", related_name="pay_from_set", verbose_name=_(
         "pay_from"), on_delete=models.CASCADE)
@@ -176,6 +182,7 @@ class Transaction(AccountingPage):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
 
+
 class TransactionMixin():
     def get_icon(self):
         type1="پول"
@@ -208,6 +215,7 @@ class AssetTransaction(Transaction,TransactionMixin):
         self.class_name="assettransaction"
         return super(AssetTransaction,self).save(*args, **kwargs)
 
+
 class MarketOrderTransaction(Transaction,TransactionMixin):
     order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
 
@@ -218,8 +226,6 @@ class MarketOrderTransaction(Transaction,TransactionMixin):
     class Meta:
         verbose_name = _("MarketOrderTransaction")
         verbose_name_plural = _("تراکنش های صورت حساب فروش")
-
-
 
 
 class MoneyTransaction(Transaction,TransactionMixin):
