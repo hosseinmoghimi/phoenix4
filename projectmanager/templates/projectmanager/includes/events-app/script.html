@@ -47,7 +47,6 @@
                     end_datetime: this.end_datetime,
                     project_id: parent_id,
                 }
-                console.log(payload)
                 let posting = $.post(url_add_event, payload)
                 posting.done((data) => {
                     events_app.waiting = false

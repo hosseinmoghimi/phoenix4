@@ -12,6 +12,8 @@ def show_archives(request):
         parameter_repo = ParameterRepo(request=request,app_name=APP_NAME)
         show_archives=parameter_repo.parameter(ParametersEnum.SHOW_ARCHIVES).boolesan_value
         return show_archives
+
+
 class ProjectRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -925,9 +927,18 @@ class EventRepo():
             return self.objects.filter(pk=kwargs['event_id']).first()
         if 'title' in kwargs:
             return self.objects.filter(pk=kwargs['title']).first()
+    
     def add_event(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_event"):
-            return None
+        if 'project_id' in kwargs:
+            project_id= kwargs['project_id']
+        my_project_ids=BasicPageRepo(request=self.request).my_pages_ids()
+        print(my_project_ids)
+        if self.user.has_perm(APP_NAME+".add_event")  :
+            pass
+        elif project_id in my_project_ids:
+            pass
+        else:
+            return
         if 'start_datetime' in kwargs:
             start_datetime=kwargs['start_datetime']
         if 'end_datetime' in kwargs:
@@ -938,8 +949,6 @@ class EventRepo():
             from django.utils import timezone
             event_datetime=timezone.now()
         new_event=Event(creator=ProfileRepo(user=self.user).me,event_datetime=event_datetime)
-        if 'project_id' in kwargs:
-            new_event.project_related_id = kwargs['project_id']
         if 'title' in kwargs:
             new_event.title = kwargs['title']
         if 'event_datetime' in kwargs:
@@ -949,6 +958,7 @@ class EventRepo():
         new_event.event_datetime=event_datetime
         new_event.end_datetime=end_datetime
         new_event.start_datetime=start_datetime
+        new_event.project_related_id=project_id
         new_event.creator=self.profile
         new_event.save()
         return new_event

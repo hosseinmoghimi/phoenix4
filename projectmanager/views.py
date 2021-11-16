@@ -350,8 +350,6 @@ class ProjectViews(View):
             context['copy_project_request_form']=CopyProjectRequestForm()
             context['add_existing_location_form'] = AddExistingLocationForm()
             context['edit_project_form']=EditProjectForm()
-        if request.user.has_perm(APP_NAME+'.add_event'):
-            context['add_event_form'] = AddEventForm()
         organization_units = project.organization_units.all()
         context['organization_units'] = organization_units
         context['organization_units_s'] = json.dumps(OrganizationUnitSerializer(organization_units, many=True).data)
@@ -361,6 +359,8 @@ class ProjectViews(View):
         context['unit_names'] = (i[0] for i in UnitNameEnum.choices)
         context['unit_names2'] = (i[0] for i in UnitNameEnum.choices)
         
+        if request.user.has_perm(APP_NAME+'.add_event') or project.id in my_pages_ids:
+            context['add_event_form'] = AddEventForm()
         if request.user.has_perm(APP_NAME+".add_serviverequest") or project.id in my_pages_ids:
             services = ServiceRepo(request=request).list()
             context['services_s'] = json.dumps(ServiceSerializer(services, many=True).data)
