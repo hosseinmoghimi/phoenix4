@@ -237,6 +237,8 @@ class ProjectViews(View):
             f"واحد مبلغ ها {CURRENCY} می باشد.",
             f"""مربوط به {project.full_title}     ({project.id})""",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
+            f"شناسه شبا حساب به نام حسین مقیمی و به شناسه 09 3540 1581 0010 0000 0170 I",
+            f"شماره کارت به نام حسین مقیمی و به شماره 6037 9974 5889 8245 ",
             ]
             
         total_for_pay = tax+lines_total
@@ -283,6 +285,8 @@ class ProjectViews(View):
             f"""مربوط به {project.full_title}     ( کد {project.id} )""",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
             f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
+            f"شناسه شبا حساب به نام حسین مقیمی و به شناسه 09 3540 1581 0010 0000 0170",
+            f"شماره کارت به نام حسین مقیمی و به شماره 6037 9974 5889 8245  I",
 
             ]
         total_for_pay = tax+lines_total
