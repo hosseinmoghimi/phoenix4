@@ -145,10 +145,10 @@ class EventApi(APIView):
         context['result']=FAILED
         log=1
         if request.method=='POST':
-            log+=1
+            log=2
             add_event_form=AddEventForm(request.POST)
             if add_event_form.is_valid():
-                log+=1
+                log=3
                 title=add_event_form.cleaned_data['title']
                 event_datetime=add_event_form.cleaned_data['event_datetime']
                 start_datetime=add_event_form.cleaned_data['start_datetime']
@@ -159,6 +159,7 @@ class EventApi(APIView):
                 end_datetime=PersianCalendar().to_gregorian(end_datetime)
                 event=EventRepo(request=request).add_event(start_datetime=start_datetime,end_datetime=end_datetime,event_datetime=event_datetime,project_id=project_id,title=title)
                 if event is not None:
+                    log=4
                     context['event']=EventSerializer(event).data
                     context['result']=SUCCEED
         context['log']=log
