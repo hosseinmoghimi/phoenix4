@@ -545,6 +545,7 @@ class MaterialRequest(Request):
     # sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
     class_name = 'materialrequest'
     ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("برگه انبار"), null=True,blank=True,on_delete=models.SET_NULL)
+    ware_house_sheets=models.ManyToManyField("warehousesheet",related_name="ware_house_sheets", verbose_name=_("برگه های انبار"))
     class Meta:
         verbose_name = _("MaterialRequest")
         verbose_name_plural = _("درخواست های متریال")
@@ -856,8 +857,7 @@ class WareHouseSheetLine(models.Model):
         return f"{self.ware_house_sheet} : {self.material.title} "
 
     def get_absolute_url(self):
-        return self.ware_house_sheet.get_absolute_url()
-        # return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
 
     def save(self,*args, **kwargs):
         ware_house=self.ware_house_sheet.ware_house
@@ -876,6 +876,7 @@ class WareHouseSheetLine(models.Model):
         return super(WareHouseSheetLine,self).save(*args, **kwargs)
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+
 
 class WareHouseMaterial(models.Model):
     ware_house=models.ForeignKey("warehouse", verbose_name=_("warehouse"), on_delete=models.CASCADE)

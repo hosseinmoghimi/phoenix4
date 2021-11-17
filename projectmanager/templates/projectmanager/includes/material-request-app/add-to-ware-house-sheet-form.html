@@ -42,6 +42,9 @@
                 {% for ware_house in ware_houses %}
                 <option value="{{ware_house.id}}">{{ware_house.title}}</option>
                 {% endfor %}
+                {% for ware_house in ware_houses2 %}
+                <option value="{{ware_house.id}}">{{ware_house.title}}</option>
+                {% endfor %}
             </select>
         </div>
 

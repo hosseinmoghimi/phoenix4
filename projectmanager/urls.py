@@ -31,6 +31,7 @@ urlpatterns = [
     path('material/<int:pk>/',login_required(views.MaterialViews().material),name="material"),
     path('materialrequest/<int:pk>/',login_required(views.MaterialRequestViews().material_request),name="materialrequest"),
     path('service/<int:pk>/',login_required(views.ServiceViews().service),name="service"),
+    path('ware_house_sheet_line/<int:pk>/',login_required(views.WareHouseSheetViews().ware_house_sheet_line),name="warehousesheetline"),
     path('ware_house_sheet/<int:pk>/',login_required(views.WareHouseSheetViews().ware_house_sheet),name="ware_house_sheet"),
     path('ware_house/<int:pk>/',login_required(views.WareHouseViews().ware_house),name="warehouse"),
     path('ware_house_import_sheet/<int:pk>/',login_required(views.WareHouseSheetViews().ware_house_import_sheet),name="warehouseimportsheet"),

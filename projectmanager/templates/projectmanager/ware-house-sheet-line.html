@@ -1,0 +1,34 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="title">
+                    {{ware_house_sheet_line.ware_house_sheet}}
+                </h5>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-success farsi" href="{{ware_house_sheet_line.ware_house_sheet.get_absolute_url}}">
+
+                    {{ware_house_sheet_line.ware_house_sheet}}
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "projectmanager/includes/ware-house-sheet-lines-app/script.html" %}
+
+{% endblock script %}

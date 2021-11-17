@@ -582,6 +582,14 @@ class WareHouseSheetViews(View):
     def ware_house_export_sheet(self, request, *args, **kwargs):
         return self.ware_house_sheet(request,*args, **kwargs)
     
+    def ware_house_sheet_line(self, request, *args, **kwargs):
+        context = getContext(request)
+        ware_house_sheet_line=WareHouseSheetLineRepo(request=request).ware_house_sheet_line(*args, **kwargs)
+        context['ware_house_sheet_line']=ware_house_sheet_line
+        context['ware_house_sheet']=ware_house_sheet_line.ware_house_sheet
+        context['page_title']="برگه انبار شماره "+str(ware_house_sheet_line.ware_house_sheet.pk)
+        context['ware_house']=ware_house_sheet_line.ware_house_sheet.ware_house
+        return render(request, TEMPLATE_ROOT+"ware-house-sheet-line.html", context)
     def ware_house_sheet(self, request, *args, **kwargs):
         context = getContext(request)
         ware_house_sheet=WareHouseSheetRepo(request=request).ware_house_sheet(*args, **kwargs)
@@ -648,6 +656,9 @@ class MaterialRequestViews(View):
     def material_request(self, request, *args, **kwargs):
         me_employee=EmployeeRepo(request=request).me
         material_request = MaterialRequestRepo(request=request).material_request(*args, **kwargs)
+        my_project_ids=me_employee.my_project_ids()
+        # print("me_employee")
+        # print(me_employee)
         if material_request is None:
             mv=MessageView()
             mv.header_text="خطای 404"
@@ -661,7 +672,7 @@ class MaterialRequestViews(View):
             return mv.response(request=request,app_name=APP_NAME,*args, **kwargs)
         if request.user.has_perm(APP_NAME+".view_materialrequest"):
             pass
-        elif me_employee is not None and material_request.project.id in me_employee.my_project_ids():
+        elif me_employee is not None and material_request.project.id in my_project_ids:
             pass
         else:
             mv=MessageView()
@@ -680,9 +691,15 @@ class MaterialRequestViews(View):
         context['signature_statuses']=(i[0] for i in SignatureStatusEnum.choices)
         
         context['add_signature_form']=AddSignatureForm()
-        if request.user.has_perm(APP_NAME+".add_warehousesheet") and material_request.status==RequestStatusEnum.ACCEPTED:
+        # print("my_project_ids")
+        # print(my_project_ids)
+        # context['add_material_request_to_ware_house_sheet_form']=AddMaterialRequestToWareHouseSheetForm()
+        if material_request.project.id in my_project_ids and (material_request.status==RequestStatusEnum.ACCEPTED or material_request.status==RequestStatusEnum.IMPORT_TO_WARE_HOUSE or material_request.status==RequestStatusEnum.EXPORT_FROM_WARE_HOUSE ):
             context['add_material_request_to_ware_house_sheet_form']=AddMaterialRequestToWareHouseSheetForm()
             context["ware_houses"]=material_request.project.contractor.ware_houses()
+            context["ware_houses2"]=material_request.project.employer.ware_houses()
+            # print(context["ware_houses"])
+            # print(context["ware_houses2"])
         return render(request, TEMPLATE_ROOT+"material-request.html", context)
 
     def material_requests(self, request, *args, **kwargs):

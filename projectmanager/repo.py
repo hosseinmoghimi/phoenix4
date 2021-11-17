@@ -355,6 +355,8 @@ class WareHouseSheetRepo():
         
         sheet.creator=self.me_employee
         sheet_line.ware_house_sheet=sheet
+        material_request.ware_house_sheets.add(sheet)
+
 
 
         if 'date_exported' in kwargs:
