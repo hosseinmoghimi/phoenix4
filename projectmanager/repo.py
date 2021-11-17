@@ -776,13 +776,17 @@ class ServiceRequestRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
+        self.employee=EmployeeRepo(request=self.request).me
         
+        if self.user.has_perm(APP_NAME+".view_servicerequest"):
+            self.objects = ServiceRequest.objects.order_by('-date_added')
+        elif self.employee is not None:
+            self.objects = ServiceRequest.objects.filter(project_id__in=self.employee.my_project_ids()).order_by('-date_added')
         self.objects = ServiceRequest.objects.order_by('-date_added')
         if_show_archives=show_archives(request=self.request)
         if not if_show_archives:
             self.objects = self.objects.filter(project__archive=False)
         self.me=ProfileRepo(user=self.user).me
-        self.employee=EmployeeRepo(request=self.request).me
 
    
     def service_request(self, *args, **kwargs):
@@ -850,8 +854,13 @@ class ServiceRequestRepo():
         return objects.all()
 
     def add_service_request(self, *args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_servicerequest"):
-            return None
+        if self.user.has_perm(APP_NAME+".add_servicerequest"):
+            pass
+        elif self.employee is not None:
+            project=ProjectRepo(request=self.request).project(*args, **kwargs)
+            if project is None:
+                return
+
         new_service_request = ServiceRequest(status=RequestStatusEnum.REQUESTED)
         if 'project_id' in kwargs:
             new_service_request.project_id = kwargs['project_id']
@@ -975,6 +984,8 @@ class EventRepo():
     def list(self,*args, **kwargs):
         objects=self.objects.all().order_by('-event_datetime')
         return objects
+
+
 class MaterialRequestRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -984,12 +995,16 @@ class MaterialRequestRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-            
-        self.objects = MaterialRequest.objects.order_by('-date_added')
+        self.employee=EmployeeRepo(request=self.request).me
+        
+        if self.user.has_perm(APP_NAME+".view_materialrequest"):
+            self.objects = MaterialRequest.objects.all()
+        elif self.employee is not None:
+            self.objects = MaterialRequest.objects.filter(project_id__in=self.employee.my_project_ids()).order_by('-date_added')
+          
         if_show_archives=show_archives(request=self.request)
         if not if_show_archives:
             self.objects = self.objects.filter(project__archive=False)
-        self.employee=EmployeeRepo(request=self.request).me
 
     def material_request(self, *args, **kwargs):
         objects = self.objects
@@ -1014,7 +1029,9 @@ class MaterialRequestRepo():
 
     def add_material_request(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_materialrequest"):
-            return None
+            project=ProjectRepo(request=self.request).project(*args, **kwargs)
+            if project is None:
+                return
         new_material_request = MaterialRequest(status=RequestStatusEnum.REQUESTED)
         if 'project_id' in kwargs:
             new_material_request.project_id = kwargs['project_id']
