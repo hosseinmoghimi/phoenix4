@@ -1069,7 +1069,9 @@ class MaterialRequestRepo():
             return new_material_request
 
     def add_signature(self,material_request_id,status,description=None):
-        if self.user.has_perm(APP_NAME+".add_materialrequestsignature"):
+        material_request=self.material_request(material_request_id=material_request_id)
+
+        if self.user.has_perm(APP_NAME+".add_materialrequestsignature") or material_request.project.id in self.employee.my_project_ids():
             signature=RequestSignature()
             signature.description=description
             signature.request_id=material_request_id
