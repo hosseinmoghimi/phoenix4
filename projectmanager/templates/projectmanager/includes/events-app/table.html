@@ -35,7 +35,13 @@
 
                     </span>
                 </a>
+                <span class="pull-left">
+                    <small class="d-inline text-primary">
 
+                        <!-- <i  class="fa fa-star-o text-secondary" aria-hidden="true"></i> -->
+                        <i  v-for="item in event.likes_count" class="fa fa-star text-primary" aria-hidden="true"></i>
+                    </small>
+                </span>
             </td>
             {% if not project %}
           

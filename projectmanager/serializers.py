@@ -81,7 +81,7 @@ class EventSerializer(serializers.ModelSerializer):
     project_related=ProjectBriefSerializer()
     class Meta:
         model=Event
-        fields=['id','project_related','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','get_edit_url']
+        fields=['id','project_related','likes_count','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','get_edit_url']
 
 
 class LocationSerializer(serializers.ModelSerializer):
