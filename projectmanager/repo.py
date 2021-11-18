@@ -934,6 +934,9 @@ class EventRepo():
         else:
             self.objects=Event.objects.filter(id=0)
 
+
+        self.objects=self.objects.order_by('-event_datetime')
+
     def event(self, *args, **kwargs):
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
