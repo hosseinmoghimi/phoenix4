@@ -34,5 +34,5 @@ class TransactionSerializer(serializers.ModelSerializer):
     order=OrderSerializer()
     class Meta:
         model = Transaction
-        fields=['id','title','get_edit_url','description','asset','order','pay_to','pay_from','amount','persian_date_paid','rest','get_transaction2_url','get_icon','payment_method','get_color']
+        fields=['id','title','get_edit_url','description','asset','order','pay_to','pay_from','amount','persian_date_paid','rest','get_transaction2_url','get_icon','payment_method','get_color','get_absolute_url']
  

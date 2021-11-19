@@ -100,13 +100,39 @@ class BankAccount(models.Model):
     shaba_no=models.CharField(_("شماره شبا"), null=True,blank=True,max_length=50)
     class_name="bankaccount"
     description=HTMLField(_("description"),null=True,blank=True, max_length=5000)
+    is_active=models.BooleanField(_("is active ?"),default=True)
+    is_default=models.BooleanField(_("is default ?"),default=True)
     class Meta:
         verbose_name = _("BankAccount")
         verbose_name_plural = _("حساب های بانکی")
+    def to_html(bank_account):
+        desc="شماره حساب "
+        if bank_account.bank is not None:
+            desc=f"{desc} {bank_account.bank}"
+        if bank_account.owner is not None:
+            desc=f"{desc} ، به&nbsp;نام&nbsp;{bank_account.owner.profile.name}"
+        if bank_account.card_no is not None:
+            desc=f"{desc} ، شماره&nbsp;کارت&nbsp;{bank_account.card_no}"
+        if bank_account.shaba_no is not None:
+            desc=f"{desc} ، شماره&nbsp;شبا&nbsp;{bank_account.shaba_no}"
+        if bank_account.account_no is not None:
+            desc=f"{desc} ، شماره&nbsp;حساب&nbsp;{bank_account.account_no}"
+        return desc
 
-    def __str__(self):
-        return self.title
-
+        
+    def __str__(bank_account):
+        desc="شماره حساب "
+        if bank_account.bank is not None:
+            desc=f"{desc} {bank_account.bank}"
+        if bank_account.owner is not None:
+            desc=f"{desc} ، به نام {bank_account.owner.profile.name}"
+        if bank_account.card_no is not None:
+            desc=f"{desc} ، شماره کارت {bank_account.card_no}"
+        if bank_account.shaba_no is not None:
+            desc=f"{desc} ، شماره شبا {bank_account.shaba_no}"
+        if bank_account.account_no is not None:
+            desc=f"{desc} ، شماره حساب {bank_account.account_no}"
+        return desc
     def get_absolute_url(self):
         return self.owner.get_absolute_url()
 
@@ -225,11 +251,13 @@ class TransactionMixin():
             {type1}
             </span>
             """
-
-
+ 
 class AssetTransaction(Transaction,TransactionMixin):
     asset = models.ForeignKey("asset", verbose_name=_("asset"), on_delete=models.CASCADE)
     
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name,kwargs={'pk':self.pk})
+
 
     class Meta:
         verbose_name = _("AssetTransaction")
@@ -261,6 +289,9 @@ class MarketOrderTransaction(Transaction,TransactionMixin):
     order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
 
         
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name,kwargs={'pk':self.pk})
+
     def save(self,*args, **kwargs):
         self.class_name="marketordertransaction"
         return super(MarketOrderTransaction,self).save(*args, **kwargs)
@@ -290,6 +321,9 @@ class MarketOrderTransaction(Transaction,TransactionMixin):
             """
 class MoneyTransaction(Transaction,TransactionMixin):
     payment_method=models.CharField(_("payment_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name,kwargs={'pk':self.pk})
 
     def get_icon(self):
         type1="پول"

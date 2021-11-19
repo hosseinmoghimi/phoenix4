@@ -7,110 +7,116 @@
     </div>
     <div class="card-body">
 
-      
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="">
-                            پرداخت از
-                        </label>
-                        <select required v-model="pay_from_id" class="form-control" id="">
-                            <option v-for="financial_account in financial_accounts" :value="financial_account.id"
-                                v-text="financial_account.profile.name">
 
-                            </option>
-                        </select>
-                    </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">
+                        پرداخت از (بستانکار)
+                    </label>
+                    <select required v-model="pay_from_id" class="form-control" id="">
+                        <option v-for="financial_account in financial_accounts" :value="financial_account.id"
+                            v-text="financial_account.profile.name">
 
-                    <div class="form-group">
-                        <label for="">
-                            به
+                        </option>
+                    </select>
+                </div>
 
-                        </label>
-                        <button @click="swap()" title="عوض کردن">
-                            <i class="fa fa-exchange"></i>
-                        </button>
-                        <select  required v-model="pay_to_id" class="form-control" id="">
-                            <option v-for="financial_account in financial_accounts" :value="financial_account.id"
-                                v-text="financial_account.profile.name">
+                <div class="form-group">
+                    <label for="">
+                        پرداخت به (بدهکار)
 
-                            </option>
-                        </select>
-                    </div>
+                    </label>
+                    <!-- <button @click="swap()" title="عوض کردن" class="btn btn-outline-warning"
+                        style="transform: rotate(-90deg);">
+                        <i class="fa fa-exchange"></i>
+                    </button> -->
+                    <button @click="swap()" title="عوض کردن" class="mx-3 btn btn-outline-warning">
+                        <i class="fa fa-arrow-up"></i>
+                        <i class="fa fa-arrow-down"></i>
+                    </button>
+                    <select required v-model="pay_to_id" class="form-control" id="">
+                        <option v-for="financial_account in financial_accounts" :value="financial_account.id"
+                            v-text="financial_account.profile.name">
+
+                        </option>
+                    </select>
+                </div>
 
 
-                    <div class="form-group">
-                        <label for="">
-                            به
+                <div class="form-group">
+                    <label for="">
+                        تاریخ تراکنش
 
-                        </label>
-                        <date-picker  required v-model="date_paid"></date-picker>
-                         
-                    </div>
-
+                    </label>
+                    <date-picker required v-model="date_paid"></date-picker>
 
                 </div>
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="">
-                                    عنوان تراکنش
-                                </label>
-                                <input required  type="text" class="form-control" placeholder="عنوان تراکنش جدید"
-                                    v-model="new_transaction_title" id="">
-                            </div>
+
+
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="">
+                                عنوان تراکنش
+                            </label>
+                            <input required type="text" class="form-control" placeholder="عنوان تراکنش جدید"
+                                v-model="new_transaction_title" id="">
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="">
-                                    مبلغ تراکنش
-                                </label>
-                                <input required  type="number" class="form-control" placeholder="مبلغ تراکنش جدید"
-                                    v-model="new_transaction_amount" id="">
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="">
-                                    نحوه پرداخت
-                                </label>
-
-                                <select required  v-model="payment_method" class="form-control" id="">
-                                    {% for payment_method1 in payment_methods %}
-
-                                    <option value="{{payment_method1}}">
-                                        {{payment_method1}}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="">
-                                    توضیحات
-                                </label>
-                                <input type="text" class="form-control" placeholder="توضیحات تراکنش جدید"
-                                    v-model="new_transaction_description" id="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-                        </div>
-                        <div class="col-md-6">
-                            <button v-if="!waiting && !done" class="btn btn-success" @click="add_transaction()" type="submit">تایید</button>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">
+                                مبلغ تراکنش
+                            </label>
+                            <input required type="number" class="form-control" placeholder="مبلغ تراکنش جدید"
+                                v-model="new_transaction_amount" id="">
                         </div>
                     </div>
 
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">
+                                نحوه پرداخت
+                            </label>
+
+                            <select required v-model="payment_method" class="form-control" id="">
+                                {% for payment_method1 in payment_methods %}
+
+                                <option value="{{payment_method1}}">
+                                    {{payment_method1}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="">
+                                توضیحات
+                            </label>
+                            <input type="text" class="form-control" placeholder="توضیحات تراکنش جدید"
+                                v-model="new_transaction_description" id="">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                    </div>
+                    <div class="col-md-6">
+                        <button v-if="!waiting && !done" class="btn btn-success" @click="add_transaction()"
+                            type="submit">تایید</button>
+                    </div>
                 </div>
 
             </div>
-       
+
+        </div>
+
         <div v-if="done">
             <div class="alert alert-success">
                 <p>

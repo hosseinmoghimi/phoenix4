@@ -20,6 +20,16 @@
                 </a>
                 {% endif %}
             </h4>
+            {% if bank_account.is_active %}
+
+            <span class="badge badge-primary">فعال</span>
+            {% else %}
+            <span class="badge badge-secondary">غیر فعال</span>
+            {% endif %}
+            {% if bank_account.is_default %}
+
+            <span class="badge badge-success">پیش فرض</span>
+            {% endif %}
         </div>
         {% if bank_account.bank %}
 

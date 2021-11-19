@@ -20,7 +20,7 @@ class BankAccountRepo:
         
         if 'profile_id' in kwargs:
             profile_id=kwargs['profile_id']
-            return self.objects.filter(owner__profile_id=profile_id).first()
+            return self.objects.filter(owner__profile_id=profile_id).filter(is_default=True).filter(is_active=True).first()
         if 'bank_account_id' in kwargs:
             pk=kwargs['bank_account_id']
         if 'pk' in kwargs:
@@ -308,11 +308,12 @@ class TransactionRepo:
         if asset_id is not None:
             #add AssetTransaction
             return
+        print(kwargs)
         transaction=MoneyTransaction()
         transaction.pay_to_id=kwargs['pay_to_id']
         transaction.pay_from_id=kwargs['pay_from_id']
         transaction.amount=kwargs['amount']
-        transaction.paymet_method=kwargs['payment_method'] 
+        transaction.payment_method=kwargs['payment_method'] 
         transaction.title=kwargs['title']
         transaction.description=kwargs['description']
         date_paid=kwargs['date_paid'] if 'date_paid' in kwargs else None
