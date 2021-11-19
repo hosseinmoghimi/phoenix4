@@ -12,7 +12,7 @@
             <label for="">
                 &nbsp;
             </label>
-            <img v-if="!waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
             <button v-if="!waiting" class="d-block btn btn-danger" type="submit">
                 افزودن
             </button>
