@@ -1,3 +1,4 @@
+from .apps import APP_NAME
 from .models import Guest,Food, Meal, ReservedMeal
 
 
@@ -139,6 +140,8 @@ class FoodRepo():
 
 
     def add_food(self, *args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_food"):
+            return
         food=Food()
         if 'title' in kwargs:
             food.title = kwargs['title']

@@ -3,6 +3,7 @@
     let foods_app_data = {
         foods: foods,
         title: "",
+        waiting: false,
     }
 </script>
 <script>
@@ -11,13 +12,16 @@
         data: foods_app_data,
         methods: {
             add_food: function () {
+                foods_app.waiting = true
                 let url = "{% url 'restaurant:add_food' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    title:this.title,
+                    title: this.title,
                 }
                 let posting = $.post(url, payload)
                 posting.done((data) => {
+                    foods_app.waiting = false
+
                     console.log(data)
                     if (data.result === "SUCCEED") {
                         foods_app.foods.push(data.food)
