@@ -25,6 +25,9 @@
         el: "#taxes-app",
         data: taxes_app_data,
         methods: {
+            to_price:function(value,curr){
+                return to_price(value,curr)
+            },
             filter: function () {
                 let ataxes = this.taxes.filter(tax => {
                     return tax.year == taxes_app.new_tax_year

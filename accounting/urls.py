@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 app_name=APP_NAME
 urlpatterns = [
     path('',login_required(views.BasicViews().home),name="home"),
-    path('financial_account/<int:financial_account_id>/',login_required(views.TransactionViews().financial_account),name="financial_account"),
+    path('financial_account/<int:financial_account_id>/',login_required(views.FinancialAccountViews().financial_account),name="financial_account"),
+    path('financial_accounts/',login_required(views.FinancialAccountViews().financial_accounts),name="financial_accounts"),
     path('asset/<int:asset_id>/',login_required(views.AssetViews().asset),name="asset"),
     path('transaction/<int:pk>/',login_required(views.TransactionViews().transaction),name="transaction"),
     path('transactions/<int:pay_from_id>/<int:pay_to_id>/',login_required(views.TransactionViews().transactions2),name="transactions2"),

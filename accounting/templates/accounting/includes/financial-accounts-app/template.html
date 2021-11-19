@@ -1,0 +1,38 @@
+<div class="card" id="financial-accounts-app">
+    <div class="card-header card-header-warning card-header-icon">
+
+        <h4 class="card-title">
+            <a href="{% url 'accounting:financial_accounts' %}">
+                لیست طرف حساب ها
+            </a>
+        </h4>
+        <div class="row">
+            <div class="col-md-4">
+                <input placeholder="جستجو ..." type="text" v-model="search_for" @input="filter()" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <tr v-for="financial_account in financial_accounts">
+                <td>
+                    <a :href="financial_account.get_absolute_url">
+                        <img :src="financial_account.profile.image" class="rounded-circle" width="32" alt="">
+                        <span v-text="financial_account.profile.name"></span>
+                    </a>
+                </td>
+
+                <td>
+                    <span :class="financial_account.total>=0?'text-success':'text-danger'">
+                        <span v-text="to_price(financial_account.total)"></span>
+                    </span>
+
+                </td>
+                <td>
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</div>

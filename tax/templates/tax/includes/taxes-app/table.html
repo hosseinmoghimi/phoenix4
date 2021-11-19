@@ -22,7 +22,7 @@
                 <span v-text="tax.year"></span>
             </td>
             <td>
-                <span v-text="tax.amount"></span>
+                <span v-text="to_price(tax.amount,'{{CURRENCY}}')"></span>
             </td>
         </tr>
     </tbody>

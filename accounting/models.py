@@ -123,11 +123,27 @@ class Transaction(AccountingPage):
     date_paid = models.DateTimeField(
         _("date_paid"), auto_now=False, auto_now_add=False)
     rest=0
-    direction=None
+    direction=None 
+    def asset(self):
+        ooo=AssetTransaction.objects.filter(pk=self.pk).first()
+        if ooo is not None:
+            return ooo.asset
+
+    def order(self):
+        ooo=MarketOrderTransaction.objects.filter(pk=self.pk).first()
+        if ooo is not None:
+            return ooo.order
+
+
+    def payment_method(self):
+        ooo=MoneyTransaction.objects.filter(pk=self.pk).first()
+        if ooo is not None:
+            return ooo.payment_method
 
     def save(self,*args, **kwargs):
         return super(Transaction,self).save(*args, **kwargs)
-
+    def get_icon(self):
+        return self.get_sub_transaction().get_icon()
     def get_color(self):
         if self.direction:
             return "success"
@@ -178,12 +194,19 @@ class Transaction(AccountingPage):
  
  
     def get_absolute_url(self):
-        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+        # mt=MoneyTransaction.objects.filter(pk=self.pk)
+        # ot=MarketOrderTransaction.objects.filter(pk=self.pk)
+        # at=AssetTransaction.objects.filter(pk=self.pk)
+        return self.get_sub_transaction().get_absolute_url()
+
     def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
+        return self.get_sub_transaction().get_edit_url()
+
 
 
 class TransactionMixin():
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
     def get_icon(self):
         type1="پول"
         color="success"
@@ -214,8 +237,25 @@ class AssetTransaction(Transaction,TransactionMixin):
     def save(self,*args, **kwargs):
         self.class_name="assettransaction"
         return super(AssetTransaction,self).save(*args, **kwargs)
-
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    def get_icon(self):
+        type1="پول"
+        color="success"
+        if self.class_name=="marketordertransaction":
+            type1="سفارش"
+            color="primary"
+        if self.class_name=="assettransaction":
+            type1="دارایی"
+            color="warning"
+        if self.class_name=="moneytransaction":
+            type1="پول"
+            color="success"
+        return f"""
+            <span class="badge badge-{color}">
+            {type1}
+            </span>
+            """
 class MarketOrderTransaction(Transaction,TransactionMixin):
     order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
 
@@ -226,11 +266,47 @@ class MarketOrderTransaction(Transaction,TransactionMixin):
     class Meta:
         verbose_name = _("MarketOrderTransaction")
         verbose_name_plural = _("تراکنش های صورت حساب فروش")
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
 
+    def get_icon(self):
+        type1="پول"
+        color="success"
+        if self.class_name=="marketordertransaction":
+            type1="سفارش"
+            color="primary"
+        if self.class_name=="assettransaction":
+            type1="دارایی"
+            color="warning"
+        if self.class_name=="moneytransaction":
+            type1="پول"
+            color="success"
+        return f"""
+            <span class="badge badge-{color}">
+            {type1}
+            </span>
+            """
 class MoneyTransaction(Transaction,TransactionMixin):
     payment_method=models.CharField(_("payment_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
 
+    def get_icon(self):
+        type1="پول"
+        color="success"
+        if self.class_name=="marketordertransaction":
+            type1="سفارش"
+            color="primary"
+        if self.class_name=="assettransaction":
+            type1="دارایی"
+            color="warning"
+        if self.class_name=="moneytransaction":
+            type1="پول"
+            color="success"
+        return f"""
+            <span class="badge badge-{color}">
+            {type1}
+            </span>
+            """
     class Meta:
         verbose_name = _("MoneyTransaction")
         verbose_name_plural = _("تراکنش های پولی")
@@ -238,3 +314,5 @@ class MoneyTransaction(Transaction,TransactionMixin):
     def save(self,*args, **kwargs):
         self.class_name="moneytransaction"
         return super(MoneyTransaction,self).save(*args, **kwargs)
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"

@@ -1,5 +1,5 @@
 from accounting.enums import PaymetMethodEnum
-from accounting.serializers import FinancialAccountSerializer
+from accounting.serializers import FinancialAccountSerializer, TransactionSerializer
 from core.enums import ParametersEnum
 from core.forms import AddPageImageForm
 from core.repo import ParameterRepo
@@ -38,11 +38,23 @@ class AssetViews(View):
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
-        accounts=FinancialAccountRepo(request=request).list()
-        context['accounts']=accounts
+
+
+        financial_accounts=FinancialAccountRepo(request=request).list()
+        context['financial_accounts']=financial_accounts
+        context['financial_accounts_s']=json.dumps(FinancialAccountSerializer(financial_accounts,many=True).data)
+
+
         assets=AssetRepo(request=request).list()
         context['assets']=assets
         context.update(TransactionViews().get_add_transaction_context(request))
+
+        # transactions=TransactionRepo(request=request).list()
+        # context['transactions']=transactions
+        # transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
+        # context['transactions_s']=transactions_s
+        
+        
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class TransactionViews(View):
@@ -63,6 +75,8 @@ class TransactionViews(View):
             financial_account=FinancialAccountRepo(request=request).financial_account(financial_account_id=financial_account_id)
         transactions=TransactionRepo(request=request).list(*args, **kwargs)
         context['transactions']=transactions
+        transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
+        context['transactions_s']=transactions_s
         total=0
         for transaction in transactions:
             if transaction.pay_to_id==financial_account_id:
@@ -84,6 +98,9 @@ class TransactionViews(View):
         # financial_account=FinancialAccountRepo(request=request).financial_account(financial_account_id=financial_account_id)
         transactions=TransactionRepo(request=request).list(*args, **kwargs)
         context['transactions']=transactions
+        transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
+        context['transactions_s']=transactions_s
+        
         total=0
         # for transaction in transactions:
         #     if transaction.pay_to_id==financial_account_id:
@@ -135,12 +152,28 @@ class TransactionViews(View):
 
         context.update(self.getTransactionContext(request,*args, **kwargs))
         return render(request,TEMPLATE_ROOT+"transaction.html",context)
-    
+ 
+class FinancialAccountViews(View):   
     def financial_account(self,request,*args, **kwargs):
         context=getContext(request=request)
         financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)
         context['financial_account']=financial_account
-        context['transactions']=financial_account.transactions()
+        transactions=financial_account.transactions()
+        context['transactions']=transactions
+        transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
+        context['transactions_s']=transactions_s
+        context['me_financial_account']=FinancialAccountRepo(request=request).me
+
+        
         context['transactions']=TransactionRepo(request=request).list(*args, **kwargs)
         
+        context.update(TransactionViews().get_add_transaction_context(request))
         return render(request,TEMPLATE_ROOT+"financial-account.html",context)
+    def financial_accounts(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        financial_accounts=FinancialAccountRepo(request=request).list(*args, **kwargs)
+        context['financial_accounts']=financial_accounts
+        context['financial_accounts_s']=json.dumps(FinancialAccountSerializer(financial_accounts,many=True).data)
+ 
+        
+        return render(request,TEMPLATE_ROOT+"financial-accounts.html",context)

@@ -4,8 +4,12 @@
 <script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'vendor/js/popper.min.js' %}"></script>
 <script src="{% static 'utility/js/utility.js' %}"></script>
-<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% if DEBUG %}
+<script src="{% static 'vendor/js/vue.js' %}"></script>
 
+{% else %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% endif %}
 <script>
     let CURRENCY = "{{CURRENCY}}"
     let current_datetime = "{{current_datetime}}"

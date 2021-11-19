@@ -6,7 +6,11 @@
 {% block content %}
 <div class="row">
     <div class="col-md-4">
-      {% include "accounting/includes/financial-accounts-app/card.html" %}
+        {% include "accounting/includes/financial-accounts-app/card.html" %}
+    </div>
+    <div class="col-md-8">
+        {% include "accounting/includes/transactions-app/add-transaction-form.html" %}
+
     </div>
     <div class="col-md-12">
         <div class="card">
@@ -38,6 +42,15 @@
 
 
 {% block script %}
-{% include "accounting/includes/transactions-app/script.html" %}
+<script>
+    let financial_accounts = JSON.parse(`{{financial_accounts_s|escapejs}}`)
 
+    $(document).ready(() => {
+        console.log("ready")
+        add_transaction_app.pay_from_id = parseInt("{{me_financial_account.id}}")
+        add_transaction_app.pay_to_id = parseInt("{{financial_account.id}}")
+    })
+</script>
+{% include "accounting/includes/transactions-app/script.html" %}
+{% include "accounting/includes/transactions-app/add-transaction-script.html" %}
 {% endblock %}

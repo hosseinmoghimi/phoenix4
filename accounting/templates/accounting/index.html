@@ -6,44 +6,8 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <div class="card mb-3">
-            <div class="card-header card-header-warning card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">
-                        settings
-                    </i>
-                </div>
-                <h4 class="card-title">
-                    لیست طرف حساب ها
-                </h4>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    {% for account in accounts %}
-                    <tr>
-                        <td>
-                            <a href="{{account.get_absolute_url}}">
-                                <img src="{{account.profile.image}}" class="rounded-circle" width="32" alt="">
-                                {{account.profile.name}}
-                            </a>
-                        </td>
+        {% include "accounting/includes/financial-accounts-app/template.html" %}
 
-                        <td>
-                            <span class="text-{{account.total|to_transaction_color}}">
-
-                                {{account.total|to_price}}
-                            </span>
-
-                        </td>
-                        <td>
-
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
 
     </div>
     <div class="col-md-12">
@@ -71,7 +35,14 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+
+    let financial_accounts = JSON.parse(`{{financial_accounts_s|escapejs}}`)
+</script>
+
+
 {% include "accounting/includes/assets-app/script.html" %}
 {% include "accounting/includes/transactions-app/add-transaction-script.html" %}
+{% include "accounting/includes/financial-accounts-app/script.html" %}
 
 {% endblock %}

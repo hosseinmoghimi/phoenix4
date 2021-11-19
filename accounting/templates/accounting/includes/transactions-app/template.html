@@ -1,81 +1,72 @@
 {% load to_price %}
 {% load to_persian_date %}
 <div id="transactions-app">
+    <table class="table table-striped">
+<thead>
+    <th>
+عنوان
+    </th>
+</thead>
+<tbody>
 
-    <table class="table">
-        {% for transaction in transactions %}
-
-        <tr>
+        <tr v-for="transaction in transactions">
             <td>
-
-                {{transaction.get_sub_transaction.get_icon|safe}}
-                <a href="{{transaction.get_sub_transaction.get_absolute_url}}">
-
-                    {{transaction.title}}
+                <span v-html="transaction.get_icon"></span>
+                <a :href="transaction.get_absolute_url">
+                    <span v-text="transaction.title"></span>
                 </a>
             </td>
             <td>
-                <a href="{{transaction.pay_from.get_absolute_url}}">
-                    <img src="{{transaction.pay_from.profile.image}}" class="rounded-circle" width="32" alt="">
-                    {{transaction.pay_from.profile.name}}
+                <a :href="transaction.pay_from.get_absolute_url">
+                    <img :src="transaction.pay_from.profile.image" class="rounded-circle" width="32" alt="">
+                    <span v-text="transaction.pay_from.profile.name"></span>
+
                 </a>
             </td>
             <td>
-                {% if transaction.get_sub_transaction.asset %}
 
-                <a href="{{transaction.get_sub_transaction.asset.get_absolute_url}}">
-                    {{transaction.get_sub_transaction.asset.title}}
+                <a v-if="transaction.asset" :href="transaction.asset.get_absolute_url">
+                    <span v-text="transaction.asset.title"></span>
+
                 </a>
-                {% endif %}
-                {% if transaction.get_sub_transaction.order %}
 
-                <a href="{{transaction.get_sub_transaction.order.get_absolute_url}}">
+                <a v-if="transaction.order" :href="transaction.order.get_absolute_url">
                     سفارش شماره
-                    {{transaction.get_sub_transaction.order.pk}}
+                    <span v-text="transaction.order.id"></span>
+
                 </a>
-                {% endif %}
 
-                {% if transaction.get_sub_transaction.payment_method %}
-
-                {{transaction.get_sub_transaction.payment_method}}
-                {% endif %}
-                {% if transaction.description %}
+                <span v-text="transaction.payment_method"></span>
                 <div>
-                    <small class="text-muted">
+                    <small class="text-muted" v-html="transaction.description">
 
-                        {{transaction.description|safe}}
                     </small>
                 </div>
-                {% endif %}
 
             </td>
             <td>
-                <a href="{{transaction.pay_to.get_absolute_url}}">
-                    <img src="{{transaction.pay_to.profile.image}}" class="rounded-circle" width="32" alt="">
-
-                    {{transaction.pay_to.profile.name}}
+                <a :href="transaction.pay_to.get_absolute_url">
+                    <img :src="transaction.pay_to.profile.image" class="rounded-circle" width="32" alt="">
+                    <span v-text="transaction.pay_to.profile.name"></span>
                 </a>
             </td>
             <td>
-                <span class="text-{{transaction.get_color}}">
-                    {{transaction.amount|to_price}}
-
+                <span :class="'text-'+transaction.get_color">
+                    <span v-text="to_price(transaction.amount,'{{CURRENCY}}')"></span>
                 </span>
             </td>
             <td>
-                <small class="text-secondary">
+                <small class="text-secondary" v-text="transaction.persian_date_paid">
 
-                    {{transaction.date_paid|to_persian_datetime|safe}}
                 </small>
             </td>
             <td>
-                <small class="text-secondary">
+                <small class="text-secondary" v-text="to_price(transaction.rest,'{{CURRENCY}}')">
 
-                    {{transaction.rest|to_price}}
                 </small>
             </td>
             <td>
-                <a href="{{transaction.get_transaction2_url}}">
+                <a :href="transaction.get_transaction2_url">
                     <i class="material-icons">
                         ballot
                     </i>
@@ -83,7 +74,7 @@
 
                 {% if perms.accounting.change_transaction %}
 
-                <a target="_blank" title="ویرایش" href="{{transaction.get_sub_transaction.get_edit_url}}">
+                <a target="_blank" title="ویرایش" :href="transaction.get_edit_url">
                     <i class="fa fa-edit">
                     </i>
                 </a>
@@ -92,6 +83,7 @@
 
             </td>
         </tr>
-        {% endfor %}
+</tbody>
+    
     </table>
 </div>

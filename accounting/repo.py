@@ -71,6 +71,7 @@ class FinancialAccountRepo:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
         self.objects=FinancialAccount.objects.all()
+        self.me=FinancialAccount.objects.filter(profile_id=self.profile.id).first()
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects

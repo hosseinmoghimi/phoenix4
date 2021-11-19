@@ -1,0 +1,15 @@
+<script>
+    let financial_accounts_app_data = {
+        financial_accounts: financial_accounts,
+        search_for: "",
+    }
+    let financial_accounts_app = new Vue({
+        el: "#financial-accounts-app",
+        data: financial_accounts_app_data,
+        methods: {
+            filter: function () {
+                this.financial_accounts = financial_accounts.filter(item => item.profile.name.indexOf(financial_accounts_app.search_for) > -1)
+            },
+        }
+    })
+</script>
