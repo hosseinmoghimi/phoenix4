@@ -26,7 +26,10 @@
                         مانده : {{financial_account.total|to_price}}
                     </span>
                 </p>
-                {% include "accounting/includes/transactions-app/template.html" %}
+                <div class="my-3">
+
+                    {% include "accounting/includes/transactions-app/template.html" %}
+                </div>
                 <p>
 
                     <span class="alert alert-{{financial_account.total|to_transaction_color}}">
