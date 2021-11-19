@@ -7,8 +7,7 @@
     </div>
     <div class="card-body">
 
-        <form @submit.prevent="add_transaction">
-
+      
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -104,15 +103,14 @@
 
                         </div>
                         <div class="col-md-6">
-                            <button v-if="!waiting && !done" class="btn btn-success " type="submit">تایید</button>
+                            <button v-if="!waiting && !done" class="btn btn-success" @click="add_transaction()" type="submit">تایید</button>
                         </div>
                     </div>
 
                 </div>
 
             </div>
-        </form>
-
+       
         <div v-if="done">
             <div class="alert alert-success">
                 <p>

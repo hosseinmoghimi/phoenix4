@@ -10,42 +10,97 @@
         </div>
         {% for bank_account in financial_account.bankaccount_set.all %}
         <hr>
-        <div>
-            {{bank_account.title}}
-            {% if perms.accounting.change_bankaccount %}
-            <a href="{{bank_account.get_edit_url}}" target="_blank" title="ویرایش">
-                <i class="fa fa-edit"></i>
-            </a>
-            {% endif %}
+        <div class="mb-2">
+            <h4>
+
+                {{bank_account.title}}
+                {% if perms.accounting.change_bankaccount %}
+                <a href="{{bank_account.get_edit_url}}" target="_blank" title="ویرایش">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {% endif %}
+            </h4>
         </div>
+        {% if bank_account.bank %}
+
+        <div class="mb-2">
+
+            <span class="small text-muted">
+                بانک :
+            </span>
+            {{bank_account.bank}}
+
+        </div>
+        {% endif %}
+
+
+        {% if bank_account.branch %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+                شعبه
+
+            </span>
+
+            {{bank_account.branch}}
+
+        </div>
+        {% endif %}
+
         {% if bank_account.card_no %}
 
-        <div>
+        <div class="mb-2">
+            <span class="small text-muted">
+
+                شماره کارت :
+            </span>
             {{bank_account.card_no}}
 
         </div>
         {% endif %}
         {% if bank_account.account_no %}
 
-        <div>
+        <div class="mb-2">
+            <span class="small text-muted">
+
+                شماره حساب :
+            </span>
             {{bank_account.account_no}}
         </div>
         {% endif %}
         {% if bank_account.shaba_no %}
 
-        <div>
+        <div class="mb-2">
+            <span class="small text-muted">
+                شماره شبا :
 
+            </span>
             {{bank_account.shaba_no}}
+        </div>
+        {% endif %}
+        {% if bank_account.description %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+                توضیحات :
+
+            </span>
+            {{bank_account.description|safe}}
         </div>
         {% endif %}
         {% endfor %}
 
 
         {% if perms.accounting.add_bankaccount %}
-        <a href="{{ADMIN_URL}}{{APP_NAME}}/bankaccount/add/?owner={{financial_account.id}}" target="_blank" title="افزودن">
-            <i class="fa fa-plus"></i>افزودن حساب بانکی جدید
-        </a>
+        <div class="my-3">
+
+            <a href="{{ADMIN_URL}}{{APP_NAME}}/bankaccount/add/?owner={{financial_account.id}}" target="_blank"
+                title="افزودن">
+                <i class="fa fa-plus ml-2"></i>افزودن حساب بانکی جدید
+            </a>
+        </div>
         {% endif %}
+
 
     </div>
 </div>

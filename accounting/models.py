@@ -99,6 +99,7 @@ class BankAccount(models.Model):
     card_no=models.CharField(_("شماره کارت"), null=True,blank=True,max_length=50)
     shaba_no=models.CharField(_("شماره شبا"), null=True,blank=True,max_length=50)
     class_name="bankaccount"
+    description=HTMLField(_("description"),null=True,blank=True, max_length=5000)
     class Meta:
         verbose_name = _("BankAccount")
         verbose_name_plural = _("حساب های بانکی")
@@ -107,7 +108,7 @@ class BankAccount(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("BankAccount_detail", kwargs={"pk": self.pk})
+        return self.owner.get_absolute_url()
 
 
     def get_edit_url(self):
