@@ -1,0 +1,13 @@
+{% extends "restaurant/layout.html" %}
+{% block content %}
+<div class="row">
+    <h4 class="title">
+        {{food.title}}
+        {% if perms.restaurant.change_food %}
+        <a href="{{food.get_edit_url}}" title="ویرایش" target="_blank">
+            <i class="fa fa-edit text-info"></i>
+        </a>
+        {% endif %}
+    </h4>
+</div>
+{% endblock content %}

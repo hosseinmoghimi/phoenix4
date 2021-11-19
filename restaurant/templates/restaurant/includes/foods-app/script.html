@@ -1,0 +1,30 @@
+<script>
+    let foods = JSON.parse(`{{foods_s|escapejs}}`)
+    let foods_app_data = {
+        foods: foods,
+        title: "",
+    }
+</script>
+<script>
+    let foods_app = new Vue({
+        el: "#foods-app",
+        data: foods_app_data,
+        methods: {
+            add_food: function () {
+                let url = "{% url 'restaurant:add_food' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title:this.title,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === "SUCCEED") {
+                        foods_app.foods.push(data.food)
+                        foods_app.title = ""
+                    }
+                })
+            }
+        }
+    })
+</script>

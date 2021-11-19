@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'todocalendar',
     'bms',  
     'mafia',
+    'restaurant',
     'messenger',
     'realestate',
     'library',

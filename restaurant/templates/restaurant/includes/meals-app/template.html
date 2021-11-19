@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="title">
+            وعده های غذایی
+        </h4>
+    </div>
+    <div class="card-body farsi">
+        <ul>
+            {% for meal in meals %}
+              <li class="text-right farsi">
+                {{meal.food.title}}  {{meal.persian_date_served}}  {{meal.meal_type}} 
+              </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+

@@ -1,0 +1,27 @@
+<div class="card" id="foods-app">
+    <div class="card-header">
+        <h4 class="title">
+            <a href="{% url 'restaurant:foods' %}">
+
+                غذا ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+        <ul>
+          
+
+            <li class="text-right farsi" v-for="food in foods">
+                <a :href="food.get_absolute_url">
+                    <span v-text="food.title"></span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    {% if add_food_form %}
+      <div class="card-footer">
+          {% include "restaurant/includes/foods-app/add-food-form.html" %}
+      </div>
+    {% endif %}
+</div>

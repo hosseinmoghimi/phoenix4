@@ -1,0 +1,16 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="title">
+            مهمان ها
+        </h4>
+    </div>
+    <div class="card-body farsi">
+        <ul>
+            {% for guest in guests %}
+              <li class="text-right farsi">
+                  {{guest.profile.name}}
+              </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
