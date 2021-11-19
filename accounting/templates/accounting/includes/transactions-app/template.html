@@ -83,9 +83,8 @@
 
                 {% if perms.accounting.change_transaction %}
 
-                <a href="{{transaction.get_sub_transaction.get_edit_url}}">
-                    <i class="material-icons">
-                        edit
+                <a target="_blank" title="ویرایش" href="{{transaction.get_sub_transaction.get_edit_url}}">
+                    <i class="fa fa-edit">
                     </i>
                 </a>
 
