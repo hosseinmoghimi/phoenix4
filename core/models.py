@@ -698,7 +698,7 @@ class Picture(models.Model):
         verbose_name_plural = _("Pictures")
 
     def __str__(self):
-        return self.name
+        return self.app_name+" : "+self.name
 
     def get_absolute_url(self):
         return reverse("Picture_detail", kwargs={"pk": self.pk})

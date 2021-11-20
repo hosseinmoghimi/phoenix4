@@ -5,7 +5,13 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" title="{{app.title}}" href="{{app.home_url}}">
+        {% if app.logo.image %}
+        <img width="64" src="{{app.logo.image}}" alt="">
+          
+        {% else %}
         <img width="64" src="{% static 'logo.png' %}" alt="">
+
+        {% endif %}
     </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">

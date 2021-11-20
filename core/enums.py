@@ -3,6 +3,9 @@ from django.db.models import TextChoices
 from django.utils.translation import gettext as _
 from enum import Enum
 
+class PictureNameEnums(TextChoices):
+    LOGO="لوگو",_("لوگو")
+
 
 class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")

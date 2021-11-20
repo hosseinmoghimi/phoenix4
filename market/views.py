@@ -321,8 +321,8 @@ class ProductViews(View):
         brands = BrandRepo(request=request).list(*args, **kwargs)
         context = getContext(request)
         context['brands'] = brands
-        context['image_header']=PictureRepo(request=request).picture(name=PictureEnum.BRANDS_IMAGE_HEADER)
-        context['brands_slogan']=ParameterRepo(request=request).parameter(name=ParameterEnum.BRANDS_SLOGAN)
+        context['image_header']=PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureEnum.BRANDS_IMAGE_HEADER)
+        context['brands_slogan']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.BRANDS_SLOGAN)
         return render(request, TEMPLATE_ROOT+"brands.html", context)
 
     def add_product(self,request,*args, **kwargs):

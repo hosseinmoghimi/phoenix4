@@ -17,7 +17,7 @@ from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
 from django.views import View
 from django.shortcuts import redirect, render
-from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum
+from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum,PictureNameEnums
 from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
 TEMPLATE_ROOT = APP_NAME+"/"
@@ -45,8 +45,10 @@ def getContext(request):
         'home_url': reverse(APP_NAME+":home"),
         'tel': parameter_repo.get(ParametersEnum.TEL).value,
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
+        'logo':PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureNameEnums.LOGO)
     }
-
+    print(context['app']['logo'].image())
+    print(context['app']['logo'].pk)
     return context
 
 
