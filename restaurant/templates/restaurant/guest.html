@@ -1,0 +1,34 @@
+{% extends "restaurant/layout.html" %}
+{% block content %}
+<h3 class="text-center">
+    رستوران
+</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    {{guest.profile.name}}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="media">
+                    <a href="{{guest.profile.get_absolute_url}}">
+                        <img src="{{guest.profile.image}}" class="rounded-circle" width="48" alt="">
+                    </a>
+                    <div class="media-body">
+                        <a href="{{guest.profile.get_absolute_url}}">
+                            {{guest.profile.name}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+{% include "restaurant/includes/foods-app/script.html" %}
+{% endblock script %}

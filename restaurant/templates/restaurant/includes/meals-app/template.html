@@ -1,17 +1,58 @@
-<div class="card">
+<div class="card" id="meals-app">
     <div class="card-header">
         <h4 class="title">
-            وعده های غذایی
+            <a href="{% url 'restaurant:meals' %}">
+
+                وعده های غذایی
+            </a>
         </h4>
     </div>
     <div class="card-body farsi">
-        <ul>
-            {% for meal in meals %}
-              <li class="text-right farsi">
-                {{meal.food.title}}  {{meal.persian_date_served}}  {{meal.meal_type}} 
-              </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
+        <table class="table">
+            <thead>
+                <th>
+                    
+                </th>
+                <th>
+                    غذا
+                </th>
+                <th>
+                    وعده
+                </th>
+                <th>
+                    تاریخ
+                </th>
+            </thead>
+            <tbody>
+                <tr  v-for="meal in meals" >
+                    <td>
+                        <a :href="meal.get_absolute_url">
+                           <i class="material-icons">
+                               ballot
+                           </i>
+                        </a> 
+                    </td>
+                    <td>
+                        <a :href="meal.food.get_absolute_url">
+                            <span class="d-block my-2" v-text="meal.food.title"></span>
 
+                        </a>
+
+                    </td>
+                    <td>
+                        <span class="d-block my-2" v-text="meal.meal_type"></span>
+
+                    </td>
+                    <td>
+
+                        <span class="d-block my-2" v-text="meal.persian_date_served"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    {% if add_meal_form %}
+
+    {% endif %}
+</div>

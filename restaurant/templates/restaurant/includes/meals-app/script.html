@@ -1,0 +1,10 @@
+<script>
+    let meals=JSON.parse(`{{meals_s|escapejs}}`)
+    let meals_app=new Vue({
+        el:"#meals-app",
+        data:{
+            meals:meals,
+            
+        }
+    })
+</script>

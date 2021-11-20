@@ -1,3 +1,7 @@
+
+from django.core.files.storage import FileSystemStorage
+
+
 from django.db import models, reset_queries
 from django.db.models.base import Model
 from django.db.models.fields import BooleanField, CharField
@@ -10,6 +14,9 @@ from tinymce.models import HTMLField
 from .enums import *
 from utility.persian import PersianCalendar
 IMAGE_FOLDER = APP_NAME+'/images/'
+
+upload_storage = FileSystemStorage(location=UPLOAD_ROOT, base_url='/uploads')
+image = models.ImageField() 
 
 class Icon(models.Model):
     name=models.CharField(_("name"), null=True,blank=True,max_length=50)
@@ -371,6 +378,8 @@ class BasicPage(models.Model):
             ids.append(pd.document.id)
         documents= Document.objects.filter(id__in=ids).all()
         return documents
+
+
 class Link(Icon):
     title = models.CharField(_("عنوان"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)
@@ -492,10 +501,6 @@ class PageLink(Link):
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
 
-from django.core.files.storage import FileSystemStorage
-
-upload_storage = FileSystemStorage(location=UPLOAD_ROOT, base_url='/uploads')
-image = models.ImageField() 
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
     title = models.CharField(_('عنوان'), max_length=200)
@@ -640,6 +645,9 @@ class Parameter(models.Model):
 
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/parameter/{self.pk}/change/'
+
+    def get_delete_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/parameter/{self.pk}/delete/'
 
     def save(self):
         if self.name==ParametersEnum.LOCATION:
