@@ -11,6 +11,7 @@ import json
 
 TEMPLATE_ROOT="restaurant/"
 LAYOUT_PARENT="phoenix/layout.html"
+
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['LAYOUT_PARENT']=LAYOUT_PARENT
