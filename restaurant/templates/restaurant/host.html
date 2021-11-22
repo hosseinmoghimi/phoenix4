@@ -1,0 +1,44 @@
+
+{% extends "restaurant/layout.html" %}
+{% block content %}
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="card farsi text-right" id="hosts-app">
+            <div class="card-header">
+                <h4 class="title">
+                    {{host.title}}
+                    {% if perms.restaurant.change_host %}
+                      <a href="{{host.get_edit_url}}" target="_blank" title="ویرایش">
+                          <i class="fa fa-edit text-info"></i>
+                      </a>
+                    {% endif %}
+                </h4>
+            </div>
+
+            <div class="card-body">
+             
+
+            </div>
+            <div class="card-footer">
+                
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-12">
+        {% include "restaurant/includes/meals-app/template.html" %}
+    </div>
+  
+    
+</div>
+{% endblock content %}
+ 
+
+{% block script %}
+<script>
+</script>
+{% include "restaurant/includes/meals-app/script.html" %}
+{% endblock script %}

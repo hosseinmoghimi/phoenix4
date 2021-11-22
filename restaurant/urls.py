@@ -10,8 +10,10 @@ urlpatterns = [
     path('foods/',views.FoodViews().foods,name="foods"),
     path('guests/',views.GuestViews().guests,name="guests"),
     # path('week/<int:year>/<int:month>/<int:day>/',views.MealViews().week,name="week"),
+    path('host/<int:pk>/',views.HostViews().host,name="host"),
+    path('hosts/',views.HostViews().hosts,name="hosts"),
     path('meal/<int:pk>/',views.MealViews().meal,name="meal"),
-    path('meals/',views.MealViews().meals,name="meals"),
+    path('meals/<int:guest_id>/',views.MealViews().meals,name="meals"),
     path('reserved_meal/<int:pk>/',views.MealViews().reserved_meal,name="reservedmeal"),
 
 

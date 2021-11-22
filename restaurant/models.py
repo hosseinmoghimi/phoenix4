@@ -48,6 +48,7 @@ class Food(RestaurantPage):
 
 
 class Meal(models.Model):
+    host=models.ForeignKey("host", verbose_name=_("host"), on_delete=models.CASCADE)
     food=models.ForeignKey("food", verbose_name=_("food"), on_delete=models.CASCADE)
     date_served=models.DateField(_("date_served"), auto_now=False, auto_now_add=False)
     meal_type=models.CharField(_("meal type"),choices=MealTypeEnum.choices, max_length=50)
@@ -81,6 +82,7 @@ class Meal(models.Model):
 
 
 class ReservedMeal(models.Model):
+    quantity=models.IntegerField(_("تعداد"),default=1)
     guest=models.ForeignKey("guest", verbose_name=_("guest"), on_delete=models.CASCADE)
     meal=models.ForeignKey("meal", verbose_name=_("meal"), on_delete=models.CASCADE)
     date_reserved=models.DateTimeField(_("date_reserved"), auto_now=False, auto_now_add=True)
@@ -110,15 +112,15 @@ class ReservedMeal(models.Model):
 
 
 class Host(models.Model):
+    title=models.CharField(_("title"), max_length=100)
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-    
     class_name="host"
     class Meta:
         verbose_name = _("Host")
         verbose_name_plural = _("Hosts")
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
     def get_absolute_url(self):

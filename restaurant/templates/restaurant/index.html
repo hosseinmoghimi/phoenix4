@@ -13,10 +13,21 @@
     <div class="col-md-6">
         {% include "restaurant/includes/meals-app/template.html" %}
     </div>
+    <div class="col-md-6">
+        {% include "restaurant/includes/hosts-app/template.html" %}
+    </div>
 </div>
 {% endblock content %}
 
 {% block script %}
+<script>
+    
+    let guest_id="{{me_guest.id}}"
+    let hosts=JSON.parse(`{{hosts_s|escapejs}}`)
+    let guests=JSON.parse(`{{guests_s|escapejs}}`)
+
+</script>
 {% include "restaurant/includes/meals-app/script.html" %}
 {% include "restaurant/includes/foods-app/script.html" %}
+{% include "restaurant/includes/hosts-app/script.html" %}
 {% endblock script %}

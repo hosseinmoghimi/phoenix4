@@ -1,8 +1,10 @@
 <script>
+
+    let meals = JSON.parse(`{{meals_s|escapejs}}`)
+    
     let url_reserve_meal = "{% url 'restaurant:reserve_meal' %}"
     let url_unreserve_meal = "{% url 'restaurant:unreserve_meal' %}"
 
-    let meals = JSON.parse(`{{meals_s|escapejs}}`)
     let meal_component_template = `
     {% include "restaurant/includes/meals-app/component.html" %}
     `
@@ -29,6 +31,7 @@
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     meal_id: this.meal.id,
+                    guest_id: meals_app.guest_id,
                 }
                 let meal = this.meal
                 let posting = $.post(url_reserve_meal, payload)
@@ -45,6 +48,7 @@
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     meal_id: this.meal.id,
+                    guest_id: meals_app.guest_id,
                 }
                 let meal = this.meal
                 let posting = $.post(url_unreserve_meal, payload)
@@ -63,15 +67,58 @@
     })
 
 
+</script>
+
+{% if reserve_meal_form %}
+<script>
+    let meals_app_data = {
+        meals: meals,
+        guest_id: guest_id,
+        guests: guests,
+        selected_guest: null,
+
+    }
+    let meals_app_components = {
+        meal_component
+
+
+    }
+    let meals_app_methods = {
+        change_guest: function () {
+
+        }
+
+    }
+</script>
+{% else %}
+<script>
+
+    let meals_app_data = {
+        meals: meals,
+
+
+    }
+
+    let meals_app_components = {
+
+
+    }
+    let meals_app_methods = {
+
+    }
+
+
+
+</script>
+
+{% endif %}
+<script>
+
 
     let meals_app = new Vue({
         el: "#meals-app",
-        data: {
-            meals: meals,
-
-        },
-        components: {
-            meal_component
-        }
+        data: meals_app_data,
+        components: meals_app_components,
+        methods: meals_app_methods,
     })
 </script>

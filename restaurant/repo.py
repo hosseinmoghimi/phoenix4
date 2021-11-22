@@ -1,7 +1,7 @@
 from django.http import request
 from django.utils import timezone
 from .apps import APP_NAME
-from .models import Guest,Food, Meal, ReservedMeal
+from .models import Guest,Food, Host, Meal, ReservedMeal
 from authentication.repo import ProfileRepo
 
 
@@ -19,6 +19,7 @@ class GuestRepo():
         self.profile=ProfileRepo(request=self.request).me
         if self.profile is not None:
             self.me=Guest.objects.filter(profile_id=self.profile.id).first()
+        if self.user.has_perm(APP_NAME+".view_guest"):
             self.objects=Guest.objects
     def guest(self, *args, **kwargs):
         
@@ -28,6 +29,8 @@ class GuestRepo():
             pk=kwargs['pk']
         elif 'id' in kwargs:
             pk=kwargs['id']
+        if pk==0:
+            return self.me
         return self.objects.filter(pk=pk).first()
     
     def get(self, *args, **kwargs):
@@ -71,8 +74,8 @@ class MealRepo():
         objects = self.objects
         if 'search_for' in kwargs:
             objects = objects.filter(title__contains=kwargs['search_for'])
-        if 'parent_id' in kwargs:
-            objects=objects.filter(parent_id=kwargs['parent_id'])
+        if 'host_id' in kwargs:
+            objects=objects.filter(host_id=kwargs['host_id'])
         # if 'is_reserved' in kwargs:
         #     guest=GuestRepo(request=self.request).me
         #     for meal in objects.all():
@@ -104,10 +107,10 @@ class ReservedMealRepo():
     def reserve_meal(self, *args, **kwargs):
         meal_id=kwargs['meal_id'] if 'meal_id' in kwargs else None
         guest_id=kwargs['guest_id'] if 'guest_id' in kwargs else None
+        me_guest=GuestRepo(request=self.request).me
         if guest_id is None:
-            guest=GuestRepo(request=self.request).me
-            if guest is not None:
-                guest_id=guest.id
+            if me_guest is not None:
+                guest_id=me_guest.id
         if guest_id is None or meal_id is None:
             return None
         reserved_meal=ReservedMeal.objects.filter(meal_id=meal_id).filter(guest_id=guest_id).first()
@@ -116,11 +119,12 @@ class ReservedMealRepo():
         # guest=GuestRepo(request=self.request).guest(*args, **kwargs)
         # if guest is None:
         #     return None
-        reserved_meal = ReservedMeal()
-        reserved_meal.guest_id=guest_id
-        reserved_meal.meal_id=meal_id
-        reserved_meal.save()
-        return reserved_meal
+        if self.user.has_perm(APP_NAME+".add_reservedmeal") or (me_guest is not None and me_guest.id==guest_id):
+            reserved_meal = ReservedMeal()
+            reserved_meal.guest_id=guest_id
+            reserved_meal.meal_id=meal_id
+            reserved_meal.save()
+            return reserved_meal
   
 
     def reserved_meal(self, *args, **kwargs):
@@ -217,4 +221,49 @@ class FoodRepo():
             food.title = kwargs['title']
         food.save()
         return food
+  
+
+
+  
+class HostRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        
+        self.objects=Host.objects
+    def host(self, *args, **kwargs):
+        pk=0
+        if 'host_id' in kwargs:
+            pk=kwargs['host_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+    
+    def get(self, *args, **kwargs):
+        return self.project(*args, **kwargs)
+
+    def list(self, *args, **kwargs):
+        objects = self.objects
+        if 'search_for' in kwargs:
+            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'parent_id' in kwargs:
+            objects=objects.filter(parent_id=kwargs['parent_id'])
+        return objects.all()
+
+
+    def add_host(self, *args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_host"):
+            return
+        host=Host()
+        if 'profile_id' in kwargs:
+            host.profile_id = kwargs['profile_id']
+        host.save()
+        return host
   

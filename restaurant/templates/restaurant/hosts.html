@@ -1,3 +1,4 @@
+
 {% extends "restaurant/layout.html" %}
 {% block content %}
 <h3 class="text-center">
@@ -6,7 +7,7 @@
  
 <div class="row">
     <div class="col-md-12">
-        {% include "restaurant/includes/meals-app/template.html" %}
+        {% include "restaurant/includes/hosts-app/template.html" %}
     </div>
     
 </div>
@@ -15,8 +16,7 @@
 {% block script %}
 <script>
     let guest_id="{{me_guest.id}}"
-    let guests=JSON.parse(`{{guests_s|escapejs}}`)
-    let me_guest=JSON.parse(`{{me_guest_s|escapejs}}`)
+    let hosts=JSON.parse(`{{hosts_s|escapejs}}`)
 </script>
-{% include "restaurant/includes/meals-app/script.html" %}
+{% include "restaurant/includes/hosts-app/script.html" %}
 {% endblock script %}
