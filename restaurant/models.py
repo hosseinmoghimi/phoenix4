@@ -43,7 +43,7 @@ class Food(RestaurantPage):
     salt=models.IntegerField(_("نمک"),default=0)
     protein=models.IntegerField(_("پروتئین"),default=0)
     fat_acid=models.IntegerField(_("اسید چرب"),default=0)
-    
+
     class Meta:
         verbose_name = _("Food")
         verbose_name_plural = _("Foods")
@@ -76,7 +76,7 @@ class Meal(models.Model):
         verbose_name_plural = _("Meals")
 
     def __str__(self):
-        return f"{str(self.food)} # {self.meal_type} @ {self.persian_date_served()}"
+        return f"{str(self.title)} # {self.meal_type} @ {self.persian_date_served()}"
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":meal", kwargs={"pk": self.pk})

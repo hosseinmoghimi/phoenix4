@@ -34,7 +34,7 @@
             <td>
                 <a :href="served_meal.meal.get_absolute_url">
 
-                    <span v-text="served_meal.meal.food.title"></span>
+                    <span v-for="food in served_meal.meal.foods" v-text="food.title"></span>
                     <span v-text="served_meal.meal.meal_type"></span>
                     <span v-text="served_meal.meal.persian_date_served"></span>
                 </a>

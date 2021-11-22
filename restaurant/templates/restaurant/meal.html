@@ -18,8 +18,8 @@
                 <div>
                     {% for food in meal.foods.all %}
                       
-                    <a class="mx-2" href="{{meal.food.get_absolute_url}}">
-                        {{meal.food.title}}
+                    <a class="mx-2" href="{{food.get_absolute_url}}">
+                        {{food.title}}
                     </a>
                     {% endfor %}
                     {% if perms.restaurant.change_meal %}
@@ -67,7 +67,7 @@
         <div class="card farsi text-right">
             <div class="card-header">
                 <h4 class="title">
-                    {{meal.food.title}}
+                    {{meal.title}}
                 </h4>
             </div>
 
