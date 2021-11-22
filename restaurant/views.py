@@ -66,6 +66,7 @@ class BasicViews(View):
         context['guests_s']=json.dumps(GuestSerializer(guests,many=True).data)
 
         
+        context['reserve_meal_form']=ReserveMealForm()
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class GuestViews(View):

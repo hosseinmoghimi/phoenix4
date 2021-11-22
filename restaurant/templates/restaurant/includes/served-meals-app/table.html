@@ -12,6 +12,9 @@
         <th>
 
         </th>
+        <th>
+
+        </th>
     </thead>
     <tbody>
         <tr v-for="served_meal in served_meals">
@@ -21,7 +24,7 @@
                         <img :src="served_meal.guest.profile.image" class="rounded-circle" width="48" alt="">
                     </a>
                     <div class="media-body mt-3 mr-2">
-                        <div >
+                        <div>
 
                             <a :href="served_meal.guest.get_absolute_url">
                                 <span v-text="served_meal.guest.profile.name"></span>
@@ -32,12 +35,18 @@
 
             </td>
             <td>
-                <a :href="served_meal.meal.get_absolute_url">
+                <div v-for="food in served_meal.meal.foods" class="mx-2">
+                    <a :href="food.get_absolute_url">
 
-                    <span v-for="food in served_meal.meal.foods" v-text="food.title"></span>
-                    <span v-text="served_meal.meal.meal_type"></span>
-                    <span v-text="served_meal.meal.persian_date_served"></span>
-                </a>
+                        <span v-text="food.title"></span>
+                    </a>
+
+                </div>
+                </span>
+            </td>
+            <td>
+                <span v-text="served_meal.meal.meal_type"></span>
+                <span v-text="served_meal.meal.persian_date_served"></span>
             </td>
             <td>
                 <small class="text-muted">

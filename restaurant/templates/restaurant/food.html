@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="card farsi text-right" id="meal-app">
             <div class="card-header">
                 <h4 class="title">
@@ -11,6 +11,9 @@
             </div>
 
             <div class="card-body">
+
+              {% include "restaurant/includes/foods-app/food-spec.html" %}
+
                 <table class="table table-striped">
                     <thead>
                         <th>
@@ -34,13 +37,20 @@
                         {% for meal in food.meal_set.all %}
                         <tr>
                             <td>
-                                <a href="{{meal.food.get_absolute_url}}">
-                                    {{meal.food.title}}
-                                </a>
+                                {% for food in meal.foods.all %}
+                                <div>
+
+                                    <a href="{{food.get_absolute_url}}">
+                                        {{food.title}}
+                                    </a>
+                                </div>
+                                {% endfor %}
                             </td>
 
                             <td>
-                                {{meal.meal_type}}
+                                <a href="{{meal.get_absolute_url}}">
+                                    {{meal.meal_type}}
+                                </a>
                             </td>
                             <td>
                                 {{meal.persian_date_served}}
@@ -104,7 +114,7 @@
 
 
 
-  
-    
+
+
 </div>
 {% endblock content %}
