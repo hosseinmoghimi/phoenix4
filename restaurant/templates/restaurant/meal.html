@@ -5,7 +5,7 @@
         <div class="card farsi text-right" id="meal-app">
             <div class="card-header">
                 <h4 class="title">
-                    {{meal.food.title}}
+                    {{meal.title}}
                     {% if perms.restaurant.change_meal %}
                     <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
                         <i class="fa fa-edit text-info"></i>
@@ -16,9 +16,12 @@
 
             <div class="card-body">
                 <div>
-                    <a href="{{meal.food.get_absolute_url}}">
+                    {% for food in meal.foods.all %}
+                      
+                    <a class="mx-2" href="{{meal.food.get_absolute_url}}">
                         {{meal.food.title}}
                     </a>
+                    {% endfor %}
                     {% if perms.restaurant.change_meal %}
                     <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
                         <i class="fa fa-edit text-info"></i>

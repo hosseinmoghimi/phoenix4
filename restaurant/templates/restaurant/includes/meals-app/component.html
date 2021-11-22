@@ -26,10 +26,13 @@
     </td>
 
     <td>
-        <a :href="meal.food.get_absolute_url">
-            <span class="d-block my-2" v-text="meal.food.title"></span>
+        <div v-for="food in meal.foods" >
 
-        </a>
+            <a :href="food.get_absolute_url">
+                <span class="d-block my-2" v-text="food.title"></span>
+                
+            </a>
+        </div>
 
 
     </td>

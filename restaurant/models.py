@@ -36,7 +36,14 @@ class Guest(models.Model):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
 
 class Food(RestaurantPage):
-
+    callery=models.IntegerField(_("کالری"),default=0)
+    fat=models.IntegerField(_("چربی"),default=0)
+    sugar=models.IntegerField(_("قند"),default=0)
+    carbo_hydrathe=models.IntegerField(_("کربو هیدرات"),default=0)
+    salt=models.IntegerField(_("نمک"),default=0)
+    protein=models.IntegerField(_("پروتئین"),default=0)
+    fat_acid=models.IntegerField(_("اسید چرب"),default=0)
+    
     class Meta:
         verbose_name = _("Food")
         verbose_name_plural = _("Foods")
@@ -48,8 +55,9 @@ class Food(RestaurantPage):
 
 
 class Meal(models.Model):
+    title=models.CharField(_("title"), max_length=50)
     host=models.ForeignKey("host", verbose_name=_("host"), on_delete=models.CASCADE)
-    food=models.ForeignKey("food", verbose_name=_("food"), on_delete=models.CASCADE)
+    foods=models.ManyToManyField("food", verbose_name=_("food"))
     date_served=models.DateField(_("date_served"), auto_now=False, auto_now_add=False)
     meal_type=models.CharField(_("meal type"),choices=MealTypeEnum.choices, max_length=50)
     reserved=models.BooleanField(_("reserved"),default=False)
