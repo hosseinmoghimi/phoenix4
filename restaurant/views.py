@@ -18,7 +18,10 @@ def getContext(request):
     parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
     me_guest=GuestRepo(request=request).me
     context['me_guest']=me_guest
-    context['guests_s']=json.dumps(GuestSerializer([me_guest],many=True).data)
+    guests=[]
+    if me_guest is not None:
+        guests=[me_guest]
+    context['guests_s']=json.dumps(GuestSerializer(guests,many=True).data)
     context['me_guest_s']=json.dumps(GuestSerializer(me_guest).data)
     context['app']={
         'home_url':parameter_repo.parameter(name='آدرس خانه').value,
