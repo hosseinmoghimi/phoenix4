@@ -15,7 +15,7 @@ class MealSerializer(serializers.ModelSerializer):
     food=FoodSerializer()
     class Meta:
         model=Meal
-        fields=['id','food' ,'reserves_count','persian_date_served','get_edit_url','get_absolute_url','meal_type']
+        fields=['id','food' ,'reserved','reserves_count','persian_date_served','get_edit_url','get_absolute_url','meal_type']
 
 class ReservedMealSerializer(serializers.ModelSerializer):
     meal=MealSerializer()

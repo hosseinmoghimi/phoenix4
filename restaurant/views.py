@@ -54,6 +54,8 @@ class GuestViews(View):
         context=getContext(request=request)
         guest=GuestRepo(request=request).guest(*args, **kwargs)
         context['guest']=guest
+
+        
         return render(request,TEMPLATE_ROOT+"guest.html",context)
 
     def guests(self,request,*args, **kwargs):
@@ -96,6 +98,9 @@ class MealViews(View):
         context=getContext(request=request)
         meals=MealRepo(request=request).list(*args, **kwargs)
         context['meals']=meals
+        guest=GuestRepo(request=request).me
+        for meal in meals:
+            meal.is_reserved(guest_id=guest.id)
         meals_s=json.dumps(MealSerializer(meals,many=True).data)
         context['meals_s']=meals_s
         return render(request,TEMPLATE_ROOT+"meals.html",context)

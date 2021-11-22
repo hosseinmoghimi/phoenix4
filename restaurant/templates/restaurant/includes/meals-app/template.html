@@ -23,41 +23,20 @@
                     تاریخ
                 </th>
                 <th>
-                    رزرو
+                    تعداد کل رزرو
+                </th>
+                <th>
+                    رزرو / حذف
                 </th>
             </thead>
             <tbody>
-                <tr  v-for="meal in meals" >
-                    <td>
-                        <a :href="meal.get_absolute_url">
-                           <i class="material-icons">
-                               ballot
-                           </i>
-                        </a> 
-                    </td>
-                    <td>
-                        <a :href="meal.food.get_absolute_url">
-                            <span class="d-block my-2" v-text="meal.food.title"></span>
+                <template v-for="meal in meals">
 
-                        </a>
-
-                    </td>
-                    <td>
-                        <span class="d-block my-2" v-text="meal.meal_type"></span>
-
-                    </td>
-                    <td>
-
-                        <span class="d-block my-2" v-text="meal.persian_date_served"></span>
-                    </td>
-                    <td>
-                        <span class="d-block my-2" v-text="meal.reserves_count"></span>
-
-                    </td>
-                </tr>
+                    <meal-component :meal="meal"></meal-component>
+                </template>
             </tbody>
         </table>
-        
+
     </div>
     {% if add_meal_form %}
 

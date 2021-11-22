@@ -2,7 +2,7 @@ from stock.models import Payment
 from core.constants import FAILED,SUCCEED
 from .serializers import FoodSerializer, MealSerializer, ReservedMealSerializer
 from rest_framework.views import APIView
-from .forms import AddFoodForm,ReserveMealForm, ServeMealForm
+from .forms import AddFoodForm,ReserveMealForm, ServeMealForm, UnreserveMealForm
 from .repo import FoodRepo, MealRepo, ReservedMealRepo
 from django.http import JsonResponse
  
@@ -19,13 +19,36 @@ class MealApi(APIView):
                 meal_id=reserve_meal_form.cleaned_data['meal_id']
                 guest_id=reserve_meal_form.cleaned_data['guest_id']
                  
-                reserved_meal=MealRepo(request=request).reserve_meal(
+                reserved_meal=ReservedMealRepo(request=request).reserve_meal(
                     meal_id=meal_id,
                     guest_id=guest_id,
                     )
 
                 if reserved_meal is not None:
                     context['reserved_meal']=ReservedMealSerializer(reserved_meal).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def unreserve_meal(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=100
+        if request.method=='POST':
+            log=200
+            unreserve_meal_form=UnreserveMealForm(request.POST)
+            if unreserve_meal_form.is_valid():
+                log=300
+                meal_id=unreserve_meal_form.cleaned_data['meal_id']
+                guest_id=unreserve_meal_form.cleaned_data['guest_id']
+                 
+                meal=ReservedMealRepo(request=request).unreserve_meal(
+                    meal_id=meal_id,
+                    guest_id=guest_id,
+                    )
+
+                if meal is not None:
+                    context['meal']=MealSerializer(meal).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

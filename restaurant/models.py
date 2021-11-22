@@ -51,6 +51,14 @@ class Meal(models.Model):
     food=models.ForeignKey("food", verbose_name=_("food"), on_delete=models.CASCADE)
     date_served=models.DateField(_("date_served"), auto_now=False, auto_now_add=False)
     meal_type=models.CharField(_("meal type"),choices=MealTypeEnum.choices, max_length=50)
+    reserved=models.BooleanField(_("reserved"),default=False)
+    def is_reserved(self, *args, **kwargs):
+        if 'guest_id' not in kwargs:
+            return False
+        guest_id=kwargs['guest_id']
+        self.reserved= len(self.reservedmeal_set.filter(guest_id=guest_id))>0
+        return self.reserved
+
     class_name="meal"
     def reserves_count(self):
         return len(self.reservedmeal_set.all())
