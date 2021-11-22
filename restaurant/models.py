@@ -107,3 +107,23 @@ class ReservedMeal(models.Model):
         
     def persian_date_served(self):
         return PersianCalendar().from_gregorian(self.date_served)
+
+
+class Host(models.Model):
+    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    
+    class_name="host"
+    class Meta:
+        verbose_name = _("Host")
+        verbose_name_plural = _("Hosts")
+
+    def __str__(self):
+        return self.name
+
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+ 
