@@ -123,12 +123,10 @@ class ProjectRepo():
     def add_organization_unit(self,*args, **kwargs):
 
         project=self.project(*args, **kwargs)
-        print(project)
         if project is None:
             return None
         
         organization_unit=OrganizationUnitRepo(user=self.user).organization_unit(*args, **kwargs)
-        print(organization_unit)
         if organization_unit in project.organization_units.all():
             return None
         if project is not None and organization_unit is not None:
@@ -900,7 +898,7 @@ class ServiceRequestRepo():
         profile = ProfileRepo(user=self.user).me
         new_service_request.handler_id = handler_id
         new_service_request.creator=self.employee
-        if new_service_request.quantity > 0 and new_service_request.unit_price > 0:
+        if new_service_request.quantity > 0 and new_service_request.unit_price >= 0:
             new_service_request.save()
             new_service_request.service.unit_price = new_service_request.unit_price
             new_service_request.service.unit_name = new_service_request.unit_name
@@ -951,7 +949,6 @@ class EventRepo():
         if 'project_id' in kwargs:
             project_id= kwargs['project_id']
         my_project_ids=BasicPageRepo(request=self.request).my_pages_ids()
-        print(my_project_ids)
         if self.user.has_perm(APP_NAME+".add_event")  :
             pass
         elif project_id in my_project_ids:
@@ -1064,7 +1061,7 @@ class MaterialRequestRepo():
             new_material_request.status = kwargs['status']
         profile = ProfileRepo(user=self.user).me
         new_material_request.creator = self.employee
-        if new_material_request.quantity > 0 and new_material_request.unit_price > 0:
+        if new_material_request.quantity > 0 and new_material_request.unit_price >= 0:
             new_material_request.save()
             new_material_request.material.unit_price = new_material_request.unit_price
             new_material_request.material.unit_name = new_material_request.unit_name
