@@ -68,7 +68,6 @@
         },
         methods: {
             fff: function () {
-                console.log(this.order_lines)
             },
             checkout: function () {
                 let url = url_save_cart
@@ -88,9 +87,7 @@
                 }
                 let posting = $.post(url, payload)
                 posting.done(function (data) {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
-                        console.log(data)
                         order_app.order_lines = data.order_lines
                         order_app.checkout_done = true
                     }

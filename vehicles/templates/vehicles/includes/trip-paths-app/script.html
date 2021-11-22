@@ -27,7 +27,6 @@
                 }
                 $.post(url_add_trip_path, payload).done((data) => {
 
-                    console.log(data)
                     if(data.result==='SUCCEED'){
                         trip_paths_app.trip_paths.push(data.trip_path)
                     }

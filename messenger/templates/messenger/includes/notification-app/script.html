@@ -25,7 +25,6 @@
                 }
                 $.post(url, payload).done((data) => {
                     notification_app.waiting = false
-                    console.log(data)
                     if (data.result === "SUCCEED") {
 
 

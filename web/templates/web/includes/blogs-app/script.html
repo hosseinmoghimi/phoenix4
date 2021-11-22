@@ -16,10 +16,8 @@
                     title: this.title,
                     for_home: true,
                 }
-                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
                     blogs_app.waiting = false
                     if (data.result === 'SUCCEED') {
 

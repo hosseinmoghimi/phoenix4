@@ -53,11 +53,9 @@
                     unit_price: this.unit_price,
                     available: this.available,
                 }
-                console.log(payload)
 
                 let posting = $.post(url_add_shop, payload)
                 posting.done((data) => {
-                    console.log(data)
                     // add_to_cart_app.shops=data.shops
                     shops_app.shops.push(data.shop)
                     add_to_cart_app.shops.push(data.shop)

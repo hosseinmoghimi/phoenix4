@@ -27,7 +27,6 @@
                 })
 
                 posting.done(function (data) {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
 
                         product_specifications_app.specifications.push(data.product_specification)

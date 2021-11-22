@@ -17,10 +17,8 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
 
                 }
-                console.log(payload)
                 let posting = $.post(url_add_passenger_to_trip, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === "SUCCEED") {
                         passengers_app.passengers.push(data.passenger)
                     }

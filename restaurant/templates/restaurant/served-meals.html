@@ -107,12 +107,10 @@
                     meal_id: meal_id,
                     guest_id: guest_id,
                 }
-                console.log(payload)
 
                 let url = "{% url 'restaurant:reserve_meal' %}"
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
                 })
             },
 
@@ -123,12 +121,10 @@
                     meal_id: meal_id,
                     guest_id: this.guest_id,
                 }
-                console.log(payload)
 
                 let url = "{% url 'restaurant:serve_meal' %}"
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if(data.result==='SUCCEED'){
                         meal_app.served_meals.push(data.served_meal)
                     }

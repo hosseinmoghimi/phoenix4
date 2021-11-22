@@ -57,7 +57,6 @@
                     weight: this.weight,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                // console.log(payload)
 
 
                 var posting = $.post(url_edit_project, payload);
@@ -69,7 +68,6 @@
                 posting.done(function (data) {
 
                     project_app.waiting = false
-                    // console.log(data)
                     if (data.result === 'SUCCEED') {
                         // project_timing_app.services.push(data.service)
                         // project_timing_app.add_service_form_title = ""

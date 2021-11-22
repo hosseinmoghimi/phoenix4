@@ -16,10 +16,8 @@
                     meal_id: meal_id,
                     guest_id: this.guest_id,
                 }
-                console.log(payload)
                 let posting = $.post(url_serve_meal, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if(data.result==='SUCCEED'){
                         served_meals_app.served_meals.reverse()
                         served_meals_app.served_meals.push(data.served_meal)
@@ -33,10 +31,8 @@
                     meal_id: meal_id_,
                     guest_id: guest_id_,
                 }
-                console.log(payload)
                 let posting = $.post(url_unserve_meal, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if(data.result==='SUCCEED'){
                         served_meals=served_meals_app.served_meals
                         served_meals_app.served_meals=served_meals.filter(served_meal=>(served_meal.id!=data.reserved_meal.id))

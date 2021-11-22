@@ -35,10 +35,8 @@
                     ware_house_id: this.ware_house_id,
                     description: this.add_to_sheet_description,
                 }
-                // console.log(payload)
                 let posting = $.post(url_add_material_request_to_ware_house_sheet, payload)
                 posting.done((data) => {
-                    // console.log(data)
                     material_request_app.waiting = false
                     if (data.result === 'SUCCEED') {
                         material_request_app.ware_house_sheet=(data.ware_house_sheet)
@@ -53,10 +51,8 @@
                     status: this.add_signature_form_status,
                     description: this.add_signature_form_description,
                 }
-                //console.log(payload)
                 let posting = $.post(url_add_signature, payload)
                 posting.done((data) => {
-                // console.log(data)
                     material_request_app.waiting = false
                     if (data.result === 'SUCCEED') {
                         material_request_app.signatures.push(data.signature)

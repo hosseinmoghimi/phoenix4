@@ -55,13 +55,11 @@
                 }
                 let posting = $.post(url_add_work_shift, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === "SUCCEED") {
                         work_shifts_app.work_shifts.push(data.work_shift)
                     }
 
                 })
-                console.log(payload)
             },
         }
     })

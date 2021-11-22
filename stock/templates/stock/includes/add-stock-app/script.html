@@ -23,9 +23,7 @@
                     agent_id:this.agent_id
                 }
                 let posting = $.post(url, payload)
-                console.log(payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED'){
                         add_stock_app.first_name=""
                         add_stock_app.stock1=""

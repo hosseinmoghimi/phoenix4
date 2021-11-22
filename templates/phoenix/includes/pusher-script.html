@@ -4,7 +4,6 @@
   <script>
       
     let member = JSON.parse("{{member_s|escapejs}}")
-    console.log(member)
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
@@ -16,7 +15,6 @@
     channel.bind(member.event, function (data) {
         let message = JSON.stringify(data)
         message = JSON.parse(message)
-        console.log(message)
         notifications_app.notifications.push(message);
     });
 

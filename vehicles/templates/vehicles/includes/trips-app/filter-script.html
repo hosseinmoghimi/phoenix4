@@ -52,10 +52,8 @@
                     trip_path_id: this.trip_path_id,
 
                 }
-                console.log(payload)
                 let posting=$.post(url_filter_trip,payload)
                 posting.done((data)=>{
-                    console.log(data)
                     if(data.result==='SUCCEED')
                     trips_app.trips=data.trips
 

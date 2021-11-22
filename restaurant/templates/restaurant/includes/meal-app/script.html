@@ -14,11 +14,9 @@
                     meal_id: meal_id,
                     guest_id: guest_id,
                 }
-                console.log(payload)
 
                 let posting = $.post(url_reserve_meal, payload)
                 posting.done((data) => {
-                    console.log(data)
                 })
             },
 

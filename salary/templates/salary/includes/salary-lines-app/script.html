@@ -62,9 +62,7 @@
                     description: description,
                     employee_salary_id: employee_salary_id
                 }
-                console.log(payload)
                 $.post(url_add_salary_line, payload).done((data) => {
-                    console.log(data)
                     if (typeof data.negative_line != 'undefined') {
                         salary_lines_app.total_negatives += data.negative_line.amount
                         salary_lines_app.negative_lines.push(data.negative_line)

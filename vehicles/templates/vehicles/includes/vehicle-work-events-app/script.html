@@ -50,13 +50,11 @@
                 }
                 let posting = $.post(url_add_work_shift, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === "SUCCEED") {
                         vehicle_work_events_app.vehicle_work_events.push(data.vehicle_work_event)
                     }
 
                 })
-                console.log(payload)
             }
         }
     })

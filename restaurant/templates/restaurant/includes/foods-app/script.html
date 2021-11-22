@@ -22,7 +22,6 @@
                 posting.done((data) => {
                     foods_app.waiting = false
 
-                    console.log(data)
                     if (data.result === "SUCCEED") {
                         foods_app.foods.push(data.food)
                         foods_app.title = ""

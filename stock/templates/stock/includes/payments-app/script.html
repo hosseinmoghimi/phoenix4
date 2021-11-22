@@ -44,9 +44,7 @@
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        console.log(data)
                         if (data != 0) {
-                            //console.log(data)
                             if (data.result === 'SUCCEED') {
                                 payments_app.payments.push(data.payment)
                                 payments_app.add_payment_form_title = ''

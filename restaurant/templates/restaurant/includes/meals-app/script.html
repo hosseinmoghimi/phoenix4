@@ -30,11 +30,9 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     meal_id: this.meal.id,
                 }
-                console.log(payload)
                 let meal = this.meal
                 let posting = $.post(url_reserve_meal, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         meal.reserved = true
                         meal.reserves_count = data.reserved_meal.meal.reserves_count
@@ -48,11 +46,9 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     meal_id: this.meal.id,
                 }
-                console.log(payload)
                 let meal = this.meal
                 let posting = $.post(url_unreserve_meal, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         meal.reserved = false
                         meal.reserves_count = data.meal.reserves_count

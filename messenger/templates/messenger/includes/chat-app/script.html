@@ -3,7 +3,6 @@
 <script>
     let channel_id = parseInt("{{channel.id}}")
     // let member = JSON.parse("{{member_s|escapejs}}")
-    console.log(member)
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
@@ -15,7 +14,6 @@
     channel.bind(member.event, function (data) {
         let message = JSON.stringify(data)
         message = JSON.parse(message)
-        console.log(message)
         chat_app.messages=chat_app.messages.reverse()
         chat_app.messages.push(message);
         chat_app.messages=chat_app.messages.reverse()
@@ -44,7 +42,6 @@
                 }
                 $.post(url, payload).done((data) => {
                     chat_app.waiting = false
-                    console.log(data)
                     if (data.result === "SUCCEED") {
 
 
@@ -66,7 +63,6 @@
                 }
                 $.post(url, payload).done((data) => {
                     chat_app.waiting = false
-                    console.log(data)
                     if (data.result === "SUCCEED") {
 
 
