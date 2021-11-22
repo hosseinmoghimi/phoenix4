@@ -52,6 +52,8 @@ class Meal(models.Model):
     date_served=models.DateField(_("date_served"), auto_now=False, auto_now_add=False)
     meal_type=models.CharField(_("meal type"),choices=MealTypeEnum.choices, max_length=50)
     class_name="meal"
+    def reserves_count(self):
+        return len(self.reservedmeal_set.all())
     class Meta:
         verbose_name = _("Meal")
         verbose_name_plural = _("Meals")
@@ -73,7 +75,7 @@ class Meal(models.Model):
 class ReservedMeal(models.Model):
     guest=models.ForeignKey("guest", verbose_name=_("guest"), on_delete=models.CASCADE)
     meal=models.ForeignKey("meal", verbose_name=_("meal"), on_delete=models.CASCADE)
-    date_reserved=models.DateTimeField(_("date_reserved"), auto_now=False, auto_now_add=False)
+    date_reserved=models.DateTimeField(_("date_reserved"), auto_now=False, auto_now_add=True)
     date_served=models.DateTimeField(_("date_served"),null=True,blank=True, auto_now=False, auto_now_add=False)
     class_name="reservedmeal"
 
@@ -81,8 +83,12 @@ class ReservedMeal(models.Model):
         verbose_name = _("ReservedMeal")
         verbose_name_plural = _("ReservedMeals")
 
+    def persian_date_reserved(self):
+        return PersianCalendar().from_gregorian(self.date_reserved)
+
+
     def __str__(self):
-        return f"{str(self.guest)} {str(self.meal)}"
+        return f"""{("***" if self.date_served is not None else "")} {str(self.guest)} {str(self.meal)}"""
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
@@ -91,3 +97,5 @@ class ReservedMeal(models.Model):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 
         
+    def persian_date_served(self):
+        return PersianCalendar().from_gregorian(self.date_served)

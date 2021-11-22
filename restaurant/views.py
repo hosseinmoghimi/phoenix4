@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.views import View
 from core.repo import ParameterRepo
 from core.views import CoreContext
-from restaurant.serializers import FoodSerializer, GuestSerializer, MealSerializer
-from .forms import AddFoodForm
-from .repo import FoodRepo, GuestRepo, MealRepo
+from restaurant.serializers import FoodSerializer, GuestSerializer, MealSerializer, ReservedMealSerializer
+from .forms import AddFoodForm, ReserveMealForm, ServeMealForm
+from .repo import FoodRepo, GuestRepo, MealRepo, ReservedMealRepo
 from .apps import APP_NAME
 import json
 
@@ -69,7 +69,28 @@ class MealViews(View):
         context=getContext(request=request)
         meal=MealRepo(request=request).meal(*args, **kwargs)
         context['meal']=meal
+        guest=GuestRepo(request=request).me
+        context['guest']=guest
+        reserved_meal_repo=ReservedMealRepo(request=request)
+        reserved_meal=reserved_meal_repo.objects.filter(meal=meal).filter(guest=guest).first()
+        context['reserved_meal']=reserved_meal
+        if guest is not None and reserved_meal is None:
+            context['reserve_meal_form']=ReserveMealForm()
+        if request.user.has_perm(APP_NAME+".change_reservedmeal"):
+            context['serve_meal_form']=ServeMealForm()
+        if request.user.has_perm(APP_NAME+".view_reservedmeal"):
+            served_meals=reserved_meal_repo.list(meal_id=meal.id).exclude(date_served=None).order_by('-date_served')
+            served_meals_s=json.dumps(ReservedMealSerializer(served_meals,many=True).data)
+            context['served_meals_s']=served_meals_s
         return render(request,TEMPLATE_ROOT+"meal.html",context)
+
+    def reserved_meal(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        reserved_meal=ReservedMealRepo(request=request).reserved_meal(*args, **kwargs)
+        context['reserved_meal']=reserved_meal
+        guest=GuestRepo(request=request).me
+        context['guest']=guest
+        return render(request,TEMPLATE_ROOT+"reserved-meal.html",context)
 
     def meals(self,request,*args, **kwargs):
         context=getContext(request=request)

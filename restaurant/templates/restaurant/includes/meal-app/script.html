@@ -1,0 +1,30 @@
+<script>
+    let url_reserve_meal="{% url 'restaurant:reserve_meal' %}"
+    let meal_app_data = {
+        guest_id: guest_id,
+
+    }
+    let meal_app = new Vue({
+        el: "#meal-app",
+        data: meal_app_data,
+        methods: {
+            reserve_meal: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    meal_id: meal_id,
+                    guest_id: guest_id,
+                }
+                console.log(payload)
+
+                let posting = $.post(url_reserve_meal, payload)
+                posting.done((data) => {
+                    console.log(data)
+                })
+            },
+
+
+            
+
+        }
+    })
+</script>

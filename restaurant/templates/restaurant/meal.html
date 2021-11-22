@@ -1,24 +1,104 @@
-
 {% extends "restaurant/layout.html" %}
 {% block content %}
 <div class="row">
-    <h4 class="title">
-        <a href="{{meal.food.get_absolute_url}}">
+    <div class="col-md-6">
+        <div class="card farsi text-right" id="meal-app">
+            <div class="card-header">
+                <h4 class="title">
+                    {{meal.food.title}}
+                    {% if perms.restaurant.change_meal %}
+                    <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                    {% endif %}
+                </h4>
+            </div>
 
-            {{meal.food.title}}
-        </a>
-        <div>
-            {{meal.persian_date_served}}
+            <div class="card-body">
+                <div>
+                    <a href="{{meal.food.get_absolute_url}}">
+                        {{meal.food.title}}
+                    </a>
+                    {% if perms.restaurant.change_meal %}
+                    <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                    {% endif %}
+                </div>
 
+                <div>
+                    {{meal.persian_date_served}}
+                </div>
+                <div>
+                    {{meal.meal_type}}
+                </div>
+                <div>
+                    رزرو شده برای
+                    {{meal.reservedmeal_set.all|length}} نفر
+                </div>
+                {% if reserved_meal %}
+
+                <div>
+                    رزرو شده برای
+                    <a href="{{reserved_meal.guest.get_absolute_url}}">
+                        {{reserved_meal.guest.profile.name}}
+                    </a>
+                    در
+                    <a href="{{reserved_meal.get_absolute_url}}">
+                        {{reserved_meal.persian_date_reserved}}
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="card-footer">
+                {% if reserve_meal_form %}
+                <button class="btn btn-info" @click="reserve_meal()">
+                    رزرو غذا
+                </button>
+                {% endif %}
+            </div>
         </div>
-        <div>
-            {{meal.meal_type}}
+    </div>
+    <div class="col-md-6">
+        <div class="card farsi text-right">
+            <div class="card-header">
+                <h4 class="title">
+                    {{meal.food.title}}
+                </h4>
+            </div>
+
+            <div class="card-body">
+                {% for reserved_meal in meal.reservedmeal_set.all %}
+                <div>
+                    <small class="text-muted ml-3">
+                        {{forloop.counter}}
+
+                    </small>
+                    {{reserved_meal.guest.id}}
+                    {{reserved_meal.guest.profile.name}}
+                </div>
+                {% endfor %}
+            </div>
         </div>
-        {% if perms.restaurant.change_meal %}
-        <a href="{{meal.get_edit_url}}" title="ویرایش" target="_blank">
-            <i class="fa fa-edit text-info"></i>
-        </a>
-        {% endif %}
-    </h4>
+    </div>
+
+    <div class="col-md-12">
+        {% include "restaurant/includes/served-meals-app/template.html" %}
+
+    </div>
+
 </div>
 {% endblock content %}
+
+
+{% block script %}
+<script>
+
+    let meal_id = parseInt(`{{meal.id}}`)
+    let guest_id = parseInt(`{{guest.id}}`)
+</script>
+{% include "restaurant/includes/meal-app/script.html" %}
+{% include "restaurant/includes/served-meals-app/script.html" %}
+
+{% endblock script %}

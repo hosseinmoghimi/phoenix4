@@ -1,19 +1,25 @@
+from django.http import request
+from django.utils import timezone
 from .apps import APP_NAME
 from .models import Guest,Food, Meal, ReservedMeal
-
+from authentication.repo import ProfileRepo
 
 
 class GuestRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
         self.user = None
+        self.me = None
+        self.objects = Guest.objects.filter(pk=0)
         if 'request' in kwargs:
             self.request = kwargs['request']
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        
-        self.objects=Guest.objects
+        self.profile=ProfileRepo(request=self.request).me
+        if self.profile is not None:
+            self.me=Guest.objects.filter(profile_id=self.profile.id).first()
+            self.objects=Guest.objects
     def guest(self, *args, **kwargs):
         
         if 'guest_id' in kwargs:
@@ -70,6 +76,24 @@ class MealRepo():
         return objects.all()
 
   
+    def reserve_meal(self, *args, **kwargs):
+        meal_id=kwargs['meal_id'] if 'meal_id' in kwargs else None
+        guest_id=kwargs['guest_id'] if 'guest_id' in kwargs else None
+        if guest_id is None or meal_id is None:
+            return None
+        reserved_meal=ReservedMeal.objects.filter(meal_id=meal_id).filter(guest_id=guest_id).first()
+        if reserved_meal is not None:
+            return
+        # guest=GuestRepo(request=self.request).guest(*args, **kwargs)
+        # if guest is None:
+        #     return None
+        reserved_meal = ReservedMeal()
+        reserved_meal.guest_id=guest_id
+        reserved_meal.meal_id=meal_id
+        reserved_meal.save()
+        return reserved_meal
+  
+    
 
 
 class ReservedMealRepo():
@@ -83,10 +107,12 @@ class ReservedMealRepo():
             self.user = kwargs['user']
         
         self.objects=ReservedMeal.objects
-    def meal(self, *args, **kwargs):
-        
-        if 'meal_id' in kwargs:
-            pk=kwargs['meal_id']
+    def reserved_meal(self, *args, **kwargs):
+        if 'meal_id' in kwargs and  'guest_id' in kwargs:
+            return self.objects.filter(meal_id=kwargs['meal_id']).filter(guest_id=kwargs['guest_id']).first()
+        pk=0
+        if 'reserved_meal_id' in kwargs:
+            pk=kwargs['reserved_meal_id']
         elif 'pk' in kwargs:
             pk=kwargs['pk']
         elif 'id' in kwargs:
@@ -98,12 +124,27 @@ class ReservedMealRepo():
 
     def list(self, *args, **kwargs):
         objects = self.objects
-        if 'search_for' in kwargs:
-            objects = objects.filter(title__contains=kwargs['search_for'])
+        if 'meal_id' in kwargs:
+            objects = objects.filter(meal_id=kwargs['meal_id'])
         if 'parent_id' in kwargs:
             objects=objects.filter(parent_id=kwargs['parent_id'])
         return objects.all()
-
+    def serve_meal(self, *args, **kwargs):
+        reserved_meal=self.reserved_meal(*args, **kwargs)
+        if reserved_meal is None or reserved_meal.date_served is not None:
+            return
+        reserved_meal.date_served=timezone.now()
+        reserved_meal.save() 
+        return reserved_meal
+            
+    def unserve_meal(self, *args, **kwargs):
+        reserved_meal=self.reserved_meal(*args, **kwargs)
+        if reserved_meal is None or reserved_meal.date_served is None:
+            return
+        reserved_meal.date_served=None
+        reserved_meal.save() 
+        return reserved_meal
+            
   
 
 class FoodRepo():

@@ -1,0 +1,31 @@
+<div class="card farsi text-right" id="served-meals-app">
+    <div class="card-header">
+        <h4 class="title">
+           غذاهای سرو شده
+        </h4>
+    </div>
+
+    <div class="card-body">
+        {% if serve_meal_form %}
+        <form @submit.prevent="serve_meal()">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="">شناسه مهمان</label>
+                        <input type="number" v-model="guest_id" class="form-control" required>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+
+        {% include "restaurant/includes/served-meals-app/table.html" %}
+
+       
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
