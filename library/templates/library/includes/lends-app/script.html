@@ -18,7 +18,6 @@
                 this.members.forEach(member => {
                     if (member.id == member_id) {
                         lends_app.selected_member = member
-                        console.log(member)
                     }
                 })
             },
@@ -28,7 +27,6 @@
                 this.books.forEach(book => {
                     if (book.id == book_id) {
                         lends_app.selected_book = book
-                        console.log(book)
                     }
                 })
             },
@@ -40,9 +38,7 @@
                     book_id: this.book_id,
                     member_id: this.member_id,
                 }
-                console.log(payload)
                 $.post(url_add_lend, payload).done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         lends_app.lends.push(data.lend)
                     }
@@ -60,9 +56,7 @@
                     col: this.new_book_col,
                     row: this.new_book_row,
                 }
-                console.log(payload)
                 $.post(url_add_book, payload).done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         books_app.books.push(data.book)
                     }

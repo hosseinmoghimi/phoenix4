@@ -14,15 +14,13 @@
                     page_id: page_id,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                // console.log(payload)
+                
                 let posting = $.post(urlـtoggle_like, payload)
                 posting.done((data) => {
-                    // console.log(data)
                     if (data.result==="SUCCEED")
                     {
                         page_like_app.my_like=!(typeof data.my_like==='undefined')
                         page_like_app.likes_count=data.likes_count
-                        // console.log(page_like_app.my_like)
                     }
                 })
             }

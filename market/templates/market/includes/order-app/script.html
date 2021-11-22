@@ -30,12 +30,10 @@
                     quantity: this.quantity,
                     shop_id: this.shop.id,
                 }
-                console.log(payload)
 
                 let aa = this
                 let posting = $.post(url_add_to_cart, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         let message = data.order_line.quantity + " " + data.order_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
                         aa.message = message
@@ -88,7 +86,6 @@
                     order_lines: order_lines,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done(function (data) {
                     console.log(data)

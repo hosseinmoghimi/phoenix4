@@ -40,9 +40,7 @@
                     col: this.new_book_col,
                     row: this.new_book_row,
                 }
-                console.log(payload)
                 $.post(url_add_book, payload).done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         books_app.books.push(data.book)
                     }

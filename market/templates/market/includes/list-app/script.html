@@ -35,14 +35,12 @@
                     title: this.new_product_title,
                     category_id: category_id,
                 }
-                console.log(payload)
 
                 let aa = this
                 let posting = $.post(url_add_product, payload)
                 posting.done((data) => {
                     add_list_app.waiting = false
 
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         add_list_app.new_product_title = ""
                         add_list_app.can_add_category = false
@@ -60,14 +58,12 @@
                     title: this.new_category_title,
                     parent_id: category_id,
                 }
-                console.log(payload)
 
                 let aa = this
                 let posting = $.post(url_add_category, payload)
                 posting.done((data) => {
                 add_list_app.waiting=false
 
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         add_list_app.new_category_title = ""
                         add_list_app.can_add_product = false

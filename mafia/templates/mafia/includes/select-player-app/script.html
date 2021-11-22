@@ -28,7 +28,6 @@
 
                 }
                 $.post(url, payload).done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         select_player_app.players.push(data.player)
                         select_player_app.show_add_player_form = false

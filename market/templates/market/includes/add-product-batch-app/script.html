@@ -26,8 +26,7 @@
             add_product: function () {
 
                 let availables_s = JSON.stringify(availables)
-                console.log(availables_s)
-                console.log(availables_s.length)
+               
                 products_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -40,12 +39,10 @@
                     buy_price: this.buy_price,
                     old_price: this.old_price,
                 }
-                console.log(payload)
                 let aa = this
                 let posting = $.post(url_add_product, payload)
                 posting.done((data) => {
                     products_app.waiting = false
-                    console.log(data)
 
                     if (data.result === 'SUCCEED') {
                         // products_app.new_product_title = ""

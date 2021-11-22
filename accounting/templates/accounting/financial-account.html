@@ -49,7 +49,6 @@
     let financial_accounts = JSON.parse(`{{financial_accounts_s|escapejs}}`)
 
     $(document).ready(() => {
-        console.log("ready")
         add_transaction_app.pay_from_id = parseInt("{{me_financial_account.id}}")
         add_transaction_app.pay_to_id = parseInt("{{financial_account.id}}")
     })

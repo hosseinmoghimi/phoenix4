@@ -21,10 +21,8 @@
                     product_feature_id: parseInt(this.product_feature_id),
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
-                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         if (product_features_app.add)
                             product_features_app.features.push(data.feature)

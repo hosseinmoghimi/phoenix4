@@ -95,11 +95,7 @@
         },
         methods: {
             edit_page: function () {
-                // console.log(parameter_value)
-                // console.log("#parameter"+parameter_id)
-                // console.log($("#parameter"+parameter_id)[0])
-                // console.log($("#parameter"+parameter_id)[0].val())
-                // parameter_value=$("#parameter"+parameter_id).val()
+                
                 let payload = {
                     for_home: app.page.for_home,
                     page_id: app.page.id,
@@ -109,7 +105,7 @@
                     child_class: child_class,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                
                 var posting = $.post(url_edit_page, payload);
 
                 // Put the results in a div
@@ -128,22 +124,16 @@
 
                         showNotification('bottom', 'left', 'chat', 'success', message)
                         app.page = data.page
-                        console.log(data)
 
                     }
                     else {
-                        console.log(data)
                     }
                 })
 
 
             },
             create_page: function () {
-                // console.log(parameter_value)
-                // console.log("#parameter"+parameter_id)
-                // console.log($("#parameter"+parameter_id)[0])
-                // console.log($("#parameter"+parameter_id)[0].val())
-                // parameter_value=$("#parameter"+parameter_id).val()
+          
                 let payload = {
                     for_home: app.page.for_home,
                     page_id: 0,
@@ -153,7 +143,7 @@
                     child_class: child_class,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                
                 var posting = $.post(url_edit_page, payload);
 
                 // Put the results in a div
@@ -172,11 +162,11 @@
 
                         showNotification('bottom', 'left', 'chat', 'success', message)
                         
-                        console.log(data)
+                        
 
                     }
                     else {
-                        console.log(data)
+                        
                     }
                 })
 

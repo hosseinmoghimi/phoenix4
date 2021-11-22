@@ -41,7 +41,6 @@
                     processData: false,
                     success: function (data) {
                         if (data != 0) {
-                            console.log(data)
                             if (data.result === 'SUCCEED') {
                                 product_images_app.images.push(data.page_image.image)
                                 // product_images_app.add_page_image_form_title = ''
@@ -64,7 +63,6 @@
                 }
                 let posting = $.post(url_delete_page_image, payload)
                 posting.done((data) => {
-                    console.log(data)
                     if (data.result === "SUCCEED") {
                         product_images_app.images = product_images_app.images.filter(im => im.id != image_id)
                         if(product_images_app.images.length>0)
@@ -72,7 +70,6 @@
                         else
                             product_images_app.selected_image={ image: "{{SITE_URL}}static/market/img/pages/image/product.jpg" , thumbnail: "{{SITE_URL}}static/market/img/pages/image/product.jpg" }
 
-                        console.log(product_images_app.images)
                     }
 
                 })

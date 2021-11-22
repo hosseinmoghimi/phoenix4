@@ -89,12 +89,7 @@
         },
         methods: {
             change_parameter: function (parameter_id, parameter_name, parameter_value) {
-                // console.log(parameter_id)
-                // console.log(parameter_value)
-                // console.log("#parameter"+parameter_id)
-                // console.log($("#parameter"+parameter_id)[0])
-                // console.log($("#parameter"+parameter_id)[0].val())
-                // parameter_value=$("#parameter"+parameter_id).val()
+               
                 let payload = {
                     parameter_id: parameter_id,
                     parameter_value: parameter_value,
@@ -102,7 +97,7 @@
                     // parameter_name: parameter_name,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                
                 var posting = $.post(url_change_parameter, payload);
 
                 // Put the results in a div
@@ -112,12 +107,7 @@
                             if (parameter.id == data.parameter.id)
                                 parameter.value = data.parameter.value
                         });
-                        // let title='title'
-                        // let align='align'
-                        // let icon='icon'
-                        // let bgcolor='bgcolor'
-                        // let html=''
-                        // showNotification(title, align, icon, bgcolor, html) 
+              
                         message =
                             `
                         <p>
@@ -128,7 +118,7 @@
                         showNotification('bottom', 'left', 'chat', 'success', message)
                     }
                     else {
-                        console.log(data)
+                        
                     }
                 })
 

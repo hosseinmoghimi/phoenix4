@@ -37,9 +37,7 @@
                     description: this.new_member_description,
                     profile_id: this.profile_id,
                 }
-                console.log(payload)
                 $.post(url_add_member, payload).done((data) => {
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         members_app.members.push(data.member)
                     }

@@ -40,9 +40,7 @@
                     payment_method: this.payment_method,
                     date_paid: this.date_paid,
                 }
-                console.log(payload)
                 $.post(url_add_transaction, payload).done((data) => {
-                    console.log(data)
                     add_transaction_app.amount = ""
                     add_transaction_app.title = ""
                     add_transaction_app.description = ""

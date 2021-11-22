@@ -376,14 +376,12 @@
                     name: this.new_warehouse_name,
                     address: this.new_warehouse_address,
                 }
-                console.log(payload)
 
                 let aa = this
                 let posting = $.post(url_add_warehouse, payload)
                 posting.done((data) => {
                     ware_houses_app.waiting = false
 
-                    console.log(data)
                     if (data.result === 'SUCCEED') {
                         ware_houses_app.new_warehouse_name = ""
                         ware_houses_app.new_warehouse_address = ""
