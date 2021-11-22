@@ -20,7 +20,7 @@
         <tr v-for="served_meal in served_meals">
             <td>
                 <div class="media">
-                    <a href="served_meal.guest.get_absolute_url">
+                    <a :href="served_meal.guest.get_absolute_url">
                         <img :src="served_meal.guest.profile.image" class="rounded-circle" width="48" alt="">
                     </a>
                     <div class="media-body mt-3 mr-2">

@@ -55,6 +55,11 @@ class ProfileViews(View):
     def edit_profile(self,request,*args, **kwargs):
         context=getContext(request)
         selected_profile=ProfileRepo(user=request.user).profile(*args, **kwargs)
+        me_profile=ProfileRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".change_profile") or (me_profile is not None and selected_profile.id==me_profile.id):
+            pass
+        else:
+            raise Http404
         context['selected_profile']=selected_profile
         context['upload_profile_image_form']=UploadProfileImageForm()
         context['selected_profile_s']=json.dumps(ProfileSerializer(selected_profile).data)

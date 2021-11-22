@@ -122,7 +122,9 @@ class ProfileRepo():
         profile_id=0
         if 'profile_id' in kwargs:
             profile_id=kwargs['profile_id']
-        if not self.user.has_perm(APP_NAME+".change_profile") and not self.me.id==profile_id:
+        if self.user.has_perm(APP_NAME+".change_profile") or (self.me is not None and self.me.id==profile_id):
+            pass
+        else:
             return False
 
         edited_profile=Profile.objects.get(pk=profile_id)

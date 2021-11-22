@@ -17,7 +17,19 @@
             </div>
 
             <div class="card-body">
-             
+                <div class="media">
+                    <a href="{{host.profile.get_absolute_url}}">
+                        <img src="{{host.profile.image}}" class="rounded-circle" width="48" alt="">
+                    </a>
+                    <div class="media-body mt-3 mr-2">
+                        <div>
+
+                            <a href="{{host.profile.get_absolute_url}}">
+                               {{host.profile.name}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <div class="card-footer">
