@@ -1,0 +1,203 @@
+{% extends "mafia/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% block mafia_content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    بازی شماره {{game.id}}
+                    {% if perms.mafia.change_game %}
+                    <a target="_blank" href="{{game.get_edit_url}}">
+                        <span class="material-icons">
+                            edit
+                        </span>
+                    </a>
+                    {% endif %}
+                </h4>
+                <h6  class="text-center">
+                    {{game.status}}
+                </h6>
+            </div>
+            <div class="card-body">
+                <h4 class="text-center1">
+                    <small class="text-muted">
+
+                        سناریوی بازی :
+                    </small>
+                    <span>
+                        {{game.scenario}}
+                    </span>
+                </h4>
+                <h5 class="text-center1">
+                   
+
+                    <div class="media mb-4">
+                        <div>
+                            <img src="{{game.god.profile.image}}" class="rounded-circle" width="96" alt="">
+                        </div>
+                        <div class="media-body mr-2">
+
+                            <div>
+                                <a href="{{game.god.get_absolute_url}}">
+                                    {{game.god.profile.name}}
+                                </a>
+                            </div>
+                            <h6>
+                                <small class="text-muted">
+
+                                    گاد بازی
+                                </small>
+            
+                            </h6>
+                        </div>
+                    </div>
+                </h5>
+                <hr>
+                {% if shuffle_game_form %}
+
+                <form action="{% url 'mafia:shuffle_game' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" value="{{game.id}}">
+                    <div class="text-center">
+
+                        <button class="btn btn-info text-center" type="submit">
+                            <span class="material-icons">
+                                shuffle
+                            </span>
+                            انتخاب مجدد نقش برای بازیکن ها
+                        </button>
+                    </div>
+                </form>
+                <hr>
+                {% endif %}
+
+                {% if start_game_form %}
+
+                <form action="{% url 'mafia:start_game' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" value="{{game.id}}">
+                    <div class="text-center">
+
+                        <button class="btn btn-danger text-center" type="submit">
+                            <span class="material-icons">
+                                shuffle
+                            </span>
+                            شروع بازی
+                        </button>
+                    </div>
+                </form>
+                <hr>
+                {% endif %}
+                {% if next_game_state_form %}
+
+                <form action="{% url 'mafia:change_game_state' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" value="{{game.id}}">
+                    <button class="btn btn-success" type="submit">
+                        {{game.next_state}}
+                    </button>
+                </form>
+                <hr>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    بازی شماره {{game.id}}
+
+                </h4>
+            </div>
+            <div class="card-body">
+                {% include "mafia/includes/vote-app/template.html" %}
+
+            
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">
+                    بازی شماره {{game.id}}
+
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    {% for game_role in game.game_roles %}
+                    <div class="col-md-4">
+                        <div class="media mb-4">
+                            <div>
+
+
+
+                                <img src="{{game_role.role.image}}" class="rounded-circle" width="48" alt="">
+                                <img src="{{game_role.player.profile.image}}" class="rounded-circle" width="48" alt="">
+
+                            </div>
+                            <div class="media-body mr-2">
+
+                                <div>
+                                    <a href="{{game_role.role.get_absolute_url}}">
+                                        {{game_role.role.role_name}} ({{game_role.role.side}})
+                                    </a>
+                                    {{game_role.get_edit_btn|safe}}
+                                </div>
+                                <div>
+                                    <a href="{{game_role.player.get_absolute_url}}">
+                                        {{game_role.player.profile.name}}
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                {% if start_game_day_form %}
+                <form action="{% url 'mafia:start_game_day' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" id="" value="{{game.id}}">
+                    <button class="btn btn-success" type="submit">شروع روز {{game.next_day_no|to_tartib}}</button>
+                </form>
+                {% endif %}
+
+                {% if start_game_night_form %}
+                <form action="{% url 'mafia:start_game_night' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" id="" value="{{game.id}}">
+                    <button class="btn btn-success" type="submit">شروع شب {{game.next_night_no|to_tartib}}</button>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block mafia_script %}
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "mafia/includes/vote-app/script.html" %}
+
+{% endblock %}

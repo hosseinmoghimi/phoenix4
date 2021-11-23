@@ -1,0 +1,9 @@
+<script>
+    let classrooms=JSON.parse(`{{classrooms_s|escapejs}}`)
+    let classrooms_app=new Vue({
+        el:"#classrooms-app",
+        data:{
+            classrooms:classrooms,
+        }
+    })
+</script>

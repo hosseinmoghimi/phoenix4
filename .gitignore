@@ -1,5 +1,5 @@
-
 staticfiles/
+public/
 .DS_Store
 .VsCodeCounter/
 *.sqlite3*
@@ -20,8 +20,7 @@ _createsuperuser.bat
 _activate.bat
 
 .VSCodeCounter/
-settings_pars.py
-settings_server*.py
+server_settings.py
 *.cnf
 # connection parameters for  MY SQL,... 
 

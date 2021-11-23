@@ -1,0 +1,26 @@
+{% if do_ship_form %}
+<form action="{% url 'market:do_ship_order' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{order.id}}">
+    <h3>
+        ارسال کردن سفارش
+    </h3>
+    <div class="row rtl">
+
+        <div class="col-12">
+
+            <div class="form-group label-floating is-empty bmd-form-group rtl">
+                <label class="bmd-label-floating">توضیحات</label>
+                <input type="text" name="description" class="form-control farsi">
+                <span class="material-input"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-success farsi">سفارش را ارسال کردم</button>
+        </div>
+    </div>
+
+
+</form>
+
+{% endif %}

@@ -21,38 +21,108 @@
         </a>
         {% endif %}
     </h3>
+
     <div class="farsi">
         {{event.get_breadcrumb|safe}}
     </div>
 
 
-    <div class="row ">
+    <div class="row mb-5">
+
+
+
 
         <div class="col-md-4">
-            <a href="{{event.project_related.get_absolute_url}}">
-                {{event.project_related.title}}
-            </a>
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h5>
+                        {{event.title}} {% include "core/includes/page-like-app/template.html" %}
+                        {% if perms.projectmanager.change_event %}
+                        <a title="ویرایش" target="_blank" href="{{event.get_edit_url}}">
+                            <i class="fa fa-edit text-info"></i>
+                        </a>
+                        {% endif %}
+                    </h5>
+
+
+
+                    <p>
+                        <span class="small text-secondary">
+                            مربوط به پروژه
+
+                        </span>
+                        <span>
+                            <a class="mx-3" href="{{event.project_related.get_absolute_url}}">
+                                {{event.project_related.title}}
+                            </a>
+                        </span>
+                    </p>
+
+                    <p>
+                        <small class="text-secondary">
+                            افزوده شده توسط :
+
+                        </small>
+                        {{event.creator.media_tag|safe}}
+                    </p>
+                    <p>
+                        <small class="text-secondary">
+
+                            تاریخ :
+                        </small>
+
+                        {{event.event_datetime|to_persian_datetime|safe}}
+                    </p>
+
+                    <img src="{{event.image}}" class="rounded w-100" alt="">
+
+                </div>
+            </div>
+
         </div>
-        <div class="col-md-4">
-            <div class="mb-3 py-3">
+        <div class="col-md-8 mb-5">
+            {% include "core/includes/page-description-app/short-description.html" %}
+            <div class="mb-5"></div>
+            {% include "core/includes/page-description-app/full-description.html" %}
+            <div class="mb-5"></div>
+            <div class="row">
+                <div class="col-6 mb-5">
+                    {% include "core/includes/page-links-app/template.html" %}
+                    {% include "core/includes/page-tags-app/template.html" %}
 
-                <img src="{{event.thumbnail}}" class="rounded w-100" alt="">
+                </div>
+
+                <div class="col-6 mb-5">
+                    {% include "core/includes/page-documents-app/template.html" %}
+
+                </div>
             </div>
         </div>
 
 
 
-        <div class="col-md-4">
-            {% include "core/includes/page-links-app/template.html" %}
-            {% include "core/includes/page-documents-app/template.html" %}
+
+
+
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-images-app/template.html" %}
 
         </div>
 
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-comments-app/template.html" %}
+        </div>
 
+        <div class="col-md-12 mb-5">
+            {% include "projectmanager/includes/locations-app/template.html" %}
+        </div>
 
+        {% if add_related_page_form or related_pages %}
 
-
-
+        <div class="col-md-12">
+            {% include "core/includes/page-related-app/template.html" %}
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -61,12 +131,21 @@
 {% block script %}
 <script>
     let parent_id = parseInt("{{parent_id}}")
+    let page_id = parseInt("{{page.id}}")
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
 
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
 
 {% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-comments-app/script.html" %}
 
+{% include "core/includes/page-description-app/script.html" %}
+{% include "core/includes/page-images-app/script.html" %}
+{% include "projectmanager/includes/locations-app/script.html" %}
+{% include "core/includes/page-like-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
 
 {% endblock %}

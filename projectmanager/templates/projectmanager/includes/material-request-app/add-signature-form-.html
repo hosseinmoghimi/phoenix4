@@ -1,0 +1,53 @@
+{% load static %}
+<p class="alert alert-info">
+    <small>
+
+        ابتدا یک پاراف اضافه کرده و سپس نوع امضا را انتخاب و در آخر دکمه تایید امضا را بزنید.
+    </small>
+</p>
+<form @submit.prevent="add_signature()">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+
+            <div class="farsi text-right">
+                پاراف
+
+            </div>
+            <input type="text" v-model="add_signature_form_description" placeholder="پاراف" class="form-control farsi">
+        </div>
+
+
+
+        <div class="col-md-3 mb-3">
+            <div class="farsi text-right">
+
+                نوع امضای درخواست
+
+            </div>
+            <select required v-model="add_signature_form_status" class="form-control">
+                <option class="farsi" disabled selected>یک وضعیت را انتخاب کنید.</option>
+                {% for signature_status in signature_statuses %}
+                <option class="farsi" value="{{signature_status}}">{{signature_status}}</option>
+
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+            <div class="farsi text-right">
+                &nbsp;
+            </div>
+
+            <button v-if="!waiting" type="submit" class="btn btn-block btn-success">
+                <i class="material-icons">
+                    assignment_turned_in
+                </i>
+                تایید و ثبت امضا
+            </button>
+        </div>
+
+
+    </div>
+</form>

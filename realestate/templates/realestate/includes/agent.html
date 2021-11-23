@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5>
+                    لیست ملک های مربوطه ...
+                </h5>
+                <ul>
+                    {% for property in selected_profile.property_set.all %}
+
+                    <li class="text-right">
+                        <a href="{{property.get_absolute_url}}">
+                            {{property.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,269 @@
+{% extends "bms/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+{% block content_bms %}
+<div class="row" id="logs-app">
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <th>
+                        عنوان
+                    </th>
+                    <th>
+                        پروفایل
+
+                    </th>
+                    <th>
+                        فیدر
+
+                    </th>
+                    <th>
+                        فرمان
+
+                    </th>
+
+                    <th>
+                        سناریو
+
+                    </th>
+                    <th>
+                        رله
+
+                    </th>
+                    <th>
+                        زمان
+
+                    </th>
+                </thead>
+                {% for log in logs %}
+                <tr>
+                    <td>
+                        {% if log.succeed %}
+                        
+                        <span class="material-icons text-success">
+                            check_circle
+                        </span>
+                        <span class="">
+                            {{log.title}}
+                        </span>
+                        {% else %}
+
+                            <span class="material-icons text-danger">
+                                info
+                            </span>
+                        <span class="text-secondary">
+                            {{log.title}}
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{log.profile.get_absolute_url}}" title="{{log.profile.name}}">
+                            <img src="{{log.profile.image}}" width="32" class="rounded-circle" alt="">
+                            {{log.profile.name}}
+                        </a>
+                    </td>
+
+                    <td>
+                        <a target="_blank" href="{{log.relay.feeder.get_absolute_url}}">
+                            {{log.relay.feeder.name}}
+
+                        </a>
+
+
+                    </td>
+
+
+                    <td>
+                        <a title="{{log.command.name}}" href="{{log.command.get_absolute_url}}">
+
+                            {{log.command.name}}
+
+                        </a>
+
+                    </td>
+
+
+                    <td>
+                        <a target="_blank" href="{{log.scenario.get_absolute_url}}">
+
+                            {{log.scenario.name}}
+                        </a>
+
+
+                    </td>
+
+                    <td>
+                        <a target="_blank" href="{{log.relay.get_absolute_url}}">
+
+                            {{log.relay.name}}
+                        </a>
+
+
+                    </td>
+
+
+                    <td>
+                        <small>
+
+                            {{log.date_added|to_persian_datetime|safe}}
+                        </small>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                <tr v-for="log in logs">
+
+                    <td>
+
+                        <span v-if="log.succeed" class="material-icons text-success">
+                            check_circle
+                        </span>
+
+
+                        <span v-if="log.succeed" class="material-icons text-success">
+                            check_circle
+                        </span>
+                        <span v-if="!log.succeed" class="material-icons text-danger">
+                            info
+                        </span>
+
+                        <span :class="log.succeed?'text-success':'text-secondary'" v-text="log.title">
+
+                        </span>
+                    </td>
+                    <td>
+
+                        <a v-if="log.profile" :href="log.profile.get_absolute_url">
+
+                            <img :src="log.profile.image" width="32" class="rounded-circle" alt="">
+                            <span v-text="log.profile.name">
+
+                            </span>
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <a v-if="log.feeder" :href="log.feeder.get_absolute_url">
+                            <span v-text="log.feeder.name"></span>
+                        </a>
+
+
+                    </td>
+
+                    <td>
+                        <a v-if="log.command" :title="log.command.name" :href="log.command.get_absolute_url">
+
+
+                            <span v-text="log.command.name"></span>
+                        </a>
+
+
+
+                    </td>
+
+
+                    <td>
+
+                        <a v-if="log.scenario" :href="log.scenario.get_absolute_url">
+                            <span v-text="log.scenario.name"></span>
+                        </a>
+
+
+                    </td>
+
+                    <td>
+
+                        <a v-if="log.relay" :href="log.relay.get_absolute_url">
+                            <span v-text="log.relay.name"></span>
+                        </a>
+
+
+
+                    </td>
+
+
+                    <td>
+                        <small>
+
+                            <span v-html="log.persian_date_added"></span>
+                        </small>
+                    </td>
+                </tr>
+
+            </table>
+            <div class="text-center">
+                <button class="btn btn-info" @click="next_page()">
+                    صفحه
+                    <span v-text="page+1">
+
+                    </span>
+                </button>
+                <div class="text-center">
+                    <img src="{% static 'img/ha-loader.gif' %}" v-if="waiting" alt="">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% block script_bms %}
+<script>
+    $("#nav-item-bms-logs").addClass("active")
+
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let url_get_logs = "{% url 'bms:get_logs' %}"
+    let per_page = parseInt("{{per_page}}")
+    let logs_app = new Vue({
+        el: "#logs-app",
+        data: {
+            page: 1,
+            per_page: per_page,
+            logs: [],
+            waiting: false,
+        },
+        methods: {
+            next_page: function () {
+                logs_app.waiting = true
+
+                let payload = {
+                    page: this.page + 1,
+                    per_page: this.per_page,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                }
+                let posting = $.post(url_get_logs, payload)
+                posting.done((data) => {
+                    if (data.result == 'SUCCEED') {
+
+                        data.logs.forEach(log1 => {
+
+                            logs_app.logs.push(log1)
+                        });
+                        logs_app.page++
+                        logs_app.waiting = false
+                    }
+                })
+            },
+        }
+    })
+</script>
+{% endblock %}

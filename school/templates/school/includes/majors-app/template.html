@@ -1,0 +1,27 @@
+<div class="card" id="majors-app">
+    <div class="card-header">
+        <h4 class="title">
+          <a href="{% url 'school:majors' %}">
+            لیست رشته ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+      <div v-for="major in majors">
+        <h4>
+
+          <a :href="major.get_absolute_url">
+            <span v-text="major.title"></span>
+          </a>
+          {% if perms.school.change_major %}
+          <a target="_blank" title="ویرایش" :href="major.get_edit_url">
+            <i class="material-icons">
+                edit
+            </i>
+            
+          </a>
+          {% endif %}
+        </h4>
+      </div>
+    </div>
+  </div>

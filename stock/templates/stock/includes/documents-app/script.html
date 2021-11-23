@@ -1,0 +1,45 @@
+<script>
+    let documents_app = new Vue({
+        el: "#documents-app",
+        data: {
+            documents: [],
+            add_document_form_title: "",
+            show_add_form:false,
+        },
+        methods: {
+            add_document: function () {
+                let url_add_document="{% url 'stock:add_document' %}"
+
+
+
+                let title = this.add_document_form_title
+                let formData = new FormData();
+                let file = $('#add-document-form')[0].elements[1].files[0]
+                formData.append("file", file);
+                formData.append("title", title);
+                formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+                formData.append("stock_id", stock_id);
+
+                $.ajax({
+                    url: url_add_document,
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data != 0) {
+                            //console.log(data)
+                            if (data.result === 'SUCCEED') {
+                                documents_app.documents.push(data.document)
+                                documents_app.add_document_form_title = ''
+                            }
+                        }
+                        else {
+                        }
+                    },
+                });
+
+            },
+        }
+    })
+</script>

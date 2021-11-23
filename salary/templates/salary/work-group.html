@@ -1,0 +1,25 @@
+{% extends "salary/layout.html" %}
+{% load to_price %}
+{% load static %}
+{% block content %}
+<h4 class="text-center">
+    {{work_group.title}}
+    {% if perms.salary.change_workgroup %}
+    {{work_group.get_edit_btn|safe}}
+      
+    {% endif %}
+</h4>
+<div class="row">
+    <div class="col-md-12">
+
+     {% include "projectmanager/includes/employees-app/template.html" %}
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "projectmanager/includes/employees-app/script.html" %}
+  
+{% endblock script %}

@@ -1,0 +1,60 @@
+<tr :style="tr_style()">
+    <td>
+        <a :href="meal.get_absolute_url">
+            <i class="material-icons">
+                ballot
+            </i>
+        </a>
+        <span v-if="meal.reserved" class="badge badge-success mr-2" @click="reserve_meal()">رزرو شده</span>
+    </td>
+
+    <td>
+        <div>
+            <a :href="meal.host.get_absolute_url">
+                <span v-text="meal.host.title"></span>
+            </a>
+        </div>
+        <div>
+
+            <a :href="meal.host.profile.get_absolute_url">
+
+                <span v-text="meal.host.profile.name"></span>
+            </a>
+        </div>
+
+
+    </td>
+
+    <td>
+        <div v-for="food in meal.foods" >
+
+            <a :href="food.get_absolute_url">
+                <span class="d-block my-2" v-text="food.title"></span>
+                
+            </a>
+        </div>
+
+
+    </td>
+    <td>
+        <span class="d-block my-2" v-text="meal.meal_type"></span>
+
+    </td>
+    <td>
+
+        <span class="d-block my-2" v-text="meal.persian_date_served"></span>
+    </td>
+    <td>
+        <span class="d-block my-2" v-text="meal.reserves_count"></span>
+
+    </td>
+    <td>
+{% if reserve_meal_form %}
+  
+<button v-if="!meal.reserved" class="btn btn-success" @click="reserve_meal()">رزرو کن</button>
+
+<button v-if="meal.reserved" class="btn btn-sm btn-outline-danger" @click="unreserve_meal()">حذف</button>
+{% endif %}
+
+    </td>
+</tr>

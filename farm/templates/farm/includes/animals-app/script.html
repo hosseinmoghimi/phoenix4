@@ -1,0 +1,18 @@
+<script>
+    $("#nav-item-farm-index").addClass("active")
+
+
+    let animals_app = new Vue({
+        el: "#animals-app",
+        data: {
+
+            animals: []
+        },
+        methods: {
+            to_price: function (value) {
+                return to_price(value, "{{CURRENCY}}")
+            },
+
+        }
+    })
+</script>

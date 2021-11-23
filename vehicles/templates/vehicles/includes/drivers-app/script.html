@@ -1,0 +1,24 @@
+<script>
+    let url_add_driver = "{% url 'vehicles:add_new_driver' %}"
+    let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
+    let drivers_app = new Vue({
+        el: "#drivers-app",
+        data: {
+            drivers: drivers,
+            profile_id:0,
+        },
+        methods: {
+            add_driver: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    profile_id: this.profile_id,
+                }
+                $.post(url_add_driver, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        drivers_app.drivers.push(data.driver)
+                    }
+                })
+            },
+        }
+    })
+</script>

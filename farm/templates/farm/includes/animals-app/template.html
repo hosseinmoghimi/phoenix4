@@ -1,0 +1,178 @@
+{% load to_price %}
+<div class="card" id="animals-app">
+    <div class="card-header card-header-success card-header-icon">
+        <div class="card-icon">
+            <i class="material-icons">
+                pets
+            </i>
+        </div>
+        <h3 class="card-title">
+            لیست دام ها
+
+        </h3>
+    </div>
+    <div class="card-body mt-3">
+
+        <table class="table table-striped">
+            <thead>
+              
+
+
+                <th>
+                    دام
+                </th>
+
+
+                <th>
+                    سالن
+                </th>
+
+
+
+                <th>
+                    وزن
+                </th>
+
+                <th>
+                    قیمت خرید
+                </th>
+                <th>
+                    تاریخ ورود به دامداری
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+
+                <tr>
+                    <td>
+                        <a href="">
+
+                            <img src="{{animal.image}}" class="rounded-circle"
+                            width="48" alt="">
+                            {{animal.category}}
+                            {{animal.tag}}
+                        </a>
+
+                    </td>
+                  
+
+
+                  
+
+                    <td>
+                        <span>
+                            
+                            {% if animal.current_in_saloon %}
+                            {{animal.current_in_saloon.get_link|safe}}
+                     
+                            {% endif %}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span>
+                            {{animal.weight}}
+                            کیلوگرم
+                        </span>
+                    </td>
+
+                    <td>
+                        <span>
+                            {{animal.price|to_price}}
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            {{animal.persian_enter_date}}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{animal.get_absolute_url}}">
+                            <i class="material-icons">
+                                pets
+                            </i>
+                        </a>
+
+                        <a href="{{animal.get_edit_url}}">
+                            <i class="material-icons text-warning">
+                                edit
+                            </i>
+                        </a>
+
+
+
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                <tr v-for="animal in animals">
+                    <td>
+                        <span v-text="animal.category">
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <span v-text="animal.tag">
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <div v-if="animal.current_in_saloon">
+
+                            <a :href="animal.current_in_saloon.farm.get_absolute_url">
+                                <span v-text="animal.current_in_saloon.name">
+
+                                </span>
+                            </a> |
+                            <a :href="animal.current_in_saloon.farm.get_absolute_url">
+                                <span v-text="animal.current_in_saloon.farm.name">
+
+                                </span>
+                            </a>
+                        </div>
+
+                    </td>
+
+
+
+                    <td>
+                        <span v-text="animal.weight">
+                        </span>
+                    </td>
+
+                    <td>
+                        <span v-text="to_price(animal.price)">
+                        </span>
+                    </td>
+                    <td>
+                        <span v-text="animal.persian_enter_date">
+                        </span>
+                    </td>
+                    <td>
+                        <a :href="animal.get_absolute_url">
+                            <i class="material-icons">
+                                pets
+                            </i>
+                        </a>
+
+                        <a :href="animal.get_edit_url">
+                            <i class="material-icons text-warning">
+                                edit
+                            </i>
+                        </a>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

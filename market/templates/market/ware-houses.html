@@ -1,0 +1,396 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" filter-color="rose"
+    style="background-image: url('{{supplier.image_header}}');">
+    <div class="container">
+        <div class="row title-row">
+            <div class="col-md-4 mr-auto">
+                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
+                    <span class="farsi">
+
+                        0 در سبد خرید
+                    </span>
+                    <i class="material-icons mx-2">shopping_cart</i>
+
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="px-3 text-center">
+
+                        <img src="{{supplier.image}}" class="w-100 mx-5">
+                    </div>
+
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <h2 class="title">{{supplier.title}}
+                        {% if perms.market.change_supplier %}
+                        {{supplier.get_edit_btn|safe}}
+                        {% endif %}
+                    </h2>
+                    <h3 class="main-price">{{supplier.region.name}}</h3>
+                    <div id="accordion" role="tablist">
+                        {% if supplier.short_description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingShortDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseShortDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کوتاه
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseShortDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingShortDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{supplier.short_description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        {% if supplier.description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کامل
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{supplier.description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="features text-center">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info">
+                        <div class="icon icon-info">
+                            <i class="material-icons">local_shipping</i>
+                        </div>
+                        <h4 class="info-title">2 Days Delivery </h4>
+                        <p>Divide details about your product or agency work into parts. Write a few lines about each
+                            one. A paragraph describing a feature will be enough.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info">
+                        <div class="icon icon-success">
+                            <i class="material-icons">verified_user</i>
+                        </div>
+                        <h4 class="info-title">Refundable Policy</h4>
+                        <p>Divide details about your product or agency work into parts. Write a few lines about each
+                            one. A paragraph describing a feature will be enough.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info">
+                        <div class="icon icon-rose">
+                            <i class="material-icons">favorite</i>
+                        </div>
+                        <h4 class="info-title">Popular Item</h4>
+                        <p>Divide details about your product or agency work into parts. Write a few lines about each
+                            one. A paragraph describing a feature will be enough.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="related-products" id="warehouses-app">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="title text-center">لیست انبار ها<h3>
+                            {% if add_ware_house_form %}
+                            <form @submit.prevent="add_warehouse()">
+
+                                <input v-model="new_warehouse_name" required type="text" class="farsi form-control"
+                                    placeholder="نام انبار">
+                                <input v-model="new_warehouse_address" type="text" class="farsi form-control"
+                                    placeholder="آدرس انبار"> 
+                                    
+                                    <button type="submit" class="farsi btn btn-success">
+                                    افزودن
+                                </button>
+                            </form>
+                            {% endif %}
+                            <div class="table-responsive rtl farsi">
+                                <table class="table table-shopping">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-right">انبار</th>
+                                            <th class="text-right">کارکنان</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ware_house in ware_houses %}
+
+                                        <tr>
+
+                                            <td class="td-name text-right">
+                                                <h5>
+                                                <a href="{{ware_house.get_absolute_url}}">
+
+                                                        {{ware_house.name}}
+                                                        
+                                                    </a>
+                                                </h5>
+                                                <h6 class="text-muted">
+                                                    {{ware_house.address}}
+                                                </h6>
+                                            </td>
+
+                                            <td class="text-right">
+                                                {% for employee in ware_house.employees.all %}
+
+                                                <a title="{{employee.profile.name}} ( {{employee.role}} )"
+                                                    href="{{employee.get_absolute_url}}">
+
+                                                    <img width="64" src="{{employee.profile.image}}"
+                                                        class="rounded-circle" alt="">
+                                                </a>
+                                                {% endfor %}
+
+                                            </td>
+
+
+                                       
+                                            <td class="td-actions">
+                                                <button type="button" rel="tooltip" data-placement="left"
+                                                    title="Remove item" class="btn btn-link">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        {% endfor %}
+
+                                        <tr v-for="ware_house in ware_houses">
+
+                                            <td class="td-name text-right">
+                                                <a :href="ware_house.get_absolute_url">
+                                                    <h5>
+                                                        <span v-text="ware_house.name">
+
+                                                        </span>
+
+                                                    </h5>
+
+                                                </a>
+                                                <h6 class="text-muted">
+                                                    <span v-text="ware_house.address">
+
+                                                    </span>
+                                                </h6>
+                                            </td>
+
+                                            <td class="text-right">
+                                                {% for employee in ware_house.employees.all %}
+
+                                                <a title="{{employee.profile.name}} ( {{employee.role}} )"
+                                                    href="{{employee.get_absolute_url}}">
+
+                                                    <img width="64" src="{{employee.profile.image}}"
+                                                        class="rounded-circle" alt="">
+                                                </a>
+                                                {% endfor %}
+
+                                            </td>
+
+
+                                         
+                                            <td class="td-actions">
+                                                <button type="button" rel="tooltip" data-placement="left"
+                                                    title="Remove item" class="btn btn-link">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        <!-- <tr>
+                      <td colspan="6"></td>
+                      <td colspan="2" class="text-right">
+                        <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
+                      </td>
+                    </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="related-products">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="title text-center">سفارشات {{supplier.title}}</h3>
+
+                    <div class="table-responsive rtl farsi">
+                        <table class="table table-shopping">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-right">محصول</th>
+                                    <th class="text-right">سطح</th>
+                                    <th class="text-right">واحد</th>
+                                    <th class="text-right">قیمت</th>
+                                    <th class="text-right">تاریخ</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in supplier.order_set.all %}
+
+                                <tr>
+                                    <td>
+                                        <div class="img-container">
+                                            <img class="rounded" src="{{shop.product.thumbnail}}" alt="...">
+                                        </div>
+                                    </td>
+                                    <td class="td-name text-right">
+                                        <a href="{{shop.product.get_absolute_url}}">{{shop.product.title}}</a>
+                                        <br />
+                                        <small>{{shop.product.category.title}}</small>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span class="badge badge-primary">
+
+                                            {{shop.level}}
+                                        </span>
+
+
+                                    </td>
+                                    <td class="text-right">
+                                        <span class="badge badge-danger">
+                                            {{shop.unit_name}}
+
+                                        </span>
+
+                                    </td>
+                                    <td class="td-number text-right">
+                                        {{shop.unit_price|to_price_pure}}
+                                        <small class="text-muted">{{CURRENCY}}</small>
+                                    </td>
+
+                                    <td class="td-number text-right">
+                                        <small class="text-muted">
+
+                                            {{shop.date_added|to_persian_datetime|safe}}
+                                        </small>
+                                    </td>
+                                    <td class="td-actions">
+                                        <button type="button" rel="tooltip" data-placement="left" title="Remove item"
+                                            class="btn btn-link">
+                                            <i class="material-icons">close</i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+                                <!-- <tr>
+                      <td colspan="6"></td>
+                      <td colspan="2" class="text-right">
+                        <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
+                      </td>
+                    </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+{% block script %}
+
+
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let url_add_warehouse = "{% url 'market:add_warehouse' %}"
+    let ware_houses_app = new Vue({
+        el: "#warehouses-app",
+        data: {
+            ware_houses: [],
+            new_warehouse_name: "",
+            waiting: false,
+            new_warehouse_address: "",
+
+        }
+        ,
+        methods: {
+            add_warehouse: function () {
+                ware_houses_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    name: this.new_warehouse_name,
+                    address: this.new_warehouse_address,
+                }
+
+                let aa = this
+                let posting = $.post(url_add_warehouse, payload)
+                posting.done((data) => {
+                    ware_houses_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        ware_houses_app.new_warehouse_name = ""
+                        ware_houses_app.new_warehouse_address = ""
+                        ware_houses_app.ware_houses.push(data.ware_house)
+
+                    }
+                })
+            }
+        }
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,444 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+
+{% block page_header %}
+<div class="page-header header-filter" id="product-main" data-parallax="true" filter-color="rose"
+    style="background-image: url('{{product.image_header}}');">
+    <div class="container">
+        <div class="row title-row">
+            {% if me_customer %}
+            <div class="col-md-4 mr-auto" id="cart-app">
+                <a class="btn btn-white float-left" href="{% url 'market:cart' %}">
+                    <span class="farsi">
+
+                        <span v-text="in_cart"></span>
+
+
+                    </span>
+                    <i class="material-icons mx-2">shopping_cart</i>
+
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    {% include "market/includes/product-images-app/template.html" %}
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <span class="farsi">
+                        {{product.category.get_breadcrumb|safe}}
+                    </span>
+                    <h3 class="title">{{product.title}}
+                        {% if perms.market.change_product %}
+                        <span class="mx-2">
+
+                            {{product.get_edit_btn|safe}}
+                        </span>
+                        {% endif %}
+                        {% if perms.market.add_categoryproducttop %}
+
+
+                        <form class="text-right d-inline" action="{% url 'market:add_product_for_category_page' %}"
+                            method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{product.id}}" name="product_id">
+                            {% if product.is_top_in_category %}
+                            <button title="حذف از لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
+                                type="submit">
+                                <!-- <span class="material-icons">
+                                    verified
+                                </span> -->
+                                <span class="material-icons">
+                                    star
+                                </span>
+                            </button>
+                            {% else %}
+                            <button title="افزودن به لیست محصولات برگزیده" class="btn btn-info btn-link farsi"
+                                type="submit">
+                                <!-- <span class="material-icons">
+                                verified
+                            </span> -->
+                                <span class="material-icons">
+                                    star_border
+                                </span>
+                            </button>
+                            {% endif %}
+
+                        </form>
+                        {% endif %}
+                    </h3>
+
+
+
+                    {% if product.barcode %}
+                    <h4>
+                        <small class="text-muted">
+                            کد :
+                        </small>
+                        {{product.barcode}}
+                    </h4>
+                    {% endif %}
+
+                    {% include "core/includes/page-like-app/template.html" %}
+
+                    {% if product.brand %}
+                    <div class="text-right farsi">
+                        برند :
+                        {{product.brand.get_logo_link|safe}}
+                    </div>
+                    {% endif %}
+
+                    {% if product.model_name %}
+                    <div class="text-right farsi">
+
+                        مدل : {{product.model_name}}
+                    </div>
+                    {% endif %}
+                    {% if product.old_price %}
+                    <div class="text-right farsi my-2">
+                        قیمت :
+                        <span class="price h4 price-old mx-2 farsi text-danger" style="text-decoration: line-through">
+                            {{product.old_price|to_price}}
+                        </span>
+                    </div>
+                    <div class="text-right farsi my-2">
+                        از فروشگاه های زیر ارزان تر بخرید.
+                    </div>
+                    {% endif %}
+
+
+                    {% if me_supplier %}
+                    <div class="farsi text-right">
+                        <div>
+
+                            موجودی در فروشگاه
+                            <a href="{{me_supplier.get_absolute_url}}">
+                                {{me_supplier.title}}
+                            </a>
+                        </div>
+                        {% for available in availables %}
+
+                        
+                        <div>
+                            {{available.quantity}}
+                            <span class="badge badge-rose">
+
+                                {{available.unit_name}}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% endif %}
+                    <!-- <h3 class="main-price">$335</h3> -->
+                    <div id="accordion" role="tablist">
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingSpecification">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseSpecification" aria-expanded="true"
+                                        aria-controls="collapseSpecification">
+                                        ویژگی ها <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseSpecification" class="collapse" role="tabpanel"
+                                aria-labelledby="headingSpecification" data-parent="#accordion">
+                                <div class="card-body">
+
+                                    {% include "market/includes/product-specifications-app/template.html" %}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if product.short_description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingShortDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseShortDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کوتاه
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseShortDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingShortDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{product.short_description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        {% if product.description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کامل
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{product.description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                    </div>
+
+
+
+
+
+                    {% if me_customer %}
+                    <div class="mb-4"></div>
+                    {% include "market/includes/add-to-cart-app/template.html" %}
+                    {% endif %}
+
+
+
+                </div>
+
+
+
+                {% if me_supplier %}
+
+                <div class="col-md-12">
+
+                    {% include "market/includes/product-shops-app/template.html" %}
+                </div>
+                {% endif %}
+
+
+
+
+            </div>
+        </div>
+        {% if page.documents.all or add_page_document_form %}
+
+        <div class="my-5 farsi">
+            <div class="row">
+                <div class="col-md-12">
+                    {% include "core/includes/page-documents-app/template.html" %}
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div id="product-features">
+
+            {% include "market/includes/product-features-app/template.html" %}
+        </div>
+
+
+        <div id="comments"></div>
+        <div class="my-5 farsi">
+            <div class="row">
+                <div class="col-md-12" id="page-comments-app">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center">
+                                نظرات کاربران
+                            </h3>
+                            {% for page_comment in page.pagecomment_set.all1 %}
+                            <div class="py-3">
+
+                                <div class="media">
+                                    <img src="{{page_comment.profile.image}}" class="rounded-circle" width="64" alt="">
+                                    <div class="media-body">
+                                        <h6 class="small">{{page_comment.profile.name}}
+                                            <span class="text-secondary mx-3 small">
+
+                                                {{page_comment.date_added|to_persian_datetime|safe}}
+                                            </span>
+                                        </h6>
+                                        <div class="text-secondary text-right">{{page_comment.comment}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                            <div class="py-3" v-for="page_comment in page_comments">
+                                <page-comment-component :page_comment="page_comment">
+                                </page-comment-component>
+
+                            </div>
+                            {% if add_page_comment_form %}
+
+                            <div class="media">
+                                <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
+                                <div class="media-body mr-2">
+                                    <h6>{{profile.name}}</h6>
+
+                                    <textarea id="comment_inputed" v-model="comment" class="farsi form-control"
+                                        rows="5"></textarea>
+                                    <button @click="add_comment"
+                                        class="btn btn-primary farsi btn-round btn-wd float-right">ثبت نظر</button>
+
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        {% if related_pages or add_related_page_form %}
+
+        <div class="related-products" id="related-products-div">
+            <h3 class="title text-center">محصولات مرتبط</h3>
+            {% include "market/includes/related-products-app/template.html" %}
+
+        </div>
+        {% endif %}
+        {% if order_lines %}
+
+        <div class="related-products">
+            <a id="product-orders"></a>
+            <h3 class="title text-center">سفارشات مربوطه</h3>
+            {% include "market/includes/product-orders-app/template.html" %}
+
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let page_id = parseInt("{{page.id}}")
+    let page_comment_component_template = `
+    
+    <div class="media">
+    <a :href="page_comment.profile.get_absolute_url">
+        <img :src="page_comment.profile.image" class="rounded-circle" width="64" alt="">
+    </a>
+    <div class="media-body mr-2">
+        <div class="text-right">
+            <a target="_blank" :href="page_comment.profile.get_absolute_url">
+
+                <span class="farsi text-right text-primary" v-text="page_comment.profile.name"></span>
+            </a>
+            <span class="farsi small text-secondary mr-2 text-right" v-text="page_comment.persian_date_added"></span>
+        </div>
+
+
+        <div class="  farsi  text-right " >
+
+            <div class="farsi text-dark text-right" v-html="page_comment.comment">
+
+            </div>
+            <div>
+
+                <a v-if="page_comment.profile.id=={{profile.id}} && !confirm_delete" style="cursor:pointer"
+                    class="small text-danger mr-auto1 mx-2" @click="confirm_delete=true">
+                    حذف
+    
+                </a>
+    
+                <span v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                    class="small text-danger mr-auto1 mx-2">
+                    این نظر حذف شود ؟
+    
+                </span>
+    
+                <a v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                    class="small text-secondary mr-auto1 mx-2" @click="confirm_delete=false">
+                    خیر
+    
+                </a>
+                <a v-if="page_comment.profile.id=={{profile.id}} && confirm_delete" style="cursor:pointer"
+                    class="small text-danger mr-auto1 mx-2" @click="delete_comment(page_comment.id)">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                    حذف کن
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    `
+</script>
+
+
+{% include "market/includes/product-images-app/script.html" %}
+
+
+
+{% if me_supplier %}
+{% include "market/includes/product-shops-app/script.html" %}
+{% endif %}
+
+
+{% if add_product_feature_form %}
+{% include "market/includes/product-features-app/script.html" %}
+{% endif %}
+
+
+
+{% include "market/includes/product-specifications-app/script.html" %}
+
+
+
+
+{% if me_customer %}
+{% include "market/includes/add-to-cart-app/script.html" %}
+{% include "market/includes/cart-app/cart-app.html" %}
+{% endif %}
+
+
+
+{% if add_related_page_form %}
+{% include "core/includes/page-related-app/script.html" %}
+{% endif %}
+{% include "core/includes/page-like-app/script.html" %}
+{% include "core/includes/page-comments-app/script.html" %}
+
+
+{% include "core/includes/page-documents-app/script.html" %}
+
+{% endblock %}

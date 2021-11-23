@@ -1,0 +1,29 @@
+{% extends "farm/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+
+
+{% block farm_content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{koshtar.animal.tag}}
+
+                </h4>
+            </div>
+
+            <div class="card-body">
+                {{koshtar.description}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block farm_script %}
+
+{% endblock %}

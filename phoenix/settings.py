@@ -12,14 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = False
 SERVER_ON_HEROKU=False
+SERVER_ON_AZURE=False
 
-
-if SERVER_ON_HEROKU:
-    SECRET_KEY = 'django-insecure-glsp_74#5x@o7b(*o$6mc6_zd4^3$-es1h1sav5(=kstm((pn&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Application definition
 
@@ -33,7 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djecrety',
-    'tinymce',
+    'django_cleanup.apps.CleanupConfig',
     'django.contrib.sites',   # <--
     # 'social_app',   # <--
     'django.contrib.humanize',
@@ -41,14 +39,31 @@ INSTALLED_APPS = [
     'allauth.account',   # <--
     'allauth.socialaccount',   # <--
     'allauth.socialaccount.providers.google', 
-
-
+    'todocalendar',
+    'bms',  
+    'mafia',
+    'restaurant',
+    'messenger',
+    'realestate',
+    'library',
+    'tinymce',
+    'school',
+    'salary',
+    'accounting',
+    'resume',
+    'vehicles',
+    'help',
+    'hse',
+    'map',
+    'tax',
+    'stock',
     'authentication',
     'core',
     'dashboard',
     'farm',
     'market',
     'projectmanager',
+    'phoenix_forums',
     'utility',
     'web',
 
@@ -150,27 +165,34 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SESSION_COOKIE_AGE = 3600 # one hour in seconds
 
-if SERVER_ON_HEROKU:
-    from . import settings_heroku as settings_server
+if SERVER_ON_AZURE:
+    from . import settings_azure as server_settings
+elif SERVER_ON_HEROKU:
+    from . import settings_heroku as server_settings
 else:
-    from . import settings_server
+    from . import server_settings
 
-TIME_ZONE=settings_server.TIME_ZONE
-SECRET_KEY=settings_server.SECRET_KEY
-DEBUG=settings_server.DEBUG
-STATIC_ROOT=settings_server.STATIC_ROOT
-MEDIA_ROOT=settings_server.MEDIA_ROOT
-STATIC_URL = settings_server.STATIC_URL
-MEDIA_URL = settings_server.MEDIA_URL
-MYSQL = settings_server.MYSQL
-SITE_URL = settings_server.SITE_URL
-DATABASES = settings_server.DATABASES
-YEAR_ADDED=settings_server.YEAR_ADDED
-ALLOWED_HOSTS=settings_server.ALLOWED_HOSTS
-PUSHER_IS_ENABLE=settings_server.PUSHER_IS_ENABLE
-STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
-
+TIME_ZONE=server_settings.TIME_ZONE
+SECRET_KEY=server_settings.SECRET_KEY
+DEBUG=server_settings.DEBUG
+STATIC_ROOT=server_settings.STATIC_ROOT
+MEDIA_ROOT=server_settings.MEDIA_ROOT
+STATIC_URL = server_settings.STATIC_URL
+MEDIA_URL = server_settings.MEDIA_URL
+MYSQL = server_settings.MYSQL
+SESSION_COOKIE_AGE = server_settings.SESSION_COOKIE_AGE
+SITE_URL = server_settings.SITE_URL
+DATABASES = server_settings.DATABASES
+YEAR_ADDED=server_settings.YEAR_ADDED
+UPLOAD_ROOT=server_settings.UPLOAD_ROOT
+ALLOWED_HOSTS=server_settings.ALLOWED_HOSTS
+PUSHER_IS_ENABLE=server_settings.PUSHER_IS_ENABLE
+STATICFILES_DIRS=server_settings.STATICFILES_DIRS
+QRCODE_ROOT=os.path.join(MEDIA_ROOT,'qr_code')
+SITE_FULL_BASE_ADDRESS=server_settings.SITE_FULL_BASE_ADDRESS
+QRCODE_URL=SITE_URL+"qrcode/"
 if SERVER_ON_HEROKU:
     import django_heroku
     django_heroku.settings(locals())

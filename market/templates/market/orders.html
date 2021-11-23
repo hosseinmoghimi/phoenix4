@@ -1,0 +1,64 @@
+{% extends "market/layout.html" %}
+{% load to_persian_date %}
+{% load to_price %}
+{% load static %}
+{% block content %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <h4 class="title text-center">
+                 لیست سفارشات
+                </h4>
+                {% if supplier %}
+                   <h2 class="title text-center">
+                        {{supplier.title}}
+                    </h2>
+                {% endif %}
+
+                
+                {% if shipper %}
+                   <h2 class="title text-center">
+                        {{shipper.title}}
+                    </h2>
+                {% endif %}
+
+                
+                {% if customer %}
+                   <h2 class="title text-center">
+                        {{customer.title}}
+                    </h2>
+                {% endif %}
+                {% if perms.core.change_picture %}
+                <div class="text-center">
+                    {{header_image.get_edit_btn|safe}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main main-raised">
+    <div class="container">
+        <div class="card card-plain">
+            <div class="card-body">
+                <h3 class="card-title text-center">
+                    {{orders_title}}
+                </h3>
+                <br />
+
+                {% include "market/includes/orders-app/template.html" %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "market/includes/cart-app/script.html" %}
+
+{% endblock %}

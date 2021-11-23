@@ -1,0 +1,75 @@
+{% extends "vehicles/layout.html" %}
+{% load static %}
+{% block content %}
+<h4 class="text-center">
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+</h4>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+
+            <div class="card-header">
+                <h3 class="title text-center">
+                    work_shift
+                </h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav flex-column" style="padding-right:10px">
+                    <li class="nav-item">
+                        <a class="nav-link farsi docs-creator" href="{{work_shift.get_absolute_url}}">
+                            {{work_shift.name}}
+                        </a>
+                        {% if perms.vehicles.change_workshift %}
+                        <a title="ویرایش" target="_blank" href="{{work_shift.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-header"></div>
+            <div class="card-body">
+                <p>
+
+                    <a href="{{work_shift.driver.get_absolute_url}}">
+                        <img src="{{work_shift.driver.profile.image}}"
+                         width="48" class="rounded-circle" alt="">
+                        {{work_shift.driver.profile.name}}
+                    </a>
+                </p>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
+    <div class="col-md-12">
+
+{% include "vehicles/includes/vehicle-work-events-app/template.html" %}
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let vehicle_id = parseInt("{{vehicle.id}}")
+</script>
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% include "vehicles/includes/vehicle-work-events-app/script.html" %}
+
+
+
+{% endblock script %}

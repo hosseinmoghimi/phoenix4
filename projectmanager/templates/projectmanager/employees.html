@@ -1,0 +1,142 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+<div>
+    {% if organization_unit %}
+
+    <h3 class="text-center">
+        <a href="{{organization_unit.get_absolute_url}}">
+
+            {{organization_unit.title}}
+        </a>
+
+        <a href="{{organization_unit.get_edit_url}}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+
+    </h3>
+    {% endif %}
+
+
+    {% if employer %}
+
+    <h3 class="text-center">
+        <a href="{{employer.get_absolute_url}}">
+
+            {{employer.title}}
+        </a>
+
+        <a href="{{employer.get_edit_url}}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+
+    </h3>
+    {% endif %}
+
+    <div class="row " id="employees-app">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        پرسنل
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="my-3">
+                        <input type="text" class="form-control" @input="filter()" v-model="search_for"
+                            placeholder="جستجو ...">
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>
+                                پرسنل
+                            </th>
+                            <th>
+                                واحد سازمانی
+                            </th>
+                            <th>
+                                کارفرما
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="employee in employees">
+                                <td>
+                                    <a :href="employee.get_absolute_url">
+                                        <img :src="employee.profile.image" class="rounded-circle" width="96" alt="">
+                                        <span v-text="employee.profile.name"></span>
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a :href="employee.organization_unit.get_absolute_url">
+                                        <span v-text="employee.organization_unit.title"></span>
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a :href="employee.organization_unit.employer.get_absolute_url">
+                                        <span v-text="employee.organization_unit.employer.title"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <h5>
+                        تعداد :
+                        <span v-text="employees.length"></span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+    let employees = JSON.parse(`{{employees_s|escapejs}}`)
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let employees_app = new Vue({
+        el: "#employees-app",
+        data: {
+            employees: employees,
+            search_for: ""
+        },
+        methods: {
+            filter: function () {
+                this.employees = employees.filter(function (employee) {
+                    if (employee.profile.first_name.indexOf(employees_app.search_for) >= 0)
+                        return true
+
+                        if (employee.profile.last_name.indexOf(employees_app.search_for) >= 0)
+                        return true
+                    if (employee.organization_unit.title.indexOf(employees_app.search_for) >= 0)
+                        return true
+
+                        if (employee.organization_unit.employer.title.indexOf(employees_app.search_for) >= 0)
+                        return true
+
+                })
+            }
+        }
+    })
+</script>
+
+{% endblock %}

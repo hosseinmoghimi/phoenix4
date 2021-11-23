@@ -1,0 +1,39 @@
+<script>
+    let product_features_app = new Vue({
+        el: "#product-features-app",
+        data: {
+            product_feature_id: "",
+            add: true,
+            features: [],
+        },
+        methods: {
+            change_button_text:function(){
+                let add = this.add ? 'افزودن' : 'حذف'
+                
+
+            },
+            add_feature: function () {
+                let add = this.add ? "add" : "remove"
+                let url = "{% url 'market:add_feature_for_product' %}"
+                let payload = {
+                    product_id: page_id,
+                    add_or_remove: add,
+                    product_feature_id: parseInt(this.product_feature_id),
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        if (product_features_app.add)
+                            product_features_app.features.push(data.feature)
+                        else
+                            product_features_app.features = product_features_app.features.filter(feature => feature.id != data.feature.id)
+
+                        product_features_app.product_feature_id = ""
+                    }
+                })
+            }
+
+        },
+    })
+</script>

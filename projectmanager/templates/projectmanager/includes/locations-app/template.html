@@ -1,0 +1,98 @@
+<!-- موقعیت در نقشه -->
+
+{% load static %}
+
+<div id="accordion-locations">
+
+
+    <div class="card card-stats" id="locations-app">
+        <div class="card-header card-header-warning card-header-icon" id="headingLocations">
+
+            <h3 class="card-title text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseseLocations"
+                    aria-expanded="true" aria-controls="collapseseLocations">
+                    موقعیت در نقشه
+                </button>
+
+            </h3>
+        </div>
+
+        <div id="collapseseLocations" class="collapse {% if locations %}show{% endif %}"
+            aria-labelledby="headingLocations" data-parent="#accordion-locations">
+            <div class="card-body ">
+
+
+
+                {% for location in locations %}
+                <div class="mb-5">
+                    <h4 class="mb-2">
+                        <a href="{{location.get_absolute_url}}">
+                            <i class="material-icons">
+                                place
+                            </i>
+                            <span>{{location.title}}</span>
+                        </a>
+                        <a target="_blank" href="{{location.get_edit_url}}">
+                            <i class="material-icons">
+                                settings
+                            </i>
+                        </a>
+                    </h4>
+                    <div>
+                        {{location.location|safe}}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div v-for="location in locations" class="mb-5">
+                    <h4 class="mb-2">
+                        <a :href="location.get_absolute_url">
+
+                            <span v-text="location.title"></span>
+                        </a>
+                        <a target="_blank" :href="location.get_edit_url">
+                            <i class="material-icons">
+                                settings
+                            </i>
+                        </a>
+                    </h4>
+                    <div v-html="location.location">
+
+                    </div>
+                </div>
+
+                {% if add_existing_location_form %}
+               
+                {% include "projectmanager/includes/locations-app/add-existing-location-form.html" %}
+
+                {% endif %}
+                {% if add_location_form %}
+                {% include "projectmanager/includes/locations-app/add-new-location-form.html" %}
+           
+
+
+                <p>
+
+                    <button @click="show_add_location_form=true" v-if="!show_add_location_form" class="btn btn-success">
+                        <i class="material-icons">
+                            add
+                        </i>
+                    </button>
+                </p>
+
+                {% endif %}
+
+
+            </div>
+            <div class="card-footer text-right farsi">
+                <p>
+
+                    <a target="_blank" href="{% url 'help:help' app_name='projectmanager' template='add_location' %}">
+                        <i class="material-icons" aria-hidden="true">help</i>
+                        راهنما
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" filter-color="rose"
+    style="background-image: url('{{supplier.image_header}}');">
+    <div class="container">
+
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="px-3 text-center">
+
+                        <img src="{{supplier.image}}" class="w-100 mx-5">
+                    </div>
+
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <h2 class="title">{{supplier.title}}
+                        {% if perms.market.change_supplier %}
+                        {{supplier.get_edit_btn|safe}}
+                        {% endif %}
+                    </h2>
+                    <h3 class="main-price">
+                        <span class="material-icons">
+                            public
+                        </span>
+
+                        {{supplier.region.name}}
+                    </h3>
+                    <div id="accordion" role="tablist">
+                        {% if supplier.short_description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingShortDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseShortDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کوتاه
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseShortDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingShortDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{supplier.short_description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        {% if supplier.description %}
+                        <div class="card card-collapse">
+                            <div class="card-header" role="tab" id="headingDescription">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
+                                        aria-controls="collapseShortDescription">
+                                        توضیحات کامل
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseDescription" class="collapse" role="tabpanel"
+                                aria-labelledby="headingDescription" data-parent="#accordion">
+                                <div class="card-body">
+
+
+                                    {{supplier.description|safe}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+   
+        <!-- shops -->
+        <div class="related-products">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="title text-center">محصولات ارائه شده توسط {{supplier.title}}</h3>
+{% include "market/includes/shops-app/template.html" %}
+                   
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+{% block script %}
+{% include "market/includes/shops-app/script.html" %}
+
+{% endblock %}

@@ -1,44 +1,26 @@
 {% load static %}
+
+
+<div id="accordion">
+
+
 <div class="card mb-3" id="employers-app">
-    <div class="card-header">
+    <div class="card-header" id="headingEmployers">
 
         <h5 class="card-title text-center farsi">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEmployers"
+            aria-expanded="true" aria-controls="collapseEmployers">
             لیست کارفرما ها
+        </button>
         </h5>
 
 
     </div>
-
+    <div id="collapseEmployers" class="collapse" aria-labelledby="headingEmployers" data-parent="#accordion">
+      
     <div class="card-body">
-        {% for employer in employers %}
-        <a href="{{employer.get_absolute_url}}">
-            <div class="media">
-
-                <i class="material-icons">
-                    apartment
-                </i>
-
-                <div class="media-body farsi">
-
-                    <h5>
-                        {% if employer.pre_title %}
-                        <small>
-                            {{employer.pre_title}}
-
-                        </small>
-
-                        {% endif %}
-                        {{employer.title}}
-
-                    </h5>
-
-
-                </div>
-            </div>
-        </a>
-
-        {% endfor %}
-        <div v-for="employer in employers">
+    
+        <div v-for="employer in employers" class="mb-3">
             <a :href="employer.get_absolute_url">
                 <div class="media">
 
@@ -46,7 +28,7 @@
                         apartment
                     </i>
 
-                    <div class="media-body farsi">
+                    <div class="media-body farsi mr-2">
 
                         <h5>
                             <small v-text="employer.pre_title">
@@ -89,4 +71,6 @@
 
 
     </div>
+</div>
+</div>
 </div>

@@ -1,0 +1,70 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+
+        </th>
+        <th>
+            عضو
+        </th>
+        <th>
+            کتاب
+        </th>
+
+        <th>
+            تاریخ امانت
+        </th>
+        <th>
+            تاریخ برگشت
+        </th>
+        <th>
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="lend in lends">
+            <td>
+                <a :href="lend.get_absolute_url">
+                  
+                    <i class="material-icons">
+                        ballot
+                    </i>
+                </a>
+            </td>
+            <td>
+                <a :href="lend.book.get_absolute_url">
+                    <span v-text="lend.book.title"></span>
+                </a>
+            </td>
+            <td>
+                <a :href="lend.member.get_absolute_url">
+                    <span v-text="lend.member.profile.name"></span>
+                </a>
+            </td>
+
+
+
+            <td>
+                <small class="text-muted">
+                    <span v-text="lend.persian_date_lended"></span>
+                </small>
+            </td>
+
+
+
+            <td>
+                <small class="text-muted">
+                    <span v-text="lend.persian_date_returned"></span>
+                </small>
+            </td>
+
+            <td>
+                {% if perms.library.change_lend %}
+                <a :href="lend.get_edit_url" title="ویرایش" target="_blank">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>

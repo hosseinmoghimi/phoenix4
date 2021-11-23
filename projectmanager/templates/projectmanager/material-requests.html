@@ -1,0 +1,185 @@
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<div>
+
+
+    <h3 class="text-center">
+
+        <i class="material-icons">engineering</i>
+        <small class="text-secondary">
+            درخواست های متریال
+
+        </small>
+
+    </h3>
+
+    <div class="row " id="material-requests-app">
+        <div class="col-md-4">
+            <input type="text" v-model="search_for" placeholder="جستجو ..." @input="filter" class="form-control" id="">
+        </div>
+        <div class="col-12">
+
+
+
+            <div class="card" id="material-request-app">
+                <div class="card-header">
+
+                    <h5 class="card-title text-center farsi">
+
+                        درخواست های متریال
+                    </h5>
+
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <th>
+
+                            </th>
+                            <th>
+                                تاریخ درخواست
+                            </th>
+                            {% if not project %}
+
+                            <th>
+                                پروژه
+                            </th>
+                            {% endif %}
+                            <th>
+                                متریال
+                            </th>
+                            <th>
+                                تعداد
+                            </th>
+                            <th>
+                                قیمت واحد
+                            </th>
+                            <th>
+                                جمع
+                            </th>
+                            <th>
+                                وضعیت
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="material_request in material_requests">
+                                <td>
+                                    <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
+                                        <i class="material-icons">
+                                            ballot
+                                        </i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <small v-text="material_request.persian_date_added">
+                                    </small>
+                                </td>
+                                {% if not project %}
+                                <td>
+                                    <a target="_blank" :href="material_request.project.get_absolute_url"
+                                        v-text="material_request.project.title">
+                                    </a>
+                                </td>
+                                {% endif %}
+                                <td>
+                                    <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32"
+                                        alt="">
+
+                                    <a target="_blank" :href="material_request.material.get_absolute_url"
+                                        v-text="material_request.material.title">
+
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <span v-text="material_request.quantity"></span>
+                                    <small v-text="material_request.unit_name">
+
+                                    </small>
+
+                                </td>
+                                <td>
+                                    <span v-text="to_price(material_request.unit_price,'')"></span>
+
+                                </td>
+                                <td>
+                                    <span
+                                        v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
+
+                                </td>
+                                <td>
+                                    <span v-html="material_request.get_status_tag"></span>
+
+
+                                    {% if perms.projectmanager.change_materialrequest %}
+                                    <a title="ویرایش" target="_blank" :href="material_request.get_edit_url">
+                                        <i class="material-icons">edit</i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+                <div class="card-footer ">
+                    <p>
+
+                        <span class="small text-secondary">
+                            مجموع قیمت متریال ها :
+                        </span>
+                        <span v-text="to_price(sum_material_requests)">
+
+                        </span>
+
+
+
+
+                    </p>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let material_requests = JSON.parse("{{material_requests_s|escapejs}}")
+
+    let material_requests_app = new Vue({
+        el: "#material-requests-app",
+        data: {
+            material_requests: material_requests,
+            search_for: "",
+            sum_material_requests: 0,
+        },
+        methods: {
+            filter: function () {
+                material_requests_app.material_requests = material_requests.filter(item => item.material.title.toUpperCase().includes(material_requests_app.search_for.toUpperCase()))
+            },
+            sum_material_requests1: function () {
+                return 10000
+            },
+            to_price: function (value) {
+                return to_price(value, "{{CURRENCY}}")
+            }
+        }
+    })
+</script>
+
+
+{% endblock %}

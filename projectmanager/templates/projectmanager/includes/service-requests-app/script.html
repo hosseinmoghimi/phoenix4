@@ -1,19 +1,47 @@
 <script>
-    let sum_service_requests = parseInt("{{project.sum_service_requests}}")
+    let service_requests = JSON.parse("{{service_requests_s|escapejs}}")
+</script>
+{% if add_service_request_form %}
+<script>
     let services = JSON.parse(`{{services_s|escapejs}}`)
+    let service_requests_app_data = {
+        employees: JSON.parse("{{employees_s|escapejs}}"),
+        add_service_request_form_title: "",
+        services: services.slice(0, 6),
+        add_service_request_form_unit_price: 0,
+        add_service_request_form_unit_name: "",
+        add_service_request_form_quantity: "",
+        add_service_request_form_employee_id: 0,
+        service_requests: service_requests,
+        waiting: false,
+        sum_service_requests: 0,
+        show_add_service_request_form: false,
+    }
+</script>
+{% else %}
+
+<script>
+    let service_requests_app_data = {
+        waiting: false,
+        sum_service_requests: 0,
+        show_add_service_request_form: false,
+    }
+</script>
+{% endif %}
+
+<script>
+
+
     let url_add_service_request = "{% url 'projectmanager:add_service_request' %}"
     let service_requests_app = new Vue({
         el: "#service-requests-app",
-        data: {
-            add_service_request_form_title: "",
-            services: services.slice(0, 6),
-            add_service_request_form_unit_price: 0,
-            add_service_request_form_unit_name: "",
-            add_service_request_form_quantity: "",
-            service_requests: [],
-            waiting: false,
-            sum_service_requests: sum_service_requests,
-            show_add_service_request_form: false,
+        data: service_requests_app_data,
+        mounted: function () {
+            this.sum_service_requests = 0
+            service_requests.forEach(service_request => {
+                this.sum_service_requests += service_request.total
+
+            });
         },
         methods: {
             to_price: function (value, CURRENCY) {
@@ -34,13 +62,14 @@
                     project_id: page_id,
                     service_title: this.add_service_request_form_title,
                     unit_price: this.add_service_request_form_unit_price,
+                    employee_id: this.add_service_request_form_employee_id,
                     unit_name: this.add_service_request_form_unit_name,
                     quantity: this.add_service_request_form_quantity,
                     // status: this.add_service_request_form_status,
                     // description: this.add_service_request_form_description,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                //console.log(payload)
 
 
                 var posting = $.post(url_add_service_request, payload);
@@ -51,17 +80,11 @@
                 // Put the results in a div
                 posting.done(function (data) {
                     service_requests_app.waiting = false
-                    console.log(data)
+                    //console.log(data)
                     if (data.result === 'SUCCEED') {
                         service_requests_app.service_requests.push(data.service_request)
                         // service_request_app.show_add_service_request_form = false
                         service_requests_app.sum_service_requests += data.service_request.quantity * data.service_request.unit_price
-
-
-
-
-
-
 
                     }
                     else {
@@ -71,9 +94,14 @@
             },
             select_service: function (service) {
                 this.add_service_request_form_unit_name = service.unit_name
-                this.add_service_request_form_unit_price = service.unit_price
+                try {
+                    this.add_service_request_form_unit_price = service.unit_price
+
+                } catch (error) {
+
+                    this.add_service_request_form_unit_price = 0
+                }
                 this.add_service_request_form_title = service.title
-                console.log(service)
                 this.services = [service]
             },
             filter_list: function () {

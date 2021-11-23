@@ -1,0 +1,67 @@
+<div class="cd-section" id="blogs">
+    <!--     *********     BLOGS 2      *********      -->
+    <div class="blogs-2" id="blogs-2">
+        <div class="container" id="blogs-app">
+            <div class="row">
+                <div class="col-md-10 ml-auto mr-auto">
+                    <h2 class="title text-center">
+                        {{blog_title_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{blog_title_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+                    </h2>
+                    <br>
+                    <div class="row">
+                        {% if perms.web.add_blog %}
+                        <div class="col-md-12 text-center my-3">
+
+                            <input type="text" style="width: 25em;" placeholder="عنوان مقاله جدید" v-model="title"
+                                class="form-control">
+                            <button @click="add_blog()" class="btn btn-success">افزودن</button>
+                        </div>
+                        {% endif %}
+                        {% for blog in blogs %}
+                        <div class="col-md-4">
+                            <div class="card card-plain card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="{{blog.get_absolute_url}}">
+                                        <img class="img img-raised" src="{{blog.thumbnail}}">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-category text-info">
+                                        {% if blog.sub_title %}
+
+                                        {{blog.sub_title}}
+                                        {% endif %}
+                                    </h6>
+                                    <h4 class="card-title">
+                                        <a href="{{blog.get_absolute_url}}">
+                                            {{blog.title}}
+                                        </a>
+                                    </h4>
+                                    {% if blog.get_absolute_url %}
+                                    <div class="card-description">
+                                        {% if blog.short_description %}
+                                        {{blog.short_description|safe}}
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                    <p>
+                                        <a href="{{blog.get_absolute_url}}">
+                                            ادامه مطلب
+                                            <i class="material-icons">reply</i>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--     *********    END BLOGS 2      *********      -->
+</div>

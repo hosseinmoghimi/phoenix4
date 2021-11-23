@@ -1,0 +1,128 @@
+<div class="section" id="products-app">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="px-3 text-center">
+
+                        <img src="{{category.image}}" class="w-80 mx-5">
+                    </div>
+
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <h5>
+                        افزودن کالا
+                        در دسته
+                    </h5>
+                    <a href="{{category.get_absolute_url}}">
+                        <h2 class="title">
+                            {{category.title}}
+
+                        </h2>
+                    </a>
+                    <h3 class="main-price">{{supplier.region.name}}</h3>
+
+
+                    <div>
+                        <form @submit.prevent="add_product()">
+
+                            <input v-model="new_product_title" required type="text" class="farsi form-control"
+                                placeholder="نام کالا">
+
+                                <input v-model="new_product_barcode" required type="text" class="farsi form-control"
+                                placeholder="کد کالا">
+                                <input v-model="old_price" type="number" class="farsi form-control"
+                                    placeholder="قیمت بدون تخفیف">
+                                    <input v-model="buy_price" required type="number" class="farsi form-control"
+                                        placeholder="قیمت خرید">
+                            <input v-model="unit_price" required type="number" class="farsi form-control"
+                                placeholder="قیمت فروش">
+
+                            <div v-for="available in availables">
+                                <div class="row mt-3">
+                                    <div class="col-4 farsi">
+                                        موجودی 
+                                        
+
+                                        <span v-text="available.name"></span>
+                                        
+                                        <span v-text="available.value"></span>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control farsi" v-model="available.available"
+                                            :placeholder="available.name + available.value">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <button type="submit" class="farsi btn btn-success">
+                                افزودن
+                            </button>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="related-products">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="title text-center">محصولات افزوده شده</h3>
+
+                    <div class="table-responsive rtl farsi">
+                        <table class="table table-shopping">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-right">محصول</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr v-for="product in products">
+                                    <td>
+                                        <div class="img-container">
+                                            <img class="rounded" :src="product.thumbnail" alt="...">
+                                        </div>
+                                    </td>
+                                    <td class="td-name text-right">
+                                        <a :href="product.get_absolute_url">
+                                            <h5>
+                                                <span v-text="product.title"></span>
+                                            </h5>
+
+                                        </a>
+                                        <br />
+                                        <small>{{shop.product.category.title}}</small>
+                                    </td>
+
+
+
+
+                                </tr>
+
+                                <!-- <tr>
+                      <td colspan="6"></td>
+                      <td colspan="2" class="text-right">
+                        <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button>
+                      </td>
+                    </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+</div>

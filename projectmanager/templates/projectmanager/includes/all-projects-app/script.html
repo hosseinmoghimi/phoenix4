@@ -1,0 +1,32 @@
+<script>
+    let projects = JSON.parse("{{projects_s|escapejs}}")
+    let projects_list_app = new Vue({
+        el: "#projects-list-app",
+        data: {
+            projetcs: projects,
+            search_for: "",
+            status: 'همه',
+        },
+        methods: {
+            to_price: function (value) {
+                return to_price(value, "{{CURRENCY}}")
+            },
+            filter: function () {
+
+                projects_list_app.projects = projects.filter(item => item.title.includes(projects_list_app.search_for))
+            },
+            sort: function (field_to_sort) {
+                if (field_to_sort === 'total') {
+                    let lprojects = projects.sort(function (a, b) { return a.sum_total - b.sum_total })
+                    this.projects = lprojects
+                }
+                if (field_to_sort === 'contractor') {
+                    projects_list_app.projects = projects.sort(function (a, b) { return a.contractor.title > b.contractor.title })
+                }
+                if (field_to_sort === 'employer') {
+                    projects_list_app.projects = projects.sort(function (a, b) { return a.employer.title > b.employer.title })
+                }
+            }
+        }
+    })
+</script>

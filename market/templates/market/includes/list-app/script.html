@@ -1,0 +1,77 @@
+<script>
+    let url_add_product = "{% url 'market:add_product' %}"
+    let url_add_category = "{% url 'market:add_category' %}"
+
+    // let category_id=parseInt("{{category_id}}")
+    let show_list_app = new Vue({
+        el: "#show-list-app",
+        data: {
+            products: [],
+            categories: [],
+            title: "",
+        },
+        methods: {
+            
+            
+        }
+    })
+    let add_list_app = new Vue({
+        el: "#add-list-app",
+        mounted: function () {
+
+        },
+        data: {
+            new_product_title: "",
+            new_category_title: "",
+            waiting: false,
+            can_add_category: true,
+            can_add_product: true,
+        },
+        methods: {
+            add_product: function () {
+                add_list_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.new_product_title,
+                    category_id: category_id,
+                }
+
+                let aa = this
+                let posting = $.post(url_add_product, payload)
+                posting.done((data) => {
+                    add_list_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        add_list_app.new_product_title = ""
+                        add_list_app.can_add_category = false
+                            
+                            show_list_app.products.push(data.product)
+
+                    }
+                })
+            },
+
+            add_category: function () {
+                add_list_app.waiting=true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.new_category_title,
+                    parent_id: category_id,
+                }
+
+                let aa = this
+                let posting = $.post(url_add_category, payload)
+                posting.done((data) => {
+                add_list_app.waiting=false
+
+                    if (data.result === 'SUCCEED') {
+                        add_list_app.new_category_title = ""
+                        add_list_app.can_add_product = false
+                        show_list_app.categories.push(data.category)
+                    }
+                })
+            }
+
+        }
+    })
+</script>

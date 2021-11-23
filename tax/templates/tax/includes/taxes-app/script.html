@@ -1,0 +1,55 @@
+<script>
+    let taxes = JSON.parse(`{{taxes_s|escapejs}}`)
+</script>
+{% if add_tax_form %}
+<script>
+    let taxes_app_data = {
+        taxes: taxes,
+        new_tax_amount: "",
+        new_tax_title: "",
+        new_tax_year: "1400",
+        new_tax_description:"",
+
+    }
+</script>
+{% else %}
+<script>
+    let taxes_app_data = {
+        taxes: taxes,
+    }
+</script>
+{% endif %}
+
+<script>
+    let taxes_app = new Vue({
+        el: "#taxes-app",
+        data: taxes_app_data,
+        methods: {
+            to_price:function(value,curr){
+                return to_price(value,curr)
+            },
+            filter: function () {
+                let ataxes = this.taxes.filter(tax => {
+                    return tax.year == taxes_app.new_tax_year
+                });
+                this.taxes=ataxes
+            },
+            add_tax: function () {
+                let url_add_tax = "{% url 'tax:add_tax' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    amount: this.new_tax_amount,
+                    title: this.new_tax_title,
+                    year: this.new_tax_year,
+                    description:this.new_tax_description,
+                }
+                $.post(url_add_tax, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        taxes_app.taxes.push(data.tax)
+                    }
+                })
+            },
+
+        }
+    })
+</script>

@@ -1,0 +1,66 @@
+{% if add_work_shift_form %}
+<script>
+    let work_shifts = JSON.parse(`{{work_shifts_s|escapejs}}`)
+    let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
+    let areas = JSON.parse(`{{areas_s|escapejs}}`)
+    let work_shifts_app_data = {
+        work_shifts: work_shifts,
+        drivers: drivers,
+        start_datetime: current_datetime,
+        end_datetime: current_datetime,
+        driver_id: "",
+        areas: areas,
+        area_id: "",
+        description: "",
+        income: "",
+        outcome: "",
+        show_form: false,
+    }
+</script>
+{% else %}
+<script>
+    let work_shifts = JSON.parse(`{{work_shifts_s|escapejs}}`)
+
+    let work_shifts_app_data = {
+        work_shifts: work_shifts,
+
+    }
+</script>
+{% endif %}
+<script>
+
+
+    let work_shifts_app = new Vue({
+        el: "#work-shifts-app",
+        data: work_shifts_app_data,
+        components: {
+            DatePicker: VuePersianDatetimePicker
+
+        },
+        methods: {
+            to_price: value => to_price(value),
+            add_work_shift: function () {
+                let url_add_work_shift = "{% url 'vehicles:add_work_shift' %}"
+                let payload = {
+                    vehicle_id: vehicle_id,
+                    driver_id: this.driver_id,
+                    start_datetime: this.start_datetime,
+                    end_datetime: this.end_datetime,
+                    area_id: this.area_id,
+                    outcome: this.outcome,
+                    income: this.income,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+
+                }
+                let posting = $.post(url_add_work_shift, payload)
+                posting.done((data) => {
+                    if (data.result === "SUCCEED") {
+                        work_shifts_app.work_shifts.push(data.work_shift)
+                    }
+
+                })
+            },
+        }
+    })
+</script>

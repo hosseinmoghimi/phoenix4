@@ -1,0 +1,49 @@
+<div class="cd-section" id="features">
+    <div class="container">
+        <!--     *********     FEATURES 1      *********      -->
+        <div class="features-1">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    <h2 class="title text-center">
+                        {{feature_title_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{feature_title_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+
+                    </h2>
+                    <h5 class="description text-center">
+                        {{feature_description_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{feature_description_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+                    </h5>
+                </div>
+            </div>
+            <div class="row">
+                {% for feature in features %}
+
+                <div class="col-md-4 mr-auto ml-auto">
+                    <div class="info">
+                        <div class="icon icon-info">
+                            <i class="material-icons">chat</i>
+                        </div>
+                        <a href="{{feature.get_absolute_url}}">
+
+                            <h4 class="info-title">{{feature.title}}</h4>
+                        </a>
+                        <div>
+                            {% if feature.short_description %}
+                            {{feature.short_description|safe}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+        <!--     *********    END FEATURES 1      *********      -->
+    </div>
+</div>

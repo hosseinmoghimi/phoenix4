@@ -25,7 +25,7 @@
                     // description: this.add_service_request_form_description,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                //console.log(payload)
 
 
                 var posting = $.post(url_add_service, payload);
@@ -36,7 +36,7 @@
                 // Put the results in a div
                 posting.done(function (data) {
                     services_app.waiting = false
-                    console.log(data)
+                    //console.log(data)
                     if (data.result === 'SUCCEED') {
                         services_app.services.push(data.service)
                         services_app.add_service_form_title = ""

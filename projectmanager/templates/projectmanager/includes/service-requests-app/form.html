@@ -1,0 +1,99 @@
+{% load static %}
+<div class="text-right">
+
+    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+
+    <button v-if="!waiting && !show_add_service_request_form" @click="show_add_service_request_form=true"
+        class="btn btn-success">
+        <i class="material-icons text-light">
+            add
+        </i>
+    </button>
+    <div class="row" v-if="show_add_service_request_form">
+        <div class="col-8">
+            <form @submit.prevent="add_service_request()">
+
+                <input @input="filter_list" required type="text" v-model="add_service_request_form_title"
+                    class="farsi form-control" placeholder="سرویس">
+               
+                    
+                <div class="row">
+
+
+                    <div class="col-lg-4">
+                        <select v-model="add_service_request_form_employee_id" class="form-control farsi" id=""
+                            required>
+                            <option disabled selected>نام پرسنل مرتبط را انتخاب کنید</option>
+                            <option v-for="employee in employees" :value="employee.id" v-text="employee.profile.name"></option>
+                        </select>
+
+                    </div>
+
+                    <div class="col-lg-2">
+                        <input required type="number" min="0" placeholder="تعداد" class="form-control"
+                            v-model="add_service_request_form_quantity">
+                    </div>
+
+
+                    <div class="col-lg-3">
+                        <select v-model="add_service_request_form_unit_name" class="form-control farsi" id="">
+                            <option disabled selected>نام واحد</option>
+                            {% for unit_name in unit_names2 %}
+                            <option value="{{unit_name}}">{{unit_name}}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="col-lg-3">
+                        <input required type="number" v-model="add_service_request_form_unit_price"
+                            class="farsi form-control" placeholder="قیمت واحد">
+                    </div>
+
+                    <div class="col-12">
+                        <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+
+                        <button class="btn btn-outline-secondary" @click="show_add_service_request_form=false"
+                            type="reset">Cancel</button>
+                        <button v-if="!waiting" class="btn btn-primary" type="submit">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            افزودن
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+
+
+            {% if copy_project_request_form %}
+
+            <form class="mt-5" action="{% url 'projectmanager:copy_project_request' destination_project_id=project.id %}"
+                method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="request_type" value="service">
+                <h4>کپی درخواست سرویس ها از یک پروژه دیگر</h4>
+                <!-- <input type="hidden" name="destination_project_id"> -->
+                <input type="number" class="form-control" placeholder="شناسه پروژه مبدا" name="source_project_id">
+                <button class="btn btn-warning" type="submit">تایید</button>
+            </form>
+            {% endif %}
+
+        </div>
+        <div class="col-4">
+            <div v-for="service in services">
+                <button class="btn btn-secondary btn-block my-2" @click="select_service(service)"
+                    v-text="service.title"></button>
+                <a :href="service.get_absolute_url" title="نمایش کامل ">
+
+                    <i class="material-icons">description</i>
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

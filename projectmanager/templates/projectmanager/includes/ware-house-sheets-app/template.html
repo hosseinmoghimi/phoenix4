@@ -1,0 +1,113 @@
+{% load static %}
+<div id="ware-house-sheets-app">
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="title text-center">
+                برگه های انبار
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <th>
+
+                    </th>
+
+                    {% if not ware_house %}
+                    <th>
+                        انبار متریال
+                    </th>
+                    {% endif %}
+
+                    <th>
+                        جهت
+                    </th>
+
+
+                    <th>
+                        تاریخ
+                    </th>
+                    <th>
+                        ثبت کننده
+                    </th>
+                    <th></th>
+
+                </thead>
+                <tbody>
+                    <tr v-for="sheet in sheets">
+                        <td>
+                            <a title="جزئیات" target="_blank" :href="sheet.get_absolute_url">
+                                <i class="material-icons">
+                                    ballot
+                                </i>
+                                برگه
+                                <span v-text="sheet.id"></span>
+                            </a>
+
+                        </td>
+                        {% if not ware_house %}
+
+                        <td>
+                            <div class="media">
+                                <!-- <i class="material-icons">
+                                    store
+                                </i> -->
+
+                                <img src="{% static 'projectmanager/img/warehouse.jpg' %}" class="rounded-circle"
+                                    width="48" alt="">
+                                <div class="media-body mr-2">
+
+                                    <div>
+                                        <a :href="sheet.ware_house.get_absolute_url">
+                                            <span v-text="sheet.ware_house.title"></span>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a :href="sheet.ware_house.employer.get_absolute_url">
+                                            <small class="text-secondary"
+                                                v-text="sheet.ware_house.employer.title"></small>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </td>
+
+                        {% endif %}
+                        <td>
+                            <span :class="'badge badge-'+sheet.get_status_color" v-text="sheet.direction"></span>
+                        </td>
+
+                      
+                        <td>
+                            <small class="text-secondary " v-text="sheet.persian_date_imported"></small>
+                            <small class="text-secondary " v-text="sheet.persian_date_exported"></small>
+                        </td>
+                        <td>
+                            <a v-if="sheet.creator" :href="sheet.creator.get_absolute_url">
+                                <img :src="sheet.creator.profile.image" alt="" class="rounded-circle" width="32">
+                                <span v-text="sheet.creator.profile.name"></span>
+                            </a>
+                        </td>
+                        <td>
+                            {% if perms.projectmanager.change_warehousesheet %}
+                            <a title="ویرایش" target="_blank" :href="sheet.get_edit_url">
+
+                                <i class="material-icons">
+                                    edit
+                                </i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>

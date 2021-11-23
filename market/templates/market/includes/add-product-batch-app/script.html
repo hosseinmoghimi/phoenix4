@@ -1,0 +1,56 @@
+<script>
+    let supplier_id = parseInt("{{me_supplier.id}}")
+    let url_add_product = "{% url 'market:add_product_for_shoe' %}"
+    let category_id = parseInt("{{category.id}}")
+    let availables = []
+    sizes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]
+    // let sizes = [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, ]
+    sizes.forEach(size => {
+        availables.push({ name: "سایز", value: size, available: 0 })
+    });
+
+    let products_app = new Vue({
+        el: "#products-app",
+        data: {
+            products: [],
+            new_product_title: "کفش ",
+            waiting: false,
+            availables: availables,
+            unit_price: "",
+            buy_price: "",
+            new_product_barcode: "",
+            old_price: "",
+        }
+        ,
+        methods: {
+            add_product: function () {
+
+                let availables_s = JSON.stringify(availables)
+               
+                products_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.new_product_title,
+                    category_id: category_id,
+                    barcode: this.new_product_barcode,
+                    availables: availables_s,
+                    supplier_id: supplier_id,
+                    unit_price: this.unit_price,
+                    buy_price: this.buy_price,
+                    old_price: this.old_price,
+                }
+                let aa = this
+                let posting = $.post(url_add_product, payload)
+                posting.done((data) => {
+                    products_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        // products_app.new_product_title = ""
+                        products_app.products.push(data.product)
+
+                    }
+                })
+            }
+        }
+    })
+</script>

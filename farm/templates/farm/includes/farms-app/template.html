@@ -1,0 +1,69 @@
+{% load to_price %}
+{% load static %}
+<div class="card">
+    <div class="card-header">
+        <h4>
+
+            دامداری ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <th>
+                    دامداری
+                </th>
+                <th>
+                    سالن
+                </th>
+
+
+
+            </thead>
+            <tbody>
+                {% for farm in farms %}
+                <tr>
+
+                    <td>
+                        <a href="{{farm.get_absolute_url}}">
+                            {{farm.name}}
+
+                        </a>
+                    </td>
+
+
+                    <td>
+
+
+                    </td>
+
+
+
+                </tr>
+                {% for saloon in farm.saloon_set.all %}
+                <tr>
+
+                    <td>
+
+                    </td>
+
+
+                    <td>
+                        <a href="{{saloon.get_absolute_url}}">
+                            {{saloon.name}}
+
+                        </a>
+
+                    </td>
+
+
+
+                </tr>
+
+                {% endfor %}
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>

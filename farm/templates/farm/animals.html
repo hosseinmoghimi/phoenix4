@@ -1,0 +1,179 @@
+{% extends "farm/layout.html" %}
+{% load to_price %}
+{% load static %}
+{% load to_persian_date %}
+
+{% block farm_content %}
+<div class="row" id="animals-app">
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">
+                        settings
+                    </i>
+                </div>
+                <h3 class="card-title">
+                    دام های حاضر در سالن ها
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>دام</th>
+                        <th>
+                            وزن
+                        </th>
+                        <th>
+                            قیمت برآورد شده
+                        </th>
+                        <th>محل نگهداری</th>
+                        <th>تاریخ ورود</th>
+                        <th>
+                            ثبت توسط
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for animal in animals %}
+
+                        {% if animal.current_in_saloon %}
+                        <tr>
+                            <td>
+                                <a href="{{animal.get_absolute_url}}">
+                                    <div class="media">
+                                        <img src="{{animal.image}}" class="rounded-circle" width="64" alt="">
+                                        <div class="media-body mr-2">
+                                            <div>
+                                                {{animal.name}}
+                                            </div>
+                                            <div class="text-secondary mt-2">
+                                                {{animal.tag}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </td>
+
+                            <td>
+                                {{animal.current_in_saloon.animal_weight}}
+                                کیلوگرم
+                            </td>
+                            <td>
+                                {{animal.current_in_saloon.animal_price|to_price}}
+                            </td>
+
+                            <td>
+                                {% if animal.current_in_saloon %}
+
+                                <a class="mx-2" href="{{animal.current_in_saloon.saloon.farm.get_absolute_url}}">
+                                    {{animal.current_in_saloon.saloon.farm.name}}
+                                </a>
+                                <span v-text="'>'"></span>
+                                <a class="mx-2" href="{{animal.current_in_saloon.saloon.get_absolute_url}}">
+                                    {{animal.current_in_saloon.saloon.name}}
+                                </a>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                <small class="d-block">
+                                    {% if animal.current_in_saloon %}
+
+
+                                    {{animal.current_in_saloon.enter_date|to_persian_datetime|safe}}
+
+                                    {% endif %}
+
+                                </small>
+                            </td>
+                            <td>
+                                <a title="{{animal.current_in_saloon.employee.profile.name}}" href="{{animal.current_in_saloon.employee.get_absolute_url}}">
+                                    <img src="{{animal.current_in_saloon.employee.profile.image}}"
+                                    width="32" class="rounded-circle">
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% endif %}
+                        {% endfor %}
+                        {% for animal in animals %}
+
+                        {% if not animal.current_in_saloon %}
+                        <tr>
+                            <td>
+                                <a href="{{animal.get_absolute_url}}">
+
+                                    {{animal.name}}
+                                </a>
+                            </td>
+                            <td>
+                                {{animal.tag}}
+                            </td>
+                            <td>
+                                {% if animal.current_in_saloon %}
+
+                                <a class="mx-2" href="{{animal.current_in_saloon.saloon.farm.get_absolute_url}}">
+                                    {{animal.current_in_saloon.saloon.farm.name}}
+                                </a>
+                                <span v-text="'>'"></span>
+                                <a class="mx-2" href="{{animal.current_in_saloon.saloon.get_absolute_url}}">
+                                    {{animal.current_in_saloon.saloon.name}}
+                                </a>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <td>
+                                <small class="d-block">
+                                    {% if animal.current_in_saloon %}
+
+
+                                    {{animal.current_in_saloon.enter_date|to_persian_datetime|safe}}
+
+                                    {% endif %}
+
+                                </small>
+                            </td>
+                        </tr>
+
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block farm_script %}
+<script>
+    $("#nav-item-farm-animals").addClass("active")
+</script>
+
+
+<script>
+    let animals_app = new Vue({
+        el: "#animals-app",
+        data: {
+
+        },
+        methods: {
+            to_price: function (price) {
+
+                return toPrice(price, TUMAN)
+            },
+        }
+    })
+</script>
+
+{% endblock %}

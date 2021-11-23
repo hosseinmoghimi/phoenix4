@@ -1,0 +1,44 @@
+
+{% load static %}
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+<script>
+    let service_request_id=parseInt("{{service_request.id}}")
+    let url_add_signature = "{% url 'projectmanager:api_add_signature' %}"
+    let service_request_app = new Vue({
+        el: "#service-request-app",
+        data: {
+            signatures: [],
+            add_signature_form_status: "",
+            add_signature_form_description:"",
+            waiting: false,
+            event_datetime:current_datetime
+        },
+        components:{
+            DatePicker: VuePersianDatetimePicker
+  
+        },
+        methods: {
+            add_signature: function () {
+                this.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    service_request_id:service_request_id,
+                    status: this.add_signature_form_status,
+                    description:this.add_signature_form_description,
+                }
+                let posting = $.post(url_add_signature, payload)
+                posting.done((data) => {
+                    
+                    service_request_app.waiting = false
+                    if (data.result === 'SUCCEED') {
+                        service_request_app.signatures.push(data.signature)
+                        service_request_app.add_signature_form_description = ""
+                        service_request_app.waiting = false
+                    }
+                })
+            },
+        }
+    })
+</script>

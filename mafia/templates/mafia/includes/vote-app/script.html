@@ -1,0 +1,63 @@
+<script>
+    let game_roles=JSON.parse(`{{game_roles_s|escapejs}}`)
+    let game_day=JSON.parse(`{{game_day_s|escapejs}}`)
+    let level="{{level}}"
+    let all_vote_template=`{% include "mafia/includes/vote-app/all-vote-component.html" %}`
+     let all_vote_component = Vue.component('all-vote-component', {
+        data: function () {
+            return {
+                count: 0,
+            }
+        },
+        methods: {
+            add_all_vote: function (page_comment_id) {
+                let url = "{% url 'mafia:add_all_vote' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    count: this.count,
+                    game_role_id: this.game_role.id,
+                    game_day_id: game_day.id,
+                    level:level,              
+
+                }
+                $.post(url, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        
+                    }
+                })
+            },
+
+
+        },
+        props: ['game_role'],
+        template: all_vote_template,
+    })
+
+    let vote_app = new Vue({
+        el: "#vote-app",
+        data: {
+
+        },
+        components:{
+            all_vote_component
+        },
+        methods: {
+            aaaa: function () {
+                let url = "{% url 'mafia:add_all_vote' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    count: this.count,
+                    game_role_id: this.game_role_id,
+                    game_day_id: this.game_day_id,                   
+
+                }
+                $.post(url, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        select_player_app.players.push(data.player)
+                        select_player_app.show_add_player_form = false
+                    }
+                })
+            }
+        }
+    })
+</script>

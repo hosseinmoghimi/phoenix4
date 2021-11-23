@@ -14,12 +14,10 @@
             پروژه
 
         </small>
-        {{project.title}}
+        {{project.full_title}}
         {% if perms.projectmanager.change_project %}
         <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
-            <i class="material-icons">
-                edit
-            </i>
+            <i class="fa fa-edit text-info"></i>
         </a>
         {% endif %}
     </h3>
@@ -27,31 +25,221 @@
         {{project.get_breadcrumb|safe}}
     </div>
     <div class="row ">
-        <div class="col-md-4">
+        <div class="col-md-4 mb-5">
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h5 class=" ">
+
+
+                        {{project.title}}
+
+                        {% include "core/includes/page-like-app/template.html" %}
+                        {% if perms.projectmanager.change_project %}
+                        <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
+                            <i class="fa fa-edit text-info"></i>
+                        </a>
+                        {% endif %}
+                    </h5>
+                    <p>
+                        <span class="small text-secondary">
+                            وضعیت:
+
+                        </span>
+                        <span class="badge badge-{{project.get_status_color}}">
+                            {{project.status}}
+                        </span>
+                    </p>
+                    <p>
+                        <span class="small text-secondary">
+                            کارفرما :
+
+                        </span>
+
+
+                        <a href="{{project.employer.get_absolute_url}}">
+                            <span class="material-icons text-danger">
+                                store
+                            </span>
+                            <span class="text-danger">
+
+                                {{project.employer.title}}
+                            </span>
+                        </a>
+                    </p>
+
+                    <p>
+                        <span class="small text-secondary">
+
+                            پیمانکار :
+                        </span>
+
+                        <a href="{{project.contractor.get_absolute_url}}">
+
+
+
+                            <span class="material-icons text-success">
+                                engineering
+                            </span>
+                            <span class="text-success">
+
+                                {{project.contractor.title}}
+                            </span>
+                        </a>
+                    </p>
+                    <P>
+                        <span class="small text-secondary">
+                            ارزش پروژه :
+
+                        </span>
+
+                        <span class=" badge badge-primary px-1 py-1">
+                            <span class=" ">
+
+                                {{project.sum_total_self|to_price_pure}}
+                            </span>
+                        </span>
+                        /
+                        <span class=" badge badge-primary px-1 py-1">
+                            <span class=" ">
+
+                                {{project.sum_total|to_price}}
+                            </span>
+                        </span>
+                    </P>
+                    <p>
+
+                        {{project.start_date|to_persian_date|safe}} ~
+                        {{project.end_date|to_persian_date|safe}}
+                    </P>
+                    <p>
+                        <span class="small text-secondary">
+                            پیشرفت پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.percentage_completed}} %
+
+                        </span>
+                        <br>
+                        <span class="small text-secondary">
+                            پیشرفت خودکار پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.auto_percentage_completed}} %
+
+                        </span>
+
+
+                        <br>
+                        <span class="small text-secondary">
+                            وزن پروژه :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.weight}}
+
+                        </span>
+                        <br>
+                        <span class="small text-secondary">
+                            وزن کل زیر پروژه ها :
+
+                        </span>
+
+                        <span class="text-primary">
+                            {{project.sum_weight}}
+                        </span>
+
+
+                    <div class="progress mb-3" style="height: 5px;">
+                        <div role="progressbar" aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
+                            aria-valuemax="100" class="progress-bar bg-primary"
+                            style="width: {{project.percentage_completed}}%;"></div>
+                    </div>
+
+                    </P>
+                    <p>
+
+                        <a href="{{project.get_chart_url}}">
+                            نمودار
+                        </a>
+                    </p>
+
+                    <p>
+
+                        <a href="{{project.get_event_chart_url}}">
+                            نمودار رویداد های پروژه
+                        </a>
+                    </p>
+                    <p>
+
+                        <a href="{{project.get_guantt_chart_url}}">
+                            نمودار نمودار گانت زیر پروژه ها
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4 mb-5">
             {% include "projectmanager/includes/projects-app/template.html" %}
         </div>
-        <div class="col-md-4">
-
+        <div class="col-md-4 mb-5">
             {% include "projectmanager/includes/organization-units-app/template.html" %}
-        </div>
-        <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
+            {% include "core/includes/page-documents-app/template.html" %}
+            {% include "core/includes/page-tags-app/template.html" %}
         </div>
-        <div class="col-md-8">
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-description-app/short-description.html" %}
+        </div>
+
+
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-description-app/full-description.html" %}
+        </div>
+
+
+        {% if edit_project_form %}
+
+        <div class="col-md-12 mb-5">
+
+            {% include "projectmanager/includes/project-edit-app/template.html" %}
+        </div>
+        {% endif %}
+        <div class="col-md-12 mb-5">
             {% include "projectmanager/includes/events-app/template.html" %}
         </div>
-        <div class="col-md-4">
-            {% include "core/includes/page-documents-app/template.html" %}
-        </div>
-        <div class="col-md-12">
+
+        <div class="col-md-12 mb-5">
             {% include "projectmanager/includes/material-requests-app/template.html" %}
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12 mb-5">
             {% include "projectmanager/includes/service-requests-app/template.html" %}
         </div>
-        <div class="col-md-8">
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-images-app/template.html" %}
         </div>
+        <div class="col-md-12 mb-5">
+            {% include "projectmanager/includes/locations-app/template.html" %}
+        </div>
+
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-comments-app/template.html" %}
+        </div>
+        {% if add_related_page_form or related_pages %}
+
+        <div class="col-md-12 mb-5">
+            {% include "core/includes/page-related-app/template.html" %}
+        </div>
+        {% endif %}
     </div>
+
+
+
 </div>
 {% endblock %}
 
@@ -59,16 +247,27 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
+
+    let page_id = parseInt("{{page.id}}")
     let parent_id = parseInt("{{parent_id}}")
     let project_id = parseInt("{{parent_id}}")
-
+    let project = JSON.parse(`{{project_s|escapejs}}`)
 </script>
+{% include "core/includes/page-comments-app/script.html" %}
 {% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-images-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "projectmanager/includes/projects-app/script.html" %}
 {% include "projectmanager/includes/material-requests-app/script.html" %}
 {% include "projectmanager/includes/service-requests-app/script.html" %}
 {% include "projectmanager/includes/organization-units-app/script.html" %}
 {% include "projectmanager/includes/events-app/script.html" %}
+{% include "projectmanager/includes/project-edit-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-description-app/script.html" %}
+{% include "core/includes/page-like-app/script.html" %}
+{% include "projectmanager/includes/locations-app/script.html" %}
 
 {% endblock %}

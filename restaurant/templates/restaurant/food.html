@@ -1,0 +1,127 @@
+{% extends "restaurant/layout.html" %}
+{% block content %}
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="card farsi text-right" id="meal-app">
+            <div class="card-header">
+                <h4 class="title">
+                    {{food.title}}
+
+                    {% if perms.restaurant.change_food %}
+                    <a href="{{food.get_edit_url}}" target="_blank" title="ویرایش">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                  {% endif %}
+
+                </h4>
+            </div>
+
+            <div class="card-body">
+
+              {% include "restaurant/includes/foods-app/food-spec.html" %}
+
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            غذا
+                        </th>
+                        <th>
+                            وعده
+
+                        </th>
+                        <th>
+                            تاریخ
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for meal in food.meal_set.all %}
+                        <tr>
+                            <td>
+                                {% for food in meal.foods.all %}
+                                <div>
+
+                                    <a href="{{food.get_absolute_url}}">
+                                        {{food.title}}
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </td>
+
+                            <td>
+                                <a href="{{meal.get_absolute_url}}">
+                                    {{meal.meal_type}}
+                                </a>
+                            </td>
+                            <td>
+                                {{meal.persian_date_served}}
+                            </td>
+                            <td>
+                                {{meal.reservedmeal_set.all|length}}
+                            </td>
+                            <td>
+                                {% if perms.restaurant.change_meal %}
+                                <div>
+                                    <a href="{{meal.get_absolute_url}}" title="جزئیات" target="_blank">
+                                        <i class="material-icons">
+                                            ballot
+                                        </i>
+                                    </a>
+
+                                    <a href="{{meal.get_edit_url}}" title="ویرایش" target="_blank">
+                                        <i class="fa fa-edit text-info"></i>
+                                    </a>
+                                </div>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+
+
+
+
+
+
+                {% if reserved_meal %}
+
+                <div>
+                    رزرو شده برای
+                    <a href="{{reserved_meal.guest.get_absolute_url}}">
+                        {{reserved_meal.guest.profile.name}}
+                    </a>
+                    در
+                    <a href="{{reserved_meal.get_absolute_url}}">
+                        {{reserved_meal.persian_date_reserved}}
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="card-footer">
+                {% if reserve_meal_form %}
+                <button class="btn btn-info" @click="reserve_meal()">
+                    رزرو غذا
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+{% endblock content %}

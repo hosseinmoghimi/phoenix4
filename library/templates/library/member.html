@@ -1,0 +1,39 @@
+{% extends "library/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h4>
+                    {{member.profile.name}}
+                {% if perms.library.change_member %}
+                <a href="{{member.get_edit_url}}" title="ویرایش" target="_blank">
+                    <i class="fa fa-edit text-info"></i>
+                </a>
+                {% endif %}
+                </h4>
+               
+                <div class="farsi text-right">
+                    {{member.membership_started|to_persian_date|safe}}
+                </div>  <div class="farsi text-right">
+                    {{member.membership_ended|to_persian_date|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+</script>
+{% endblock script %}

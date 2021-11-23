@@ -1,0 +1,125 @@
+{% extends "stock/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+<li class="nav-item my-auto mx-2">
+    <a class="nav-link farsi " href="{% url 'stock:home' %}">
+        مدیریت
+    </a>
+</li>
+{% endblock %}
+{% block content %}
+
+<div class="text-center">
+
+    <p class="text-center">
+        <img src="{{stock.profile.image}}" class="rounded-circle" width="128" alt="">
+    </p>
+    <h4 class="text-center text-primary my-4">
+        {{stock.profile.name}}
+        {% if perms.stock.change_stock %}
+        {{stock.get_edit_btn|safe}}
+        {% endif %}
+    </h4>
+
+
+    <h4 class="text-center">
+        {{stock.get_stock_amount}}
+    </h4>
+    <h6 class="text-center">
+        <em class="small text-secondary">
+            نماینده :
+
+        </em>
+        <a href="{% url 'stock:agent' stock.agent.id %}">
+
+            {{stock.agent.profile.name}}
+        </a>
+
+    </h6>
+    {% if stock.melli_code %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            کد ملی :
+        </em>
+        {{stock.melli_code}}
+    </p>
+    {% endif %}
+
+    
+    {% if stock.account_no %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            شماره حساب :
+        </em>
+        {{stock.account_no}}
+    </p>
+    {% endif %}
+
+
+
+    {% if stock.sh_sh %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            شماره شناسنامه :
+        </em>
+        {{stock.sh_sh}}
+    </p>
+    {% endif %}
+
+
+
+    
+    {% if stock.address %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            آدرس :
+        </em>
+        {{stock.address}}
+    </p>
+    {% endif %}
+
+
+
+
+
+
+    {% if stock.description %}
+
+    <p class="text-center">
+        <em class="small text-secondary">
+
+            توضیحات :
+        </em>
+        {{stock.description}}
+    </p>
+    {% endif %}
+
+</div>
+<div class="">
+    {% include "stock/includes/documents-app/template.html" %}
+    <div class="mb-5"></div>
+    {% include "stock/includes/payments-app/template.html" %}
+
+</div>
+{% endblock %}
+{% block script %}
+
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let stock_id = parseInt("{{stock.pk}}")
+
+</script>
+{% include "stock/includes/documents-app/script.html" %}
+{% include "stock/includes/payments-app/script.html" %}
+
+{% endblock %}

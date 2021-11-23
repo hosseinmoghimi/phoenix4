@@ -1,0 +1,45 @@
+{% load static %}
+    <!--   Core JS Files   -->
+    <script src="{% static 'vendor/js/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/js/popper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/js/bootstrap.min.js' %}" type="text/javascript"></script>
+  
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="{% static 'utility/js/utility.js' %}"></script>
+    
+
+
+
+ 
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrfmiddlewaretoken = ''
+        var current_date = '{{current_date}}'
+        $(document).ready(function () {
+            //   md.checkFullPageBackgroundImage();
+
+
+            $("#sidebar_active_color_{{sidebar.sidebar_active_color}}").addClass("active")
+            $("#sidebar_bg_color_{{sidebar.sidebar_bg_color}}").addClass("active")
+            // Javascript method's body can be found in assets/js/demos.js
+            // csrfmiddgetCookie('csrftoken');lewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+            csrfmiddlewaretoken = getCookie('csrftoken');
+            // csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            // $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+        });
+    </script>

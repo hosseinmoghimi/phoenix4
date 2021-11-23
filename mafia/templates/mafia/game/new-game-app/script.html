@@ -1,0 +1,103 @@
+<script>
+    let roles = JSON.parse("{{roles_s|escapejs}}")
+    let players = JSON.parse("{{players_s|escapejs}}")
+    let add_role_component_template = `{% include "mafia/game/new-game-app/role-component.html" %}`
+    let add_player_component_template = `{% include "mafia/game/new-game-app/player-component.html" %}`
+    let add_role_component = Vue.component('add-role-component', {
+        data: function () {
+            return {
+                // count: this.role.default_count,
+            }
+        },
+        methods: {
+            add: function (value) {
+                if (value == -1 && this.count > 0) { this.count-- }
+                if (value == 1 && this.count < 12) { this.count++ }
+                game1_app.selected_roles = game1_app.selected_roles.filter(item => item.role_id != this.role.id)
+                game1_app.selected_roles.push({
+                    role_id:this.role.id,
+                    count: this.count
+                })
+            },
+            delete_comment: function (page_comment_id) {
+                this.confirm_delete = false
+
+                let url = url_delete_page_comment
+                let payload = {
+                    page_comment_id: page_comment_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                //console.log(payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        page_comments_app.page_comments = page_comments_app.page_comments.filter((page_comment) => {
+                            return (page_comment.id != page_comment_id)
+                        })
+                        page_comment_component.confirm_delete = false
+                    }
+                })
+            },
+
+
+        },
+        props: ['role', 'count'],
+        template: add_role_component_template,
+    })
+
+    let add_player_component = Vue.component('add-player-component', {
+        data: function () {
+            return {
+                selected: false,
+            }
+        },
+        methods: {
+            select: function () {
+                this.selected=!this.selected
+                game1_app.selected_players = game1_app.selected_players.filter(item => item.player_id != this.player.id)
+                if(this.selected){
+                    game1_app.selected_players.push({
+                    player_id:this.player.id,
+                })
+            }
+        },
+           
+
+
+        },
+        props: ['player'],
+        template: add_player_component_template,
+    })
+
+
+
+    let game1_app = new Vue({
+        el: "#game1-app",
+        components: {
+            add_player_component,
+            add_role_component,
+
+        },
+        data: {
+            roles: roles,
+            selected_roles: [],
+            selected_roles_str:"",
+
+            players: players,
+            selected_players:[],
+            selected_players_str:"",
+
+            show_submit:false,
+
+
+        },
+        methods: {
+            normalizer: function () {
+                this.selected_roles_str=JSON.stringify(this.selected_roles)
+                this.selected_players_str=JSON.stringify(this.selected_players)
+                this.show_submit=true
+            },            
+             
+        }
+    })
+</script>

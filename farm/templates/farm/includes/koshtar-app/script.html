@@ -1,0 +1,50 @@
+<script>
+    let koshtar_app = new Vue({
+        el: "#koshtar-app",
+        data: {
+            tag: animal_tag,
+            koshtar_date: current_date,
+            weight: animal_weight,
+            Jegar_price: 15000,
+            Kalle_pache_price: 200000,
+            pust_price: 20000,
+            transport_fee: 10000,
+            koshtar_fee: 45000,
+            lashe_price: 1000000,
+            lashe_weight: 0,
+            description: "...",
+
+            // description
+            // weight
+            // 
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+        },
+        methods: {
+            do_koshtar: function () {
+                let url = "{% url 'farm:do_koshtar' %}"
+                let payload = {
+                    tag: koshtar_app.tag,
+                    koshtar_date: koshtar_app.koshtar_date,
+                    weight: koshtar_app.weight,
+                    Jegar_price: koshtar_app.Jegar_price,
+                    Kalle_pache_price: koshtar_app.Kalle_pache_price,
+                    pust_price: koshtar_app.pust_price,
+                    transport_fee: koshtar_app.transport_fee,
+                    koshtar_fee: koshtar_app.koshtar_fee,
+                    lashe_price: koshtar_app.lashe_price,
+                    lashe_weight: koshtar_app.lashe_weight,
+                    description: koshtar_app.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                }
+                // //console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    // //console.log(data)
+                })
+            },
+
+        }
+    })
+</script>

@@ -1,0 +1,185 @@
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+<div id="accordion1a">
+
+
+    <div class="card" id="ware-house-sheet-lines-app">
+        <div class="card-header" id="headingWareHouseSheetLines">
+
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseWareHouseSheetLines"
+                    aria-expanded="true" aria-controls="collapseWareHouseSheetLines">
+                    ریز برگه های انبار
+
+                </button>
+            </h5>
+
+
+        </div>
+        <div id="collapseWareHouseSheetLines" class="collapse {% if ware_house_sheet %}show{% endif %}"
+            aria-labelledby="headingWareHouseSheetLines" data-parent="#accordion1a">
+
+            <div class="card-body">
+
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+
+                        </th>
+                        {% if not ware_house %}
+
+                        <th>
+                            انبار
+                        </th>
+                        {% endif %}
+                        {% if not ware_house_sheet %}
+                        <th>
+                            تاریخ درخواست
+                        </th>
+
+                        <th>
+                            پرسنل
+                        </th>
+                        {% endif %}
+                        {% if not ware_house_sheet %}
+
+                        <th>
+                            ورود/خروج
+                        </th>
+                        {% endif %}
+                        {% if not material %}
+
+                        <th>
+                            متریال
+                        </th>
+                        {% endif %}
+                        <th>
+                            تعداد
+                        </th>
+                        <th>
+                            قیمت واحد
+                        </th>
+                        <th>
+                            جمع
+                        </th>
+                        <th>
+                            توضیحات
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="ware_house_sheet_line in ware_house_sheet_lines">
+                            <td>
+                                <a target="_blank" :href="ware_house_sheet_line.get_absolute_url" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+
+                            </td>
+
+                            {% if not ware_house %}
+
+                            <td>
+                                <a :href="ware_house_sheet_line.ware_house_sheet.ware_house.get_absolute_url">
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.ware_house.title"></span>
+                                </a>
+                            </td>
+                            {% endif %}
+
+
+                            {% if not ware_house_sheet %}
+                            <td>
+
+                                <small>
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.persian_date_imported"></span>
+
+                                </small>
+
+                                <small>
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.persian_date_exported"></span>
+
+                                </small>
+
+                            </td>
+
+                            <td>
+
+                                <a v-if="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh" target="_blank"
+                                    :href="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.get_absolute_url">
+                                    <img :src="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.image"
+                                        class="ml-2 rounded-circle" width="32" alt="">
+                                    <span
+                                        v-text="ware_house_sheet_line.ware_house_sheet.tahvil_dahandeh.profile.name"></span>
+
+                                </a>
+
+                                <a  v-if="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh" target="_blank"
+                                    :href="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.get_absolute_url">
+                                    <img :src="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.image"
+                                        class="ml-2 rounded-circle" width="32" alt="">
+                                    <span
+                                        v-text="ware_house_sheet_line.ware_house_sheet.tahvil_girandeh.profile.name"></span>
+                                </a>
+                            </td>
+
+                            {% endif %}
+
+                            {% if not ware_house_sheet %}
+
+                            <td>
+
+                                <span :class="'badge badge-'+ware_house_sheet_line.ware_house_sheet.get_status_color">
+                                    <span v-text="ware_house_sheet_line.ware_house_sheet.direction"></span>
+                                </span>
+                            </td>
+                            {% endif %}
+                            {% if not material %}
+
+
+                            <td>
+
+                                <a target="_blank" :href="ware_house_sheet_line.material.get_absolute_url">
+                                    <img :src="ware_house_sheet_line.material.thumbnail" class="ml-2 rounded" width="32"
+                                        alt="">
+                                    <span v-text="ware_house_sheet_line.material.title"></span>
+                                </a>
+                            </td>
+                            {% endif %}
+
+                            <td>
+                                <span v-text="ware_house_sheet_line.quantity"></span>
+                            <small>
+                                <span v-text="ware_house_sheet_line.unit_name"></span>
+                            </small>
+
+                        </td>
+                        <td>
+                            <span v-text="to_price(ware_house_sheet_line.unit_price,'')"></span>
+
+                        </td>
+                        <td>
+                            <span v-text="to_price(ware_house_sheet_line.line_total,'{{CURRENCY}}')"></span>
+
+                        </td>
+                        <td>
+                            <small class="text-secondary">
+                                <span v-html="ware_house_sheet_line.description"></span>
+
+                            </small>
+                            {% if perms.projectmanager.change_materialrequest %}
+
+                            {% endif %}
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer text-right farsi">
+                جمع :
+                <span v-text="to_price(sum_total,'{{CURRENCY}}')"></span>
+            </div>
+        </div>
+    </div>
+</div>

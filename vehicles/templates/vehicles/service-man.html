@@ -1,0 +1,64 @@
+{% extends "vehicles/layout.html" %}
+{% load static %}
+{% block content %}
+<h3 class="text-center my-3">
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+
+            <div class="card-header">
+                <h4 class="title text-center">
+                    سرویس کار
+                </h4>
+            </div>
+            <div class="card-body">
+                <h4>
+                    {{service_man.name}}
+                        {% if perms.vehicles.change_serviceman %}
+                        <a title="ویرایش" target="_blank" href="{{service_man.get_edit_url}}">
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+                        {% endif %}
+
+                </h4>
+                <ul class="nav flex-column" style="padding-right:10px">
+                    <li class="nav-item">
+                        <a class="nav-link farsi docs-creator" href="{{service_man.profile.get_absolute_url}}">
+                            <img src="{{service_man.profile.image}}" class="rounded-circle" width="48" alt="">
+                            {{service_man.profile.name}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    
+    <div class="col-md-12">
+        {% include "vehicles/includes/maintenances-app/template.html" %}
+    </div>
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let vehicle_id = parseInt("{{vehicle.id}}")
+</script>
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% include "vehicles/includes/maintenances-app/script.html" %}
+
+
+{% endblock script %}

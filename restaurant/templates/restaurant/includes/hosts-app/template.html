@@ -1,0 +1,60 @@
+<div class="card" id="hosts-app">
+    <div class="card-header">
+        <h4 class="title">
+            <a href="{% url 'restaurant:hosts' %}">
+
+               میزبان ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body farsi">
+        <table class="table">
+            <thead>
+                <th>
+عنوان
+                </th>
+              <th>
+                  مسئول
+              </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                    <tr  v-for="host in hosts">
+                        <td>
+                            <a :href="host.get_absolute_url">
+                               <i class="material-icons">
+                                   ballot
+                               </i>
+                               <span v-text="host.title"></span>
+                            </a> 
+                           
+                    
+                        </td>
+                        <td >
+                            
+                    
+                            <a :href="host.profile.get_absolute_url">
+                                <img :src="host.profile.image" class="rounded-circle" width="48" alt="">
+                                <span v-text="host.profile.name"></span>
+                             </a> 
+                        </td>
+                     
+                        <td>
+                         {% if perms.restaurant.change_host %}
+                         <a :href="host.get_edit_url" target="_blank" title="ویرایش">
+                            <i class="fa fa-edit text-info"></i>
+                        </a>
+                         {% endif %}
+                                
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+
+    </div>
+    {% if add_meal_form %}
+
+    {% endif %}
+</div>

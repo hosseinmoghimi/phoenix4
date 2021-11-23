@@ -1,0 +1,25 @@
+<script>
+    let url_add_vehicle = "{% url 'vehicles:add_new_vehicle' %}"
+    let vehicles = JSON.parse(`{{vehicles_s|escapejs}}`)
+    let vehicles_app = new Vue({
+        el: "#vehicles-app",
+        data: {
+            vehicles: vehicles,
+            new_vehicle_title: "",
+        },
+        methods: {
+            add_vehicle: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.new_vehicle_title,
+                }
+                $.post(url_add_vehicle, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        vehicles_app.vehicles.push(data.vehicle)
+                        vehicles_app.new_vehicle_title=""
+                    }
+                })
+            },
+        }
+    })
+</script>

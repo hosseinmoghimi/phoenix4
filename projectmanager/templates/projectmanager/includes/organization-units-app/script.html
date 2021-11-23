@@ -1,28 +1,47 @@
 <script>
-
-
-
-
     let organization_units = JSON.parse("{{organization_units_s|escapejs}}")
+
+</script>
+{% if add_organization_unit_form %}
+  <script>
     let all_organization_units = JSON.parse("{{all_organization_units_s|escapejs}}")
     let url_add_organization_unit = "{% url 'projectmanager:add_organization_unit' %}"
 
-    let organization_unit_app = new Vue({
-        el: "#organization-unit-app",
-        data: {
+      let organization_unit_app_data= {
             selected_organization_unit_title: "",
             new_organization_unit_title: "",
+            new_organization_is_ware_house: false,
             organization_units: organization_units,
-
-
             waiting: false,
-        },
+        }
+  </script>
+{% else %}
+  <script>
+      let organization_unit_app_data= {
+            selected_organization_unit_title: "",
+            new_organization_unit_title: "",
+            new_organization_is_ware_house: false,
+            organization_units: organization_units,
+            waiting: false,
+        }
+  </script>
+{% endif %}
+
+<script>
+
+
+
+
+
+    let organization_unit_app = new Vue({
+        el: "#organization-unit-app",
+        data: organization_unit_app_data,
         methods: {
             show_add_btn: function () {
-                return !this.waiting && (typeof organization_unit_id !='undefined') && this.new_organization_unit_title 
+                return !this.waiting && (typeof organization_unit_id != 'undefined') && this.new_organization_unit_title
             },
             show_select_btn: function () {
-                return !this.waiting && (typeof project_id !='undefined') && this.new_organization_unit_title 
+                return !this.waiting && (typeof project_id != 'undefined') && this.new_organization_unit_title
             },
             filter: function () {
                 this.organization_units = all_organization_units.filter((organization_unit) => {
@@ -40,11 +59,16 @@
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
-                        console.log(data)
+                        //console.log(data)
                         organization_units.push(data.organization_unit)
-                        organization_unit_app.organization_units = organization_units
                         organization_unit_app.new_organization_unit_title = ""
+                        data.organization_unit.employees.forEach(employee => {
+                            service_requests_app.employees.push(employee)
+                            material_requests_app.employees.push(employee)
+                        });
                     }
+
+                    organization_unit_app.organization_units = organization_units
                 })
             },
             add_organization_unit: function () {
@@ -52,15 +76,24 @@
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     parent_id: organization_unit_id,
+                    is_ware_house: this.new_organization_is_ware_house,
                     title: this.new_organization_unit_title,
                 }
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
-                        console.log(data)
+                        //console.log(data)
                         organization_units.push(data.organization_unit)
                         organization_unit_app.organization_units = organization_units
                         organization_unit_app.new_organization_unit_title = ""
+                        // try {
+
+                        //     data.organization_unit.employees.forEach(employee => {
+                        //         service_requests_app.employees.push(employee)
+                        //     });
+                        // } catch (error) {
+
+                        // }
                     }
                 })
             },

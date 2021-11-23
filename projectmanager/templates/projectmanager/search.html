@@ -1,13 +1,306 @@
-{% extends layout %}
+{% extends "projectmanager/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+<li class="nav-item my-auto mx-2">
+    <a class="nav-link farsi " href="{% url 'projectmanager:project_chart' %}">
+        مدیریت
+    </a>
+</li>
+{% endblock %}
 {% block content %}
-  <div class="row">
-      <div class="col-md-4">
-<div class="card">
-    <div class="card-header">
-        <h4 class="card-title"></h4>
+<div>
+
+</div>
+<div class="row">
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <small>
+
+                        جستجو برای :
+                    </small>
+                    <strong>
+                        {{search_for}}
+                    </strong>
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if tags %}
+
+
+
+
+
+                <h5 class="mt-4">
+                    برچسب ها :
+                </h5>
+                {% for tag in tags %}
+                <p class="mr-5">
+                    <a href="{{tag.get_absolute_url}}">
+
+                        {{tag.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if employees %}
+
+
+                <h5 class="mt-4">
+                    پرسنل :
+                </h5>
+                {% for employee in employees %}
+                <p class="mr-5">
+                <div class="media">
+                    <a href="{{employee.get_absolute_url}}">
+                        <img src="{{employee.profile.image}}" class="rounded-circle" width="32" alt="">
+                    </a>
+                    <div class="media-body">
+                        <div>
+
+                            <a href="{{employee.get_absolute_url}}">
+                                {{employee.profile.name}}
+                            </a>
+                        </div>
+
+                        <div class="">
+
+                            <a class="text-muted small" href="{{employee.organization_unit.employer.get_absolute_url}}">
+                                {{employee.organization_unit.employer.title}}
+                            </a>
+                        /
+                            <a class="text-muted small" href="{{employee.organization_unit.get_absolute_url}}">
+                                {{employee.organization_unit.title}}
+                            </a>
+                        </div>
+
+
+                    </div>
+                </div>
+                </p>
+                {% endfor %}
+
+
+
+                {% endif %}
+
+
+
+                {% if projects %}
+
+
+                <h5 class="mt-4">
+                    پروژه ها :
+                </h5>
+                {% for page in projects %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if materials %}
+
+
+
+
+
+                <h5 class="mt-4">
+                    متریال ها :
+                </h5>
+                {% for page in materials %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if services %}
+
+                <h5 class="mt-4">
+                    سرویس ها :
+                </h5>
+                {% for page in services %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if employers %}
+
+
+                <h5 class="mt-4">
+                    کارفرما ها :
+                </h5>
+                {% for page in employers %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+
+                {% endif %}
+
+
+
+
+
+
+
+
+                {% if organization_units %}
+
+                <h5 class="mt-4">
+                    واحد های سازمانی ها :
+                </h5>
+                {% for page in organization_units %}
+                <p class="mr-5">
+                    <a href="{{page.get_absolute_url}}">
+
+                        {{page.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
+
+
+                {% if events %}
+
+                <h5 class="mt-4">
+                    رویداد ها :
+                </h5>
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            زمان
+                        </th>
+                        <th>
+                            پروژه
+                        </th>
+                        <th>
+                            رویداد
+                        </th>
+                    </thead>
+                    <tbody>
+
+                        {% for event in events %}
+                        <tr>
+                            <td>
+                                <small>
+                                    {{event.persian_event_datetime}}
+                                </small>
+                            </td>
+                            <td>
+                                <a href="{{event.project_related.get_absolute_url}}">
+                                    {{event.project_related.title}}
+
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{event.get_absolute_url}}">
+                                    {{event.title}}
+
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+                {% endif %}
+
+
+
+
+            </div>
+        </div>
     </div>
+
+
+
 </div>
 
-      </div>
-  </div>
-{% endblock content %}
+{% endblock %}
+{% block script %}
+<script>
+    let parent_id = 0
+</script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+
+
+
+{% endblock %}

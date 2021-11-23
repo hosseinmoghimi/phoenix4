@@ -1,0 +1,15 @@
+{% extends "map/layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    {% include "map/includes/locations-app/template.html" %}
+  </div>
+</div>
+{% endblock %}
+
+{% block script  %}
+{% include "map/includes/locations-app/script.html" %}
+
+{% endblock %}

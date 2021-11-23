@@ -1,15 +1,19 @@
-
 <script>
-    let project_app = new Vue({
-        el: "#project-app",
+    let projects = JSON.parse(`{{projects_s|escapejs}}`)
+    let projects_app = new Vue({
+        el: "#projects-app",
         data: {
             new_project_title: "",
-            projects: [],
-            waiting:false,
+            projects: projects,
+            waiting: false,
+            show_detail: false,
         },
         methods: {
+            to_price: function (value, curr) {
+                return to_price(value, curr)
+            },
             add_project: function () {
-                project_app.waiting=true
+                projects_app.waiting = true
                 let url = "{% url 'projectmanager:add_project' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
@@ -18,11 +22,11 @@
                 }
                 let posting = $.post(url, payload)
                 posting.done((data) => {
+                    projects_app.waiting = false
                     if (data.result === 'SUCCEED') {
-                        project_app.waiting=false
 
-                        project_app.projects.push(data.project)
-                        project_app.new_project_title = ""
+                        projects_app.projects.push(data.project)
+                        projects_app.new_project_title = ""
                     }
                 })
             },

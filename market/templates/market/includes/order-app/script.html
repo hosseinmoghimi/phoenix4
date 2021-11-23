@@ -1,0 +1,104 @@
+<script>
+    let url_save_cart = "{% url 'market:save_cart' %}"
+    let order_line_component_template = `{% include 'market/includes/order-app/component.html' %}`
+    let order_lines = JSON.parse(`{{order_lines_s|escapejs}}`)
+    let order_line_component = Vue.component('order-line-component', {
+        data: function () {
+            return {
+
+            }
+        },
+        methods: {
+            add_quantity: function (a) {
+                if ((this.order_line.quantity + a) < 0) {
+                    this.order_line.quantity = 0
+                }
+                else if ((this.order_line.quantity + a) > this.order_line.shop.available) {
+                    this.order_line.quantity = this.order_line.shop.available
+                }
+                else {
+                    this.order_line.quantity = this.order_line.quantity + a
+                }
+            },
+
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            add_to_cart: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    quantity: this.quantity,
+                    shop_id: this.shop.id,
+                }
+
+                let aa = this
+                let posting = $.post(url_add_to_cart, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        let message = data.order_line.quantity + " " + data.order_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        aa.message = message
+                        aa.done = true
+                        setTimeout(() => {
+                            aa.done = false
+                        }, 1800);
+                    }
+                })
+            },
+
+
+        },
+        props: ['order_line'],
+        template: order_line_component_template,
+    })
+
+
+    let order_app = new Vue({
+        el: "#order-app",
+        data: {
+            order_lines: order_lines,
+            total: 0,
+            checkout_done:false,
+            show_guarantees:false,
+        },
+        mounted: function () {
+            this.total = 0
+            order_lines.forEach(line => {
+                this.total += (line.quantity * line.unit_price)
+            });
+        },
+        methods: {
+            fff: function () {
+            },
+            checkout: function () {
+                let url = url_save_cart
+                let order_lines = []
+                this.order_lines.forEach(order_line => {
+                    order_lines.push({
+                        shop_id: order_line.shop.id,
+                        quantity: order_line.quantity,
+                    })
+                });
+                order_lines = JSON.stringify(order_lines)
+                let customer_id = 1
+                let payload = {
+                    customer_id: customer_id,
+                    order_lines: order_lines,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        order_app.order_lines = data.order_lines
+                        order_app.checkout_done = true
+                    }
+                })
+            },
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+        },
+        components: {
+            order_line_component,
+        }
+    })
+</script>

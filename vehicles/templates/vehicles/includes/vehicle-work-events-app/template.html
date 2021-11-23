@@ -1,0 +1,79 @@
+<div class="card" id="vehicle-work-events-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            رویداد ها و وقایع
+        </h4>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+
+                </th>
+                <th>
+                    ماشین
+                </th>
+
+                <th>
+                    راننده
+                </th>
+
+                <th>
+                    رویداد
+                </th>
+                <th>
+                    زمان
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="vehicle_work_event in vehicle_work_events">
+                    <td>
+                        <a :href="vehicle_work_event.get_absolute_url" title="جزئیات">
+                            <i class="material-icons">ballot</i>
+                        </a>
+                    </td>
+                    <td>
+                        <a :href="vehicle_work_event.vehicle.get_absolute_url">
+
+                            <span v-text="vehicle_work_event.vehicle.title"></span>
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <a :href="vehicle_work_event.work_shift.driver.get_absolute_url">
+
+                            <img :src="vehicle_work_event.work_shift.driver.profile.image" class="rounded-circle"
+                                width="48">
+                            <span v-text="vehicle_work_event.work_shift.driver.profile.name"></span>
+                        </a>
+
+                    </td>
+                    <td>
+                        <span v-text="vehicle_work_event.event_type"></span>
+
+                    </td>
+                    <td>
+                        <div>
+                            <small class="text-secondary" v-text="vehicle_work_event.persian_event_datetime"></small>
+
+                        </div>
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+    </div>
+    {% if add_vehicle_work_event_form %}
+    <div class="card-footer">
+
+        {% include "vehicles/includes/vehicle-work-events-app/form.html" %}
+    </div>
+
+    {% endif %}
+</div>

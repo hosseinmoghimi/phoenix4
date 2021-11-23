@@ -1,0 +1,43 @@
+<script>
+    let blogs = JSON.parse(`{{blogs_s|escapejs}}`)
+</script>
+{% if add_blog_form %}
+<script>
+    let blogs_app_data = {
+        blogs: blogs,
+        new_blog_amount: "",
+        new_blog_title: "",
+        new_blog_year: "1400",
+        new_blog_description:"",
+
+    }
+</script>
+{% else %}
+<script>
+    let blogs_app_data = {
+        blogs: blogs,
+    }
+</script>
+{% endif %}
+
+<script>
+    let blogs_app = new Vue({
+        el: "#blogs-app",
+        data: blogs_app_data,
+        methods: { 
+            add_blog: function () {
+                let url_add_blog = "{% url 'hse:add_blog' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.new_blog_title,
+                }
+                $.post(url_add_blog, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        blogs_app.blogs.push(data.blog)
+                    }
+                })
+            },
+
+        }
+    })
+</script>

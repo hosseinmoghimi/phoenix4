@@ -1,0 +1,40 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+            نام و نام خانوادگی
+        </th>
+        <th>
+            عضویت
+        </th>
+        <th>
+
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="member in members">
+            <td>
+                <a :href="member.get_absolute_url">
+                    <span v-text="member.profile.name"></span>
+                </a>
+            </td>
+            <td>
+                <span class="small text-muted">
+                    <span v-text="member.persian_membership_started"></span>
+                </span>
+                ~
+                <span class="small text-muted">
+                    <span v-text="member.persian_membership_started"></span>
+                </span>
+            </td>
+            <td>
+                {% if perms.library.change_member %}
+                <a :href="member.get_edit_url" title="ویرایش" target="_blank">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>

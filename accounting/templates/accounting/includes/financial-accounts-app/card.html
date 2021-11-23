@@ -1,0 +1,116 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="title">
+            {{financial_account.profile.name}}
+        </h4>
+    </div>
+    <div class="card-body farsi text-right">
+        <div>
+            <a href="{{financial_account.profile.get_absolute_url}}">{{financial_account.profile.name}}</a>
+        </div>
+        {% for bank_account in financial_account.bankaccount_set.all %}
+        <hr>
+        <div class="mb-2">
+            <h4>
+
+                {{bank_account.title}}
+                {% if perms.accounting.change_bankaccount %}
+                <a href="{{bank_account.get_edit_url}}" target="_blank" title="ویرایش">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {% endif %}
+            </h4>
+            {% if bank_account.is_active %}
+
+            <span class="badge badge-primary">فعال</span>
+            {% else %}
+            <span class="badge badge-secondary">غیر فعال</span>
+            {% endif %}
+            {% if bank_account.is_default %}
+
+            <span class="badge badge-success">پیش فرض</span>
+            {% endif %}
+        </div>
+        {% if bank_account.bank %}
+
+        <div class="mb-2">
+
+            <span class="small text-muted">
+                بانک :
+            </span>
+            {{bank_account.bank}}
+
+        </div>
+        {% endif %}
+
+
+        {% if bank_account.branch %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+                شعبه
+
+            </span>
+
+            {{bank_account.branch}}
+
+        </div>
+        {% endif %}
+
+        {% if bank_account.card_no %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+
+                شماره کارت :
+            </span>
+            {{bank_account.card_no}}
+
+        </div>
+        {% endif %}
+        {% if bank_account.account_no %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+
+                شماره حساب :
+            </span>
+            {{bank_account.account_no}}
+        </div>
+        {% endif %}
+        {% if bank_account.shaba_no %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+                شماره شبا :
+
+            </span>
+            {{bank_account.shaba_no}}
+        </div>
+        {% endif %}
+        {% if bank_account.description %}
+
+        <div class="mb-2">
+            <span class="small text-muted">
+                توضیحات :
+
+            </span>
+            {{bank_account.description|safe}}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+
+        {% if perms.accounting.add_bankaccount %}
+        <div class="my-3">
+
+            <a href="{{ADMIN_URL}}{{APP_NAME}}/bankaccount/add/?owner={{financial_account.id}}" target="_blank"
+                title="افزودن">
+                <i class="fa fa-plus ml-2"></i>افزودن حساب بانکی جدید
+            </a>
+        </div>
+        {% endif %}
+
+
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="card" id="students-app">
+    <div class="card-header">
+        <h4 class="title">
+          <a href="{% url 'school:students' %}">
+            لیست دانش آموزان
+          </a>
+        </h4>
+    </div>
+    <div class="card-body">
+      <div v-for="student in students">
+        <h4>
+
+          <a :href="student.get_absolute_url">
+            <span v-text="student.profile.name"></span>
+          </a>
+          {% if perms.school.change_student %}
+          <a target="_blank" title="ویرایش" :href="student.get_edit_url">
+            <i class="material-icons">
+                edit
+            </i>
+            
+          </a>
+          {% endif %}
+        </h4>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,131 @@
+{% if add_maintenance_form %}
+
+<p>
+
+    <button @click="show_form=!show_form" class="btn btn-success">
+        <span class="material-icons">
+
+            add
+        </span>
+    </button>
+</p>
+<form v-show="show_form" @submit.prevent="add_maintenance()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1fdvg34">تاریخ سرویس</label>
+                <date-picker v-model="event_datetime"></date-picker>
+
+                <small id="emai5645lHelp" class="form-text farsi text-muted">
+                    تاریخ سرویس مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="end_datetimesdfd">عنوان</label>
+                <input type="text" class="form-control" v-model="title" id="end_datetimesdfd">
+                <small id="emailHelp12" class="form-text farsi text-muted">
+                    عنوان سرویس را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="description">توضیحات</label>
+                <input type="text" v-model="description" class="form-control" id="description">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    توضیحات مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="paid">هزینه سرویس</label>
+                <input required min="0" type="number" v-model="paid" class="form-control" id="paid">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    هزینه سرویس را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="maintenance_type">سرویس</label>
+
+                <select v-model="maintenance_type" class="form-control" id="maintenance_type">
+                    {% for maintenance_type in maintenance_types %}
+
+
+                    <option value="{{maintenance_type}}">
+                        {{maintenance_type}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    نوع سرویس مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="service_man_id">سرویس کار</label>
+                <select required v-model="service_man_id" id="service_man_id" class="form-control">
+                    <template v-for="service_man in service_mans">
+
+                        <option :value="service_man.id">
+                            <span v-text="service_man.name"></span>
+                            (<small class="mx-2 px-2" v-text="service_man.profile.name"></small>)
+                        </option>
+                    </template>
+                </select>
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    سرویس کار مرتبط را انتخاب کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="kilometer">کیلومتر ماشین</label>
+                <input required min="0" type="number" v-model="kilometer" class="form-control" id="kilometer">
+
+
+                <small id="emailHeewrle324p" class="form-text farsi text-muted">
+                    کیلومتر ماشین را انتخاب کنید.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-success btn-block" type="submit">افزودن</button>
+        </div>
+
+
+
+
+    </div>
+
+
+</form>
+{% endif %}

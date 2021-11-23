@@ -1,0 +1,137 @@
+{% extends "restaurant/layout.html" %}
+{% block content %}
+<div class="row" id="meal-app">
+    <div class="col-md-6">
+        <div class="card farsi text-right">
+            <div class="card-header">
+                <h4 class="title">
+                    {{meal.food.title}}
+                </h4>
+            </div>
+
+            <div class="card-body">
+                <div>
+                    <a href="{{meal.food.get_absolute_url}}">
+                        {{meal.food.title}}
+                    </a>
+                </div>
+                <div>
+                    {{meal.persian_date_served}}
+                </div>
+                <div>
+                    {{meal.meal_type}}
+                </div>
+                <div>
+                    رزرو شده برای
+                    {{meal.reservedmeal_set.all|length}} نفر
+                </div>
+                {% if reserved_meal %}
+
+                <div>
+                    رزرو شده برای
+                    <a href="{{reserved_meal.guest.get_absolute_url}}">
+                        {{reserved_meal.guest.profile.name}}
+                    </a>
+                    در
+                    <a href="{{reserved_meal.get_absolute_url}}">
+                        {{reserved_meal.persian_date_reserved}}
+                    </a>
+                </div>
+                {% endif %}
+                {% if perms.restaurant.change_meal %}
+                <div>
+                    <a href="{{meal.get_edit_url}}" title="ویرایش" target="_blank">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                {% if reserve_meal_form %}
+                <button class="btn btn-info" @click="reserve_meal()">
+                    رزرو غذا
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card farsi text-right">
+            <div class="card-header">
+                <h4 class="title">
+                    {{meal.food.title}}
+                </h4>
+            </div>
+
+            <div class="card-body">
+               {% for reserved_meal in meal.reservedmeal_set.all %}
+                 <div>
+                     <small class="text-muted ml-3">
+                         {{forloop.counter}} 
+
+                     </small>
+                     {{reserved_meal.guest.id}} 
+                     {{reserved_meal.guest.profile.name}}
+                 </div>
+               {% endfor %}
+            </div> 
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        {% include "restaurant/includes/served-meals-app/template.html" %}
+     
+    </div>
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let meal_id = parseInt(`{{meal.id}}`)
+    let served_meals = JSON.parse(`{{served_meals_s|escapejs}}`)
+    let guest_id = parseInt(`{{guest.id}}`)
+    let meal_app_data = {
+        guest_id: guest_id,
+        served_meals: served_meals
+
+    }
+    let meal_app = new Vue({
+        el: "#meal-app",
+        data: meal_app_data,
+        methods: {
+            reserve_meal: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    meal_id: meal_id,
+                    guest_id: guest_id,
+                }
+
+                let url = "{% url 'restaurant:reserve_meal' %}"
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                })
+            },
+
+
+            serve_meal: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    meal_id: meal_id,
+                    guest_id: this.guest_id,
+                }
+
+                let url = "{% url 'restaurant:serve_meal' %}"
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if(data.result==='SUCCEED'){
+                        meal_app.served_meals.push(data.served_meal)
+                    }
+                })
+            },
+
+        }
+    })
+</script>
+{% endblock script %}

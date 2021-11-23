@@ -1,0 +1,17 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+            عنوان
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="blog in blogs">
+            <td>
+                <a :href="blog.get_absolute_url">
+
+                    <span v-text="blog.title"></span>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

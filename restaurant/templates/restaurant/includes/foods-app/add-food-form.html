@@ -1,0 +1,21 @@
+{% load static %}
+
+<form @submit.prevent="add_food()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="">نام غذا</label>
+                <input type="text" v-model="title" class="form-control" required>
+            </div>
+        </div>
+        <div class="col-md-6 text-right">
+            <label for="">
+                &nbsp;
+            </label>
+            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+            <button v-if="!waiting" class="d-block btn btn-danger" type="submit">
+                افزودن
+            </button>
+        </div>
+    </div>
+</form>

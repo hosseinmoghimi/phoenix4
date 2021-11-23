@@ -1,0 +1,36 @@
+<div id="features-app" class="row">
+
+
+
+    {% for feature in property.propertyfeature_set.all %}
+
+    <div class="col-lg-6 farsi mb-3 text-right">
+        <div class="py-2 px-4" style="background-color: #f3f7fb;">
+
+            {{feature.name}}
+        </div>
+        <div class="py-2 px-4">
+
+            {{feature.value}}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="col-lg-6 farsi mb-3 text-right" v-for="feature in features">
+        <div class="py-2 px-4" style="background-color: #f3f7fb;" v-text="feature.name">
+
+        </div>
+        <div class="py-2 px-4" v-text="feature.value">
+
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <button class="farsi btn btn-info" @click="show_panel=true" v-show="!show_panel">افزودن ویژگی</button>
+        <form v-show="show_panel" @submit.prevent="add_feature">
+            <input type="text" v-model="name" class="form-control farsi" placeholder="نام ویژگی">
+            <input type="text" v-model="value" class="form-control farsi" placeholder="مقدار ویژگی">
+            <button class="btn btn-success farsi">تایید</button>
+        </form>
+    </div>
+
+</div>

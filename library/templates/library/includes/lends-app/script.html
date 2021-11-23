@@ -1,0 +1,67 @@
+<script>
+    let lends_app = new Vue({
+        el: "#lends-app",
+        data: {
+            description: "eee",
+            member_id: "",
+            book_id: "",
+            members: JSON.parse(`{{members_s|escapejs}}`),
+            books: JSON.parse(`{{books_s|escapejs}}`),
+            selected_member: false,
+            selected_book: false,
+            lends:JSON.parse(`{{lends_s|escapejs}}`),
+        },
+        methods: {
+            select_member: function () {
+                member_id = this.member_id
+                lends_app.selected_member = false
+                this.members.forEach(member => {
+                    if (member.id == member_id) {
+                        lends_app.selected_member = member
+                    }
+                })
+            },
+            select_book: function () {
+                book_id = this.book_id
+                lends_app.selected_book = false
+                this.books.forEach(book => {
+                    if (book.id == book_id) {
+                        lends_app.selected_book = book
+                    }
+                })
+            },
+            lend_book: function () {
+                let url_add_lend = "{% url 'library:add_lend' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    description: this.description,
+                    book_id: this.book_id,
+                    member_id: this.member_id,
+                }
+                $.post(url_add_lend, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        lends_app.lends.push(data.lend)
+                    }
+                })
+            },
+            return_book: function () {
+                let url_add_book = "{% url 'library:add_book' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    description: this.new_book_description,
+                    price: this.new_book_price,
+                    year: this.new_book_year,
+                    title: this.new_book_title,
+                    shelf: this.new_book_shelf,
+                    col: this.new_book_col,
+                    row: this.new_book_row,
+                }
+                $.post(url_add_book, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        books_app.books.push(data.book)
+                    }
+                })
+            },
+        }
+    })
+</script> 

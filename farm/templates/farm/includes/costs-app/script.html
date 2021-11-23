@@ -1,0 +1,31 @@
+<script>
+    let costs = []
+    let costs_app = new Vue({
+        el: "#costs-app",
+        data: {
+            costs: costs,
+            waiting: false,
+            title: "",
+            category: "",
+            value: 0,
+            cost_date:current_datetime,
+        },
+        methods: {
+            add_cost: function () {
+                let url = "{% url 'farm:add_cost' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    category: costs_app.category,
+                    title: costs_app.title,
+                    value: costs_app.value,
+                    cost_date:costs_app.cost_date,
+                }
+                let posting = $.post(url, payload)
+                posting.done(
+                    (data) => {
+                        //console.log(data)
+                    })
+            },
+        }
+    })
+</script>

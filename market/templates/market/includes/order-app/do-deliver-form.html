@@ -1,0 +1,40 @@
+{% if do_deliver_form %}
+<form action="{% url 'market:do_deliver_order' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{order.id}}">
+    <h3>
+        تحویل گرفتن سفارش
+    </h3>
+    <div class="row rtl">
+        {% if ware_houses %}
+
+        <div class="col-4">
+
+            <select name="ware_house_id" id="" class="form-control farsi">
+                <option value="" disabled selected>انبار را برای ورود سفارش انتخاب کنید</option>
+                {% for ware_house in ware_houses %}
+                <option value="{{ware_house.id}}">{{ware_house.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% else %}
+        <input value="0" name="ware_house_id" type="hidden">
+        {% endif %}
+
+        <div class="col-12">
+
+            <div class="form-group label-floating is-empty bmd-form-group">
+                <label class="bmd-label-floating">توضیحات</label>
+                <input type="text" name="description" class="form-control farsi">
+                <span class="material-input"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-success farsi">سفارش را دریافت کردم</button>
+        </div>
+    </div>
+
+
+</form>
+
+{% endif %}

@@ -1,0 +1,75 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block page_header %}
+
+{% endblock page_header %}
+{% block content %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <h2 class="title text-center">{{customer.title}}</h2>
+                {% if perms.market.change_customer %}
+                <div class="text-center">
+                    <a href="{{customer.get_edit_url}}">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                    
+                </div>
+                {% endif %}
+
+                {% if perms.core.change_picture %}
+                <div class="text-center">
+                    {{header_image.get_edit_btn|safe}}
+
+                    <a href="{{header_image.get_edit_url}}">
+                        <i class="material-icons">
+                            edit
+                        </i>
+                    </a>
+                    
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main main-raised">
+    <div class="container">
+        <div class="card card-plain">
+            <div class="card-body">
+                <h3 class="card-title text-center">{{customer.profile.name}}</h3>
+                <p class="mb-5">
+                    پروفایل :
+                    <a href="{{customer.profile.get_absolute_url}}">
+                        <img src="{{customer.profile.image}}" class="rounded-circle" width="64" alt="">
+
+                        {{customer.profile.name}}
+                    </a>
+                </p>
+                <p>
+                    <a href="{{customer.get_orders_url}}">
+                        <i class="material-icons">
+                            ballot
+                        </i>
+                        لیست سفارشات 
+                    </a>
+                </p>
+<div>
+    {% include "market/includes/list-app/template.html" %}
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

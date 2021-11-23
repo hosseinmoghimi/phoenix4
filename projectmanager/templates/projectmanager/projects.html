@@ -1,0 +1,29 @@
+{% extends wide_layout_parent %}
+
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+<div>
+    <h3 class="text-center">
+        <i class="material-icons">engineering</i>
+        <small class="text-secondary">
+            پروژه ها
+        </small>
+    </h3>
+    <div class="row">
+        <div class="col-md-12">
+            {% include "projectmanager/includes/favorite-pages-app/template.html" %}
+
+        </div>
+        <div class="col-md-12">
+          {% include "projectmanager/includes/all-projects-app/template.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "projectmanager/includes/all-projects-app/script.html" %}
+
+{% endblock %}

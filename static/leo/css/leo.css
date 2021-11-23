@@ -5,3 +5,10 @@ text-align: right;
 .form-check-sign{
     direction: ltr !important;
 }
+.rtl{
+    direction: rtl;
+}
+
+.ltr{
+    direction: ltr;
+}

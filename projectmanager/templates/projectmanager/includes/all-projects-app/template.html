@@ -1,0 +1,8 @@
+<div class="card mb-5" id="projects-list-app">
+    <div class="card-body">
+        <input type="text" placeholder="جستجو ..." class="form-control" @input="filter()" v-model="search_for">
+
+        
+        {% include "projectmanager/includes/all-projects-app/table.html" %}
+    </div>
+</div>

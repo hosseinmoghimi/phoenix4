@@ -1,0 +1,73 @@
+<div class="cd-section" id="headers">
+
+    <!--     *********     HEADER 3      *********      -->
+    <div class="header-3">
+
+
+        <!-- Carousel Card -->
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                {% for slider in sliders %}
+
+                <li data-target="#carouselExampleIndicators" id="slider_link{{forloop.counter0}}"
+                    data-slide-to="{{forloop.counter0}}"></li>
+                {% endfor %}
+
+            </ol>
+            <div class="carousel-inner">
+                {% for slider in sliders %}
+                <div class="carousel-item">
+                    <div class="page-header header-filter1" style="background-image: url('{{slider.image}}');">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6 text-left">
+                                    {% if slider.title %}
+                                      
+                                    <h1 class="title">{{slider.title}}</h1>
+                                    {% endif %}
+
+                                    {% if slider.body %}
+                                    <div class="farsi">
+
+                                        {{slider.body|safe}}
+                                    </div>
+                                    {% endif %}
+                                    <br>
+                                    <div class="buttons">
+                                        {% for link in slider.links.all %}
+
+
+                                        <a href="{{link.url}}"  target="{{link.target}}"
+                                            class="farsi mx-2 my-2 btn btn-{{link.color}} btn-lg">
+                                            {{link.title}}
+                                        </a>
+                                        {% endfor %}
+
+
+
+                                    </div>
+                                    {% if perms.web.change_carousel %}
+                                      {{slider.get_edit_btn|safe}}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <i class="material-icons">keyboard_arrow_left</i>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <i class="material-icons">keyboard_arrow_right</i>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <!-- End Carousel Card -->
+    </div>
+    <!--     *********    END HEADER 3      *********      -->
+</div>

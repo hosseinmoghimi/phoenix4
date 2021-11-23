@@ -1,0 +1,16 @@
+<script>
+    let transactions = JSON.parse(`{{transactions_s|escapejs}}`)
+    let transactions_app = new Vue(
+        {
+            el: "#transactions-app",
+            data: {
+                transactions: transactions,
+            },
+            methods: {
+                to_price: function (val, curr) {
+                    return to_price(val, curr)
+                },
+            }
+        }
+    )
+</script>

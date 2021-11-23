@@ -1,0 +1,21 @@
+{% extends "vehicles/layout.html" %}
+{% load static %}
+{% block content %}
+<h3 class="text-center my-3">
+  سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+</h3>
+<div class="row">
+  <div class="col-md-4">
+    {% include "vehicles/includes/vehicles-app/template.html" %}
+  </div>
+
+
+ 
+
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "vehicles/includes/vehicles-app/script.html" %} 
+{% endblock script %}

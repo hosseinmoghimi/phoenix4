@@ -1,0 +1,22 @@
+<div class="card" id="books-app">
+    <div class="card-header">
+        <h4 class="title">
+            <a href="{% url 'library:books' %}">
+
+                کتاب ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+       {% include "library/includes/books-app/table.html" %}
+
+     
+    </div>
+    <div class="card-footer">
+        
+        {% if add_book_form %}
+       {% include "library/includes/books-app/add-book-form.html" %}
+          
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="card" id="taxes-app">
+    <div class="card-header">
+        <h4 class="title">
+            مالیات ها
+        </h4>
+    </div>
+    <div class="card-body">
+       {% include "tax/includes/taxes-app/table.html" %}
+
+     
+    </div>
+    <div class="card-footer">
+        
+        {% if add_tax_form %}
+       {% include "tax/includes/taxes-app/add-tax-form.html" %}
+          
+        {% endif %}
+    </div>
+</div>

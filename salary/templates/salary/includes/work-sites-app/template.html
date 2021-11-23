@@ -1,0 +1,32 @@
+<div id="work-sites-app">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+                work sites
+            </h4>
+        </div>
+        <div class="card-body">
+            {% for work_site in work_sites %}
+            <div class="mb-5">
+                <h4 class="mb-2">
+                    <a href="{{work_site.get_absolute_url}}">
+                        <i class="material-icons">
+                            place
+                        </i>
+                        <span>{{work_site.title}}</span>
+                    </a>
+                    {% if perms.salary.change_worksite %}
+
+                    <a target="_blank" href="{{work_site.get_edit_url}}">
+                        <i class="material-icons">
+                            settings
+                        </i>
+                    </a>
+                    {% endif %}
+                </h4>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

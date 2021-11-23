@@ -1,0 +1,92 @@
+{% if add_vehicle_work_event_form %}
+<p>
+
+    <button @click="show_form=!show_form" class="btn btn-success">
+        <span class="material-icons">
+
+            add
+        </span>
+    </button>
+</p>
+<form v-show="show_form" @submit.prevent="add_event()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="event_datetime">تاریخ رویداد</label>
+                <date-picker v-model="event_datetime"></date-picker>
+
+                <small id="emai5645lHelp" class="form-text farsi text-muted">
+                    تاریخ رویداد مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="description">توضیحات</label>
+                <input type="text" v-model="description" class="form-control" id="description">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    توضیحات مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="kilometer">کارکرد ماشین</label>
+                <input required min="0" type="number" v-model="kilometer" class="form-control" id="kilometer">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    کارکرد ماشین را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">نوع رویداد</label>
+                <select required v-model="event_type" id="" class="form-control">
+                    {% for event_type in event_types %}
+                    <option value="{{event_type}}">
+                        {{event_type}}
+                    </option>
+                    {% endfor %}
+
+                </select>
+
+                <small id="emailHeewrle324p" class="form-text farsi text-muted">
+                    رویداد مرتبط را انتخاب کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+
+
+
+        
+
+        <div class="col-md-4">
+            <button class="btn btn-success btn-block" type="submit">افزودن</button>
+        </div>
+
+
+
+
+    </div>
+
+
+</form>
+{% endif %}

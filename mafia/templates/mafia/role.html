@@ -1,0 +1,52 @@
+{% extends "mafia/layout.html" %}
+{% load static %}
+{% block mafia_content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    {{role.role_name}}
+                </h4>
+            </div>
+            <div class="card-body">
+                <p>
+
+                    <img src="{{role.image}}" width="128" class="rounded-circle" alt="">
+                </p>
+                
+
+                {% if perms.mafia.change_role %}
+                <p class="my-3">
+
+                    {{role.get_edit_btn|safe}}
+                </p>
+
+
+                {% endif %}
+
+                <p>
+
+                    ساید :
+                    <span class="badge badge-{{role.role_color}}">
+                        {{role.side}}
+
+                    </span>
+                </p>
+                {% if role.description %}
+                <div class="farsi">
+
+                    {{role.description|safe}}
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block mafia_script %}
+
+{% endblock %}

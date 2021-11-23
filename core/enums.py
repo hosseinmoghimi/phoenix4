@@ -1,19 +1,44 @@
+from core.settings import SITE_URL
 from django.db.models import TextChoices
 from django.utils.translation import gettext as _
 from enum import Enum
 
-   
+class PictureNameEnums(TextChoices):
+    LOGO="لوگو",_("لوگو")
+
+
+class UnitNameEnum(TextChoices):
+    ADAD="عدد",_("عدد")
+    GERAM="گرم",_("گرم")
+    KILOGERAM="کیلوگرم",_("کیلوگرم")
+    TON="تن",_("تن")
+    METER="متر",_("متر")
+    METER2="متر مربع",_("متر مربع")
+    METER3="متر مکعب",_("متر مکعب")
+    PART="قطعه",_("قطعه")
+    SHAKHEH="شاخه",_("شاخه")
+    DASTGAH="دستگاه",_("دستگاه")
+    SERVICE="سرویس",_("سرویس")
+    PACK="بسته",_("بسته")
+    POCKET="کیسه",_("کیسه")
+
 class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')
+    tax='tax',_('tax')
     web='web',_('web')
-    # stock='stock',_('stock')
-    # charity='charity',_('charity')
+    salary='salary',_('salary')
+    stock='stock',_('stock')
+    calendar='calendar',_('calendar')
+    resume='resume',_('resume')
+    realestate='realestate',_('realestate')
     projectmanager='projectmanager',_('projectmanager')
     # market='market',_('market')
     # transport='transport',_('transport')
-    # livestock='livestock',_('livestock')
-    # charirt='charirty',_('charirty')
+    accounting='accounting',_('accounting')
+    help='help',_('help')
+    farm='farm',_('farm')
     core='core',_('core')
+    market='market',_('market')
     # dashboard='dashboard',_('dashboard')
     # realestate='realestate',_('realestate')
     # vehicles='vehicles',_('vehicles')
@@ -82,6 +107,7 @@ class IconsEnum(TextChoices):
 
 
 class ParametersEnum(TextChoices):
+    SHOW_ARCHIVES="نمایش فایل های آرشیو شده",_("نمایش فایل های آرشیو شده")
     VISITOR_COUNTER="VISITOR_COUNTER",_("VISITOR_COUNTER")
     GOOGLE_API_KEY='GOOGLE_API_KEY',_('GOOGLE_API_KEY')
     GOOGLE_GPS_X='GOOGLE_GPS_X',_('GOOGLE_GPS_X')
@@ -153,6 +179,12 @@ my_apps=[
             'title':'خیریه',
             'color':'primary',
             'url':'/charity/'
+        },
+        {
+            'name':'todocalendar',
+            'title':'سررسید',
+            'color':'primary',
+            'url':'/calendar/'
         },
         {
             'name':'drassistant',

@@ -1,0 +1,61 @@
+{% if add_vehicle_work_event_form %}
+<script>
+    let vehicle_work_events = JSON.parse(`{{vehicle_work_events_s|escapejs}}`)
+    let vehicle_work_events_app_data = {
+        vehicle_work_events: vehicle_work_events,
+        event_datetime: current_datetime,
+        event_type: "",
+        description: "",
+        kilometer: "",
+        show_form: false,
+        vehicle_id:0,
+        work_shift_id:parseInt("{{work_shift.id}}")
+    }
+</script>
+{% else %}
+<script>
+    let vehicle_work_events = JSON.parse(`{{vehicle_work_events_s|escapejs}}`)
+    let vehicle_work_events_app_data = {
+        vehicle_work_events: vehicle_work_events
+    }
+</script>
+{% endif %}
+<script>
+
+
+    let vehicle_work_events_app = new Vue({
+        el: "#vehicle-work-events-app",
+        data: vehicle_work_events_app_data
+        ,
+        components: {
+            DatePicker: VuePersianDatetimePicker
+
+        },
+        methods: {
+            to_price: value => to_price(value),
+            add_event: function () {
+                let url_add_work_shift = "{% url 'vehicles:add_vehicle_work_event' %}"
+                let payload = {
+                    vehicle_id:  this.vehicle_id,
+                    work_shift_id: this.work_shift_id,
+                    event_type: this.event_type,
+                    event_datetime: this.event_datetime,
+                    kilometer: this.kilometer,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+
+
+
+
+                }
+                let posting = $.post(url_add_work_shift, payload)
+                posting.done((data) => {
+                    if (data.result === "SUCCEED") {
+                        vehicle_work_events_app.vehicle_work_events.push(data.vehicle_work_event)
+                    }
+
+                })
+            }
+        }
+    })
+</script>

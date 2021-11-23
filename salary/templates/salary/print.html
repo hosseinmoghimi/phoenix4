@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load to_persian_date %}
+    {% load static %}
+    {% load to_price %}
+    {% include "phoenix/includes/head.html" %}
+    <style>
+        .table-header {
+            text-align: right;
+            background-color: #ddd;
+            color: #222;
+        }
+
+        .bordered>td,
+        th,
+        .lines_total {
+            border: 3px solid #888;
+        }
+    </style>
+</head>
+
+<body class="farsi rtl">
+
+    <div class="container rtl">
+        <div class="row mt-3">
+            <div class="col-md-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <h4>
+        
+                                    {{employee_salary.employee.profile.name}}
+                               
+                            </h4>
+                        </div>
+                        <p>
+        
+                            {{employee_salary.month_name}}
+                            {{employee_salary.year}}
+                        </p>
+                        <p>
+                           قابل پرداخت :  {{employee_salary.total|to_price}}
+                        </p>
+                         
+                    </div>
+                </div>
+            </div>
+        
+
+            <div class="col-md-6">
+                <div class="card">
+                  
+                    <div class="card-body">
+                        <h4 class="text-center bordered">
+                            مزایا
+                        </h4>
+                        <table class="table  ">
+                            <thead  class="bordered">
+                                <th>
+                                    عنوان
+                                </th>
+                                <th>
+                                    مبلغ
+                                </th>
+                                <th>
+                                    توضیحات
+                                </th>
+                               
+                            </thead>
+                            <tbody>
+                                {% for line in positive_lines %}
+        
+                                <tr class="bordered">
+                                    <td>
+                                          {{forloop.counter}}
+        -
+                                            {{line.title}}
+                                    </td>
+                                    <td>
+                                        <div class="">
+        
+                                            {{line.amount|to_price}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if line.description %}
+                                        {{line.description}}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+        
+                         <p>
+                            جمع :
+                            {{employee_salary.total_positives|to_price}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        
+        
+            <div class="col-md-6">
+                <div class="card">
+          
+                    <div class="card-body"> 
+                           <h4 class="text-center">
+                            کسورات
+                        </h4>
+                        <table class="table">
+                            <thead>
+                                <th>
+                                    عنوان
+                                </th>
+                                <th>
+                                    مبلغ
+                                </th>
+                                <th>
+                                    توضیحات
+                                </th>
+                               
+                            </thead>
+                            <tbody>
+                                {% for line in negative_lines %}
+        
+                                <tr class="bordered">
+                                    <td>
+                                        {{forloop.counter}}
+                                        -
+                                            {{line.title}}
+                                        
+                                    </td>
+                                    <td>
+                                        <div class="">
+        
+                                            {{line.amount|to_price}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if line.description %}
+                                        {{line.description}}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+        
+                    
+                        <p>
+                            جمع :
+                            {{employee_salary.total_negatives|to_price}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2">
+
+            </div>
+        </div>
+    </div>
+
+    {% csrf_token %}
+
+    {% include "phoenix/includes/layout-scripts.html" %}
+</body>
+
+</html>

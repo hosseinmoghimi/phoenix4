@@ -1,0 +1,55 @@
+{% extends "salary/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h4>
+                    {{vacation.title}}
+                </h4>
+                <h6>
+                    {{vacation.employee.profile.name}}
+                </h6>
+                <h6>
+                    {{vacation.persian_vacation_started}}
+                </h6>
+                <h6>
+                    {{vacation.persian_vacation_ended}}
+                </h6>
+                <div class="farsi text-right">
+                    {{vacation.description|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+        {% include "core/includes/page-links-app/template.html" %}
+    </div>
+    <div class="col-md-4">
+
+        {% include "core/includes/page-documents-app/template.html" %}
+    </div>
+    <div class="col-md-12">
+
+        {% include "core/includes/page-images-app/template.html" %}
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let page_id = parseInt("{{vacation.id}}")
+</script>
+{% include "core/includes/page-images-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-links-app/script.html" %}
+{% endblock script %}

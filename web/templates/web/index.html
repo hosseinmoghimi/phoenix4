@@ -1,12 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends "web/layout.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="main {{main_class}}">
+    {% include "web/includes/index-sections/sliders.html" %}
+    {% include "web/includes/index-sections/features.html" %}
+    {% include "web/includes/blogs-app/template.html" %}
+    {% include "web/includes/index-sections/our-teams.html" %}
+    {% include "web/includes/index-sections/our-works.html" %}
+    {% include "web/includes/index-sections/testimonials.html" %}
+    {% include "web/includes/index-sections/contactus.html" %}
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "web/includes/blogs-app/script.html" %}
+
+{% include "web/includes/contact-us-app/script.html" %}
+
+<script>
+    $(document).ready(() => {
+        $("#slider_link0").addClass("active")
+
+        $(".carousel-item").first().addClass("active")
+    })
+</script>
+{% endblock %}
+
+
+{% block vertical_nav %}
+
+{% endblock %}
+
+{% block nav_bar %}
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% if add_material_request_to_ware_house_sheet_form %}
+<form @submit.prevent="add_material_request_to_ware_house_sheet()">
+
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="farsi text-right">
+                شناسه برگه خروج از انبار
+
+            </div>
+
+
+            <input placeholder="شناسه برگه خروج از انبار" min="0"  type="number" class="form-control"
+                v-model="ware_house_export_sheet_id">
+
+
+        </div>
+        <div class="col-md-3">
+            <div class="farsi text-right">
+                شناسه برگه ورود به انبار
+
+            </div>
+
+
+            <input placeholder="شناسه برگه ورود به انبار" min="0"  type="number" class="form-control"
+                v-model="ware_house_import_sheet_id">
+
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="farsi text-right">
+                انبار متریال
+
+            </div>
+
+            <select v-model="ware_house_id" class="form-control">
+                {% for ware_house in ware_houses %}
+                <option value="{{ware_house.id}}">{{ware_house.title}}</option>
+                {% endfor %}
+                {% for ware_house in ware_houses2 %}
+                <option value="{{ware_house.id}}">{{ware_house.title}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <div class="farsi text-right">
+                &nbsp;
+            </div>
+
+            <button class="btn btn-success btn-block" type="submit">
+                <i class="material-icons">
+                    description
+                </i>
+                تایید</button>
+
+
+        </div>
+    </div>
+</form>
+{% endif %}

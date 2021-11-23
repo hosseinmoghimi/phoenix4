@@ -1,0 +1,21 @@
+{% extends "library/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+<h3>
+    کتابخانه
+</h3>
+<div class="row">
+    <div class="col-md-12">
+        {% include "library/includes/books-app/template.html" %}
+    </div> 
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% include "library/includes/books-app/script.html" %}
+{% endblock script %}

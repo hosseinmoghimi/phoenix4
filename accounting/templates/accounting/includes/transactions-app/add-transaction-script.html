@@ -1,0 +1,62 @@
+{% load static %}
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+<script>
+    let add_transaction_app = new Vue({
+        el: "#add-transaction-app",
+        data: {
+            financial_accounts: financial_accounts,
+            new_transaction_title: "",
+            new_transaction_amount: "0",
+            pay_from_id: 0,
+            pay_to_id: 0,
+            new_transaction_description: "",
+            payment_method: "",
+            waiting: false,
+            done: false,
+            date_paid: current_date
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+        },
+        methods: {
+            swap: function () {
+                let pay_to_id = this.pay_from_id
+                let pay_from_id = this.pay_to_id
+                this.pay_to_id = pay_to_id
+                this.pay_from_id = pay_from_id
+            },
+            add_transaction: function () {
+                add_transaction_app.waiting = true
+                let url_add_transaction = "{% url 'accounting:add_transaction' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    pay_to_id: this.pay_to_id,
+                    pay_from_id: this.pay_from_id,
+                    amount: this.new_transaction_amount,
+                    title: this.new_transaction_title,
+                    description: this.new_transaction_description,
+                    payment_method: this.payment_method,
+                    date_paid: this.date_paid,
+                }
+                $.post(url_add_transaction, payload).done((data) => {
+                    add_transaction_app.amount = ""
+                    add_transaction_app.title = ""
+                    add_transaction_app.description = ""
+                    add_transaction_app.waiting = false
+                    if(typeof transactions_app !="undefined"){
+                        transactions_app.transactions.push(data.transaction)
+                    }
+                    if (data.result === 'SUCCEED') {
+                        add_transaction_app.done = true
+                        setTimeout(() => {
+                            add_transaction_app.done = false
+
+                        }, 3000);
+                    }
+                })
+            }
+        },
+    })
+</script>

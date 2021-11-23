@@ -1,12 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {{material_request.pk}}
-</body>
-</html>
+{% extends "projectmanager/layout.html" %}
+
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+
+
+
+<h3 class="text-center">
+
+    <i class="material-icons">engineering</i>
+    <small class="text-secondary">
+        درخواست متریال
+        شماره
+        {{material_request.pk}}
+
+    </small>
+    {% if perms.projectmanager.change_materialrequest %}
+    <a title="ویرایش" target="_blank" href="{{material_request.get_edit_url}}">
+        <i class="material-icons">
+            edit
+        </i>
+    </a>
+    {% endif %}
+</h3>
+
+{% include "projectmanager/includes/material-request-app/template.html" %}
+
+
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let parent_id = parseInt("{{parent_id}}")
+
+</script>
+{% include "projectmanager/includes/material-request-app/script.html" %}
+
+
+
+
+
+{% endblock %}

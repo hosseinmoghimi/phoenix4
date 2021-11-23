@@ -1,14 +1,73 @@
+{% if add_employee_form %}
 <script>
-    
+    let employees = JSON.parse(`{{employees_s|escapejs}}`)
+
+    let all_profiles = JSON.parse(`{{all_profiles_s|escapejs}}`)
+    let url_add_employee = "{% url 'projectmanager:add_employee' %}"
+
+    let employees_app_data = {
+        employees: employees,
+        add_employee_form_first_name: "",
+        add_employee_form_last_name: "",
+        show_add_form: false,
+        waiting: false,
+        profiles: [],
+        add_employee_form_username: "",
+        add_employee_form_password: "",
+
+    }
+</script>
+{% else %}
+<script>
+    let employees = JSON.parse(`{{employees_s|escapejs}}`)
+    let all_profiles = []
+    let employees_app_data = {
+        employees: employees,
+        add_employee_form_first_name: "",
+        add_employee_form_last_name: "",
+        show_add_form: false,
+        waiting: false,
+        profiles: [],
+
+    }
+</script>
+{% endif %}
+
+<script>
     let employees_app = new Vue({
         el: "#employees-app",
-        data: {
-            employees: [],
-            waiting:false,
-        },
+        data: employees_app_data,
         methods: {
-            add_employee: function () {
+            filter: function () {
+                employees_app.profiles = all_profiles.filter((profile) => {
+                    return (profile.first_name.indexOf(employees_app.add_employee_form_first_name) > -1) && (profile.last_name.indexOf(employees_app.add_employee_form_last_name) > -1)
+                })
+            },
+            add_employee: function (profile_id) {
+                employees_app.waiting = true
+                if (typeof organization_unit_id == 'undefined')
+                    return
 
+                let url = url_add_employee
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    organization_unit_id: organization_unit_id,
+                    profile_id: profile_id,
+                    password: this.add_employee_form_password,
+                    username: this.add_employee_form_username,
+                    first_name: this.add_employee_form_first_name,
+                    last_name: this.add_employee_form_last_name,
+                }
+                // //console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    employees_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        // //console.log(data)
+                        this.employees.push(data.employee)
+                    }
+                })
             },
         }
     })

@@ -1,0 +1,63 @@
+{% if our_works %}
+  
+<div class="cd-section" id="projects">
+
+    <!--     *********    PROJECTS 3     *********      -->
+    <div class="projects-3 section-dark" id="projects-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto text-center">
+                    <h6 class="category text-muted text-center">
+                        {{ourwork_pretitle_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{ourwork_pretitle_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+                    </h6>
+                    <h2 class="title text-center">
+                   {{ourwork_title_param.value}}
+                   
+                   {% if perms.core.change_parameter %}
+                   {{ourwork_title_param.get_edit_btn|safe}}
+                     
+                   {% endif %}
+                    </h2>
+                </div>
+            </div>
+            <div class="row">
+                {% for our_work in our_works %}
+                <div class="col-md-5 ml-auto mr-auto">
+                    <div class="card card-plain">
+                        <a href="{{our_work.get_absolute_url}}">
+                            <div class="card-header card-header-image">
+                                <img src="{{our_work.thumbnail}}">
+                            </div>
+                        </a>
+                        <div class="card-body ">
+                            <h6 class="card-category">
+                                
+                                {% if our_work.sub_title %}
+
+                                {{our_work.sub_title}}
+                                {% endif %}
+                            </h6>
+                            <a href="{{our_work.get_absolute_url}}">
+                                <h4 class="card-title">{{our_work.title}}</h4>
+                            </a>
+                            <div class="card-description">
+                                {% if our_work.short_description %}
+                                {{our_work.short_description|safe}}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--     *********    END PROJECTS 3      *********      -->
+
+</div>
+
+{% endif %}

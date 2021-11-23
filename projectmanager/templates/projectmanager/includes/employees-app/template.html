@@ -1,72 +1,103 @@
 {% load static %}
-<div class="card mb-3" id="employees-app">
-    <div class="card-header">
 
-        <h5 class="card-title text-center farsi">
-            پرسنل
-        </h5>
+<div id="accordion-employees">
+    <div class="card mb-3" id="employees-app">
+        <div class="card-header" id="headingEmployees">
 
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEmployees"
+                    aria-expanded="true" aria-controls="collapseEmployees">
+                    پرسنل
+                </button>
 
-    </div>
-
-    <div class="card-body">
-        {% for employee in organization_unit.employee_set.all %}
-        <a href="{{employee.get_absolute_url}}">
-            <div class="media">
-                <img class="rounded-circle mr-3" width="64" src="{{employee.profile.image}}" alt="">
-                <div class="media-body farsi">
-
-                    <h5>
-                        {{employee.profile.name}}
-
-                    </h5>
+            </h5>
 
 
+        </div>
+        <div id="collapseEmployees" class="collapse {% if organization_unit %}show{% endif %}"
+            aria-labelledby="headingEmployees" data-parent="#accordion-employees">
+            <div class="card-body">
+
+                <div v-for="employee in employees" class="mb-3">
+                    <a :href="employee.get_absolute_url">
+                        <div class="media">
+                            <img class="rounded-circle mr-3 " width="64" :src="employee.profile.image" alt="">
+                            <div class="media-body farsi">
+
+                                <h5 v-text="employee.profile.name">
+
+                                </h5>
+                                <div>
+                                    <a :href="employee.organization_unit.employer.get_absolute_url">
+                                        <small v-text=employee.organization_unit.employer.title></small>
+                                    </a>
+                                    /
+                                    <a :href="employee.organization_unit.get_absolute_url">
+                                        <small v-text=employee.organization_unit.title></small>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-        </a>
-
-        {% endfor %}
-        <div v-for="employee in employees">
-            <a :href="employee.get_absolute_url">
-                <div class="media">
-                    <img class="rounded-circle mr-3 " width="64" :src="employee.profile.image" alt="">
-                    <div class="media-body farsi">
-
-                        <h5 v-text="employee.profile.name">
-
-                        </h5>
 
 
+                <div v-for="profile in profiles">
+                    <div class="media">
+                        <img class="rounded-circle mr-3 " width="64" :src="profile.image" alt="">
+                        <div class="media-body farsi">
+
+                            <a :href="profile.get_absolute_url">
+                                <h5 v-text="profile.name">
+
+                                </h5>
+                            </a>
+                            <button class="btn btn-primary" @click="add_employee(profile.id)">
+                                <i class="material-icons">
+                                    add
+                                </i>
+                            </button>
+
+                        </div>
                     </div>
                 </div>
-            </a>
-        </div>
-    </div>
-    <div class="card-footer ">
 
-        {% if add_employee_form %}
-
-        <form @submit.prevent="add_employee()">
-            <div class="row">
-                <div class="col-8">
-                    <input required type="text" v-model="new_employee_fist_name" class="farsi form-control"
-                        placeholder="نام پرسنل جدید">
-                    <input required type="text" v-model="new_employee_last_name" class="farsi form-control"
-                        placeholder="نام خانوادگی پرسنل جدید">
-
-                </div>
-                <div class="col-4">
-                    <img  v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-                    <button   v-if="!waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
-
-                </div>
             </div>
+            {% if add_employee_form %}
+            <div class="card-footer ">
 
-        </form>
-        {% endif %}
+                <button class="btn btn-primary" v-if="!show_add_form" @click="show_add_form=true">
+                    <i class="material-icons">
+                        add
+                    </i>
+                </button>
+                <form v-if="show_add_form" @submit.prevent="add_employee(0)">
+                    <div class="row">
+                        <div class="col-8">
+                            <input @input="filter" required type="text" v-model="add_employee_form_first_name"
+                                class="farsi form-control" placeholder="نام پرسنل جدید">
+                            <input @input="filter" required type="text" v-model="add_employee_form_last_name"
+                                class="farsi form-control" placeholder="نام خانوادگی پرسنل جدید">
+                            <input required type="text" v-model="add_employee_form_username" class="farsi form-control"
+                                placeholder="نام کاربری پرسنل جدید">
+                            <input required type="text" v-model="add_employee_form_password" class="farsi form-control"
+                                placeholder="کلمه عبور پرسنل جدید">
+
+                        </div>
+                        <div class="col-4">
+                            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                            <button v-if="!waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
+
+                        </div>
+                    </div>
+
+                </form>
 
 
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>

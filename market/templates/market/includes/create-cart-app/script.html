@@ -1,0 +1,123 @@
+<script>
+    let url_save_cart = "{% url 'market:save_cart' %}"
+    let cart_line_component_template = `{% include 'market/includes/cart-app/component.html' %}`
+    let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
+    let add_to_cart_component = Vue.component('cart-line-component', {
+        data: function () {
+            return {
+
+            }
+        },
+        methods: {
+            add_quantity: function (a) {
+                if ((this.cart_line.quantity + a) < 0) {
+                    this.cart_line.quantity = 0
+                }
+                else if ((this.cart_line.quantity + a) > this.cart_line.shop.available) {
+                    this.cart_line.quantity = this.cart_line.shop.available
+                }
+                else {
+                    this.cart_line.quantity = this.cart_line.quantity + a
+                }
+            },
+
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            add_to_cart: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    quantity: this.quantity,
+                    shop_id: this.shop.id,
+                }
+
+                let aa = this
+                let posting = $.post(url_add_to_cart, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        aa.message = message
+                        aa.done = true
+                        setTimeout(() => {
+                            aa.done = false
+                        }, 1800);
+                    }
+                })
+            },
+
+
+        },
+        props: ['cart_line'],
+        template: cart_line_component_template,
+    })
+
+
+    let create_cart_app = new Vue({
+        el: "#cart-app",
+        data: {
+            cart_lines: cart_lines,
+            total: 0,
+            checkout_done:false,
+        },
+        mounted: function () {
+            this.total = 0
+            cart_lines.forEach(line => {
+                this.total += (line.quantity * line.shop.unit_price)
+            });
+        },
+        methods: {
+            add_cart_line:function(){
+                let url = url_add_cart_line
+                
+                let customer_id = 1
+                let payload = {
+                    customer_id: customer_id,
+                    product_id: product_id,
+                    product_bar_code: product_bar_code,
+                    quantity:quantity,
+                    unit_price:unit_price,
+                    unit_name:unit_name,
+                    customer_id:customer_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        cart_app.cart_lines = data.cart_lines
+                        cart_app.checkout_done = true
+                    }
+                })
+            },
+            checkout: function () {
+                let url = url_checkout_cart
+                let cart_lines = []
+                this.cart_lines.forEach(cart_line => {
+                    cart_lines.push({
+                        shop_id: cart_line.shop.id,
+                        quantity: cart_line.quantity,
+                    })
+                });
+                cart_lines = JSON.stringify(cart_lines)
+                let customer_id = 1
+                let payload = {
+                    customer_id: customer_id,
+                    cart_lines: cart_lines,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        cart_app.cart_lines = data.cart_lines
+                        cart_app.checkout_done = true
+                    }
+                })
+            },
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+        },
+        components: {
+            add_to_cart_component,
+        }
+    })
+</script>

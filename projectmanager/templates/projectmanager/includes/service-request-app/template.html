@@ -1,0 +1,239 @@
+{% load static %}
+{% load to_persian_date %}
+{% load to_price %}
+<div id="service-request-app">
+
+    <div class="card mb-3">
+        <div class="card-body">
+
+            <h5 class="text-right">
+                سرویس :
+                <a href="{{service_request.service.get_absolute_url}}">
+
+                    {{service_request.service.title}}
+                </a>
+                <span class="badge badge-{{service_request.get_status_color}}">{{service_request.status}}</span>
+
+
+            </h5>
+
+            <h6 class="text-secondary">
+                پروژه :
+                <a href="{{service_request.project.get_absolute_url}}">
+
+                    {{service_request.project.title}}
+                </a>
+            </h6>
+
+
+            <p>
+                <small class="text-muted">
+                    تاریخ ثبت :
+                </small>
+                {{service_request.persian_date_added}}
+            </p>
+            <p>
+                <small class="text-muted">
+                    تاریخ درخواست :
+                </small>
+                {{service_request.persian_date_requested}}
+            </p>
+            <p>
+                <small class="text-muted">
+                    تاریخ تحویل :
+                </small>
+                {{service_request.persian_date_delivered}}
+            </p>
+
+
+            <p>
+
+
+                پرسنل :
+                <a target="_blank" href="{{service_request.handler.get_absolute_url}}">
+                    <img src="{{service_request.handler.profile.image}}" class="ml-2 rounded-circle" width="32" alt="">
+                    {{service_request.handler.profile.name}}
+                </a>
+                <small class="mr-3 text-secondary">
+                    شاغل در
+
+                </small>
+                <small class="mr-4">
+
+                    <a target="_blank" href="{{service_request.handler.organization_unit.employer.get_absolute_url}}">
+
+                        {{service_request.handler.organization_unit.employer.title}}
+                    </a>
+                </small>
+                /
+                <small>
+
+                    <a target="_blank" href="{{service_request.handler.organization_unit.get_absolute_url}}">
+
+                        {{service_request.handler.organization_unit.title}}
+                    </a>
+                </small>
+
+
+
+
+            </p>
+
+
+
+
+
+            <p class="px-4 py-3 alert alert-success rtl ">
+
+
+                {{service_request.quantity}}
+                <small>
+                    {{service_request.unit_name}}
+                </small>
+
+                *
+
+
+                {{service_request.unit_price|to_price_pure}} =
+                <strong>
+                    {{service_request.line_total|to_price}}
+                </strong>
+
+                <span class=" mx-4 ">
+                    {{service_request.line_total|to_horuf}} {{CURRENCY}}
+                </span>
+
+            </p>
+
+
+
+
+        </div>
+        <div class="card-footer">
+
+
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+
+                امضا ها
+            </h4>
+        </div>
+
+        <div class="card-body">
+            
+            <table class="table">
+
+                <tbody>
+                    {% for signature in service_request.requestsignature_set.all %}
+                    <tr>
+                        <td>
+                            <div class="media">
+                                <a href="{{signature.employee.get_absolute_url}}">
+                                    <img src="{{signature.employee.profile.image}}" class="rounded-circle mr-3" width=48
+                                        alt="">
+                                </a>
+                                <div class="media-body pr-3">
+                                    <div>
+
+                                        {{signature.get_status_tag|safe}}
+                                    </div>
+                                    <div>
+
+                                        <a href="{{signature.employee.get_absolute_url}}">
+                                            {{signature.employee.profile.name}}
+                                        </a>
+                                        <small class="mx-2 text-secondary">
+
+                                            {{signature.date_added|to_persian_datetime|safe}}
+                                        </small>
+                                        {{signature.get_edit_btn|safe}}
+                                    </div>
+                                    <p class="text-{{signature.get_status_color}}">
+                                        <small>
+                                            {% if signature.description %}
+
+
+                                            {{signature.description}}
+                                            {% endif %}
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+                    {% endfor %}
+                    <tr v-for="signature in signatures">
+                        <td>
+                            <div class="media">
+                                <a :href="signature.employee.get_absolute_url">
+                                    <img :src="signature.employee.profile.image" class="rounded-circle mr-3" width=48
+                                        alt="">
+                                </a>
+                                <div class="media-body pr-3">
+                                    <div>
+
+                                        <span :class="'badge badge-'+signature.get_status_color"
+                                            v-text="signature.status"></span>
+                                    </div>
+                                    <div>
+                                        <a :href="signature.employee.get_absolute_url">
+                                            <span v-text="signature.employee.profile.name"></span>
+                                        </a>
+
+                                        <small class="text-secondary" v-text="signature.persian_date_added">
+                                        </small>
+
+                                        <a target="_blank" :href="signature.get_edit_url">
+                                            <i class="material-icons">
+                                                edit
+                                            </i>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <small :class="'text-'+signature.get_status_color"
+                                            v-text="signature.description">
+                                        </small>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+
+          
+        </div>
+        <div class="card-footer">
+            {% if add_signature_form %}
+
+
+          {% include "projectmanager/includes/service-request-app/add-signature-form.html" %}
+          {% endif %}
+         
+          {% if add_signature_form_ %}
+
+
+          {% include "projectmanager/includes/material-request-app/add-signature-form-.html" %}
+          {% endif %}
+         
+            {% if not add_signature_form and not add_signature_form_ %}
+            <p>
+                شما مجوز لازم برای امضای این درخواست را ندارید.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>

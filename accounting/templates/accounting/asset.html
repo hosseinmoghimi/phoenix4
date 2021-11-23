@@ -1,0 +1,35 @@
+{% extends "accounting/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load to_transaction_color %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+{{asset.title}}
+{% if perms.accounting.change_asset %}
+{{asset.get_edit_btn|safe}}
+
+
+{% endif %}
+            </div>
+            <div class="card-body">
+{% if asset.description %}
+<div>
+    {{asset.description|safe}}
+</div>
+  
+{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

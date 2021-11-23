@@ -1,0 +1,81 @@
+<script>
+    let image = { image: "{{product.image}}" }
+    let url_add_page_image = "{% url 'core:add_page_image' %}"
+    let url_delete_page_image = "{% url 'core:delete_page_image' %}"
+    let product_id = parseInt("{{product.id}}")
+    let images = JSON.parse(`{{images_s|escapejs}}`)
+    let selected_image = {}
+    if (images.length > 0)
+        selected_image = images[0]
+    let product_images_app = new Vue({
+        el: "#product-images-app",
+        mounted: function () {
+            this.select_image(image)
+        },
+        data: {
+            selected_image: selected_image,
+            images: images,
+            show_add_page_image_form: false,
+            show_delete_page_image_form: false,
+            add_page_image_form_title: "تصویر بدون نام",
+            add_page_image_form_file: "",
+        },
+        methods: {
+            select_image: function (image) {
+                this.selected_image = image
+            },
+            add_page_image: function () {
+                let title = this.add_page_image_form_title
+                let formData = new FormData();
+                let image = $('#add-page-image-form')[0].elements[1].files[0]
+                formData.append("image", image);
+                formData.append("title", title);
+                formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+                formData.append("page_id", product_id);
+
+                $.ajax({
+                    url: url_add_page_image,
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data != 0) {
+                            if (data.result === 'SUCCEED') {
+                                product_images_app.images.push(data.page_image.image)
+                                // product_images_app.add_page_image_form_title = ''
+                                product_images_app.add_page_image_form_file = ''
+                                product_images_app.show_add_page_image_form = false
+                            }
+                        }
+                        else {
+                        }
+                    },
+                });
+
+            },
+            delete_page_image: function () {
+                let image_id = this.selected_image.id
+                let payload = {
+                    image_id: image_id,
+                    page_id: page_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url_delete_page_image, payload)
+                posting.done((data) => {
+                    if (data.result === "SUCCEED") {
+                        product_images_app.images = product_images_app.images.filter(im => im.id != image_id)
+                        if(product_images_app.images.length>0)
+                            product_images_app.selected_image = product_images_app.images[0]
+                        else
+                            product_images_app.selected_image={ image: "{{SITE_URL}}static/market/img/pages/image/product.jpg" , thumbnail: "{{SITE_URL}}static/market/img/pages/image/product.jpg" }
+
+                    }
+
+                })
+
+            },
+
+        }
+    })
+</script>

@@ -1,0 +1,66 @@
+<script>
+    let specifications = JSON.parse(`{{specifications_s|escapejs}}`)
+
+
+    let url_add_shop = "{% url 'market:add_shop' %}"
+    let shops_app = new Vue({
+        el: "#shops-app",
+        mounted: function () {
+
+        },
+        data: {
+            unit_name: "جفت",
+            unit_price: "",
+            buy_price: "0",
+            available: 3,
+            old_price:"",
+            level: "{{level}}",
+            shops: [],
+            specifications: specifications,
+            selected_specifications: []
+        },
+        methods: {
+            to_price: function (value) {
+                return to_price(value, "{{CURRENCY}}")
+            },
+            toggle_specification: function (specification) {
+                let added = true
+                i = 0
+                this.selected_specifications.forEach(specification1 => {
+                    if (specification.id == specification1.id) {
+                        added = false
+                        this.selected_specifications.splice(i, 1)
+                        return
+                    }
+                    i++
+                });
+                if (added) {
+                    this.selected_specifications.push({ id: specification.id })
+                }
+            },
+            add_shop: function (product_id, supplier_id) {
+                let specifications1 = JSON.stringify(this.selected_specifications)
+                
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    product_id: product_id,
+                    unit_name: this.unit_name,
+                    supplier_id: supplier_id,
+                    level: this.level,
+                    buy_price:this.buy_price,
+                    old_price:this.old_price,
+                    specifications: specifications1,
+                    unit_price: this.unit_price,
+                    available: this.available,
+                }
+
+                let posting = $.post(url_add_shop, payload)
+                posting.done((data) => {
+                    // add_to_cart_app.shops=data.shops
+                    shops_app.shops.push(data.shop)
+                    add_to_cart_app.shops.push(data.shop)
+                })
+            },
+        }
+    })
+</script>

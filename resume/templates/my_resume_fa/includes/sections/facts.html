@@ -1,0 +1,42 @@
+{% load static %}
+
+    <!-- ======= Facts Section ======= -->
+    <section id="facts" class="facts">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>Facts</h2>
+                <div>
+
+                    {{resume_index.facts_top|safe}}
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                {% if perms.resume.add_resumefact %}
+                {{admin_utility.get_add_fact_btn|safe}}
+                {% endif %}
+                {% for fact in resume_index.resumefact_set.all %}
+                  
+                <div class="col-lg-3 col-md-6">
+                    <div class="count-box">
+                        {{fact.icon|safe}}
+                        
+                        <span data-purecounter-start="0" data-purecounter-end="{{fact.count}}" data-purecounter-duration="1"
+                            class="purecounter"></span>
+                        <p>{{fact.title}}</p>
+                    </div>
+                    {% if perms.resume.change_resumefact %}
+                    <div class="text-center">
+
+                        {{fact.get_edit_btn|safe}}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+    </section><!-- End Facts Section -->

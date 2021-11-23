@@ -1,0 +1,79 @@
+{% extends "farm/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+
+
+{% block farm_content %}
+<div class="row">
+    <div class="col-3">
+
+    </div>
+
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="title text-center">
+
+                    هزینه
+                </h3>
+            </div>
+            <div class="card-body text-right">
+                <p class="alert alert-success">
+                    <span class="h4">
+                        {{cost.title}}
+                    </span>
+<br>
+<span title=" دسته بندی" class="material-icons">
+    category
+    </span>
+                   
+                    {{cost.category}}
+                    <br>
+
+                    هزینه شده در :
+                    <a href="{{cost.saloon.get_absolute_url}}">
+
+
+                        {{cost.saloon}}
+
+                    </a>
+                </p>
+
+
+
+
+                <p class=" alert alert-danger farsi ">
+
+                    {{cost.value|to_price}}
+                    <br>
+                    {{cost.value|to_horuf}} {{CURRENCY}}
+                </p>
+
+
+                <p class="alert alert-warning">
+                    تاریخ هزینه :
+                    {{cost.persian_cost_date}}
+                </p>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block farm_script %}
+
+{% endblock %}

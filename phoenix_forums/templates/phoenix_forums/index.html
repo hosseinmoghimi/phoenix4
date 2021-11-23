@@ -1,0 +1,57 @@
+{% extends "phoenix_forums/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">
+                    انجمن ها
+                </h3>
+            </div>
+            <div class="card-body">
+                {% for forum in forums %}
+                <div class="farsi text-right">
+                    <a href="{{forum.get_absolute_url}}">
+                        {{forum.title}}
+                    </a>
+                    <div class="mr-5">
+                        {% for forum1 in forum.childs %}
+                        <div class="farsi text-right">
+                            <a href="{{forum1.get_absolute_url}}">
+                                {{forum1.title}}
+                            </a>
+                            <div class="mr-5">
+                                {% for forum2 in forum1.childs %}
+                                <div class="farsi text-right">
+                                    <a href="{{forum2.get_absolute_url}}">
+                                        {{forum2.title}}
+                                    </a>
+                                    <div class="mr-5">
+
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    let parent_id = 0
+</script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% endblock %}

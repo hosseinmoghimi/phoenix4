@@ -1,0 +1,76 @@
+{% load static %}
+<div class="card" id="chat-app">
+    <div class="card-body">
+{% include "messenger/includes/chat-app/send-message.html" %}
+     
+        <div class="mb-5"></div>
+        <div v-for="message in messages" class="mb-5">
+
+            <div class="media" class="mb-5">
+                <a :href="message.sender.get_absolute_url" :title="message.sender.name">
+
+                    <img :src="message.sender.image" width="96" class="rounded-circle" alt="">
+                </a>
+                <div class="media-body mr-3">
+
+                    <h5>
+                        <span v-text="message.title"></span>
+
+                    </h5>
+                    <p>
+
+                        <span v-text="message.body" class="text-muted mb-4"></span>
+                    </p>
+                    <h6 class="text-muted">
+                        <a :href="message.sender.get_absolute_url">
+                            <span v-text="message.sender.name"></span>
+                        </a>
+                        <small class="mr-2">
+
+                            <span v-text="message.perisan_date_send"></span>
+                        </small>
+                    </h6>
+                </div>
+            </div>
+
+        </div>
+        {% for message in messages %}
+
+        <div class="media mb-5">
+            <a href="{{message.sender.get_absolute_url}}" title="{{message.sender.name}}">
+
+                <img src="{{message.sender.image}}" width="96" class="rounded-circle" alt="">
+            </a>
+            <div class="media-body mr-3">
+
+                <h5>
+                    <span>{{message.title}}</span>
+
+                </h5>
+                <p>
+
+                    <span class="text-muted mb-4">{{message.body}}</span>
+                </p>
+                <h6 class="text-muted">
+                    <a href="{{message.sender.get_absolute_url}}">
+                        {{message.sender.name}}
+                    </a>
+                    <small class="mr-2">
+
+                        {{message.perisan_date_send}}
+                    </small>
+                </h6>
+            </div>
+        </div>
+
+
+        {% endfor %}
+
+
+
+
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>

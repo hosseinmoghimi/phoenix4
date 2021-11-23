@@ -1,0 +1,57 @@
+{% load static %}
+<script src="/static/material-dashboard-5/assets/js/core/popper.min.js"></script>
+<script src="/static/material-dashboard-5/assets/js/core/bootstrap.min.js"></script>
+<script src="/static/material-dashboard-5/assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="/static/material-dashboard-5/assets/js/plugins/smooth-scrollbar.min.js"></script>
+<!-- Kanban scripts -->
+<script src="/static/material-dashboard-5/assets/js/plugins/dragula/dragula.min.js"></script>
+<script src="/static/material-dashboard-5/assets/js/plugins/jkanban/jkanban.js"></script>
+<!--  Plugin for TypedJS, full documentation here: https://github.com/inorganik/CountUp.js -->
+<script src="/static/material-dashboard-5/assets/js/plugins/countup.min.js"></script>
+<script>
+  if (document.getElementById('state1')) {
+    const countUp = new CountUp('state1', document.getElementById("state1").getAttribute("countTo"));
+    if (!countUp.error) {
+      countUp.start();
+    } else {
+      console.error(countUp.error);
+    }
+  }
+  if (document.getElementById('state2')) {
+    const countUp = new CountUp('state2', document.getElementById("state2").getAttribute("countTo"));
+    if (!countUp.error) {
+      countUp.start();
+    } else {
+      console.error(countUp.error);
+    }
+  }
+  if (document.getElementById('state3')) {
+    const countUp = new CountUp('state3', document.getElementById("state3").getAttribute("countTo"));
+    if (!countUp.error) {
+      countUp.start();
+    } else {
+      console.error(countUp.error);
+    }
+  }
+  if (document.getElementById('state4')) {
+    const countUp = new CountUp('state4', document.getElementById("state4").getAttribute("countTo"));
+    if (!countUp.error) {
+      countUp.start();
+    } else {
+      console.error(countUp.error);
+    }
+  }
+</script>
+<script>
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = {
+      damping: '0.5'
+    }
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="/static/material-dashboard-5/assets/js/material-dashboard.min.js?v=3.0.0"></script>

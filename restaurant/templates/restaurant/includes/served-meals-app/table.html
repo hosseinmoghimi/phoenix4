@@ -1,0 +1,81 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="served_meal in served_meals">
+            <td>
+                <div class="media">
+                    <a :href="served_meal.guest.get_absolute_url">
+                        <img :src="served_meal.guest.profile.image" class="rounded-circle" width="48" alt="">
+                    </a>
+                    <div class="media-body mt-3 mr-2">
+                        <div>
+
+                            <a :href="served_meal.guest.get_absolute_url">
+                                <span v-text="served_meal.guest.profile.name"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+
+            <td>
+                 <span v-text="served_meal.quantity"></span>
+                   
+
+            </td>
+
+            <td>
+                <div v-for="food in served_meal.meal.foods" class="mx-2">
+                    <a :href="food.get_absolute_url">
+
+                        <span v-text="food.title"></span>
+                    </a>
+
+                </div>
+                </span>
+            </td>
+            <td>
+                <span v-text="served_meal.meal.meal_type"></span>
+                <span v-text="served_meal.meal.persian_date_served"></span>
+            </td>
+            <td>
+                <small class="text-muted">
+
+                    <span v-text="served_meal.persian_date_served"></span>
+                </small>
+
+            </td>
+            <td>
+                {% if perms.restaurant.change_reservedmeal %}
+                <button class="btn btn-danger" @click="unserve_meal(served_meal.meal.id,served_meal.guest.id)">
+                    حذف سرو
+                </button>
+                {% endif %}
+
+                {% if perms.restaurant.change_reservedmeal %}
+                <a :href="served_meal.get_edit_url" target="_blank" title="ویرایش">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {% endif %}
+
+            </td>
+        </tr>
+    </tbody>
+</table>

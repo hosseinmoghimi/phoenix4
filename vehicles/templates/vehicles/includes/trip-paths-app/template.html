@@ -1,0 +1,76 @@
+<div class="card" id="trip-paths-app">
+    <div class="card-header">
+        <h4 class="title">
+            <a href="{% url 'vehicles:trippaths' %}">
+                مسیر های سفر
+            </a>
+        </h4>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>عنوان مسیر</th>
+                <th>مبدا</th>
+                <th>مقصد</th>
+                <th>هزینه</th>
+                <th>فاصله</th>
+                <th>زمان تقریبی</th>
+            </thead>
+            <tbody>
+                <tr v-for="path in trip_paths">
+                    <td>
+                        <a :href="path.get_absolute_url">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                            <span v-text="path.title"></span>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a :href="path.source.get_absolute_url">
+                            <i class="material-icons">
+                                place
+                            </i>
+                            <span v-text="path.source.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a :href="path.destination.get_absolute_url">
+                            <i class="material-icons">
+                                place
+                            </i>
+                            <span v-text="path.destination.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="to_price(path.cost,'{{CURRENCY}}')"></span>
+
+                    </td>
+                    <td>
+                        <div class="ltr">
+
+                            <span v-text="path.distance"></span> 
+                            km
+                            
+                        </div>
+                    </td>
+                    <td>
+                        <span v-text="path.duration"></span>
+                        دقیقه
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    {% if add_trip_path_form %}
+
+    <div class="card-footer">
+       {% include "vehicles/includes/trip-paths-app/add-trip-path-form.html" %}
+    </div>
+    {% endif %}
+
+</div>

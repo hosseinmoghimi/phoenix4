@@ -1,0 +1,58 @@
+{% extends wide_layout_parent %}
+{% load static %}
+{% load to_price %}
+{% load to_transaction_color %}
+{% load to_persian_date %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        {% include "accounting/includes/financial-accounts-app/card.html" %}
+    </div>
+    <div class="col-md-8">
+        {% include "accounting/includes/transactions-app/add-transaction-form.html" %}
+
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center card-title">
+                    {{financial_account.profile.name}}
+                </h4>
+            </div>
+            <div class="card-body">
+                <p>
+
+                    <span class="alert alert-{{financial_account.total|to_transaction_color}}">
+                        مانده : {{financial_account.total|to_price}}
+                    </span>
+                </p>
+                <div class="my-3">
+
+                    {% include "accounting/includes/transactions-app/template.html" %}
+                </div>
+                <p>
+
+                    <span class="alert alert-{{financial_account.total|to_transaction_color}}">
+                        مانده : {{financial_account.total|to_price}}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+    let financial_accounts = JSON.parse(`{{financial_accounts_s|escapejs}}`)
+
+    $(document).ready(() => {
+        add_transaction_app.pay_from_id = parseInt("{{me_financial_account.id}}")
+        add_transaction_app.pay_to_id = parseInt("{{financial_account.id}}")
+    })
+</script>
+{% include "accounting/includes/transactions-app/script.html" %}
+{% include "accounting/includes/transactions-app/add-transaction-script.html" %}
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends wide_layout_parent %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+
+{% block content %}
+<div class="row farsi text-right">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{transaction.title}}
+
+                </h4>
+            </div>
+            <div class="card-body">
+                <h4>
+
+                    {{transaction.title}}
+                </h4>
+                {% if perms.accounting.vhange_transaction %}
+                <a href="{{transaction.get_edit_url}}" target="_blank" title="ویرایش">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+
+                {% endif %}
+                <div>
+
+                    <small class="text-muted">
+                        مبلغ تراکنش :
+
+                    </small>
+                    {{transaction.amount|to_price}}
+                </div>
+
+                <div>
+                    <small class="text-muted">
+                        بستانکار :
+                    </small>
+                    <a href="{{transaction.pay_from.get_absolute_url}}">
+                        {{transaction.pay_from.profile.name}}
+                    </a>
+
+                </div>
+                <div>
+                    <small class="text-muted">
+
+                        بدهکار :
+                    </small>
+                    <a href="{{transaction.pay_to.get_absolute_url}}">
+                        {{transaction.pay_to.profile.name}}
+                    </a>
+                </div>
+                <div>
+                    <small class="text-muted">
+                        تاریخ تراکنش :
+                    </small>
+
+                    {{transaction.date_paid|to_persian_datetime|safe}}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% block money %}
+
+    {% endblock money %}
+ 
+    <div class="col-md-12">
+        {% include "core/includes/page-images-app/template.html" %}
+    </div>
+    <div class="col-md-6">
+        {% include "core/includes/page-documents-app/template.html" %}
+
+
+    </div>
+    <div class="col-md-6">
+{% include "core/includes/page-tags-app/template.html" %}
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let page_id=parseInt("{{transaction.id}}")
+</script>
+{% include "core/includes/page-images-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+
+
+{% endblock %}

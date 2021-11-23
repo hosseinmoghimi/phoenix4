@@ -13,7 +13,8 @@ def to_price(value,unit=CURRENCY):
         a=separate(value)
         return sign+a+' '+unit
     except:
-        return LEO_ERRORS.error_to_price_template_tag
+        # return LEO_ERRORS.error_to_price_template_tag
+        return ""
 
 
 def separate(price):

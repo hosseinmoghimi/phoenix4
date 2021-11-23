@@ -1,0 +1,39 @@
+<script>
+    let select_player_app = new Vue({
+        el: "#select-player-app",
+        data: {
+            first_name: "",
+            last_name: "",
+            mobile: "",
+            show_add_player_form: false,
+            players: [],
+            email: "",
+            message: "",
+            username: "",
+            password: "",
+            success_message: false,
+            danger_message: false,
+        },
+        methods: {
+            add_player: function () {
+                let url = "{% url 'mafia:add_player' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    first_name: this.first_name,
+                    last_name: this.last_name,
+                    username: this.username,
+                    password: this.password,
+                    mobile: this.mobile,
+                    profile_id: 0,
+
+                }
+                $.post(url, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        select_player_app.players.push(data.player)
+                        select_player_app.show_add_player_form = false
+                    }
+                })
+            }
+        }
+    })
+</script>

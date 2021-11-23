@@ -1,0 +1,48 @@
+<div class="card" id="areas-app">
+
+    <div class="card-header">
+        <h4 class="title text-center">
+            <a href="{% url 'vehicles:areas' %}">
+
+                محدوده ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+
+            <li class="nav-item" v-for="area in areas">
+                <a class="nav-link farsi docs-creator" :href="area.get_absolute_url">
+                    <span v-text="area.name"></span>
+                    (<small v-text="area.code"></small>)
+                </a>
+
+            </li>
+        </ul>
+    </div>
+
+    {% if add_area_form %}
+
+    <div class="card-footer">
+        <form @submit.prevent="add_area()">
+            <div class="row">
+                <div class="col-9">
+                    <select type="text" v-model="profile_id" id="" class="form-control farsi">
+                        <option value="{{profile.id}}">{{profile.name}}</option>
+                    </select>
+                    <input type="number" v-model="profile_id" id="">
+                </div>
+                <div class="col-3">
+
+                    <button class="btn btn-success btn-sm" type="submit">
+
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,103 @@
+<script>
+    let url_edit_order_line = "{% url 'market:edit_order_line' %}"
+    let order_line_component_template = `{% include 'market/includes/order-edit-app/order-line-component.html' %}`
+    let order_lines = JSON.parse(`{{order_lines_s|escapejs}}`)
+    let order_line_component = Vue.component('order-line-component', {
+        data: function () {
+            return {
+
+            }
+        },
+        methods: {
+            add_quantity: function (a) {
+                if ((this.cart_line.quantity + a) < 0) {
+                    this.cart_line.quantity = 0
+                }
+                else if ((this.cart_line.quantity + a) > this.cart_line.shop.available) {
+                    this.cart_line.quantity = this.cart_line.shop.available
+                }
+                else {
+                    this.cart_line.quantity = this.cart_line.quantity + a
+                }
+            },
+
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            save: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    quantity: this.order_line.quantity,
+                    product_id: this.order_line.product.id,
+                    unit_price: this.order_line.unit_price,
+                    unit_name: this.order_line.unit_name,
+                }
+
+                let aa = this
+                let posting = $.post(url_edit_order_line, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        let message = data.cart_line.quantity + " " + data.cart_line.shop.unit_name + " با موفقیت به سبد خرید شما افزوده شد."
+                        aa.message = message
+                        aa.done = true
+                        setTimeout(() => {
+                            aa.done = false
+                        }, 1800);
+                    }
+                })
+            },
+
+
+        },
+        props: ['order_line'],
+        template: order_line_component_template,
+    })
+
+
+    let edit_order_app = new Vue({
+        el: "#edit-order-app",
+        data: {
+            order_lines: order_lines,
+            total: 0,
+            checkout_done:false,
+        },
+        mounted: function () {
+            this.total = 0
+            order_lines.forEach(line => {
+                this.total += (line.quantity * line.unit_price)
+            });
+        },
+        methods: {
+            checkout: function () {
+                let url = url_checkout_cart
+                let cart_lines = []
+                this.cart_lines.forEach(cart_line => {
+                    cart_lines.push({
+                        shop_id: cart_line.shop.id,
+                        quantity: cart_line.quantity,
+                    })
+                });
+                cart_lines = JSON.stringify(cart_lines)
+                let customer_id = 1
+                let payload = {
+                    customer_id: customer_id,
+                    cart_lines: cart_lines,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                let posting = $.post(url, payload)
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+                        cart_app.cart_lines = data.cart_lines
+                        cart_app.checkout_done = true
+                    }
+                })
+            },
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+        },
+        components: {
+            order_line_component,
+        }
+    })
+</script>

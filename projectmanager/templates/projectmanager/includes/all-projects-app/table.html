@@ -1,0 +1,86 @@
+<table class="table table-striped">
+    <thead>
+        <th>
+            عنوان پروژه
+        </th>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+        <th>
+<span style="cursor: pointer;" @click="sort('employer')">
+کارفرما
+
+</span>
+        </th>
+
+        <th>
+            <span style="cursor: pointer;"  @click="sort('contractor')">
+            
+                پیمانکار
+            </span>
+        </th>
+
+        <th>
+            
+            <span style="cursor: pointer;"  @click="sort('total')"  >
+            ارزش پروژه
+            </span>
+        </th>
+
+        <th>
+            شروع / پایان
+        </th>
+    </thead>
+    <tbody>
+        <tr v-for="project in projects">
+            <td>
+                <a :href="project.get_absolute_url">
+                    <span v-text="project.title"></span>
+                </a>
+                <span class="pull-left">
+                    <small class="d-inline text-primary">
+
+                        <!-- <i  class="fa fa-star-o text-secondary" aria-hidden="true"></i> -->
+                        <i  v-for="item in project.likes_count" class="fa fa-star" style="color: #f3be0d !important;" aria-hidden="true"></i>
+                    </small>
+                </span>
+            </td>
+            <td> 
+                <span :class="'badge badge-'+project.get_status_color">
+                    <span v-text="project.status"></span>
+                </span>
+              
+               
+            </td>
+            <td>
+                <small class="mx-2">
+
+                    <span v-text="project.percentage_completed"></span>%
+                </small>
+            </td>
+            <td>
+                <a v-if="project.employer" :href="project.employer.get_absolute_url">
+                    <span v-text="project.employer.title"></span>
+                </a>
+            </td>
+            <td>
+                <a v-if="project.contractor" :href="project.contractor.get_absolute_url">
+                    <span v-text="project.contractor.title"></span>
+                </a>
+            </td>
+            <td>
+                <span v-text="to_price(project.sum_total)"></span>
+            </td>
+            <td>
+                <small v-text="project.persian_start_date.slice(0,10)"></small>
+                <small class="text-muted">
+                    ~
+                </small>
+                <small v-text="project.persian_end_date.slice(0,10)"></small>
+            </td>
+        </tr>
+    </tbody>
+</table>

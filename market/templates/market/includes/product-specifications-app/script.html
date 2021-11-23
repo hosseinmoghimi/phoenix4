@@ -1,0 +1,42 @@
+<script>
+    let url_add_product_specification = "{% url 'market:add_product_specification' %}"
+    if (typeof specifications === 'undefined')
+        specifications = JSON.parse(`{{specifications_s|escapejs}}`)
+
+    let product_specifications_app = new Vue({
+        el: "#product-specifications-app",
+        data: {
+
+            specifications: specifications,
+            new_spec_name: '',
+            new_spec_value: '',
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            add_specification: function () {
+
+                let url = url_add_product_specification
+
+                let posting = $.post(url, {
+                    name: product_specifications_app.new_spec_name,
+                    value: product_specifications_app.new_spec_value,
+                    product_id: product_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                })
+
+                posting.done(function (data) {
+                    if (data.result === 'SUCCEED') {
+
+                        product_specifications_app.specifications.push(data.product_specification)
+                        // product_specifications_app.new_spec_name = ''
+                        product_specifications_app.new_spec_value = ''
+                    }
+                })
+
+            },
+        },
+
+    })
+</script>

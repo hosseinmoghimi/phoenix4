@@ -1,0 +1,27 @@
+{% extends "calendar/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav flex-column">
+                    {% for appointment in appointments %}
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{appointment.get_absolute_url}}">{{appointment.title}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

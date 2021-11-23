@@ -1,0 +1,112 @@
+{% load to_price %}
+{% load to_persian_date %}
+<div id="transactions-app">
+    <table class="table table-striped">
+        <thead>
+            <th>
+                عنوان
+            </th>
+            <th>
+                بستانکار
+            </th>
+            <th>
+                نحوه پرداخت
+            </th>
+            <th>
+                بدهکار
+            </th>
+
+            <th>
+                مبلغ
+            </th>
+
+            <th>
+                تاریخ تراکنش
+            </th>
+
+            <th>
+                مانده
+            </th>
+
+
+        </thead>
+        <tbody>
+
+            <tr v-for="transaction in transactions">
+                <td>
+                    <span v-html="transaction.get_icon"></span>
+                    <a :href="transaction.get_absolute_url">
+                        <span v-text="transaction.title"></span>
+                    </a>
+                </td>
+                <td>
+                    <a :href="transaction.pay_from.get_absolute_url">
+                        <img :src="transaction.pay_from.profile.image" class="rounded-circle" width="32" alt="">
+                        <span v-text="transaction.pay_from.profile.name"></span>
+
+                    </a>
+                </td>
+                <td>
+
+                    <a v-if="transaction.asset" :href="transaction.asset.get_absolute_url">
+                        <span v-text="transaction.asset.title"></span>
+
+                    </a>
+
+                    <a v-if="transaction.order" :href="transaction.order.get_absolute_url">
+                        سفارش شماره
+                        <span v-text="transaction.order.id"></span>
+
+                    </a>
+
+                    <span v-text="transaction.payment_method"></span>
+                    <div>
+                        <small class="text-muted" v-html="transaction.description">
+
+                        </small>
+                    </div>
+
+                </td>
+                <td>
+                    <a :href="transaction.pay_to.get_absolute_url">
+                        <img :src="transaction.pay_to.profile.image" class="rounded-circle" width="32" alt="">
+                        <span v-text="transaction.pay_to.profile.name"></span>
+                    </a>
+                </td>
+                <td>
+                    <span :class="'text-'+transaction.get_color">
+                        <span v-text="to_price(transaction.amount,'{{CURRENCY}}')"></span>
+                    </span>
+                </td>
+                <td>
+                    <small class="text-secondary" v-text="transaction.persian_date_paid">
+
+                    </small>
+                </td>
+                <td>
+                    <small class="text-secondary" v-text="to_price(transaction.rest,'{{CURRENCY}}')">
+
+                    </small>
+                </td>
+                <td>
+                    <a :href="transaction.get_transaction2_url">
+                        <i class="material-icons">
+                            ballot
+                        </i>
+                    </a>
+
+                    {% if perms.accounting.change_transaction %}
+
+                    <a target="_blank" title="ویرایش" :href="transaction.get_edit_url">
+                        <i class="fa fa-edit">
+                        </i>
+                    </a>
+
+                    {% endif %}
+
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>

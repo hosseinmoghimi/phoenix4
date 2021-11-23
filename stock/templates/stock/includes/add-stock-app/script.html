@@ -1,0 +1,42 @@
+<script>
+    let add_stock_app = new Vue({
+        el: "#add-stock-app",
+        data: {
+            
+            agents:agents,
+            first_name: "",
+            last_name: "",
+            stock1:"",
+            stock2:"",
+            show_add_form:false,
+            agent_id:0,
+        },
+        methods: {
+            add_stock: function () {
+                let url = "{% url 'stock:add_stock' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    first_name: this.first_name,
+                    last_name: this.last_name,
+                    stock1: this.stock1,
+                    stock2: this.stock2,
+                    agent_id:this.agent_id
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED'){
+                        add_stock_app.first_name=""
+                        add_stock_app.stock1=""
+                        add_stock_app.stock2=""
+                        // stocks_list_app.stocks.push(data.stock)
+                        stocks=stocks.reverse()
+                        stocks.push(data.stock)
+                        stocks=stocks.reverse() 
+
+                        stocks_app.stocks=stocks 
+                    }
+                })
+            },
+        }
+    })
+</script>

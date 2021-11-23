@@ -1,0 +1,68 @@
+{% extends "school/layout.html" %}
+{% block content %}
+<h4 class="text-center">
+    {{session.title}}
+</h4>
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-body">
+                {% for student in session.active_course.students.all %}
+                <div>
+                    <h4>
+
+                        <a href="{{student.get_absolute_url}}">
+                            <img src="{{student.profile.image}}" class="rounded-circle" width="64" alt="">
+                            {{student.profile.name}}
+                        </a>
+                        {% if perms.school.change_student %}
+                        {{student.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    {% for book in session.active_course.course.books.all %}
+                    <h4>
+
+                        <a href="{{book.get_absolute_url}}">
+                            {{book.title}}
+                        </a>
+                        {% if perms.school.change_book %}
+                        {{book.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% for document in book.documents.all %}
+                    <h4>
+                        <small class="text-muted">
+                            دانلود
+                        </small>
+                        <a href="{{document.get_download_url}}">
+
+                            {{document.title}}
+                        </a>
+                        {% if perms.core.change_document %}
+                        {{document.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h4>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock content %}

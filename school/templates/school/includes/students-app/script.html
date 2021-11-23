@@ -1,0 +1,12 @@
+<script>
+    let students = JSON.parse(`{{students_s|escapejs}}`)
+    let students_app = new Vue({
+        el: "#students-app",
+        data: {
+            students: students,
+        },
+        methods: {
+
+        }
+    })
+</script>

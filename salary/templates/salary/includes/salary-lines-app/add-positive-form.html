@@ -1,0 +1,43 @@
+{% if add_salary_line_form %}
+<span @click="show_positive_form=!show_positive_form" style="cursor: pointer;">
+    <i class="material-icons text-success">
+        add
+    </i>
+</span>
+<form v-if="show_positive_form" @submit.prevent="add_salary_line(1)">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="mazaya_title" class="">عنوان</label>
+                <select v-model="mazaya_title" id="mazaya_title" class="form-control">
+                    {% for title in line_titles %}
+                    <option value="{{title}}">{{title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="mazaya_amount" class="">مبلغ</label>
+                <input type="number" id="mazaya_amount" class="form-control" required v-model="mazaya_amount">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-success btn-block mt-4" type="submit">
+                افزودن
+            </button>
+        </div>
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="mazaya_description" class="">توضیحات</label>
+
+                <input type="text" v-model="mazaya_description" id="mazaya_description" class="form-control">
+            </div>
+        </div>
+
+    </div>
+</form>
+{% endif %}

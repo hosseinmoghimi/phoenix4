@@ -1,0 +1,99 @@
+{% load to_price %}
+{% load static %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-icon">
+            <i class="material-icons">
+                money
+            </i>
+        </div>
+        <h4 class="title">
+
+            هزینه ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+
+                <th>
+                    دسته بندی
+                </th>
+                <th>
+                    سالن
+                </th>
+                <th>
+                    تاریخ
+                </th>
+
+                <th>
+                    ثبت شده توسط
+                </th>
+                <th>
+                    هزینه
+                </th>
+
+            </thead>
+            <tbody>
+                {% for cost in costs %}
+                <tr>
+
+                    <td>
+                        <a href="{{cost.get_absolute_url}}">
+                            {{cost.title}}
+
+                        </a>
+                    </td>
+
+
+                    <td>
+
+                        {{cost.category}}
+                    </td>
+
+                    <td>
+                        <a href="{{cost.saloon.get_absolute_url}}">
+
+
+                            {{cost.saloon}}
+
+                        </a>
+                    </td>
+                    <td>
+                        <small>
+                            {{cost.persian_cost_date}}
+
+                        </small>
+                    </td>
+                    <td>
+                        <a href="{{cost.employee.get_absolute_url}}">
+                            <img src="{{cost.employee.profile.image}}" class="rounded-circle" width="32" height="32"
+                                alt="">
+                            {{cost.employee.profile.name}}
+
+                        </a>
+
+                    </td>
+                    <td>
+                        {{cost.value|to_price}}
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <select name="" class="form-control" id="">
+            <option value=""></option>
+            {% for category in cost_categories %}
+            <option value="{{category}}">{{category}}</option>
+              
+            {% endfor %}
+        </select>
+    </div>
+</div>

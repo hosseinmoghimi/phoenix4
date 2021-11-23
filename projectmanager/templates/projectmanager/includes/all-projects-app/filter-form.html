@@ -1,0 +1,25 @@
+<form @submit.prevent="filter()">
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" placeholder="جستجو ..." class="form-control" v-model="search_for">
+
+        </div>
+        <div class="col-md-4">
+            <select class="form-control" v-model="status">
+                <option value="همه">همه</option>
+                {% for status in statuses %}
+
+                <option value="{{status}}">{{status}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-warning">فیلتر کن</button>
+        </div>
+
+
+    </div>
+</form>

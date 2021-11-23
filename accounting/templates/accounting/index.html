@@ -1,0 +1,48 @@
+{% extends "accounting/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load to_transaction_color %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        {% include "accounting/includes/financial-accounts-app/template.html" %}
+
+
+    </div>
+    <div class="col-md-12">
+        {% include "accounting/includes/transactions-app/add-transaction-form.html" %}
+
+    </div>
+    <div class="col-md-12">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4 class="card-title">
+                    لیست دارایی ها
+                </h4>
+            </div>
+            <div class="card-body">
+             
+                {% include "accounting/includes/assets-app/template.html" %}
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+
+    let financial_accounts = JSON.parse(`{{financial_accounts_s|escapejs}}`)
+</script>
+
+
+{% include "accounting/includes/assets-app/script.html" %}
+{% include "accounting/includes/transactions-app/add-transaction-script.html" %}
+{% include "accounting/includes/financial-accounts-app/script.html" %}
+
+{% endblock %}

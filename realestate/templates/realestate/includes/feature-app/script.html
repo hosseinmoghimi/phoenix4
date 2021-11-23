@@ -1,0 +1,30 @@
+<script>
+    let url_add_feature = "{% url 'realestate:add_feature' %}"
+    let features_app = new Vue({
+        el: "#features-app",
+        data: {
+            name: "",
+            value: "",
+            features:[],
+            show_panel:false,
+        },
+        methods: {
+            add_feature: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    property_id: property_id,
+                    name: this.name,
+                    value: this.value,
+                }
+                let posting = $.post(url_add_feature, payload)
+                posting.done((data) => {
+                    features_app.features.push(data.property_feature)
+                    features_app.name=""
+                    features_app.value=""
+                    features_app.show_panel=false
+                    
+                })
+            }
+        }
+    })
+</script>

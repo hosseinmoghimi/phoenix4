@@ -1,0 +1,128 @@
+{% if add_work_shift_form %}
+<p>
+
+    <button @click="show_form=!show_form" class="btn btn-success">
+        <span class="material-icons">
+
+            add
+        </span>
+    </button>
+</p>
+<form v-show="show_form" @submit.prevent="add_work_shift()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">شروع شیفت</label>
+                <date-picker v-model="start_datetime"></date-picker>
+
+                <small id="emai5645lHelp" class="form-text farsi text-muted">
+                    شروع شیفت مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="end_datetime">پایان شیفت</label>
+                <date-picker id="end_datetime" v-model="end_datetime"></date-picker>
+
+                <small id="emailHelp12" class="form-text farsi text-muted">
+                    پایان شیفت مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="description">توضیحات</label>
+                <input type="text" v-model="description" class="form-control" id="description">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    توضیحات مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="income">درآمد</label>
+                <input  required min="0" type="number" v-model="income" class="form-control" id="income">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    درآمد مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="outcome">خرج کرد</label>
+                <input  required min="0" type="number"  v-model="outcome" class="form-control" id="outcome">
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    خرج کرد مرتبط را وارد کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">راننده</label>
+                <select required  v-model="driver_id" id="" class="form-control">
+                    <template v-for="driver in drivers">
+
+                        <option :value="driver.id">
+                            <span v-text="driver.profile.name"></span>
+                        </option>
+                    </template>
+                </select>
+
+                <small id="emailHele324p" class="form-text farsi text-muted">
+                    راننده مرتبط را انتخاب کنید.
+                </small>
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">محدوده</label>
+                <select required v-model="area_id" id="" class="form-control">
+                    <template v-for="area in areas">
+
+                        <option :value="area.id">
+                            <span v-text="area.name"></span>
+                        </option>
+                    </template>
+                </select>
+
+                <small id="emailHeewrle324p" class="form-text farsi text-muted">
+                    محدوده مرتبط را انتخاب کنید.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-success btn-block" type="submit">افزودن</button>
+        </div>
+
+
+
+
+    </div>
+
+
+</form>
+{% endif %}

@@ -1,24 +1,52 @@
 <script>
-    let sum_material_requests = parseInt("{{project.sum_material_requests}}")
+    let material_requests=JSON.parse(`{{material_requests_s|escapejs}}`)
+</script>
+{% if add_material_request_form %}
+<script>
     let materials = JSON.parse(`{{materials_s|escapejs}}`)
     let url_add_material_request = "{% url 'projectmanager:add_material_request' %}"
-    let material_request_app = new Vue({
-        el: "#material-request-app",
-        data: {
+    let material_requests_app_data= {
+            employees:JSON.parse(`{{employees_s|escapejs}}`),
             new_material_request_material_id: 1,
             add_material_request_form_title: "",
             materials: materials.slice(0, 6),
             add_material_request_form_unit_price: 0,
             add_material_request_form_unit_name: "",
             add_material_request_form_quantity: "",
-            material_requests: [],
+            material_requests:material_requests,
             waiting: false,
-            sum_material_requests: sum_material_requests,
+            sum_material_requests: 0,
             show_add_material_request_form: false,
+            add_material_request_form_employee_id: ""
+        }
+</script>
+{% else %}
+<script>
+    let material_requests_app_data= {
+            material_requests:material_requests,
+            waiting: false,
+            sum_material_requests: 0,
+            show_add_material_request_form: false,
+        }
+</script>
+{% endif %}
+
+<script>
+
+   
+    let material_requests_app = new Vue({
+        el: "#material-requests-app",
+        data: material_requests_app_data,
+        mounted:function(){
+            this.sum_material_requests=0
+            this.material_requests.forEach(material_request => {
+                this.sum_material_requests+=material_request.total
+                
+            });
         },
         methods: {
-            to_price: function (value,CURRENCY) {
-                return to_price(value,CURRENCY)
+            to_price: function (value, CURRENCY) {
+                return to_price(value, CURRENCY)
             },
             selected_material: function () {
                 if (this.add_material_request_form_title === "") {
@@ -29,7 +57,7 @@
                 return {}
             },
             add_material_request: function () {
-                material_request_app.waiting = true
+                material_requests_app.waiting = true
 
                 let payload = {
                     project_id: page_id,
@@ -37,26 +65,27 @@
                     unit_price: this.add_material_request_form_unit_price,
                     unit_name: this.add_material_request_form_unit_name,
                     quantity: this.add_material_request_form_quantity,
+                    employee_id: this.add_material_request_form_employee_id,
                     // status: this.add_material_request_form_status,
                     // description: this.add_material_request_form_description,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
-                console.log(payload)
+                //console.log(payload)
 
 
                 var posting = $.post(url_add_material_request, payload);
                 posting.fail(function (xhr, status, error) {
-                    material_request_app.waiting = false
-                    showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
+                    material_requests_app.waiting = false
+                    // showNotification('top', 'center', 'settings', 'danger', 'خطا در ارتباط' + error)
                 })
                 // Put the results in a div
                 posting.done(function (data) {
-                    material_request_app.waiting = false
-                    console.log(data)
+                    material_requests_app.waiting = false
+
                     if (data.result === 'SUCCEED') {
-                        material_request_app.material_requests.push(data.material_request)
-                        // material_request_app.show_add_material_request_form = false
-                        material_request_app.sum_material_requests += data.material_request.quantity * data.material_request.unit_price
+                        material_requests_app.material_requests.push(data.material_request)
+                        // material_requests_app.show_add_material_request_form = false
+                        material_requests_app.sum_material_requests += data.material_request.quantity * data.material_request.unit_price
 
 
 
@@ -70,12 +99,12 @@
                 this.add_material_request_form_unit_name = material.unit_name
                 this.add_material_request_form_unit_price = material.unit_price
                 this.add_material_request_form_title = material.title
-                this.materials=[material]
+                this.materials = [material]
             },
             filter_list: function () {
                 if (this.add_material_request_form_title) {
 
-                    this.materials = materials.filter(item => item.title.toUpperCase().includes(this.add_material_request_form_title.toUpperCase())).slice(0, 6);
+                    this.materials = materials.filter(item => item.full_title.toUpperCase().includes(this.add_material_request_form_title.toUpperCase())).slice(0, 6);
                     try {
                         this.add_material_request_form_unit_price = this.selected_material().unit_price
                         this.add_material_request_form_unit_name = this.selected_material().unit_name

@@ -1,4 +1,4 @@
-from phoenix import settings,settings_server
+from phoenix import settings
 
 SITE_URL=settings.SITE_URL
 ADMIN_URL=SITE_URL+'admin/'
@@ -11,4 +11,9 @@ SERVER_ON_HEROKU=settings.SERVER_ON_HEROKU
 PUSHER_IS_ENABLE=settings.PUSHER_IS_ENABLE
 DEBUG=settings.DEBUG
 YEAR_ADDED=settings.YEAR_ADDED
+QRCODE_ROOT=settings.QRCODE_ROOT
+QRCODE_URL=settings.QRCODE_URL
+UPLOAD_ROOT=settings.UPLOAD_ROOT
+
+SITE_FULL_BASE_ADDRESS=settings.SITE_FULL_BASE_ADDRESS
 

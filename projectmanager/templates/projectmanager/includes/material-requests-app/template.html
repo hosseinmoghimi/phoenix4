@@ -1,212 +1,189 @@
 {% load static %}
 {% load to_persian_date %}
 {% load to_price %}
-<div class="card mb-3" id="material-request-app">
-    <div class="card-header">
-
-        <h5 class="card-title text-center farsi">
-            درخواست های متریال
-        </h5>
+<div id="accordion">
 
 
-    </div>
+    <div class="card" id="material-requests-app">
+        <div class="card-header" id="headingmaterialrequests">
 
-    <div class="card-body">
-
-        <table class="table table-striped">
-            <thead>
-                <th>
-                    تاریخ درخواست
-                </th>
-                <th>
-                    متریال
-                </th>
-                <th>
-                    تعداد
-                </th>
-                <th>
-                    قیمت واحد
-                </th>
-                <th>
-                    جمع
-                </th>
-                <th>
-                    وضعیت
-                </th>
-            </thead>
-            <tbody>
-                {% for material_request in project.materialrequest_set.all %}
-                <tr>
-                    <td>
-                        <small>
-
-                            {{material_request.date_added|to_persian_date|safe}}
-                        </small>
-                    </td>
-                    <td>
-
-                        <a href="{{material_request.material.get_absolute_url}}">
-<!-- <img src="{{material_request.material.thumbnail}}" class="ml-2 rounded" width="32" alt=""> -->
-                            {{material_request.material.title}}
-                        </a>
-                    </td>
-                    <td>
-                        {{material_request.quantity}}
-                        <small>
-
-                            {{material_request.unit_name}}
-                        </small>
-
-                    </td>
-                    <td>
-                        {{material_request.unit_price|to_price_pure}}
-
-                    </td>
-                    <td>
-                        {{material_request.line_total|to_price}}
-
-                    </td>
-                    <td>
-                        {{material_request.get_status_tag|safe}}
-                        <a href="{{material_request.get_absolute_url}}" title="نمایش کامل">
-                            <i class="material-icons">
-                                description
-                            </i>
-                        </a>
-
-                        {% if perms.projectmanager.change_materialrequest %}
-                        {{material_request.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-
-                <tr v-for="material_request in material_requests">
-                    <td>
-                        <small v-text="material_request.persian_date_added">
-
-                        </small>
-                    </td>
-                    <td>
-
-                        <a :href="material_request.material.get_absolute_url" v-text="material_request.material.title">
-
-                        </a>
-                    </td>
-                    <td>
-                        <span v-text="material_request.quantity"></span>
-                        <small v-text="material_request.unit_name">
-
-                        </small>
-
-                    </td>
-                    <td>
-                        <span v-text="to_price(material_request.unit_price,'')"></span>
-
-                    </td>
-                    <td>
-                        <span
-                            v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
-
-                    </td>
-                    <td>
-                        <span v-html="material_request.get_status_tag"></span>
-
-                        <a :href="material_request.get_absolute_url" title="نمایش کامل">
-                            <i class="material-icons">
-                                description
-                            </i>
-                        </a>
-                        {% if perms.projectmanager.change_materialrequest %}
-                        <a title="ویرایش" :href="material_request.get_edit_url">
-                            <i class="material-icons">edit</i>
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        {% if add_material_request_form %}
-        <button v-if="!show_add_material_request_form" @click="show_add_material_request_form=true"
-            class="btn btn-success">
-            <i class="material-icons text-light">
-                add
-            </i>
-        </button>
-        <div class="row" v-if="show_add_material_request_form">
-            <div class="col-8">
-                <form @submit.prevent="add_material_request()">
-
-                    <input @input="filter_list" required type="text" v-model="add_material_request_form_title"
-                        class="farsi form-control" placeholder="متریال">
-                    <p class="text-right">
-                        <span v-text="selected_material().title"></span>
-                        <span>هر </span>
-                        <span v-text="add_material_request_form_unit_name"></span>
-                        <span v-text="to_price(add_material_request_form_unit_price,'')"></span>
-                        <small>
-
-                            {{CURRENCY}}
-                        </small>
-                    </p>
-                    <div class="row">
-                        <div class="col-4">
-                            <input required type="number" min="0" placeholder="تعداد" class="form-control"
-                                v-model="add_material_request_form_quantity">
-                        </div>
-                        <div class="col-4">
-                            <select v-model="add_material_request_form_unit_name" class="form-control farsi" id="">
-                                <option disabled selected>نام واحد</option>
-                                {% for unit_name in unit_names %}
-                                <option value="{{unit_name}}">{{unit_name}}</option>
-                                {% endfor %}
-                            </select>
-
-                        </div>
-                        <div class="col-4">
-                            <input required type="number" v-model="add_material_request_form_unit_price"
-                                class="farsi form-control" placeholder="قیمت واحد">
-                        </div>
-
-                        <div class="col-6">
-                            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
-
-
-                            <button v-if="!waiting" class="btn btn-primary" type="submit">Add</button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-secondary" @click="show_add_material_request_form=false"
-                                type="reset">Cancel</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-4">
-                <div v-for="material in materials">
-                    <button class="btn btn-secondary my-2 d-block" @click="select_material(material)"
-                        v-text="material.title"></button>
-                </div>
-            </div>
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapsematerialrequests"
+                    aria-expanded="true" aria-controls="collapsematerialrequests">
+                    درخواست های متریال
+                </button>
+            </h5>
 
 
         </div>
+        <div id="collapsematerialrequests" class="collapse {% if project and material_requests %}show{% endif %}"
+            aria-labelledby="headingmaterialrequests" data-parent="#accordion">
 
-        {% endif %}
-    </div>
-    <div class="card-footer ">
-        <p>
+            <div class="card-body">
 
-            <span class="small text-secondary">
-                مجموع متریال ها :
-            </span>
-            <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
 
-            </span>
-        </p>
+                        </th>
+                        <th>
+                            تاریخ درخواست
+                        </th>
+                        <!-- <th>
+                            مسئول خرید
+                        </th> -->
+                        {% if not project %}
+
+                        <th>
+                            پروژه
+                        </th>
+                        {% endif %}
 
 
 
+                        {% if not material %}
+
+                        <th>
+                            متریال
+                        </th>
+                        {% endif %}
+                        <th>
+                            تعداد
+                        </th>
+                        <th>
+                            قیمت واحد
+                        </th>
+                        <th>
+                            جمع
+                        </th>
+                        <th>
+                            وضعیت
+                        </th>
+                    </thead>
+                    <tbody>
+
+                        <tr v-for="material_request in material_requests">
+                            <td>
+                                <a target="_blank" :href="material_request.get_absolute_url" title="نمایش کامل">
+                                    <i class="material-icons">
+                                        ballot
+                                    </i>
+                                </a>
+                            </td>
+                            <td>
+                                <small v-text="material_request.persian_date_requested">
+                                </small>
+                            </td>
+                            {% if not project %}
+
+                            <td>
+
+                                <a target="_blank" :href="material_request.project.get_absolute_url"
+                                    v-text="material_request.project.title">
+
+                                </a>
+                            </td>
+                            {% endif %}
+                            {% if not material %}
+
+                            <td>
+                                <img :src="material_request.material.thumbnail" class="ml-2 rounded" width="32" alt="">
+
+                                <a target="_blank" :href="material_request.material.get_absolute_url"
+                                    v-text="material_request.material.title">
+
+                                </a>
+                            </td>
+                            {% endif %}
+
+
+                            <td>
+                                <span v-text="material_request.quantity"></span>
+                                <small v-text="material_request.unit_name">
+
+                                </small>
+
+                            </td>
+                            <td>
+                                <span v-text="to_price(material_request.unit_price,'')"></span>
+
+                            </td>
+                            <td>
+                                <span
+                                    v-text="to_price(material_request.unit_price*material_request.quantity,'{{CURRENCY}}')"></span>
+
+                            </td>
+                            <td>
+                                <span v-html="material_request.get_status_tag"></span>
+
+
+                                {% if perms.projectmanager.change_materialrequest %}
+                                <a title="ویرایش" target="_blank" :href="material_request.get_edit_url">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {% if add_material_request_form %}
+                {% include "projectmanager/includes/material-requests-app/form.html" %}
+
+
+                {% endif %}
+            </div>
+            <div class="card-footer ">
+                {% if project %}
+                <p>
+
+                    <span class="small text-secondary">
+                        مجموع قیمت متریال ها :
+                    </span>
+                    <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')">
+
+                    </span>
+                    <a title="چاپ فاکتور" target="_blank" class="mx-3" href="{{project.get_materials_order_url}}">
+                        <i class="material-icons">print</i>
+                    </a>
+
+
+                </p>
+
+                {% endif %}
+
+                {% if material %}
+                <p>
+
+                    <span>
+                        <span class="text-secondary">
+
+                            تعداد کل درخواست شده :
+                        </span>
+                        <span>
+                            {{material.count_requested|to_price_pure}}
+                        </span>
+                    </span>
+
+
+
+                    <span class="mr-4">
+                        <span class="text-secondary">
+
+                            مبلغ کل درخواست شده :
+                        </span>
+                        <span>
+
+                            {{material.sum_price_requested|to_price}}
+                        </span>
+                    </span>
+
+                </p>
+                {% endif %}
+                <p>
+                   جمع :  <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')"></span>
+                </p>
+            </div>
+        </div>
     </div>
 </div>

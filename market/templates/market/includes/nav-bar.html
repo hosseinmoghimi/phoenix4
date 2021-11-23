@@ -1,0 +1,156 @@
+<li class="dropdown nav-item">
+    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+        <i class="material-icons">apps</i>
+        <span class="farsi">
+
+            دسته بندی ها
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-with-icons">
+
+
+        {% for category in root_categories %}
+        <a href="{{category.get_absolute_url}}" class="dropdown-item">
+            <i class="material-icons">line_style</i>
+            <span class="farsi">
+
+                {{category.title}}
+            </span>
+        </a>
+        {% endfor %}
+    </div>
+</li>
+
+{% if me_customer %}
+
+<li class="dropdown nav-item">
+    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+        <span class="material-icons">
+            shopping_cart
+        </span>
+        <span class="farsi">
+
+            {{me_customer.profile.name}}
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-with-icons">
+
+
+
+
+        <a href="{{me_customer.get_absolute_url}}" class="dropdown-item">
+            <i class="material-icons">line_style</i>
+            <span class="farsi">
+
+                {{me_customer.profile.name}}
+            </span>
+        </a>
+
+        <a href="{{me_customer.get_cart_url}}" class="dropdown-item">
+            <i class="material-icons">shopping_cart</i>
+            <span class="farsi">
+                سبد خرید
+            </span>
+        </a>
+
+
+        <a href="{{me_customer.get_orders_url}}" class="dropdown-item">
+            <i class="material-icons">
+
+                ballot
+            </i>
+            <span class="farsi">
+                سفارشات
+            </span>
+        </a>
+
+
+        <a href="{% url 'authentication:logout' %}" class="dropdown-item">
+            <i class="material-icons">
+
+                logout
+            </i>
+            <span class="farsi">
+                خروج
+            </span>
+        </a>
+
+
+
+
+
+    </div>
+</li>
+{% endif %}
+{% if me_supplier %}
+
+<li class="dropdown nav-item">
+    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+        <span class="material-icons">
+            store
+        </span>
+        <span class="farsi">
+
+            {{me_supplier.title}}
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-with-icons">
+
+
+
+
+        <a href="{{me_supplier.get_absolute_url}}" class="dropdown-item">
+            <i class="material-icons">line_style</i>
+            <span class="farsi">
+
+                {{me_supplier.title}}
+            </span>
+        </a>
+
+        <a href="{{me_supplier.get_shops_url}}" class="dropdown-item">
+            <i class="material-icons">shopping_cart</i>
+            <span class="farsi">
+                آماده  فروش
+            </span>
+        </a>
+
+
+        <a href="{{me_supplier.get_orders_url}}" class="dropdown-item">
+            <i class="material-icons">
+
+                ballot
+            </i>
+            <span class="farsi">
+                سفارشات
+            </span>
+        </a>
+
+
+        <a href="{% url 'authentication:logout' %}" class="dropdown-item">
+            <i class="material-icons">
+
+                logout
+            </i>
+            <span class="farsi">
+                خروج
+            </span>
+        </a>
+
+
+
+
+
+    </div>
+</li>
+{% endif %}
+{% if not profile %}
+<li class="button-container nav-item iframe-extern">
+    <a href="{% url 'authentication:login' %}" target="_blank" class="btn  btn-success mx-2 btn-round btn-block">
+        <i class="material-icons">vpn_key</i>
+        <span class="farsi">
+
+            ورود
+        </span>
+    </a>
+</li>
+{% endif %}

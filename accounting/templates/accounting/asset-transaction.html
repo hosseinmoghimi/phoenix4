@@ -1,0 +1,28 @@
+{% extends "accounting/transaction.html" %}
+
+
+{% block money %}
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+                {{asset_transaction.title}}
+
+            </h4>
+        </div>
+        <div class="card-body">
+            <h5>
+                تراکنش اموال
+            </h5>
+            <div>
+                <small class="text-muted">
+مورد :
+                </small>
+                <a href="{{asset_transaction.asset.get_absolute_url}}">
+                    {{asset_transaction.asset.title}}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock money %}

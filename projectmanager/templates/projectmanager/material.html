@@ -29,10 +29,25 @@
     <div class="row ">
 
         <div class="col-md-4">
+            <h6>
+                <span class="material-icons">
+                    corporate_fare
+                </span>
+                <a href="{{page.get_chart_url}}" target="_blank">
+
+                    نمودار</a>
+            </h6>
+
+            {% include "core/includes/page-like-app/template.html" %}
             <div class="mb-3 py-3">
 
                 <img src="{{material.image}}" class="rounded w-100" alt="">
             </div>
+        </div>
+        <div class="col-md-8">
+            {% include "core/includes/page-description-app/short-description.html" %}
+            {% include "core/includes/page-description-app/full-description.html" %}
+
         </div>
         <div class="col-md-4">
 
@@ -43,110 +58,50 @@
 
         <div class="col-md-4">
             {% include "core/includes/page-links-app/template.html" %}
+
+        </div>
+        <div class="col-md-4">
+
             {% include "core/includes/page-documents-app/template.html" %}
+            {% include "core/includes/page-tags-app/template.html" %}
 
         </div>
 
+        {% if ware_house_materials %}
 
         <div class="col-md-12">
-            <div class="card mb-3" id="material-request-app">
-                <div class="card-header">
-
-                    <h5 class="card-title text-center farsi">
-                        درخواست های مربوط به این متریال
-                    </h5>
-
-
-                </div>
-
-                <div class="card-body">
-
-                    <table class="table table-striped">
-                        <thead>
-                            <th>
-                                تاریخ درخواست
-                            </th>
-                            <th>
-                                پروژه
-                            </th>
-                            <th>
-                                تعداد
-                            </th>
-                            <th>
-                                قیمت واحد
-                            </th>
-                            <th>
-                                جمع
-                            </th>
-                            <th>
-                                وضعیت
-                            </th>
-                        </thead>
-                        <tbody>
-                            {% for material_request in material.materialrequest_set.all %}
-                            <tr>
-                                <td>
-                                    <small>
-                                        {{material_request.date_added|to_persian_date|safe}}
-                                    </small>
-                                </td>
-                                <td>
-                                    <a href="{{material_request.project.get_absolute_url}}">
-
-                                        {{material_request.project.title}}
-                                    </a>
-                                </td>
-                                <td>
-                                    {{material_request.quantity}}
-                                    <small>
-
-                                        {{material_request.unit_name}}
-                                    </small>
-                                </td>
-
-                                <td>
-                                    {{material_request.unit_price|to_price_pure}}
-
-                                </td>
-
-                                <td>
-                                    {{material_request.line_total|to_price}}
-
-                                </td>
-                                <td>
-
-                                    {{material_request.get_status_tag|safe}}
-                                    <a title="جزئیات" href="{{material_request.get_absolute_url}}">
-                                        <i class="material-icons">
-                                            description
-                                        </i>
-                                    </a>
-                                    {% if perms.projectmanager.change_materialrequest %}
-                                    <a title="ویرایش" href="{{material_request.get_edit_url}}">
-                                        <i class="material-icons">
-                                            edit
-                                        </i>
-                                    </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-
-
-                </div>
-                <div class="card-footer ">
-
-                
-
-                </div>
-            </div>
-
+            {% include "projectmanager/includes/ware-house-materials-app/template.html" %}
 
         </div>
+        {% endif %}
+        {% if ware_house_sheet_lines %}
 
+        <div class="col-md-12">
+            {% include "projectmanager/includes/ware-house-sheet-lines-app/template.html" %}
 
+        </div>
+        {% endif %}
+
+        {% if material_requests %}
+
+        <div class="col-md-12">
+            {% include "projectmanager/includes/material-requests-app/template.html" %}
+
+        </div>
+        {% endif %}
+
+        <div class="col-md-12">
+            {% include "core/includes/page-images-app/template.html" %}
+
+        </div>
+        <div class="col-md-12">
+
+            {% include "core/includes/page-comments-app/template.html" %}
+        </div>
+        <div class="col-md-12">
+
+            {% include "core/includes/page-related-app/template.html" %}
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -154,14 +109,25 @@
 
 {% block script %}
 <script>
-    let parent_id = parseInt("{{parent_id}}")
+
+    let parent_id = parseInt("{{material.id}}")
+    let page_id = parseInt("{{material.id}}")
+    let page_comment_component_template = `{% include "core/includes/page-comments-app/component.html" %}`
 
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-images-app/script.html" %}
 
 {% include "core/includes/page-documents-app/script.html" %}
 
+{% include "core/includes/page-related-app/script.html" %}
+{% include "core/includes/page-comments-app/script.html" %}
 {% include "projectmanager/includes/materials-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
 
+{% include "core/includes/page-description-app/script.html" %}
+{% include "projectmanager/includes/material-requests-app/script.html" %}
+{% include "core/includes/page-like-app/script.html" %}
+{% include "projectmanager/includes/ware-house-sheet-lines-app/script.html" %}
 {% endblock %}

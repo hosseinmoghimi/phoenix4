@@ -1,38 +1,58 @@
-
 {% load static %}
 <script src="{% static 'persian/moment.js' %}"></script>
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script >
+    let events=JSON.parse(`{{events_s|escapejs}}`)
+
+</script>
+{% if add_event_form %}
+<script>
+    let events_app_data= {
+          events: events,
+          add_event_form_title: "",
+          waiting: false,
+          event_datetime: current_datetime,
+          start_datetime: current_datetime,
+          end_datetime: current_datetime,
+
+      }
+</script>
+{% else %}
+<script>
+    let events_app_data= {
+          events: events,  
+
+      }
+</script>
+{% endif %}
 <script>
     let url_add_event = "{% url 'projectmanager:add_event' %}"
     let events_app = new Vue({
         el: "#events-app",
-        data: {
-            events: [],
-            add_event_form_title: "",
-            waiting: false,
-            event_datetime:current_datetime
-        },
-        components:{
+        data: events_app_data,
+        components: {
             DatePicker: VuePersianDatetimePicker
-  
+
         },
         methods: {
             add_event: function () {
-                this.waiting = true
+                events_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     title: this.add_event_form_title,
-                    event_datetime:this.event_datetime,
+                    event_datetime: this.event_datetime,
+                    start_datetime: this.start_datetime,
+                    end_datetime: this.end_datetime,
                     project_id: parent_id,
                 }
                 let posting = $.post(url_add_event, payload)
                 posting.done((data) => {
-                    console.log(data)
+                    events_app.waiting = false
                     if (data.result === 'SUCCEED') {
                         events_app.events.push(data.event)
                         events_app.add_event_form_title = ""
-                        events_app.waiting = false
                     }
                 })
             },

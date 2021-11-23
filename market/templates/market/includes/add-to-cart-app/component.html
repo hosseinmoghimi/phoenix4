@@ -1,0 +1,110 @@
+<div class="mb-3">
+    <hr>
+    <div class="text-right">
+
+        خرید از
+        <a :href="shop.supplier.get_absolute_url" target="_blank">
+            <span v-text="shop.supplier.title"></span>
+        </a>
+
+
+
+
+        <small class="text-muted pr-4">
+            موجودی :
+            <span v-text="shop.available"></span>
+            <span v-text="shop.unit_name"></span>
+
+        </small>
+
+
+        <span class="badge badge-primary mr-4">
+            <span v-text="shop.level"></span>
+
+        </span>
+
+
+
+    </div>
+    <div class="text-right">
+        <span v-for="specification in shop.specifications">
+            <span class="btn-group ltr">
+
+                <button class="btn btn-round  btn-warning btn-sm">
+                    <span v-text="specification.value"></span>
+                    
+                    <div class="ripple-container"></div>
+                </button>
+                <button class="btn btn-info btn-sm">
+                    <span v-text="specification.name"></span>
+
+                </button>
+            </span>
+        </span>
+    </div>
+
+    <div class="text-right">
+        <div class="btn-group ltr text-right">
+            <button class="btn btn-round btn-danger btn-sm" @click="add_quantity(-1)">
+                <i class="material-icons">remove</i>
+                <div class="ripple-container"></div>
+            </button>
+            <button class="btn btn-primary btn-link btn-sm">
+                <span v-text="quantity"></span>
+                <span v-text="shop.unit_name"></span>
+
+            </button>
+            <button class="btn btn-round btn-success btn-sm" @click="add_quantity(1)">
+                <i class="material-icons">add</i>
+                <div class="ripple-container"></div>
+            </button>
+        </div>
+
+
+    </div>
+
+    <div class="text-right">
+
+        <div class="btn-group ltr text-right">
+
+
+
+
+
+            <button @click="add_to_cart()" class="btn btn-rose btn-round">
+                هر
+                <span v-text="shop.unit_name"></span>
+                <span v-text="to_price(shop.unit_price,'{{CURRENCY}}')"></span>
+
+            </button>
+            <button @click="add_to_cart()" class="btn btn-rose btn-round">
+                <i class="material-icons">shopping_cart</i>
+
+                <span class="farsi">
+                    افزودن به سبد خرید
+                </span>
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="alert alert-success farsi rtl text-right rounded" v-if="done">
+        <div class="container">
+            <div class="alert-icon">
+                <i class="material-icons">check</i>
+            </div>
+
+
+
+            <span v-html="message">
+
+            </span>
+        </div>
+    </div>
+
+    <hr>
+</div>
