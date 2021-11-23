@@ -1,7 +1,7 @@
 {% extends "restaurant/layout.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <div class="card farsi text-right" id="meal-app">
             <div class="card-header">
                 <h4 class="title">
@@ -41,9 +41,15 @@
                     {{meal.meal_type}}
                 </div>
                 <div>
-                    رزرو شده برای
-                    {{meal.reservedmeal_set.all|length}} نفر
+                    رزرو شده :
+                    {{meal.reserves_count}} پرس
                 </div>
+
+                <div>
+                    سرو شده :
+                    {{meal.served_count}} پرس
+                </div>
+
                 {% if reserved_meal %}
 
                 <div>
@@ -80,7 +86,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card farsi text-right">
             <div class="card-header">
                 <h4 class="title">
@@ -97,6 +103,13 @@
                     </small>
                     {{reserved_meal.guest.id}}
                     {{reserved_meal.guest.profile.name}}
+
+
+                    (
+                        {{reserved_meal.quantity}}
+پرس 
+                    )
+
                 </div>
                 {% endfor %}
             </div>

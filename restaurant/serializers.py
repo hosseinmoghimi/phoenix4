@@ -28,4 +28,4 @@ class ReservedMealSerializer(serializers.ModelSerializer):
     guest=GuestSerializer()
     class Meta:
         model=ReservedMeal
-        fields=['id','meal','guest' ,'persian_date_served','get_edit_url','get_absolute_url']
+        fields=['id','meal','quantity','guest' ,'persian_date_served','get_edit_url','get_absolute_url']

@@ -10,6 +10,7 @@ class ServeMealForm(forms.Form):
     meal_id=forms.IntegerField(required=True)
 class ReserveMealForm(forms.Form):
     meal_id=forms.IntegerField(required=True)
+    quantity=forms.IntegerField(required=False)
     guest_id=forms.IntegerField(required=False)
 class UnreserveMealForm(forms.Form):
     meal_id=forms.IntegerField(required=True)

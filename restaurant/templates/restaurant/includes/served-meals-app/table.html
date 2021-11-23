@@ -34,6 +34,13 @@
                 </div>
 
             </td>
+
+            <td>
+                 <span v-text="served_meal.quantity"></span>
+                   
+
+            </td>
+
             <td>
                 <div v-for="food in served_meal.meal.foods" class="mx-2">
                     <a :href="food.get_absolute_url">

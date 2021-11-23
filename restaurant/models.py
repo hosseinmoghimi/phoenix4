@@ -61,6 +61,12 @@ class Meal(models.Model):
     date_served=models.DateField(_("date_served"), auto_now=False, auto_now_add=False)
     meal_type=models.CharField(_("meal type"),choices=MealTypeEnum.choices, max_length=50)
     reserved=models.BooleanField(_("reserved"),default=False)
+    def served_count(self):
+        a=self.reservedmeal_set.exclude(date_served=None)
+        sum=0
+        for ss in a:
+            sum+=ss.quantity
+        return sum
     def is_reserved(self, *args, **kwargs):
         if 'guest_id' not in kwargs:
             return False
@@ -70,7 +76,11 @@ class Meal(models.Model):
 
     class_name="meal"
     def reserves_count(self):
-        return len(self.reservedmeal_set.all())
+        a=self.reservedmeal_set.all()
+        sum=0
+        for ss in a:
+            sum+=ss.quantity
+        return sum
     class Meta:
         verbose_name = _("Meal")
         verbose_name_plural = _("Meals")

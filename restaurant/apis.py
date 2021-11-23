@@ -18,10 +18,12 @@ class MealApi(APIView):
                 log+=1
                 meal_id=reserve_meal_form.cleaned_data['meal_id']
                 guest_id=reserve_meal_form.cleaned_data['guest_id']
+                quantity=reserve_meal_form.cleaned_data['quantity']
                  
                 reserved_meal=ReservedMealRepo(request=request).reserve_meal(
                     meal_id=meal_id,
                     guest_id=guest_id,
+                    quantity=quantity
                     )
 
                 if reserved_meal is not None:

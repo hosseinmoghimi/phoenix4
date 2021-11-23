@@ -1,5 +1,7 @@
 from django.http import request
 from django.utils import timezone
+
+from restaurant.serializers import HostSerializer
 from .apps import APP_NAME
 from .models import Guest,Food, Host, Meal, ReservedMeal
 from authentication.repo import ProfileRepo
@@ -107,6 +109,7 @@ class ReservedMealRepo():
     def reserve_meal(self, *args, **kwargs):
         meal_id=kwargs['meal_id'] if 'meal_id' in kwargs else None
         guest_id=kwargs['guest_id'] if 'guest_id' in kwargs else None
+        quantity=kwargs['quantity'] if 'quantity' in kwargs else 1
         me_guest=GuestRepo(request=self.request).me
         if guest_id is None:
             if me_guest is not None:
@@ -123,6 +126,7 @@ class ReservedMealRepo():
             reserved_meal = ReservedMeal()
             reserved_meal.guest_id=guest_id
             reserved_meal.meal_id=meal_id
+            reserved_meal.quantity=quantity
             reserved_meal.save()
             return reserved_meal
   
@@ -156,7 +160,14 @@ class ReservedMealRepo():
             objects=objects.filter(parent_id=kwargs['parent_id'])
         return objects.all()
     def serve_meal(self, *args, **kwargs):
+        me_host=HostRepo(request=self.request).me
         reserved_meal=self.reserved_meal(*args, **kwargs)
+        if self.user.has_perm(APP_NAME+".change_reservedmeal"):
+            pass
+        elif me_host is not None and me_host.id==reserved_meal.host.id:
+            pass
+        else:
+            return
         if reserved_meal is None or reserved_meal.date_served is not None:
             return
         reserved_meal.date_served=timezone.now()
@@ -229,12 +240,15 @@ class HostRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
         self.user = None
+        self.me=None
+        self.profile=None
         if 'request' in kwargs:
             self.request = kwargs['request']
             self.user = self.request.user
         if 'user' in kwargs:
-            self.user = kwargs['user']
-        
+            self.user = kwargs['user']  
+        self.me=ProfileRepo(request=self.request).me
+        self.me=Host.objects.filter(profile=self.profile).first()
         self.objects=Host.objects
     def host(self, *args, **kwargs):
         pk=0
