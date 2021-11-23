@@ -14,6 +14,7 @@
         data: function () {
             return {
                 confirm_delete: false,
+                quantity:1,
             }
         },
         methods: {
@@ -32,12 +33,13 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     meal_id: this.meal.id,
                     guest_id: meals_app.guest_id,
+                    quantity: this.quantity,
                 }
                 let meal = this.meal
                 let posting = $.post(url_reserve_meal, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
-                        meal.reserved = true
+                        meal.reserved = data.reserved_meal.quantity
                         meal.reserves_count = data.reserved_meal.meal.reserves_count
 
                     }
@@ -54,7 +56,7 @@
                 let posting = $.post(url_unreserve_meal, payload)
                 posting.done((data) => {
                     if (data.result === 'SUCCEED') {
-                        meal.reserved = false
+                        meal.reserved = 0
                         meal.reserves_count = data.meal.reserves_count
                     }
                 })

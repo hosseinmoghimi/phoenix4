@@ -1,0 +1,97 @@
+<div class="card farsi text-right" id="meal-app">
+    <div class="card-header">
+        <h4 class="title">
+            {{meal.title}}
+            {% if perms.restaurant.change_meal %}
+            <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
+                <i class="fa fa-edit text-info"></i>
+            </a>
+            {% endif %}
+        </h4>
+    </div>
+
+    <div class="card-body">
+        <div>
+            {% for food in meal.foods.all %}
+
+            <a class="mx-2" href="{{food.get_absolute_url}}">
+                {{food.title}}
+            </a>
+
+
+            {% include "restaurant/includes/foods-app/food-spec.html" %}
+
+
+            {% endfor %}
+            {% if perms.restaurant.change_meal %}
+            <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
+                <i class="fa fa-edit text-info"></i>
+            </a>
+            {% endif %}
+        </div>
+
+        <div>
+            {{meal.persian_date_served}}
+        </div>
+        <div>
+            {{meal.meal_type}}
+        </div>
+        <div>
+            رزرو شده :
+            {{meal.reserves_count}} پرس
+        </div>
+
+        <div>
+            سرو شده :
+            {{meal.served_count}} پرس
+        </div>
+
+
+
+        
+        <div>
+            سرو شده :
+            
+            <span v-text="served_count"></span>
+            پرس
+        </div>
+
+
+        {% if reserved_meal %}
+
+        <div>
+            رزرو شده برای
+            <a href="{{reserved_meal.guest.get_absolute_url}}">
+                {{reserved_meal.guest.profile.name}}
+            </a>
+            در
+            <a href="{{reserved_meal.get_absolute_url}}">
+                {{reserved_meal.persian_date_reserved}}
+            </a>
+        </div>
+
+
+        {% if reserved_meal.date_served %}
+
+
+        <div>
+            سرو شده در
+
+            <a href="{{reserved_meal.get_absolute_url}}">
+                {{reserved_meal.persian_date_served}}
+            </a>
+        </div>
+
+        {% endif %}
+        {% endif %}
+
+    </div>
+    <div class="card-footer">
+        {% if reserve_meal_form %}
+        <input type="number" v-model="quantity" class="form-control" required placeholder="تعداد پرس رزرو">
+        <button class="btn btn-info" @click="reserve_meal()">
+            رزرو غذا
+        </button>
+        {% endif %}
+    </div>
+</div>

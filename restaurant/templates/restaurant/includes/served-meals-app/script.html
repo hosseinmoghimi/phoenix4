@@ -22,6 +22,11 @@
                         served_meals_app.served_meals.reverse()
                         served_meals_app.served_meals.push(data.served_meal)
                         served_meals_app.served_meals.reverse()
+
+
+                        meal_app.served_count+=data.served_meal.quantity
+
+
                     }
                 })
             },

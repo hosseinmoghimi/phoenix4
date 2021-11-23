@@ -2,6 +2,8 @@
     let url_reserve_meal="{% url 'restaurant:reserve_meal' %}"
     let meal_app_data = {
         guest_id: guest_id,
+        quantity:1,
+        served_count:parseInt(`{{meal.served_count}}`),
 
     }
     let meal_app = new Vue({
@@ -12,6 +14,7 @@
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     meal_id: meal_id,
+                    quantity: this.quantity,
                     guest_id: guest_id,
                 }
 

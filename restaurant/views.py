@@ -42,7 +42,7 @@ class BasicViews(View):
         meals=MealRepo(request=request).list(*args, **kwargs)
         if guest is not None:
             for meal in meals:
-                meal.is_reserved(guest_id=guest.id)
+                meal.update_reserved(guest_id=guest.id)
 
         context['meals']=meals
         meals_s=json.dumps(MealSerializer(meals,many=True).data)
@@ -122,9 +122,8 @@ class MealViews(View):
         guest=context['me_guest']
         if 'guest_id' in kwargs:
             guest=GuestRepo(request=request).guest(pk=kwargs['guest_id'])
-            print(guest)
         for meal in meals:
-            meal.is_reserved(guest_id=guest.id)
+            meal.update_reserved(guest_id=guest.id)
         meals_s=json.dumps(MealSerializer(meals,many=True).data)
         context['meals_s']=meals_s
         guests=GuestRepo(request=request).list()
