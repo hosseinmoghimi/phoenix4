@@ -2,12 +2,18 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-     
 
-{% include "restaurant/includes/meal-app/template.html" %}
+
+        {% include "restaurant/includes/meal-app/template.html" %}
 
     </div>
-    <div class="col-md-4">
+
+    <div class="col-md-12">
+        {% include "restaurant/includes/served-meals-app/template.html" %}
+
+    </div>
+
+    <div class="col-md-12">
         <div class="card farsi text-right">
             <div class="card-header">
                 <h4 class="title">
@@ -19,16 +25,19 @@
                 {% for reserved_meal in meal.reservedmeal_set.all %}
                 <div>
                     <small class="text-muted ml-3">
-                        {{forloop.counter}}
+                        {{forloop.counter}} -
 
                     </small>
-                    {{reserved_meal.guest.id}}
-                    {{reserved_meal.guest.profile.name}}
+                    <a href="{{reserved_meal.guest.get_absolute_url}}">
+
+                        {{reserved_meal.guest.id}}
+                        {{reserved_meal.guest.profile.name}}
+                    </a>
 
 
                     (
-                        {{reserved_meal.quantity}}
-پرس 
+                    {{reserved_meal.quantity}}
+                    پرس
                     )
 
                 </div>
@@ -36,12 +45,6 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-12">
-        {% include "restaurant/includes/served-meals-app/template.html" %}
-
-    </div>
-
 </div>
 {% endblock content %}
 

@@ -1,0 +1,13 @@
+<script>
+    let reserved_meals = JSON.parse(`{{reserved_meals_s|escapejs}}`)
+    let reserved_meals_app_data = {
+        reserved_meals: reserved_meals
+    }
+    let reserved_meals_app = new Vue({
+        el: "#reserved-meals-app",
+        data: reserved_meals_app_data,
+        methods: {
+             
+        }
+    })
+</script>

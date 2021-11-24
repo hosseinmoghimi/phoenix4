@@ -156,6 +156,8 @@ class ReservedMealRepo():
         objects = self.objects
         if 'meal_id' in kwargs:
             objects = objects.filter(meal_id=kwargs['meal_id'])
+        if 'guest_id' in kwargs:
+            objects = objects.filter(guest_id=kwargs['guest_id'])
         if 'parent_id' in kwargs:
             objects=objects.filter(parent_id=kwargs['parent_id'])
         return objects.all()

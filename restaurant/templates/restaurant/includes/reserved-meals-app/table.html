@@ -1,0 +1,92 @@
+<table class="table table-striped">
+    <thead>
+        {% if not guest %}
+
+        <th>
+            مهمان
+        </th>
+        {% endif %}
+        <th>
+            تعداد پرس رزرو
+        </th>
+        <th>
+            غذا
+        </th>
+        <th>
+            وعده
+        </th>
+        <th>
+            تاریخ سرو
+        </th>
+        <th>
+
+        </th>
+
+    </thead>
+    <tbody>
+        <tr v-for="reserved_meal in reserved_meals">
+            {% if not guest %}
+
+            <td>
+                <div class="media">
+                    <a :href="reserved_meal.guest.get_absolute_url">
+                        <img :src="reserved_meal.guest.profile.image" class="rounded-circle" width="48" alt="">
+                    </a>
+                    <div class="media-body mt-3 mr-2">
+                        <div>
+
+                            <a :href="reserved_meal.guest.get_absolute_url">
+                                <span v-text="reserved_meal.guest.profile.name"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+            {% endif %}
+
+            <td>
+                <span v-text="reserved_meal.quantity"></span>
+
+
+            </td>
+
+            <td>
+                <div v-for="food in reserved_meal.meal.foods" class="mx-2">
+                    <a :href="food.get_absolute_url">
+
+                        <span v-text="food.title"></span>
+                    </a>
+
+                </div>
+                </span>
+            </td>
+            <td>
+                <a :href="reserved_meal.meal.get_absolute_url">
+
+                    <span v-text="reserved_meal.meal.meal_type"></span>
+                    
+                    <div>
+                        <small class="text-muted">
+                            <span v-text="reserved_meal.persian_date_reserved"></span>
+                        </small>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <div>
+                    <small class="text-muted">
+                        <span v-text="reserved_meal.persian_date_served"></span>
+                    </small>
+                </div>
+            </td>
+            <td>
+                {% if perms.restaurant.change_reservedmeal %}
+                <a :href="reserved_meal.get_edit_url" target="_blank" title="ویرایش">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>

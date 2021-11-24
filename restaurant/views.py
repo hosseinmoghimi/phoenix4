@@ -78,6 +78,11 @@ class GuestViews(View):
         guest=GuestRepo(request=request).guest(*args, **kwargs)
         context['guest']=guest
 
+        reserved_meals=ReservedMealRepo(request=request).list(guest_id=guest.id)
+        context['reserved_meals']=reserved_meals
+        reserved_meals_s=json.dumps(ReservedMealSerializer(reserved_meals,many=True).data)
+        context['reserved_meals_s']=reserved_meals_s
+
         
         return render(request,TEMPLATE_ROOT+"guest.html",context)
 

@@ -1,6 +1,8 @@
 <div class="card farsi text-right" id="meal-app">
     <div class="card-header">
         <h4 class="title">
+            {{meal.meal_type}}
+            {{meal.persian_date_served}}
             {{meal.title}}
             {% if perms.restaurant.change_meal %}
             <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
@@ -23,18 +25,13 @@
 
 
             {% endfor %}
-            {% if perms.restaurant.change_meal %}
-            <a href="{{meal.get_edit_url}}" title="ویرایش" class="mx-2" target="_blank">
-                <i class="fa fa-edit text-info"></i>
-            </a>
-            {% endif %}
+           
         </div>
 
         <div>
-            {{meal.persian_date_served}}
-        </div>
-        <div>
             {{meal.meal_type}}
+            {{meal.persian_date_served}}
+         
         </div>
      
 
@@ -42,10 +39,12 @@
 
 
         
-        <div>
+        <div class="rtl">
             سرو شده :
             
-            <span class="h3" v-text="served_count"></span>/    {{meal.reserves_count}}
+            {{meal.reserves_count}}
+            /
+            <span class="h3" v-text="served_count"></span>
             پرس
         </div>
 
