@@ -40,6 +40,7 @@
                 posting.done((data) => {
                     if(data.result==='SUCCEED'){
                         served_meals=served_meals_app.served_meals
+                        meal_app.served_count-=data.reserved_meal.quantity
                         served_meals_app.served_meals=served_meals.filter(served_meal=>(served_meal.id!=data.reserved_meal.id))
                     }
                 })

@@ -36,15 +36,8 @@
         <div>
             {{meal.meal_type}}
         </div>
-        <div>
-            رزرو شده :
-            {{meal.reserves_count}} پرس
-        </div>
+     
 
-        <div>
-            سرو شده :
-            {{meal.served_count}} پرس
-        </div>
 
 
 
@@ -52,7 +45,7 @@
         <div>
             سرو شده :
             
-            <span v-text="served_count"></span>
+            <span class="h3" v-text="served_count"></span>/    {{meal.reserves_count}}
             پرس
         </div>
 

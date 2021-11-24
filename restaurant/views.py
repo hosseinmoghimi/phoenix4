@@ -28,6 +28,8 @@ def getContext(request):
         'title':parameter_repo.parameter(name='عنوان').value,
     }
     return context
+
+
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -68,6 +70,7 @@ class BasicViews(View):
         
         context['reserve_meal_form']=ReserveMealForm()
         return render(request,TEMPLATE_ROOT+"index.html",context)
+
 
 class GuestViews(View):
     def guest(self,request,*args, **kwargs):
@@ -134,7 +137,6 @@ class MealViews(View):
         return render(request,TEMPLATE_ROOT+"meals.html",context)
 
 
-
 class HostViews(View):
     def host(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -158,6 +160,7 @@ class HostViews(View):
         context['hosts_s']=json.dumps(HostSerializer(hosts,many=True).data)
         context['add_host_form']=AddHostForm()
         return render(request,TEMPLATE_ROOT+"hosts.html",context)
+
 
 class FoodViews(View):
     def food(self,request,*args, **kwargs):
