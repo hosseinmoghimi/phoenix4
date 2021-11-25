@@ -106,6 +106,18 @@
                             </span>
                         </span>
                     </P>
+
+                    {% for projecttransaction in project.projecttransaction_set.all %}
+                    <div>
+                        <p>
+
+                            <a href="{{projecttransaction.get_absolute_url}}">
+                                <img width="64" src="{% static 'accounting/icons/financial.svg' %}" alt="">
+                                اطلاعات حسابداری
+                        </p>
+                        </a>
+                    </div>
+                    {% endfor %}
                     <p>
 
                         {{project.start_date|to_persian_date|safe}} ~

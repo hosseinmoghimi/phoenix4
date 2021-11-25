@@ -254,7 +254,6 @@ class Project(ProjectManagerPage):
         return Project.objects.filter(pk=self.parent_id).first()
 
     def update_accounting_data(self, *args, **kwargs):
-        print(10*"$#")
         if self.employer is None or self.employer.owner is None:
             return
         if self.contractor is None or self.contractor.owner is None:
@@ -262,13 +261,15 @@ class Project(ProjectManagerPage):
             
         from accounting.models import ProjectTransaction,FinancialAccount
         ProjectTransaction.objects.filter(project=self).delete()
+        if (self.sum_material_requests()+self.sum_service_requests())==0:
+            return
         pt=ProjectTransaction()
         pt.project=self
         pt.amount=self.sum_material_requests()+self.sum_service_requests()
         pt.pay_from=FinancialAccount.get_by_profile_or_new(profile_id=self.contractor.owner.id)
         pt.pay_to=FinancialAccount.get_by_profile_or_new(profile_id=self.employer.owner.id)
         pt.date_paid=self.date_added
-        pt.title=f"""بابت حساب پروژه - {self.title}"""
+        pt.title=f"""بابت حساب پروژه """
         pt.save()
 
     def save(self, *args, **kwargs):
@@ -524,9 +525,10 @@ class Request(models.Model):
         return PersianCalendar().from_gregorian(self.date_requested)
     
     def save(self,*args, **kwargs):
+        a=super(Request,self).save(*args, **kwargs)
         if self.project is not None:
             self.project.update_accounting_data()
-        return super(Request,self).save(*args, **kwargs)
+        return a
     
     def total(self):
         total=0

@@ -7,10 +7,11 @@
                 عنوان
             </th>
             <th>
-                بستانکار
+             
+                
             </th>
-            <th>
-                نحوه پرداخت
+            <th class="text-left">
+                بستانکار
             </th>
             <th>
                 بدهکار
@@ -37,13 +38,6 @@
                     <span v-html="transaction.get_icon"></span>
                     <a :href="transaction.get_absolute_url">
                         <span v-text="transaction.title"></span>
-                    </a>
-                </td>
-                <td>
-                    <a :href="transaction.pay_from.get_absolute_url">
-                        <img :src="transaction.pay_from.profile.image" class="rounded-circle" width="32" alt="">
-                        <span v-text="transaction.pay_from.profile.name"></span>
-
                     </a>
                 </td>
                 <td>
@@ -74,7 +68,17 @@
                     </div>
 
                 </td>
+                <td class="text-left">
+                    <a :href="transaction.pay_from.get_absolute_url">
+                        <span v-text="transaction.pay_from.profile.name"></span>
+                        <img :src="transaction.pay_from.profile.image" class="rounded-circle" width="32" alt="">
+
+                    </a>
+                    <i class="fa fa-arrow-left"></i>
+                </td>
                 <td>
+                    <i class="fa fa-arrow-left"></i>
+
                     <a :href="transaction.pay_to.get_absolute_url">
                         <img :src="transaction.pay_to.profile.image" class="rounded-circle" width="32" alt="">
                         <span v-text="transaction.pay_to.profile.name"></span>

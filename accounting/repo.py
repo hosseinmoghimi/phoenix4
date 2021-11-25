@@ -258,7 +258,7 @@ class TransactionRepo:
         if 'user' in kwargs:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=Transaction.objects.order_by('date_paid')
+        self.objects=Transaction.objects.order_by('-date_paid')
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'financial_account_id' in kwargs:

@@ -167,7 +167,7 @@ class FinancialAccountViews(View):
         context=getContext(request=request)
         financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)
         context['financial_account']=financial_account
-        transactions=financial_account.transactions()
+        transactions=TransactionRepo(request=request).list(financial_account_id=financial_account.id)
         context['transactions']=transactions
         transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
         context['transactions_s']=transactions_s
