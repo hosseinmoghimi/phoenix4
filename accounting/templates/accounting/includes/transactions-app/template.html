@@ -76,10 +76,10 @@
                         <img :src="transaction.pay_from.profile.image" class="rounded-circle" width="32" alt="">
 
                     </a>
-                    <i class="fa fa-arrow-left"></i>
+                    <i class="fa fa-arrow-left text-success"></i>
                 </td>
                 <td>
-                    <a :href="transaction.get_transaction2_url">
+                    <a :href="transaction.get_transaction2_url" :title="'صورت حساب بین '+transaction.pay_from.profile.name+' و '+transaction.pay_to.profile.name">
 
                         <i class="fa fa-exchange" aria-hidden="true"></i>
 
@@ -87,7 +87,7 @@
                     </a>
                 </td>
                 <td>
-                    <i class="fa fa-arrow-left"></i>
+                    <i class="fa fa-arrow-left text-danger"></i>
 
                     <a :href="transaction.pay_to.get_absolute_url">
                         <img :src="transaction.pay_to.profile.image" class="rounded-circle" width="32" alt="">
