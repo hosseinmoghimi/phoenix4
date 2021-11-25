@@ -47,8 +47,7 @@ def getContext(request):
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
         'logo':PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureNameEnums.LOGO)
     }
-    print(context['app']['logo'].image())
-    print(context['app']['logo'].pk)
+    
     return context
 
 

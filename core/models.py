@@ -591,6 +591,10 @@ class Document(Icon):
         return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/change/'
 
     
+    def get_delete_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/document/{self.pk}/delete/'
+
+    
 class PageDocument(Document):
     page=models.ForeignKey("BasicPage",related_name="documents", verbose_name=_("page"),null=True,blank=True, on_delete=models.CASCADE)
     
