@@ -194,7 +194,7 @@ class Project(ProjectManagerPage):
     weight = models.IntegerField(_("ضریب و وزن پروژه"), default=10)
     locations = models.ManyToManyField(
         "location", blank=True, verbose_name=_("locations"))
-
+    
     def get_event_chart_url(self):
         return reverse(APP_NAME+":project_events_chart", kwargs={'project_id': self.pk})
 
@@ -253,7 +253,27 @@ class Project(ProjectManagerPage):
     def parent_project(self):
         return Project.objects.filter(pk=self.parent_id).first()
 
+    def update_accounting_data(self, *args, **kwargs):
+        print(10*"$#")
+        if self.employer is None or self.employer.owner is None:
+            return
+        if self.contractor is None or self.contractor.owner is None:
+            return
+            
+        from accounting.models import ProjectTransaction,FinancialAccount
+        ProjectTransaction.objects.filter(project=self).delete()
+        pt=ProjectTransaction()
+        pt.project=self
+        pt.amount=self.sum_material_requests()+self.sum_service_requests()
+        pt.pay_from=FinancialAccount.get_by_profile_or_new(profile_id=self.contractor.owner.id)
+        pt.pay_to=FinancialAccount.get_by_profile_or_new(profile_id=self.employer.owner.id)
+        pt.date_paid=self.date_added
+        pt.title=f"""بابت حساب پروژه - {self.title}"""
+        pt.save()
+
     def save(self, *args, **kwargs):
+
+        self.update_accounting_data()
         self.class_name = "project"
         if self.contractor is None and self.parent is not None:
             self.contractor = self.parent_project().contractor
@@ -502,6 +522,12 @@ class Request(models.Model):
     class_name = 'request'
     def persian_date_requested(self):
         return PersianCalendar().from_gregorian(self.date_requested)
+    
+    def save(self,*args, **kwargs):
+        if self.project is not None:
+            self.project.update_accounting_data()
+        return super(Request,self).save(*args, **kwargs)
+    
     def total(self):
         total=0
         total=self.unit_price*self.quantity
@@ -569,20 +595,7 @@ class MaterialRequest(Request):
         """
 
     def save(self, *args, **kwargs):
-        # updated=False
-
-        # material_order=self.project.get_material_order
-        # if material_order is not None:
-        #     for line in material_order.orderline_set.all():
-        #         if line.product==self.material.product:
-        #             line.quantity=self.quantity
-        #             line.unit_price=self.unit_price
-        #             line.unit_name=self.unit_name
-        #             line.save()
-        #             updated=True
-        #     if not updated:
-        #         line=OrderLine(product=self.material.product,unit_name=self.unit_name,quantity=self.quantity,unit_price=self.unit_price,order=material_order)
-        #         line.save()
+ 
         self.request_type = RequestTypeEnum.MATERIAL_REQUEST
         return super(MaterialRequest, self).save(*args, **kwargs)
 

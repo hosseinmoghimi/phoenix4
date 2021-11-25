@@ -5,7 +5,7 @@ from core.forms import AddPageImageForm
 from core.repo import ParameterRepo
 from django.utils import translation
 from accounting.models import FinancialAccount
-from accounting.repo import AssetRepo, AssetTransactionRepo, FinancialAccountRepo, MoneyTransactionRepo, TransactionRepo
+from accounting.repo import AssetRepo, AssetTransactionRepo,ProjectTransactionRepo, FinancialAccountRepo, MoneyTransactionRepo, TransactionRepo
 from django.shortcuts import render,reverse
 from core.views import PageContext
 from core.serializers import ImageSerializer
@@ -138,6 +138,15 @@ class TransactionViews(View):
         money_transaction=MoneyTransactionRepo(request=request).money_transaction(*args, **kwargs)
         context['money_transaction']=money_transaction
         return render(request,TEMPLATE_ROOT+"money-transaction.html",context)
+    
+    def project_transaction(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+        context.update(self.getTransactionContext(request,*args, **kwargs))
+        
+        project_transaction=ProjectTransactionRepo(request=request).project_transaction(*args, **kwargs)
+        context['project_transaction']=project_transaction
+        return render(request,TEMPLATE_ROOT+"project-transaction.html",context)
     
     def asset_transaction(self,request,*args, **kwargs):
         context=getContext(request=request)

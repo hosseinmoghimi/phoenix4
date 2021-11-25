@@ -59,6 +59,13 @@
 
                     </a>
 
+                    <a v-if="transaction.project" :href="transaction.project.get_absolute_url">
+                        پروژه
+                        <span v-text="transaction.project.title"></span>
+
+                    </a>
+
+
                     <span v-text="transaction.payment_method"></span>
                     <div>
                         <small class="text-muted" v-html="transaction.description">

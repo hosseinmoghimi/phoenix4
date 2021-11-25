@@ -3,10 +3,15 @@ from .models import Asset, BankAccount, FinancialAccount, Transaction
 from authentication.serializers import ProfileSerializer
 
 from market.models import Order
+from projectmanager.models import Project
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields=['id','get_absolute_url']
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields=['id','title','get_absolute_url']
 
 class AssetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,7 +37,8 @@ class TransactionSerializer(serializers.ModelSerializer):
     pay_from=FinancialAccountSerializer()
     asset=AssetSerializer()
     order=OrderSerializer()
+    project=ProjectSerializer()
     class Meta:
         model = Transaction
-        fields=['id','title','get_edit_url','description','asset','order','pay_to','pay_from','amount','persian_date_paid','rest','get_transaction2_url','get_icon','payment_method','get_color','get_absolute_url']
+        fields=['id','title','get_edit_url','description','asset','project','order','pay_to','pay_from','amount','persian_date_paid','rest','get_transaction2_url','get_icon','payment_method','get_color','get_absolute_url']
  
