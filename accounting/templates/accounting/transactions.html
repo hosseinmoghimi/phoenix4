@@ -16,14 +16,14 @@
                 <p>
 
                     <span class="alert alert-{{financial_account.total|to_transaction_color}}">
-                        مانده : {{financial_account.total|to_price}}
+                        مانده : {{rest|to_price}}
                     </span>
                 </p>
                 {% include "accounting/includes/transactions-app/template.html" %}
                 <p>
 
                     <span class="alert alert-{{financial_account.total|to_transaction_color}}">
-                        مانده : {{financial_account.total|to_price}}
+                        مانده : {{rest|to_price}}
                     </span>
                 </p>
             </div>

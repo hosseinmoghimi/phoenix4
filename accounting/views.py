@@ -84,6 +84,7 @@ class TransactionViews(View):
             if transaction.pay_from_id==financial_account_id:
                 total+=transaction.amount
         context['total']=total
+        context['rest']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
     def transactions2(self,request,*args, **kwargs):
@@ -107,7 +108,11 @@ class TransactionViews(View):
         #         total-=transaction.amount
         #     if transaction.pay_from_id==financial_account_id:
         #         total+=transaction.amount
+        if len(transactions)>0:
+            total=transactions[0].rest
         context['total']=total
+        
+        context['rest']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
     def getTransactionContext(self,request,*args, **kwargs):
@@ -173,6 +178,7 @@ class FinancialAccountViews(View):
         context['transactions_s']=transactions_s
         context['me_financial_account']=FinancialAccountRepo(request=request).me
 
+        context['rest']=financial_account.total()
         
         context['transactions']=TransactionRepo(request=request).list(*args, **kwargs)
         
