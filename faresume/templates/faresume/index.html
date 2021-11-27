@@ -1,7 +1,18 @@
 {% extends "faresume/layout.html" %}
 
 {% block content %}
-  <h4 class="text-center">
- RESUME
-  </h4>
+<h4 class="text-center">
+    RESUME
+</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        {% include "faresume/includes/resume-category-app/template.html" %}
+    </div>
+</div>
 {% endblock content %}
+
+{% block script %}
+{% include "faresume/includes/resume-category-app/script.html" %}
+
+{% endblock script %}
