@@ -19,6 +19,7 @@ urlpatterns = [
     path('tax/', include('tax.urls')),
     path('school/', include('school.urls')),
     path('map/', include('map.urls')),
+    path('faresume/', include('faresume.urls')),
     path('library/', include('library.urls')),
     path('vehicles/', include('vehicles.urls')),
     path('hse/', include('hse.urls')),

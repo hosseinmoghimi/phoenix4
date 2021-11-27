@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', 
     'todocalendar',
     'bms',  
+    'faresume',
     'mafia',
     'restaurant',
     'messenger',
