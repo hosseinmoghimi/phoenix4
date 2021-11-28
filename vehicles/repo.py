@@ -147,7 +147,7 @@ class TripRepo():
         return self.objects.filter(pk=pk).first()
     
     def add_passenger_to_trip(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_passenger"):
+        if not self.user.has_perm(APP_NAME+".change_trip"):
             return
         trip=TripRepo(request=self.request).trip(*args, **kwargs)
         passenger=PassengerRepo(request=self.request).passenger(*args, **kwargs)
