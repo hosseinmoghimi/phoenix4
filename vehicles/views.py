@@ -3,9 +3,9 @@ from projectmanager.repo import LocationRepo
 from django.shortcuts import render
 from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
-from core.views import CoreContext
+from core.views import CoreContext, MessageView
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
+from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddPassengerToTripForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -187,9 +187,29 @@ class AreaViews(View):
 
 
 class PassengerViews(View):
+    def passengers(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        passengers=PassengerRepo(request=request).list(*args, **kwargs)
+        context['passengers']=passengers
+        passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
+        context['passengers_s']=passengers_s
+        context['all_passengers_s']=passengers_s
+        return render(request,TEMPLATE_FOLDER+"passengers.html",context)
+
     def passenger(self,request,*args, **kwargs):
         context=getContext(request=request)
         passenger=PassengerRepo(request=request).passenger(*args, **kwargs)
+        me_passenger=PassengerRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".view_passenger"):
+            pass
+        elif passenger==me_passenger:
+            print(me_passenger)
+            pass
+        else:
+            header_text="دسترسی غیر مجاز برای شما"
+            mm=MessageView(header_text=header_text)
+            return mm.response(request=request)
+
         context['passenger']=passenger
         trips=TripRepo(request=request).list(*args, **kwargs)
         context['trips']=trips
@@ -202,6 +222,19 @@ class TripViews(View):
     def trip(self,request,*args, **kwargs):
         context=getContext(request=request)
         trip=TripRepo(request=request).trip(*args, **kwargs)
+        me_driver=DriverRepo(request=request).me
+        me_passenger=PassengerRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".view_trip"):
+            pass
+        elif trip.driver==me_driver:
+            pass
+        elif me_passenger is not None and me_passenger in trip.passengers.all():
+            pass
+        else:
+            header_text="دسترسی غیر مجاز برای شما"
+            mm=MessageView(header_text=header_text)
+            return mm.response(request=request)
+
         context['trip']=trip
         context['vehicle']=trip.vehicle
         passengers=trip.passengers.all()
@@ -212,7 +245,7 @@ class TripViews(View):
         context['all_passengers']=all_passengers
         all_passengers_s=json.dumps(PassengerSerilizer(all_passengers,many=True).data)
         context['all_passengers_s']=all_passengers_s
-
+        context['add_passenger_to_trip_form']=AddPassengerToTripForm()
         return render(request,TEMPLATE_FOLDER+"trip.html",context)
 
         
@@ -352,11 +385,18 @@ class MaintenanceViews(View):
 class DriverViews(View):
     def driver(self,request,*args, **kwargs):
         context=getContext(request=request)
-
-
         driver=DriverRepo(request=request).driver(*args, **kwargs)
         context['driver']=driver
-
+        me_driver=DriverRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".view_driver"):
+            pass
+        elif driver==me_driver:
+            print(me_driver)
+            pass
+        else:
+            header_text="دسترسی غیر مجاز برای شما"
+            mm=MessageView(header_text=header_text)
+            return mm.response(request=request)
 
         trips=TripRepo(request=request).list(*args, **kwargs)
         context['trips']=trips
@@ -404,3 +444,13 @@ class ServiceManViews(View):
             
     
         return render(request,TEMPLATE_FOLDER+"service-man.html",context)
+    def service_mans(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+
+        service_mans=ServiceManRepo(request=request).list(*args, **kwargs)
+        context['service_mans']=service_mans
+        context['service_mans_s']=json.dumps(ServiceManSerializer(service_mans,many=True).data)
+            
+    
+        return render(request,TEMPLATE_FOLDER+"service-mans.html",context)

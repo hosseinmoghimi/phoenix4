@@ -31,8 +31,10 @@ urlpatterns = [
     path("vehicle_work_event/<int:pk>/",login_required(views.VehicleWorkEventViews().vehicle_work_event),name="vehicleworkevent"),
     path("vehicleevent/<int:pk>/",login_required(views.AreaViews().area),name="vehicleevent"),
     path("maintenance/<int:maintenance_id>/",login_required(views.MaintenanceViews().maintenance),name="maintenance"),
+    path("service_mans/",login_required(views.ServiceManViews().service_mans),name="service_mans"),
     path("service_man/<int:service_man_id>/",login_required(views.ServiceManViews().service_man),name="service_man"),
     path("work_shift/<int:pk>/",login_required(views.WorkShiftViews().work_shift),name="workshift"),
+    path("passengers/",login_required(views.PassengerViews().passengers),name="passengers"),
     path("passenger/<int:passenger_id>/",login_required(views.PassengerViews().passenger),name="passenger"),
 
     path("add_passenger_to_trip/",login_required(apis.TripApi().add_passenger_to_trip),name='add_passenger_to_trip'),

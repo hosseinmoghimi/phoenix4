@@ -75,7 +75,7 @@ class Trip(models.Model):
     date_started=models.DateTimeField(_("شروع سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_ended=models.DateTimeField(_("پایان سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
     paths=models.ManyToManyField("trippath",blank=True, verbose_name=_("مسیر های سرویس"))
-    passengers=models.ManyToManyField("passenger", verbose_name=_("مسافر ها"))
+    passengers=models.ManyToManyField("passenger",blank=True, verbose_name=_("مسافر ها"))
     delay=models.IntegerField(_("تاخیر"),default=0)
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=5000)
     class_name="trip"
@@ -216,8 +216,8 @@ class Area(models.Model):
 
 class Driver(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-    medical_license_photo=models.ForeignKey("core.image",related_name="medical_license_photoes", verbose_name=_("تصویر کارت بهداشت"),null=True,blank=True, on_delete=models.CASCADE)
-    driving_license_photo=models.ForeignKey("core.image",related_name="driving_license_photoes",  verbose_name=_("تصویر گواهینامه"),null=True,blank=True, on_delete=models.CASCADE)
+    medical_license_photo=models.ForeignKey("core.image",related_name="medical_license_photoes", verbose_name=_("تصویر کارت بهداشت"),null=True,blank=True, on_delete=models.SET_NULL)
+    driving_license_photo=models.ForeignKey("core.image",related_name="driving_license_photoes",  verbose_name=_("تصویر گواهینامه"),null=True,blank=True, on_delete=models.SET_NULL)
     start_date=models.DateTimeField(_("start_date"), auto_now=False, auto_now_add=False)
     end_date=models.DateTimeField(_("end_date"), auto_now=False, auto_now_add=False)
     class Meta:

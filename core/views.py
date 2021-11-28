@@ -128,33 +128,33 @@ def DefaultContext(request, app_name='core', *args, **kwargs):
 
 
 class MessageView(View):
-    def __init__(response, *args, **kwargs):
-        response.links = []
-        response.message_text_html = None
-        response.message_color = 'warning'
-        response.has_home_link = True
-        response.header_color = "rose"
-        response.message_icon = ''
-        response.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
-        response.message_text = ""
-        response.header_text = ""
-        response.message_html = ""
+    def __init__(self, *args, **kwargs):
+        self.links = []
+        self.message_text_html = None
+        self.message_color = 'warning'
+        self.has_home_link = True
+        self.header_color = "rose"
+        self.message_icon = ''
+        self.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+        self.message_text = ""
+        self.header_text = ""
+        self.message_html = ""
         if 'message_html' in kwargs:
-            response.message_html = kwargs['message_html']
+            self.message_html = kwargs['message_html']
         if 'message_color' in kwargs:
-            response.message_color = kwargs['message_color']
+            self.message_color = kwargs['message_color']
         if 'has_home_link' in kwargs:
-            response.has_home_link = kwargs['has_home_link']
+            self.has_home_link = kwargs['has_home_link']
         if 'header_color' in kwargs:
-            response.header_color = kwargs['header_color']
+            self.header_color = kwargs['header_color']
         if 'message_icon' in kwargs:
-            response.message_icon = kwargs['message_icon']
+            self.message_icon = kwargs['message_icon']
         if 'header_icon' in kwargs:
-            response.header_icon = kwargs['header_icon']
+            self.header_icon = kwargs['header_icon']
         if 'message_text' in kwargs:
-            response.message_text = kwargs['message_text']
+            self.message_text = kwargs['message_text']
         if 'header_text' in kwargs:
-            response.header_text = kwargs['header_text']
+            self.header_text = kwargs['header_text']
 
 
 

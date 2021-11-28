@@ -58,7 +58,8 @@ class PassengerRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Passenger.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = Passenger.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         objects=self.objects
@@ -73,6 +74,7 @@ class PassengerRepo():
         return objects.all()
 
     def passenger(self, *args, **kwargs):
+        pk=0
         if 'passenger_id' in kwargs:
             pk = kwargs['passenger_id']
         elif 'pk' in kwargs:
@@ -92,8 +94,16 @@ class TripRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Trip.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.objects=Trip.objects.filter(pk=0)
+        self.profile = ProfileRepo(user=self.user).me
+        self.driver = DriverRepo(user=self.user).me
+        self.passenger = PassengerRepo(user=self.user).me
+        if self.user.has_perm(APP_NAME+".view_trip"):
+            self.objects = Trip.objects
+        elif self.driver is not None:
+            self.objects=Trip.objects.filter(driver_id=self.driver.id)
+        elif self.passenger is not None:
+            self.objects=self.passenger.trip_set.all()
 
     def list(self, *args, **kwargs):
         objects=self.objects
@@ -145,7 +155,13 @@ class TripRepo():
         return passenger
 
     def add_trip(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_trip"):
+        me_passenger=PassengerRepo(request=self.request).me
+        passengers =kwargs['passengers'] if 'passengers' in kwargs else []
+        if self.user.has_perm(APP_NAME+".add_trip"):
+            pass
+        elif me_passenger is not None and passengers==[me_passenger.id]:
+            pass
+        else:
             return
         trip=Trip()
         trip.title=kwargs['title'] if 'title' in kwargs else None
@@ -156,7 +172,6 @@ class TripRepo():
         trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
         trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
         trip.delay =kwargs['delay'] if 'delay' in kwargs else 0
-        passengers =kwargs['passengers'] if 'passengers' in kwargs else []
         trip.save()
         passenger_repo=PassengerRepo(request=self.request)
         for passenger_id in passengers:
@@ -299,7 +314,8 @@ class DriverRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Driver.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = Driver.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         return self.objects.all()

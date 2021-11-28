@@ -6,10 +6,17 @@
             trips: all_trips,
         },
         methods: {
+            sum_trips: function () {
+                let sum = 0
+                this.trips.forEach(trip => {
+                    sum += trip.cost
+                })
+                return sum
+            },
             to_price: function (value, currency) {
                 return to_price(value, currency)
             },
-           
+
 
         }
     })

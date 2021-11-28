@@ -1,0 +1,35 @@
+{% extends "vehicles/wide-layout.html" %}
+
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+<h4 class="text-center">
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+</h4>
+<div class="row">
+
+    <div class="col-md-12">
+        {% include "vehicles/includes/servicemans-app/template.html" %}
+
+    </div>
+
+
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let vehicle_id = parseInt("{{vehicle.id}}")
+</script>
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+{% include "vehicles/includes/servicemans-app/script.html" %}
+
+{% endblock script %}
