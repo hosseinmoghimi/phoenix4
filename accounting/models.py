@@ -34,7 +34,6 @@ class Asset(models.Model):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=5000)
-    
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
@@ -278,6 +277,7 @@ class AssetTransaction(Transaction):
             </span>
             """
 
+
 class MarketOrderTransaction(Transaction):
     order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
 
@@ -312,8 +312,6 @@ class MarketOrderTransaction(Transaction):
             {type1}
             </span>
             """
-
-
 
 
 class ProjectTransaction(Transaction):

@@ -44,7 +44,6 @@ class Property(Asset):
 class Car(Asset):
     brand=models.CharField(_("brand"),choices=CarBrandEnum.choices, max_length=50)
     product=models.CharField(_("محصول"), max_length=50)
-    color=models.CharField(_("رنگ"), max_length=50)
     distance=models.IntegerField(_("کارکرد به کیلومتر"))
 
 

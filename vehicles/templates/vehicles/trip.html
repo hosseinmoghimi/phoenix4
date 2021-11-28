@@ -31,13 +31,21 @@
                     </a>
                     {% endif %}
                 </div>
-                {% for trip_path in trip.paths.all %}
                 <div class="my-3">
+                {% for trip_path in trip.paths.all %}
                     <div>
                         <a href="{{trip_path.get_absolute_url}}">
                             {{trip_path.title}}
                         </a>
                     </div>
+                  
+                    {% endfor %}
+                </div>
+
+                
+                {% for trip_path in trip.paths.all %}
+                <div class="my-3">
+                   
                     <span class="text-muted  ">
 
                         مبدا :
@@ -60,6 +68,7 @@
                     </a>
                 </div>
                 {% endfor %}
+
 
                 <div class="my-3">
                     زمان شروع:

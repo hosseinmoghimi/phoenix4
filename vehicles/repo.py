@@ -1,4 +1,3 @@
-from django.db import connections
 from django.http import request
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
@@ -46,6 +45,7 @@ class VehicleRepo():
         
         vehicle.save()
         return vehicle
+
 
 class PassengerRepo():
 
@@ -206,6 +206,11 @@ class TripPathRepo():
         return objects.all()
 
     def trip_path(self, *args, **kwargs):
+        
+        if 'source_id' in kwargs and 'destination_id' in kwargs:
+            source_id = kwargs['source_id']
+            destination_id = kwargs['destination_id']
+            return self.objects.filter(source_id=source_id).filter(destination_id=destination_id).first()
         if 'trip_path_id' in kwargs:
             pk = kwargs['trip_path_id']
         elif 'pk' in kwargs:
@@ -222,14 +227,17 @@ class TripPathRepo():
         duration=kwargs['duration'] if 'duration' in kwargs else 0
         distance=kwargs['distance'] if 'distance' in kwargs else 0
         cost=kwargs['cost'] if 'cost' in kwargs else 0
-        trip_path=TripPath()
-        trip_path.source_id=source_id
-        trip_path.destination_id=destination_id
+        trip_path=self.trip_path(source_id=source_id,destination_id=destination_id)
+        if trip_path is None:
+            trip_path=TripPath()
+            trip_path.source_id=source_id
+            trip_path.destination_id=destination_id
         trip_path.duration=duration
         trip_path.distance=distance
         trip_path.cost=cost
         trip_path.save()
         return trip_path
+
 
 class ServiceManRepo():
     def __init__(self, *args, **kwargs):
@@ -315,6 +323,7 @@ class DriverRepo():
         driver.end_date=kwargs['end_date'] if 'end_date' in kwargs else timezone.now()
         driver.save()
         return driver
+
 
 class MaintenanceRepo():
     def __init__(self, *args, **kwargs):
