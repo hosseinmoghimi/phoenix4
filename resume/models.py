@@ -1,4 +1,4 @@
-from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum
+from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum, languageToIndex
 from django.db.models.fields import DateField
 from tinymce.models import HTMLField
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
@@ -109,7 +109,9 @@ class ResumeIndex(models.Model):
             return f'{STATIC_URL}{TEMPLATE_ROOT}/img/hero-bg.jpg'
     
     def get_absolute_url(self):
-        return reverse(APP_NAME+":resume_index_language", kwargs={"profile_id": self.profile.pk,'language':self.language})
+        
+        language_index=languageToIndex(language=self.language)
+        return reverse(APP_NAME+":resume_index_language", kwargs={"profile_id": self.profile.pk,'language_index':language_index})
     def get_edit_btn(self):
         return f"""
           <a target="_blank" title="edit" href="{self.get_edit_url()}">

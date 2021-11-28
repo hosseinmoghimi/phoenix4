@@ -25,7 +25,23 @@ class LanguageEnum(TextChoices):
     FARSI='farsi',_('farsi')
     RUSSIAN='russian',_('russian')
     ARABIC='arabic',_('arabic')
-
+def languageToIndex(*args, **kwargs):
+    if 'language' in kwargs:
+        if kwargs['language']==LanguageEnum.FARSI:
+            return 2
+        if kwargs['language']==LanguageEnum.ENGLISH:
+            return 1
+        return 1
+        
+    if 'index' in kwargs:
+        if kwargs['index']==2:
+            return LanguageEnum.FARSI
+        if kwargs['index']==1:
+            return LanguageEnum.ENGLISH
+        return LanguageEnum.ENGLISH
+    
+        
+    
 
 class LinkClassEnum(TextChoices):
     twitter="""twitter"""

@@ -1,9 +1,10 @@
-from resume.enums import ResumeItemEnum
-from resume.models import ResumeFact
+from .enums import ResumeItemEnum
+from .models import ResumeFact, ResumeSkill
 from rest_framework.views import APIView
 from core.constants import FAILED,SUCCEED
 from .forms import AddContactMessageForm, AddResumeFactForm, AddResumeItemForm, AddResumeSkillForm
-from .repo import ContactMessageRepo, ResumeFactRepo, ResumeSkillRepo
+from .repo import ContactMessageRepo, ResumeFactRepo, ResumeIndexRepo, ResumeSkillRepo
+from .serializers import ResumeSkillSerializer
 from django.http import JsonResponse
 
 
@@ -46,6 +47,7 @@ class BasicApi(APIView):
         return JsonResponse(context)
     def add_resume_skill(self,request,*args, **kwargs):
         context={}
+        context['result']=FAILED
         log=1
         if request.method=='POST':
             log=2
@@ -53,11 +55,15 @@ class BasicApi(APIView):
             if add_resume_skill_form.is_valid():
                 log=3
                 resume_index_id=add_resume_skill_form.cleaned_data['resume_index_id']
-                language=add_resume_skill_form.cleaned_data['language']
                 title=add_resume_skill_form.cleaned_data['title']
                 percentage=add_resume_skill_form.cleaned_data['percentage']
-                resume_skill=ResumeSkillRepo(request=request,language=language).add(percentage=percentage,resume_index_id=resume_index_id,title=title)
-                return JsonResponse({'result':SUCCEED})
+                priority=add_resume_skill_form.cleaned_data['priority']
+                language=ResumeIndexRepo(request=request).resume_index(pk=resume_index_id).language
+                
+                resume_skill=ResumeSkillRepo(request=request,language=language).add(priority=priority,percentage=percentage,resume_index_id=resume_index_id,title=title)
+                if resume_skill is not None:
+                    context['result']=SUCCEED
+                    context['skill']=ResumeSkillSerializer(resume_skill).data
         context['log']=log
         return JsonResponse(context)
     def add_contact_message(self,request,*args, **kwargs):

@@ -1,5 +1,5 @@
-from mafia.apps import APP_NAME
-from resume.enums import IconEnum, LanguageEnum
+from .apps import APP_NAME
+from .enums import IconEnum, LanguageEnum
 from .models import Resume, ResumeCategory, ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill, ResumeTestimonial,ContactMessage
 from authentication.repo import ProfileRepo
 
@@ -34,7 +34,7 @@ class ResumeIndexRepo:
             pk=kwargs['pk']
         elif 'id' in kwargs:
             pk=kwargs['id']
-        resume_index= self.objects.filter(pk=pk).first()
+        resume_index= ResumeIndex.objects.filter(pk=pk).first()
         return resume_index
 class PortfolioRepo:
     def __init__(self,*args, **kwargs):
@@ -188,7 +188,7 @@ class ResumeSkillRepo:
         if 'user' in kwargs:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=ResumeSkill.objects.all()#.filter(language=self.language)
+        self.objects=ResumeSkill.objects.all()
     
     def resume_skill(self,*args, **kwargs):
         pk=0
