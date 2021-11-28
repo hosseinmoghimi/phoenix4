@@ -23,6 +23,9 @@ class Passenger(models.Model):
     class_name="passenger"
     
 
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':0,'passenger_id':self.pk,'trip_path_id':0})
+    
     class Meta:
         verbose_name = _("Passenger")
         verbose_name_plural = _("Passengers")
@@ -46,7 +49,7 @@ class TripCategory(models.Model):
         """
     
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':self.pk,'driver_id':0,'vehicle_id':0,'trip_path_id':0})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':self.pk,'driver_id':0,'passenger_id':0,'vehicle_id':0,'trip_path_id':0})
     class Meta:
         verbose_name = _("TripCategory")
         verbose_name_plural = _("TripCategorys")
@@ -125,7 +128,7 @@ class TripPath(models.Model):
     def __str__(self):
         return self.title
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':0,'trip_path_id':self.pk})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'passenger_id':0,'vehicle_id':0,'trip_path_id':self.pk})
     
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_path_id": self.pk})
@@ -150,7 +153,7 @@ class Vehicle(Asset):
         verbose_name_plural = _("Vehicles")
 
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':self.pk,'trip_path_id':0})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'passenger_id':0,'vehicle_id':self.pk,'trip_path_id':0})
      
 
     def get_edit_url(self):
@@ -223,7 +226,7 @@ class Driver(models.Model):
         verbose_name_plural = _("Drivers")
 
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':self.pk,'vehicle_id':0,'trip_path_id':0})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'passenger_id':0,'driver_id':self.pk,'vehicle_id':0,'trip_path_id':0})
     
     def __str__(self):
         return self.profile.name

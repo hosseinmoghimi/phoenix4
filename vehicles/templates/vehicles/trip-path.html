@@ -71,17 +71,9 @@
     </div>
 
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="title">
-                    ثبت سفر جدید
-                </h4>
-            </div>
-            <div class="card-body">
-                {% include "vehicles/includes/trips-app/add-trip-form.html" %}
 
-            </div>
-        </div>
+        {% include "vehicles/includes/add-trip-app/card.html" %}
+     
 
     </div>
 
@@ -104,14 +96,14 @@
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 
 {% include "vehicles/includes/trips-app/script.html" %}
-{% include "vehicles/includes/trips-app/add-trip-script.html" %}
+{% include "vehicles/includes/add-trip-app/script.html" %}
 <script>
     $(document).ready(() => {
 
         all_paths.forEach(path => {
             if (path.id == trip_path_id) {
                 add_trip_app.paths.push(path)
-                add_trip_app.cost=path.cost
+                add_trip_app.cost = path.cost
 
             }
         });

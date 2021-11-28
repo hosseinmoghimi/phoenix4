@@ -21,12 +21,34 @@
                             {{passenger.profile.name}}
                         </a>
                         {% if perms.vehicles.change_passenger %}
-                        <a title="ویرایش" target="_blank" href="{{passenger.get_edit_url}}">
-                            <i class="material-icons">
-                                edit
-                            </i>
-                        </a>
+                        <div>
+
+                            <a title="ویرایش" target="_blank" href="{{passenger.get_edit_url}}">
+                                <i class="material-icons">
+                                    edit
+                                </i>
+                                <span class="farsi">
+                                    
+                                    ویرایش
+                                </span>
+                            </a>
+                        </div>
                         {% endif %}
+                        <div>
+
+                            <a class="btn btn-success farsi" href="{% url 'vehicles:trip_request' %}">
+                                درخواست سرویس
+                            </a>
+                        </div>
+                        <div class="my-3">
+                            <a href="{{passenger.get_trips_url}}">
+                                <i class="material-icons">
+                                    commute
+                                </i>
+                                سفرها
+                            </a>
+                        </div>
+
                     </li>
                 </ul>
             </div>

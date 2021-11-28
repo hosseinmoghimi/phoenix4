@@ -4,6 +4,11 @@
 <h3 class="text-center my-3">
   سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
 </h3>
+<div class="text-center">
+  <a class="btn btn-success farsi" href="{% url 'vehicles:trip_request' %}">
+    درخواست سرویس
+  </a>
+</div>
 <div class="row">
   <div class="col-md-4">
     {% include "vehicles/includes/vehicles-app/template.html" %}
@@ -12,57 +17,27 @@
 
   <div class="col-md-4">
     {% include "vehicles/includes/areas-app/template.html" %}
-    
+
   </div>
 
   <div class="col-md-4">
- 
+
     {% include "vehicles/includes/drivers-app/template.html" %}
   </div>
 
 
-
   <div class="col-md-4">
-    <div class="card">
 
-      <div class="card-header">
-        <h4 class="title text-center">
-          سرویس کار ها
-        </h4>
-      </div>
-      <div class="card-body">
-        <ul class="nav flex-column" style="padding-right:10px">
-          {% for service_man in service_mans %}
+    {% include "vehicles/includes/servicemans-app/template.html" %}
 
 
-          <li class="nav-item">
 
-            <div class="media">
-              <a class="nav-link farsi docs-creator" href="{{service_man.get_absolute_url}}">
-                <img src="{{service_man.profile.image}}" class="rounded-circle" width="48" alt="">
-              </a>
-              <div class="media-body">
-                <div>
-                  <a href="{{service_man.get_absolute_url}}">
-                    {{service_man.name}}
-                  </a>
-                </div>
-
-                <div>
-                  <a href="{{service_man.profile.get_absolute_url}}">
-                    {{service_man.profile.name}}
-                  </a>
-                </div>
-
-              </div>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-
-    </div>
   </div>
+  <div class="col-md-4">
+
+    {% include "vehicles/includes/passengers-app/template.html" %}
+  </div>
+
 
   <div class="col-md-12">
     {% include "vehicles/includes/trips-app/template.html" %}
@@ -80,6 +55,8 @@
 {% include "vehicles/includes/drivers-app/script.html" %}
 {% include "vehicles/includes/trips-app/script.html" %}
 {% include "vehicles/includes/areas-app/script.html" %}
+{% include "vehicles/includes/passengers-app/script.html" %}
 
+{% include "vehicles/includes/servicemans-app/script.html" %}
 {% include "vehicles/includes/trip-paths-app/script.html" %}
 {% endblock script %}

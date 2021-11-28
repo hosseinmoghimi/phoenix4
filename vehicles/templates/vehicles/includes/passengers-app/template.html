@@ -13,13 +13,7 @@
                     <img :src="passenger.profile.image" class="rounded-circle" width="48" alt="">
                     <span v-text="passenger.profile.name"></span>
                 </a>
-                {% if perms.vehicles.change_passenger %}
-                <a title="ویرایش" target="_blank" :href="passenger.get_edit_url">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-                {% endif %}
+                
             </li>
 
 
@@ -27,6 +21,8 @@
     </div>
 <div class="card-footer">
     <form @submit.prevent="add_passenger_to_trip()">
+
+        <input type="number" class="form-control" v-model="passenger_id">
         <select class="form-control" v-model="passenger_id" id="">
             <option :value="passenger.id" v-for="passenger in all_passengers" v-text="passenger.profile.name">
             </option>

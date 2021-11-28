@@ -33,6 +33,11 @@
                 </div>
                 {% for trip_path in trip.paths.all %}
                 <div class="my-3">
+                    <div>
+                        <a href="{{trip_path.get_absolute_url}}">
+                            {{trip_path.title}}
+                        </a>
+                    </div>
                     <span class="text-muted  ">
 
                         مبدا :
@@ -139,9 +144,7 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "vehicles/includes/work-shifts-app/script.html" %}
 
-{% include "vehicles/includes/trips-app/script.html" %}
 {% include "vehicles/includes/passengers-app/script.html" %}
 
 {% endblock script %}

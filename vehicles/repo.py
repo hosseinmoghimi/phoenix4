@@ -1,3 +1,4 @@
+from django.db import connections
 from django.http import request
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
@@ -126,6 +127,7 @@ class TripRepo():
         return objects.all()
 
     def trip(self, *args, **kwargs):
+        pk=0
         if 'trip_id' in kwargs:
             pk = kwargs['trip_id']
         elif 'pk' in kwargs:
@@ -154,8 +156,12 @@ class TripRepo():
         trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
         trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
         trip.delay =kwargs['delay'] if 'delay' in kwargs else 0
+        passengers =kwargs['passengers'] if 'passengers' in kwargs else []
         trip.save()
-
+        passenger_repo=PassengerRepo(request=self.request)
+        for passenger_id in passengers:
+            passenger=passenger_repo.passenger(pk=passenger_id)
+            trip.passengers.add(passenger)
         paths =kwargs['paths'] if 'paths' in kwargs else []
         for path in paths:
             path1=TripPathRepo(request=self.request).trip_path(pk=path['id'])

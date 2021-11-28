@@ -165,6 +165,7 @@ class TripApi(APIView):
                 paths=add_trip_form.cleaned_data['paths']
                 cost=add_trip_form.cleaned_data['cost']
                 delay=add_trip_form.cleaned_data['delay']
+                passengers=add_trip_form.cleaned_data['passengers']
                 start_datetime=add_trip_form.cleaned_data['start_datetime']
                 end_datetime=add_trip_form.cleaned_data['end_datetime']
                 if start_datetime is None or start_datetime=="":
@@ -177,6 +178,7 @@ class TripApi(APIView):
                 else:
                     end_datetime=PersianCalendar().from_gregorian(end_datetime)
                 paths=json.loads(paths)
+                passengers=json.loads(passengers)
                 trip=TripRepo(request=request).add_trip(
                     title=title,
                     vehicle_id=vehicle_id,
@@ -186,6 +188,7 @@ class TripApi(APIView):
                     delay=delay,
                     start_datetime=start_datetime,
                     end_datetime=end_datetime,
+                    passengers=passengers,
                 )
                 
                 if trip is not None:

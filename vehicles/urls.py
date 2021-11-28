@@ -9,6 +9,10 @@ urlpatterns = [
     
     path("",login_required(views.BasicViews().home),name="home"),
     
+    path("trip_request/",login_required(views.TripViews().trip_request),name="trip_request"),
+
+
+
     path("areas/",login_required(views.AreaViews().areas),name="areas"),
     path("area/<int:area_id>/",login_required(views.AreaViews().area),name="area"),
 
@@ -18,7 +22,7 @@ urlpatterns = [
     path("vehicles/",login_required(views.VehicleViews().vehicles),name="vehicles"),
     path("vehicle/<int:vehicle_id>/",login_required(views.VehicleViews().vehicle),name="vehicle"),
     
-    path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/",login_required(views.TripViews().trips),name="trips"),
+    path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/<int:passenger_id>/",login_required(views.TripViews().trips),name="trips"),
     path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),
 
     path("trip_paths/",login_required(views.TripViews().trip_paths),name='trippaths'),

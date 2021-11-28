@@ -1,3 +1,4 @@
+from django.http.response import Http404
 from projectmanager.repo import LocationRepo
 from django.shortcuts import render
 from authentication.repo import ProfileRepo
@@ -18,6 +19,8 @@ LAYOUT_PARENT="phoenix/layout.html"
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
+    me_passenger=PassengerRepo(request=request).me
+    context['me_passenger']=me_passenger
     context['app']={
         'home_url':"/vehicles/",
         'title':'ماشین آلات',
@@ -48,6 +51,13 @@ class BasicViews(View):
         drivers=DriverRepo(request=request).list(*args, **kwargs)
         context['drivers']=drivers
         context['drivers_s']=json.dumps(DriverSerializer(drivers,many=True).data)
+ 
+
+        passengers=PassengerRepo(request=request).list(*args, **kwargs)
+        context['passengers']=passengers
+        all_passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
+        context['passengers_s']=all_passengers_s
+        context['all_passengers_s']=all_passengers_s
  
 
         trips=TripRepo(request=request).list(*args, **kwargs)
@@ -204,6 +214,23 @@ class TripViews(View):
         context['all_passengers_s']=all_passengers_s
 
         return render(request,TEMPLATE_FOLDER+"trip.html",context)
+
+        
+    def trip_request(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        me_passenger=context['me_passenger']
+        if me_passenger is None and not request.user.has_perm(APP_NAME+"add_trip"):
+            raise Http404
+        if me_passenger is None:
+            context['passenger_id']=0
+        else:
+            context['passenger_id']=me_passenger.id
+
+
+        context.update(self.add_trip_context(request=request,*args, **kwargs))
+        context['add_trip_form']=AddTripForm()
+        return render(request,TEMPLATE_FOLDER+"trip-request.html",context)
+
     def trips(self,request,*args, **kwargs):
         context=getContext(request=request)
         trips=TripRepo(request=request).list(*args, **kwargs)
