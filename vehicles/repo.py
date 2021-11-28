@@ -145,6 +145,7 @@ class TripRepo():
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+    
     def add_passenger_to_trip(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_passenger"):
             return

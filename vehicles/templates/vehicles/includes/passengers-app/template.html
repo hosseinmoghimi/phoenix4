@@ -22,8 +22,8 @@
 
         </ul>
     </div>
+    {% if trip and add_passenger_to_trip_form %}
     <div class="card-footer">
-        {% if trip and add_passenger_to_trip_form %}
 
         <form @submit.prevent="add_passenger_to_trip()">
 
@@ -34,6 +34,6 @@
             </select>
             <button type="submit" class="btn btn-block btn-primary">افزودن به سفر</button>
         </form>
-        {% endif %}
     </div>
+    {% endif %}
 </div>
