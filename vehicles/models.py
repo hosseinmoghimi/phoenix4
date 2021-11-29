@@ -144,6 +144,8 @@ class Vehicle(Asset):
     model_name=models.CharField(_("مدل"),null=True,blank=True, max_length=50)
     plaque=models.CharField(_("پلاک"),null=True,blank=True, max_length=50)
     driver=models.CharField(_("راننده"), max_length=50,null=True,blank=True)
+    color=models.CharField(_("رنگ"),choices=VehicleColorEnum.choices,default=VehicleColorEnum.SEFID, max_length=50)
+
     kilometer=models.IntegerField(_("کیلومتر"),default=0)
     def save(self,*args, **kwargs):
         self.class_name="vehicle"
