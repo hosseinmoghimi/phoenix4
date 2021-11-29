@@ -18,6 +18,8 @@ class VehiclePage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(VehiclePage,self).save(*args, **kwargs)
+
+
 class Passenger(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     class_name="passenger"
@@ -255,7 +257,7 @@ class WorkShift(models.Model):
         verbose_name_plural = _("WorkShifts")
 
     def __str__(self):
-        return f'{self.vehicle.title} {self.start_time}'
+        return f'{self.vehicle.title} {self.persian_start_time()}'
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":workshift", kwargs={"pk": self.pk})

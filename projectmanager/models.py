@@ -136,6 +136,7 @@ class Employee(models.Model):
         "profile"), on_delete=models.CASCADE)
     organization_unit = models.ForeignKey("organizationunit", verbose_name=_(
         "organizationunit"), on_delete=models.CASCADE)
+    is_default=models.BooleanField(_("is default ?"),default=False)
     class_name = "employee"
     def documents(self):
         return EmployeeDocument.objects.filter(employee=self)

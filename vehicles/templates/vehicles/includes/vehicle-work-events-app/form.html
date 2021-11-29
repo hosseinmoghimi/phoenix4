@@ -74,6 +74,25 @@
 
 
 
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">شیفت کاری</label>
+                <select required v-model="work_shift_id" id="" class="form-control">
+                    {% for work_shift in work_shifts %}
+                    <option value="{{work_shift.id}}">
+                        {{work_shift}}
+                    </option>
+                    {% endfor %}
+
+                </select>
+
+                <small id="emailHeewrle324p" class="form-text farsi text-muted">
+                    رویداد مرتبط را انتخاب کنید.
+                </small>
+            </div>
+
+        </div>
+
 
 
         

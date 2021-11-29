@@ -435,7 +435,7 @@ class WorkShiftRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = WorkShift.objects
+        self.objects = WorkShift.objects.order_by("-start_time")
         self.me = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):

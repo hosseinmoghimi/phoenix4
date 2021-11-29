@@ -107,6 +107,12 @@ class VehicleViews(View):
         context['vehicle_work_events']=vehicle_work_events
         vehicle_work_events_s=json.dumps(VehicleWorkEventSerializer(vehicle_work_events,many=True).data)
         context['vehicle_work_events_s']=vehicle_work_events_s
+        if request.user.has_perm(APP_NAME+".add_vehicleworkevent"):
+            context['event_types']=(i[0] for i in WorkEventEnum.choices)
+            work_shifts=WorkShiftRepo(request=request).list(vehicle_id=vehicle.id).order_by("-start_time")
+            context['work_shifts']=work_shifts
+            context['add_vehicle_work_event_form']=AddVehicleWorkEventForm()
+        
 
 
         

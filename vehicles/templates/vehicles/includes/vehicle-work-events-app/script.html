@@ -8,8 +8,8 @@
         description: "",
         kilometer: "",
         show_form: false,
-        vehicle_id:0,
-        work_shift_id:parseInt("{{work_shift.id}}")
+        vehicle_id:vehicle_id,
+        work_shift_id:0
     }
 </script>
 {% else %}
@@ -48,6 +48,7 @@
 
 
                 }
+                console.log(payload)
                 let posting = $.post(url_add_work_shift, payload)
                 posting.done((data) => {
                     if (data.result === "SUCCEED") {
