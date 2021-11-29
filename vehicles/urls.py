@@ -38,6 +38,8 @@ urlpatterns = [
     path("passenger/<int:passenger_id>/",login_required(views.PassengerViews().passenger),name="passenger"),
 
 
+    path("add_area/",login_required(apis.AreaApi().add_area),name='add_area'),
+    path("add_service_man/",login_required(apis.ServiceManApi().add_service_man),name='add_service_man'),
     path("add_passenger/",login_required(apis.PassengerApi().add_new_passenger),name='add_passenger'),
     path("add_passenger_to_trip/",login_required(apis.TripApi().add_passenger_to_trip),name='add_passenger_to_trip'),
     path("add_work_shift/",login_required(apis.WorkShiftApi().add_work_shift),name='add_work_shift'),

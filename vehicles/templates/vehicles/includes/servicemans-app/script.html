@@ -1,0 +1,28 @@
+
+<script>
+    let service_mans=JSON.parse(`{{service_mans_s|escapejs}}`)
+    let url_add_service_man="{% url 'vehicles:add_service_man' %}"
+    let service_mans_app=new Vue({
+        el:"#service-mans-app",
+        data:{
+            service_mans:service_mans,
+            profile_id :0,
+            name :"",
+        },
+        methods:{
+            add_service_man: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    profile_id: this.profile_id,
+                    name: this.name,
+                }
+                $.post(url_add_service_man, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        service_mans_app.service_mans.push(data.service_man)
+                    }
+                })
+            },
+           
+        }
+    })
+</script>

@@ -87,6 +87,9 @@ class PassengerRepo():
     def add_passenger(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_passenger"):
             return
+        passenger=Passenger.objects.filter(profile_id=kwargs['profile_id']).first()
+        if passenger is not None:
+            return
         passenger=Passenger()
         passenger.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
         passenger.save()
@@ -288,6 +291,19 @@ class ServiceManRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_service_man(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_serviceman"):
+            return
+        service_man=ServiceMan.objects.filter(profile_id=kwargs['profile_id']).first()
+        if service_man is not None:
+            return None
+        service_man=ServiceMan()
+        service_man.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
+        service_man.name=kwargs['name'] if 'name' in kwargs else None
+        service_man.save()
+        return service_man
+
+
 
 class AreaRepo():
     def __init__(self, *args, **kwargs):
@@ -312,6 +328,16 @@ class AreaRepo():
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+    def add_area(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_area"):
+            return
+        area=Area()
+        area.name=kwargs['name'] if 'name' in kwargs else None
+        area.code=kwargs['code'] if 'code' in kwargs else kwargs['name']
+        area.save()
+        return area
+
 
 
 class DriverRepo():
@@ -343,6 +369,9 @@ class DriverRepo():
     def add_driver(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_driver"):
             return
+        driver=Driver.objects.filter(profile_id=kwargs['profile_id']).first()
+        if driver is not None:
+            return None
         driver=Driver()
         driver.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
         driver.start_date=kwargs['start_date'] if 'start_date' in kwargs else timezone.now()

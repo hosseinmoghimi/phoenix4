@@ -5,7 +5,7 @@ from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
 from core.views import CoreContext, MessageView
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddPassengerForm, AddPassengerToTripForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
+from vehicles.forms import AddAreaForm, AddDriverForm, AddMaintenanceForm, AddPassengerForm, AddPassengerToTripForm, AddServiceManForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -187,7 +187,8 @@ class AreaViews(View):
         context['areas']=areas
         areas_s=json.dumps(AreaSerializer(areas,many=True).data)
         context['areas_s']=areas_s
-
+        if request.user.has_perm(APP_NAME+".add_area"):
+            context['add_area_form']=AddAreaForm()
  
         return render(request,TEMPLATE_FOLDER+"areas.html",context)
 
@@ -462,6 +463,13 @@ class ServiceManViews(View):
         service_mans=ServiceManRepo(request=request).list(*args, **kwargs)
         context['service_mans']=service_mans
         context['service_mans_s']=json.dumps(ServiceManSerializer(service_mans,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_serviceman"):
+            context['add_serviceman_form']=AddServiceManForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
+            context['profiles_s']=json.dumps(ProfileSerializer(profiles,many=True).data)
+         
+
             
     
         return render(request,TEMPLATE_FOLDER+"service-mans.html",context)

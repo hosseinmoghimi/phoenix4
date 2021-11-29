@@ -5,8 +5,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
-from vehicles.repo import DriverRepo, MaintenanceRepo, PassengerRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -339,6 +339,60 @@ class PassengerApi(APIView):
                 if passenger is not None:
                     log=4
                     context['passenger']=PassengerSerilizer(passenger).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   
+class AreaApi(APIView):
+    def add_area(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_area_form=AddAreaForm(request.POST)
+            if add_area_form.is_valid():
+                log=3
+                
+                name=add_area_form.cleaned_data['name']
+                code=add_area_form.cleaned_data['code']
+              
+                area=AreaRepo(request=request).add_area(
+                    name=name,
+                    code=code,
+                )
+                
+                if area is not None:
+                    log=4
+                    context['area']=AreaSerializer(area).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   
+class ServiceManApi(APIView):
+    def add_service_man(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_service_man_form=AddServiceManForm(request.POST)
+            if add_service_man_form.is_valid():
+                log=3
+                
+                name=add_service_man_form.cleaned_data['name']
+                profile_id=add_service_man_form.cleaned_data['profile_id']
+              
+                service_man=ServiceManRepo(request=request).add_service_man(
+                    name=name,
+                    profile_id=profile_id,
+                )
+                
+                if service_man is not None:
+                    log=4
+                    context['service_man']=ServiceManSerializer(service_man).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

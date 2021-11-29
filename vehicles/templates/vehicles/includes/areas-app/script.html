@@ -1,17 +1,20 @@
 <script>
-    let url_add_area = "{% url 'vehicles:add_new_driver' %}"
+    let url_add_area = "{% url 'vehicles:add_area' %}"
     let areas = JSON.parse(`{{areas_s|escapejs}}`)
     let areas_app = new Vue({
         el: "#areas-app",
         data: {
             areas: areas,
-            profile_id:0,
+            name:"",
+            code:"",
         },
         methods: {
             add_area: function () {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    profile_id: this.profile_id,
+                    name: this.name,
+                    code: this.code,
+
                 }
                 $.post(url_add_area, payload).done((data) => {
                     if (data.result === 'SUCCEED') {
