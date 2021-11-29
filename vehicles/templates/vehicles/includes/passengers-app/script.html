@@ -1,14 +1,27 @@
 <script>
     let passengers=JSON.parse(`{{passengers_s|escapejs}}`)
     let all_passengers=JSON.parse(`{{all_passengers_s|escapejs}}`)
+    let url_add_passenger="{% url 'vehicles:add_passenger' %}"
     let passengers_app=new Vue({
         el:"#passengers-app",
         data:{
             passengers:passengers,
             all_passengers:all_passengers,
             passenger_id:0,
+            profile_id :0,
         },
         methods:{
+            add_passenger: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    profile_id: this.profile_id,
+                }
+                $.post(url_add_passenger, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        passengers_app.passengers.push(data.passenger)
+                    }
+                })
+            },
             add_passenger_to_trip:function(){
                 let url_add_passenger_to_trip = "{% url 'vehicles:add_passenger_to_trip' %}"
                 let payload = {

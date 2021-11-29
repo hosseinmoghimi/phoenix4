@@ -18,6 +18,10 @@ class AddDriverForm(forms.Form):
     profile_id=forms.IntegerField(  required=True)
 
 
+class AddPassengerForm(forms.Form):
+    profile_id=forms.IntegerField(  required=True)
+
+
 class FilterTripForm(forms.Form):
     title=forms.CharField( max_length=50, required=False)
     vehicle_id=forms.IntegerField(required=False)

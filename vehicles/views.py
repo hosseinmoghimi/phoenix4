@@ -5,7 +5,7 @@ from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
 from core.views import CoreContext, MessageView
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddPassengerToTripForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
+from vehicles.forms import AddDriverForm, AddMaintenanceForm, AddPassengerForm, AddPassengerToTripForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -200,6 +200,11 @@ class PassengerViews(View):
         passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
         context['passengers_s']=passengers_s
         context['all_passengers_s']=passengers_s
+        if request.user.has_perm(APP_NAME+'.add_driver'):
+            context['add_passenger_form']=AddPassengerForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
+            context['profiles_s']=json.dumps(ProfileSerializer(profiles,many=True).data)
         return render(request,TEMPLATE_FOLDER+"passengers.html",context)
 
     def passenger(self,request,*args, **kwargs):

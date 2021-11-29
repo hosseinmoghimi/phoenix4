@@ -5,7 +5,7 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
-from vehicles.repo import DriverRepo, MaintenanceRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.repo import DriverRepo, MaintenanceRepo, PassengerRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
@@ -314,6 +314,31 @@ class DriverApi(APIView):
                 if driver is not None:
                     log=4
                     context['driver']=DriverSerializer(driver).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   
+class PassengerApi(APIView):
+    def add_new_passenger(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_passenger_form=AddPassengerForm(request.POST)
+            if add_passenger_form.is_valid():
+                log=3
+                
+                profile_id=add_passenger_form.cleaned_data['profile_id']
+              
+                passenger=PassengerRepo(request=request).add_passenger(
+                    profile_id=profile_id,
+                )
+                
+                if passenger is not None:
+                    log=4
+                    context['passenger']=PassengerSerilizer(passenger).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

@@ -37,6 +37,8 @@ urlpatterns = [
     path("passengers/",login_required(views.PassengerViews().passengers),name="passengers"),
     path("passenger/<int:passenger_id>/",login_required(views.PassengerViews().passenger),name="passenger"),
 
+
+    path("add_passenger/",login_required(apis.PassengerApi().add_new_passenger),name='add_passenger'),
     path("add_passenger_to_trip/",login_required(apis.TripApi().add_passenger_to_trip),name='add_passenger_to_trip'),
     path("add_work_shift/",login_required(apis.WorkShiftApi().add_work_shift),name='add_work_shift'),
     path("add_trip_path/",login_required(apis.TripApi().add_trip_path),name='add_trip_path'),

@@ -84,6 +84,15 @@ class PassengerRepo():
         return self.objects.filter(pk=pk).first()
 
 
+    def add_passenger(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_passenger"):
+            return
+        passenger=Passenger()
+        passenger.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
+        passenger.save()
+        return passenger
+
+
 class TripRepo():
 
     def __init__(self, *args, **kwargs):
