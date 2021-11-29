@@ -453,6 +453,16 @@ class ServiceManViews(View):
 
         maintenances=MaintenanceRepo(request=request).list(*args, **kwargs)
         context['maintenances_s']=json.dumps(MaintenanceSerializer(maintenances,many=True).data)
+        me_service_man=ServiceManRepo(request=request).me
+        if request.user.has_perm(APP_NAME+".view_serviceman"):
+            pass
+        elif me_service_man is not None and service_man.id==me_service_man.id:
+            pass
+        else:
+            header_text="دسترسی غیر مجاز برای شما"
+            mm=MessageView(header_text=header_text)
+            return mm.response(request=request)
+
             
     
         return render(request,TEMPLATE_FOLDER+"service-man.html",context)

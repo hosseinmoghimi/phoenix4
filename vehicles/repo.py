@@ -277,7 +277,8 @@ class ServiceManRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = ServiceMan.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = ServiceMan.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         return self.objects.all()
