@@ -14,6 +14,9 @@
                     عنوان
                 </th>
                 <th>
+                    وضعیت
+                </th>
+                <th>
                     مسیر ها
                 </th>
                 <th>
@@ -58,10 +61,13 @@
 
 
 
-                            <span :class="'badge badge-'+trip.get_status_color">
+                        
+
+                        </td>
+                        <td>
+                                <span :class="'badge badge-'+trip.get_status_color">
                                 <span v-text="trip.status"></span>
                             </span>
-
                         </td>
                         <td>
                             <div v-for="path in trip.paths">
@@ -132,7 +138,7 @@
                         </td>
                     </tr>
                     <tr v-if="trip.description">
-                        <td colspan="9">
+                        <td colspan="10">
                             <div class="text-muted">
 
                                 توضیحات : <span v-text="trip.description"></span>
@@ -141,10 +147,10 @@
                         </td>
                     </tr>
                     <tr v-if="trip.description">
-                        <td colspan="9"></td>
+                        <td colspan="10"></td>
                     </tr>
                     <tr>
-                        <td colspan="9"></td>
+                        <td colspan="10"></td>
                     </tr>
                 </template>
             </tbody>
