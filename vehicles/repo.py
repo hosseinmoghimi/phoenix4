@@ -75,6 +75,9 @@ class PassengerRepo():
 
     def passenger(self, *args, **kwargs):
         pk=0
+        if 'profile_id' in kwargs:
+            profile_id = kwargs['profile_id']
+            return self.objects.filter(profile_id=profile_id).first()
         if 'passenger_id' in kwargs:
             pk = kwargs['passenger_id']
         elif 'pk' in kwargs:
@@ -358,6 +361,9 @@ class DriverRepo():
         return self.objects.all()
 
     def driver(self, *args, **kwargs):
+        if 'profile_id' in kwargs:
+            profile_id = kwargs['profile_id']
+            return self.objects.filter(profile_id=profile_id).first()
         if 'driver_id' in kwargs:
             pk = kwargs['driver_id']
         elif 'pk' in kwargs:
