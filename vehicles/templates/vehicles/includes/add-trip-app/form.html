@@ -84,7 +84,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="title">ماشین</label>
-                <input type="number" v-model="vehicle_id" placeholder="کد راننده" class="form-control" required>
+                <input type="number" v-model="vehicle_id" placeholder="کد ماشین" class="form-control" required>
                 <select class="form-control" required v-model="vehicle_id" id="">
                     <option v-for="vehicle in vehicles" :value="vehicle.id" v-text="vehicle.title">
                     </option>
@@ -96,7 +96,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="title">راننده</label>
-                <input type="number" v-model="driver_id" pla class="form-control" required>
+                <input type="number" v-model="driver_profile_id" @input="selected_driver_by_profile_id()" placeholder="شناسه پروفایل" class="form-control" required>
 
                 <select class="form-control" required v-model="driver_id" id="">
                     <option v-for="driver in drivers" :value="driver.id" v-text="driver.profile.name">

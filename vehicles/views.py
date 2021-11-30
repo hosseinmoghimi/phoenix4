@@ -47,6 +47,7 @@ class BasicViews(View):
         
         service_mans=ServiceManRepo(request=request).list(*args, **kwargs)
         context['service_mans']=service_mans
+        context['service_mans_s']=json.dumps(ServiceManSerializer(service_mans,many=True).data)
 
         drivers=DriverRepo(request=request).list(*args, **kwargs)
         context['drivers']=drivers

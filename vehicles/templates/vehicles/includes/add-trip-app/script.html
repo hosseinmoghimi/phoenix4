@@ -16,6 +16,7 @@
             waiting: false,
             vehicle_id: 0,
             driver_id: 0,
+            driver_profile_id: 0,
             title: "",
             paths: [],
             path_id: 0,
@@ -48,7 +49,27 @@
 
                 })
             },
+            selected_driver_by_profile_id: function () {
+                let selected_driverr=null
+                drivers.forEach(driver => {
+                    if (driver.id == add_trip_app.driver_profile_id)
+                        selected_driverr = driver
+                });
+                add_trip_app.driver_id=selected_driverr.id
+            },
             add_new_trip: function () {
+                if(add_trip_app.title===""){
+                    add_trip_app.show_message("warning","عنوان سفر را وارد کنید.")
+                    return
+                }
+                if(add_trip_app.vehicle_id==0){
+                    add_trip_app.show_message("warning","وسیله را وارد کنید.")
+                    return
+                }
+                if(add_trip_app.driver_id==0){
+                    add_trip_app.show_message("warning","راننده را وارد کنید.")
+                    return
+                }
                 add_trip_app.waiting = true
                 let paths_ = []
                 this.paths.forEach(path => {
@@ -57,7 +78,9 @@
                     })
                 });
                 let paths = JSON.stringify(paths_)
-                let passengers = JSON.stringify([passenger_id])
+                let passengers = JSON.stringify([])
+                if (typeof passenger_id != "undefined")
+                    passengers = JSON.stringify([passenger_id])
                 let payload = {
                     title: this.title,
                     csrfmiddlewaretoken: csrfmiddlewaretoken,

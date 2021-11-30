@@ -22,6 +22,22 @@
                     }
                 })
             },
+            select_passenger_by_profile_id:function(){
+                let passenger1=null
+                all_passengers.forEach(passenger => {
+                    if (passenger.profile.id == passengers_app.profile_id)
+                    passenger1 = passenger
+                });
+                this.passenger_id=passenger1.id
+            },
+            select_passenger_by_passenger_id: function () {
+                let passenger1=null
+                all_passengers.forEach(passenger => {
+                    if (passenger.id == passengers_app.passenger_id)
+                    passenger1 = passenger
+                });
+                return passenger1
+            },
             add_passenger_to_trip:function(){
                 let url_add_passenger_to_trip = "{% url 'vehicles:add_passenger_to_trip' %}"
                 let payload = {

@@ -188,6 +188,10 @@ class TripRepo():
         trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
         trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
         trip.delay =kwargs['delay'] if 'delay' in kwargs else 0
+        if trip.vehicle_id is None or trip.driver_id is None:
+            return
+        if trip.vehicle_id ==0 or trip.driver_id==0:
+            return
         trip.save()
         passenger_repo=PassengerRepo(request=self.request)
         for passenger_id in passengers:
