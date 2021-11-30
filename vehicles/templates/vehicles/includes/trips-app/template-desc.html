@@ -131,8 +131,8 @@
                             {% endif %}
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="8">
+                    <tr v-if="trip.description">
+                        <td colspan="9">
                             <div class="text-muted">
 
                                 توضیحات : <span v-text="trip.description"></span>
@@ -140,11 +140,11 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="8"></td>
+                    <tr v-if="trip.description">
+                        <td colspan="9"></td>
                     </tr>
                     <tr>
-                        <td colspan="8"></td>
+                        <td colspan="9"></td>
                     </tr>
                 </template>
             </tbody>
