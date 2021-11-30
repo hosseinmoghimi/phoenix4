@@ -8,6 +8,9 @@
         <table class="table table-striped">
             <thead>
                 <th>
+                    دسته بندی
+                </th>
+                <th>
                     عنوان
                 </th>
                 <th>
@@ -35,8 +38,15 @@
             </thead>
             <tbody>
                 <template v-for="trip in trips">
-
                     <tr>
+                        <td>
+                            <a v-if="trip.category" :href="trip.category.get_trips_url">
+                                <span :class="'badge badge-'+trip.category.color">
+                                    <span v-text="trip.category.title"></span>
+                                </span>
+                            </a>
+
+                        </td>
                         <td>
                             <a :href="trip.get_absolute_url">
                                 <i class="material-icons">
@@ -47,11 +57,7 @@
                             </a>
 
 
-                            <a v-if="trip.category" :href="trip.category.get_trips_url">
-                                <span :class="'badge badge-'+trip.category.color">
-                                    <span v-text="trip.category.title"></span>
-                                </span>
-                            </a>
+
                             <span :class="'badge badge-'+trip.get_status_color">
                                 <span v-text="trip.status"></span>
                             </span>
@@ -145,5 +151,5 @@
         </table>
 
     </div>
-     
+
 </div>
