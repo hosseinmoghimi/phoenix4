@@ -48,11 +48,11 @@
                 </span>
             </td>
             <td>
-                <span v-if="project.archive" class="badge badge-secondary">
-                    آرشیو شده
-                </span>
                 <span :class="'badge badge-'+project.get_status_color">
                     <span v-text="project.status"></span>
+                </span>
+                <span v-if="project.archive" class="badge badge-secondary">
+                    آرشیو شده
                 </span>
             </td>
             <td>
