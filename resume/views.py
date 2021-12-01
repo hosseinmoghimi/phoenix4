@@ -1,6 +1,6 @@
 import json
 
-from resume.serializers import ResumeSkillSerializer
+from resume.serializers import ResumeFactSerializer, ResumeSkillSerializer
 from .apps import APP_NAME
 from .enums import LanguageEnum, ResumeItemEnum, languageToIndex
 from .forms import AddResumeFactForm, AddResumeSkillForm
@@ -60,6 +60,11 @@ class BasicViews(View):
         skills=resume_index.resumeskill_set.order_by('priority')
         context['skills']=skills
         context['skills_s']=json.dumps(ResumeSkillSerializer(skills,many=True).data)
+
+
+        facts=resume_index.resumefact_set.order_by('priority')
+        context['facts']=facts
+        context['facts_s']=json.dumps(ResumeFactSerializer(facts,many=True).data)
 
 
         portfolio_categories = PortfolioRepo(request=request).category_list()
