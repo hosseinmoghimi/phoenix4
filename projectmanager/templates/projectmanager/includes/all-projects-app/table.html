@@ -4,29 +4,22 @@
             عنوان پروژه
         </th>
         <th>
-
         </th>
         <th>
-
         </th>
         <th>
-<span style="cursor: pointer;" @click="sort('employer')">
-کارفرما
-
-</span>
+            <span style="cursor: pointer;" @click="sort('employer')">
+                کارفرما
+            </span>
         </th>
-
         <th>
-            <span style="cursor: pointer;"  @click="sort('contractor')">
-            
+            <span style="cursor: pointer;" @click="sort('contractor')">
                 پیمانکار
             </span>
         </th>
-
         <th>
-            
-            <span style="cursor: pointer;"  @click="sort('total')"  >
-            ارزش پروژه
+            <span style="cursor: pointer;" @click="sort('total')">
+                ارزش پروژه
             </span>
         </th>
 
@@ -42,22 +35,28 @@
                 </a>
                 <span class="pull-left">
                     <small class="d-inline text-primary">
-
                         <!-- <i  class="fa fa-star-o text-secondary" aria-hidden="true"></i> -->
-                        <i  v-for="item in project.likes_count" class="fa fa-star" style="color: #f3be0d !important;" aria-hidden="true"></i>
+                        <span v-if="6>project.likes_count">
+                            <i v-for="item in project.likes_count" class="fa fa-star" style="color: #f3be0d !important;"
+                                aria-hidden="true"></i>
+                        </span>
+                        <span v-if="project.likes_count>5">
+                            <span v-text="project.likes_count"></span>
+                            <i class="fa fa-star" style="color: #f3be0d !important;" aria-hidden="true"></i>
+                        </span>
                     </small>
                 </span>
             </td>
-            <td> 
+            <td>
+                <span v-if="project.archive" class="badge badge-secondary">
+                    آرشیو شده
+                </span>
                 <span :class="'badge badge-'+project.get_status_color">
                     <span v-text="project.status"></span>
                 </span>
-              
-               
             </td>
             <td>
                 <small class="mx-2">
-
                     <span v-text="project.percentage_completed"></span>%
                 </small>
             </td>
