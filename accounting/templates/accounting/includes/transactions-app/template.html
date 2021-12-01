@@ -30,7 +30,9 @@
             <th>
                 مانده
             </th>
+            <th>
 
+            </th>
 
         </thead>
         <tbody>
@@ -79,7 +81,8 @@
                     <i class="fa fa-arrow-left text-success"></i>
                 </td>
                 <td>
-                    <a :href="transaction.get_transaction2_url" :title="'صورت حساب بین '+transaction.pay_from.profile.name+' و '+transaction.pay_to.profile.name">
+                    <a :href="transaction.get_transaction2_url"
+                        :title="'صورت حساب بین '+transaction.pay_from.profile.name+' و '+transaction.pay_to.profile.name">
 
                         <i class="fa fa-list" aria-hidden="true"></i>
 

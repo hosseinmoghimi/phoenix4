@@ -109,7 +109,11 @@ class TransactionViews(View):
         #     if transaction.pay_from_id==financial_account_id:
         #         total+=transaction.amount
         if len(transactions)>0:
-            total=transactions.last().rest
+            tra=transactions.order_by('date_paid').last()
+            tra.calculate_rest(pay_to_id=kwargs['pay_to_id'],pay_from_id=kwargs['pay_from_id'])
+            total=tra.rest
+            print(total)
+            print(tra)
         context['total']=total
         
         context['rest']=total
