@@ -52,6 +52,7 @@
         props: ['menu_line'],
         template: menu_line_component_template,
     })
+    let url_save_cart = "{% url 'market:save_cart' %}"
 
     let menu = JSON.parse(`{{menu_s|escapejs}}`)
     // let menu_lines = JSON.parse(`{{menu_lines_s|escapejs}}`)
@@ -106,13 +107,13 @@
         // })
         // },
         methods: {
-            save_menu: function () {
-                let url = url_save_menu
+            save_cart: function () {
+                let url = url_save_cart
                 let cart_lines = []
-                this.cart_lines.forEach(cart_line => {
+                this.menu_lines.forEach(menu_line => {
                     cart_lines.push({
-                        shop_id: cart_line.shop.id,
-                        quantity: cart_line.quantity,
+                        shop_id: menu_line.shop.id,
+                        quantity: menu_line.quantity,
                     })
                 });
                 cart_lines = JSON.stringify(cart_lines)
@@ -121,11 +122,11 @@
                     cart_lines: cart_lines,
                     csrfmiddlewaretoken: csrfmiddlewaretoken
                 }
+                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done(function (data) {
                     if (data.result === 'SUCCEED') {
-                        cart_app.cart_lines = data.cart_lines
-                        cart_app.save_done = true
+                        menu_app.save_done = true
                     }
                 })
             },

@@ -31,6 +31,7 @@
 {% block script %}
 <script>
     let page_id = "{{menu.id}}"
+    let customer_id = parseInt("{{me_customer.id}}")
 </script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "core/includes/page-like-app/script.html" %}
