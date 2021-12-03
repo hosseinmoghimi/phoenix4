@@ -103,8 +103,12 @@ class ProfileRepo():
             if user.is_authenticated:
                 return request
         return None
-    def login_as_user(self,username):
-        if not self.user.has_perm(APP_NAME+".change_profile"):
+    def login_as_user(self,username,*args, **kwargs):
+        if 'force' in kwargs and kwargs['force']:
+            pass
+        elif self.user.has_perm(APP_NAME+".change_profile"):
+            pass
+        else:
             return
         user=User.objects.filter(username=username).first()
         if user is None:

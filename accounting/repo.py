@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.utils import translation
-from resume.apps import APP_NAME
+from .apps import APP_NAME
 from accounting.models import Asset, AssetTransaction, BankAccount, FinancialAccount, MarketOrderTransaction, MoneyTransaction, ProjectTransaction, Transaction
 from authentication.repo import ProfileRepo
 from django.db.models import Q
