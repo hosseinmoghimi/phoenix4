@@ -60,6 +60,12 @@
                         <div class="card-body text-center">
                             <h4 class="card-title">
                                 <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                                {% if perms.market.change_product %}
+                                <a href="{{product.get_edit_url}}" target="_blank" title="ویرایش">
+                                <i class="fa fa-edit text-info"></i>    
+                                </a>
+                                  
+                                {% endif %}
                             </h4>
 
                             <div class="card-description">
