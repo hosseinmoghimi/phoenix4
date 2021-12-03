@@ -54,12 +54,7 @@ def getContext(request):
     context['search_action'] = reverse(APP_NAME+":search")
     context['search_form'] = SearchForm()
     parameter_repo = ParameterRepo(app_name=APP_NAME)
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-        'logo':PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureNameEnums.LOGO)
-    }
+     
     
     return context
 

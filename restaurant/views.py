@@ -23,10 +23,7 @@ def getContext(request):
         guests=[me_guest]
     context['guests_s']=json.dumps(GuestSerializer(guests,many=True).data)
     context['me_guest_s']=json.dumps(GuestSerializer(me_guest).data)
-    context['app']={
-        'home_url':parameter_repo.parameter(name='آدرس خانه').value,
-        'title':parameter_repo.parameter(name='عنوان').value,
-    }
+ 
     return context
 
 

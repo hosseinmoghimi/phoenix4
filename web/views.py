@@ -1,6 +1,7 @@
 
 from authentication.views import ProfileContext
-from core.repo import ParameterRepo
+from core.enums import PictureNameEnums
+from core.repo import ParameterRepo, PictureRepo
 from django.shortcuts import render
 from .repo import *
 from django.views import View
@@ -14,6 +15,7 @@ TEMPLATE_ROOT="web/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
+     
     return context
 
 class BasicViews(View):

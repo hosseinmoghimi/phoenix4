@@ -15,11 +15,7 @@ def getContext(request):
     context['layout_parent']=layout_parent
     parameter_repo = ParameterRepo(app_name=APP_NAME)
     context['admin_utility']=AdminUtility()
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-    }
+  
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):

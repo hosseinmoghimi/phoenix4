@@ -3,6 +3,7 @@ import json
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
 from core.constants import CURRENCY
+from core.enums import PictureNameEnums
 from core.repo import NavLinkRepo, ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
 from django.http.response import Http404
@@ -34,8 +35,6 @@ LAYOUT_PARENT = "material-kit-pro/layout.html"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     context['title'] = "Market"
-    context['market_title']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_TITLE)
-    context['market_link']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_LINK)
     me_supplier=SupplierRepo(request=request).me
     context['me_supplier'] = me_supplier
     me_customer=CustomerRepo(request=request).me

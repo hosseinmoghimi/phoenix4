@@ -16,10 +16,7 @@ LAYOUT_PARENT="phoenix/layout.html"
 def getContext(request):
     context=CoreContext(app_name=APP_NAME,request=request)
     context['LAYOUT_PARENT']=LAYOUT_PARENT
-    context['app']={
-        'title':'resume',
-        'home_url':reverse(APP_NAME+":home"),
-    }
+ 
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):

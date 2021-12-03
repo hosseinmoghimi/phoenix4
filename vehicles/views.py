@@ -21,10 +21,7 @@ def getContext(request,*args, **kwargs):
     context['layout_parent']=LAYOUT_PARENT
     me_passenger=PassengerRepo(request=request).me
     context['me_passenger']=me_passenger
-    context['app']={
-        'home_url':"/vehicles/",
-        'title':'ماشین آلات',
-    }
+ 
     return context
 
 

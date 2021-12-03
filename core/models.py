@@ -678,7 +678,7 @@ class PageImage(models.Model):
 class Picture(models.Model):
     app_name=models.CharField(_("app_name"), max_length=50)
     name=models.CharField(_("name"), max_length=50)
-    image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"picture/", height_field=None, width_field=None, max_length=None)
+    image_origin=models.ImageField(_("image"), upload_to=IMAGE_FOLDER+"picture/",null=True,blank=True, height_field=None, width_field=None, max_length=None)
     class_name="picture"
     
     def get_edit_btn(self):

@@ -5,6 +5,8 @@ class ParameterEnum(TextChoices):
     FeatureTitle="عنوان خدمات ما",_("عنوان خدمات ما")
     FeatureDescription="توضیح خدمات ما",_("توضیح خدمات ما")
     BlogsTitle="عنوان مقالات",_("عنوان مقالات")
+    APP_Title="عنوان وب سایت",_("عنوان وب سایت")
+    APP_HOME_URL="آدرس خانه وب سایت",_("آدرس خانه وب سایت")
     BlogsDescription="توضیح مقالات",_("توضیح مقالات")
     OurWorksPreTitle="پیش عنوان پروژه های ما",_("پیش عنوان پروژه های ما")
     OurWorksTitle="عنوان پروژه های ما",_("عنوان پروژه های ما")

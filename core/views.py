@@ -1,7 +1,9 @@
 import json
 from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, TagSerializer
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render,reverse
+
+from .enums import ParametersEnum
 
 
 
@@ -39,6 +41,15 @@ def CoreContext(request, *args, **kwargs):
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
+    parameter_repo = ParameterRepo(request=request,app_name=APP_NAME)
+    
+    context['app']={
+        'title':parameter_repo.parameter(name=ParametersEnum.TITLE).value,
+        # 'home_url':parameter_repo.parameter(name=ParametersEnum.HOME_URL).value,
+        'home_url': reverse(app_name+":home"),
+        'logo':PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureNameEnums.LOGO),
+    }
+    
 
     if PUSHER_IS_ENABLE and profile is not None and profile.member_set.first() is not None:
         from messenger.views import GetMemberContext

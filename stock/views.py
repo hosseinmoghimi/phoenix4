@@ -20,11 +20,7 @@ def getContext(request):
     context['search_form']=SearchForm()
     context['search_action']=reverse(APP_NAME+":search")
     context['admin_utility']=AdminUtility()
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value,
-        'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value,
-    }
+ 
     parameter_repo=ParameterRepo(app_name=APP_NAME,request=request)
     context['stock1']=parameter_repo.parameter(name=ParametersEnum.STOCK1)
     context['stock2']=parameter_repo.parameter(name=ParametersEnum.STOCK2)

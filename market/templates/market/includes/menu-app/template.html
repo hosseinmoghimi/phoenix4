@@ -1,5 +1,10 @@
 {% load static %}
 <div id="menu-app">
+    <div class="farsi text-right">
+        <h4 class="title" v-text="to_price(total,'{{CURRENCY}}')">
+
+        </h4>
+    </div>
     <template v-for="menu_line in menu_lines">
         <menu-line-component :menu_line="menu_line"></menu-line-component>
     </template>
