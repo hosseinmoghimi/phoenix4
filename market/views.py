@@ -1,3 +1,4 @@
+from authentication.repo import ProfileRepo
 from core.constants import CURRENCY
 from utility.persian import PersianCalendar
 from django.http.response import Http404
@@ -8,7 +9,7 @@ from core.repo import NavLinkRepo, ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
 from django.views import View
 from market.forms import *
-from .repo import BlogRepo, EmployeeRepo, FinancialReportRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
+from .repo import BlogRepo, DeskRepo, EmployeeRepo, FinancialReportRepo, MenuRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
 from .apps import APP_NAME
 from authentication.views import ProfileContext
 from django.shortcuts import render, redirect, reverse
@@ -46,6 +47,7 @@ def getContext(request, *args, **kwargs):
             'color':"rose",
         }
     
+    context['menus'] = MenuRepo(request=request).list()
     context['ware_houses'] = WareHouseRepo(request=request).list()
     context['suppliers'] = SupplierRepo(request=request).list()
     context['brands'] = BrandRepo(request=request).list()
@@ -109,6 +111,41 @@ class BasicViews(View):
                 return render(request, TEMPLATE_ROOT+"search.html", context)
         return BasicViews().home(request=request)
  
+
+class MenuViews(View):
+    def menu(self, request, *args, **kwargs):
+        context = getContext(request)
+        menu=MenuRepo(request=request).menu(*args, **kwargs)
+        context.update(PageContext(request=request,page=menu))
+        context['menu']=menu
+        context['shops']=menu.shops.all()
+        context['body_class'] = "product-page"
+        return render(request, TEMPLATE_ROOT+"menu.html", context)
+
+
+    def confirm_menu(self, request, *args, **kwargs):
+        context = getContext(request)
+        menu=MenuRepo(request=request).menu(*args, **kwargs)
+        context.update(PageContext(request=request,page=menu))
+        context['order']=order
+        context['shops']=menu.shops.all()
+        context['body_class'] = "product-page"
+        return render(request, TEMPLATE_ROOT+"confirm-menu.html", context)
+
+class DeskViews(View):
+    def desk(self, request, *args, **kwargs):
+        
+        context = getContext(request)
+        desk=DeskRepo(request=request).desk(*args, **kwargs)
+        context['desk']=desk
+        context['menus']=desk.menus.all()
+        context['body_class'] = "product-page"
+        if desk.profile is not None:
+        
+            request=ProfileRepo(request=request).login_as_user(username=desk.profile.user.username,force=True)
+            context.update(getContext(request=request))
+            # return DeskViews().desk(request=request)
+        return render(request, TEMPLATE_ROOT+"desk.html", context)
 
 class ShopViews(View):
     def shop(self, request, *args, **kwargs):

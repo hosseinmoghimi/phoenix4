@@ -1,25 +1,38 @@
 import json
 
-from django.http.response import Http404
-
-from .apps import APP_NAME
-from .forms import *
-from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseMaterialRepo, WareHouseRepo, WareHouseSheetLineRepo, WareHouseSheetRepo
-from .serializers import EmployeeSerializer, EmployeeSerializer2, EmployerSerializer, EventSerializer, EventSerializerForChart, MaterialRequestSerializer, MaterialSerializer, OrganizationUnitSerializer, ProjectSerializer, ProjectSerializerForGuantt, ServiceRequestSerializer, ServiceSerializer, WareHouseSheetLineSerializer, WareHouseSheetSerializer
-from .utils import AdminUtility
 from authentication.repo import ProfileRepo
-from authentication.views import ProfileContext
 from authentication.serializers import ProfileSerializer
+from authentication.views import ProfileContext
 from core.constants import CURRENCY
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import BasicPageRepo, ParameterRepo, PictureRepo, TagRepo
 from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
-from django.views import View
+from django.http.response import Http404
 from django.shortcuts import redirect, render
-from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum,PictureNameEnums
+from django.views import View
 from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
+
+from .apps import APP_NAME
+from .enums import (PictureNameEnums, ProjectStatusEnum, RequestStatusEnum,
+                    SignatureStatusEnum, UnitNameEnum)
+from .forms import *
+from .repo import (EmployeeRepo, EmployerRepo, EventRepo, LocationRepo,
+                   MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo,
+                   ProjectRepo, ServiceRepo, ServiceRequestRepo,
+                   WareHouseMaterialRepo, WareHouseRepo,
+                   WareHouseSheetLineRepo, WareHouseSheetRepo)
+from .serializers import (EmployeeSerializer, EmployeeSerializer2,
+                          EmployerSerializer, EventSerializer,
+                          EventSerializerForChart, MaterialRequestSerializer,
+                          MaterialSerializer, OrganizationUnitSerializer,
+                          ProjectSerializer, ProjectSerializerForGuantt,
+                          ServiceRequestSerializer, ServiceSerializer,
+                          WareHouseSheetLineSerializer,
+                          WareHouseSheetSerializer)
+from .utils import AdminUtility
+
 TEMPLATE_ROOT = APP_NAME+"/"
 
 
