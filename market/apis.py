@@ -141,6 +141,7 @@ class CartApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+ 
 
 class CategoryApi(APIView):
     def add_category(self,request,*args, **kwargs):
