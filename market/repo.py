@@ -582,7 +582,7 @@ class OrderRepo:
             order.date_cancelled = timezone.now()
             if description is not None:
                 order.description = order.description+'   @ ' + \
-                    order.customer.profile.name()+' # انصراف '+PersianCalendar().from_gregorian(order.date_cancelled)+' : '+str(description)
+                    order.customer.profile.name+' # انصراف '+PersianCalendar().from_gregorian(order.date_cancelled)+' : '+str(description)
             order.save()
             if order is not None:
 
@@ -1265,7 +1265,9 @@ class CartRepo:
                 # order=OrderRepo(user=self.user).get(order_id=order.pk)
                 # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)
                 if order.supplier.profile is not None:
-                    NotificationRepo(request=self.request).add(
+                    
+                    
+                    NotificationRepo(request=self.request).send_notification(
                         title='سفارش تایید شده',
                         body=f'سفارش تایید شده به مبلغ {order.total} تومان',
                         url=order.get_absolute_url(),

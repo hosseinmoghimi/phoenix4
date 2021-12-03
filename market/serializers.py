@@ -96,10 +96,17 @@ class ProductFeatureSerializer(serializers.ModelSerializer):
         fields = ['id','title','short_description','get_absolute_url']
 
 class MenuSerializer(serializers.ModelSerializer):
-    supplier=SupplierSerializerForShop()
     shops=ShopSerializer(many=True)
     class Meta:
         model = Menu
-        fields = ['id', 'supplier','shops','title', 'get_absolute_url']
+        fields = ['id','shops','title', 'get_absolute_url']
+
+
+
+class MenuLineSerializer(serializers.ModelSerializer):
+    shops=ShopSerializer(many=True)
+    class Meta:
+        model = Menu
+        fields = ['id','shops','title', 'get_absolute_url']
 
 

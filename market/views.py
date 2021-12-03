@@ -1,18 +1,29 @@
-from authentication.repo import ProfileRepo
-from core.constants import CURRENCY
-from utility.persian import PersianCalendar
-from django.http.response import Http404
-from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ProductSpecificationSerializer, ShopSerializer
 import json
-from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
+
+from authentication.repo import ProfileRepo
+from authentication.views import ProfileContext
+from core.constants import CURRENCY
 from core.repo import NavLinkRepo, ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
+from django.http.response import Http404
+from django.shortcuts import redirect, render, reverse
 from django.views import View
+from utility.persian import PersianCalendar
+
 from market.forms import *
-from .repo import BlogRepo, DeskRepo, EmployeeRepo, FinancialReportRepo, MenuRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
+from market.serializers import (CartLineSerializer, CartSerializer,
+                                MenuLineSerializer, MenuSerializer,
+                                OrderLineSerializer,
+                                ProductSpecificationSerializer, ShopSerializer)
+
 from .apps import APP_NAME
-from authentication.views import ProfileContext
-from django.shortcuts import render, redirect, reverse
+from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
+from .repo import (BlogRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo,
+                   DeskRepo, EmployeeRepo, FinancialReportRepo, GuaranteeRepo,
+                   MenuRepo, OfferRepo, OrderRepo, ProductFeatureRepo,
+                   ProductRepo, ShipperRepo, ShopRepo, SupplierRepo,
+                   WareHouseRepo)
+
 TEMPLATE_ROOT = "market/"
 LAYOUT_PARENT = "Adminlte/layout.html"
 LAYOUT_PARENT = "Adminlte/layout.html"
@@ -47,10 +58,11 @@ def getContext(request, *args, **kwargs):
             'color':"rose",
         }
     
-    context['menus'] = MenuRepo(request=request).list()
-    context['ware_houses'] = WareHouseRepo(request=request).list()
-    context['suppliers'] = SupplierRepo(request=request).list()
-    context['brands'] = BrandRepo(request=request).list()
+    context['all_menus'] = MenuRepo(request=request).list()
+    context['all_desks'] = DeskRepo(request=request).list()
+    context['all_ware_houses'] = WareHouseRepo(request=request).list()
+    context['all_suppliers'] = SupplierRepo(request=request).list()
+    context['all_brands'] = BrandRepo(request=request).list()
     context['navbar'] = APP_NAME+"/includes/nav-bar.html"
     context['layout_parent'] = LAYOUT_PARENT
     context['root_categories'] = CategoryRepo(
@@ -118,8 +130,15 @@ class MenuViews(View):
         menu=MenuRepo(request=request).menu(*args, **kwargs)
         context.update(PageContext(request=request,page=menu))
         context['menu']=menu
+        context['menu_s']=json.dumps(MenuSerializer(menu).data)
         context['shops']=menu.shops.all()
         context['body_class'] = "product-page"
+        menu_lines=[]
+        # context['menu_lines_s']=json.dumps(MenuLineSerializer(menu_lines,many=True).data)
+        me_customer=CustomerRepo(request=request).me
+        cart_lines=CartRepo(request=request).cart(customer_id=me_customer.id).lines
+        context['cart_lines_s']=json.dumps(CartLineSerializer(cart_lines,many=True).data)
+
         return render(request, TEMPLATE_ROOT+"menu.html", context)
 
 
@@ -131,6 +150,7 @@ class MenuViews(View):
         context['shops']=menu.shops.all()
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"confirm-menu.html", context)
+
 
 class DeskViews(View):
     def desk(self, request, *args, **kwargs):
@@ -146,6 +166,7 @@ class DeskViews(View):
             context.update(getContext(request=request))
             # return DeskViews().desk(request=request)
         return render(request, TEMPLATE_ROOT+"desk.html", context)
+
 
 class ShopViews(View):
     def shop(self, request, *args, **kwargs):

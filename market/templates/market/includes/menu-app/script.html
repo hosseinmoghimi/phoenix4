@@ -1,6 +1,5 @@
 <script>
     let menu_line_component_template = `{% include 'market/includes/menu-app/component.html' %}`
-    let menu_lines = JSON.parse(`{{menu_lines_s|escapejs}}`)
     let menu_line_component = Vue.component('menu-line-component', {
         data: function () {
             return {
@@ -9,7 +8,7 @@
         },
         methods: {
             add_quantity: function (a) {
-                if (cart_app.save_done)
+                if (menu_app.save_done)
                     return
 
                 if ((this.menu_line.quantity + a) < 0) {
@@ -21,7 +20,7 @@
                 else {
                     this.menu_line.quantity = this.menu_line.quantity + a
                 }
-                cart_app.calculate_total()
+                menu_app.calculate_total()
             },
 
             to_price: function (value, currency) {
@@ -54,20 +53,58 @@
         template: menu_line_component_template,
     })
 
+    let menu = JSON.parse(`{{menu_s|escapejs}}`)
+    // let menu_lines = JSON.parse(`{{menu_lines_s|escapejs}}`)
+    let cart_lines = JSON.parse(`{{cart_lines_s|escapejs}}`)
+
+
+
+
+    $(document).ready(
+        () => {
+            menu.shops.forEach(shop => {
+                let quantity = 0
+                cart_lines.forEach(line => {
+                    if (shop.id == line.shop.id) {
+                        menu_app.total += (line.quantity * line.shop.unit_price)
+                        quantity = line.quantity
+                    }
+                })
+                menu_app.menu_lines.push({
+                    shop: shop,
+                    quantity: quantity
+                })
+            })
+        }
+    )
+
 
     let menu_app = new Vue({
         el: "#menu-app",
         data: {
-            menu_lines: menu_lines,
+            menu: menu,
+            menu_lines: [],
+            shops: menu.shops,
             total: 0,
             save_done: false,
         },
-        mounted: function () {
-            this.total = 0
-            menu_lines.forEach(line => {
-                this.total += (line.quantity * line.shop.unit_price)
-            });
-        },
+        // mounted: function () {
+        // this.total = 0
+        // menu_lines = this.menu_Lines = []
+        // this.menu.shops.forEach(shop => {
+        //     let quantity = 0
+        //     cart_lines.forEach(line => {
+        //         if (shop.id == line.shop.id) {
+        //             this.total += (line.quantity * line.shop.unit_price)
+        //             quantity = line.quantity
+        //         }
+        //     })
+        //     menu_lines.push({
+        //         shop: shop,
+        //         quantity: quantity
+        //     })
+        // })
+        // },
         methods: {
             save_menu: function () {
                 let url = url_save_menu
@@ -97,7 +134,7 @@
             },
             calculate_total: function () {
                 this.total = 0
-                cart_lines.forEach(line => {
+                this.menu_lines.forEach(line => {
                     this.total += (line.quantity * line.shop.unit_price)
                 });
             }
