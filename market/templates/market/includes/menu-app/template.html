@@ -1,25 +1,47 @@
 {% load static %}
 <div id="menu-app">
     <div class="farsi text-right">
-        <h4 class="title" v-text="to_price(total,'{{CURRENCY}}')">
+        <div class="mx-3">
+            <button class="btn btn-info">
+                <span v-text="to_price(total,'')"></span>
+                <small>
+                    {{CURRENCY}}
+                </small>
+            </button>
+        </div>
+        <template v-for="menu_line in menu_lines">
+            <menu-line-component :menu_line="menu_line"></menu-line-component>
+        </template>
+        <div class="farsi text-right">
+            <button class="btn btn-outline-info">
+                <small>
 
-        </h4>
+                    جمع :
+                </small>
+                <span v-text="to_price(total,'')"></span>
+                <small>
+                    {{CURRENCY}}
+                </small>
+            </button>
+            <button v-if="!save_done" @click="save_cart()" class="btn btn-success">ذخیره</button>
+        </div>
+        <form v-if="save_done" action="{% url 'market:save_menu' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="small"> در صورت داشتن توضیحات کادر زیر را پر کنید.</label>
+
+                <textarea placeholder="..." rows="2" name="description" type="text" class="form-control">
+                    </textarea>
+            </div>
+            <button type="submit" class="my-2 btn btn-success">
+                <small>
+                    تایید نهایی سفارش به مبلغ
+                </small>
+                <span v-text="to_price(total,'')"></span>
+                <small>
+                    {{CURRENCY}}
+                </small>
+            </button>
+        </form>
+        <button v-if="save_done" @click="save_done=false" class="btn btn-secondary">انصراف</button>
     </div>
-    <template v-for="menu_line in menu_lines">
-        <menu-line-component :menu_line="menu_line"></menu-line-component>
-    </template>
-    <div class="farsi text-right">
-        <h4 class="title" v-text="to_price(total,'{{CURRENCY}}')">
-
-        </h4>
-    </div>
-
-    <button v-if="!save_done" @click="save_cart()" class="btn btn-success">save</button>
-    <button v-if="save_done" @click="save_done=false" class="btn btn-secondary">cancel</button>
-
-    <form v-if="save_done" action="{% url 'market:save_menu' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success">تایید سفارش</button>
-    </form>
-
-</div>

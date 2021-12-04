@@ -5,6 +5,9 @@ class CheckoutCartForm(forms.Form):
     cart_lines=forms.CharField(max_length=1000,required=True)
     customer_id=forms.IntegerField(required=True)
 
+class ConfirmMenuForm(forms.Form):
+    description=forms.CharField(max_length=5000,required=False)
+
 class AddOrderInWareHouseForm(forms.Form):
     direction=forms.CharField(max_length=20,required=True)
     order_id=forms.IntegerField(required=True)

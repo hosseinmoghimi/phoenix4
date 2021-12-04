@@ -3,7 +3,9 @@ from .apps import APP_NAME
 from . import views,apis
 from django.contrib.auth.decorators import login_required
 from django.urls import path,include
+
 app_name=APP_NAME
+
 urlpatterns = [
     path("",views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),

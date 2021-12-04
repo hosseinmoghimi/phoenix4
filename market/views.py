@@ -128,23 +128,26 @@ class MenuViews(View):
 
     def save_menu(self,request,*args, **kwargs):
         if request.method=='POST':
-            me_customer=CustomerRepo(request=request).me
-            if me_customer is None :
-                raise Http404
-            customer_id=me_customer.id
-            cart_lines=CartRepo(request=request).cart(
-                customer_id=customer_id
-                ).lines
-            if cart_lines is not None and len(cart_lines)>0:
-                orders = CartRepo(request=request).confirm(
-                    no_ship=True,
-                    customer_id=customer_id,
-                    address="",
-                    description="",
-                    supplier_id=cart_lines[0].shop.supplier.id
-                )
-                if orders is not None and len(orders) == 1:
-                    return redirect(orders[0].get_absolute_url())
+            confirm_menu_form=ConfirmMenuForm(request.POST)
+            if confirm_menu_form.is_valid():
+                description=confirm_menu_form.cleaned_data['description']
+                me_customer=CustomerRepo(request=request).me
+                if me_customer is None :
+                    raise Http404
+                customer_id=me_customer.id
+                cart_lines=CartRepo(request=request).cart(
+                    customer_id=customer_id
+                    ).lines
+                if cart_lines is not None and len(cart_lines)>0:
+                    orders = CartRepo(request=request).confirm(
+                        no_ship=True,
+                        customer_id=customer_id,
+                        address="",
+                        description=description,
+                        supplier_id=cart_lines[0].shop.supplier.id
+                    )
+                    if orders is not None and len(orders) == 1:
+                        return redirect(orders[0].get_absolute_url())
 
     def menu(self, request, *args, **kwargs):
         context = getContext(request)
@@ -154,7 +157,7 @@ class MenuViews(View):
         context['menu_s']=json.dumps(MenuSerializer(menu).data)
         context['shops']=menu.shops.all()
         context['body_class'] = "product-page"
-        menu_lines=[]
+        context['confirm_menu_form']=ConfirmMenuForm()
         # context['menu_lines_s']=json.dumps(MenuLineSerializer(menu_lines,many=True).data)
         me_customer=context['me_customer']
         if me_customer is None :
@@ -307,6 +310,7 @@ class ProductViews(View):
             context['order_lines'] = order_lines
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"product-sold.html.html", context)
+    
     def add_product_for_category_page(self,request,*args, **kwargs):
 
         log=1
@@ -351,6 +355,7 @@ class ProductViews(View):
         vertical_navs.append({'url':"#comments",'title':'نظرات کاربران','priority':3})
         vertical_navs.append({'url':"#related-products-div",'title':'محصولات مشابه','priority':4})
         vertical_navs.append({'url':"#product-orders",'title':'سفارشات این محصول','priority':5})
+
         context['vertical_navs']=vertical_navs
         context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR
@@ -364,14 +369,12 @@ class ProductViews(View):
                 product=product).order_by('unit_name', 'unit_price')
             context['add_shop_form']=AddShopForm()
         if context['me_customer'] is not None:
-            
             context['in_cart']="ناموجود در سبد خرید شما"
             me_customer=context['me_customer']
             shops = ShopRepo(request=request).list(
                 product=product, region=me_customer.region, level=me_customer.level)
             context['shops'] = shops
-            context['shops_s'] = json.dumps(
-                ShopSerializer(shops, many=True).data)
+            context['shops_s'] = json.dumps(ShopSerializer(shops, many=True).data)
             cart=CartRepo(request=request).cart(customer_id=me_customer.id)
             context['cart']=cart
             line=cart.lines.filter(shop__product=product).first()
@@ -492,7 +495,9 @@ class OrderViews(View):
         context = getContext(request)
         financial_report=FinancialReportRepo(request=request).financial_report(*args, **kwargs)
         context['financial_report']=financial_report
-        context['order']=financial_report.order
+        order=financial_report.order
+        context['order']=order
+        context['order_lines_s'] = json.dumps(OrderLineSerializer(order.orderline_set.all(), many=True).data)
         return render(request, TEMPLATE_ROOT+"financial-report.html", context)
 
     def order(self, request, *args, **kwargs):

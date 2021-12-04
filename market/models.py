@@ -733,7 +733,10 @@ class Menu(MarketPage):
     def save(self,*args, **kwargs):
         self.class_name="menu"
         return super(Menu,self).save(*args, **kwargs)
-     
+    
+    def supplier(self):
+        if len(self.shops.all())>0:
+            return self.shops.first().supplier
 
 class OrderInWareHouse(models.Model):
     direction=models.BooleanField(_("ورود به انبار ؟"),default=True)
