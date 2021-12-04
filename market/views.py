@@ -145,7 +145,7 @@ class MenuViews(View):
                 )
                 if orders is not None and len(orders) == 1:
                     return redirect(orders[0].get_absolute_url())
-        
+
     def menu(self, request, *args, **kwargs):
         context = getContext(request)
         menu=MenuRepo(request=request).menu(*args, **kwargs)
@@ -156,7 +156,9 @@ class MenuViews(View):
         context['body_class'] = "product-page"
         menu_lines=[]
         # context['menu_lines_s']=json.dumps(MenuLineSerializer(menu_lines,many=True).data)
-        me_customer=CustomerRepo(request=request).me
+        me_customer=context['me_customer']
+        if me_customer is None :
+            raise Http404
         cart_lines=CartRepo(request=request).cart(customer_id=me_customer.id).lines
         context['cart_lines_s']=json.dumps(CartLineSerializer(cart_lines,many=True).data)
 
