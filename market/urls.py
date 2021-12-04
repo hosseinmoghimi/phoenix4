@@ -1,6 +1,7 @@
 from market import apis
 from .apps import APP_NAME
 from . import views,apis
+from django.contrib.auth.decorators import login_required
 from django.urls import path,include
 app_name=APP_NAME
 urlpatterns = [
@@ -13,7 +14,7 @@ urlpatterns = [
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
     path("shops/<int:supplier_id>/",views.ShopViews().shops,name="shops"),
     path("desk/<int:pk>/",views.DeskViews().desk,name="desk"),
-    path("menu/<int:pk>/",views.MenuViews().menu,name="menu"),
+    path("menu/<int:pk>/",login_required(views.MenuViews().menu),name="menu"),
     path("order_invoice/<int:pk>/",views.OrderViews().order_invoice,name="order_invoice"),
     path("order/<int:pk>/",views.OrderViews().order,name="order"),
     path("order-edit/<int:pk>/",views.OrderViews().edit_order,name="edit_order"),
