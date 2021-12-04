@@ -255,19 +255,7 @@ class OrganizationUnitRepo():
         new_organization.save()
         return new_organization
 
-    def add_employee_to_org_unit(self, *args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_employee"):
-            return None
-        new_employee = Employee()
 
-        if 'profile_id' in kwargs:
-            new_employee.profile_id = kwargs['profile_id']
-
-        if 'organization_unit_id' in kwargs:
-            new_employee.organization_unit_id = kwargs['organization_unit_id']
-
-        new_employee.save()
-        return new_employee
 class WareHouseSheetRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
