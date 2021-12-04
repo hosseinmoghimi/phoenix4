@@ -1,0 +1,31 @@
+<div class="card mb-3" id="profiles-app">
+    <div class="card-header">
+        <h4 class="title">
+            لیست پروفایل ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <input type="text" placeholder="جستجو ..." class="form-control farsi my-4" v-model="search_for"
+            @input="filter()">
+        <div v-for="profile in profiles">
+            <hr>
+            <div class="media">
+                <img :src="profile.image" width="48" alt="" class="rounded-circle">
+                <div class="media-body farsi text-right mr-2">
+                    <div>
+                        <a :href="profile.get_absolute_url" :title="profile.name" class="docs-creator">
+                            <span v-text="profile.name">
+
+                            </span>
+                        </a>
+                    </div>
+                    <div class="small text-secondary">
+                        <span v-text="profile.bio"></span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>

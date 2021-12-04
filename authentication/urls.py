@@ -17,5 +17,6 @@ urlpatterns = [
     # path(r'^login/(?P<next>\w{0,50})/$', views.AuthenticationViews().login2,name="login_next"),
     path("login/",views.AuthenticationViews().login,name="login"),
     path('edit_profile_/<int:profile_id>/',apis.ProfileApi().edit_profile,name="edit_profile"),
+    path('add_profile/',apis.ProfileApi().add_profile,name="add_profile"),
     path('upload_profile_image/<int:profile_id>/',views.ProfileViews().upload_profile_image,name="upload_profile_image"),
 ]

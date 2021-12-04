@@ -1,6 +1,7 @@
 from django.db.models.aggregates import Avg
 from django.http import request
 from django.utils import timezone
+from core.constants import SUCCEED
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum, WareHouseSheetDirectionEnum
 from authentication.repo import ProfileRepo
 from django.db.models import Q,Sum
@@ -254,31 +255,19 @@ class OrganizationUnitRepo():
         new_organization.save()
         return new_organization
 
-    def add_employee(self,*args, **kwargs):
+    def add_employee_to_org_unit(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_employee"):
             return None
-        profile=ProfileRepo(user=self.request.user).profile(*args, **kwargs)
-        if profile is None:
-            from authentication.models import Profile
-            profile=Profile()
-            if 'first_name' in kwargs and 'last_name' in kwargs and 'username' in kwargs and 'password' in kwargs:
-                from django.contrib.auth.models import User
-                user=User.objects.create(first_name=kwargs['first_name'],last_name=kwargs['last_name'],username=kwargs['username'],password=kwargs['password'])
-                user.save()
-                user.set_password(kwargs['password'])
-                user.save()
-                profile=ProfileRepo(user=self.user).objects.filter(user=user).first()
-                if profile is None:
-                    return None
-        organization_unit=OrganizationUnitRepo(request=self.request).organization_unit(*args, **kwargs)
-        if profile is not None and organization_unit is not None:
-            emp=Employee.objects.filter(profile=profile).filter(organization_unit=organization_unit).first()
-            if emp is None:
-                emp=Employee(profile=profile,organization_unit=organization_unit)
-                emp.save()
-                return emp
-            
+        new_employee = Employee()
 
+        if 'profile_id' in kwargs:
+            new_employee.profile_id = kwargs['profile_id']
+
+        if 'organization_unit_id' in kwargs:
+            new_employee.organization_unit_id = kwargs['organization_unit_id']
+
+        new_employee.save()
+        return new_employee
 class WareHouseSheetRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -650,20 +639,41 @@ class EmployeeRepo():
             objects=objects.filter(Q(profile__user__first_name__contains=search_for)|Q(profile__user__last_name__contains=search_for))
         return objects.all()
 
-    def add_employee(self, *args, **kwargs):
+
+
+    def add_employee(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_employee"):
             return None
-        new_employee = Employee()
-
-        if 'profile_id' in kwargs:
-            new_employee.profile_id = kwargs['profile_id']
-
-        if 'organization_unit_id' in kwargs:
-            new_employee.organization_unit_id = kwargs['organization_unit_id']
-
-        new_employee.save()
-        return new_employee
-
+        
+        profile=ProfileRepo(user=self.request.user).profile(*args, **kwargs)
+        
+        
+        
+        
+        if profile is None:
+            
+            (result,profile,message)=ProfileRepo(request=request).add_profile(*args, **kwargs)
+            if result!=SUCCEED:
+                return (result,None,message)
+            from authentication.models import Profile
+            profile=Profile()
+            if 'first_name' in kwargs and 'last_name' in kwargs and 'username' in kwargs and 'password' in kwargs:
+                from django.contrib.auth.models import User
+                user=User.objects.create(first_name=kwargs['first_name'],last_name=kwargs['last_name'],username=kwargs['username'],password=kwargs['password'])
+                user.save()
+                user.set_password(kwargs['password'])
+                user.save()
+                profile=ProfileRepo(user=self.user).objects.filter(user=user).first()
+                if profile is None:
+                    return None
+        organization_unit=OrganizationUnitRepo(request=self.request).organization_unit(*args, **kwargs)
+        if profile is not None and organization_unit is not None:
+            emp=Employee.objects.filter(profile=profile).filter(organization_unit=organization_unit).first()
+            if emp is None:
+                emp=Employee(profile=profile,organization_unit=organization_unit)
+                emp.save()
+                return emp
+            
 
 class EmployerRepo():
     def __init__(self, *args, **kwargs):

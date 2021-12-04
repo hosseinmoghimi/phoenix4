@@ -1,8 +1,13 @@
 from django.core.checks import messages
+from django.http import request
 from core.constants import FAILED, SUCCEED
 from .models import *
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+
+
+def is_not_blank(s):
+    return bool(s and not s.isspace())
 
 class ProfileRepo():
     def __init__(self,*args, **kwargs):
@@ -162,34 +167,88 @@ class ProfileRepo():
         edited_user.save()
         edited_profile.save()
         return True
-
-        user=self.user
-        if user.is_authenticated:
-            me=ProfileRepo(user=user).me
-            if me.id==profile_id or me.user.has_perm(APP_NAME+'.change_profile'):
-                edited_profile=self.objects.get(pk=profile_id)
-                edited_profile=self.objects.get(pk=profile_id)
-                
-                if edited_profile is not None:
-                    if edited_profile.user is not None:
-                        edited_profile.user.first_name=first_name
-                        edited_profile.user.last_name=last_name
-                        edited_profile.user.save()
-
-
-                    edited_profile.first_name=first_name
-                    edited_profile.last_name=last_name
-                    edited_profile.mobile=mobile
-                    edited_profile.slogan=slogan
-                    edited_profile.bio=bio
-                    edited_profile.address=address
-                    edited_profile.postal_code=postal_code
-                    
-                    edited_profile.save()
-                    return edited_profile
-        return None
+ 
     
 
+
+    def add_profile(self,*args, **kwargs):
+        if self.user.has_perm(APP_NAME+".add_profile"):
+            pass
+        else:
+            
+            return (FAILED,None,"دسترسی غیر مجاز")
+        
+
+        if 'first_name' in kwargs:
+            first_name=kwargs['first_name']
+        else:
+            first_name=None
+
+        
+        if 'last_name' in kwargs:
+            last_name=kwargs['last_name']
+        else:
+            last_name=None
+
+        
+        if 'email' in kwargs:
+            email=kwargs['email']
+        else:
+            email=None
+
+        
+        if 'bio' in kwargs:
+            bio=kwargs['bio']
+        else:
+            bio=None
+
+        
+        if 'mobile' in kwargs:
+            mobile=kwargs['mobile']
+        else:
+            mobile=None
+
+        
+        if 'address' in kwargs:
+            address=kwargs['address']
+        else:
+            address=None
+
+        
+
+        if 'username' in kwargs:
+            username=kwargs['username']
+        else:
+            username=None
+
+        if 'password' in kwargs:
+            password=kwargs['password']
+        else:
+            password=None
+        if not is_not_blank(username) or not is_not_blank(password):
+            return (FAILED,None,"نام کاربری و کلمه عبور نا معتبر")
+        new_user=User.objects.filter(username=username).first()
+        if new_user is not None:
+            return (FAILED,None,"نام کاربری تکراری")  
+
+
+        user=User.objects.create(first_name=kwargs['first_name'],email=kwargs['email'],last_name=kwargs['last_name'],username=kwargs['username'],password=kwargs['password'])
+        user.save()
+        user.set_password(kwargs['password'])
+        user.save()  
+
+ 
+        profile=Profile.objects.filter(user=user).first()
+        if profile is None:
+            return (FAILED,None,"خطای 12")
+        profile.user=user
+        profile.bio=bio
+        profile.mobile=mobile
+        profile.address=address
+
+        profile.save()
+        return (SUCCEED,profile,"ایجاد پروفایل با موفقیت انجام شد.")
+        
     def register(self,*args, **kwargs):
         # if not self.user.has_perm(APP_NAME+".add_profile"):
         #     return (FAILED,None,"")

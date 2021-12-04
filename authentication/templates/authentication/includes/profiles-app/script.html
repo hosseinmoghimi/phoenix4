@@ -1,0 +1,19 @@
+<script>
+    let profiles = JSON.parse(`{{profiles_s|escapejs}}`)
+    let profiles_app = new Vue({
+        el: "#profiles-app",
+        data: {
+            search_for: "",
+            profiles: profiles
+        },
+        methods: {
+            filter: function () {
+                this.profiles = profiles.filter((profile) => {
+                    if(profile.name.indexOf(profiles_app.search_for) > -1) return true
+                    if(profile.mobile!=null && profile.mobile.indexOf(profiles_app.search_for) > -1) return true
+                    return false
+                })
+            }
+        }
+    })
+</script>

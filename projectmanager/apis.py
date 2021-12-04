@@ -3,7 +3,7 @@ from projectmanager.serializers import EmployeeSerializer, EmployeeSerializer2, 
 from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from .repo import EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseSheetRepo
+from .repo import EmployeeRepo, EmployerRepo, EventRepo, LocationRepo, MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo, ProjectRepo, ServiceRepo, ServiceRequestRepo, WareHouseSheetRepo
 from .forms import *
 
 
@@ -208,6 +208,9 @@ class OrganizationUnitApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+
+class EmployeeApi(APIView):
+
     def add_employee(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
@@ -223,13 +226,12 @@ class OrganizationUnitApi(APIView):
                 password=add_employee_form.cleaned_data['password']
                 organization_unit_id=add_employee_form.cleaned_data['organization_unit_id']
                 profile_id=add_employee_form.cleaned_data['profile_id']
-                employee=OrganizationUnitRepo(request=request).add_employee(username=username,password=password,first_name=first_name,last_name=last_name,profile_id=profile_id,organization_unit_id=organization_unit_id)
+                employee=EmployeeRepo(request=request).add_employee(username=username,password=password,first_name=first_name,last_name=last_name,profile_id=profile_id,organization_unit_id=organization_unit_id)
                 if employee is not None:
                     context['employee']=EmployeeSerializer2(employee).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-
 
 class WareHouseSheetApi(APIView):
     def add_material_request_to_ware_house_sheet(self,request,*args, **kwargs):

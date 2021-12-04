@@ -101,6 +101,7 @@ class AuthenticationViews(View):
         context['profiles']=profiles
         profiles_s=json.dumps(ProfileSerializer(profiles,many=True).data)
         context['profiles_s']=profiles_s
+        context['add_profile_form']=AddProfileForm()
         return render(request,TEMPLATE_ROOT+"profiles.html",context)
     
     def login(self,request,*args, **kwargs):
