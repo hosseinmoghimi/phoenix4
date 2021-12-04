@@ -127,32 +127,25 @@ class MenuViews(View):
 
 
     def save_menu(self,request,*args, **kwargs):
-        context={}
-        log=1
         if request.method=='POST':
-            log=2
-            checkout_cart_form=CheckoutCartForm(request.POST)
-            if checkout_cart_form.is_valid():
-                log=3
-                cart_lines=checkout_cart_form.cleaned_data['cart_lines']
-                customer_id=checkout_cart_form.cleaned_data['customer_id']
-                cart_lines=json.loads(cart_lines)
-                cart_lines=CartRepo(request=request).save(
-                    cart_lines=cart_lines,
-                    customer_id=customer_id
-                    )
-                if cart_lines is not None:
-                    level=4
-                    orders = CartRepo(request=request).confirm(
-                        no_ship=True,
-                        customer_id=customer_id,
-                        address="",
-                        description="",
-                        supplier_id=cart_lines[0].shop.supplier.id
-                    )
-                    if orders is not None and len(orders) == 1:
-                        return redirect(orders[0].get_absolute_url())
-
+            me_customer=CustomerRepo(request=request).me
+            if me_customer is None :
+                raise Http404
+            customer_id=me_customer.id
+            cart_lines=CartRepo(request=request).cart(
+                customer_id=customer_id
+                ).lines
+            if cart_lines is not None and len(cart_lines)>0:
+                orders = CartRepo(request=request).confirm(
+                    no_ship=True,
+                    customer_id=customer_id,
+                    address="",
+                    description="",
+                    supplier_id=cart_lines[0].shop.supplier.id
+                )
+                if orders is not None and len(orders) == 1:
+                    return redirect(orders[0].get_absolute_url())
+        
     def menu(self, request, *args, **kwargs):
         context = getContext(request)
         menu=MenuRepo(request=request).menu(*args, **kwargs)

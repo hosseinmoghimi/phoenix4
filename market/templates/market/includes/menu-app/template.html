@@ -14,5 +14,12 @@
         </h4>
     </div>
 
-    <button @click="save_cart()" class="btn btn-success">save</button>
+    <button v-if="!save_done" @click="save_cart()" class="btn btn-success">save</button>
+    <button v-if="save_done" @click="save_done=false" class="btn btn-secondary">cancel</button>
+
+    <form v-if="save_done" action="{% url 'market:save_menu' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">تایید سفارش</button>
+    </form>
+
 </div>
