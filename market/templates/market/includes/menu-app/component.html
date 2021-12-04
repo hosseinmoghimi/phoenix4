@@ -13,6 +13,11 @@
                     <span v-text="menu_line.shop.product.title"></span>
                 </div>
             </a>
+            <div>
+                هر 
+                <span v-text="menu_line.shop.unit_name"></span>
+                <span v-text="to_price(menu_line.shop.unit_price)"></span>{{CURRENCY}}
+            </div>
         </div>
         <div class="col-4">
             <button class="btn btn-sm btn-round btn-danger" @click="add_quantity(-1)"> <i class="material-icons">remove</i>
