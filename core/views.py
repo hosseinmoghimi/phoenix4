@@ -41,13 +41,13 @@ def CoreContext(request, *args, **kwargs):
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
-    parameter_repo = ParameterRepo(request=request,app_name=APP_NAME)
+    parameter_repo = ParameterRepo(request=request,app_name=app_name)
     
     context['app']={
         'title':parameter_repo.parameter(name=ParametersEnum.TITLE).value,
         # 'home_url':parameter_repo.parameter(name=ParametersEnum.HOME_URL).value,
         'home_url': reverse(app_name+":home"),
-        'logo':PictureRepo(request=request,app_name=APP_NAME).picture(name=PictureNameEnums.LOGO),
+        'logo':PictureRepo(request=request,app_name=app_name).picture(name=PictureNameEnums.LOGO),
     }
     
 
