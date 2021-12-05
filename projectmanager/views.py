@@ -18,7 +18,8 @@ from .apps import APP_NAME
 from .enums import (PictureNameEnums, ProjectStatusEnum, RequestStatusEnum,
                     SignatureStatusEnum, UnitNameEnum)
 from .forms import *
-from .repo import (EmployeeRepo, EmployerRepo, EventRepo, LocationRepo,
+from map.repo import LocationRepo
+from .repo import (EmployeeRepo, EmployerRepo, EventRepo,
                    MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo,
                    ProjectRepo, ServiceRepo, ServiceRequestRepo,
                    WareHouseMaterialRepo, WareHouseRepo,
@@ -112,8 +113,7 @@ class BasicViews(View):
             context['add_material_form'] = AddMaterialForm()
         if request.user.has_perm(APP_NAME+".add_project"):
             context['add_project_form'] = AddProjectForm()
-        if request.user.has_perm(APP_NAME+".add_location"):
-            context['add_location_form'] = AddLocationForm()
+         
         profile = ProfileRepo(request=request).me
         favorite_pages = profile.pagelike_set.filter(page__app_name=APP_NAME)
         context['favorite_pages'] = favorite_pages
