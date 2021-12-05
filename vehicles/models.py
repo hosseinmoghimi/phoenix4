@@ -1,9 +1,6 @@
-from django.db.models.base import Model
-from django.db.models.fields import CharField
 from core.enums import ColorEnum
 from core.models import BasicPage
 from django.db import models
-from django.db.models import Sum
 from django.shortcuts import reverse
 from accounting.models import Asset
 
