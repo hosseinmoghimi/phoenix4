@@ -194,7 +194,7 @@ class Project(ProjectManagerPage):
         "پیمانکار"), on_delete=models.CASCADE)
     weight = models.IntegerField(_("ضریب و وزن پروژه"), default=10)
     locations = models.ManyToManyField(
-        "location", blank=True, verbose_name=_("locations"))
+        "map.location", blank=True, verbose_name=_("locations"))
     
     def get_event_chart_url(self):
         return reverse(APP_NAME+":project_events_chart", kwargs={'project_id': self.pk})
@@ -390,7 +390,7 @@ class Event(ProjectManagerPage):
     end_datetime = models.DateTimeField(
         _("end_datetime"), auto_now=False, auto_now_add=False)
     locations = models.ManyToManyField(
-        "location", blank=True, verbose_name=_("locations"))
+        "map.location", blank=True, verbose_name=_("locations"))
     # adder=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -415,35 +415,8 @@ class Event(ProjectManagerPage):
     class Meta:
         verbose_name = _("Event")
         verbose_name_plural = _("رویداد ها")
+ 
 
-
-class Location(models.Model):
-    title = models.CharField(
-        _("عنوان نقطه"), max_length=50, null=True, blank=True)
-    location = models.CharField(_("لوکیشن"), max_length=1000)
-    creator = models.ForeignKey("authentication.profile", null=True,
-                                blank=True, verbose_name=_("profile"), on_delete=models.CASCADE)
-    date_added = models.DateTimeField(
-        _("date_added"), auto_now=False, auto_now_add=True)
-    class_name = "location"
-
-    class Meta:
-        verbose_name = _("Location")
-        verbose_name_plural = _("لوکیشن ها")
-
-    def __str__(self):
-        return f'{self.title}'
-
-    def get_edit_url(self):
-        return f'{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/'
-
-    def save(self, *args, **kwargs):
-        self.location = self.location.replace('width="600"', 'width="100%"')
-        self.location = self.location.replace('height="450"', 'height="400"')
-        super(Location, self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":location", kwargs={'pk': self.pk})
 
 
 class OrganizationUnit(ProjectManagerPage):

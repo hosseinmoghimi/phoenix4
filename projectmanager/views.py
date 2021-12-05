@@ -58,17 +58,7 @@ def getContext(request):
     
     return context
 
-
-class LoactionViews(View):
-    def location(self, request, *args, **kwargs):
-        context = getContext(request)
-        repo = LocationRepo(request=request)
-        location = repo.location(*args, **kwargs)
-        context['location'] = location
-        pages = repo.pages(location)
-        context['pages'] = pages
-        return render(request, TEMPLATE_ROOT+"location.html", context)
-
+ 
 
 class BasicViews(View):
     def search(self, request, *args, **kwargs):
@@ -361,7 +351,6 @@ class ProjectViews(View):
         my_pages_ids = BasicPageRepo(request=request).my_pages_ids()
 
         if request.user.has_perm(APP_NAME+'.change_project') or project.id in my_pages_ids:
-            context['add_location_form'] = AddLocationForm()
             context['copy_project_request_form'] = CopyProjectRequestForm()
             context['add_existing_location_form'] = AddExistingLocationForm()
             context['edit_project_form'] = EditProjectForm()

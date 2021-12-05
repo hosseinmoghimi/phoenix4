@@ -217,7 +217,7 @@ class WorkGroup(models.Model):
 class WorkSite(models.Model):
     parent=models.ForeignKey("worksite",null=True,blank=True, verbose_name=_("والد"), on_delete=models.CASCADE) 
     title=models.CharField(_("عنوان"), max_length=50)
-    location=models.ForeignKey("projectmanager.location",null=True,blank=True, verbose_name=_("location"), on_delete=models.CASCADE)
+    location=models.ForeignKey("map.location",null=True,blank=True, verbose_name=_("location"), on_delete=models.CASCADE)
     class_name="worksite"
     class Meta:
         verbose_name = _("WorkSite")

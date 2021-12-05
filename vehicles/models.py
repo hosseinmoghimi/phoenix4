@@ -114,8 +114,8 @@ class Trip(models.Model):
 
 class TripPath(models.Model):
     
-    source=models.ForeignKey("projectmanager.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
-    destination=models.ForeignKey("projectmanager.location",related_name="trip_destination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
+    source=models.ForeignKey("map.location",related_name="trip_source_set", verbose_name=_("مبدا"), on_delete=models.CASCADE)
+    destination=models.ForeignKey("map.location",related_name="trip_destination_set", verbose_name=_("مقصد"), on_delete=models.CASCADE)
     cost=models.IntegerField(_("هزینه"),default=0)
     distance=models.IntegerField(_("فاصله"),default=0)
     duration=models.IntegerField(_("مدت زمان تقریبی"),default=0)

@@ -31,6 +31,7 @@ class BasicViews(View):
         context['location'] = location
         context['location_s'] = json.dumps(LocationSerializer(location).data)
 
+
         return render(request, TEMPLATE_ROOT+"location.html", context)
 
 class BasicViews(View):
@@ -39,6 +40,8 @@ class BasicViews(View):
         locations = LocationRepo(request=request).list(*args, **kwargs)
         context['locations'] = locations
         context['locations_s'] = json.dumps(LocationSerializer(locations,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_location"):
+            context['add_location_form']=AddLocationForm()
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
 

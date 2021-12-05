@@ -1,7 +1,7 @@
 from django.db.models.query_utils import PathInfo
 from rest_framework import serializers
 
-from projectmanager.serializers import LocationSerializer
+from map.serializers import LocationSerializer
 from .models import Area, Passenger, Trip, TripCategory, TripPath, Vehicle,VehicleWorkEvent,Maintenance,WorkShift,ServiceMan,Driver
 from authentication.serializers import ProfileSerializer
 

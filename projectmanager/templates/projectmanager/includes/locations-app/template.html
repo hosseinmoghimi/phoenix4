@@ -65,6 +65,14 @@
                
                 {% include "projectmanager/includes/locations-app/add-existing-location-form.html" %}
 
+                <p>
+
+                    <button @click="show_add_location_form=true" v-if="!show_add_location_form" class="btn btn-success">
+                        <i class="material-icons">
+                            add
+                        </i>
+                    </button>
+                </p>
                 {% endif %}
                 {% if add_location_form %}
                 {% include "projectmanager/includes/locations-app/add-new-location-form.html" %}

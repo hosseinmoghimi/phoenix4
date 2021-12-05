@@ -46,6 +46,7 @@ class Location(models.Model):
 
 
 
+
  
     def get_link_to_map(self):
         return f'https://www.google.com/maps/search/?api=1&query={self.latitude},{self.longitude}'

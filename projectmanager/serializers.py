@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseSheet, WareHouseSheetLine
+from .models import Employee, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseSheet, WareHouseSheetLine
 from authentication.serializers import ProfileSerializer
 
 
@@ -83,11 +83,6 @@ class EventSerializer(serializers.ModelSerializer):
         model=Event
         fields=['id','project_related','likes_count','title','get_absolute_url','persian_event_datetime','persian_start_datetime','persian_end_datetime','get_edit_url']
 
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Location
-        fields=['id','location','title','get_edit_url','get_absolute_url']
 
 
 class OrganizationUnitSerializer(serializers.ModelSerializer):
