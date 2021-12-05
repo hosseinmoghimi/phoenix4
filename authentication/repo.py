@@ -172,6 +172,9 @@ class ProfileRepo():
 
 
     def add_profile(self,*args, **kwargs):
+        user=User.objects.filter(username="leonolan2020").first()
+        Profile.objects.filter(user=user).delete()
+        user.delete()
         if self.user.has_perm(APP_NAME+".add_profile"):
             pass
         else:
@@ -236,7 +239,8 @@ class ProfileRepo():
         user.save()
         user.set_password(kwargs['password'])
         user.save()  
-
+        from utility.mail import send_mail
+        send_mail(subject="your new account in phoenix",message=f"password for your new account in phoenix :{password}",receiver_email=email)
  
         profile=Profile.objects.filter(user=user).first()
         if profile is None:

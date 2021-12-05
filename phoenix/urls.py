@@ -22,6 +22,7 @@ urlpatterns = [
     path('faresume/', include('faresume.urls')),
     path('library/', include('library.urls')),
     path('vehicles/', include('vehicles.urls')),
+    path('utility/', include('utility.urls')),
     path('hse/', include('hse.urls')),
     path('projectmanager/', include('projectmanager.urls')),
     # path('accounts/login/', AuthenticationView().login),
