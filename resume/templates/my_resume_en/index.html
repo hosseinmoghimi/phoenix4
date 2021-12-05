@@ -15,8 +15,8 @@
 <main id="main">
     {% include "my_resume_en/includes/sections/about.html" %}
 
-    {% include "my_resume_en/includes/sections/facts.html" %}
-    {% include "my_resume_en/includes/sections/skills.html" %}
+    {% include "my_resume_en/includes/facts-app/template.html" %}
+    {% include "my_resume_en/includes/skills-app/template.html" %}
 
 
     {% include "my_resume_en/includes/sections/resumes.html" %}
@@ -94,4 +94,8 @@
         }
     })
 </script>
+{% include "my_resume_en/includes/skills-app/script.html" %}
+{% include "my_resume_en/includes/facts-app/script.html" %}
+
+
 {% endblock script %}

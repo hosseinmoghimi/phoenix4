@@ -1,4 +1,3 @@
-from resume.apps import APP_NAME
 from django.apps import AppConfig
 
 APP_NAME='accounting'

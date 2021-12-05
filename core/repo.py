@@ -475,15 +475,19 @@ class PictureRepo:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
         self.objects=Picture.objects.all()
-    def get(self,*args, **kwargs):
+    def picture(self,*args, **kwargs):
         pk=0
         name=""
         picture=None
         if 'name' in kwargs:
             name=kwargs['name']
+            if name=="":
+                return
             picture= self.objects.filter(app_name=self.app_name).filter(name=name).first()
-            if picture is None and not name=="":
-                picture=self.objects.create(app_name=self.app_name,name=name)
+            if picture is None:
+                picture=Picture(app_name=self.app_name,name=name)
+                picture.save()
+                return picture
         if 'pk' in kwargs:
             pk=kwargs['pk']
         if 'picture_id' in kwargs:
@@ -492,8 +496,8 @@ class PictureRepo:
             picture= self.objects.filter(app_name=self.app_name).filter(pk=pk).first()
         return picture
 
-    def picture(self,*args, **kwargs):
-        return self.get(*args, **kwargs)
+    def get(self,*args, **kwargs):
+        return self.picture(*args, **kwargs)
 
 
 class LinkRepo:

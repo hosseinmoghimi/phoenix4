@@ -119,6 +119,18 @@
 
 
                                     رزومه</a>
+                                {% if send_mail_form %}
+
+                                <form method="POST" action="{% url 'utility:send_mail'%}">
+                                    {% csrf_token %}
+
+                                    <input type="hidden" name="receiver_email" value="{{selected_profile.user.email}}">
+                                    <input type="hidden" name="subject" value="Hello World!">
+                                    <input type="hidden" name="message"
+                                        value="سلام {{selected_profile.user.first_name}}">
+                                    <button class="farsi btn btn-success" type="submit">ارسال ایمیل</button>
+                                </form>
+                                {% endif %}
 
                                 {% block card %}
 

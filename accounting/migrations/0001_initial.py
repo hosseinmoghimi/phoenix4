@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                 'verbose_name': 'MoneyTransaction',
                 'verbose_name_plural': 'MoneyTransactions',
             },
-            bases=('accounting.transaction', accounting.models.TransactionMixin),
+            bases=('accounting.transaction',),
         ),
         migrations.AddField(
             model_name='transaction',
@@ -114,7 +114,7 @@ class Migration(migrations.Migration):
                 'verbose_name': 'MarketOrderTransaction',
                 'verbose_name_plural': 'MarketOrderTransactions',
             },
-            bases=('accounting.transaction', accounting.models.TransactionMixin),
+            bases=('accounting.transaction',),
         ),
         migrations.CreateModel(
             name='AssetTransaction',
@@ -126,6 +126,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'AssetTransaction',
                 'verbose_name_plural': 'AssetTransactions',
             },
-            bases=('accounting.transaction', accounting.models.TransactionMixin),
+            bases=('accounting.transaction', ),
         ),
     ]

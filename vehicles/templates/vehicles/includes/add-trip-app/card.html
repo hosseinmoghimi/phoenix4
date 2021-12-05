@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="title">
+            <a href="{% url 'vehicles:trip_request' %}">
+
+                ثبت سفر جدید
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+        {% include "vehicles/includes/add-trip-app/form.html" %}
+
+    </div>
+</div>

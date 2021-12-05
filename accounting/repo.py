@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.utils import translation
-from resume.apps import APP_NAME
-from accounting.models import Asset, AssetTransaction, BankAccount, FinancialAccount, MarketOrderTransaction, MoneyTransaction, Transaction
+from .apps import APP_NAME
+from accounting.models import Asset, AssetTransaction, BankAccount, FinancialAccount, MarketOrderTransaction, MoneyTransaction, ProjectTransaction, Transaction
 from authentication.repo import ProfileRepo
 from django.db.models import Q
 class BankAccountRepo:
@@ -372,3 +372,33 @@ class MarketOrderTransactionRepo:
             return transaction
 
 
+
+class ProjectTransactionRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.profile=ProfileRepo(user=self.user).me
+        self.objects=ProjectTransaction.objects.order_by('date_paid')
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        
+
+
+        return objects
+    def project_transaction(self,*args, **kwargs):
+        pk=0
+        
+        if 'project_transaction_id' in kwargs:
+            pk=kwargs['project_transaction_id']
+        if 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        transaction= self.objects.filter(pk=pk).first()
+        return transaction
+     

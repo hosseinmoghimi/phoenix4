@@ -1,37 +1,65 @@
-<div class="card" id="passengers-app">
+<div class="card h-100" id="passengers-app">
 
     <div class="card-header">
-        <h3 class="title text-center">
-            مسافر ها
-        </h3>
+        <h4 class="title text-center">
+            <a href="{% url 'vehicles:passengers' %}">
+
+                مسافر ها
+            </a>
+        </h4>
     </div>
     <div class="card-body">
         <ul class="nav flex-column" style="padding-right:10px">
-          
+
             <li class="nav-item" v-for="passenger in passengers">
                 <a class="nav-link farsi docs-creator" :href="passenger.get_absolute_url">
                     <img :src="passenger.profile.image" class="rounded-circle" width="48" alt="">
                     <span v-text="passenger.profile.name"></span>
                 </a>
-                {% if perms.vehicles.change_passenger %}
-                <a title="ویرایش" target="_blank" :href="passenger.get_edit_url">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-                {% endif %}
+
             </li>
 
 
         </ul>
     </div>
-<div class="card-footer">
-    <form @submit.prevent="add_passenger_to_trip()">
-        <select class="form-control" v-model="passenger_id" id="">
-            <option :value="passenger.id" v-for="passenger in all_passengers" v-text="passenger.profile.name">
-            </option>
-        </select>
-        <button type="submit" class="btn btn-block btn-primary">افزودن به سفر</button>
-    </form>
-</div>
+    {% if trip and add_passenger_to_trip_form %}
+    <div class="card-footer">
+
+        <form @submit.prevent="add_passenger_to_trip()">
+
+            <input type="number" @input="select_passenger_by_profile_id()" class="form-control" v-model="profile_id">
+            <select  @input="select_passenger_by_passenger_id()" class="form-control" v-model="passenger_id" id="">
+                <option :value="passenger.id" v-for="passenger in all_passengers" v-text="passenger.profile.name">
+                </option>
+            </select>
+            <button type="submit" class="btn btn-block btn-primary">افزودن به سفر</button>
+        </form>
+    </div>
+    {% endif %}
+    {% if add_passenger_form %}
+      <div class="card-footer">
+        <form @submit.prevent="add_passenger()">
+            <div class="row">
+                <div class="col-9">
+                    <select type="text" v-model="profile_id" id="" class="form-control farsi">
+                        {% for profile in profiles %}
+                          
+                        <option value="{{profile.id}}">{{profile.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" class="form-control" required placeholder="شناسه پروفایل" v-model="profile_id" id="">
+                </div>
+                <div class="col-3">
+
+                    <button class="btn btn-success btn-sm" type="submit">
+
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+      </div>
+    {% endif %}
 </div>

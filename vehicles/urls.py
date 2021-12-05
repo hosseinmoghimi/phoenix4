@@ -9,6 +9,10 @@ urlpatterns = [
     
     path("",login_required(views.BasicViews().home),name="home"),
     
+    path("trip_request/",login_required(views.TripViews().trip_request),name="trip_request"),
+
+
+
     path("areas/",login_required(views.AreaViews().areas),name="areas"),
     path("area/<int:area_id>/",login_required(views.AreaViews().area),name="area"),
 
@@ -18,7 +22,7 @@ urlpatterns = [
     path("vehicles/",login_required(views.VehicleViews().vehicles),name="vehicles"),
     path("vehicle/<int:vehicle_id>/",login_required(views.VehicleViews().vehicle),name="vehicle"),
     
-    path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/",login_required(views.TripViews().trips),name="trips"),
+    path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/<int:passenger_id>/",login_required(views.TripViews().trips),name="trips"),
     path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),
 
     path("trip_paths/",login_required(views.TripViews().trip_paths),name='trippaths'),
@@ -27,10 +31,16 @@ urlpatterns = [
     path("vehicle_work_event/<int:pk>/",login_required(views.VehicleWorkEventViews().vehicle_work_event),name="vehicleworkevent"),
     path("vehicleevent/<int:pk>/",login_required(views.AreaViews().area),name="vehicleevent"),
     path("maintenance/<int:maintenance_id>/",login_required(views.MaintenanceViews().maintenance),name="maintenance"),
+    path("service_mans/",login_required(views.ServiceManViews().service_mans),name="service_mans"),
     path("service_man/<int:service_man_id>/",login_required(views.ServiceManViews().service_man),name="service_man"),
     path("work_shift/<int:pk>/",login_required(views.WorkShiftViews().work_shift),name="workshift"),
+    path("passengers/",login_required(views.PassengerViews().passengers),name="passengers"),
     path("passenger/<int:passenger_id>/",login_required(views.PassengerViews().passenger),name="passenger"),
 
+
+    path("add_area/",login_required(apis.AreaApi().add_area),name='add_area'),
+    path("add_service_man/",login_required(apis.ServiceManApi().add_service_man),name='add_service_man'),
+    path("add_passenger/",login_required(apis.PassengerApi().add_new_passenger),name='add_passenger'),
     path("add_passenger_to_trip/",login_required(apis.TripApi().add_passenger_to_trip),name='add_passenger_to_trip'),
     path("add_work_shift/",login_required(apis.WorkShiftApi().add_work_shift),name='add_work_shift'),
     path("add_trip_path/",login_required(apis.TripApi().add_trip_path),name='add_trip_path'),

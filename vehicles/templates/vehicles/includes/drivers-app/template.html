@@ -1,4 +1,4 @@
-<div class="card" id="drivers-app">
+<div class="card h-100" id="drivers-app">
 
     <div class="card-header">
         <h4 class="title text-center">
@@ -33,7 +33,7 @@
                         <option value="{{profile.id}}">{{profile.name}}</option>
                         {% endfor %}
                     </select>
-                    <input type="number" v-model="profile_id" id="">
+                    <input type="number" class="form-control" required placeholder="شناسه پروفایل" v-model="profile_id" id="">
                 </div>
                 <div class="col-3">
 

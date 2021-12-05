@@ -5,8 +5,8 @@ from core.constants import SUCCEED,FAILED
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import json
-from vehicles.repo import DriverRepo, MaintenanceRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
-from vehicles.serializers import DriverSerializer, MaintenanceSerializer, PassengerSerilizer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
+from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
+from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .forms import *
 
 
@@ -165,6 +165,7 @@ class TripApi(APIView):
                 paths=add_trip_form.cleaned_data['paths']
                 cost=add_trip_form.cleaned_data['cost']
                 delay=add_trip_form.cleaned_data['delay']
+                passengers=add_trip_form.cleaned_data['passengers']
                 start_datetime=add_trip_form.cleaned_data['start_datetime']
                 end_datetime=add_trip_form.cleaned_data['end_datetime']
                 if start_datetime is None or start_datetime=="":
@@ -177,6 +178,7 @@ class TripApi(APIView):
                 else:
                     end_datetime=PersianCalendar().from_gregorian(end_datetime)
                 paths=json.loads(paths)
+                passengers=json.loads(passengers)
                 trip=TripRepo(request=request).add_trip(
                     title=title,
                     vehicle_id=vehicle_id,
@@ -186,6 +188,7 @@ class TripApi(APIView):
                     delay=delay,
                     start_datetime=start_datetime,
                     end_datetime=end_datetime,
+                    passengers=passengers,
                 )
                 
                 if trip is not None:
@@ -311,6 +314,85 @@ class DriverApi(APIView):
                 if driver is not None:
                     log=4
                     context['driver']=DriverSerializer(driver).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   
+class PassengerApi(APIView):
+    def add_new_passenger(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_passenger_form=AddPassengerForm(request.POST)
+            if add_passenger_form.is_valid():
+                log=3
+                
+                profile_id=add_passenger_form.cleaned_data['profile_id']
+              
+                passenger=PassengerRepo(request=request).add_passenger(
+                    profile_id=profile_id,
+                )
+                
+                if passenger is not None:
+                    log=4
+                    context['passenger']=PassengerSerilizer(passenger).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   
+class AreaApi(APIView):
+    def add_area(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_area_form=AddAreaForm(request.POST)
+            if add_area_form.is_valid():
+                log=3
+                
+                name=add_area_form.cleaned_data['name']
+                code=add_area_form.cleaned_data['code']
+              
+                area=AreaRepo(request=request).add_area(
+                    name=name,
+                    code=code,
+                )
+                
+                if area is not None:
+                    log=4
+                    context['area']=AreaSerializer(area).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+   
+class ServiceManApi(APIView):
+    def add_service_man(self,request):
+        context={'result':FAILED}
+        log=1
+        user=request.user
+        if request.method=='POST':
+            log=2
+            add_service_man_form=AddServiceManForm(request.POST)
+            if add_service_man_form.is_valid():
+                log=3
+                
+                name=add_service_man_form.cleaned_data['name']
+                profile_id=add_service_man_form.cleaned_data['profile_id']
+              
+                service_man=ServiceManRepo(request=request).add_service_man(
+                    name=name,
+                    profile_id=profile_id,
+                )
+                
+                if service_man is not None:
+                    log=4
+                    context['service_man']=ServiceManSerializer(service_man).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

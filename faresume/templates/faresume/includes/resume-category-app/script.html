@@ -1,0 +1,11 @@
+<script>
+    let resume_categories = JSON.parse(`{{resume_categories_s|escapejs}}`)
+    let resume_category_app_data = {
+        resume_categories: resume_categories,
+    }
+    let resume_category_app = new Vue({
+        el: "#resume-category-app",
+        data: resume_category_app_data,
+
+    })
+</script>

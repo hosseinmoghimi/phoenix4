@@ -1,3 +1,5 @@
+{% load to_price %}
+{% load to_transaction_color %}
 <div class="card">
     <div class="card-header">
         <h4 class="title">
@@ -6,8 +8,17 @@
     </div>
     <div class="card-body farsi text-right">
         <div>
-            <a href="{{financial_account.profile.get_absolute_url}}">{{financial_account.profile.name}}</a>
+            <p>
+                <a href="{{financial_account.profile.get_absolute_url}}">{{financial_account.profile.name}}</a>
+            </p>
         </div>
+        <p>
+
+            <span class="alert alert-{{financial_account.total|to_transaction_color}}">
+                مانده : {{rest|to_price}}
+            </span>
+        </p>
+
         {% for bank_account in financial_account.bankaccount_set.all %}
         <hr>
         <div class="mb-2">

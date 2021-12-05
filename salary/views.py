@@ -20,11 +20,7 @@ def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
     parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-    }
+ 
     context['search_action'] = reverse(APP_NAME+":search")
     return context
 class SalaryViews(View):

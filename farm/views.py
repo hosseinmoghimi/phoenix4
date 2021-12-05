@@ -28,15 +28,9 @@ def getContext(request):
     # navbar_links_repo = NavBarLinkRepo()
     # # navbar_links = navbar_links_repo.list_roots(app_name=APP_NAME)
     # navbar_buttons = navbar_links_repo.buttons(app_name=APP_NAME)
-    context['app'] = {
-        # 'navbar_links': navbar_links,
-        # 'navbar_buttons': navbar_buttons,
-        # 'social_links': CoreRepo.SocialLinkRepo(user=user).list_for_app(app_name=APP_NAME),
-        # 'our_team_title': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_title(),
-        # 'our_team_link': CoreRepo.OurTeamRepo(user=user, app_name=APP_NAME).get_link(),
-    }
+ 
     parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
-    context['app'] = {
+    context['app'].update( {
         'home_url': reverse(APP_NAME+":home"),
         'tel': parameter_repo.get(ParametersEnum.TEL).value,
         'title': parameter_repo.get(ParametersEnum.TITLE).value,
@@ -53,7 +47,7 @@ def getContext(request):
         'mobile': parameter_repo.get(ParametersEnum.MOBILE),
         'email': parameter_repo.get(ParametersEnum.EMAIL),
         'tel': parameter_repo.get(ParametersEnum.TEL),
-    }
+    })
     context['APP_NAME'] = APP_NAME
     return context
 

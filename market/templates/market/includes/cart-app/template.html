@@ -54,16 +54,15 @@
             وارد کنید
         </h4>
         {% csrf_token %}
-        <input type="hidden"  name="supplier_id" value="{{order.supplier.id}}">
+        <input type="hidden" name="supplier_id" value="{{order.supplier.id}}">
         <hr>
 
         <div class="form-check" class="my-5 mx-3">
             سفارش را خودم تحویل میگیرم . ارسال نشود.
             <label class="form-check-label">
-                <input class="form-check-input" type="checkbox"
-                    value="" unchecked>
+                <input class="form-check-input" type="checkbox" value="" unchecked>
 
-              
+
                 <span class="form-check-sign">
                     <span class="check"></span>
                 </span>
@@ -71,22 +70,21 @@
         </div>
 
         <div class="form-group bmd-form-group">
-            <!-- <label for="address{{order.id}}" class="bmd-label-floating">آدرس تحویل</label> -->
-        <div class="form-group bmd-form-group">
-            <input value="خواف " type="text" name="address" placeholder="آدرس تحویل" required id="address{{order.id}}" class="form-control text-right farsi" >
+            <input value="خواف " type="text" name="address" placeholder="آدرس تحویل" required id="address{{order.id}}"
+                class="form-control text-right farsi">
         </div>
 
 
 
         <button type="submit" class="btn btn-info btn-round farsi">
-            
-            <i
 
-                class="material-icons" aria-hidden="true">keyboard_arrow_left</i>
+            <i class="material-icons" aria-hidden="true">keyboard_arrow_left</i>
             تایید سفارش {{order.supplier.title}}
-            
-            
-            </button>
+
+
+        </button>
+
+     
     </form>
 
     {% endfor %}

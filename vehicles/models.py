@@ -18,11 +18,16 @@ class VehiclePage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(VehiclePage,self).save(*args, **kwargs)
+
+
 class Passenger(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     class_name="passenger"
     
 
+    def get_trips_url(self):
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':0,'passenger_id':self.pk,'trip_path_id':0})
+    
     class Meta:
         verbose_name = _("Passenger")
         verbose_name_plural = _("Passengers")
@@ -46,7 +51,7 @@ class TripCategory(models.Model):
         """
     
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':self.pk,'driver_id':0,'vehicle_id':0,'trip_path_id':0})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':self.pk,'driver_id':0,'passenger_id':0,'vehicle_id':0,'trip_path_id':0})
     class Meta:
         verbose_name = _("TripCategory")
         verbose_name_plural = _("TripCategorys")
@@ -72,7 +77,7 @@ class Trip(models.Model):
     date_started=models.DateTimeField(_("شروع سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
     date_ended=models.DateTimeField(_("پایان سرویس"),null=True,blank=True, auto_now=False, auto_now_add=False)
     paths=models.ManyToManyField("trippath",blank=True, verbose_name=_("مسیر های سرویس"))
-    passengers=models.ManyToManyField("passenger", verbose_name=_("مسافر ها"))
+    passengers=models.ManyToManyField("passenger",blank=True, verbose_name=_("مسافر ها"))
     delay=models.IntegerField(_("تاخیر"),default=0)
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=5000)
     class_name="trip"
@@ -125,7 +130,7 @@ class TripPath(models.Model):
     def __str__(self):
         return self.title
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':0,'trip_path_id':self.pk})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'passenger_id':0,'vehicle_id':0,'trip_path_id':self.pk})
     
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"trip_path_id": self.pk})
@@ -137,9 +142,10 @@ class Vehicle(Asset):
     vehicle_type=models.CharField(_("نوع وسیله "),choices=VehicleTypeEnum.choices,default=VehicleTypeEnum.SEDAN, max_length=50)
     brand=models.CharField(_("برند"),choices=VehicleBrandEnum.choices,default=VehicleBrandEnum.TOYOTA, max_length=50)
     model_name=models.CharField(_("مدل"),null=True,blank=True, max_length=50)
-    color=models.CharField(_("رنگ"),choices=VehicleColorEnum.choices,default=VehicleColorEnum.SEFID, max_length=50)
     plaque=models.CharField(_("پلاک"),null=True,blank=True, max_length=50)
     driver=models.CharField(_("راننده"), max_length=50,null=True,blank=True)
+    color=models.CharField(_("رنگ"),choices=VehicleColorEnum.choices,default=VehicleColorEnum.SEFID, max_length=50)
+
     kilometer=models.IntegerField(_("کیلومتر"),default=0)
     def save(self,*args, **kwargs):
         self.class_name="vehicle"
@@ -150,7 +156,7 @@ class Vehicle(Asset):
         verbose_name_plural = _("Vehicles")
 
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'vehicle_id':self.pk,'trip_path_id':0})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'passenger_id':0,'vehicle_id':self.pk,'trip_path_id':0})
      
 
     def get_edit_url(self):
@@ -214,8 +220,8 @@ class Area(models.Model):
 
 class Driver(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
-    medical_license_photo=models.ForeignKey("core.image",related_name="medical_license_photoes", verbose_name=_("تصویر کارت بهداشت"),null=True,blank=True, on_delete=models.CASCADE)
-    driving_license_photo=models.ForeignKey("core.image",related_name="driving_license_photoes",  verbose_name=_("تصویر گواهینامه"),null=True,blank=True, on_delete=models.CASCADE)
+    medical_license_photo=models.ForeignKey("core.image",related_name="medical_license_photoes", verbose_name=_("تصویر کارت بهداشت"),null=True,blank=True, on_delete=models.SET_NULL)
+    driving_license_photo=models.ForeignKey("core.image",related_name="driving_license_photoes",  verbose_name=_("تصویر گواهینامه"),null=True,blank=True, on_delete=models.SET_NULL)
     start_date=models.DateTimeField(_("start_date"), auto_now=False, auto_now_add=False)
     end_date=models.DateTimeField(_("end_date"), auto_now=False, auto_now_add=False)
     class Meta:
@@ -223,7 +229,7 @@ class Driver(models.Model):
         verbose_name_plural = _("Drivers")
 
     def get_trips_url(self):
-        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':self.pk,'vehicle_id':0,'trip_path_id':0})
+        return reverse(APP_NAME+":trips",kwargs={'category_id':0,'passenger_id':0,'driver_id':self.pk,'vehicle_id':0,'trip_path_id':0})
     
     def __str__(self):
         return self.profile.name
@@ -253,7 +259,7 @@ class WorkShift(models.Model):
         verbose_name_plural = _("WorkShifts")
 
     def __str__(self):
-        return f'{self.vehicle.title} {self.start_time}'
+        return f'{self.vehicle.title} {self.persian_start_time()}'
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":workshift", kwargs={"pk": self.pk})

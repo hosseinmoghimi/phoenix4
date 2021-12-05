@@ -69,7 +69,7 @@ class PictureEnum(TextChoices):
     GUARANTEE_HEADER="تصویر سربرگ گارانتی",_("تصویر سربرگ گارانتی")
 class ParameterEnum(TextChoices):
     BRANDS_SLOGAN="شعار صفحه برند ها",_("شعار صفحه برند ها")
-    SHOP_HEADER_TITLE='عنوان فروشگاه',_('عنوان فروشگاه')
+    SHOP_HEADER_TITLE='عنوان صفحه خانه برای فروشگاه',_('عنوان صفحه خانه برای فروشگاه')
     SHOP_HEADER_LINK='لینک فروشگاه',_('لینک فروشگاه')
     SHOP_HEADER_SLOGAN='شعار فروشگاه',_('شعار فروشگاه')
     SHOP_HEADER_IMAGE='تصویر بنر فروشگاه',_('تصویر بنر فروشگاه')

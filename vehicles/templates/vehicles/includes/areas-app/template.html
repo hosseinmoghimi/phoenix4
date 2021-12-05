@@ -1,4 +1,4 @@
-<div class="card" id="areas-app">
+<div class="card h-100" id="areas-app" >
 
     <div class="card-header">
         <h4 class="title text-center">
@@ -26,13 +26,21 @@
     <div class="card-footer">
         <form @submit.prevent="add_area()">
             <div class="row">
-                <div class="col-9">
-                    <select type="text" v-model="profile_id" id="" class="form-control farsi">
-                        <option value="{{profile.id}}">{{profile.name}}</option>
-                    </select>
-                    <input type="number" v-model="profile_id" id="">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="">نام</label>
+                    </div>
+                    <input type="text" v-model="name" class="form-control">
                 </div>
-                <div class="col-3">
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="">کد</label>
+                    </div>
+                    <input type="text" v-model="code" class="form-control">
+                </div>
+
+                <div class="col-md-3">
 
                     <button class="btn btn-success btn-sm" type="submit">
 

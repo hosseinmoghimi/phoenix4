@@ -1,5 +1,5 @@
-from mafia.apps import APP_NAME
-from resume.enums import IconEnum, LanguageEnum
+from .apps import APP_NAME
+from .enums import IconEnum, LanguageEnum
 from .models import Resume, ResumeCategory, ResumeFact, ResumeIndex, ResumePortfolio, ResumeService, ResumeSkill, ResumeTestimonial,ContactMessage
 from authentication.repo import ProfileRepo
 
@@ -34,7 +34,7 @@ class ResumeIndexRepo:
             pk=kwargs['pk']
         elif 'id' in kwargs:
             pk=kwargs['id']
-        resume_index= self.objects.filter(pk=pk).first()
+        resume_index= ResumeIndex.objects.filter(pk=pk).first()
         return resume_index
 class PortfolioRepo:
     def __init__(self,*args, **kwargs):
@@ -151,7 +151,7 @@ class ResumeFactRepo:
     def add(self,*args, **kwargs):
         if 'resume_index_id' in kwargs:
             resume_index_id=kwargs['resume_index_id']
-            resume_index=ResumeIndex.objects.filter(language=self.language).filter(pk=resume_index_id).first()
+            resume_index=ResumeIndex.objects.filter(pk=resume_index_id).first()
             if resume_index is None:
                 return None
             if self.user.has_perm(APP_NAME+".add_resumefact") or self.profile==resume_index.profile:
@@ -168,6 +168,8 @@ class ResumeFactRepo:
                 resume_fact.count=kwargs['count']
             if 'color' in kwargs:
                 resume_fact.color=kwargs['color']
+            if 'priority' in kwargs:
+                resume_fact.priority=kwargs['priority']
             if 'icon' in kwargs:
                 resume_fact.icon=kwargs['icon']
             resume_fact.save()
@@ -188,7 +190,7 @@ class ResumeSkillRepo:
         if 'user' in kwargs:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=ResumeSkill.objects.all()#.filter(language=self.language)
+        self.objects=ResumeSkill.objects.all()
     
     def resume_skill(self,*args, **kwargs):
         pk=0

@@ -10,11 +10,7 @@ TEMPLATE_ROOT=APP_NAME+'/'
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     parameter_repo=ParameterRepo(user=request.user,app_name=APP_NAME)
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(CoreEnums.ParametersEnum.TEL).value,
-        'title': parameter_repo.get(CoreEnums.ParametersEnum.TITLE).value,
-    }
+ 
     return context
 class BasicViews(View):
     def home(self,request,*args, **kwargs):

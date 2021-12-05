@@ -1,0 +1,58 @@
+<script>
+    let add_profile_app = new Vue({
+        el: "#add-profile-app",
+        data: {
+            username: "leonolan2020",
+            password: "ghghfYT^%RTYft^%",
+            first_name: "leo",
+            last_name: "nolan",
+            mobile: "09367764920",
+            bio: "bbbb",
+            address: "aaaa",
+            email: "leonolan2020@gmail.com",
+            message: { show: false },
+        },
+        methods: {
+            add_profile: function () {
+                let url = "{% url 'authentication:add_profile' %}"
+                let payload = {
+                    // profile_id:add_profile_app.profile_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    username: add_profile_app.username,
+                    password: add_profile_app.password,
+                    first_name: add_profile_app.first_name,
+                    last_name: add_profile_app.last_name,
+                    mobile: add_profile_app.mobile,
+                    bio: add_profile_app.bio,
+                    address: add_profile_app.address,
+                    email: add_profile_app.email,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        add_profile_app.message = {
+                            show: true,
+                            color: "success",
+                            body: data.message
+                        }
+                        if (typeof profiles_app != "undefined")
+                            profiles_app.profiles.push(data.profile)
+
+                        // setTimeout(() => {
+                        //     add_profile_app.message = {
+                        //         show: false,                                
+                        //     }
+                        // }, 1500);
+                    }
+                    else {
+                        add_profile_app.message = {
+                            show: true,
+                            color: "danger",
+                            body: data.message
+                        }
+                    }
+                })
+            },
+        },
+    })
+</script>

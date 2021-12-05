@@ -59,7 +59,14 @@ SITE_URL='/'
 PUSHER_IS_ENABLE=False
 PUBLIC_ROOT=BASE_DIR
 MYSQL=False
+HOME_APP_URLS='projectmanager.urls'
+PUSHER_IS_ENABLE=True
 ALLOWED_HOSTS = ['*']
+SITE_FULL_BASE_ADDRESS="http://127.0.0.1:8000/"
+SESSION_COOKIE_AGE = 3600 # one hour in seconds
+UPLOAD_ROOT="d:\\uploads2"
+ALLOW_REGISTER_ONLINE=False
+
 
 
 
@@ -86,6 +93,121 @@ STATIC_ROOT=os.path.join(PUBLIC_ROOT,'staticfiles')
 MEDIA_ROOT=os.path.join(PUBLIC_ROOT,'media')
 STATIC_URL = SITE_URL+'static/'
 MEDIA_URL =  SITE_URL+'media/'
+
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+
+
+
+apps=[
+    {
+        'name':'web',
+        'title':'وب سایت',
+        'home_url':SITE_URL+"web"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'faresume',
+        'title':'رزومه',
+        'home_url':SITE_URL+"faresume"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'restaurant',
+        'title':'رستوران',
+        'home_url':SITE_URL+"restaurant"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'library',
+        'title':'کتابخانه',
+        'home_url':SITE_URL+"library"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'hse',
+        'title':'ایمنی و محیط زیست',
+        'home_url':SITE_URL+"hse"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'accounting',
+        'title':'حسابداری',
+        'home_url':SITE_URL+"accounting"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'tax',
+        'title':'مالیات',
+        'home_url':SITE_URL+"tax"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'salary',
+        'title':'سیستم حقوق و دستمزد',
+        'home_url':SITE_URL+"salary"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'vehicles',
+        'title':'ماشین آلات',
+        'home_url':SITE_URL+"vehicles"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'school',
+        'title':'آموزشگاه',
+        'home_url':SITE_URL+"school"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'projectmanager',
+        'title':'مدیریت پروژه',
+        'home_url':SITE_URL+"projectmanager"+"/",
+        'has_help':True,
+    },
+    {
+        'name':'market',
+        'title':'مارکت',
+        'home_url':SITE_URL+"market"+"",
+        'has_help':False,
+    },
+    {
+        'name':'mafia',
+        'title':'مافیا',
+        'home_url':SITE_URL+"mafia"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'realestate',
+        'title':'املاک',
+        'home_url':SITE_URL+"realestate"+"/",
+        'has_help':True,
+    },
+    {
+        'name':'messenger',
+        'title':'پیام رسان',
+        'home_url':SITE_URL+"messenger"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'bms',
+        'title':'ساختمان هوشمند',
+        'home_url':SITE_URL+"bms"+"/",
+        'has_help':True,
+    },
+    {
+        'name':'farm',
+        'title':'دامپروری',
+        'home_url':SITE_URL+"farm"+"/",
+        'has_help':False,
+    },
+    {
+        'name':'stock',
+        'title':'سهام',
+        'home_url':SITE_URL+"stock"+"/",
+        'has_help':True,
+    },
+]
 
 
 ```

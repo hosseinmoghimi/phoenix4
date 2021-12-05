@@ -143,7 +143,7 @@ class Animal(models.Model):
         from django.utils import timezone as tz
         report_date=tz.now()
         animal_in_saloon = AnimalInSaloon.objects.filter(animal=self).order_by('-enter_date')
-        if 'report_date' is kwargs:
+        if 'report_date' in kwargs:
             report_date = kwargs['report_date']
         animal_in_saloon = animal_in_saloon.filter(enter_date__lte=report_date)
         # saloon = saloon.filter(enter_date__lte=report_date)

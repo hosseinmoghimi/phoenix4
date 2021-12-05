@@ -1,7 +1,9 @@
 import json
 from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, TagSerializer
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render,reverse
+
+from .enums import ParametersEnum
 
 
 
@@ -39,6 +41,15 @@ def CoreContext(request, *args, **kwargs):
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
+    parameter_repo = ParameterRepo(request=request,app_name=app_name)
+    
+    context['app']={
+        'title':parameter_repo.parameter(name=ParametersEnum.TITLE).value,
+        # 'home_url':parameter_repo.parameter(name=ParametersEnum.HOME_URL).value,
+        'home_url': reverse(app_name+":home"),
+        'logo':PictureRepo(request=request,app_name=app_name).picture(name=PictureNameEnums.LOGO),
+    }
+    
 
     if PUSHER_IS_ENABLE and profile is not None and profile.member_set.first() is not None:
         from messenger.views import GetMemberContext
@@ -128,33 +139,33 @@ def DefaultContext(request, app_name='core', *args, **kwargs):
 
 
 class MessageView(View):
-    def __init__(response, *args, **kwargs):
-        response.links = []
-        response.message_text_html = None
-        response.message_color = 'warning'
-        response.has_home_link = True
-        response.header_color = "rose"
-        response.message_icon = ''
-        response.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
-        response.message_text = ""
-        response.header_text = ""
-        response.message_html = ""
+    def __init__(self, *args, **kwargs):
+        self.links = []
+        self.message_text_html = None
+        self.message_color = 'warning'
+        self.has_home_link = True
+        self.header_color = "rose"
+        self.message_icon = ''
+        self.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+        self.message_text = ""
+        self.header_text = ""
+        self.message_html = ""
         if 'message_html' in kwargs:
-            response.message_html = kwargs['message_html']
+            self.message_html = kwargs['message_html']
         if 'message_color' in kwargs:
-            response.message_color = kwargs['message_color']
+            self.message_color = kwargs['message_color']
         if 'has_home_link' in kwargs:
-            response.has_home_link = kwargs['has_home_link']
+            self.has_home_link = kwargs['has_home_link']
         if 'header_color' in kwargs:
-            response.header_color = kwargs['header_color']
+            self.header_color = kwargs['header_color']
         if 'message_icon' in kwargs:
-            response.message_icon = kwargs['message_icon']
+            self.message_icon = kwargs['message_icon']
         if 'header_icon' in kwargs:
-            response.header_icon = kwargs['header_icon']
+            self.header_icon = kwargs['header_icon']
         if 'message_text' in kwargs:
-            response.message_text = kwargs['message_text']
+            self.message_text = kwargs['message_text']
         if 'header_text' in kwargs:
-            response.header_text = kwargs['header_text']
+            self.header_text = kwargs['header_text']
 
 
 

@@ -17,13 +17,11 @@
                 <h4>
 
                     {{transaction.title}}
+                    {% if perms.accounting.vhange_transaction %}
+                    <a href="{{transaction.get_edit_url}}" target="_blank" class="mx-2" title="ویرایش">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
                 </h4>
-                {% if perms.accounting.vhange_transaction %}
-                <a href="{{transaction.get_edit_url}}" target="_blank" title="ویرایش">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
 
                 {% endif %}
                 <div>
@@ -68,7 +66,7 @@
     {% block money %}
 
     {% endblock money %}
- 
+
     <div class="col-md-12">
         {% include "core/includes/page-images-app/template.html" %}
     </div>
@@ -78,7 +76,7 @@
 
     </div>
     <div class="col-md-6">
-{% include "core/includes/page-tags-app/template.html" %}
+        {% include "core/includes/page-tags-app/template.html" %}
 
     </div>
 </div>
@@ -88,7 +86,7 @@
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 <script>
-    let page_id=parseInt("{{transaction.id}}")
+    let page_id = parseInt("{{transaction.id}}")
 </script>
 {% include "core/includes/page-images-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}

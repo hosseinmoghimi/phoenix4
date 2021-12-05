@@ -27,6 +27,11 @@
                         <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
                             <i class="fa fa-edit text-info" ></i>
                         </a>
+                        {% endif %} 
+                         {% if perms.core.delete_document %}
+                        <a :href="document.get_delete_url" target="_blank" title="حذف" class="mx-2 docs-creator">
+                            <i class="fa fa-trash text-danger" ></i>
+                        </a>
                         {% endif %}
                     </h6>
                 </div>

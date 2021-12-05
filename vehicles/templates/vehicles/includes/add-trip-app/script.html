@@ -1,0 +1,136 @@
+<script>
+    let vehicles = JSON.parse(`{{vehicles_s|escapejs}}`)
+    let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
+    let all_paths = JSON.parse(`{{paths_s|escapejs}}`)
+    let passengers = JSON.parse(`{{passengers_s|escapejs}}`)
+
+    let url_add_new_trip = "{% url 'vehicles:add_new_trip' %}"
+
+    let add_trip_app = new Vue({
+        el: "#add-trip-app",
+        data: {
+            all_passengers: passengers,
+            passengers: [],
+            delay: 0,
+            cost: 0,
+            waiting: false,
+            vehicle_id: 0,
+            driver_id: 0,
+            driver_profile_id: 0,
+            title: "",
+            paths: [],
+            path_id: 0,
+            drivers: drivers,
+            all_paths: all_paths,
+            paths: [],
+            vehicles: vehicles,
+            if_show_message: false,
+            message_color: "",
+            message: "",
+        },
+        methods: {
+            show_message: function (message_color, message) {
+                this.if_show_message = true
+                this.message_color = message_color
+                this.message = message
+            },
+            to_price: function (value, currency) {
+                return to_price(value, currency)
+            },
+            remove_path: function (path_id) {
+
+
+                add_trip_app.paths = add_trip_app.paths.filter((path) => {
+                    if (path.id == path_id) {
+                        add_trip_app.all_paths.push(path)
+
+                    }
+                    return path.id != path_id
+
+                })
+            },
+            selected_driver_by_profile_id: function () {
+                let selected_driverr=null
+                drivers.forEach(driver => {
+                    if (driver.id == add_trip_app.driver_profile_id)
+                        selected_driverr = driver
+                });
+                add_trip_app.driver_id=selected_driverr.id
+            },
+            add_new_trip: function () {
+                if(add_trip_app.title===""){
+                    add_trip_app.show_message("warning","عنوان سفر را وارد کنید.")
+                    return
+                }
+                if(add_trip_app.vehicle_id==0){
+                    add_trip_app.show_message("warning","وسیله را وارد کنید.")
+                    return
+                }
+                if(add_trip_app.driver_id==0){
+                    add_trip_app.show_message("warning","راننده را وارد کنید.")
+                    return
+                }
+                add_trip_app.waiting = true
+                let paths_ = []
+                this.paths.forEach(path => {
+                    paths_.push({
+                        id: path.id
+                    })
+                });
+                let paths = JSON.stringify(paths_)
+                let passengers = JSON.stringify([])
+                if (typeof passenger_id != "undefined")
+                    passengers = JSON.stringify([passenger_id])
+                let payload = {
+                    title: this.title,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    vehicle_id: this.vehicle_id,
+                    driver_id: this.driver_id,
+                    delay: this.delay,
+                    cost: this.cost,
+                    paths: paths,
+                    passengers: passengers
+                }
+                console.log(payload)
+                $.post(url_add_new_trip, payload).done((data) => {
+                    add_trip_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        if (typeof trips_app != "undefined")
+                            trips_app.trips.push(data.trip)
+                        add_trip_app.show_message("success", "با موفقیت افزوده شد." + "<div><a href='" + data.trip.get_absolute_url + "''>" + data.trip.title + "</a></div>")
+                    }
+                    else {
+                        add_trip_app.show_message("danger", "خطا در افزودن درخواست")
+
+                    }
+                })
+            },
+            add_path: function () {
+                add_trip_app.all_paths.forEach(path => {
+                    if (path.id == add_trip_app.path_id) {
+                        add_trip_app.paths.push(path)
+                        add_trip_app.cost = parseInt(add_trip_app.cost) + path.cost
+                    }
+                })
+
+                add_trip_app.all_paths = []
+                all_paths.forEach(path1 => {
+                    let sw = true
+                    add_trip_app.paths.forEach(path2 => {
+                        if (path1.id == path2.id)
+                            sw = false
+
+
+                    })
+                    if (sw)
+                        add_trip_app.all_paths.push(path1)
+
+                });
+
+
+            }
+        }
+
+    })
+</script>

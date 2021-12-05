@@ -1,0 +1,31 @@
+<div>
+
+    <div class="row farsi text-right">
+        <div class="col-3">
+            <a :title="menu_line.shop.product.title" :href="menu_line.shop.product.get_absolute_url">
+                <img class="rounded w-100" :src="menu_line.shop.product.thumbnail" alt="...">
+            </a>
+        </div>
+        <div class="col-5">
+            <a :href="menu_line.shop.product.get_absolute_url">
+                <div class="text-right">
+
+                    <span v-text="menu_line.shop.product.title"></span>
+                </div>
+            </a>
+            <div>
+                هر 
+                <span v-text="menu_line.shop.unit_name"></span>
+                <span v-text="to_price(menu_line.shop.unit_price)"></span>{{CURRENCY}}
+            </div>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-sm btn-round btn-danger" @click="add_quantity(-1)"> <i class="material-icons">remove</i>
+            </button>
+            <span v-text="to_price(menu_line.quantity)"></span>
+            <button class="btn btn-sm btn-round btn-success" @click="add_quantity(1)"> <i class="material-icons">add</i>
+            </button>
+        </div>
+    </div>
+    <hr>
+</div>

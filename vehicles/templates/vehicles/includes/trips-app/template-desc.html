@@ -8,7 +8,13 @@
         <table class="table table-striped">
             <thead>
                 <th>
+                    دسته بندی
+                </th>
+                <th>
                     عنوان
+                </th>
+                <th>
+                    وضعیت
                 </th>
                 <th>
                     مسیر ها
@@ -35,8 +41,15 @@
             </thead>
             <tbody>
                 <template v-for="trip in trips">
-
                     <tr>
+                        <td>
+                            <a v-if="trip.category" :href="trip.category.get_trips_url">
+                                <span :class="'badge badge-'+trip.category.color">
+                                    <span v-text="trip.category.title"></span>
+                                </span>
+                            </a>
+
+                        </td>
                         <td>
                             <a :href="trip.get_absolute_url">
                                 <i class="material-icons">
@@ -47,15 +60,14 @@
                             </a>
 
 
-                            <a v-if="trip.category" :href="trip.category.get_trips_url">
-                                <span :class="'badge badge-'+trip.category.color">
-                                    <span v-text="trip.category.title"></span>
-                                </span>
-                            </a>
-                            <span :class="'badge badge-'+trip.get_status_color">
+
+                        
+
+                        </td>
+                        <td>
+                                <span :class="'badge badge-'+trip.get_status_color">
                                 <span v-text="trip.status"></span>
                             </span>
-
                         </td>
                         <td>
                             <div v-for="path in trip.paths">
@@ -125,8 +137,8 @@
                             {% endif %}
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="8">
+                    <tr v-if="trip.description">
+                        <td colspan="10">
                             <div class="text-muted">
 
                                 توضیحات : <span v-text="trip.description"></span>
@@ -134,16 +146,16 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="8"></td>
+                    <tr v-if="trip.description">
+                        <td colspan="10"></td>
                     </tr>
                     <tr>
-                        <td colspan="8"></td>
+                        <td colspan="10"></td>
                     </tr>
                 </template>
             </tbody>
         </table>
 
     </div>
-     
+
 </div>

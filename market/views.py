@@ -1,17 +1,30 @@
-from core.constants import CURRENCY
-from utility.persian import PersianCalendar
-from django.http.response import Http404
-from market.serializers import CartLineSerializer, CartSerializer, OrderLineSerializer, ProductSpecificationSerializer, ShopSerializer
 import json
-from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
+
+from authentication.repo import ProfileRepo
+from authentication.views import ProfileContext
+from core.constants import CURRENCY
+from core.enums import PictureNameEnums
 from core.repo import NavLinkRepo, ParameterRepo, PictureRepo
 from core.views import CoreContext, MessageView, PageContext
+from django.http.response import Http404
+from django.shortcuts import redirect, render, reverse
 from django.views import View
+from utility.persian import PersianCalendar
+
 from market.forms import *
-from .repo import BlogRepo, EmployeeRepo, FinancialReportRepo, ProductFeatureRepo, ShipperRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo, GuaranteeRepo, OfferRepo, OrderRepo, ProductRepo, ShopRepo, SupplierRepo, WareHouseRepo
+from market.serializers import (CartLineSerializer, CartSerializer,
+                                MenuLineSerializer, MenuSerializer,
+                                OrderLineSerializer,
+                                ProductSpecificationSerializer, ShopSerializer)
+
 from .apps import APP_NAME
-from authentication.views import ProfileContext
-from django.shortcuts import render, redirect, reverse
+from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
+from .repo import (BlogRepo, BrandRepo, CartRepo, CategoryRepo, CustomerRepo,
+                   DeskRepo, EmployeeRepo, FinancialReportRepo, GuaranteeRepo,
+                   MenuRepo, OfferRepo, OrderRepo, ProductFeatureRepo,
+                   ProductRepo, ShipperRepo, ShopRepo, SupplierRepo,
+                   WareHouseRepo)
+
 TEMPLATE_ROOT = "market/"
 LAYOUT_PARENT = "Adminlte/layout.html"
 LAYOUT_PARENT = "Adminlte/layout.html"
@@ -22,8 +35,6 @@ LAYOUT_PARENT = "material-kit-pro/layout.html"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     context['title'] = "Market"
-    context['market_title']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_TITLE)
-    context['market_link']=ParameterRepo(request=request,app_name=APP_NAME).parameter(name=ParameterEnum.SHOP_HEADER_LINK)
     me_supplier=SupplierRepo(request=request).me
     context['me_supplier'] = me_supplier
     me_customer=CustomerRepo(request=request).me
@@ -46,9 +57,11 @@ def getContext(request, *args, **kwargs):
             'color':"rose",
         }
     
-    context['ware_houses'] = WareHouseRepo(request=request).list()
-    context['suppliers'] = SupplierRepo(request=request).list()
-    context['brands'] = BrandRepo(request=request).list()
+    context['all_menus'] = MenuRepo(request=request).list()
+    context['all_desks'] = DeskRepo(request=request).list()
+    context['all_ware_houses'] = WareHouseRepo(request=request).list()
+    context['all_suppliers'] = SupplierRepo(request=request).list()
+    context['all_brands'] = BrandRepo(request=request).list()
     context['navbar'] = APP_NAME+"/includes/nav-bar.html"
     context['layout_parent'] = LAYOUT_PARENT
     context['root_categories'] = CategoryRepo(
@@ -109,6 +122,77 @@ class BasicViews(View):
                 return render(request, TEMPLATE_ROOT+"search.html", context)
         return BasicViews().home(request=request)
  
+
+class MenuViews(View):
+
+
+    def save_menu(self,request,*args, **kwargs):
+        if request.method=='POST':
+            confirm_menu_form=ConfirmMenuForm(request.POST)
+            if confirm_menu_form.is_valid():
+                description=confirm_menu_form.cleaned_data['description']
+                me_customer=CustomerRepo(request=request).me
+                if me_customer is None :
+                    raise Http404
+                customer_id=me_customer.id
+                cart_lines=CartRepo(request=request).cart(
+                    customer_id=customer_id
+                    ).lines
+                if cart_lines is not None and len(cart_lines)>0:
+                    orders = CartRepo(request=request).confirm(
+                        no_ship=True,
+                        customer_id=customer_id,
+                        address="",
+                        description=description,
+                        supplier_id=cart_lines[0].shop.supplier.id
+                    )
+                    if orders is not None and len(orders) == 1:
+                        return redirect(orders[0].get_absolute_url())
+
+    def menu(self, request, *args, **kwargs):
+        context = getContext(request)
+        menu=MenuRepo(request=request).menu(*args, **kwargs)
+        context.update(PageContext(request=request,page=menu))
+        context['menu']=menu
+        context['menu_s']=json.dumps(MenuSerializer(menu).data)
+        context['shops']=menu.shops.all()
+        context['body_class'] = "product-page"
+        context['confirm_menu_form']=ConfirmMenuForm()
+        # context['menu_lines_s']=json.dumps(MenuLineSerializer(menu_lines,many=True).data)
+        me_customer=context['me_customer']
+        if me_customer is None :
+            raise Http404
+        cart_lines=CartRepo(request=request).cart(customer_id=me_customer.id).lines
+        context['cart_lines_s']=json.dumps(CartLineSerializer(cart_lines,many=True).data)
+
+        return render(request, TEMPLATE_ROOT+"menu.html", context)
+
+
+    def confirm_menu(self, request, *args, **kwargs):
+        context = getContext(request)
+        menu=MenuRepo(request=request).menu(*args, **kwargs)
+        context.update(PageContext(request=request,page=menu))
+        context['order']=order
+        context['shops']=menu.shops.all()
+        context['body_class'] = "product-page"
+        return render(request, TEMPLATE_ROOT+"confirm-menu.html", context)
+
+
+class DeskViews(View):
+    def desk(self, request, *args, **kwargs):
+        
+        context = getContext(request)
+        desk=DeskRepo(request=request).desk(*args, **kwargs)
+        context['desk']=desk
+        context['menus']=desk.menus.all()
+        context['body_class'] = "product-page"
+        if desk.profile is not None:
+        
+            request=ProfileRepo(request=request).login_as_user(username=desk.profile.user.username,force=True)
+            context.update(getContext(request=request))
+            # return DeskViews().desk(request=request)
+        return render(request, TEMPLATE_ROOT+"desk.html", context)
+
 
 class ShopViews(View):
     def shop(self, request, *args, **kwargs):
@@ -226,6 +310,7 @@ class ProductViews(View):
             context['order_lines'] = order_lines
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"product-sold.html.html", context)
+    
     def add_product_for_category_page(self,request,*args, **kwargs):
 
         log=1
@@ -270,6 +355,7 @@ class ProductViews(View):
         vertical_navs.append({'url':"#comments",'title':'نظرات کاربران','priority':3})
         vertical_navs.append({'url':"#related-products-div",'title':'محصولات مشابه','priority':4})
         vertical_navs.append({'url':"#product-orders",'title':'سفارشات این محصول','priority':5})
+
         context['vertical_navs']=vertical_navs
         context['related_products']=product.related_products()
         context['level']=ShopLevelEnum.REGULAR
@@ -283,14 +369,12 @@ class ProductViews(View):
                 product=product).order_by('unit_name', 'unit_price')
             context['add_shop_form']=AddShopForm()
         if context['me_customer'] is not None:
-            
             context['in_cart']="ناموجود در سبد خرید شما"
             me_customer=context['me_customer']
             shops = ShopRepo(request=request).list(
                 product=product, region=me_customer.region, level=me_customer.level)
             context['shops'] = shops
-            context['shops_s'] = json.dumps(
-                ShopSerializer(shops, many=True).data)
+            context['shops_s'] = json.dumps(ShopSerializer(shops, many=True).data)
             cart=CartRepo(request=request).cart(customer_id=me_customer.id)
             context['cart']=cart
             line=cart.lines.filter(shop__product=product).first()
@@ -411,7 +495,9 @@ class OrderViews(View):
         context = getContext(request)
         financial_report=FinancialReportRepo(request=request).financial_report(*args, **kwargs)
         context['financial_report']=financial_report
-        context['order']=financial_report.order
+        order=financial_report.order
+        context['order']=order
+        context['order_lines_s'] = json.dumps(OrderLineSerializer(order.orderline_set.all(), many=True).data)
         return render(request, TEMPLATE_ROOT+"financial-report.html", context)
 
     def order(self, request, *args, **kwargs):

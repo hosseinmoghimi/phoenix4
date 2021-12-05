@@ -53,6 +53,7 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
 
                 }
+                console.log(payload)
                 let posting = $.post(url_add_work_shift, payload)
                 posting.done((data) => {
                     if (data.result === "SUCCEED") {

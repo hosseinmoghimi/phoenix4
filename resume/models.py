@@ -1,4 +1,4 @@
-from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum
+from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum, languageToIndex
 from django.db.models.fields import DateField
 from tinymce.models import HTMLField
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
@@ -109,7 +109,9 @@ class ResumeIndex(models.Model):
             return f'{STATIC_URL}{TEMPLATE_ROOT}/img/hero-bg.jpg'
     
     def get_absolute_url(self):
-        return reverse(APP_NAME+":resume_index_language", kwargs={"profile_id": self.profile.pk,'language':self.language})
+        
+        language_index=languageToIndex(language=self.language)
+        return reverse(APP_NAME+":resume_index_language", kwargs={"profile_id": self.profile.pk,'language_index':language_index})
     def get_edit_btn(self):
         return f"""
           <a target="_blank" title="edit" href="{self.get_edit_url()}">
@@ -183,13 +185,16 @@ class ResumeSkill(models.Model):
     def __str__(self):
         return f"""{self.resume_index.profile.name} : {self.title} : {self.percentage}"""
 
+  
     def get_absolute_url(self):
-        return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
+        return reverse(f"{APP_NAME}:{self.class_name}", kwargs={"pk": self.pk})
+
 
 class ResumeFact(models.Model):
     resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=500)
     color=models.CharField(_("color"),null=True,blank=True, max_length=50)
+    priority=models.IntegerField(_("priority"),default=10)
     icon=models.CharField(_("icon"),choices=IconEnum.choices,null=True,blank=True, max_length=100)
     count=models.IntegerField(_("count"),default=10)
     class_name="resumefact"
@@ -218,7 +223,7 @@ class ResumeFact(models.Model):
         return f"""{self.resume_index.profile.name} : {self.title} : {self.count}"""
 
     def get_absolute_url(self):
-        return reverse("ResumeSkill_detail", kwargs={"pk": self.pk})
+        return reverse(f"{APP_NAME}:{self.class_name}", kwargs={"pk": self.pk})
 
 
 

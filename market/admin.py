@@ -1,11 +1,13 @@
 from django.contrib import admin
-from .models import CategoryProductTop, FinancialReport, ProductSpecification,Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product,Category, ProductFeature, ProductInStock, Shipper, Shop, ShopRegion, Supplier, UnitName, WareHouse
+from .models import CategoryProductTop, Desk, FinancialReport, Menu, ProductSpecification,Blog, Brand, Cart, CartLine, Customer, Employee, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product,Category, ProductFeature, ProductInStock, Shipper, Shop, ShopRegion, Supplier, UnitName, WareHouse
 
 admin.site.register(Product)
 admin.site.register(Category)
 admin.site.register(UnitName)
 admin.site.register(Customer)
 admin.site.register(Blog)
+admin.site.register(Desk)
+admin.site.register(Menu)
 admin.site.register(Offer)
 admin.site.register(Supplier)
 admin.site.register(Shipper)

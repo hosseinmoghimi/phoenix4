@@ -34,7 +34,6 @@ class Asset(models.Model):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=5000)
-    
     def image(self):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
@@ -62,6 +61,12 @@ class Asset(models.Model):
 class FinancialAccount(models.Model):
     profile = models.ForeignKey("authentication.profile", verbose_name=_(
         "profile"), on_delete=models.CASCADE)
+    def get_by_profile_or_new(profile_id):
+        fa=FinancialAccount.objects.filter(profile_id=profile_id).first()
+        if fa is None:
+            fa=FinancialAccount(profile_id=profile_id)
+            fa.save()
+        return fa
 
     def total(self):
         total = 0
@@ -161,6 +166,11 @@ class Transaction(AccountingPage):
         if ooo is not None:
             return ooo.order
 
+    def project(self):
+        ooo=ProjectTransaction.objects.filter(pk=self.pk).first()
+        if ooo is not None:
+            return ooo.project
+
 
     def payment_method(self):
         ooo=MoneyTransaction.objects.filter(pk=self.pk).first()
@@ -201,6 +211,9 @@ class Transaction(AccountingPage):
         at=AssetTransaction.objects.filter(pk=self.pk).first()
         if at is not None:
             return at
+        pt=ProjectTransaction.objects.filter(pk=self.pk).first()
+        if pt is not None:
+            return pt
         mt=MoneyTransaction.objects.filter(pk=self.pk).first()
         if mt is not None:
             return mt
@@ -229,30 +242,8 @@ class Transaction(AccountingPage):
     def get_edit_url(self):
         return self.get_sub_transaction().get_edit_url()
 
-
-
-class TransactionMixin():
-    def get_edit_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
-    def get_icon(self):
-        type1="پول"
-        color="success"
-        if self.class_name=="marketordertransaction":
-            type1="سفارش"
-            color="primary"
-        if self.class_name=="assettransaction":
-            type1="دارایی"
-            color="warning"
-        if self.class_name=="moneytransaction":
-            type1="پول"
-            color="success"
-        return f"""
-            <span class="badge badge-{color}">
-            {type1}
-            </span>
-            """
  
-class AssetTransaction(Transaction,TransactionMixin):
+class AssetTransaction(Transaction):
     asset = models.ForeignKey("asset", verbose_name=_("asset"), on_delete=models.CASCADE)
     
     def get_absolute_url(self):
@@ -285,7 +276,9 @@ class AssetTransaction(Transaction,TransactionMixin):
             {type1}
             </span>
             """
-class MarketOrderTransaction(Transaction,TransactionMixin):
+
+
+class MarketOrderTransaction(Transaction):
     order=models.ForeignKey("market.order", verbose_name=_("order"), on_delete=models.CASCADE)
 
         
@@ -319,7 +312,39 @@ class MarketOrderTransaction(Transaction,TransactionMixin):
             {type1}
             </span>
             """
-class MoneyTransaction(Transaction,TransactionMixin):
+
+
+class ProjectTransaction(Transaction):
+    project=models.ForeignKey("projectmanager.project", verbose_name=_("project"), on_delete=models.CASCADE)
+
+        
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name,kwargs={'pk':self.pk})
+
+    def save(self,*args, **kwargs):
+        self.class_name="projecttransaction"
+        return super(ProjectTransaction,self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _("ProjectTransaction")
+        verbose_name_plural = _("تراکنش های پروژه ها")
+        
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+
+    def __str__(self):
+        return f"""بابت حساب پروژه - {self.project.title}"""
+    def get_icon(self):
+        type1="پروژه"
+        color="danger" 
+        return f"""
+            <span class="badge badge-{color}">
+            {type1}
+            </span>
+            """
+
+
+class MoneyTransaction(Transaction):
     payment_method=models.CharField(_("payment_method"),choices=PaymetMethodEnum.choices,default=PaymetMethodEnum.CARD, max_length=50)
 
     def get_absolute_url(self):

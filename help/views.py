@@ -10,10 +10,7 @@ TEMPLATE_ROOT="help/"
 
 def getContext(request):
     context = CoreContext(request=request, app_name=APP_NAME)    
-    context['app']={
-        'title':"راهنما",
-        'home_url':reverse("help:home")
-    }
+ 
     return context
 
 def get_sidebar_links(app_name):

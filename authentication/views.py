@@ -10,7 +10,7 @@ import json
 from .forms import *
 from django.views import View
 from core.views import CoreContext
-
+from utility.forms import SendEmailForm
 TEMPLATE_ROOT="authentication/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
@@ -73,6 +73,8 @@ class ProfileViews(View):
         if 'pk' in kwargs:
             selected_profile=ProfileRepo(request=request).profile(pk=kwargs['pk'])
         context['selected_profile']=selected_profile
+        if request.user.has_perm(APP_NAME+".change_profile"):
+            context['send_mail_form']=SendEmailForm()
         return render(request,TEMPLATE_ROOT+"profile.html",context)
     def profile2(self,request,*args, **kwargs):
         context=getContext(request)
@@ -101,6 +103,7 @@ class AuthenticationViews(View):
         context['profiles']=profiles
         profiles_s=json.dumps(ProfileSerializer(profiles,many=True).data)
         context['profiles_s']=profiles_s
+        context['add_profile_form']=AddProfileForm()
         return render(request,TEMPLATE_ROOT+"profiles.html",context)
     
     def login(self,request,*args, **kwargs):

@@ -98,14 +98,18 @@
                                 </p>
                                 {%endif %}
 
-                                <div>
-
+                                <div class="text-center farsi mb-2">
+                                    <a href="{{employer.owner.get_absolute_url}}">
+                                        <img src="{{employer.owner.image}}" class="rounded-circle" width="32" alt="">
+                                        {{employer.owner.name}}
+                                    </a>
                                 </div>
 
 
                                 <a class="btn btn-outline-success farsi" href="{{employer.get_employees_url}}">لیست
                                     پرسنل </a>
-                                <a class="btn btn-outline-danger" target="_blank" href="{{employer.get_edit_url}}">ویرایش</a>
+                                <a class="btn btn-outline-danger" target="_blank"
+                                    href="{{employer.get_edit_url}}">ویرایش</a>
                             </div>
                         </div>
                     </div>
@@ -157,7 +161,7 @@
                                 </span>
                                 تلفن تماس
                             </h6>
-                            <a href="tel:{{employer.tel}}" >
+                            <a href="tel:{{employer.tel}}">
 
                                 <span class="text-secondary farsi">
                                     {{employer.tel}}

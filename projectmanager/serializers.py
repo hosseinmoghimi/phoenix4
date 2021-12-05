@@ -15,7 +15,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     contractor=EmployerSerializer()
     class Meta:
         model=Project
-        fields=['id','weight','title','likes_count',
+        fields=['id','archive','weight','title','likes_count',
         'get_status_color','employer','contractor',
         'full_title','status','sum_total','get_absolute_url',
         'get_edit_url','short_description','thumbnail','persian_start_date',

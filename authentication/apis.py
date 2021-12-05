@@ -1,7 +1,9 @@
 import re
-from authentication.forms import EditProfileForm, RegisterForm,UploadProfileImageForm
+from authentication.forms import AddProfileForm, EditProfileForm, RegisterForm,UploadProfileImageForm
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
+
+from authentication.serializers import ProfileSerializer
 from .repo import *
 from core.constants import SUCCEED,FAILED
 
@@ -36,6 +38,42 @@ class ProfileApi(APIView):
                 )
                 if result:
                     context['result']=SUCCEED
+
+        context['log']=log
+        return JsonResponse(context)    
+
+
+    def add_profile(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_profile_form=AddProfileForm(request.POST)
+            if add_profile_form.is_valid():
+                log+=1                
+                # profile_id=edit_profile_form.cleaned_data['profile_id']
+                username=add_profile_form.cleaned_data['username']
+                password=add_profile_form.cleaned_data['password']
+                first_name=add_profile_form.cleaned_data['first_name']
+                last_name=add_profile_form.cleaned_data['last_name']
+                email=add_profile_form.cleaned_data['email']
+                bio=add_profile_form.cleaned_data['bio']
+                mobile=add_profile_form.cleaned_data['mobile']
+                address=add_profile_form.cleaned_data['address']
+                (result,profile,message)=ProfileRepo(request=request).add_profile(
+                    username=username,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    bio=bio,
+                    mobile=mobile,
+                    address=address,
+                )
+                context['message']=message
+                context['result']=result
+                if result==SUCCEED and profile is not None:
+                    context['profile']=ProfileSerializer(profile).data
 
         context['log']=log
         return JsonResponse(context)    

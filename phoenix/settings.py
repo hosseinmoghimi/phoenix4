@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', 
     'todocalendar',
     'bms',  
+    'faresume',
     'mafia',
     'restaurant',
     'messenger',
@@ -192,6 +193,17 @@ PUSHER_IS_ENABLE=server_settings.PUSHER_IS_ENABLE
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
 QRCODE_ROOT=os.path.join(MEDIA_ROOT,'qr_code')
 SITE_FULL_BASE_ADDRESS=server_settings.SITE_FULL_BASE_ADDRESS
+ 
+
+
+EMAIL_HOST=server_settings.EMAIL_HOST
+EMAIL_PORT=server_settings.EMAIL_PORT
+EMAIL_HOST_USER=server_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD=server_settings.EMAIL_HOST_PASSWORD
+EMAIL_USE_SSL=server_settings.EMAIL_USE_SSL
+EMAIL_USE_TLS=server_settings.EMAIL_USE_TLS
+SEND_EMAIL=server_settings.SEND_EMAIL
+
 QRCODE_URL=SITE_URL+"qrcode/"
 if SERVER_ON_HEROKU:
     import django_heroku

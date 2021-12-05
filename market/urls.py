@@ -1,8 +1,11 @@
 from market import apis
 from .apps import APP_NAME
 from . import views,apis
+from django.contrib.auth.decorators import login_required
 from django.urls import path,include
+
 app_name=APP_NAME
+
 urlpatterns = [
     path("",views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),
@@ -12,6 +15,8 @@ urlpatterns = [
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
     path("offer/<int:pk>/",views.OfferViews().offer,name="offer"),
     path("shops/<int:supplier_id>/",views.ShopViews().shops,name="shops"),
+    path("desk/<int:pk>/",views.DeskViews().desk,name="desk"),
+    path("menu/<int:pk>/",login_required(views.MenuViews().menu),name="menu"),
     path("order_invoice/<int:pk>/",views.OrderViews().order_invoice,name="order_invoice"),
     path("order/<int:pk>/",views.OrderViews().order,name="order"),
     path("order-edit/<int:pk>/",views.OrderViews().edit_order,name="edit_order"),
@@ -22,6 +27,7 @@ urlpatterns = [
     path("shipper/<int:pk>/",views.ShipperViews().shipper,name="shipper"),
     path("brand/<int:pk>/",views.ProductViews().brand,name="brand"),
     path("brands/",views.ProductViews().brands,name="brands"),
+    path("confirm_menu/",views.MenuViews().confirm_menu,name="confirm_menu"),
     path("guarantee/<int:pk>/",views.GuaranteeView().guarantee,name="guarantee"),
     path("cart/",views.CartViews().cart,name="cart"),
     path('do_pack_order/',views.OrderViews().do_pack_order,name='do_pack_order'),
@@ -48,6 +54,7 @@ urlpatterns = [
     path("api/add_shop/",apis.ShopApi().add_shop,name="add_shop"),
     path("api/add_to_cart/",apis.CartApi().add_to_cart,name="add_to_cart"),
     path("api/edit_order_line/",apis.OrderApi().edit_order_line,name="edit_order_line"),
+    path("api/save_menu/",views.MenuViews().save_menu,name="save_menu"),
     path("api/save_cart/",apis.CartApi().save_cart,name="save_cart"),
     path("api/add_warehouse/",apis.WareHouseApi().add_warehouse,name="add_warehouse"),
     path("api/add_feature_for_product/",apis.ProductApi().add_feature_for_product,name="add_feature_for_product"),

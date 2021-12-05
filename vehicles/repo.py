@@ -46,6 +46,7 @@ class VehicleRepo():
         vehicle.save()
         return vehicle
 
+
 class PassengerRepo():
 
     def __init__(self, *args, **kwargs):
@@ -57,7 +58,8 @@ class PassengerRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Passenger.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = Passenger.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         objects=self.objects
@@ -72,6 +74,10 @@ class PassengerRepo():
         return objects.all()
 
     def passenger(self, *args, **kwargs):
+        pk=0
+        if 'profile_id' in kwargs:
+            profile_id = kwargs['profile_id']
+            return self.objects.filter(profile_id=profile_id).first()
         if 'passenger_id' in kwargs:
             pk = kwargs['passenger_id']
         elif 'pk' in kwargs:
@@ -79,6 +85,18 @@ class PassengerRepo():
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+
+    def add_passenger(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_passenger"):
+            return
+        passenger=Passenger.objects.filter(profile_id=kwargs['profile_id']).first()
+        if passenger is not None:
+            return
+        passenger=Passenger()
+        passenger.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
+        passenger.save()
+        return passenger
 
 
 class TripRepo():
@@ -91,8 +109,16 @@ class TripRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Trip.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.objects=Trip.objects.filter(pk=0)
+        self.profile = ProfileRepo(user=self.user).me
+        self.driver = DriverRepo(user=self.user).me
+        self.passenger = PassengerRepo(user=self.user).me
+        if self.user.has_perm(APP_NAME+".view_trip"):
+            self.objects = Trip.objects
+        elif self.driver is not None:
+            self.objects=Trip.objects.filter(driver_id=self.driver.id)
+        elif self.passenger is not None:
+            self.objects=self.passenger.trip_set.all()
 
     def list(self, *args, **kwargs):
         objects=self.objects
@@ -126,6 +152,7 @@ class TripRepo():
         return objects.all()
 
     def trip(self, *args, **kwargs):
+        pk=0
         if 'trip_id' in kwargs:
             pk = kwargs['trip_id']
         elif 'pk' in kwargs:
@@ -133,8 +160,9 @@ class TripRepo():
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+    
     def add_passenger_to_trip(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_passenger"):
+        if not self.user.has_perm(APP_NAME+".change_trip"):
             return
         trip=TripRepo(request=self.request).trip(*args, **kwargs)
         passenger=PassengerRepo(request=self.request).passenger(*args, **kwargs)
@@ -143,7 +171,13 @@ class TripRepo():
         return passenger
 
     def add_trip(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_trip"):
+        me_passenger=PassengerRepo(request=self.request).me
+        passengers =kwargs['passengers'] if 'passengers' in kwargs else []
+        if self.user.has_perm(APP_NAME+".add_trip"):
+            pass
+        elif me_passenger is not None and passengers==[me_passenger.id]:
+            pass
+        else:
             return
         trip=Trip()
         trip.title=kwargs['title'] if 'title' in kwargs else None
@@ -154,8 +188,15 @@ class TripRepo():
         trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
         trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
         trip.delay =kwargs['delay'] if 'delay' in kwargs else 0
+        if trip.vehicle_id is None or trip.driver_id is None:
+            return
+        if trip.vehicle_id ==0 or trip.driver_id==0:
+            return
         trip.save()
-
+        passenger_repo=PassengerRepo(request=self.request)
+        for passenger_id in passengers:
+            passenger=passenger_repo.passenger(pk=passenger_id)
+            trip.passengers.add(passenger)
         paths =kwargs['paths'] if 'paths' in kwargs else []
         for path in paths:
             path1=TripPathRepo(request=self.request).trip_path(pk=path['id'])
@@ -200,6 +241,11 @@ class TripPathRepo():
         return objects.all()
 
     def trip_path(self, *args, **kwargs):
+        
+        if 'source_id' in kwargs and 'destination_id' in kwargs:
+            source_id = kwargs['source_id']
+            destination_id = kwargs['destination_id']
+            return self.objects.filter(source_id=source_id).filter(destination_id=destination_id).first()
         if 'trip_path_id' in kwargs:
             pk = kwargs['trip_path_id']
         elif 'pk' in kwargs:
@@ -216,14 +262,17 @@ class TripPathRepo():
         duration=kwargs['duration'] if 'duration' in kwargs else 0
         distance=kwargs['distance'] if 'distance' in kwargs else 0
         cost=kwargs['cost'] if 'cost' in kwargs else 0
-        trip_path=TripPath()
-        trip_path.source_id=source_id
-        trip_path.destination_id=destination_id
+        trip_path=self.trip_path(source_id=source_id,destination_id=destination_id)
+        if trip_path is None:
+            trip_path=TripPath()
+            trip_path.source_id=source_id
+            trip_path.destination_id=destination_id
         trip_path.duration=duration
         trip_path.distance=distance
         trip_path.cost=cost
         trip_path.save()
         return trip_path
+
 
 class ServiceManRepo():
     def __init__(self, *args, **kwargs):
@@ -235,7 +284,8 @@ class ServiceManRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = ServiceMan.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = ServiceMan.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         return self.objects.all()
@@ -248,6 +298,19 @@ class ServiceManRepo():
         elif 'id' in kwargs:
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+    def add_service_man(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_serviceman"):
+            return
+        service_man=ServiceMan.objects.filter(profile_id=kwargs['profile_id']).first()
+        if service_man is not None:
+            return None
+        service_man=ServiceMan()
+        service_man.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
+        service_man.name=kwargs['name'] if 'name' in kwargs else None
+        service_man.save()
+        return service_man
+
 
 
 class AreaRepo():
@@ -274,6 +337,16 @@ class AreaRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_area(self, *args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_area"):
+            return
+        area=Area()
+        area.name=kwargs['name'] if 'name' in kwargs else None
+        area.code=kwargs['code'] if 'code' in kwargs else kwargs['name']
+        area.save()
+        return area
+
+
 
 class DriverRepo():
     def __init__(self, *args, **kwargs):
@@ -285,12 +358,16 @@ class DriverRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Driver.objects
-        self.me = ProfileRepo(user=self.user).me
+        self.profile = ProfileRepo(user=self.user).me
+        self.me = Driver.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         return self.objects.all()
 
     def driver(self, *args, **kwargs):
+        if 'profile_id' in kwargs:
+            profile_id = kwargs['profile_id']
+            return self.objects.filter(profile_id=profile_id).first()
         if 'driver_id' in kwargs:
             pk = kwargs['driver_id']
         elif 'pk' in kwargs:
@@ -303,12 +380,16 @@ class DriverRepo():
     def add_driver(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_driver"):
             return
+        driver=Driver.objects.filter(profile_id=kwargs['profile_id']).first()
+        if driver is not None:
+            return None
         driver=Driver()
         driver.profile_id=kwargs['profile_id'] if 'profile_id' in kwargs else 0
         driver.start_date=kwargs['start_date'] if 'start_date' in kwargs else timezone.now()
         driver.end_date=kwargs['end_date'] if 'end_date' in kwargs else timezone.now()
         driver.save()
         return driver
+
 
 class MaintenanceRepo():
     def __init__(self, *args, **kwargs):
@@ -403,7 +484,7 @@ class WorkShiftRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = WorkShift.objects
+        self.objects = WorkShift.objects.order_by("-start_time")
         self.me = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):

@@ -18,11 +18,7 @@ def getContext(request):
     user = request.user
     context = CoreContext(request=request, app_name=APP_NAME)
     parameter_repo = ParameterRepo(app_name=APP_NAME)
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-    }
+ 
      
     context['layout_parent'] = layout_parent
     return context

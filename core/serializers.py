@@ -23,13 +23,13 @@ class PageLinkSerializer(serializers.ModelSerializer):
 class PageDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageDocument
-        fields=['id','title','get_download_url','get_edit_url']
+        fields=['id','title','get_download_url','get_edit_url','get_delete_url']
 
 
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
-        fields=['id','title','get_download_url','get_edit_url']
+        fields=['id','title','get_download_url','get_edit_url','get_delete_url']
 
 
 class ParameterSerializer(serializers.ModelSerializer):

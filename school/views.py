@@ -16,11 +16,7 @@ def getContext(request,*args, **kwargs):
     context['search_form']=SearchForm()
     
     context['search_action'] = reverse(APP_NAME+":search")
-    context['app'] = {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-    }
+ 
     return context
 class BasicViews(View):
     def search(self, request, *args, **kwargs):

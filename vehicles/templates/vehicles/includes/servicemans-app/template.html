@@ -1,0 +1,82 @@
+<div class="card h-100" id="service-mans-app">
+
+    <div class="card-header">
+        <h4 class="title text-center">
+            <a href="{% url 'vehicles:service_mans' %}">
+
+                سرویس کار ها
+            </a>
+        </h4>
+    </div>
+    <div class="card-body">
+        <ul class="nav flex-column" style="padding-right:10px">
+
+
+            <li class="nav-item" v-for="service_man in service_mans">
+
+                <div class="media">
+                    <a class="nav-link farsi docs-creator" :href="service_man.get_absolute_url">
+                        <img :src="service_man.profile.image" class="rounded-circle" width="48" alt="">
+                    </a>
+                    <div class="media-body">
+                        <div>
+                            <a :href="service_man.get_absolute_url">
+                                <span v-text="service_man.name"></span>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a :href="service_man.profile.get_absolute_url">
+                               <small>
+                                <span v-text="service_man.profile.name"></span>
+
+                                </small>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    {% if add_serviceman_form %}
+    <div class="card-footer">
+        <form @submit.prevent="add_service_man()">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="">شناسه</label>
+                    </div>
+                    <input type="number" v-model="profile_id" class="form-control">
+                    <select type="text" v-model="profile_id" id="" class="form-control farsi">
+                        {% for profile in profiles %}
+                          
+                        <option value="{{profile.id}}">{{profile.name}}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="">نام</label>
+                    </div>
+                    <input type="text" v-model="name" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+
+                    <button class="btn btn-success btn-sm" type="submit">
+
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+      
+    {% endif %}
+
+</div>

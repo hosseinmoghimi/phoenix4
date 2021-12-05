@@ -5,7 +5,7 @@ from core.forms import AddPageImageForm
 from core.repo import ParameterRepo
 from django.utils import translation
 from accounting.models import FinancialAccount
-from accounting.repo import AssetRepo, AssetTransactionRepo, FinancialAccountRepo, MoneyTransactionRepo, TransactionRepo
+from accounting.repo import AssetRepo, AssetTransactionRepo,ProjectTransactionRepo, FinancialAccountRepo, MoneyTransactionRepo, TransactionRepo
 from django.shortcuts import render,reverse
 from core.views import PageContext
 from core.serializers import ImageSerializer
@@ -17,13 +17,8 @@ TEMPLATE_ROOT=APP_NAME+"/"
 
 def getContext(request,*args, **kwargs):
     context=CoreContext(request=request,app_name=APP_NAME)
-    parameter_repo = ParameterRepo(app_name=APP_NAME)
     context['layout_parent']="phoenix/layout.html"
-    context['app']={
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-    }
+     
     return context
 
 class AssetViews(View):
@@ -84,6 +79,7 @@ class TransactionViews(View):
             if transaction.pay_from_id==financial_account_id:
                 total+=transaction.amount
         context['total']=total
+        context['rest']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
     def transactions2(self,request,*args, **kwargs):
@@ -107,7 +103,15 @@ class TransactionViews(View):
         #         total-=transaction.amount
         #     if transaction.pay_from_id==financial_account_id:
         #         total+=transaction.amount
+        if len(transactions)>0:
+            tra=transactions.order_by('date_paid').last()
+            tra.calculate_rest(pay_to_id=kwargs['pay_to_id'],pay_from_id=kwargs['pay_from_id'])
+            total=tra.rest
+            print(total)
+            print(tra)
         context['total']=total
+        
+        context['rest']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
     def getTransactionContext(self,request,*args, **kwargs):
@@ -139,6 +143,15 @@ class TransactionViews(View):
         context['money_transaction']=money_transaction
         return render(request,TEMPLATE_ROOT+"money-transaction.html",context)
     
+    def project_transaction(self,request,*args, **kwargs):
+        context=getContext(request=request)
+
+        context.update(self.getTransactionContext(request,*args, **kwargs))
+        
+        project_transaction=ProjectTransactionRepo(request=request).project_transaction(*args, **kwargs)
+        context['project_transaction']=project_transaction
+        return render(request,TEMPLATE_ROOT+"project-transaction.html",context)
+    
     def asset_transaction(self,request,*args, **kwargs):
         context=getContext(request=request)
 
@@ -158,12 +171,13 @@ class FinancialAccountViews(View):
         context=getContext(request=request)
         financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)
         context['financial_account']=financial_account
-        transactions=financial_account.transactions()
+        transactions=TransactionRepo(request=request).list(financial_account_id=financial_account.id)
         context['transactions']=transactions
         transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
         context['transactions_s']=transactions_s
         context['me_financial_account']=FinancialAccountRepo(request=request).me
 
+        context['rest']=financial_account.total()
         
         context['transactions']=TransactionRepo(request=request).list(*args, **kwargs)
         

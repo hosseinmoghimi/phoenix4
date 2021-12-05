@@ -7,9 +7,79 @@ from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
 from market.apps import APP_NAME
 from authentication.repo import ProfileRepo
-from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Employee, FinancialReport, Guarantee, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
+from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Desk, Employee, FinancialReport, Guarantee, Menu, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
 import json
+
+
+class MenuRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Menu.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
+        if 'category_id' in kwargs:
+            return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
+        return objects
+
+    def menu(self, *args, **kwargs):
+        pk = 0
+        if 'menu_id' in kwargs:
+            pk = kwargs['menu_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
+
+
+class DeskRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Desk.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
+        if 'category_id' in kwargs:
+            return CategoryRepo(self.request).category(category_id=kwargs['category_id']).products.all()
+        return objects
+
+    def desk(self, *args, **kwargs):
+        pk = 0
+        if 'menu_id' in kwargs:
+            pk = kwargs['menu_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        return self.objects.filter(pk=pk).first()
+
 
 
 class ShipperRepo:
@@ -486,7 +556,7 @@ class OrderRepo:
             order.save()
             if not order.no_ship :
                 if order.customer.profile is not None:
-                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} بسته بندی شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.supplier.title} در {order.count_of_packs} بسته آماده ارسال می باشد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
+                    NotificationRepo(user=self.user).send_notification(title=f'سفارش شماره {order.id} بسته بندی شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.supplier.title} در {order.count_of_packs} بسته آماده ارسال می باشد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
                     
             if order is not None:
                 
@@ -512,7 +582,7 @@ class OrderRepo:
             order.date_cancelled = timezone.now()
             if description is not None:
                 order.description = order.description+'   @ ' + \
-                    order.customer.profile.name()+' # انصراف '+PersianCalendar().from_gregorian(order.date_cancelled)+' : '+str(description)
+                    order.customer.profile.name+' # انصراف '+PersianCalendar().from_gregorian(order.date_cancelled)+' : '+str(description)
             order.save()
             if order is not None:
 
@@ -568,9 +638,9 @@ class OrderRepo:
             order.save()
             if order is not None:
                 if order.customer.profile is not None:
-                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
+                    NotificationRepo(user=self.user).send_notification(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
                 if order.supplier.profile is not None:
-                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
+                    NotificationRepo(user=self.user).send_notification(title=f'سفارش شماره {order.id} ارسال شده است.',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id}  توسط {order.shipper.title} ارسال شده است.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
                  
             
                 financial_account_repo=FinancialAccountRepo(request=self.request)
@@ -607,9 +677,9 @@ class OrderRepo:
             order.save()
             if order is not None:
                 if order.supplier.profile is not None:
-                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
+                    NotificationRepo(user=self.user).send_notification(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.supplier.profile.pk,color='success',priority=1)
                 if order.customer.profile is not None:
-                    NotificationRepo(user=self.user).add(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
+                    NotificationRepo(user=self.user).send_notification(title=f'سفارش شماره {order.id} تحویل گرفته شد .',url=order.get_absolute_url(),body=f'سفارش  شماره {order.id} تحویل گرفته شد.',icon='alarm',profile_id=order.customer.profile.pk,color='success',priority=1)
                 if ware_house is not None:
                     ware_house_repo.add_order_in_ware_house(order=order, ware_house=ware_house, direction=True, description=description)
 
@@ -1195,7 +1265,9 @@ class CartRepo:
                 # order=OrderRepo(user=self.user).get(order_id=order.pk)
                 # MyPusherChannel(user=self.user).submit(order_id=order.id,total=order.total(),supplier_id=order.supplier.id)
                 if order.supplier.profile is not None:
-                    NotificationRepo(request=self.request).add(
+                    
+                    
+                    NotificationRepo(request=self.request).send_notification(
                         title='سفارش تایید شده',
                         body=f'سفارش تایید شده به مبلغ {order.total} تومان',
                         url=order.get_absolute_url(),

@@ -1,14 +1,16 @@
+from core.constants import CURRENCY
+from core.models import BasicPage
+from core.settings import (ADMIN_URL, MEDIA_URL, QRCODE_ROOT, QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL)
+from django.db import models
+from django.shortcuts import reverse
+from django.utils.translation import gettext as _
+from utility.currency import to_price
 from utility.persian import PersianCalendar
 from utility.qrcode import generate_qrcode
-from core.settings import ADMIN_URL, MEDIA_URL,QRCODE_ROOT,QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL
-from market.enums import DegreeLevelEnum, EmployeeEnum, OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
-from django.db import models
-from core.models import BasicPage
+
+from market.enums import (DegreeLevelEnum, EmployeeEnum, OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum)
+
 from .apps import APP_NAME
-from django.utils.translation import gettext as _
-from django.shortcuts import reverse
-from core.constants import CURRENCY
-from utility.currency import to_price
 
 IMAGE_FOLDER=APP_NAME+"/images/"
 
@@ -149,7 +151,7 @@ class Customer(models.Model):
     title=models.CharField(_("title"), max_length=50)
     region=models.ForeignKey("shopregion",verbose_name=_("shop_region"), on_delete=models.CASCADE)
     level=models.CharField(_("level"),choices=ShopLevelEnum.choices,default=ShopLevelEnum.REGULAR, max_length=50)
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
+    profile=models.ForeignKey("authentication.profile",blank=True,null=True, verbose_name=_("profile"), on_delete=models.CASCADE)
     favorites=models.ManyToManyField("product", verbose_name=_("products"),blank=True)
     class_name="customer"
     def cart(self):
@@ -176,6 +178,34 @@ class Customer(models.Model):
         return reverse(APP_NAME+":customer", kwargs={"pk": self.pk})
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+
+
+class Desk(Customer):
+    
+    menus=models.ManyToManyField("menu", verbose_name=_("menus"))
+    number=models.IntegerField(_("number"))
+    class_name='desk'
+
+    class Meta:
+        verbose_name = _("Desk")
+        verbose_name_plural = _("Desks")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(f"{APP_NAME}:{self.class_name}", kwargs={"pk": self.pk})
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+        # return f"{ADMIN_URL}core/basicpage/{self.pk}/change/"
+    def get_edit_btn(self):
+        return f"""
+        <a target="_blank" class="text-info" title="ویرایش {self.title}" href="{self.get_edit_url()}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        """
 
 
 class Order(models.Model):
@@ -568,6 +598,7 @@ class Cart(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":customer_cart", kwargs={"customer_id": self.pk})
 
+
 class FinancialReport(models.Model):
     order=models.ForeignKey("order", verbose_name=_("order"), on_delete=models.CASCADE)
     title=models.CharField(_("title"),blank=True, max_length=500)
@@ -691,6 +722,21 @@ class Employee(models.Model):
         if self.profile is not None:
             return self.profile.get_edit_url()
 
+
+class Menu(MarketPage):
+    shops=models.ManyToManyField("shop",blank=True, verbose_name=_("shops"))
+
+    class Meta:
+        verbose_name = _("Menu")
+        verbose_name_plural = _("Menus")
+
+    def save(self,*args, **kwargs):
+        self.class_name="menu"
+        return super(Menu,self).save(*args, **kwargs)
+    
+    def supplier(self):
+        if len(self.shops.all())>0:
+            return self.shops.first().supplier
 
 class OrderInWareHouse(models.Model):
     direction=models.BooleanField(_("ورود به انبار ؟"),default=True)

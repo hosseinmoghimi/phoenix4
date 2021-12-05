@@ -72,7 +72,7 @@ class TripSerializer(serializers.ModelSerializer):
     paths=TripPathSerializer(many=True)
     class Meta:
         model=Trip
-        fields=['id','title','category','get_status_color','status','vehicle','driver','distance','cost','paths','delay','get_absolute_url','persian_date_started','persian_date_ended','get_edit_url']
+        fields=['id','title','category','get_status_color','status','vehicle','driver','distance','cost','paths','delay','description','get_absolute_url','persian_date_started','persian_date_ended','get_edit_url']
 
 class PassengerSerilizer(serializers.ModelSerializer):
     profile=ProfileSerializer()

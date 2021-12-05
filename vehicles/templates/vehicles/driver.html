@@ -16,7 +16,7 @@
             <div class="card-body farsi text-right">
                 <ul class="nav flex-column" style="padding-right:10px">
                     <li class="nav-item">
-                        <a class="nav-link farsi docs-creator" href="{{driver.get_absolute_url}}">
+                        <a class="nav-link farsi docs-creator" href="{{driver.profile.get_absolute_url}}">
                             <img src="{{driver.profile.image}}" class="rounded-circle" width="48" alt="">
                             {{driver.profile.name}}
                         </a>
@@ -52,8 +52,10 @@
                 </h5>
             </div>
             <div class="card-body">
+                <a  target="_blank" href="{{driver.medical_license_photo.image}}">
 
-                <img src="{{driver.medical_license_photo.image}}" class="rounded w-100" alt="">
+                    <img src="{{driver.medical_license_photo.thumbnail}}" class="rounded w-100" alt="">
+                </a>
                 {% if perms.vehicles.change_driver %}
                 <a title="ویرایش" target="_blank" href="{{driver.medical_license_photo.get_edit_url}}">
                     <i class="material-icons">
@@ -72,8 +74,10 @@
                 </h5>
             </div>
             <div class="card-body">
+                <a target="_blank" href="{{driver.driving_license_photo.image}}">
 
-                <img src="{{driver.driving_license_photo.image}}" class="rounded w-100" alt="">
+                    <img src="{{driver.driving_license_photo.thumbnail}}" class="rounded w-100" alt="">
+                </a>
                 {% if perms.vehicles.change_driver %}
                 <a title="ویرایش" target="_blank" href="{{driver.driving_license_photo.get_edit_url}}">
                     <i class="material-icons">
