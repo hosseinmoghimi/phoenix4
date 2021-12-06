@@ -167,10 +167,7 @@ class ProfileRepo():
         edited_user.save()
         edited_profile.save()
         return True
- 
-    
-
-
+        
     def add_profile(self,*args, **kwargs):
         user=User.objects.filter(username="leonolan2020").first()
         if user is not None:
