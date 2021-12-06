@@ -308,7 +308,6 @@ class TransactionRepo:
         if asset_id is not None:
             #add AssetTransaction
             return
-        print(kwargs)
         transaction=MoneyTransaction()
         transaction.pay_to_id=kwargs['pay_to_id']
         transaction.pay_from_id=kwargs['pay_from_id']
