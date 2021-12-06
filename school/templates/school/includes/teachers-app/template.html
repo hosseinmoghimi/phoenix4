@@ -6,22 +6,20 @@
             </a>
         </h4>
     </div>
-    <div class="card-body">
-      <div v-for="teacher in teachers">
-        <h4>
+    <div class="card-body farsi text-right">
+      <div v-for="teacher in teachers" class="my-2 ">
+        <a :href="teacher.get_absolute_url">
+          <img :src="teacher.profile.image" class="rounded-circle" width="32" alt="">
+          <span v-text="teacher.profile.name"></span>
+      </a>
 
-          <a :href="teacher.get_absolute_url">
-            <span v-text="teacher.profile.name"></span>
-          </a>
+         
           {% if perms.school.change_teacher %}
           <a target="_blank" title="ویرایش" :href="teacher.get_edit_url">
-            <i class="material-icons">
-                edit
-            </i>
-            
+            <i class="fa fa-edit text-info"></i>
           </a>
           {% endif %}
-        </h4>
+         
       </div>
     </div>
   </div>
