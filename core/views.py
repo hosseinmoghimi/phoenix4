@@ -247,7 +247,7 @@ class PageViews(View):
         return message_view.response(request)
 
     def access(self, request, *args, **kwargs):
-        document = DocumentRepo(request=request).document(pk=pk)
+        document = DocumentRepo(request=request).document(*args, **kwargs)
         self.me = ProfileRepo(request=request).me
         if self.me is not None and document.page in self.me.my_pages().all():
             return True
