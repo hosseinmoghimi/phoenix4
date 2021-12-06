@@ -1,36 +1,134 @@
-{% extends "map/layout.html" %}
+{% extends "projectmanager/layout.html" %}
+
 {% load static %}
+{% load to_persian_date %}
 {% load to_price %}
-
 {% block content %}
-<h3>
-    نقشه و مکان یابی
-</h3>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="title">
-                    {{location.title}}
-                    {% if perms.map.change_location %}
-
-                    <a href="{{location.get_edit_url}}" title="ویرایش" target="_blank">
-                        <i class="material-icons">
-                            edit
-                        </i>
-                    </a>
-                    {% endif %}
-                </h4>
-            </div>
-            <div class="card-body">
-                {{location.location|safe}}
+<div>
+    <h3 class="text-center">
+        <i class="material-icons">engineering</i>
+        <small class="text-secondary">
+            موقعیت مکانی
+        </small>
+        {{location.title}}
+        {% if perms.projectmanager.change_location %}
+        <a title="ویرایش" target="_blank" href="{{location.get_edit_url}}">
+            <i class="material-icons">
+                edit
+            </i>
+        </a>
+        {% endif %}
+    </h3>
+    <div class="row ">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    {{location.location|safe}}
+                </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="card mb-5">
+                <div class="card-body">
+                    <p>
+                        <span class="small text-secondary">
+                            موقعیت مکانی :
+                        </span>
+                        <span>
+                            <a class="mx-3" href="{{location.get_absolute_url}}">
+                                {{location.title}}
+                            </a>
+                        </span>
+                    </p>
+
+                    <p>
+                    <div class="row farsi">
+                        <div class="col-4 text-left">
+
+                            <small class="text-secondary">
+                                افزوده شده توسط :
+                            </small>
+                        </div>
+                        <div class="col-8">
+                            {{location.creator.media_tag|safe}}
+
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                        <small class="text-secondary">
+                            تاریخ :
+                        </small>
+                        <small class="">
+
+                            {{location.date_added|to_persian_datetime|safe}}
+                        </small>
+                    </p>
+                    <img src="{{location.image}}" class="rounded w-100" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <h4 class="">
+                            مرتبط با :
+                        </h4>
+                        <ul class="nav flex-column mb-4 farsi">
+                            {% for project in location.project_set.all %}
+                            <li class="nav-item text-right">
+                                <small class="text-muted">
+                                    پروژه
+                                </small>
+                                <a class="farsi" href="{{project.get_absolute_url}}">
+                                    {{project.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+
+                            {% for worksite in location.worksite_set.all %}
+                            <li class="nav-item text-right">
+                                <small class="text-muted">
+                                    سایت
+                                </small>
+                                <a class="farsi" href="{{worksite.get_absolute_url}}">
+                                    {{worksite.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if location.trip_source_set.all or location.trip_destination_set.all%}
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="title">
+                        مسیر های سفر
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h4>مبدا :</h4>
+                    {% for trip_path in location.trip_source_set.all %}
+                    <a href="{{trip_path.get_absolute_url}}">
+                        <h5 class="mr-5">{{trip_path.title}}</h5>
+                    </a>
+                    {% endfor %}
+                    <h4>مقصد :</h4>
+                    {% for trip_path in location.trip_destination_set.all %}
+                    <a href="{{trip_path.get_absolute_url}}">
+                        <h5 class="mr-5">{{trip_path.title}}</h5>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
-{% endblock content %}
-
-
+{% endblock %}
 {% block script %}
-
-{% endblock script %}
+{% endblock %}

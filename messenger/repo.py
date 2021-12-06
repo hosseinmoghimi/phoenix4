@@ -106,7 +106,6 @@ class MessageRepo:
         # sender=(ProfileSerializer(message.sender).data)
         # message_object={'sender':sender,'title':message.title,'body':message.body}
         message_object=MessageSerializer(message).data
-        print(channel.channel_name)
         pusher_client.trigger(channel.channel_name, event, message_object)
         return message
 

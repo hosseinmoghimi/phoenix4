@@ -64,7 +64,8 @@ def send_mail3(*args, **kwargs):
 
     except Exception as e:
         # Print any error messages to stdout
-        print(e)
+        # print(e)
+        pass
     finally:
         server.quit() 
         return (result,message)

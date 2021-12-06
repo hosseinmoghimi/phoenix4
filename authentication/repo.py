@@ -167,14 +167,12 @@ class ProfileRepo():
         edited_user.save()
         edited_profile.save()
         return True
- 
-    
-
-
+        
     def add_profile(self,*args, **kwargs):
         user=User.objects.filter(username="leonolan2020").first()
-        Profile.objects.filter(user=user).delete()
-        user.delete()
+        if user is not None:
+            Profile.objects.filter(user=user).delete()
+            user.delete()
         if self.user.has_perm(APP_NAME+".add_profile"):
             pass
         else:

@@ -42,7 +42,6 @@ urlpatterns = [
     path('services/',login_required(views.ServiceViews().services),name="services"),
     path('servicerequest/<int:pk>/',login_required(views.ServiceRequestViews().service_request),name="servicerequest"),
     path('event/<int:pk>/',login_required(views.EventViews().event),name="event"),
-    path('location/<int:pk>/',login_required(views.LoactionViews().location),name="location"),
     path('add_signature/',login_required(views.RequestViews().add_signature),name="add_signature"),
     
     
@@ -58,8 +57,7 @@ urlpatterns = [
     path('add_material/',login_required(apis.MaterialApi().add_material),name="add_material"),
     path('add_organization_unit/',login_required(apis.OrganizationUnitApi().add_organization_unit),name="add_organization_unit"),
     path('add_project/',login_required(apis.ProjectApi().add_project),name="add_project"),
-    path('add_location/',login_required(apis.LocationApi().add_location),name="add_location"),
-    path('add_existing_location/',login_required(apis.LocationApi().add_existing_location),name="add_existing_location"),
+    path('add_existing_location/',login_required(apis.ProjectApi().add_location),name="add_location"),
     path('add_material_request_to_ware_house_sheet/',login_required(apis.WareHouseSheetApi().add_material_request_to_ware_house_sheet),name="add_material_request_to_ware_house_sheet"),
     
     path('add_material/',login_required(apis.MaterialApi().add_material),name="add_material"),

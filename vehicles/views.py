@@ -213,7 +213,7 @@ class PassengerViews(View):
         if request.user.has_perm(APP_NAME+".view_passenger"):
             pass
         elif passenger==me_passenger:
-            print(me_passenger)
+            # print(me_passenger)
             pass
         else:
             header_text="دسترسی غیر مجاز برای شما"
@@ -401,7 +401,7 @@ class DriverViews(View):
         if request.user.has_perm(APP_NAME+".view_driver"):
             pass
         elif driver==me_driver:
-            print(me_driver)
+            # print(me_driver)
             pass
         else:
             header_text="دسترسی غیر مجاز برای شما"

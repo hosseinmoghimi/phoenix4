@@ -1,9 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import EmployeeDocument, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet,Employee, EmployeeSpeciality, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, Location, Request, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheetLine
+from .models import EmployeeDocument, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet,Employee, EmployeeSpeciality, Employer, Event, Material, MaterialRequest, RequestSignature, Project,OrganizationUnit, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseSheetLine
 
-admin.site.register(Location)
 admin.site.register(EmployeeDocument)
 # admin.site.register(Request)
 admin.site.register(RequestSignature)
