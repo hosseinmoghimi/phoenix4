@@ -79,6 +79,11 @@ class BasicViews(View):
         context['classrooms_s']=json.dumps(ClassRoomSerializer(classrooms,many=True).data)
 
 
+        majors=MajorRepo(request=request).list(*args, **kwargs)
+        context['majors']=majors
+        context['majors_s']=json.dumps(MajorSerializer(majors,many=True).data)
+
+
 
 
         teachers=TeacherRepo(request=request).list(*args, **kwargs)
@@ -128,6 +133,9 @@ class SchoolViews(View):
         context['classrooms']=classrooms
         context['classrooms_s']=json.dumps(ClassRoomSerializer(classrooms,many=True).data)
 
+        if request.user.has_perm(APP_NAME+".add_classroom"):
+            context['add_classroom_form']=AddClassRoomForm()
+
 
         return render(request,TEMPLATE_ROOT+"school.html",context)
 
@@ -136,7 +144,8 @@ class SchoolViews(View):
         schools=SchoolRepo(request=request).list(*args, **kwargs)
         context['schools_s']=json.dumps(SchoolSerializer(schools,many=True).data)
 
-
+        if request.user.has_perm(APP_NAME+".add_school"):
+            context['add_school_form']=AddSchoolForm()
         return render(request,TEMPLATE_ROOT+"schools.html",context)
 
 
@@ -205,6 +214,11 @@ class MajorViews(View):
         majors=MajorRepo(request=request).list(*args, **kwargs)
         context['majors']=majors
         context['majors_s']=json.dumps(MajorSerializer(majors,many=True).data)
+
+
+        if request.user.has_perm(APP_NAME+".add_major"):
+            context['add_major_form']=AddMajorForm()
+
         return render(request,TEMPLATE_ROOT+"majors.html",context)
 
 

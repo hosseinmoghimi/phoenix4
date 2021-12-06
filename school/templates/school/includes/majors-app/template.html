@@ -24,4 +24,13 @@
         </h4>
       </div>
     </div>
+    
+    {% if add_major_form %}
+    <div class="card-footer">
+        <form @submit.prevent="add_major()">
+            <input required type="text" v-model="title" class="form-control" placeholder="نام رشته جدید">
+        </form>
+    </div>
+      
+    {% endif %}
   </div>

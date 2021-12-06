@@ -45,4 +45,13 @@
         </div>
 
     </div>
+    {% if add_classroom_form %}
+    <div class="card-footer">
+        <form @submit.prevent="add_classroom()">
+
+            <input required type="text" v-model="title" class="form-control" placeholder="نام کلاس جدید">
+        </form>
+    </div>
+      
+    {% endif %}
 </div>

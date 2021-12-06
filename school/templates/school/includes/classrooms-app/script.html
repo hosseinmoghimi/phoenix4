@@ -4,6 +4,22 @@
         el:"#classrooms-app",
         data:{
             classrooms:classrooms,
+            title:"",
+        },
+        methods:{
+            add_classroom:function(){
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    title:this.title,
+                    school_id:school_id,
+                }
+                $.post("{% url 'school:add_classroom' %}",payload).done((data)=>{
+                    if(data.result==='SUCCEED'){
+                        classrooms_app.classrooms.push(data.classroom)
+                        classrooms_app.title=""
+                    }
+                })
+            }
         }
     })
 </script>

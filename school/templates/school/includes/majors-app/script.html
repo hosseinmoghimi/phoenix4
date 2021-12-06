@@ -4,9 +4,21 @@
         el: "#majors-app",
         data: {
             majors: majors,
+            title:"",
         },
-        methods: {
-
+        methods:{
+            add_major:function(){
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    title:this.title,
+                }
+                $.post("{% url 'school:add_major' %}",payload).done((data)=>{
+                    if(data.result==='SUCCEED'){
+                        majors_app.majors.push(data.major)
+                        majors_app.title=""
+                    }
+                })
+            }
         }
     })
 </script>

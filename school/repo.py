@@ -6,6 +6,7 @@ from .apps import APP_NAME
 from django.db.models import Q
 
 class SchoolRepo():
+    
     def __init__(self,*args, **kwargs):
         self.request = None
         self.user = None
@@ -16,6 +17,7 @@ class SchoolRepo():
             self.user = kwargs['user']
         self.objects = School.objects
         self.me=ProfileRepo(user=self.user).me
+    
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'school_id' in kwargs:
@@ -23,6 +25,7 @@ class SchoolRepo():
         if 'search_for' in kwargs:
             objects=objects.filter(title__contains=kwargs['search_for'])
         return objects
+    
     def school(self,*args, **kwargs):
         if 'school_id' in kwargs:
             pk=kwargs['school_id']
@@ -32,9 +35,17 @@ class SchoolRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
-
+    def add(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_school"):
+            return
+        school=School()
+        if 'title' in kwargs:
+            school.title=kwargs['title']
+        school.save()
+        return school
 
 class MajorRepo():
+    
     def __init__(self,*args, **kwargs):
         self.request = None
         self.user = None
@@ -45,6 +56,7 @@ class MajorRepo():
             self.user = kwargs['user']
         self.objects = Major.objects
         self.me=ProfileRepo(user=self.user).me
+    
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'school_id' in kwargs:
@@ -52,6 +64,7 @@ class MajorRepo():
         if 'search_for' in kwargs:
             objects=objects.filter(title__contains=kwargs['search_for'])
         return objects
+    
     def major(self,*args, **kwargs):
         if 'major_id' in kwargs:
             pk=kwargs['major_id']
@@ -61,11 +74,17 @@ class MajorRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
-
-
-
+    def add(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_major"):
+            return
+        major=Major()
+        if 'title' in kwargs:
+            major.title=kwargs['title']
+        major.save()
+        return major
     
 class BookRepo():
+    
     def __init__(self,*args, **kwargs):
         self.request = None
         self.user = None
@@ -76,6 +95,7 @@ class BookRepo():
             self.user = kwargs['user']
         self.objects = Book.objects
         self.me=ProfileRepo(user=self.user).me
+    
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'school_id' in kwargs:
@@ -83,6 +103,7 @@ class BookRepo():
         if 'search_for' in kwargs:
             objects=objects.filter(title__contains=kwargs['search_for'])
         return objects
+    
     def book(self,*args, **kwargs):
         if 'book_id' in kwargs:
             pk=kwargs['book_id']
@@ -92,12 +113,8 @@ class BookRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
-
-
-
-
-
 class ClassRoomRepo():
+   
     def __init__(self,*args, **kwargs):
         self.request = None
         self.user = None
@@ -108,6 +125,7 @@ class ClassRoomRepo():
             self.user = kwargs['user']
         self.objects = ClassRoom.objects
         self.me=ProfileRepo(user=self.user).me
+    
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'school_id' in kwargs:
@@ -115,6 +133,7 @@ class ClassRoomRepo():
         if 'search_for' in kwargs:
             objects=objects.filter(title__contains=kwargs['search_for'])
         return objects
+    
     def classroom(self,*args, **kwargs):
         if 'classroom_id' in kwargs:
             pk=kwargs['classroom_id']
@@ -124,13 +143,19 @@ class ClassRoomRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
-
-
-
-
-
+    def add(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_classroom"):
+            return
+        classroom=ClassRoom()
+        if 'title' in kwargs:
+            classroom.title=kwargs['title']
+        if 'school_id' in kwargs:
+            classroom.school_id=kwargs['school_id']
+        classroom.save()
+        return classroom
 
 class ActiveCourseRepo():
+    
     def __init__(self,*args, **kwargs):
         self.request = None
         self.user = None
@@ -141,8 +166,10 @@ class ActiveCourseRepo():
             self.user = kwargs['user']
         self.objects = ActiveCourse.objects
         self.me=ProfileRepo(user=self.user).me
+    
     def list(self,*args, **kwargs):
         return self.objects.all()
+    
     def active_course(self,*args, **kwargs):
         if 'active_course_id' in kwargs:
             pk=kwargs['active_course_id']

@@ -4,6 +4,23 @@
         el:"#schools-app",
         data:{
             schools:schools,
+            title:"",
+        },
+        methods:{
+            add_school:function(){
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    title:this.title,
+                }
+                let url_add_school="{% url 'school:add_school' %}"
+                $.post(url_add_school,payload).done((data)=>{
+                    if(data.result==='SUCCEED'){
+                        schools_app.schools.push(data.school)
+                        schools_app.title=""
+                    }
+                })
+            }
         }
+        
     })
 </script>

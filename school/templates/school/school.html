@@ -5,12 +5,15 @@
     مدرسه
 </h3>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         {% include "school/includes/classrooms-app/template.html" %}
     </div>
 </div>
 {% endblock content %}
 {% block script %}
+<script>
+    let school_id=parseInt("{{school.id}}")
+</script>
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "school/includes/classrooms-app/script.html" %}
   
