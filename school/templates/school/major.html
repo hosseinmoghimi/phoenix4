@@ -22,9 +22,9 @@
     <div class="col-md-12">
 
         <ul>
-            {% for course in major.course_set.all %}
+            {% for course in major.courses.all %}
             <li>
-                <h3>
+                <h5>
                     <small class="text-muted">
                     واحد درسی : 
 
@@ -33,7 +33,7 @@
 
                         {{course.title}}
                     </a>
-                </h3>
+                </h5>
 
 
             </li>

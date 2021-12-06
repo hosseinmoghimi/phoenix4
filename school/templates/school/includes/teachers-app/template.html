@@ -1,25 +1,25 @@
 <div class="card" id="teachers-app">
-    <div class="card-header">
-        <h4 class="title">
-          <a href="{% url 'school:teachers' %}">
-            لیست دبیران
-            </a>
-        </h4>
-    </div>
-    <div class="card-body farsi text-right">
-      <div v-for="teacher in teachers" class="my-2 ">
-        <a :href="teacher.get_absolute_url">
-          <img :src="teacher.profile.image" class="rounded-circle" width="32" alt="">
-          <span v-text="teacher.profile.name"></span>
+  <div class="card-header">
+    <h4 class="title">
+      <a href="{% url 'school:teachers' %}">
+        لیست دبیران
+      </a>
+    </h4>
+  </div>
+  <div class="card-body farsi text-right">
+    <div v-for="teacher in teachers" class="my-2 ">
+      <a :href="teacher.get_absolute_url">
+        <img :src="teacher.profile.image" class="rounded-circle" width="32" alt="">
+        <span v-text="teacher.profile.name"></span>
       </a>
 
-         
-          {% if perms.school.change_teacher %}
-          <a target="_blank" title="ویرایش" :href="teacher.get_edit_url">
-            <i class="fa fa-edit text-info"></i>
-          </a>
-          {% endif %}
-         
-      </div>
+
+      {% if perms.school.change_teacher %}
+      <a target="_blank" title="ویرایش" :href="teacher.get_edit_url">
+        <i class="fa fa-edit text-info"></i>
+      </a>
+      {% endif %}
+
     </div>
   </div>
+</div>

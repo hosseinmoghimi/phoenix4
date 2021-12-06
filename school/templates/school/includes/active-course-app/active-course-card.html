@@ -12,8 +12,8 @@
     </div>
     <div class="card-body">
         <div class="mb-3">
-            <h4>
-
+            <h5>
+                {{active_course.title}}
                 {% if perms.school.change_activecourse %}
                 <a href="active_course.get_edit_url}}" target="_blank" title="ویرایش">
                     <i class="material-icons">
@@ -21,9 +21,9 @@
                     </i>
                 </a>
                 {% endif %}
-            </h4>
+            </h5>
 
-            <h4>
+            <h5>
 
                 <small class="text-muted">
                     درس
@@ -31,16 +31,18 @@
                 <a href="{{active_course.course.get_absolute_url}}">
                     {{active_course.course.title}}
                 </a>
-            </h4>
+            </h5>
+            {% for major in active_course.course.major_set.all %}
 
-            <h4>
+            <h5>
                 <small class="text-muted">
                     رشته
                 </small>
-                <a href="{{active_course.course.major.get_absolute_url}}">
-                    {{active_course.course.major.title}}
+                <a href="{{major.get_absolute_url}}">
+                    {{major.title}}
                 </a>
-            </h4>
+            </h5>
+            {% endfor %}
 
 
 
@@ -51,7 +53,5 @@
         </div>
 
     </div>
-    <div class="card-footer">
-
-    </div>
+  
 </div>

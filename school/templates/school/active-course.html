@@ -12,7 +12,7 @@
     <div class="col-md-4">
 
         <div class="card">
-            <div class="card-body">
+            <div class="card-body text-right farsi">
                 <div class="mb-3">
                     <h4>
 
@@ -24,23 +24,65 @@
 
                         {% endif %}
                     </h4>
-                </div>
 
-                <div class="mb-3">
                     <h4>
 
-                        <small class="text-muted">
-                            دوره
-                        </small>
-                        <a href="{{active_course.course.get_absolute_url}}">
-                            {{active_course.course.title}}
+                        <a href="{{active_course.classroom.get_absolute_url}}">
+                            اتاق
+                            {{active_course.classroom.title}}
+                            آموزشگاه
+                            {{active_course.classroom.school.title}}
                         </a>
-                        {% if perms.school.change_course %}
-                        {{active_course.course.get_edit_btn|safe}}
+                        {% if perms.school.change_activecourse %}
+                        {{active_course.classroom.get_edit_btn|safe}}
 
                         {% endif %}
                     </h4>
+
                 </div>
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        واحد درسی
+                    </small>
+                    <a href="{{active_course.course.get_absolute_url}}">
+                        {{active_course.course.title}}
+                    </a>
+                    {% if perms.school.change_course %}
+                    {{active_course.course.get_edit_btn|safe}}
+
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        اتاق
+                    </small>
+                    <a href="{{active_course.course.get_absolute_url}}">
+                        {{active_course.classroom.title}}
+                    </a>
+                    {% if perms.school.change_classroom %}
+                    {{active_course.course.classroom.get_edit_btn|safe}}
+
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        آموزشگاه
+                    </small>
+                    <a href="{{active_course.course.get_absolute_url}}">
+                        {{active_course.classroom.school.title}}
+                    </a>
+                    {% if perms.school.change_school %}
+                    {{active_course.course.classroom.school.get_edit_btn|safe}}
+
+                    {% endif %}
+                </div>
+
 
 
 
@@ -55,27 +97,30 @@
     <div class="col-md-4">
 
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
 
                 <h4>
                     دبیران
                 </h4>
+            </div>
+            <div class="card-body farsi text-right">
 
-                <div class="mb-3">
+
+                <div>
                     {% for teacher in active_course.teachers.all %}
-                    <h4>
-                        <small class="text-muted">
-                            دبیر
-                        </small>
-                        <a href="{{teacher.get_absolute_url}}">
+                    <div class="mb-2">
 
+                        <a href="{{teacher.get_absolute_url}}">
+                            <img src="{{teacher.profile.image}}" class="rounded-circle" width="32" alt="">
                             {{teacher.profile.name}}
                         </a>
                         {% if perms.school.change_teacher %}
                         {{teacher.get_edit_btn|safe}}
 
                         {% endif %}
-                    </h4>
+                    </div>
+
+
                     {% endfor %}
                 </div>
 
@@ -85,48 +130,50 @@
 
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
+
 
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
                 <h4>
                     دانش آموزان
                 </h4>
+            </div>
+            <div class="card-body">
 
-                <div class="mb-3">
+
+                <div class="farsi text-right">
                     {% for student in active_course.students.all %}
-                    <h4>
-                        <small class="text-muted">
-                            دانش آموز
-                        </small>
-                        <a href="{{student.get_absolute_url}}">
+                    <div class="mb-2">
 
+                        <a href="{{student.get_absolute_url}}">
+                            <img src="{{student.profile.image}}" class="rounded-circle" width="32" alt="">
                             {{student.profile.name}}
                         </a>
                         {% if perms.school.change_student %}
                         {{student.get_edit_btn|safe}}
 
                         {% endif %}
-                    </h4>
+                    </div>
                     {% endfor %}
                 </div>
 
 
             </div>
         </div>
+
     </div>
-
-
-
-
-
-    {% for book in active_course.course.books.all %}
     <div class="col-md-4">
+        {% for book in active_course.course.books.all %}
         {% include "school/includes/books-app/book-card.html" %}
 
+        {% endfor %}
     </div>
-    {% endfor %}
+
+
+
+
+
+
     <div class="col-md-4">
 
         <div class="card">

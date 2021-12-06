@@ -43,7 +43,7 @@ class School(models.Model):
 
 
 class Major(SchoolPage):
-       
+    courses=models.ManyToManyField("course", verbose_name=_("واحد های درسی"))      
 
     class Meta:
         verbose_name = _("Major")
@@ -60,7 +60,6 @@ class Major(SchoolPage):
 class Course(models.Model):
     class_name="course"
     title=models.CharField(_("نام واحد درسی "), max_length=100)
-    major=models.ForeignKey("major", verbose_name=_("رشته تحصیلی"), on_delete=models.CASCADE)
     level=models.IntegerField(_("level"))
     books=models.ManyToManyField("book", verbose_name=_("books"),blank=True)
     
@@ -71,7 +70,7 @@ class Course(models.Model):
 
     
     def __str__(self):
-        return self.title+" "+str(self.level)+" "+str(self.major)
+        return self.title+" "+str(self.level)+" "
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
@@ -87,8 +86,37 @@ class Course(models.Model):
             </a>
         """
 
+class EducationalYear(models.Model):
+    title=models.CharField(_("title"), max_length=50)
+    start_date=models.DateTimeField(_("start_date"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    end_date=models.DateTimeField(_("end_date"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    
+    class_name="educationalyear"
+    class Meta:
+        verbose_name = _("EducationalYear")
+        verbose_name_plural = _("EducationalYears")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
+
+    def get_edit_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+
+    def get_edit_btn(self):
+        return f"""
+             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
+                <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        """
+
 
 class ActiveCourse(models.Model):
+    year=models.ForeignKey("EducationalYear", verbose_name=_("سال تحصیلی"), on_delete=models.CASCADE)
     class_name="activecourse"
     title=models.CharField(_("title"), max_length=200)
     course=models.ForeignKey("course", verbose_name=_("course"), on_delete=models.CASCADE)
@@ -138,7 +166,7 @@ class ClassRoom(models.Model):
 
     
     def __str__(self):
-        return self.title
+        return self.school.title+" "+self.title
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})

@@ -1,27 +1,25 @@
 <div class="card" id="students-app">
-    <div class="card-header">
-        <h4 class="title">
-          <a href="{% url 'school:students' %}">
-            لیست دانش آموزان
-          </a>
-        </h4>
-    </div>
-    <div class="card-body">
-      <div v-for="student in students">
-        <h4>
+  <div class="card-header">
+    <h4 class="title">
+      <a href="{% url 'school:students' %}">
+        لیست دانش آموزان
+      </a>
+    </h4>
+  </div>
+  <div class="card-body farsi text-right">
+    <div v-for="student in students" class="my-2 ">
+      <a :href="student.get_absolute_url">
+        <img :src="student.profile.image" class="rounded-circle" width="32" alt="">
+        <span v-text="student.profile.name"></span>
+      </a>
 
-          <a :href="student.get_absolute_url">
-            <span v-text="student.profile.name"></span>
-          </a>
-          {% if perms.school.change_student %}
-          <a target="_blank" title="ویرایش" :href="student.get_edit_url">
-            <i class="material-icons">
-                edit
-            </i>
-            
-          </a>
-          {% endif %}
-        </h4>
-      </div>
+
+      {% if perms.school.change_student %}
+      <a target="_blank" title="ویرایش" :href="student.get_edit_url">
+        <i class="fa fa-edit text-info"></i>
+      </a>
+      {% endif %}
+
     </div>
   </div>
+</div> 
