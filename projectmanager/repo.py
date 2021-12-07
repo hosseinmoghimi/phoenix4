@@ -604,7 +604,7 @@ class EmployeeRepo():
         else:
             self.objects=Employee.objects.filter(id=0)
 
-        self.me=Employee.objects.filter(profile=self.profile).first()
+        self.me=Employee.objects.filter(profile=self.profile).filter(is_default=True).first()
     
     def employee(self, *args, **kwargs):
         if 'pk' in kwargs:

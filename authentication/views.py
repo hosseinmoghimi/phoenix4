@@ -82,6 +82,16 @@ class ProfileViews(View):
         return render(request,TEMPLATE_ROOT+"profile2.html",context)
 
 
+    def dashboard(self,request,*args, **kwargs):
+        context=getContext(request)
+        selected_profile=None
+        if 'profile_id' in kwargs:
+            selected_profile=ProfileRepo(request=request).profile(pk=kwargs['profile_id'])
+        if 'pk' in kwargs:
+            selected_profile=ProfileRepo(request=request).profile(pk=kwargs['pk'])
+        context['selected_profile']=selected_profile
+        return render(request,TEMPLATE_ROOT+"dashboard.html",context)
+
 class AuthenticationViews(View):
     def login_as_user(self,request,*args, **kwargs):
         log=1
