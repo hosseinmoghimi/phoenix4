@@ -1,22 +1,53 @@
- 
 <div class="card">
     <div class="card-header">
-          <h4>
-                کتاب
-                <a href="{{book.get_absolute_url}}">
-                    {{book.title}}
-                </a>
-                {% if perms.school.change_book %}
-                {{book.get_edit_btn|safe}}
+        <h5>
+            <small class="text-muted">
+                <i class="fa fa-book">
 
-                {% endif %}
-            </h4>
+                </i>
+                کتاب
+            </small>
+            <a href="{{book.get_absolute_url}}">
+                {{book.title}}
+            </a>
+            {% if perms.school.change_book %}
+            {{book.get_edit_btn|safe}}
+
+            {% endif %}
+        </h5>
     </div>
     <div class="card-body">
-   
-        {% for course in book.course_set.all %}
-        <h4>
-            واحد درسی
+
+
+
+        <div class="farsi text-right">
+            {% for document in book.documents.all %}
+
+            <div class="mb-2">
+                <a target="_blank" href="{{document.get_download_url}}">
+                    <span class="ml-3">{{document.get_icon_tag|safe}}</span>{{document.title}}
+                </a>
+                {% if perms.core.change_document %}
+                {{document.get_edit_btn|safe}}
+
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        </div>
+       
+
+
+
+
+    </div>
+    <div class="card-footer">
+         {% for course in book.course_set.all %}
+        <h6>
+            <small class="text-muted">
+
+                واحد درسی
+            </small>
 
             <a href="{{course.get_absolute_url}}">
 
@@ -26,30 +57,9 @@
             {{course.get_edit_btn|safe}}
 
             {% endif %}
-        </h4>
+        </h6>
 
 
         {% endfor %}
-
-        <div class="mb-3">
-            {% for document in book.documents.all %}
-            <h4>
-                
-                <a target="_blank" href="{{document.get_download_url}}">
-                    {{document.get_icon_tag|safe}}
-                    {{document.title}}
-                </a>
-                {% if perms.core.change_document %}
-                {{document.get_edit_btn|safe}}
-
-                {% endif %}
-            </h4>
-            {% endfor %}
-        </div>
-
-
-
-
-
     </div>
 </div>

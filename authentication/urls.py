@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout/',views.AuthenticationViews().logout,name='logout'),
     path('profile2/<int:pk>/',views.ProfileViews().profile2,name="profile2"),
     path('profile/<int:pk>/',views.ProfileViews().profile,name="profile"),
+    path('dashboard/<int:pk>/',views.ProfileViews().dashboard,name="dashboard"),
     path('edit_profile/<int:profile_id>/',views.ProfileViews().edit_profile,name="edit_profile_view"),
     # path(r'^login/(?P<next>\w{0,50})/$', views.AuthenticationViews().login2,name="login_next"),
     path("login/",views.AuthenticationViews().login,name="login"),

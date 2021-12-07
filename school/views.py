@@ -18,6 +18,7 @@ def getContext(request,*args, **kwargs):
     context['search_action'] = reverse(APP_NAME+":search")
  
     return context
+
 class BasicViews(View):
     def search(self, request, *args, **kwargs):
         context = getContext(request)

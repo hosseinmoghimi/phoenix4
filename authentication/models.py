@@ -57,6 +57,9 @@ class Profile(models.Model):
     enabled=models.BooleanField(_("enabled"),default=True)
     def get_edit_url_panel(self):
         return reverse(APP_NAME+":edit_profile_view",kwargs={'profile_id':self.pk})
+
+    def get_dashboard_url(self):
+        return reverse(APP_NAME+":dashboard",kwargs={'pk':self.pk})
     @property
     def first_name(self):
         return self.user.first_name

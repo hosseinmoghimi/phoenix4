@@ -1,0 +1,256 @@
+{% extends "phoenix/layout.html" %}
+
+{% block content %}
+
+<div class="row">
+
+
+
+    {% if selected_profile.employee_set.all %}
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    پرسنل مدیریت پروژه
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for employee in selected_profile.employee_set.all %}
+                <div>
+                    <a href="{{employee.get_absolute_url}}">
+                        {% if employee.is_default %}
+                        <i class="fa fa-star text-warning " aria-hidden="true"></i>
+                        {% else %}
+                        <i class="fa fa-star-o text-warning " aria-hidden="true"></i>
+                        {% endif %}
+                        {{employee.organization_unit.employer.title}}
+                        ،
+                        {{employee.organization_unit.title}}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
+
+    {% endif %}
+
+
+    {% if selected_profile.guest_set.all or selected_profile.host_set.all %}
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    رستوران
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for guest in selected_profile.guest_set.all %}
+                <div>
+                    <a href="{{guest.get_absolute_url}}">
+                        مهمان
+                        :
+                        {{selected_profile.name}}
+                    </a>
+                </div>
+                {% endfor %}
+
+                {% for host in selected_profile.host_set.all %}
+                <div>
+                    <a href="{{guest.get_absolute_url}}">
+                        میزبان
+                        :
+                        {{host.title}}
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if selected_profile.financialaccount_set.all %}
+
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    حسابداری
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for financialaccount in selected_profile.financialaccount_set.all %}
+                <div>
+                    <a href="{{financialaccount.get_absolute_url}}">
+                        حساب مالی
+                        :
+                        {{selected_profile.name}}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if selected_profile.supplier_set.all or selected_profile.shipper_set.all or selected_profile.customer_set.all%}
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    مارکت
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for supplier in selected_profile.supplier_set.all %}
+                <div>
+                    <a href="{{supplier.get_absolute_url}}">
+                        فروشنده :
+                        {{supplier.title}}
+                    </a>
+                </div>
+                {% endfor %}
+
+                {% for shipper in selected_profile.shipper_set.all %}
+                <div>
+                    <a href="{{shipper.get_absolute_url}}">
+                        پیک :
+                        {{shipper.title}}
+                    </a>
+                </div>
+                {% endfor %}
+                {% for customer in selected_profile.customer_set.all %}
+                <div>
+                    <a href="{{customer.get_absolute_url}}">
+                        مشتری :
+                        {{customer.title}}
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+
+    {% if selected_profile.student_set.all or selected_profile.teacher_set.all %}
+
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    آموزشگاه
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for student in selected_profile.student_set.all %}
+                <div>
+                    <a href="{{student.get_absolute_url}}">
+                        دانش آموز
+                        :
+                        {{selected_profile.name}}
+                    </a>
+                </div>
+                {% endfor %}
+
+                {% for teacher in selected_profile.teacher_set.all %}
+                <div>
+                    <a href="{{teacher.get_absolute_url}}">
+                        دبیر
+                        :
+                        {{selected_profile.name}}
+
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+
+    {% if selected_profile.driver_set.all or selected_profile.passenger_set.all %}
+
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    ماشین آلات
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for driver in selected_profile.driver_set.all %}
+                <div>
+                    <a href="{{driver.get_absolute_url}}">
+                        راننده
+                        :
+                        {{selected_profile.name}}
+                    </a>
+                </div>
+                {% endfor %}
+
+                {% for passenger in selected_profile.passenger_set.all %}
+                <div>
+                    <a href="{{passenger.get_absolute_url}}">
+                        مسافر
+                        :
+                        {{selected_profile.name}}
+
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+
+
+
+    {% if selected_profile.library_member_set.all %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    کتابخانه
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                {% for member in selected_profile.library_member_set.all %}
+                <div>
+                    <a href="{{member.get_absolute_url}}">
+                        عضو کتابخانه
+                        :
+                        {{selected_profile.name}}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+
+</div>
+
+
+{% endblock content %}

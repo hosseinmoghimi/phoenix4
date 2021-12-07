@@ -9,13 +9,13 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="title">
-                    {{classroom.title}}
+                    اتاق {{classroom.title}}
                 </h4>
             </div>
 
             <div class="card-body">
                 <div class="mb-3">
-                    <h4>
+                    <h5>
                         مدرسه
                         <a href="{{classroom.school.get_absolute_url}}">
                             {{classroom.school.title}}
@@ -24,12 +24,12 @@
                         {{classroom.school.get_edit_btn|safe}}
 
                         {% endif %}
-                    </h4>
+                    </h5>
                 </div>
 
                 <div class="mb-3">
-                    <h4>
-
+                    <h5>
+                        اتاق
                         <a href="{{classroom.get_absolute_url}}">
                             {{classroom.title}}
                         </a>
@@ -37,13 +37,7 @@
                         {{classroom.get_edit_btn|safe}}
 
                         {% endif %}
-                    </h4>
-
-                    <h4>
-                        <a href="{{classroom.school.get_absolute_url}}">
-                            {{classroom.school.title}}
-                        </a>
-                    </h4>
+                    </h5>
 
 
 
@@ -52,18 +46,14 @@
 
 
             </div>
-            <div class="card-footer">
-
-            </div>
+         
         </div>
     </div>
-    {% for active_course in classroom.activecourse_set.all %}
-    <div class="col-md-4">
+    <div class="col-md-6">
+        {% for active_course in classroom.activecourse_set.all %}
         {% include "school/includes/active-course-app/active-course-card.html" %}
-
-
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 
 

@@ -136,7 +136,7 @@ class Employee(models.Model):
         "profile"), on_delete=models.CASCADE)
     organization_unit = models.ForeignKey("organizationunit", verbose_name=_(
         "organizationunit"), on_delete=models.CASCADE)
-    is_default=models.BooleanField(_("is default ?"),default=False)
+    is_default=models.BooleanField(_("is default ?"),default=True)
     class_name = "employee"
     def documents(self):
         return EmployeeDocument.objects.filter(employee=self)
@@ -144,13 +144,24 @@ class Employee(models.Model):
         verbose_name = _("Employee")
         verbose_name_plural = _("Employees")
 
+    def save(self,*args, **kwargs):
+        if self.is_default:
+            sss=Employee.objects.filter(profile=self.profile)
+            for ss in sss:
+                ss.is_default=False
+                ss.save(*args, **kwargs)
+            self.is_default=True
+            return super(Employee,self).save(*args, **kwargs)
+        else:
+            return super(Employee,self).save(*args, **kwargs)
+            
     def get_add_document_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/employeedocument/add/?employee={self.pk}"""
     def get_salary_url(self):
         return reverse("salary:employee",kwargs={'employee_id':self.pk})
     
     def __str__(self):
-        return f"""{self.organization_unit.employer.title} : {self.organization_unit.title} : {self.profile.name}"""
+        return f"""{self.organization_unit.employer.title} : {self.organization_unit.title} : {self.profile.name} {"*" if self.is_default else ""}"""
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})

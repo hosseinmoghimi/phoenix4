@@ -119,6 +119,11 @@
 
 
                                     رزومه</a>
+                                <a class="btn btn-outline-danger"
+                                    href="{% url 'authentication:dashboard' pk=selected_profile.id  %}">
+
+
+                                    دشبورد</a>
                                 {% if send_mail_form %}
 
                                 <form method="POST" action="{% url 'utility:send_mail'%}">
