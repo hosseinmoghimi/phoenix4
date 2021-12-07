@@ -87,6 +87,18 @@
                             </li>
                             {% endfor %}
 
+                            {% for event in location.event_set.all %}
+                            <li class="nav-item text-right">
+                                <small class="text-muted">
+                                    رویداد
+                                </small>
+                                <a class="farsi" href="{{event.get_absolute_url}}">
+                                    {{event.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+
+
                             {% for worksite in location.worksite_set.all %}
                             <li class="nav-item text-right">
                                 <small class="text-muted">
