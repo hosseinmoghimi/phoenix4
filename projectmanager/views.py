@@ -868,9 +868,7 @@ class EventViews(View):
         context['locations'] = event.locations.all()
         context['all_locations'] = LocationRepo(
             request=request).list().order_by('title')
-        if request.user.has_perm(APP_NAME+'.change_project'):
-            context['add_location_form'] = AddLocationForm()
-
+         
         if request.user.has_perm(APP_NAME+'.change_project'):
             context['add_existing_location_form'] = AddExistingLocationForm()
         return render(request, TEMPLATE_ROOT+"event.html", context)

@@ -17,8 +17,14 @@ class ProjectApi(APIView):
             if add_location_form.is_valid():
                 log=3
                 location_id=add_location_form.cleaned_data['location_id']
-                project_id=add_location_form.cleaned_data['page_id']
-                location=ProjectRepo(request=request).add_location(project_id=project_id,location_id=location_id)
+                page_id=add_location_form.cleaned_data['page_id']
+                project=ProjectRepo(request=request).project(pk=page_id)
+                if project is not None:
+                    location=ProjectRepo(request=request).add_location(project_id=project.id,location_id=location_id)
+                else:
+                    event=EventRepo(request=request).event(pk=page_id)
+                    if event is not None:
+                        location=EventRepo(request=request).add_location(event_id=event.id,location_id=location_id)
                 if location is not None:
                     log=4
                     location_s=LocationSerializer(location).data

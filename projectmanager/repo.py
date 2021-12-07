@@ -986,7 +986,16 @@ class EventRepo():
         objects=self.objects.all().order_by('-event_datetime')
         return objects
 
-
+    def add_location(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_project"):
+            return None 
+        location=LocationRepo(request=self.request,user=self.user).location(*args, **kwargs)
+        event=self.event(*args, **kwargs)
+        if event is None or location is None:
+            return None
+        event.locations.add(location)
+        event.save()
+        return location
 class MaterialRequestRepo():
     def __init__(self, *args, **kwargs):
         self.request = None
