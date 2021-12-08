@@ -21,7 +21,7 @@ class MealSerializer(serializers.ModelSerializer):
     host=HostSerializer()
     class Meta:
         model=Meal
-        fields=['id','title','foods','host' ,'reserved','reserves_count','persian_date_served','get_edit_url','get_absolute_url','meal_type']
+        fields=['id','title','foods','host' ,'reserved','reserves_count','max_reserve','persian_date_served','get_edit_url','get_absolute_url','meal_type']
 
 class ReservedMealSerializer(serializers.ModelSerializer):
     meal=MealSerializer()

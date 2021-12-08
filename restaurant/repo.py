@@ -88,7 +88,26 @@ class MealRepo():
         return objects.all()
 
 
-  
+    def add_meal(self,*args, **kwargs):
+        meal=Meal()
+        if 'title' in kwargs:
+            meal.title=kwargs['title']
+        if 'host_id' in kwargs:
+            meal.host_id=kwargs['host_id']
+        if 'date_served' in kwargs:
+            meal.date_served=kwargs['date_served']
+        food=FoodRepo(request=self.request).food(*args, **kwargs)
+        host=HostRepo(request=self.request).host(*args, **kwargs)
+        print(food)
+        print(host)
+        if 'meal_type' in kwargs:
+            meal.meal_type=kwargs['meal_type']
+        if 'max_reserve' in kwargs:
+            meal.max_reserve=kwargs['max_reserve']
+        meal.save()
+        meal.foods.add(food)
+        return meal
+
     
 
     

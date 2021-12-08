@@ -1,5 +1,4 @@
-
-{% extends "restaurant/layout.html" %}
+{% extends "phoenix/wide-layout.html" %}
 {% block content %}
 <div class="row">
 
@@ -9,9 +8,9 @@
                 <h4 class="title">
                     {{host.title}}
                     {% if perms.restaurant.change_host %}
-                      <a href="{{host.get_edit_url}}" target="_blank" title="ویرایش">
-                          <i class="fa fa-edit text-info"></i>
-                      </a>
+                    <a href="{{host.get_edit_url}}" target="_blank" title="ویرایش">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
                     {% endif %}
                 </h4>
             </div>
@@ -25,7 +24,7 @@
                         <div>
 
                             <a href="{{host.profile.get_absolute_url}}">
-                               {{host.profile.name}}
+                                {{host.profile.name}}
                             </a>
                         </div>
                     </div>
@@ -33,7 +32,7 @@
 
             </div>
             <div class="card-footer">
-                
+
             </div>
         </div>
     </div>
@@ -43,14 +42,24 @@
     <div class="col-md-12">
         {% include "restaurant/includes/meals-app/template.html" %}
     </div>
-  
-    
+
+    <div class="col-md-12">
+
+        {% if add_meal_form %}
+
+        {% include "restaurant/includes/add-meal-app/template.html" %}
+
+        {% endif %}
+
+    </div>
 </div>
 {% endblock content %}
- 
+
 
 {% block script %}
 <script>
 </script>
 {% include "restaurant/includes/meals-app/script.html" %}
+{% include "restaurant/includes/add-meal-app/script.html" %}
+
 {% endblock script %}

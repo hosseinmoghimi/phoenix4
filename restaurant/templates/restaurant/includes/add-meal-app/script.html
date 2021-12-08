@@ -1,0 +1,48 @@
+{% load static %}
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+
+
+<script>
+
+
+    let add_meal_app = new Vue({
+        el: "#add-meal-app",
+        data: {
+            title: "",
+            date_served: current_date,
+            meal_type: "ناهار",
+            food_id: "",
+            max_reserve: 100,
+            host_id: 0,
+        },
+        components:
+        {
+            DatePicker: VuePersianDatetimePicker
+
+        },
+        methods: {
+            add_meal: function () {
+                let url = "{% url 'restaurant:add_meal' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.title,
+                    food_id: this.food_id,
+                    host_id: this.host_id,
+                    meal_type: this.meal_type,
+                    max_reserve: this.max_reserve,
+                    date_served: this.date_served,
+                }
+                console.log(payload)
+                $.post(url, payload).done((data) => {
+                    if (typeof meals_app != "undefined") {
+                        meals_app.meals.push(data.meal)
+                    }
+                })
+            }
+        },
+    })
+</script>

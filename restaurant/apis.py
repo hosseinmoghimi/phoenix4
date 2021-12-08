@@ -1,8 +1,9 @@
 from stock.models import Payment
 from core.constants import FAILED,SUCCEED
+from utility.persian import PersianCalendar
 from .serializers import FoodSerializer, MealSerializer, ReservedMealSerializer
 from rest_framework.views import APIView
-from .forms import AddFoodForm,ReserveMealForm, ServeMealForm, UnreserveMealForm
+from .forms import AddFoodForm, AddMealForm,ReserveMealForm, ServeMealForm, UnreserveMealForm
 from .repo import FoodRepo, MealRepo, ReservedMealRepo
 from django.http import JsonResponse
  
@@ -28,6 +29,37 @@ class MealApi(APIView):
 
                 if reserved_meal is not None:
                     context['reserved_meal']=ReservedMealSerializer(reserved_meal).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    
+    def add_meal(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log+=1
+            add_meal_form=AddMealForm(request.POST)
+            if add_meal_form.is_valid():
+                log+=1
+                title=add_meal_form.cleaned_data['title']
+                meal_type=add_meal_form.cleaned_data['meal_type']
+                host_id=add_meal_form.cleaned_data['host_id']
+                food_id=add_meal_form.cleaned_data['food_id']
+                max_reserve=add_meal_form.cleaned_data['max_reserve']
+                date_served=add_meal_form.cleaned_data['date_served']
+                date_served=PersianCalendar().parse(date_served).date
+                meal=MealRepo(request=request).add_meal(
+                    title=title,
+                    meal_type=meal_type,
+                    host_id=host_id,
+                    food_id=food_id,
+                    max_reserve=max_reserve,
+                    date_served=date_served,
+                    )
+
+                if meal is not None:
+                    context['meal']=MealSerializer(meal).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

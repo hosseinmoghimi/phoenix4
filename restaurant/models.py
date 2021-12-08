@@ -60,6 +60,7 @@ class Meal(models.Model):
     foods=models.ManyToManyField("food", verbose_name=_("food"))
     date_served=models.DateField(_("date_served"), auto_now=False, auto_now_add=False)
     meal_type=models.CharField(_("meal type"),choices=MealTypeEnum.choices, max_length=50)
+    max_reserve=models.IntegerField(_("max"),default=100)
     reserved=models.IntegerField(_("reserved"),default=1)
     def served_count(self):
         a=self.reservedmeal_set.exclude(date_served=None)
@@ -74,6 +75,8 @@ class Meal(models.Model):
         reservedmeal=self.reservedmeal_set.filter(guest_id=guest_id).first()
         if reservedmeal is not None:
             self.reserved=reservedmeal.quantity
+        else:
+            self.reserved=0
         return self.reserved
 
     class_name="meal"

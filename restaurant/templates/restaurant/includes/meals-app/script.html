@@ -1,3 +1,4 @@
+{% load static %}
 {% if add_meal_form %}
   
 <script src="{% static 'persian/moment.js' %}"></script>
@@ -87,10 +88,15 @@
         guests: guests,
         selected_guest: null,
 
+
+
+        
+       
+
+
     }
     let meals_app_components = {
         meal_component,
-        // DatePicker: VuePersianDatetimePicker
 
 
     }
@@ -107,11 +113,11 @@
     let meals_app_data = {
         meals: meals,
 
+ 
 
     }
 
     let meals_app_components = {
-            // DatePicker: VuePersianDatetimePicker
 
     }
     let meals_app_methods = {

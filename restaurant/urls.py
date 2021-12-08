@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('add_food/',apis.FoodApi().add_food,name="add_food"),
     path('reserve_meal/',apis.MealApi().reserve_meal,name="reserve_meal"),
+    path('add_meal/',apis.MealApi().add_meal,name="add_meal"),
     path('unreserve_meal/',apis.MealApi().unreserve_meal,name="unreserve_meal"),
     path('serve_meal/',apis.MealApi().serve_meal,name="serve_meal"),
     path('unserve_meal/',apis.MealApi().unserve_meal,name="unserve_meal"),

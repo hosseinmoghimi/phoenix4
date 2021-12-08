@@ -1,0 +1,78 @@
+<div class="card" id="add-meal-app">
+    <div class="card-header">
+        <h4 class="title">
+            افزودن وعده غذایی
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <form @submit.prevent="add_meal()">
+            <div class="row farsi text-right">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">عنوان</label>
+                        <input v-model="title" class="form-control" type="text">
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">میزبان</label>
+                        <select v-model="host_id" class="form-control">
+                            {% for host in hosts %}
+
+                            <option value="{{host.id}}">{{host.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">غذا</label>
+                        <select v-model="food_id" class="form-control">
+                            {% for food in foods %}
+
+                            <option value="{{food.id}}">{{food.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">وعده</label>
+                        <select v-model="meal_type" class="form-control">
+                            {% for meal_type in meal_types %}
+
+                            <option value="{{meal_type}}">{{meal_type}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">حد اکثر</label>
+                        <input class="form-control" v-model="max_reserve" type="number">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">تاریخ</label>
+                        <date-picker v-model="date_served"></date-picker>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-success" type="submit">ADD</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
