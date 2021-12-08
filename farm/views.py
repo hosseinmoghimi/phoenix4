@@ -29,25 +29,25 @@ def getContext(request):
     # # navbar_links = navbar_links_repo.list_roots(app_name=APP_NAME)
     # navbar_buttons = navbar_links_repo.buttons(app_name=APP_NAME)
  
-    parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
-    context['app'].update( {
-        'home_url': reverse(APP_NAME+":home"),
-        'tel': parameter_repo.get(ParametersEnum.TEL).value,
-        'title': parameter_repo.get(ParametersEnum.TITLE).value,
-        'theme_color': parameter_repo.get(ParametersEnum.THEME_COLOR),
-        'about_us_short': parameter_repo.get(ParametersEnum.ABOUT_US_SHORT),
-        'NAV_TEXT_COLOR': parameter_repo.get(ParametersEnum.NAV_TEXT_COLOR),
-        'NAV_BACK_COLOR': parameter_repo.get(ParametersEnum.NAV_BACK_COLOR),
-        'slogan': parameter_repo.get(ParametersEnum.SLOGAN),
-        'logo': picture_repo.get(name=MainPicEnum.LOGO),
-        'favicon': picture_repo.get(name=MainPicEnum.FAVICON),
-        'loading': picture_repo.get(name=MainPicEnum.LOADING),
-        'pretitle': parameter_repo.get(ParametersEnum.PRE_TILTE),
-        'address': parameter_repo.get(ParametersEnum.ADDRESS),
-        'mobile': parameter_repo.get(ParametersEnum.MOBILE),
-        'email': parameter_repo.get(ParametersEnum.EMAIL),
-        'tel': parameter_repo.get(ParametersEnum.TEL),
-    })
+    # parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+    # context['app'].update( {
+    #     'home_url': reverse(APP_NAME+":home"),
+    #     'tel': parameter_repo.get(ParametersEnum.TEL).value,
+    #     'title': parameter_repo.get(ParametersEnum.TITLE).value,
+    #     'theme_color': parameter_repo.get(ParametersEnum.THEME_COLOR),
+    #     'about_us_short': parameter_repo.get(ParametersEnum.ABOUT_US_SHORT),
+    #     'NAV_TEXT_COLOR': parameter_repo.get(ParametersEnum.NAV_TEXT_COLOR),
+    #     'NAV_BACK_COLOR': parameter_repo.get(ParametersEnum.NAV_BACK_COLOR),
+    #     'slogan': parameter_repo.get(ParametersEnum.SLOGAN),
+    #     'logo': picture_repo.get(name=MainPicEnum.LOGO),
+    #     'favicon': picture_repo.get(name=MainPicEnum.FAVICON),
+    #     'loading': picture_repo.get(name=MainPicEnum.LOADING),
+    #     'pretitle': parameter_repo.get(ParametersEnum.PRE_TILTE),
+    #     'address': parameter_repo.get(ParametersEnum.ADDRESS),
+    #     'mobile': parameter_repo.get(ParametersEnum.MOBILE),
+    #     'email': parameter_repo.get(ParametersEnum.EMAIL),
+    #     'tel': parameter_repo.get(ParametersEnum.TEL),
+    # })
     context['APP_NAME'] = APP_NAME
     return context
 
