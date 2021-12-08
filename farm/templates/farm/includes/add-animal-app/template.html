@@ -12,67 +12,65 @@
     </div>
     <div class="card-body mt-3">
         <form @submit.prevent="add_animal()">
-
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">سالن</span>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">سالن</label>
+                        <select v-model="saloon_id" class="form-control">
+                            {% for saloon in saloons %}
+                            <option value="{{saloon.id}}">{{saloon}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-                <select v-model="saloon_id" class="form-control">
-                    {% for saloon in saloons %}
-
-                    <option value="{{saloon.id}}">{{saloon}}</option>
-                    {% endfor %}
-                </select>
-
-            </div>
-
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">تگ</span>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">تگ</label>
+                        <input type="text" v-model="tag" class="form-control">
+                    </div>
                 </div>
-                <input type="text" v-model="tag" class="form-control">
-
-            </div>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">دسته بندی</span>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">
+                            دسته بندی
+                        </label>
+                        <select v-model="category" class="form-control">
+                            {% for category in categories %}
+                            <option value="{{category}}">{{category}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-                <select v-model="category" class="form-control">
-                    {% for category in categories %}
-
-                    <option value="{{category}}">{{category}}</option>
-                    {% endfor %}
-                </select>
-
-            </div>
-
-
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">قیمت خرید شده</span>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">
+                            قیمت خرید شده
+                        </label>
+                        <input type="text" v-model="price" class="form-control">
+                    </div>
                 </div>
-                <input type="text" v-model="price" class="form-control">
-
-            </div>
-
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">وزن خرید شده</span>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">
+                            وزن خرید شده
+                        </label>
+                        <input type="text" v-model="weight" class="form-control">
+                    </div>
                 </div>
-                <input type="text" v-model="weight" class="form-control">
-
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">
+                            تاریخ ورود
+                        </label>
+                        <input type="text" v-model="enter_date" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success">
+                        تایید
+                    </button>
+                </div>
             </div>
-
-
-            <input type="text" v-model="enter_date" class="form-control">
-
-
-            <button type="submit" class="btn btn-success">
-                تایید
-            </button>
         </form>
     </div>
 </div>
