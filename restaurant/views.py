@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.views import View
 from core.repo import ParameterRepo
 from core.views import CoreContext
+from restaurant.enums import MealTypeEnum
 from restaurant.serializers import FoodSerializer, GuestSerializer, MealSerializer, ReservedMealSerializer,HostSerializer
-from .forms import AddFoodForm, ReserveMealForm, ServeMealForm,AddHostForm
+from .forms import AddFoodForm, AddMealForm, ReserveMealForm, ServeMealForm,AddHostForm
 from .repo import FoodRepo, GuestRepo, MealRepo, ReservedMealRepo,HostRepo
 from .apps import APP_NAME
 import json
@@ -92,6 +93,13 @@ class GuestViews(View):
 
 
 class MealViews(View):
+    def getAddMealContext(request,*args, **kwargs):
+        context={}
+        foods=FoodRepo(request=request).list()
+        context['foods']=foods
+        context['foods_s']=json.dumps(FoodSerializer(foods,many=True).data)
+        context['meal_types']=(i[0] for i in MealTypeEnum.choices)
+        return context
     def meal(self,request,*args, **kwargs):
         context=getContext(request=request)
         meal=MealRepo(request=request).meal(*args, **kwargs)
@@ -153,7 +161,9 @@ class HostViews(View):
         meals_s=json.dumps(MealSerializer(meals,many=True).data)
         context['meals_s']=meals_s
 
-
+        if True:
+            context.update(MealViews.getAddMealContext(request=request))
+            context['add_meal_form']=AddMealForm()
         return render(request,TEMPLATE_ROOT+"host.html",context)
     def hosts(self,request,*args, **kwargs):
         context=getContext(request=request)

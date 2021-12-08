@@ -12,6 +12,10 @@ class ReserveMealForm(forms.Form):
     meal_id=forms.IntegerField(required=True)
     quantity=forms.IntegerField(required=False)
     guest_id=forms.IntegerField(required=False)
+class AddMealForm(forms.Form):
+    food_id=forms.IntegerField(required=True)
+    quantity=forms.IntegerField(required=False)
+    host_id=forms.IntegerField(required=True)
 class UnreserveMealForm(forms.Form):
     meal_id=forms.IntegerField(required=True)
     guest_id=forms.IntegerField(required=False)

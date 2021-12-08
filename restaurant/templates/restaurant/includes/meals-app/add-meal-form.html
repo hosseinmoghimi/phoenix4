@@ -1,0 +1,28 @@
+<form @submit.prevent="add_meal()">
+    <div class="row farsi text-right">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">غذا</label>
+                <select v-model="food_id" class="form-control">
+                    {% for food in foods %}
+                      
+                    <option value="{{food.id}}">{{food.title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">وعده</label>
+                <select v-model="meal_type" class="form-control">
+                    {% for meal_type in meal_types %}
+                      
+                    <option value="{{meal_type}}">{{meal_type}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+    </div>
+</form>
