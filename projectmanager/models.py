@@ -558,7 +558,7 @@ class MaterialRequest(Request):
     # sheet=models.ForeignKey("warehousesheet",null=True,blank=True, verbose_name=_("warehousesheet"), on_delete=models.CASCADE)
     class_name = 'materialrequest'
     ware_house_sheet=models.ForeignKey("warehousesheet", verbose_name=_("برگه انبار"), null=True,blank=True,on_delete=models.SET_NULL)
-    ware_house_sheets=models.ManyToManyField("warehousesheet",related_name="ware_house_sheets", verbose_name=_("برگه های انبار"))
+    ware_house_sheets=models.ManyToManyField("warehousesheet",related_name="ware_house_sheets", blank=True,verbose_name=_("برگه های انبار"))
     class Meta:
         verbose_name = _("MaterialRequest")
         verbose_name_plural = _("درخواست های متریال")
