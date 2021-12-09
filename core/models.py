@@ -260,8 +260,12 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_header_origin)
         elif len(self.pageimage_set.all())>0:
             return self.pageimage_set.all().first().image.thumbnail()
-
+        if self.class_name=='product' and self.parent is not None:
+            return self.parent.thumbnail()
         return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.png'
+
+
+
     def class_name_farsi(self):
         t=""
         if self.class_name=="project":
