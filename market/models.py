@@ -1,4 +1,5 @@
 from core.constants import CURRENCY
+from core.enums import UnitNameEnum
 from core.models import BasicPage
 from core.settings import (ADMIN_URL, MEDIA_URL, QRCODE_ROOT, QRCODE_URL,SITE_FULL_BASE_ADDRESS, STATIC_URL)
 from django.db import models
@@ -94,6 +95,7 @@ class Product(MarketPage):
 
 
 class Category(MarketPage):
+    default_unit_name=models.CharField(_("واحد پیش فرض"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))
     def childs(self):
         return Category.objects.filter(parent=self)

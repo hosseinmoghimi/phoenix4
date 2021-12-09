@@ -21,6 +21,8 @@ class UnitNameEnum(TextChoices):
     SERVICE="سرویس",_("سرویس")
     PACK="بسته",_("بسته")
     POCKET="کیسه",_("کیسه")
+    SHOT="شات",_("شات")
+    CUP="فنجان",_("فنجان")
 
 class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')

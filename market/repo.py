@@ -215,13 +215,12 @@ class ProductRepo:
         specifications = kwargs['specifications'] if 'specifications' in kwargs else None
         
         unit_name = kwargs['unit_name'] if 'unit_name' in kwargs else "عدد"
+        category=CategoryRepo(request=self.request).category(*args, **kwargs)
         if unit_name=="":
             if "کفش" in title:
                 unit_name="جفت"
         if unit_name=="":
-            unit_name="عدد"
-        category_id = kwargs['category_id'] if 'category_id' in kwargs else None
-        category=CategoryRepo(request=self.request).category(*args, **kwargs)
+            unit_name=category.default_unit_name
         if category is None:
             category=CategoryRepo(request=self.request).misc()
         
