@@ -86,13 +86,14 @@ class BasicApi(APIView):
             if enter_animal_to_saloon_form.is_valid():
                 log=3
                 animal_id=enter_animal_to_saloon_form.cleaned_data['animal_id']
+                animal_tag=enter_animal_to_saloon_form.cleaned_data['animal_tag']
                 saloon_id=enter_animal_to_saloon_form.cleaned_data['saloon_id']
                 enter_date=enter_animal_to_saloon_form.cleaned_data['enter_date']
                 animal_price=enter_animal_to_saloon_form.cleaned_data['animal_price']
                 animal_weight=enter_animal_to_saloon_form.cleaned_data['animal_weight']
                
                 enter_date=PersianCalendar().to_gregorian(enter_date)
-                animal_in_saloon=SaloonRepo(request=request).enter_animal_to_saloon(animal_price=animal_price,animal_weight=animal_weight,saloon_id=saloon_id,animal_id=animal_id,enter_date=enter_date)
+                animal_in_saloon=SaloonRepo(request=request).enter_animal_to_saloon(animal_tag=animal_tag,animal_price=animal_price,animal_weight=animal_weight,saloon_id=saloon_id,animal_id=animal_id,enter_date=enter_date)
                 if animal_in_saloon is not None:
                     context['animal_in_saloon']=AnimalInSaloonSerializer(animal_in_saloon).data
                     context['result']=SUCCEED

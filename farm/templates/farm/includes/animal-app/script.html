@@ -60,7 +60,7 @@
 
             to_price: function (price) {
 
-                return toPrice(price, TUMAN)
+                return to_price(price, TUMAN)
             },
 
 
@@ -75,7 +75,7 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
                 let url = url_enter_animal_to_saloon
-                //console.log(payload)
+                console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
                     //console.log(data)

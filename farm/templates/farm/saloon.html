@@ -431,12 +431,9 @@
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                 }
                 let url = url_enter_animal_to_saloon
-                //console.log(saloon_app.animal_tag)
                 //console.log(url)
-                //console.log(payload)
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    //console.log(data)
                     swal({
                         title: "ثبت ورود دام",
                         text: "ورود دام به سالن با موفقیت ثبت گردید.",

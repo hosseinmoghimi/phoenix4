@@ -1,5 +1,4 @@
 from authentication.repo import ProfileRepo
-from django.db.models.base import Model
 from django.db import models 
 from django.db.models import Q 
 from core import repo as CoreRepo
@@ -67,7 +66,7 @@ class AnimalRepo():
 
     def animal(self,*args, **kwargs):
         if 'animal_tag' in kwargs and not kwargs['animal_tag'] is None:
-            return self.objects.get(tag=kwargs['animal_tag'])
+            return self.objects.filter(tag=kwargs['animal_tag']).first()
 
         if 'tag' in kwargs and not kwargs['tag'] is None:
             return self.objects.get(tag=kwargs['tag'])
@@ -342,10 +341,12 @@ class SaloonRepo():
             enter_date=kwargs['enter_date']
 
 
-        saloon=self.saloon(saloon_id)
-        for animal_in_saloon in AnimalInSaloon.objects.filter(animal_id=animal_id).filter(exit_date=None):
+        saloon=self.saloon(saloon_id=saloon_id)
+        animal=AnimalRepo(request=self.request).animal(*args, **kwargs)
+        animal_id=animal.id
+        for animal_in_saloon in AnimalInSaloon.objects.filter(animal_id=animal.id).filter(exit_date=None):
             from datetime import timedelta
-            animal_in_saloon.exit_date=enter_date+timedelta(seconds=-1)
+            animal_in_saloon.exit_date=enter_date+timedelta(minutes=-1)
             animal_in_saloon.save()
 
         animal_in_saloon=AnimalInSaloon(animal_id=animal_id,employee=employee,saloon=saloon,enter_date=enter_date,animal_price=animal_price,animal_weight=animal_weight)

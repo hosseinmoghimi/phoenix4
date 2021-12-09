@@ -25,9 +25,12 @@ class AddNewAnimalForm(forms.Form):
     weight=forms.FloatField(required=False)
     enter_date=forms.CharField(max_length=50,required=False)
 class EnterAnimalToSaloonForm(forms.Form):
-    animal_id=forms.IntegerField(required=True)
     saloon_id=forms.IntegerField(required=True)
+    animal_id=forms.IntegerField(required=False)
+    animal_tag=forms.IntegerField(required=False)
     animal_price=forms.IntegerField(required=False)
+    animal_weight=forms.IntegerField(required=False)
+    enter_date=forms.CharField(max_length=50, required=True)
 class SearchForm(forms.Form):
     search_for=forms.CharField(max_length=50, required=True)
     
