@@ -62,9 +62,9 @@
                                 <a href="{{product.get_absolute_url}}">{{product.title}}</a>
                                 {% if perms.market.change_product %}
                                 <a href="{{product.get_edit_url}}" target="_blank" title="ویرایش">
-                                <i class="fa fa-edit text-info"></i>    
+                                    <i class="fa fa-edit text-info"></i>
                                 </a>
-                                  
+
                                 {% endif %}
                             </h4>
 
@@ -125,24 +125,24 @@
                 </h5>
             </a>
             {% endif %}
-{% if me_supplier %}
-  
-            <a href="{% url 'market:add_product_for_shoe_view' category_id=category.id %}">
+            {% if me_supplier %}
+
+            <!-- <a href="{% url 'market:add_product_for_shoe_view' category_id=category.id %}">
                 <h5 class="text-center">
 
                     افزودن دسته ای کفش
                 </h5>
-            </a>
+            </a> -->
 
             {% endif %}
 
-            <div class="row">
-                <div class="col-md-3">
-                    {% include "market/includes/sidebar.html" %}
-                </div>
+            <div class="row ltr">
                 <div class="col-md-9">
 
                     {% include "market/includes/list-app/template.html" %}
+                </div>
+                <div class="col-md-3">
+                    {% include "market/includes/sidebar.html" %}
                 </div>
             </div>
             <br>
