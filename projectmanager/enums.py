@@ -100,3 +100,14 @@ def StatusColor(status):
     elif status==SignatureStatusEnum.PAID:
         color= 'success'
     return color
+
+
+class DeviceConfiguratinoEnum(TextChoices):
+    MAC_ADDRESS="MAC Address",_("MAC Address")
+    LOCATION="location",_("location")
+    TYPE="type",_("type")
+    IP="ip",_("ip")
+    USERNAME="username",_("username")
+    PASSWORD="password",_("password")
+    VERSION="version",_("version")
+    SERIAL_NO="serial no",_("serial no")

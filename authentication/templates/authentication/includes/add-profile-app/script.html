@@ -2,14 +2,14 @@
     let add_profile_app = new Vue({
         el: "#add-profile-app",
         data: {
-            username: "leonolan2020",
-            password: "ghghfYT^%RTYft^%",
-            first_name: "leo",
-            last_name: "nolan",
-            mobile: "09367764920",
-            bio: "bbbb",
-            address: "aaaa",
-            email: "leonolan2020@gmail.com",
+            username: "",
+            password: "",
+            first_name: "",
+            last_name: "",
+            mobile: "",
+            bio: "",
+            address: "",
+            email: "",
             message: { show: false },
         },
         methods: {
@@ -35,8 +35,21 @@
                             color: "success",
                             body: data.message
                         }
-                        if (typeof profiles_app != "undefined")
+                        if (typeof profiles_app != "undefined") {
+                            profiles_app.profiles.reverse()
                             profiles_app.profiles.push(data.profile)
+                            profiles_app.profiles.reverse()
+                            
+                            profiles_app.username = ""
+                            profiles_app.password = ""
+                            profiles_app.first_name = ""
+                            profiles_app.last_name = ""
+                            profiles_app.mobile = ""
+                            profiles_app.bio = ""
+                            profiles_app.address = ""
+                            profiles_app.email = ""
+
+                        }
 
                         // setTimeout(() => {
                         //     add_profile_app.message = {
