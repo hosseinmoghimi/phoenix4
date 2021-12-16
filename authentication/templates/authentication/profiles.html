@@ -68,33 +68,27 @@
 <div class="container">
     <div class="main-body ">
 
-    
+
         <div class="row gutters-sm" style="direction: rtl;">
-            <div class="col-md-4 mb-3">
-                <div class="card">
-
-
-                </div>
-
+            <div class="col-md-12 text-right">
+                <nav aria-label="breadcrumb" class="main-breadcrumb">
+                    <ol class="breadcrumb" style="direction: rtl;">
+                        <li class="breadcrumb-item"><a href="{{SITE_URL}}">
+                            <i class="material-icons">
+                                home
+                            </i>
+                            خانه</a></li> 
+        
+                    </ol>
+                </nav>    
             </div>
-            <div class="col-md-8">
-          {% include "authentication/includes/add-profile-app/template.html" %}
+           
+           
+            <div class="col-md-12">
+                {% include "authentication/includes/add-profile-app/template.html" %}
 
-          {% include "authentication/includes/profiles-app/template.html" %}
-                <div class="row gutters-sm">
-
-
-
-                    {% block table %}
-
-                    {% endblock %}
-
-                </div>
-
-
-                {% block content_profile %}
-
-                {% endblock content_profile %}
+                {% include "authentication/includes/profiles-app/template.html" %}
+             
 
             </div>
         </div>

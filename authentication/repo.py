@@ -227,10 +227,10 @@ class ProfileRepo():
         else:
             password=None
         if not is_not_blank(username) or not is_not_blank(password):
-            return (FAILED,None,"نام کاربری و کلمه عبور نا معتبر")
+            return (FAILED,None,"نام کاربری و کلمه عبور نا معتبر می باشد.")
         new_user=User.objects.filter(username=username).first()
         if new_user is not None:
-            return (FAILED,None,"نام کاربری تکراری")  
+            return (FAILED,None,"نام کاربری وارد شده ، تکراری می باشد.")  
 
 
         user=User.objects.create(first_name=kwargs['first_name'],email=kwargs['email'],last_name=kwargs['last_name'],username=kwargs['username'],password=kwargs['password'])

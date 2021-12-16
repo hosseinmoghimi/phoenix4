@@ -72,22 +72,33 @@ class BasicViews(View):
                 log += 1
                 search_for = search_form.cleaned_data['search_for']
                 context['search_for'] = search_for
-                context['materials'] = MaterialRepo(
-                    request=request).list(search_for=search_for)
-                context['services'] = ServiceRepo(
-                    request=request).list(search_for=search_for)
-                context['employers'] = EmployerRepo(
-                    request=request).list(search_for=search_for)
-                context['employees'] = EmployeeRepo(
-                    request=request).list(search_for=search_for)
-                context['projects'] = ProjectRepo(
-                    request=request).list(search_for=search_for)
-                context['tags'] = TagRepo(
-                    request=request).list(search_for=search_for)
-                context['events'] = EventRepo(
-                    request=request).search(search_for=search_for)
-                context['organization_units'] = OrganizationUnitRepo(
-                    request=request).list(search_for=search_for)
+                materials = MaterialRepo(request=request).list(search_for=search_for)
+                services = ServiceRepo(request=request).list(search_for=search_for)
+                employers = EmployerRepo(request=request).list(search_for=search_for)
+                employees = EmployeeRepo(request=request).list(search_for=search_for)
+                projects = ProjectRepo(request=request).list(search_for=search_for)
+                tags = TagRepo(request=request).list(search_for=search_for)
+                events = EventRepo(request=request).search(search_for=search_for)
+                organization_units = OrganizationUnitRepo(request=request).list(search_for=search_for)
+
+
+
+
+                
+                context['materials'] = materials
+                context['services'] = services
+                context['employers'] = employers
+                context['employees'] = employees
+                context['projects'] = projects
+                context['tags'] = tags
+                context['events'] = events
+                context['organization_units'] = organization_units
+
+
+                if len(materials)>0 or  len(services)>0 or len(employers)>0 or  len(employees)>0 or len(projects)>0 or  len(tags)>0 or len(events)>0 or  len(organization_units)>0 :
+                    context['message']=""
+                else:
+                    context['message']=f"""<span class="material-icons">search_off</span> موردی پیدا نشد."""
                 context['log'] = log
                 return render(request, TEMPLATE_ROOT+"search.html", context)
         return BasicViews().home(request=request)
