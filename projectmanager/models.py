@@ -464,7 +464,12 @@ class OrganizationUnit(ProjectManagerPage):
     def __str__(self):
         return f"{self.employer.title} : {self.full_title}"
 
-
+    def all_sub_orgs(self):
+        chs=self.all_sub_pages()
+        ids=[]
+        for ch in chs:
+            ids.append(ch.id)
+        return OrganizationUnit.objects.filter(id__in=ids)
 class EmployeeSpeciality(ProjectManagerPage):
     employee = models.ForeignKey("employee", verbose_name=_(
         "employee"), on_delete=models.CASCADE)

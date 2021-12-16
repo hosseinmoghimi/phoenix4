@@ -186,7 +186,9 @@ class ProjectViews(View):
                 'parent': page.parent_id,
                 'get_absolute_url': page.get_absolute_url(),
                 'id': page.id,
-                'sub_title': f"""<div style="direction:rtl;"><div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div><div class="small">{to_price(page.sum_total_self(),unit="")}&nbsp;&nbsp;/&nbsp;&nbsp;{to_price(page.sum_total())}</div></div>""",
+                'sub_title': f"""<div style="direction:rtl;"><div class="small"> {page.percentage_completed}% <span class="badge badge-{page.get_status_color()}">{page.status}</span></div>
+                                 <div style="direction:rtl;"><span class="small"> {page.persian_start_date()[:10]}</span> ~ <span class="small"> {page.persian_end_date()[:10]}</span></div>
+                                 <div class="small">{to_price(page.sum_total_self(),unit="")}&nbsp;&nbsp;/&nbsp;&nbsp;{to_price(page.sum_total())}</div></div>""",
 
             })
         # page=project
@@ -200,7 +202,7 @@ class ProjectViews(View):
 
         # })
         context['pages_s'] = json.dumps(pages_s)
-
+        
         return render(request, "phoenix/pages-chart.html", context)
 
     def guantt(self, request, *args, **kwargs):
@@ -466,8 +468,23 @@ class OrganizationUnitViews(View):
         employer = (EmployerRepo(request=request).employer(pk=employer_id))
         page = employer
         pages = employer.organizationunit_set.filter(
-            parent=None).first().all_sub_pages()
-        pages_s = BasicPageSerializer(pages, many=True).data
+            parent=None).first().all_sub_orgs()
+            
+        pages_s=[]
+        for page in pages:
+            names=""
+            employees=page.employee_set.all()
+            for employee in employees:
+                names+=(f"""<div style="direction:rtl;"><a href="{employee.get_absolute_url()}"><img src="{employee.profile.image}" class="rounded-circle" width="32"><small class="text-muted" >{employee.profile.name}</small></a></div>""")
+            pages_s.append({
+                'title': f"""{page.title}""",
+                'parent_id': page.parent_id,
+                'parent': page.parent_id,
+                'get_absolute_url': page.get_absolute_url(),
+                'id': page.id,
+                'sub_title': names,
+
+            })
         context['pages_s'] = json.dumps(pages_s)
         return render(request, "phoenix/pages-chart.html", context)
 
