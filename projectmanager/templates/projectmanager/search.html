@@ -86,7 +86,7 @@
                             <a class="text-muted small" href="{{employee.organization_unit.employer.get_absolute_url}}">
                                 {{employee.organization_unit.employer.title}}
                             </a>
-                        /
+                            /
                             <a class="text-muted small" href="{{employee.organization_unit.get_absolute_url}}">
                                 {{employee.organization_unit.title}}
                             </a>
@@ -110,13 +110,10 @@
                 <h5 class="mt-4">
                     پروژه ها :
                 </h5>
-                {% for page in projects %}
-                <p class="mr-5">
-                    <a href="{{page.get_absolute_url}}">
-
-                        {{page.title}}
-                    </a>
-                </p>
+                {% for project in projects %}
+                <div class="mr-5 farsi">
+                    {{project.get_breadcrumb|safe}}
+                </div>
                 {% endfor %}
 
 
@@ -139,13 +136,10 @@
                 <h5 class="mt-4">
                     متریال ها :
                 </h5>
-                {% for page in materials %}
-                <p class="mr-5">
-                    <a href="{{page.get_absolute_url}}">
-
-                        {{page.title}}
-                    </a>
-                </p>
+                {% for material in materials %}
+                <div class="mr-5 farsi">
+                    {{material.get_breadcrumb|safe}}
+                </div>
                 {% endfor %}
 
 
@@ -168,13 +162,10 @@
                 <h5 class="mt-4">
                     سرویس ها :
                 </h5>
-                {% for page in services %}
-                <p class="mr-5">
-                    <a href="{{page.get_absolute_url}}">
-
-                        {{page.title}}
-                    </a>
-                </p>
+                {% for service in services %}
+                <div class="mr-5 farsi">
+                    {{service.get_breadcrumb|safe}}
+                </div>
                 {% endfor %}
 
 

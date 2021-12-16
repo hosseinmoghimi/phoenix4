@@ -1,5 +1,8 @@
+from tinymce.models import HTMLField
+from datetime import datetime
 from django.db import models
 from django.db.models import Sum
+from django.db.models.fields import CharField
 from core.models import BasicPage as CoreBasicPage
 from .apps import APP_NAME
 from .enums import *
@@ -555,6 +558,24 @@ class Request(models.Model):
 
     def get_absolute_url(self):
         return reverse("Request_detail", kwargs={"pk": self.pk})
+
+# class DeviceConfiguration(models.Model):
+#     project=models.ForeignKey("project", verbose_name=_("project"), on_delete=models.CASCADE)
+#     creator=models.ForeignKey("employee", verbose_name=_("creator"),on_delete=models.CASCADE)
+#     employees=models.ManyToManyField("employee",related_name="conf_set",blank=True, verbose_name=_("employees"))
+#     material=models.ForeignKey("material", verbose_name=_("material"),null=True,blank=True, on_delete=models.CASCADE)
+#     name=models.CharField(_("name"), max_length=50)
+#     description=HTMLField(_("description"), max_length=5000)
+#     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+#     date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
+    
+
+#     class Meta:
+#         verbose_name = _("Device")
+#         verbose_name_plural = _("Devices")
+
+#     def __str__(self):
+#         return f"{self.project.title} : {self.material} :{self.parameter}"
 
 
 class MaterialRequest(Request):

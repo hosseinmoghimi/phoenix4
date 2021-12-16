@@ -6,6 +6,7 @@ from .models import EmployeeDocument, WareHouseExportSheet, WareHouseImportSheet
 admin.site.register(EmployeeDocument)
 # admin.site.register(Request)
 admin.site.register(RequestSignature)
+# admin.site.register(DeviceConfiguration)
 admin.site.register(Project)
 admin.site.register(OrganizationUnit)
 admin.site.register(EmployeeSpeciality)
