@@ -532,8 +532,8 @@ class OrderViews(View):
         if order is None:
             # raise Http404
             message = MessageView(request=request)
-            message.header_text = "چنین پروژه ای وجود ندارد."
-            message.message_html = """<p class="farsi text-right">چنین پروژه ای وجود ندارد.</p>"""
+            message.header_text = "چنین سفارشی وجود ندارد."
+            message.message_html = """<p class="farsi text-right">چنین سفارشی وجود ندارد.</p>"""
             return message.show()
         context = getContext(request)
         context['header_image'] = PictureRepo(
