@@ -310,7 +310,8 @@ class ProductViews(View):
         context['product'] = product
         if request.user.has_perm(APP_NAME+".view_orderline"):
             order_lines = product.orderline_set.all().order_by("order__date_ordered")
-            context['order_lines'] = order_lines
+            if len(order_lines)>0:
+                context['order_lines'] = order_lines
         context['body_class'] = "product-page"
         return render(request, TEMPLATE_ROOT+"product-sold.html.html", context)
 

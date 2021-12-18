@@ -5,7 +5,7 @@ from core import repo as CoreRepo
 from messenger.repo import NotificationRepo
 from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
-from market.apps import APP_NAME
+from .apps import APP_NAME
 from authentication.repo import ProfileRepo
 from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Desk, Employee, FinancialReport, Guarantee, Menu, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
