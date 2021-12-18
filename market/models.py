@@ -93,6 +93,8 @@ class Product(MarketPage):
         related_products=Product.objects.filter(id__in=ids)
         return related_products
 
+    def get_order_lines_url(self):
+        return reverse(APP_NAME+":order_lines",kwargs={'product_id':self.pk,'order_id':0})
 
 class Category(MarketPage):
     default_unit_name=models.CharField(_("واحد پیش فرض"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
@@ -169,6 +171,11 @@ class Customer(models.Model):
     def get_cart_url(self):
         return reverse(APP_NAME+":customer_cart",kwargs={'customer_id':self.id})
 
+    def save(self,*args, **kwargs):
+        if self.title is None or self.title=="" :
+            if self.profile is not None:
+                self.title=self.profile.name
+        return super(Customer,self).save(*args, **kwargs)
     class Meta:
         verbose_name = _("Customer")
         verbose_name_plural = _("مشتریان")
@@ -304,7 +311,11 @@ class OrderLine(models.Model):
         return f"{str(self.order)} : {self.product.title} : {self.quantity} {self.unit_name} {to_price(self.unit_price)}ی/ {to_price(self.unit_price*self.quantity)}"
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":orderLine", kwargs={"pk": self.pk})
+        return reverse(APP_NAME+":order_line", kwargs={"pk": self.pk})
+
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/orderline/{self.pk}/change/"
 
 
 class CartLine(models.Model):

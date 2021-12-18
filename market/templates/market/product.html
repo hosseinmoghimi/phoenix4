@@ -43,6 +43,7 @@
 
                             {{product.get_edit_btn|safe}}
                         </span>
+
                         {% endif %}
                         {% if perms.market.add_categoryproducttop %}
 
@@ -76,7 +77,16 @@
                         </form>
                         {% endif %}
                     </h3>
-
+                    {% if perms.market.view_orderline %}
+                    <h6 class="farsi">
+                        <a href="{{product.get_order_lines_url}}">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                            لیست ریز سفارشات
+                        </a>
+                    </h6>
+                    {% endif %}
 
 
                     {% if product.barcode %}
@@ -127,7 +137,7 @@
                         </div>
                         {% for available in availables %}
 
-                        
+
                         <div>
                             {{available.quantity}}
                             <span class="badge badge-rose">
@@ -323,7 +333,7 @@
 
         </div>
         {% endif %}
-        
+
         {% if order_lines %}
 
         <div class="related-products">

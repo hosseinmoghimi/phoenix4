@@ -69,7 +69,7 @@ class OrderLineSerializer(serializers.ModelSerializer):
     guarantees=GuaranteeSerializer(many=True)
     class Meta:
         model = OrderLine
-        fields = ['id','quantity','unit_name','unit_price','product','guarantees','description']
+        fields = ['id','quantity','unit_name','unit_price','product','guarantees','description','get_absolute_url']
 
 class OrderSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer()

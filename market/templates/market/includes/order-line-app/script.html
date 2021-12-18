@@ -1,0 +1,54 @@
+{% load static %}
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+
+<script>
+    let url_add_guarantee = "{% url 'market:add_guarantee' %}"
+    let order_line_id=parseInt("{{order_line.id}}")
+    // let category_id=parseInt("{{category_id}}")
+    let order_line_app = new Vue({
+        el: "#order-line-app",
+        data: {
+            start_date: current_date,
+            end_date: current_date,
+            description: "",
+            waiting: false,
+            barcode: "qq",
+            serial_no: "zz",
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+        },
+        methods: {
+            add_guarantee: function () {
+                add_list_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    order_line_id:order_line_id,
+                    start_date:this.start_date,
+                    end_date:this.end_date,
+                    description:this.description,
+                    barcode:this.barcode,
+                    serial_no:this.serial_no,
+                }
+
+                let posting = $.post(url_add_guarantee, payload)
+                posting.done((data) => {
+                    add_list_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+                        add_list_app.new_product_title = ""
+                        add_list_app.can_add_category = false
+                            
+                            show_list_app.products.push(data.product)
+
+                    }
+                })
+            },
+
+        }
+    })
+</script>

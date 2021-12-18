@@ -535,6 +535,34 @@ class OrderRepo:
                 order.save()
         return order
 
+
+    def order_lines(self, *args, **kwargs):
+        objects=OrderLine.objects.all()
+
+        
+        if 'order_id' in kwargs and kwargs['order_id']>0:
+            objects= objects.filter(order_id=kwargs['order_id'])
+
+        
+        if 'product_id' in kwargs and kwargs['product_id']>0:
+            objects= objects.filter(product_id=kwargs['product_id'])
+
+
+
+        return objects
+
+
+    def order_line(self, *args, **kwargs):
+        pk=0
+        if 'order_line_id' in kwargs:
+            pk = kwargs['order_line_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        order_line= OrderLine.objects.filter(pk=pk).first()
+        return order_line
+
     def do_pack(self, *args, **kwargs):
         order=self.order(*args, **kwargs)
         description=kwargs['description'] if 'description' in kwargs else None

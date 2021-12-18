@@ -1,0 +1,118 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <h4 class="title1 text-center">
+                    سفارش شماره {{order_line.order.id}}
+
+                </h4>
+                <h2 class="title text-center">ریز سفارش شماره {{order_line.pk}}</h2>
+                {% if perms.core.change_picture %}
+                <div class="text-center">
+                    {{header_image.get_edit_btn|safe}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main main-raised">
+    <div class="container">
+        <div class="card card-plain">
+            <div class="card-body">
+
+
+
+
+                <div id="order-header" class="row rtl text-right mb-5 farsi">
+                    <div class="col-md-4">
+                        <h5 class="card-title farsi text-right">
+                            <a href="{{order_line.order.get_absolute_url}}">
+                                سفارش شماره {{order_line.order.id}}
+
+
+                            </a>
+                            {{order_line.order.get_status_tag|safe}}
+
+
+                        </h5>
+
+                        <h3 class="card-title farsi text-right">
+                            ریز سفارش شماره {{order_line.id}}
+
+
+                        </h3>
+                        {% if perms.core.change_orderline %}
+                        <h3 class="card-title farsi text-right">
+                            <a target="_blank" title="ویرایش" class="mx-2" href="{{order_line.get_edit_url}}">
+                                <i class="material-icons">
+                                    settings
+                                </i>
+                            </a>
+                        </h3>
+                        {% endif %}
+
+
+
+
+
+
+
+                        {% if order_line.description %}
+
+                        <div class="farsi mr-3">
+                            توضیحات : <i>
+
+                                <span class="title farsi mx-3">
+                                    {{order_line.description|safe}}
+
+                                </span>
+                            </i>
+                        </div>
+
+                        {% endif %}
+
+
+
+                    </div>
+                    <div class="col-md-8">
+                        <h4>
+
+                        </h4>
+
+                        <div class="media">
+                            <img src="{{order_line.product.thumbnail}}" width="128" height="128" class="rounded" alt="">
+                            <div class="media-body">
+                                <a href="{{order_line.product.get_absolute_url}}">
+                                    <h4>{{order_line.product.title}}</h4>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        {% include "market/includes/order-line-app/template.html" %}
+
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+{% include "market/includes/order-line-app/script.html" %}
+
+{% endblock %}

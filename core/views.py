@@ -166,13 +166,19 @@ class MessageView(View):
             self.message_text = kwargs['message_text']
         if 'header_text' in kwargs:
             self.header_text = kwargs['header_text']
+        if 'request' in kwargs:
+            self.request = kwargs['request']
 
 
 
-    def response(self, request, *args, **kwargs):
-        return self.show(request=request)
+    def response(self, *args, **kwargs):
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+        return self.show(request=self.request)
 
-    def show(self, request, *args, **kwargs):
+    def show(self, *args, **kwargs):
+        if 'request' in kwargs:
+            self.request = kwargs['request']
         context = CoreContext(request, *args, **kwargs)
         if self.header_text is None:
             self.header_text = 'خطا'
