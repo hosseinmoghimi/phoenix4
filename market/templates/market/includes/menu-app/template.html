@@ -18,6 +18,7 @@
         </template>
         <div class="farsi text-right">
             <button @click="save_cart()"  v-if="!save_done"  class="btn btn-outline-info">
+                <span v-text="message"></span>
                 <small>
 
                     جمع :
