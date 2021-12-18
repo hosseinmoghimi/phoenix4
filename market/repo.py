@@ -745,11 +745,24 @@ class OrderRepo:
 
 
 class GuaranteeRepo():
-    def __init__(self,user=None):
-        self.user=user
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile = ProfileRepo(user=self.user).me
         self.objects=Guarantee.objects
-        self.profile=ProfileRepo(user=user).me
-        
+    
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'order_line_id' in kwargs:
+            objects=objects.filter(orderline_id=kwargs['order_line_id'])
+        if 'orderline_id' in kwargs:
+            objects=objects.filter(orderline_id=kwargs['orderline_id'])
+        return objects
     def guarantee(self,*args, **kwargs):
         pk = 0
         if 'guarantee_id' in kwargs:
@@ -760,6 +773,28 @@ class GuaranteeRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_guarantee(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_guarantee"):
+            return
+
+        guarantee=Guarantee()
+        if 'order_line_id' in kwargs:
+            guarantee.orderline_id=kwargs['order_line_id']
+        if 'orderline_id' in kwargs:
+            guarantee.orderline_id=kwargs['orderline_id']
+        if 'orderline' in kwargs:
+            guarantee.orderline=kwargs['orderline']
+        if 'serial_no' in kwargs:
+            guarantee.serial_no=kwargs['serial_no']
+        if 'barcode' in kwargs:
+            guarantee.barcode=kwargs['barcode']
+        if 'start_date' in kwargs:
+            guarantee.start_date=kwargs['start_date']
+        if 'end_date' in kwargs:
+            guarantee.end_date=kwargs['end_date']
+        guarantee.save()
+
+        return guarantee
 
 class EmployeeRepo():
     def __init__(self, *args, **kwargs):

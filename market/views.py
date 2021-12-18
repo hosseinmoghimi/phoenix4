@@ -12,7 +12,7 @@ from django.views import View
 from utility.persian import PersianCalendar
 
 from market.forms import *
-from market.serializers import (CartLineSerializer, CartSerializer,
+from market.serializers import (CartLineSerializer, CartSerializer, GuaranteeSerializer,
                                 MenuLineSerializer, MenuSerializer,
                                 OrderLineSerializer,
                                 ProductSpecificationSerializer, ShopSerializer)
@@ -762,6 +762,9 @@ class OrderViews(View):
         context['header_image'] = PictureRepo(request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_LINE_HEADER)
         if request.user.has_perm(APP_NAME+".add_guarantee"):
             context['add_guarantee_form']=AddGuaranteeForm()
+        guarantees=GuaranteeRepo(request=request).list(order_line_id=order_line.id)
+        guarantees_s=json.dumps(GuaranteeSerializer(guarantees,many=True).data)
+        context['guarantees_s']=guarantees_s
         return render(request, TEMPLATE_ROOT+"order-line.html", context)
 
 

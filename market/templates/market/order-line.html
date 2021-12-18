@@ -87,7 +87,7 @@
                         </h4>
 
                         <div class="media">
-                            <img src="{{order_line.product.thumbnail}}" width="128" height="128" class="rounded" alt="">
+                            <img src="{{order_line.product.thumbnail}}" width="256" height="256" class="rounded" alt="">
                             <div class="media-body">
                                 <a href="{{order_line.product.get_absolute_url}}">
                                     <h4>{{order_line.product.title}}</h4>
@@ -96,6 +96,9 @@
                         </div>
 
 
+
+                    </div>
+                    <div class="col-md-12">
                         {% include "market/includes/order-line-app/template.html" %}
 
                     </div>

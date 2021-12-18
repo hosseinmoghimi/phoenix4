@@ -7,7 +7,8 @@
 
 <script>
     let url_add_guarantee = "{% url 'market:add_guarantee' %}"
-    let order_line_id=parseInt("{{order_line.id}}")
+    let guarantees = JSON.parse("{{guarantees_s|escapejs}}")
+    let order_line_id = parseInt("{{order_line.id}}")
     // let category_id=parseInt("{{category_id}}")
     let order_line_app = new Vue({
         el: "#order-line-app",
@@ -18,33 +19,37 @@
             waiting: false,
             barcode: "qq",
             serial_no: "zz",
+            guarantees: guarantees,
         },
         components: {
             DatePicker: VuePersianDatetimePicker
         },
         methods: {
+            to_price: function (val, curr) {
+                return to_price(val, curr)
+            },
             add_guarantee: function () {
-                add_list_app.waiting = true
+                order_line_app.waiting = true
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    order_line_id:order_line_id,
-                    start_date:this.start_date,
-                    end_date:this.end_date,
-                    description:this.description,
-                    barcode:this.barcode,
-                    serial_no:this.serial_no,
+                    order_line_id: order_line_id,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+                    description: this.description,
+                    barcode: this.barcode,
+                    serial_no: this.serial_no,
                 }
+                console.log(payload)
 
                 let posting = $.post(url_add_guarantee, payload)
                 posting.done((data) => {
-                    add_list_app.waiting = false
-
+                    order_line_app.waiting = false
+                    console.log(data)
                     if (data.result === 'SUCCEED') {
-                        add_list_app.new_product_title = ""
-                        add_list_app.can_add_category = false
-                            
-                            show_list_app.products.push(data.product)
+                        order_line_app.barcode = ""
+                        order_line_app.serial_no = ""
 
+                        order_line_app.guarantees.push(data.guarantee)
                     }
                 })
             },
