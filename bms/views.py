@@ -65,10 +65,10 @@ class BasicViews(View):
             feeder_repo=FeederRepo(user=user)
             feeder = feeder_repo.feeder(*args, **kwargs)
             if feeder is None:
-                mv=MessageView()
-                mv.header_text="sdddddddddddddd"
-                mv.message_text="dsfds sdf s"
-                return mv
+                mv=MessageView(request=request)
+                mv.header_text="no feeder"
+                mv.message_text="feeder not found"
+                return mv.show()
             (regs,feeder)=feeder_repo.get_state(feeder=feeder)
             context['feeder'] = feeder
             # return JsonResponse(str(a),safe=False)

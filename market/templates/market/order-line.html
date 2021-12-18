@@ -59,7 +59,15 @@
                         {% endif %}
 
 
-
+<h5>
+    
+    {{order_line.unit_price|to_price_pure}}
+    *
+    {{order_line.quantity}}
+    {{order_line.unit_name}}
+    =
+    {{order_line.total|to_price}}
+</h5>
 
 
 

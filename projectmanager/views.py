@@ -552,7 +552,7 @@ class OrganizationUnitViews(View):
     def employer(self, request, *args, **kwargs):
         employer = EmployerRepo(request=request).employer(*args, **kwargs)
         if employer is None:
-            mv = MessageView()
+            mv = MessageView(request=request)
             mv.message_text = "اطلاعات ناصحیح"
             mv.header_text = "خطای 452"
             return mv.response(request=request)
@@ -738,7 +738,7 @@ class MaterialRequestViews(View):
         # print("me_employee")
         # print(me_employee)
         if material_request is None:
-            mv = MessageView()
+            mv = MessageView(request=request)
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -747,13 +747,13 @@ class MaterialRequestViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.response(request=request, app_name=APP_NAME, *args, **kwargs)
+            return mv.response( app_name=APP_NAME, *args, **kwargs)
         if request.user.has_perm(APP_NAME+".view_materialrequest"):
             pass
         elif me_employee is not None and material_request.project.id in my_project_ids:
             pass
         else:
-            mv = MessageView()
+            mv = MessageView(request=request,)
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -762,7 +762,7 @@ class MaterialRequestViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.response(request=request, app_name=APP_NAME, *args, **kwargs)
+            return mv.response( app_name=APP_NAME, *args, **kwargs)
 
         context = getContext(request)
         context['material_request'] = material_request
@@ -791,7 +791,7 @@ class MaterialRequestViews(View):
             material_requests = MaterialRequestRepo(request=request).material_requests(
                 employee_id=me_employee.id, *args, **kwargs)
         else:
-            mv = MessageView()
+            mv = MessageView(request=request)
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -800,7 +800,7 @@ class MaterialRequestViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.response(request=request, app_name=APP_NAME, *args, **kwargs)
+            return mv.response(app_name=APP_NAME, *args, **kwargs)
 
         context = getContext(request)
         context['material_requests'] = material_requests
@@ -817,7 +817,7 @@ class ServiceRequestViews(View):
         service_request = ServiceRequestRepo(
             request=request).service_request(*args, **kwargs)
         if service_request is None:
-            mv = MessageView()
+            mv = MessageView(request=request,)
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -826,7 +826,7 @@ class ServiceRequestViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.response(request=request, app_name=APP_NAME, *args, **kwargs)
+            return mv.response( app_name=APP_NAME, *args, **kwargs)
 
         context = getContext(request)
 
@@ -835,7 +835,7 @@ class ServiceRequestViews(View):
         elif me_employee is not None and service_request.project.id in me_employee.my_project_ids():
             pass
         else:
-            mv = MessageView()
+            mv = MessageView(request=request,)
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -844,7 +844,7 @@ class ServiceRequestViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.show(request=request, app_name=APP_NAME)
+            return mv.show( app_name=APP_NAME)
         context['service_request'] = service_request
         context['signature_statuses'] = (i[0]
                                          for i in SignatureStatusEnum.choices)
@@ -860,7 +860,7 @@ class ServiceRequestViews(View):
             service_requests = ServiceRequestRepo(request=request).service_requests(
                 employee_id=me_employee.id, *args, **kwargs)
         else:
-            mv = MessageView()
+            mv = MessageView(request=request, )
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -869,7 +869,7 @@ class ServiceRequestViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.response(request=request, app_name=APP_NAME, *args, **kwargs)
+            return mv.response(app_name=APP_NAME, *args, **kwargs)
         context = getContext(request)
         context['service_requests'] = service_requests
         context['service_requests_s'] = json.dumps(

@@ -238,7 +238,7 @@ class PageViews(View):
 
         # if self.access(request=request,*args, **kwargs) and document is not None:
         #     return document.download_response()
-        message_view = MessageView()
+        message_view = MessageView(request=request)
         message_view.links = []
         message_view.links.append(Link(title='تلاش مجدد', color="warning",
                                   icon_material="apartment", url=document.get_download_url()))

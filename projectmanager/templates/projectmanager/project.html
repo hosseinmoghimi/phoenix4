@@ -38,6 +38,11 @@
                         <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
                             <i class="fa fa-edit text-info"></i>
                         </a>
+                        {% endif %}   
+                         {% if perms.projectmanager.delete_project %}
+                        <a title="حذف" target="_blank" href="{{project.get_delete_url}}">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
                         {% endif %}
                     </h5>
                     <p>

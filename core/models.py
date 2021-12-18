@@ -280,7 +280,8 @@ class BasicPage(models.Model):
                 return self.parent.thumbnail()
         return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.png'
 
-
+    def get_delete_url(self):
+        return f"{ADMIN_URL}{self.app_name}/{self.class_name}/{self.pk}/delete/"
 
     def class_name_farsi(self):
         t=""
