@@ -331,7 +331,7 @@ class OrderLine(models.Model):
         return f"{str(self.order)} : {self.product.title} : {self.quantity} {self.unit_name} {to_price(self.unit_price)}ی/ {to_price(self.unit_price*self.quantity)}"
 
     def get_absolute_url(self):
-        if self.pk is not None:
+        if self is not None and self.pk is not None:
             return reverse(APP_NAME+":order_line", kwargs={"pk": self.pk})
 
 
