@@ -555,7 +555,7 @@ class OrganizationUnitViews(View):
             mv = MessageView(request=request)
             mv.message_text = "اطلاعات ناصحیح"
             mv.header_text = "خطای 452"
-            return mv.response(request=request)
+            return mv.response()
         context = getContext(request)
         context['employer'] = employer
         if request.user.has_perms(APP_NAME+".add_organizationunit"):

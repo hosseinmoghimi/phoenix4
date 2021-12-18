@@ -250,7 +250,7 @@ class PageViews(View):
         message_view.message_text = 'مجوز شما برای دسترسی به این صفحه مجاز نمی باشد.'
         message_view.header_text = 'دسترسی غیر مجاز'
 
-        return message_view.response(request)
+        return message_view.response()
 
     def access(self, request, *args, **kwargs):
         document = DocumentRepo(request=request).document(*args, **kwargs)
