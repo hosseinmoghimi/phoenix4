@@ -18,6 +18,9 @@
         <th>
 
         </th>
+        <th>
+
+        </th>
       </thead>
       <tbody>
 
@@ -39,6 +42,13 @@
           <td>
             <a :href="guarantee.get_absolute_url">
               <img :src="guarantee.get_qrcode_url" width="128" height="128" alt="">
+            </a>
+          </td>
+          <td>
+            <a :href="guarantee.get_print_url">
+              <i class="material-icons">
+                print
+              </i>
             </a>
           </td>
         </tr>

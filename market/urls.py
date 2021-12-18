@@ -11,6 +11,7 @@ urlpatterns = [
     path('search/',views.BasicViews().search,name="search"),
     path("product/<int:pk>/",views.ProductViews().product,name="product"),
     path("order_line/<int:pk>/",views.OrderViews().order_line,name="order_line"),
+    path("guarantee_print/<int:pk>/",views.GuaranteeView().guarantee_print,name="guarantee_print"),
     path("financial_report/<int:pk>/",views.OrderViews().financial_report,name="financial_report"),
     path("category/<int:pk>/",views.CategoryViews().category,name="category"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),

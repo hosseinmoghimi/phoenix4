@@ -330,7 +330,7 @@ class ProjectViews(View):
         project = ProjectRepo(request=request).project(*args, **kwargs)
 
         if project is None:
-            mv = MessageView()
+            mv = MessageView(request=request)
             mv.header_text = "خطای 404"
             mv.message_html = f"""
             <p class="text-center">
@@ -339,7 +339,7 @@ class ProjectViews(View):
             """
             mv.message_text = f"""
             """
-            return mv.response(request=request, app_name=APP_NAME, *args, **kwargs)
+            return mv.response(app_name=APP_NAME, *args, **kwargs)
         page = project
         context = getContext(request)
         context.update(PageContext(request=request, page=page))

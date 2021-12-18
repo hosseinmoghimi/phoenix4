@@ -523,6 +523,9 @@ class Guarantee(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":guarantee", kwargs={"pk": self.pk})
 
+    def get_print_url(self):
+        return reverse(APP_NAME+":guarantee_print", kwargs={"pk": self.pk})
+
 
 class Brand(models.Model):
     prefix=models.CharField(_("پیش تعریف"), max_length=200,default='',null=True,blank=True)

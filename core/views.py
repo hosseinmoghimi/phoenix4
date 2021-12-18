@@ -174,12 +174,12 @@ class MessageView(View):
     def response(self, *args, **kwargs):
         if 'request' in kwargs:
             self.request = kwargs['request']
-        return self.show(request=self.request)
+        return self.show()
 
     def show(self, *args, **kwargs):
         if 'request' in kwargs:
             self.request = kwargs['request']
-        context = CoreContext(request, *args, **kwargs)
+        context = CoreContext(request=self.request, *args, **kwargs)
         if self.header_text is None:
             self.header_text = 'خطا'
         if self.message_text is None:
@@ -202,7 +202,7 @@ class MessageView(View):
         context['message_html'] = self.message_html
 
         context['search_form'] = None
-        return render(request, TEMPLATE_ROOT+'error.html', context)
+        return render(self.request, TEMPLATE_ROOT+'error.html', context)
 
 
 class BasicViews(View):

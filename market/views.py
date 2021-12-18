@@ -474,8 +474,11 @@ class GuaranteeView(View):
         guarantee = GuaranteeRepo(request=request).guarantee(*args, **kwargs)
         context['guarantee'] = guarantee
         return render(request, TEMPLATE_ROOT+'guarantee.html', context)
-
-
+    def guarantee_print(self,request,*args, **kwargs):
+        context = getContext(request)
+        guarantee = GuaranteeRepo(request=request).guarantee(*args, **kwargs)
+        context['guarantee'] = guarantee
+        return render(request, TEMPLATE_ROOT+'guarantee-print.html', context)
 class SupplierViews(View):
     def supplier(self, request, *args, **kwargs):
 
