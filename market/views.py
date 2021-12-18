@@ -778,6 +778,13 @@ class OrderViews(View):
         context['header_image'] = PictureRepo(request=request, app_name=APP_NAME).picture(name=PictureEnum.ORDER_LINE_HEADER)
         return render(request, TEMPLATE_ROOT+"order-lines.html", context)
 
+    def order_line_print(self,request,*args, **kwargs):
+        context = getContext(request)
+        order_line = OrderRepo(request=request).order_line(*args, **kwargs)
+        guarantees = order_line.guarantee_set.all()
+        context['guarantees'] = guarantees
+        context['order_line'] = order_line
+        return render(request, TEMPLATE_ROOT+'order-line-print.html', context)
 
 class OfferViews(View):
     def offer(self, request, *args, **kwargs):

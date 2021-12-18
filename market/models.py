@@ -216,6 +216,26 @@ class Desk(Customer):
         </a>
         """
 
+    def get_qrcode_url(self):
+        self.generate_qrcode()
+        file_name=self.class_name+str(self.pk)+".svg"       
+        return f"{QRCODE_URL}{file_name}"
+
+    def generate_qrcode(self):
+        if self.pk is None:
+            super(Guarantee,self).save()
+        import os
+        file_path = QRCODE_ROOT
+        file_name=self.class_name+str(self.pk)+".svg"
+        # file_address=os.path.join(file_path,file_name)
+        file_address=os.path.join(QRCODE_ROOT,file_name)
+   
+        content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        print(content)
+        print(file_address)
+        print(file_name)
+        print(file_path)
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
 
 class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
@@ -317,6 +337,8 @@ class OrderLine(models.Model):
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/orderline/{self.pk}/change/"
 
+    def get_print_url(self):
+        return reverse(APP_NAME+":order_line_print", kwargs={"pk": self.pk})
 
 class CartLine(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
@@ -493,7 +515,7 @@ class Guarantee(models.Model):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/guarantee/{self.pk}/change/'
     def get_qrcode_url(self):
-        
+        self.generate_qrcode()
         file_name=self.class_name+str(self.pk)+".svg"       
         return f"{QRCODE_URL}{file_name}"
 
@@ -507,6 +529,10 @@ class Guarantee(models.Model):
         file_address=os.path.join(QRCODE_ROOT,file_name)
    
         content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        print(content)
+        print(file_address)
+        print(file_name)
+        print(file_path)
         generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
     def save(self):
 

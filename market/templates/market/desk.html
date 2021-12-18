@@ -35,6 +35,9 @@
                         <a href="{{menu.get_absolute_url}}" class="mx-2 my-2 btn btn-{{menu.color}}">{{menu.title}}</a>
                         {% endfor %}
                     </div>
+                    <div>
+                        <img src="{{desk.get_qrcode_url}}" width="256" height="256" alt="">
+                    </div>
                     {% include "core/includes/page-like-app/template.html" %}
                     <div id="accordion" role="tablist">
                         {% if supplier.short_description %}

@@ -32,16 +32,18 @@
 
                 <div id="order-header" class="row rtl text-right mb-5 farsi">
                     <div class="col-md-4">
-                        <h5 class="card-title farsi text-right">
-                            <a href="{{order_line.order.get_absolute_url}}">
+                        <a href="{{order_line.order.get_absolute_url}}">
+                            <h4>
+
                                 سفارش شماره {{order_line.order.id}}
 
 
-                            </a>
-                            {{order_line.order.get_status_tag|safe}}
+                            </h4>
+                        </a>
+
+                        {{order_line.order.get_status_tag|safe}}
 
 
-                        </h5>
 
                         <h3 class="card-title farsi text-right">
                             ریز سفارش شماره {{order_line.id}}
@@ -49,27 +51,35 @@
 
                         </h3>
                         {% if perms.core.change_orderline %}
-                        <h3 class="card-title farsi text-right">
+                        <div>
+
                             <a target="_blank" title="ویرایش" class="mx-2" href="{{order_line.get_edit_url}}">
-                                <i class="material-icons">
-                                    settings
+                                <i class="fa fa-edit text-warning">
+
                                 </i>
                             </a>
-                        </h3>
+                            <a target="_blank" title="چاپ" href="{{order_line.get_print_url}}">
+
+                                <i class="material-icons text-info">
+                                    print
+                                </i>
+                            </a>
+
+                        </div>
                         {% endif %}
 
 
-<h5>
-    
-    {{order_line.unit_price|to_price_pure}}
-    *
-    {{order_line.quantity}}
-    {{order_line.unit_name}}
-    =
-    {{order_line.total|to_price}}
-</h5>
+                        <div>
 
+                            {{order_line.unit_price|to_price_pure}}
+                            *
+                            {{order_line.quantity}}
+                            {{order_line.unit_name}}
+                            =
+                            {{order_line.total|to_price}}
+                        </div>
 
+                      
 
 
                         {% if order_line.description %}
@@ -90,16 +100,17 @@
 
                     </div>
                     <div class="col-md-8">
-                        <h4>
 
-                        </h4>
 
                         <div class="media">
                             <img src="{{order_line.product.thumbnail}}" width="256" height="256" class="rounded" alt="">
                             <div class="media-body">
-                                <a target="_blank" title="چاپ" href="{{order_line.product.get_absolute_url}}">
-                                    <h4>{{order_line.product.title}}</h4>
-                                </a>
+                                <h4>
+                                    <a target="_blank" title="چاپ" href="{{order_line.product.get_absolute_url}}">
+                                        {{order_line.product.title}}
+                                    </a>
+
+                                </h4>
                             </div>
                         </div>
 

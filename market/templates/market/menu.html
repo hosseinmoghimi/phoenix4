@@ -6,24 +6,19 @@
 <div class="row">
     <div class="col-6">
 
-        <h5 class="text-secondary">
-            <i class="material-icons text-muted">
-                ballot
-            </i>
-            منو
-        </h5>
-        <h2 class="title">{{menu.title}}
-            {% if perms.market.change_menu %}
-            {{menu.get_edit_btn|safe}}
-            {% endif %}
-        </h2>
-
+  
         <h4 class="main-price">
             <a href="{{supplier.get_absolute_url}}">
 
                 {{menu.supplier}}
             </a>
         </h4>
+        <h2 class="title">{{menu.title}}
+            {% if perms.market.change_menu %}
+            {{menu.get_edit_btn|safe}}
+            {% endif %}
+        </h2>
+
 
 
     </div>

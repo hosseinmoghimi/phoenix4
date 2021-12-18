@@ -25,14 +25,17 @@
 
     <div class="container rtl mt-5">
         <div class="row">
-            <div class="col-md-6">
+            {% for guarantee in guarantees %}
+               <div class="col-md-6">
                 <div class="card rtl">
 
-                    {% include "market/includes/order-line-app/guarantee-card.html" %}
 
+                 {% include "market/includes/order-line-app/guarantee-card.html" %}
                 </div>
 
             </div>
+            {% endfor %}
+           
         </div>
 
 
