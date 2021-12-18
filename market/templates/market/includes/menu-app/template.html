@@ -2,12 +2,12 @@
 <div id="menu-app">
     <div class="farsi text-right">
         <div class="mx-3">
-       
+
             <h4 class="text-left my-4">
                 <small class="text-muted">
                     جمع کل :
                 </small>
-                  <span v-text="to_price(total,'')"></span>
+                <span v-text="to_price(total,'')"></span>
                 <small>
                     {{CURRENCY}}
                 </small>
@@ -16,9 +16,12 @@
         <template v-for="menu_line in menu_lines">
             <menu-line-component :menu_line="menu_line"></menu-line-component>
         </template>
+        <div>
+            <span v-text="message"></span>
+
+        </div>
         <div class="farsi text-right">
-            <button @click="save_cart()"  v-if="!save_done"  class="btn btn-outline-info">
-                <span v-text="message"></span>
+            <button @click="save_cart()" v-if="!save_done" class="btn btn-outline-info">
                 <small>
 
                     جمع :
@@ -43,7 +46,7 @@
 
                 <small>
 
-                    تایید می شود    
+                    تایید می شود
                 </small>
             </button>
         </div>
@@ -65,5 +68,6 @@
                 </small>
             </button>
         </form>
-        <span v-if="save_done" @click="save_done=false" class="small text-secondary" style="cursor: pointer;">انصراف</span>
+        <span v-if="save_done" @click="save_done=false" class="small text-secondary"
+            style="cursor: pointer;">انصراف</span>
     </div>
