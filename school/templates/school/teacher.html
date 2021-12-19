@@ -9,7 +9,7 @@
     <div>
         <h4>
 
-            <a href="{{teacher.get_absolute_url}}">
+            <a href="{{teacher.profile.get_absolute_url}}">
                 {{teacher.profile.name}}
             </a>
             {% if perms.school.change_teacher %}

@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-9">
+        <select type="text" v-model="profile_id" id="" class="form-control farsi">
+            {% for profile in profiles %}
+            <option value="{{profile.id}}">{{profile.name}}</option>
+            {% endfor %}
+        </select>
+        <input type="number" class="form-control" required placeholder="شناسه پروفایل" v-model="profile_id" id="">
+    </div>
+    <div class="col-3">
+
+        <button class="btn btn-success btn-sm" type="submit">
+
+            <span class="material-icons">
+                add
+            </span>
+        </button>
+    </div>
+</div>

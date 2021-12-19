@@ -22,4 +22,15 @@
 
     </div>
   </div>
+
+  
+
+  {% if add_student_form %}
+  <div class="card-footer">
+    <form @submit.prevent="add_student()">
+      {% include "authentication/includes/profiles-app/select-profile-form.html" %}
+    </form>
+  </div>
+{% endif %}
+
 </div> 

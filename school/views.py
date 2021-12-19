@@ -1,4 +1,5 @@
 from django.shortcuts import render,reverse
+from authentication.repo import ProfileRepo
 from core.views import CoreContext,ParametersEnum,ParameterRepo
 from school.repo import ActiveCourseRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
 from school.serializers import MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, StudentSerializer, TeacherSerializer
@@ -164,6 +165,10 @@ class StudentViews(View):
         students=StudentRepo(request=request).list(*args, **kwargs)
         context['students']=students
         context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_teacher"):
+            context['add_student_form']=AddStudentForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"students.html",context)
 
 
@@ -198,6 +203,10 @@ class TeacherViews(View):
         teachers=TeacherRepo(request=request).list(*args, **kwargs)
         context['teachers']=teachers
         context['teachers_s']=json.dumps(TeacherSerializer(teachers,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_teacher"):
+            context['add_teacher_form']=AddTeacherForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"teachers.html",context)
 
 

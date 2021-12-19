@@ -258,14 +258,25 @@ class TeacherRepo():
         return objects
     def teacher(self,*args, **kwargs):
         if 'teacher_id' in kwargs:
-            pk=kwargs['teacher_id']
-        elif 'pk' in kwargs:
-            pk=kwargs['pk']
-        elif 'id' in kwargs:
-            pk=kwargs['id']
-        return self.objects.filter(pk=pk).first()
+            return self.objects.filter(pk=kwargs['teacher_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+        if 'profile_id' in kwargs:
+            return self.objects.filter(pk=kwargs['profile_id']).first()
 
 
+    def add_teacher(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_teacher"):
+            return
+
+        teacher=self.teacher(*args, **kwargs)
+        if teacher is None:
+            teacher=Teacher()
+            teacher.profile_id=kwargs['profile_id']
+            teacher.save()
+            return teacher
 
 
     
@@ -288,6 +299,8 @@ class StudentRepo():
             objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
         return objects
     def student(self,*args, **kwargs):
+        if 'profile_id' in kwargs:
+            return self.objects.filter(profile_id=kwargs['profile_id']).first()
         if 'student_id' in kwargs:
             pk=kwargs['student_id']
         elif 'pk' in kwargs:
@@ -295,3 +308,17 @@ class StudentRepo():
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+    
+
+    def add_student(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_student"):
+            return
+
+        student=self.student(*args, **kwargs)
+        if student is None:
+            student=Student()
+            student.profile_id=kwargs['profile_id']
+            student.save()
+            return student
+
