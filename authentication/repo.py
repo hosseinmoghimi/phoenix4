@@ -102,6 +102,7 @@ class ProfileRepo():
         logout(request=request)
 
     def login(self,request,username,password):
+        logout()
         user=authenticate(request=request,username=username,password=password)
         if user is not None:
             login(request,user)
