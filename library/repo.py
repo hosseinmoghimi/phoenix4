@@ -100,6 +100,9 @@ class MemberRepo():
         self.objects=Member.objects.all()
     def member(self, *args, **kwargs):
         
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+            return self.objects.filter(profile_id=profile_id).first()
         if 'member_id' in kwargs:
             pk=kwargs['member_id']
         elif 'pk' in kwargs:
@@ -125,10 +128,14 @@ class MemberRepo():
     def add_member(self, *args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_member"):
             return 
-
+        member=self.member(*args, **kwargs)
+        if member is not None:
+            return
         member=Member()
         if 'profile_id' in kwargs:
             member.profile_id=kwargs['profile_id']
+        if 'level' in kwargs:
+            member.level=kwargs['level']
 
         if 'membership_started' in kwargs:
             member.membership_started=kwargs['membership_started']
@@ -138,14 +145,20 @@ class MemberRepo():
         if 'membership_ended' in kwargs:
             member.membership_ended=kwargs['membership_ended']
         else:
-            member.membership_ended=timezone.now()
-        # if 'description' in kwargs:
-        #     member.description=kwargs['description']
+            # from datetime import timedelta
+            # member.membership_ended=(timezone.now()+timedelta(years=1))
+            
+            # from datetime import timedelta
+            from dateutil.relativedelta import relativedelta
+            member.membership_ended=(timezone.now()+relativedelta(years=1))
+        if 'description' in kwargs:
+            member.description=kwargs['description']
         member.save()
         return member
 
 
 class LendRepo():
+    
     def __init__(self, *args, **kwargs):
         self.request = None
         self.user = None
@@ -157,6 +170,7 @@ class LendRepo():
         
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=Lend.objects.all()
+    
     def lend(self, *args, **kwargs):
         
         if 'lend_id' in kwargs:

@@ -14,7 +14,7 @@ class MemberSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:
         model=Member
-        fields=['id','profile','persian_membership_ended','persian_membership_started','get_edit_url','get_absolute_url']
+        fields=['id','profile','level','color','persian_membership_ended','persian_membership_started','get_edit_url','get_absolute_url']
 
 
 class LendSerializer(serializers.ModelSerializer):

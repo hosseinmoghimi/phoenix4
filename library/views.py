@@ -6,6 +6,7 @@ from authentication.repo import ProfileRepo
 from core.enums import ParametersEnum
 
 from core.repo import ParameterRepo
+from library.enums import MemberShipLevelEnum
 from .serializers import BookSerializer, LendSerializer, MemberSerializer
 from .apps import APP_NAME
 from django.shortcuts import render,reverse,redirect
@@ -88,6 +89,10 @@ class MemberViews(View):
         context['members']=members
         members_s=json.dumps(MemberSerializer(members,many=True).data)
         context['members_s']=members_s
+        if request.user.has_perm(APP_NAME+".add_member"):
+            context['add_member_form']=AddMemberForm()
+            context['profiles']=ProfileRepo(request=request).list()
+            context['levels']=(i[0] for i in MemberShipLevelEnum.choices)
         return render(request,TEMPLATE_ROOT+"members.html",context)
 
 

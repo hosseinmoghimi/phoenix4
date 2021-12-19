@@ -16,6 +16,11 @@
                 <a :href="member.get_absolute_url">
                     <span v-text="member.profile.name"></span>
                 </a>
+                <span :class="'badge badge-'+member.color">
+
+                    <span v-text="member.level"></span>
+                </span>
+
             </td>
             <td>
                 <span class="small text-muted">
@@ -23,10 +28,12 @@
                 </span>
                 ~
                 <span class="small text-muted">
-                    <span v-text="member.persian_membership_started"></span>
+                    <span v-text="member.persian_membership_ended"></span>
                 </span>
             </td>
             <td>
+
+
                 {% if perms.library.change_member %}
                 <a :href="member.get_edit_url" title="ویرایش" target="_blank">
                     <i class="material-icons">

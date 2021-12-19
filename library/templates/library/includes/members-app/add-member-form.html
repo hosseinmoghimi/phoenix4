@@ -1,4 +1,4 @@
-{% if add_book_form %}
+{% if add_member_form %}
 
 <form @submit.prevent="add_member()">
 
@@ -16,6 +16,21 @@
                 </select>
             </div>
         </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="title_input">نوع عضویت</label>
+                <select class="form-control" v-model="level" id="">
+                    {% for level in levels %}
+                    <option value="{{level}}">{{level}}</option>
+
+                    {% endfor %}
+
+                </select>
+            </div>
+        </div>
+
 
 
 

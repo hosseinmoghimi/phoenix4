@@ -59,8 +59,10 @@ class MemberApi(APIView):
                 log = 3 
                 profile_id = add_member_form.cleaned_data['profile_id']
                 description = add_member_form.cleaned_data['description'] 
+                level = add_member_form.cleaned_data['level'] 
                 member = MemberRepo(request=request).add_member(
                     profile_id=profile_id,
+                    level=level,
                     description=description,
                 )
 

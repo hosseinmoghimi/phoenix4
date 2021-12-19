@@ -8,15 +8,14 @@
         </h4>
     </div>
     <div class="card-body">
+        <input type="text" placeholder="جستجو ..." v-model="search_for" @input="filter" class="form-control">
         {% include "library/includes/members-app/table.html" %}
 
 
     </div>
     <div class="card-footer">
-
         {% if add_member_form %}
         {% include "library/includes/members-app/add-member-form.html" %}
-
         {% endif %}
     </div>
 </div>
