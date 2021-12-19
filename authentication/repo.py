@@ -119,6 +119,7 @@ class ProfileRepo():
         user=User.objects.filter(username=username).first()
         if user is None:
             return None
+        logout()
         login(request=self.request,user=user,backend='django.contrib.auth.backends.ModelBackend')
         return self.request
         
