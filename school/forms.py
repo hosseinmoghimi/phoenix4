@@ -13,3 +13,5 @@ class AddTeacherForm(forms.Form):
     profile_id=forms.IntegerField( required=True)
 class AddStudentForm(forms.Form):
     profile_id=forms.IntegerField( required=True)
+class AddSessionForm(forms.Form):
+    active_course_id=forms.IntegerField( required=True)

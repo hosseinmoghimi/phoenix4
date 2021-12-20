@@ -29,6 +29,7 @@ urlpatterns = [
     path("book/<int:pk>/",views.BookViews().book,name="book"),
     
     path("session/<int:pk>/",views.SessionViews().session,name="session"),
+    path("add_session/",apis.SessionApi().add_session,name="add_session"),
     
     path("classrooms/",views.ClassRoomViews().classrooms,name="classrooms"),
     path("classroom/<int:pk>/",views.ClassRoomViews().classroom,name="classroom"),

@@ -210,7 +210,7 @@ class CourseRepo():
 
 
 
-
+from django.utils import timezone
 
 class SessionRepo():
     def __init__(self,*args, **kwargs):
@@ -234,6 +234,46 @@ class SessionRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_session(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_session"):
+            return
+        session=Session()
+        if 'active_course_id' in kwargs:
+
+            active_course_id=kwargs['active_course_id']
+        else:
+            return
+        active_course=ActiveCourse.objects.filter(pk=active_course_id).first()
+        if active_course is None:
+            return
+
+        session_no=1
+        session.active_course_id=active_course_id
+        if 'session_no' in kwargs:
+            session_no=kwargs['session_no']
+        else:
+            session_1=Session.objects.filter(active_course_id=active_course_id).order_by('-session_no').first()
+            if session_1 is not None:
+                session_no=1+session_1.session_no
+
+        session.session_no=session_no
+        if 'title' in kwargs:
+            session.title=kwargs['title']
+        else:
+            session.title="جلسه "+str(session_no)+" "+active_course.course.title
+        
+        if 'start_time' in kwargs:
+            session.start_time=kwargs['start_time']
+        else:
+            session.start_time=timezone.now()
+        
+        if 'end_time' in kwargs:
+            session.end_time=kwargs['end_time']
+        else:
+            session.end_time=timezone.now()
+
+        session.save()
+        return session
 
 
 

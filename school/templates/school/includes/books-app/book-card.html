@@ -2,64 +2,62 @@
     <div class="card-header">
         <h5>
             <small class="text-muted">
-                <i class="fa fa-book">
-
-                </i>
+                <i class="fa fa-book"></i>
                 کتاب
             </small>
             <a href="{{book.get_absolute_url}}">
                 {{book.title}}
             </a>
             {% if perms.school.change_book %}
-            {{book.get_edit_btn|safe}}
-
+            <a title="ویرایش" target="_blank" href="{{book.get_edit_url}}">
+                <i class="fa fa-edit"></i>
+            </a>
             {% endif %}
+
+            {% if perms.core.delete_book %}
+            <a title="حذف" target="_blank" href="{{book.get_delete_url}}">
+                <i class="fa fa-trash text-danger"></i>
+            </a>
+            {% endif %}
+
         </h5>
     </div>
     <div class="card-body">
-
-
-
         <div class="farsi text-right">
             {% for document in book.documents.all %}
-
             <div class="mb-2">
                 <a target="_blank" href="{{document.get_download_url}}">
                     <span class="ml-3">{{document.get_icon_tag|safe}}</span>{{document.title}}
                 </a>
                 {% if perms.core.change_document %}
-                {{document.get_edit_btn|safe}}
+                <a title="ویرایش" target="_blank" href="{{document.get_edit_url}}">
+                    <i class="fa fa-edit text-info"></i>
+                </a>
+                {% endif %}
 
+                {% if perms.core.delete_document %}
+                <a title="حذف" target="_blank" href="{{document.get_delete_url}}">
+                    <i class="fa fa-trash text-danger"></i>
+                </a>
                 {% endif %}
 
             </div>
             {% endfor %}
         </div>
-       
-
-
-
-
     </div>
     <div class="card-footer">
-         {% for course in book.course_set.all %}
+        {% for course in book.course_set.all %}
         <h6>
             <small class="text-muted">
-
                 واحد درسی
             </small>
-
             <a href="{{course.get_absolute_url}}">
-
                 {{course.title}}
             </a>
             {% if perms.school.change_course %}
             {{course.get_edit_btn|safe}}
-
             {% endif %}
         </h6>
-
-
         {% endfor %}
     </div>
 </div>

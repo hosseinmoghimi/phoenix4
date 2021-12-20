@@ -1,7 +1,7 @@
 from django.http.response import JsonResponse
 from school.forms import *
-from school.repo import ClassRoomRepo, MajorRepo, SchoolRepo, StudentRepo, TeacherRepo
-from school.serializers import ClassRoomSerializer, MajorSerializer, SchoolSerializer, StudentSerializer, TeacherSerializer
+from school.repo import ClassRoomRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.serializers import ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -22,6 +22,24 @@ class SchoolApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+class SessionApi(APIView):
+    def add_session(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddSessionForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                active_course_id=cd['active_course_id']
+                session=SessionRepo(request=request).add_session(active_course_id=active_course_id)
+                if session is not None:
+                    context['session']=SessionSerializer(session).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
 class TeacherApi(APIView):
     def add_teacher(self,request,*args, **kwargs):
         context={'result':FAILED}

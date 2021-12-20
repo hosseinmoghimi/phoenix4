@@ -2,7 +2,7 @@ from django.db.models import fields
 from .apps import APP_NAME
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
-from .models import Book, ClassRoom, Course, Major, School, Student, Teacher
+from .models import Book, ClassRoom, Course, Major, School, Session, Student, Teacher
 
 class StudentSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
@@ -10,6 +10,11 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields=['id','profile','get_absolute_url','get_edit_url']
 
+
+class SessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Session
+        fields=['id','title','session_no','get_edit_url','get_absolute_url']
 
 
 class TeacherSerializer(serializers.ModelSerializer):

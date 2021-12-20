@@ -167,38 +167,17 @@
 
 
 
-    <div class="col-md-4">
+    <div class="col-md-6">
 
-        <div class="card">
-            <div class="card-body">
-                <h4>
-                    جلسات </h4>
-
-                <div class="mb-3">
-                    {% for session in active_course.session_set.all %}
-                    <h4>
-                        <small class="text-muted">
-                            جلسه شماره
-                            {{session.session_no}}
-                        </small>
-                        -
-                        <a href="{{session.get_absolute_url}}">
-
-                            {{session.title}}
-                        </a>
-                        {% if perms.school.change_session %}
-                        {{session.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </h4>
-                    {% endfor %}
-                </div>
-
-
-            </div>
-        </div>
+        {% include "school/includes/sessions-app/template.html" %}
     </div>
 </div>
 
 </div>
 {% endblock content %}
+
+
+{% block script %}
+{% include "school/includes/sessions-app/script.html" %}
+  
+{% endblock script %}
