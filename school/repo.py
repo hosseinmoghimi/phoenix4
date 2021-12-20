@@ -4,7 +4,7 @@ import school
 from .models import ActiveCourse, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
 from .apps import APP_NAME
 from django.db.models import Q
-
+from django.utils import timezone
 class SchoolRepo():
     
     def __init__(self,*args, **kwargs):
@@ -210,7 +210,6 @@ class CourseRepo():
 
 
 
-from django.utils import timezone
 
 class SessionRepo():
     def __init__(self,*args, **kwargs):
@@ -297,15 +296,15 @@ class TeacherRepo():
             objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
         return objects
     def teacher(self,*args, **kwargs):
+        if 'profile_id' in kwargs:
+            return self.objects.filter(profile_id=kwargs['profile_id']).first()
         if 'teacher_id' in kwargs:
             return self.objects.filter(pk=kwargs['teacher_id']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
-        if 'profile_id' in kwargs:
-            return self.objects.filter(pk=kwargs['profile_id']).first()
-
+         
 
     def add_teacher(self,*args, **kwargs):
         if not self.request.user.has_perm(APP_NAME+".add_teacher"):

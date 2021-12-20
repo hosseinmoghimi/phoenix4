@@ -175,12 +175,19 @@ class CourseViews(View):
         context=getContext(request=request)
         course=CourseRepo(request=request).course(*args, **kwargs)
         context['course']=course
+        context['books']=course.books.all()
         return render(request,TEMPLATE_ROOT+"course.html",context)
 
 
     def active_course(self,request,*args, **kwargs):
         context=getContext(request=request)
         active_course=ActiveCourseRepo(request=request).active_course(*args, **kwargs)
+        context['books']=active_course.course.books.all()
+
+        students=active_course.students.all()
+        context['students']=students
+        context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+
 
         sessions=active_course.session_set.all()
         context['sessions']=sessions

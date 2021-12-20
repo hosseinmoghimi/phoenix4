@@ -10,14 +10,12 @@
         {% include "school/includes/courses-app/course-card.html" %}
 
 
-         
+
     </div>
 
     <div class="col-md-4">
-        {% for book in course.books.all %}
-        {% include "school/includes/books-app/book-card.html" %}
+        {% include "school/includes/books-app/template.html" %}
 
-        {% endfor %}
     </div>
 
 </div>

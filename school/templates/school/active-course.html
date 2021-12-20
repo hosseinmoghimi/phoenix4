@@ -124,42 +124,13 @@
             </div>
         </div>
 
+        {% include "school/includes/students-app/template.html" %}
 
-        <div class="card">
-            <div class="card-header">
-                <h4>
-                    دانش آموزان
-                </h4>
-            </div>
-            <div class="card-body">
-
-
-                <div class="farsi text-right">
-                    {% for student in active_course.students.all %}
-                    <div class="mb-2">
-
-                        <a href="{{student.get_absolute_url}}">
-                            <img src="{{student.profile.image}}" class="rounded-circle" width="32" alt="">
-                            {{student.profile.name}}
-                        </a>
-                        {% if perms.school.change_student %}
-                        {{student.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-
-
-            </div>
-        </div>
-
+        
     </div>
     <div class="col-md-4">
-        {% for book in active_course.course.books.all %}
-        {% include "school/includes/books-app/book-card.html" %}
+        {% include "school/includes/books-app/template.html" %}
 
-        {% endfor %}
     </div>
 
 
@@ -179,5 +150,6 @@
 
 {% block script %}
 {% include "school/includes/sessions-app/script.html" %}
+{% include "school/includes/students-app/script.html" %}
   
 {% endblock script %}

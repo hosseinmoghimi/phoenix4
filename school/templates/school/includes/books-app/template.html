@@ -1,3 +1,33 @@
 <div id="accordion-books">
 
+    <div class="card">
+        <div class="card-header" id="headingBooks">
+
+
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseBooks" aria-expanded="true"
+                    aria-controls="collapseBooks">
+                    کتاب ها
+                </button>
+            </h5>
+
+
+
+        </div>
+
+
+        <div id="collapseBooks" class="collapse" aria-labelledby="headingBooks" data-parent="#accordion-books">
+
+            <div class="card-body farsi text-right">
+
+
+                {% for book in books %}
+                {% include "school/includes/books-app/book-card.html" %}
+
+                {% endfor %}
+
+
+            </div>
+        </div>
     </div>
+</div>
