@@ -190,11 +190,24 @@ class Customer(models.Model):
 
 
 class Desk(Customer):
+    image_header_origin=models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
+                                     'desk/header/', height_field=None, width_field=None, max_length=None)
+    
+    image_origin=models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
+                                     'desk/Main/', height_field=None, width_field=None, max_length=None)
     
     menus=models.ManyToManyField("menu", verbose_name=_("menus"))
     number=models.IntegerField(_("number"))
     class_name='desk'
-
+    app_name=APP_NAME
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+        else:
+            return f'{STATIC_URL}{self.app_name}/img/desk.jpg'
+    def image_header(self):
+        if self.image_header_origin:
+            return MEDIA_URL+str(self.image_header_origin)
     class Meta:
         verbose_name = _("Desk")
         verbose_name_plural = _("Desks")

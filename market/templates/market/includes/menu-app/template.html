@@ -52,22 +52,31 @@
         </div>
         <form v-if="save_done" action="{% url 'market:save_menu' %}" method="POST">
             {% csrf_token %}
-            <div class="form-group">
-                <label class="small"> در صورت داشتن توضیحات کادر زیر را پر کنید.</label>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="small"> توضیحات </label>
 
-                <textarea placeholder="..." rows="2" name="description" type="text" class="form-control">
-                    </textarea>
+                        <textarea placeholder="..." rows="2" name="description" type="text" class="form-control">
+                            </textarea>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="my-2 btn btn-success">
+                        <small>
+                            تایید نهایی سفارش به مبلغ
+                        </small>
+                        <span v-text="to_price(total,'')"></span>
+                        <small>
+                            {{CURRENCY}}
+                        </small>
+                    </button>
+                    <span v-if="save_done" @click="save_done=false" class="small text-secondary"
+                        style="cursor: pointer;">انصراف</span>
+                </div>
             </div>
-            <button type="submit" class="my-2 btn btn-success">
-                <small>
-                    تایید نهایی سفارش به مبلغ
-                </small>
-                <span v-text="to_price(total,'')"></span>
-                <small>
-                    {{CURRENCY}}
-                </small>
-            </button>
+
+
         </form>
-        <span v-if="save_done" @click="save_done=false" class="small text-secondary"
-            style="cursor: pointer;">انصراف</span>
+
     </div>
