@@ -1,7 +1,7 @@
 from django.http.response import JsonResponse
 from school.forms import *
-from school.repo import ClassRoomRepo, MajorRepo, SchoolRepo
-from school.serializers import ClassRoomSerializer, MajorSerializer, SchoolSerializer
+from school.repo import ClassRoomRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.serializers import ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -19,6 +19,58 @@ class SchoolApi(APIView):
                 school=SchoolRepo(request=request).add(title=title)
                 if school is not None:
                     context['school']=SchoolSerializer(school).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+class SessionApi(APIView):
+    def add_session(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddSessionForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                active_course_id=cd['active_course_id']
+                session=SessionRepo(request=request).add_session(active_course_id=active_course_id)
+                if session is not None:
+                    context['session']=SessionSerializer(session).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+class TeacherApi(APIView):
+    def add_teacher(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddTeacherForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                profile_id=cd['profile_id']
+                teacher=TeacherRepo(request=request).add_teacher(profile_id=profile_id)
+                if teacher is not None:
+                    context['teacher']=TeacherSerializer(teacher).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+class StudentApi(APIView):
+    def add_student(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddStudentForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                profile_id=cd['profile_id']
+                student=StudentRepo(request=request).add_student(profile_id=profile_id)
+                if student is not None:
+                    context['student']=StudentSerializer(student).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

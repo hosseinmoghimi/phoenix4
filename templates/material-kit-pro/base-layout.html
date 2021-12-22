@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-
+{% load static %}
 <head>
     {% include "material-kit-pro/includes/head.html" %}
 
@@ -39,19 +39,23 @@
     {% endblock %}
     {% block content %}
     <div class="main {{main_class}}">
-        
+
     </div>
-        {% endblock %}
+    {% endblock %}
 
-        
 
-    
+
+
 
     {% include "material-kit-pro/includes/footer.html" %}
 
     {% include "material-kit-pro/includes/script.html" %}
     {% include "material-kit-pro/includes/vertical-nav.html" %}
-
+    {% if DEBUG %}
+    <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+    {% else %}
+    <script src="{% static 'vendor/js/vue.js' %}"></script>
+    {% endif %}
     {% block script %}
 
     {% endblock %}

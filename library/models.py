@@ -54,7 +54,10 @@ class Member(models.Model,Admin_Model):
     class Meta:
         verbose_name = _("Member")
         verbose_name_plural = _("Members")
-
+    def color(self):
+        if self.level==MemberShipLevelEnum.MASTER:
+            return 'danger'
+        return 'primary'
     def __str__(self):
         return self.profile.name
 

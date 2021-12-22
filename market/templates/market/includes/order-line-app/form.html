@@ -1,0 +1,52 @@
+<form @submit.prevent="add_guarantee()">
+
+
+    <div class="row farsi">
+
+        <div class="col-md-4">
+            <div class="form-group text-right">
+                <label for="" class="d-block text-right">بارکد</label>
+                <input type="text" v-model="barcode" class="form-control" required>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="form-group text-right">
+                <label for="" class="d-block text-right">شماره سریال</label>
+                <input type="text" v-model="serial_no" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group text-right">
+                <label for="" class="d-block text-right">شروع گارانتی</label>
+                <date-picker v-model="start_date"></date-picker>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group text-right">
+                <label for="" class="d-block text-right">پایان گارانتی</label>
+                <date-picker v-model="end_date"></date-picker>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-success">
+                ثبت
+            </button>
+        </div>
+
+
+
+
+    </div>
+
+
+</form>

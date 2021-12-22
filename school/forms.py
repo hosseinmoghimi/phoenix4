@@ -9,3 +9,9 @@ class AddClassRoomForm(forms.Form):
     school_id=forms.IntegerField( required=True)
 class AddMajorForm(forms.Form):
     title=forms.CharField( max_length=50, required=True)
+class AddTeacherForm(forms.Form):
+    profile_id=forms.IntegerField( required=True)
+class AddStudentForm(forms.Form):
+    profile_id=forms.IntegerField( required=True)
+class AddSessionForm(forms.Form):
+    active_course_id=forms.IntegerField( required=True)

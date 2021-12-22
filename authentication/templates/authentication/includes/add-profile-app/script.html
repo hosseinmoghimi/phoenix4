@@ -13,6 +13,16 @@
             message: { show: false },
         },
         methods: {
+            check_availables: function () {
+                if (typeof profiles_app != "undefined") {
+                    profiles_app.search_for = this.first_name + " " + this.last_name
+                    profiles_app.filter()
+                }
+            },
+            generate_password: function () {
+                var randomstring = Math.random().toString(36).slice(-10)
+                this.password = randomstring
+            },
             add_profile: function () {
                 let url = "{% url 'authentication:add_profile' %}"
                 let payload = {
@@ -39,7 +49,7 @@
                             profiles_app.profiles.reverse()
                             profiles_app.profiles.push(data.profile)
                             profiles_app.profiles.reverse()
-                            
+
                             profiles_app.username = ""
                             profiles_app.password = ""
                             profiles_app.first_name = ""
@@ -67,5 +77,10 @@
                 })
             },
         },
+    })
+</script>
+<script>
+    $(document).ready(() => {
+        add_profile_app.generate_password()
     })
 </script>

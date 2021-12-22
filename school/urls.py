@@ -15,9 +15,11 @@ urlpatterns = [
 
     path("students/",views.StudentViews().students,name="students"),
     path("student/<int:pk>/",views.StudentViews().student,name="student"),
+    path("add_student/",apis.StudentApi().add_student,name="add_student"),
 
     path("teachers/",views.TeacherViews().teachers,name="teachers"),
     path("teacher/<int:pk>/",views.TeacherViews().teacher,name="teacher"),
+    path("add_teacher/",apis.TeacherApi().add_teacher,name="add_teacher"),
 
     path("majors/",views.MajorViews().majors,name="majors"),
     path("major/<int:pk>/",views.MajorViews().major,name="major"),
@@ -27,6 +29,7 @@ urlpatterns = [
     path("book/<int:pk>/",views.BookViews().book,name="book"),
     
     path("session/<int:pk>/",views.SessionViews().session,name="session"),
+    path("add_session/",apis.SessionApi().add_session,name="add_session"),
     
     path("classrooms/",views.ClassRoomViews().classrooms,name="classrooms"),
     path("classroom/<int:pk>/",views.ClassRoomViews().classroom,name="classroom"),

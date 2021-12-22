@@ -5,27 +5,34 @@
 </h4>
 <div class="row">
 
-
-  <div class="col-md-4">
-    {% include "school/includes/schools-app/template.html" %}
-
-  </div>
-
-  <div class="col-md-4">
-    {% include "school/includes/majors-app/template.html" %}
+ 
 
 
-  </div>
+  <div class="col-md-4 farsi">
+    <a href="{% url 'school:students' %}">
+      <h5>
 
-  <div class="col-md-4">
-    {% include "school/includes/teachers-app/template.html" %}
+        لیست دانش آموزان
+      </h5>
+    </a>
+    <a href="{% url 'school:schools' %}">
+      <h5>
 
+        لیست آموزشگاه ها
+      </h5>
+    </a>
+    <a href="{% url 'school:majors' %}">
+      <h5>
 
-  </div>
+        لیست رشته های تحصیلی
+      </h5>
+    </a>
+    <a href="{% url 'school:teachers' %}">
+      <h5>
 
-
-  <div class="col-md-4">
-    {% include "school/includes/students-app/template.html" %}
+        لیست دبیران
+      </h5>
+    </a>
 
   </div>
 
@@ -41,7 +48,6 @@
 
 {% block script %}
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
-{% include "school/includes/students-app/script.html" %}
 {% include "school/includes/teachers-app/script.html" %}
 {% include "school/includes/books-app/script.html" %}
 {% include "school/includes/schools-app/script.html" %}

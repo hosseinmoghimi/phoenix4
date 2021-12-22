@@ -9,20 +9,29 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-{{asset.title}}
-{% if perms.accounting.change_asset %}
-{{asset.get_edit_btn|safe}}
+                <div class="text-right">
+                    <h4>
 
+                        <a class="farsi" href="{{asset.get_absolute_url}}">
 
-{% endif %}
+                            {{asset.title}}
+                        </a>
+                        {% if perms.accounting.change_asset %}
+                        <a href="{{asset.get_edit_url}}" target="_blank" title="edit">
+                            <i class="fa fa-edit"></i>
+                        </a>
+
+                        {% endif %}
+                    </h4>
+                </div>
             </div>
-            <div class="card-body">
-{% if asset.description %}
-<div>
-    {{asset.description|safe}}
-</div>
-  
-{% endif %}
+            <div class="card-body text-right farsi">
+                {% if asset.description %}
+                <div>
+                    {{asset.description|safe}}
+                </div>
+
+                {% endif %}
             </div>
         </div>
     </div>

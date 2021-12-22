@@ -262,7 +262,8 @@ class Book(models.Model):
     title=models.CharField(_("عنوان کتاب"), max_length=100)
     documents=models.ManyToManyField("core.document", blank=True,verbose_name=_("documents"))
 
-
+    def get_delete_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/book/{self.pk}/delete/"
     class Meta:
         verbose_name = _("Book")
         verbose_name_plural = _("Books")

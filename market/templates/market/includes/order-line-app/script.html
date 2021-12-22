@@ -1,0 +1,59 @@
+{% load static %}
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+
+<script>
+    let url_add_guarantee = "{% url 'market:add_guarantee' %}"
+    let guarantees = JSON.parse("{{guarantees_s|escapejs}}")
+    let order_line_id = parseInt("{{order_line.id}}")
+    // let category_id=parseInt("{{category_id}}")
+    let order_line_app = new Vue({
+        el: "#order-line-app",
+        data: {
+            start_date: current_date,
+            end_date: current_date,
+            description: "",
+            waiting: false,
+            barcode: "qq",
+            serial_no: "zz",
+            guarantees: guarantees,
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+        },
+        methods: {
+            to_price: function (val, curr) {
+                return to_price(val, curr)
+            },
+            add_guarantee: function () {
+                order_line_app.waiting = true
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    order_line_id: order_line_id,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+                    description: this.description,
+                    barcode: this.barcode,
+                    serial_no: this.serial_no,
+                }
+                console.log(payload)
+
+                let posting = $.post(url_add_guarantee, payload)
+                posting.done((data) => {
+                    order_line_app.waiting = false
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        order_line_app.barcode = ""
+                        order_line_app.serial_no = ""
+
+                        order_line_app.guarantees.push(data.guarantee)
+                    }
+                })
+            },
+
+        }
+    })
+</script>

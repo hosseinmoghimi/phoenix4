@@ -2,11 +2,12 @@ import json
 
 from django.db.models import manager
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
-from .repo import CartRepo, CategoryRepo, ProductRepo, ShopRepo, WareHouseRepo
+from utility.persian import PersianCalendar
+from .repo import CartRepo, CategoryRepo, GuaranteeRepo, ProductRepo, ShopRepo, WareHouseRepo
 from .apps import APP_NAME
 
 class categoryApi(APIView):
@@ -24,6 +25,39 @@ class categoryApi(APIView):
                 category=CategoryRepo(request=request).add_category(title=title,parent_id=parent_id)
                 if category is not None:
                     context['category']=CategorySerializer(category).data
+                    context['result']=SUCCEED
+        return JsonResponse(context)
+
+
+class GuaranteeApi(APIView):
+    def add_guarantee(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            add_guarantee_form=AddGuaranteeForm(request.POST)
+            if add_guarantee_form.is_valid():
+                log=3
+                order_line_id=add_guarantee_form.cleaned_data['order_line_id']
+                barcode=add_guarantee_form.cleaned_data['barcode']
+                serial_no=add_guarantee_form.cleaned_data['serial_no']
+                end_date=add_guarantee_form.cleaned_data['end_date']
+                start_date=add_guarantee_form.cleaned_data['start_date']
+                description=add_guarantee_form.cleaned_data['description']
+
+                end_date=PersianCalendar().to_gregorian(end_date)
+                start_date=PersianCalendar().to_gregorian(start_date)
+ 
+                guarantee=GuaranteeRepo(request=request).add_guarantee(
+                    order_line_id=order_line_id,
+                    start_date=start_date,
+                    end_date=end_date,
+                    serial_no=serial_no,
+                    description=description,
+                    barcode=barcode)
+                if guarantee is not None:
+                    context['guarantee']=GuaranteeSerializer(guarantee).data
                     context['result']=SUCCEED
         return JsonResponse(context)
 

@@ -124,42 +124,13 @@
             </div>
         </div>
 
+        {% include "school/includes/students-app/template.html" %}
 
-        <div class="card">
-            <div class="card-header">
-                <h4>
-                    دانش آموزان
-                </h4>
-            </div>
-            <div class="card-body">
-
-
-                <div class="farsi text-right">
-                    {% for student in active_course.students.all %}
-                    <div class="mb-2">
-
-                        <a href="{{student.get_absolute_url}}">
-                            <img src="{{student.profile.image}}" class="rounded-circle" width="32" alt="">
-                            {{student.profile.name}}
-                        </a>
-                        {% if perms.school.change_student %}
-                        {{student.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-
-
-            </div>
-        </div>
-
+        
     </div>
     <div class="col-md-4">
-        {% for book in active_course.course.books.all %}
-        {% include "school/includes/books-app/book-card.html" %}
+        {% include "school/includes/books-app/template.html" %}
 
-        {% endfor %}
     </div>
 
 
@@ -167,38 +138,18 @@
 
 
 
-    <div class="col-md-4">
+    <div class="col-md-6">
 
-        <div class="card">
-            <div class="card-body">
-                <h4>
-                    جلسات </h4>
-
-                <div class="mb-3">
-                    {% for session in active_course.session_set.all %}
-                    <h4>
-                        <small class="text-muted">
-                            جلسه شماره
-                            {{session.session_no}}
-                        </small>
-                        -
-                        <a href="{{session.get_absolute_url}}">
-
-                            {{session.title}}
-                        </a>
-                        {% if perms.school.change_session %}
-                        {{session.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </h4>
-                    {% endfor %}
-                </div>
-
-
-            </div>
-        </div>
+        {% include "school/includes/sessions-app/template.html" %}
     </div>
 </div>
 
 </div>
 {% endblock content %}
+
+
+{% block script %}
+{% include "school/includes/sessions-app/script.html" %}
+{% include "school/includes/students-app/script.html" %}
+  
+{% endblock script %}

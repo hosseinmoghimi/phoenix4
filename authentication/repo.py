@@ -102,6 +102,7 @@ class ProfileRepo():
         logout(request=request)
 
     def login(self,request,username,password):
+        logout(request=request)
         user=authenticate(request=request,username=username,password=password)
         if user is not None:
             login(request,user)
@@ -118,6 +119,7 @@ class ProfileRepo():
         user=User.objects.filter(username=username).first()
         if user is None:
             return None
+        logout(request=self.request)
         login(request=self.request,user=user,backend='django.contrib.auth.backends.ModelBackend')
         return self.request
         
@@ -229,8 +231,12 @@ class ProfileRepo():
         if not is_not_blank(username) or not is_not_blank(password):
             return (FAILED,None,"نام کاربری و کلمه عبور نا معتبر می باشد.")
         new_user=User.objects.filter(username=username).first()
+        
         if new_user is not None:
             return (FAILED,None,"نام کاربری وارد شده ، تکراری می باشد.")  
+        new_user=User.objects.filter(first_name=first_name).filter(last_name=last_name).first()
+        if new_user is not None:
+            return (FAILED,None,"نام و نام خانوادگی وارد شده ، تکراری می باشد.")  
 
 
         user=User.objects.create(first_name=kwargs['first_name'],email=kwargs['email'],last_name=kwargs['last_name'],username=kwargs['username'],password=kwargs['password'])

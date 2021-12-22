@@ -1,0 +1,25 @@
+<script>
+    let sessions = []
+    let active_course_id=parseInt("{{active_course.id}}")
+    let sessions_app = new Vue({
+        el: "#sessions-app",
+        data: {
+            sessions: sessions,
+        },
+        methods: {
+            add_session: function () {
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    active_course_id:active_course_id,
+                }
+                console.log(payload)
+                $.post("{% url 'school:add_session' %}",payload).done((data)=>{
+                    console.log(data)
+                    if(data.result==='SUCCEED'){
+                        sessions_app.sessions.push(data.session)
+                    }
+                })
+            },
+        }
+    })
+</script>

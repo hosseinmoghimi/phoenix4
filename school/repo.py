@@ -4,7 +4,7 @@ import school
 from .models import ActiveCourse, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
 from .apps import APP_NAME
 from django.db.models import Q
-
+from django.utils import timezone
 class SchoolRepo():
     
     def __init__(self,*args, **kwargs):
@@ -211,7 +211,6 @@ class CourseRepo():
 
 
 
-
 class SessionRepo():
     def __init__(self,*args, **kwargs):
         self.request = None
@@ -234,6 +233,46 @@ class SessionRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_session(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_session"):
+            return
+        session=Session()
+        if 'active_course_id' in kwargs:
+
+            active_course_id=kwargs['active_course_id']
+        else:
+            return
+        active_course=ActiveCourse.objects.filter(pk=active_course_id).first()
+        if active_course is None:
+            return
+
+        session_no=1
+        session.active_course_id=active_course_id
+        if 'session_no' in kwargs:
+            session_no=kwargs['session_no']
+        else:
+            session_1=Session.objects.filter(active_course_id=active_course_id).order_by('-session_no').first()
+            if session_1 is not None:
+                session_no=1+session_1.session_no
+
+        session.session_no=session_no
+        if 'title' in kwargs:
+            session.title=kwargs['title']
+        else:
+            session.title="جلسه "+str(session_no)+" "+active_course.course.title
+        
+        if 'start_time' in kwargs:
+            session.start_time=kwargs['start_time']
+        else:
+            session.start_time=timezone.now()
+        
+        if 'end_time' in kwargs:
+            session.end_time=kwargs['end_time']
+        else:
+            session.end_time=timezone.now()
+
+        session.save()
+        return session
 
 
 
@@ -257,15 +296,26 @@ class TeacherRepo():
             objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
         return objects
     def teacher(self,*args, **kwargs):
+        if 'profile_id' in kwargs:
+            return self.objects.filter(profile_id=kwargs['profile_id']).first()
         if 'teacher_id' in kwargs:
-            pk=kwargs['teacher_id']
-        elif 'pk' in kwargs:
-            pk=kwargs['pk']
-        elif 'id' in kwargs:
-            pk=kwargs['id']
-        return self.objects.filter(pk=pk).first()
+            return self.objects.filter(pk=kwargs['teacher_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+         
 
+    def add_teacher(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_teacher"):
+            return
 
+        teacher=self.teacher(*args, **kwargs)
+        if teacher is None:
+            teacher=Teacher()
+            teacher.profile_id=kwargs['profile_id']
+            teacher.save()
+            return teacher
 
 
     
@@ -288,6 +338,8 @@ class StudentRepo():
             objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
         return objects
     def student(self,*args, **kwargs):
+        if 'profile_id' in kwargs:
+            return self.objects.filter(profile_id=kwargs['profile_id']).first()
         if 'student_id' in kwargs:
             pk=kwargs['student_id']
         elif 'pk' in kwargs:
@@ -295,3 +347,17 @@ class StudentRepo():
         elif 'id' in kwargs:
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
+
+    
+
+    def add_student(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_student"):
+            return
+
+        student=self.student(*args, **kwargs)
+        if student is None:
+            student=Student()
+            student.profile_id=kwargs['profile_id']
+            student.save()
+            return student
+

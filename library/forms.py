@@ -16,7 +16,7 @@ class AddBookForm(forms.Form):
 class AddMemberForm(forms.Form):
     profile_id=forms.IntegerField(required=True)
     description=forms.CharField(max_length=1000, required=False)
-   
+    level=forms.CharField(max_length=50, required=False)
 
 class LendBookForm(forms.Form):
     member_id=forms.IntegerField(required=True)

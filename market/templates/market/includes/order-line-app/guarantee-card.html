@@ -1,0 +1,42 @@
+{% load to_price %}
+{% load to_persian_date %}
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <h5>
+
+                {{guarantee.orderline.product.title}}
+            </h5>
+            <hr>
+        </div>
+        <div class="col-md-8">
+            <div>
+                {{guarantee.orderline.unit_price|to_price}}
+            </div>
+            <div>
+                Serial No:
+                {{guarantee.serial_no}}
+
+            </div>
+            <div>
+                Barcode:
+
+                {{guarantee.barcode}}
+
+            </div>
+            <div>
+                Start date:
+                {{guarantee.start_date|to_persian_date|safe}}
+            </div>
+            <div>
+
+                End date:
+                {{guarantee.end_date|to_persian_date|safe}}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <img src="{{guarantee.get_qrcode_url}}" alt="">
+
+        </div>
+    </div>
+</div>

@@ -2,18 +2,26 @@
 <div id="menu-app">
     <div class="farsi text-right">
         <div class="mx-3">
-            <button class="btn btn-info">
+
+            <h4 class="text-left my-4">
+                <small class="text-muted">
+                    جمع کل :
+                </small>
                 <span v-text="to_price(total,'')"></span>
                 <small>
                     {{CURRENCY}}
                 </small>
-            </button>
+            </h4>
         </div>
         <template v-for="menu_line in menu_lines">
             <menu-line-component :menu_line="menu_line"></menu-line-component>
         </template>
+        <div>
+            <span v-text="message"></span>
+
+        </div>
         <div class="farsi text-right">
-            <button class="btn btn-outline-info">
+            <button @click="save_cart()" v-if="!save_done" class="btn btn-outline-info">
                 <small>
 
                     جمع :
@@ -23,25 +31,52 @@
                     {{CURRENCY}}
                 </small>
             </button>
-            <button v-if="!save_done" @click="save_cart()" class="btn btn-success">ذخیره</button>
+            <button v-if="!save_done" @click="save_cart()" class="btn btn-outline-success">
+                <small>
+
+                    سفارش با مبلغ کل
+                </small>
+                <strong>
+
+                    <span v-text="to_price(total,'')"></span>
+                    <small>
+                        {{CURRENCY}}
+                    </small>
+                </strong>
+
+                <small>
+
+                    تایید می شود
+                </small>
+            </button>
         </div>
         <form v-if="save_done" action="{% url 'market:save_menu' %}" method="POST">
             {% csrf_token %}
-            <div class="form-group">
-                <label class="small"> در صورت داشتن توضیحات کادر زیر را پر کنید.</label>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="small"> توضیحات </label>
 
-                <textarea placeholder="..." rows="2" name="description" type="text" class="form-control">
-                    </textarea>
+                        <textarea placeholder="..." rows="2" name="description" type="text" class="form-control">
+                            </textarea>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="my-2 btn btn-success">
+                        <small>
+                            تایید نهایی سفارش به مبلغ
+                        </small>
+                        <span v-text="to_price(total,'')"></span>
+                        <small>
+                            {{CURRENCY}}
+                        </small>
+                    </button>
+                    <span v-if="save_done" @click="save_done=false" class="small text-secondary"
+                        style="cursor: pointer;">انصراف</span>
+                </div>
             </div>
-            <button type="submit" class="my-2 btn btn-success">
-                <small>
-                    تایید نهایی سفارش به مبلغ
-                </small>
-                <span v-text="to_price(total,'')"></span>
-                <small>
-                    {{CURRENCY}}
-                </small>
-            </button>
+
+
         </form>
-        <button v-if="save_done" @click="save_done=false" class="btn btn-secondary">انصراف</button>
+
     </div>

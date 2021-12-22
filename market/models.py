@@ -93,6 +93,8 @@ class Product(MarketPage):
         related_products=Product.objects.filter(id__in=ids)
         return related_products
 
+    def get_order_lines_url(self):
+        return reverse(APP_NAME+":order_lines",kwargs={'product_id':self.pk,'order_id':0})
 
 class Category(MarketPage):
     default_unit_name=models.CharField(_("واحد پیش فرض"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
@@ -169,6 +171,11 @@ class Customer(models.Model):
     def get_cart_url(self):
         return reverse(APP_NAME+":customer_cart",kwargs={'customer_id':self.id})
 
+    def save(self,*args, **kwargs):
+        if self.title is None or self.title=="" :
+            if self.profile is not None:
+                self.title=self.profile.name
+        return super(Customer,self).save(*args, **kwargs)
     class Meta:
         verbose_name = _("Customer")
         verbose_name_plural = _("مشتریان")
@@ -183,11 +190,24 @@ class Customer(models.Model):
 
 
 class Desk(Customer):
+    image_header_origin=models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
+                                     'desk/header/', height_field=None, width_field=None, max_length=None)
+    
+    image_origin=models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
+                                     'desk/Main/', height_field=None, width_field=None, max_length=None)
     
     menus=models.ManyToManyField("menu", verbose_name=_("menus"))
     number=models.IntegerField(_("number"))
     class_name='desk'
-
+    app_name=APP_NAME
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+        else:
+            return f'{STATIC_URL}{self.app_name}/img/desk.jpg'
+    def image_header(self):
+        if self.image_header_origin:
+            return MEDIA_URL+str(self.image_header_origin)
     class Meta:
         verbose_name = _("Desk")
         verbose_name_plural = _("Desks")
@@ -209,6 +229,26 @@ class Desk(Customer):
         </a>
         """
 
+    def get_qrcode_url(self):
+        self.generate_qrcode()
+        file_name=self.class_name+str(self.pk)+".svg"       
+        return f"{QRCODE_URL}{file_name}"
+
+    def generate_qrcode(self):
+        if self.pk is None:
+            super(Guarantee,self).save()
+        import os
+        file_path = QRCODE_ROOT
+        file_name=self.class_name+str(self.pk)+".svg"
+        # file_address=os.path.join(file_path,file_name)
+        file_address=os.path.join(QRCODE_ROOT,file_name)
+   
+        content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        print(content)
+        print(file_address)
+        print(file_name)
+        print(file_path)
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
 
 class Order(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
@@ -304,8 +344,15 @@ class OrderLine(models.Model):
         return f"{str(self.order)} : {self.product.title} : {self.quantity} {self.unit_name} {to_price(self.unit_price)}ی/ {to_price(self.unit_price*self.quantity)}"
 
     def get_absolute_url(self):
-        return reverse(APP_NAME+":orderLine", kwargs={"pk": self.pk})
+        if self is not None and self.pk is not None:
+            return reverse(APP_NAME+":order_line", kwargs={"pk": self.pk})
 
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/orderline/{self.pk}/change/"
+
+    def get_print_url(self):
+        return reverse(APP_NAME+":order_line_print", kwargs={"pk": self.pk})
 
 class CartLine(models.Model):
     customer=models.ForeignKey("customer", verbose_name=_("customer"), on_delete=models.CASCADE)
@@ -482,7 +529,7 @@ class Guarantee(models.Model):
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/guarantee/{self.pk}/change/'
     def get_qrcode_url(self):
-        
+        self.generate_qrcode()
         file_name=self.class_name+str(self.pk)+".svg"       
         return f"{QRCODE_URL}{file_name}"
 
@@ -496,6 +543,10 @@ class Guarantee(models.Model):
         file_address=os.path.join(QRCODE_ROOT,file_name)
    
         content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        print(content)
+        print(file_address)
+        print(file_name)
+        print(file_path)
         generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
     def save(self):
 
@@ -511,6 +562,9 @@ class Guarantee(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":guarantee", kwargs={"pk": self.pk})
+
+    def get_print_url(self):
+        return reverse(APP_NAME+":guarantee_print", kwargs={"pk": self.pk})
 
 
 class Brand(models.Model):

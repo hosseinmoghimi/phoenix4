@@ -10,6 +10,9 @@ urlpatterns = [
     path("",views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),
     path("product/<int:pk>/",views.ProductViews().product,name="product"),
+    path("order_line/<int:pk>/",views.OrderViews().order_line,name="order_line"),
+    path("guarantee_print/<int:pk>/",views.GuaranteeView().guarantee_print,name="guarantee_print"),
+    path("order_line_print/<int:pk>/",views.OrderViews().order_line_print,name="order_line_print"),
     path("financial_report/<int:pk>/",views.OrderViews().financial_report,name="financial_report"),
     path("category/<int:pk>/",views.CategoryViews().category,name="category"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
@@ -44,6 +47,10 @@ urlpatterns = [
     path("ware_houses/",views.WareHouseViews().ware_houses,name="ware_houses"),
     path("product-feature/<int:pk>/",views.ProductViews().product_feature,name="productfeature"),
     path("api/add_product_for_category_page/",views.ProductViews().add_product_for_category_page,name="add_product_for_category_page"),
+    path('order_lines/<int:product_id>/<int:order_id>/',login_required(views.OrderViews().order_lines),name="order_lines"),
+
+
+
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),
@@ -58,5 +65,6 @@ urlpatterns = [
     path("api/save_cart/",apis.CartApi().save_cart,name="save_cart"),
     path("api/add_warehouse/",apis.WareHouseApi().add_warehouse,name="add_warehouse"),
     path("api/add_feature_for_product/",apis.ProductApi().add_feature_for_product,name="add_feature_for_product"),
+    path("api/add_guarantee/",apis.GuaranteeApi().add_guarantee,name="add_guarantee"),
     
 ]

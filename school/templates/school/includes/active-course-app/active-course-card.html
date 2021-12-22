@@ -5,26 +5,26 @@
                 دوره
             </small>
             <a href="{{active_course.get_absolute_url}}">
-
                 {{active_course.title}}
             </a>
         </h4>
     </div>
     <div class="card-body">
         <div class="mb-3">
+            <h4>
+                {{active_course.year.title}}
+            </h4>
             <h5>
                 {{active_course.title}}
                 {% if perms.school.change_activecourse %}
-                <a href="active_course.get_edit_url}}" target="_blank" title="ویرایش">
+                <a href="{{active_course.get_edit_url}}" target="_blank" title="ویرایش">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
                 {% endif %}
             </h5>
-
             <h5>
-
                 <small class="text-muted">
                     درس
                 </small>
@@ -33,7 +33,6 @@
                 </a>
             </h5>
             {% for major in active_course.course.major_set.all %}
-
             <h5>
                 <small class="text-muted">
                     رشته
@@ -43,15 +42,6 @@
                 </a>
             </h5>
             {% endfor %}
-
-
-
-
-
-
-
         </div>
-
     </div>
-  
 </div>

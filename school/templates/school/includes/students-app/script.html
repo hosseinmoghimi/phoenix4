@@ -4,8 +4,20 @@
         el: "#students-app",
         data: {
             students: students,
+            profile_id:"",
         },
         methods: {
+            add_student:function(){
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    profile_id:this.profile_id,
+                }
+                $.post("{% url 'school:add_student' %}",payload).done((data)=>{
+                    if(data.result==='SUCCEED'){
+                        students_app.students.push(data.student)
+                    }
+                })
+            },
 
         }
     })

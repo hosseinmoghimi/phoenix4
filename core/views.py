@@ -166,14 +166,20 @@ class MessageView(View):
             self.message_text = kwargs['message_text']
         if 'header_text' in kwargs:
             self.header_text = kwargs['header_text']
+        if 'request' in kwargs:
+            self.request = kwargs['request']
 
 
 
-    def response(self, request, *args, **kwargs):
-        return self.show(request=request)
+    def response(self, *args, **kwargs):
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+        return self.show()
 
-    def show(self, request, *args, **kwargs):
-        context = CoreContext(request, *args, **kwargs)
+    def show(self, *args, **kwargs):
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+        context = CoreContext(request=self.request, *args, **kwargs)
         if self.header_text is None:
             self.header_text = 'خطا'
         if self.message_text is None:
@@ -196,7 +202,7 @@ class MessageView(View):
         context['message_html'] = self.message_html
 
         context['search_form'] = None
-        return render(request, TEMPLATE_ROOT+'error.html', context)
+        return render(self.request, TEMPLATE_ROOT+'error.html', context)
 
 
 class BasicViews(View):
@@ -232,7 +238,7 @@ class PageViews(View):
 
         # if self.access(request=request,*args, **kwargs) and document is not None:
         #     return document.download_response()
-        message_view = MessageView()
+        message_view = MessageView(request=request)
         message_view.links = []
         message_view.links.append(Link(title='تلاش مجدد', color="warning",
                                   icon_material="apartment", url=document.get_download_url()))
@@ -244,7 +250,7 @@ class PageViews(View):
         message_view.message_text = 'مجوز شما برای دسترسی به این صفحه مجاز نمی باشد.'
         message_view.header_text = 'دسترسی غیر مجاز'
 
-        return message_view.response(request)
+        return message_view.response()
 
     def access(self, request, *args, **kwargs):
         document = DocumentRepo(request=request).document(*args, **kwargs)

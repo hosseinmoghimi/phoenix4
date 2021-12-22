@@ -1,7 +1,8 @@
 from django.shortcuts import render,reverse
-from core.views import CoreContext,ParametersEnum,ParameterRepo
+from authentication.repo import ProfileRepo
+from core.views import CoreContext, PageContext,ParametersEnum,ParameterRepo
 from school.repo import ActiveCourseRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, StudentSerializer, TeacherSerializer
+from school.serializers import MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from django.views import View
 from .forms import *
@@ -152,35 +153,49 @@ class SchoolViews(View):
 
         
 class StudentViews(View):
+    
     def student(self,request,*args, **kwargs):
         context=getContext(request=request)
         student=StudentRepo(request=request).student(*args, **kwargs)
         context['student']=student
         return render(request,TEMPLATE_ROOT+"student.html",context)
 
-
     def students(self,request,*args, **kwargs):
         context=getContext(request=request)
         students=StudentRepo(request=request).list(*args, **kwargs)
         context['students']=students
         context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_teacher"):
+            context['add_student_form']=AddStudentForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"students.html",context)
-
-
-        
-        
 class CourseViews(View):
     def course(self,request,*args, **kwargs):
         context=getContext(request=request)
         course=CourseRepo(request=request).course(*args, **kwargs)
         context['course']=course
+        context['books']=course.books.all()
         return render(request,TEMPLATE_ROOT+"course.html",context)
 
 
     def active_course(self,request,*args, **kwargs):
         context=getContext(request=request)
         active_course=ActiveCourseRepo(request=request).active_course(*args, **kwargs)
+        context['books']=active_course.course.books.all()
+
+        students=active_course.students.all()
+        context['students']=students
+        context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+
+
+        sessions=active_course.session_set.all()
+        context['sessions']=sessions
+        context['sessions_s']=json.dumps(SessionSerializer(sessions,many=True).data)
+
         context['active_course']=active_course
+        if request.user.has_perm(APP_NAME+".add_session"):
+            context['add_session_form']=AddSessionForm()
         return render(request,TEMPLATE_ROOT+"active-course.html",context)
 
 
@@ -198,6 +213,10 @@ class TeacherViews(View):
         teachers=TeacherRepo(request=request).list(*args, **kwargs)
         context['teachers']=teachers
         context['teachers_s']=json.dumps(TeacherSerializer(teachers,many=True).data)
+        if request.user.has_perm(APP_NAME+".add_teacher"):
+            context['add_teacher_form']=AddTeacherForm()
+            profiles=ProfileRepo(request=request).list()
+            context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"teachers.html",context)
 
 
@@ -242,5 +261,20 @@ class SessionViews(View):
     def session(self,request,*args, **kwargs):
         context=getContext(request=request)
         session=SessionRepo(request=request).session(*args, **kwargs)
+        context.update(PageContext(request=request,page=session))
         context['session']=session
+        context['course']=session.active_course.course
+
+        students=session.active_course.students.all()
+        context['students']=students
+        context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+
+        books=session.active_course.course.books.all()
+        context['books']=books
+        context['books_s']=json.dumps(BookSerializer(books,many=True).data)
+        
+        
+        sessions=session.active_course.session_set.all()
+        context['sessions']=sessions
+        context['sessions_s']=json.dumps(SessionSerializer(sessions,many=True).data)
         return render(request,TEMPLATE_ROOT+"session.html",context)

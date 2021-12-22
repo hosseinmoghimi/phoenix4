@@ -1,25 +1,51 @@
-<div class="card" id="students-app">
-  <div class="card-header">
-    <h4 class="title">
-      <a href="{% url 'school:students' %}">
-        لیست دانش آموزان
-      </a>
-    </h4>
-  </div>
-  <div class="card-body farsi text-right">
-    <div v-for="student in students" class="my-2 ">
-      <a :href="student.get_absolute_url">
-        <img :src="student.profile.image" class="rounded-circle" width="32" alt="">
-        <span v-text="student.profile.name"></span>
-      </a>
+<div id="accordion-students">
+
+  <div class="card" id="students-app">
+    <div class="card-header" id="headingStudents">
 
 
-      {% if perms.school.change_student %}
-      <a target="_blank" title="ویرایش" :href="student.get_edit_url">
-        <i class="fa fa-edit text-info"></i>
-      </a>
+      <h5 class="text-center">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseStudents" aria-expanded="true"
+          aria-controls="collapseStudents">
+          لیست دانش آموزان
+
+        </button>
+      </h5>
+
+
+
+    </div>
+
+
+    <div id="collapseStudents" class="collapse" aria-labelledby="headingStudents" data-parent="#accordion-students">
+
+      <div class="card-body farsi text-right">
+        <div v-for="student in students" class="my-2 ">
+          <a :href="student.get_absolute_url">
+            <img :src="student.profile.image" class="rounded-circle" width="32" alt="">
+            <span v-text="student.profile.name"></span>
+          </a>
+
+
+          {% if perms.school.change_student %}
+          <a target="_blank" title="ویرایش" :href="student.get_edit_url">
+            <i class="fa fa-edit text-info"></i>
+          </a>
+          {% endif %}
+
+        </div>
+      </div>
+
+
+
+      {% if add_student_form %}
+      <div class="card-footer">
+        <form @submit.prevent="add_student()">
+          {% include "authentication/includes/profiles-app/select-profile-form.html" %}
+        </form>
+      </div>
       {% endif %}
 
     </div>
   </div>
-</div> 
+</div>

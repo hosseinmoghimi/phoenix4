@@ -1,5 +1,7 @@
 <div class="card mt-3">
     <ul class="list-group list-group-flush px-0">
+        {% if selected_profile.mobile %}
+
         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
             <h6 class="mb-0">
                 <span class="material-icons">
@@ -14,7 +16,8 @@
             </a>
         </li>
 
-
+        {% endif %}
+        {% if selected_profile.email %}
         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
             <h6 class="mb-0">
                 <span class="material-icons">
@@ -28,6 +31,62 @@
                 </span>
             </a>
         </li>
+
+        {% endif %}
+        {% for customer in selected_profile.customer_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <h6 class="mb-0">
+                <span class="material-icons">
+                    shopping_basket
+                </span>
+                مشتری
+
+            </h6>
+            <a href="{{customer.get_absolute_url}}">
+                <span class="text-secondary farsi">
+                    {{customer.id}} {{customer.title}}
+                </span>
+            </a>
+        </li>
+        {% endfor %}
+
+        {% for financialaccount in selected_profile.financialaccount_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <h6 class="mb-0">
+                <span class="material-icons">
+                    monetization_on
+                </span>
+                مالی
+
+            </h6>
+            <a href="{{financialaccount.get_absolute_url}}">
+                <span class="text-secondary farsi">
+                صورت حساب مالی
+                </span>
+            </a>
+        </li>
+        {% endfor %}
+
+
+        {% for employee in selected_profile.employee_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <h6 class="mb-0">
+                <span class="material-icons">
+                    engineering
+                </span>
+                پرسنل
+
+            </h6>
+            <a href="{{employee.get_absolute_url}}">
+                <span class="text-secondary farsi" title="{{employee.organization_unit.title}} {{employee.organization_unit.employer.title}}">
+                    {{employee.organization_unit.title}} {{employee.organization_unit.employer.title}}
+                </span>
+            </a>
+
+            
+
+        </li>
+        {% endfor %}
 
         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
             <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

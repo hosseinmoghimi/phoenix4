@@ -1,0 +1,75 @@
+<div id="accordion-sessions">
+
+    <div class="card" id="sessions-app">
+        <div class="card-header" id="headingSessions">
+            
+
+            <h5 class="text-center">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSessions" aria-expanded="true"
+                    aria-controls="collapseSessions">
+                    جلسات
+                </button>
+            </h5>
+
+        </div>
+
+        <div id="collapseSessions" class="collapse" aria-labelledby="headingSessions" data-parent="#accordion-sessions">
+
+            <div class="card-body">
+
+
+                <div class="mb-3">
+                    {% for session in sessions %}
+                    <h6>
+                        <a href="{{session.get_absolute_url}}">
+
+                            <small class="text-muted">
+                                {{session.session_no}}
+                            </small>
+                            -
+                            {{session.title}}
+                        </a>
+                        {% if perms.school.change_session %}
+                        <a target="_blank" title="ویرایش" href="{{session.get_edit_url}}">
+                            <i class="fa fa-edit text-warning">
+                            </i>
+                        </a>
+                        {% endif %}
+                    </h6>
+                    {% endfor %}
+
+                    <h6 v-for="session in sessions">
+
+                        <a :href="session.get_absolute_url">
+                            <small class="text-muted">
+                                <span v-text="session.session_no"></span>
+                            </small>
+                            -
+                            <span v-text="session.title"></span>
+                        </a>
+                        {% if perms.school.change_session %}
+                        <a target="_blank" title="ویرایش" :href="session.get_edit_url">
+                            <i class="fa fa-edit text-warning">
+                            </i>
+                        </a>
+                        {% endif %}
+                    </h6>
+
+                </div>
+
+
+            </div>
+            {% if add_session_form %}
+
+            <div class="card-footer">
+
+                <form @submit.prevent="add_session()">
+                    <button class="btn btn-success btn-sm" type="submit">جلسه جدید</button>
+                </form>
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>

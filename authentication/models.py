@@ -35,6 +35,18 @@ if CREATE_PROFILE_ON_USER_ADD:
                 customer.region=ShopRegion.objects.first()
                 customer.title=instance.first_name+" "+instance.last_name
                 customer.save()
+
+
+
+                
+            from accounting.models import FinancialAccount
+            finan=FinancialAccount.objects.filter(profile=profile).first()
+            if finan is None:
+                finan=FinancialAccount()
+                finan.profile=profile
+                finan.title=instance.first_name+" "+instance.last_name
+                finan.save()
+
         except:
             pass
         

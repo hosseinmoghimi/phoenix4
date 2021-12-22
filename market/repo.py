@@ -5,7 +5,7 @@ from core import repo as CoreRepo
 from messenger.repo import NotificationRepo
 from market.enums import OrderLineStatusEnum, OrderStatusEnum, ShopLevelEnum
 from django.http import request
-from market.apps import APP_NAME
+from .apps import APP_NAME
 from authentication.repo import ProfileRepo
 from .models import Blog, Brand, Cart, CartLine, CategoryProductTop, Customer, Desk, Employee, FinancialReport, Guarantee, Menu, Offer, Order, OrderInWareHouse, OrderLine, Product, Category, ProductFeature, ProductSpecification, Shipper, Shop, Supplier, UnitName, WareHouse
 from django.db.models import Q, F
@@ -535,6 +535,34 @@ class OrderRepo:
                 order.save()
         return order
 
+
+    def order_lines(self, *args, **kwargs):
+        objects=OrderLine.objects.all()
+
+        
+        if 'order_id' in kwargs and kwargs['order_id']>0:
+            objects= objects.filter(order_id=kwargs['order_id'])
+
+        
+        if 'product_id' in kwargs and kwargs['product_id']>0:
+            objects= objects.filter(product_id=kwargs['product_id'])
+
+
+
+        return objects
+
+
+    def order_line(self, *args, **kwargs):
+        pk=0
+        if 'order_line_id' in kwargs:
+            pk = kwargs['order_line_id']
+        elif 'pk' in kwargs:
+            pk = kwargs['pk']
+        elif 'id' in kwargs:
+            pk = kwargs['id']
+        order_line= OrderLine.objects.filter(pk=pk).first()
+        return order_line
+
     def do_pack(self, *args, **kwargs):
         order=self.order(*args, **kwargs)
         description=kwargs['description'] if 'description' in kwargs else None
@@ -717,11 +745,24 @@ class OrderRepo:
 
 
 class GuaranteeRepo():
-    def __init__(self,user=None):
-        self.user=user
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile = ProfileRepo(user=self.user).me
         self.objects=Guarantee.objects
-        self.profile=ProfileRepo(user=user).me
-        
+    
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'order_line_id' in kwargs:
+            objects=objects.filter(orderline_id=kwargs['order_line_id'])
+        if 'orderline_id' in kwargs:
+            objects=objects.filter(orderline_id=kwargs['orderline_id'])
+        return objects
     def guarantee(self,*args, **kwargs):
         pk = 0
         if 'guarantee_id' in kwargs:
@@ -732,6 +773,28 @@ class GuaranteeRepo():
             pk = kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_guarantee(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_guarantee"):
+            return
+
+        guarantee=Guarantee()
+        if 'order_line_id' in kwargs:
+            guarantee.orderline_id=kwargs['order_line_id']
+        if 'orderline_id' in kwargs:
+            guarantee.orderline_id=kwargs['orderline_id']
+        if 'orderline' in kwargs:
+            guarantee.orderline=kwargs['orderline']
+        if 'serial_no' in kwargs:
+            guarantee.serial_no=kwargs['serial_no']
+        if 'barcode' in kwargs:
+            guarantee.barcode=kwargs['barcode']
+        if 'start_date' in kwargs:
+            guarantee.start_date=kwargs['start_date']
+        if 'end_date' in kwargs:
+            guarantee.end_date=kwargs['end_date']
+        guarantee.save()
+
+        return guarantee
 
 class EmployeeRepo():
     def __init__(self, *args, **kwargs):

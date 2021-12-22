@@ -14,6 +14,13 @@ class AddOrderInWareHouseForm(forms.Form):
     ware_house_id=forms.IntegerField(required=True)
     description=forms.CharField( max_length=100, required=False)
 
+class AddGuaranteeForm(forms.Form):
+    order_line_id=forms.IntegerField(required=True)
+    barcode=forms.CharField(max_length=50,required=True)
+    serial_no=forms.CharField(max_length=50,required=True)
+    start_date=forms.CharField(max_length=20,required=True)
+    end_date=forms.CharField(max_length=20,required=True)
+    description=forms.CharField( max_length=100, required=False)
 class DeleteProductCommentForm(forms.Form):
     comment_id=forms.IntegerField(required=True)
 

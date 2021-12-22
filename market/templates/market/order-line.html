@@ -1,0 +1,141 @@
+{% extends "market/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load static %}
+{% block content %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <h4 class="title1 text-center">
+                    سفارش شماره {{order_line.order.id}}
+
+                </h4>
+                <h2 class="title text-center">ریز سفارش شماره {{order_line.pk}}</h2>
+                {% if perms.core.change_picture %}
+                <div class="text-center">
+                    {{header_image.get_edit_btn|safe}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main main-raised">
+    <div class="container">
+        <div class="card card-plain">
+            <div class="card-body">
+
+
+
+
+                <div id="order-header" class="row rtl text-right mb-5 farsi">
+                    <div class="col-md-4">
+                        <a href="{{order_line.order.get_absolute_url}}">
+                            <h4>
+
+                                سفارش شماره {{order_line.order.id}}
+
+
+                            </h4>
+                        </a>
+
+                        {{order_line.order.get_status_tag|safe}}
+
+
+
+                        <h3 class="card-title farsi text-right">
+                            ریز سفارش شماره {{order_line.id}}
+
+
+                        </h3>
+                        {% if perms.core.change_orderline %}
+                        <div>
+
+                            <a target="_blank" title="ویرایش" class="mx-2" href="{{order_line.get_edit_url}}">
+                                <i class="fa fa-edit text-warning">
+
+                                </i>
+                            </a>
+                            <a target="_blank" title="چاپ" href="{{order_line.get_print_url}}">
+
+                                <i class="material-icons text-info">
+                                    print
+                                </i>
+                            </a>
+
+                        </div>
+                        {% endif %}
+
+
+                        <div>
+
+                            {{order_line.unit_price|to_price_pure}}
+                            *
+                            {{order_line.quantity}}
+                            {{order_line.unit_name}}
+                            =
+                            {{order_line.total|to_price}}
+                        </div>
+
+                      
+
+
+                        {% if order_line.description %}
+
+                        <div class="farsi mr-3">
+                            توضیحات : <i>
+
+                                <span class="title farsi mx-3">
+                                    {{order_line.description|safe}}
+
+                                </span>
+                            </i>
+                        </div>
+
+                        {% endif %}
+
+
+
+                    </div>
+                    <div class="col-md-8">
+
+
+                        <div class="media">
+                            <img src="{{order_line.product.thumbnail}}" width="256" height="256" class="rounded" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    <a target="_blank" title="چاپ" href="{{order_line.product.get_absolute_url}}">
+                                        {{order_line.product.title}}
+                                    </a>
+
+                                </h4>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-12 pt-4">
+
+                        {% include "market/includes/order-line-app/template.html" %}
+
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+{% include "market/includes/order-line-app/script.html" %}
+
+{% endblock %}

@@ -217,8 +217,8 @@ class PassengerViews(View):
             pass
         else:
             header_text="دسترسی غیر مجاز برای شما"
-            mm=MessageView(header_text=header_text)
-            return mm.response(request=request)
+            mm=MessageView(request=request,header_text=header_text)
+            return mm.response()
 
         context['passenger']=passenger
         trips=TripRepo(request=request).list(*args, **kwargs)
@@ -242,8 +242,8 @@ class TripViews(View):
             pass
         else:
             header_text="دسترسی غیر مجاز برای شما"
-            mm=MessageView(header_text=header_text)
-            return mm.response(request=request)
+            mm=MessageView(request=request,header_text=header_text)
+            return mm.response()
 
         context['trip']=trip
         context['vehicle']=trip.vehicle
@@ -405,8 +405,8 @@ class DriverViews(View):
             pass
         else:
             header_text="دسترسی غیر مجاز برای شما"
-            mm=MessageView(header_text=header_text)
-            return mm.response(request=request)
+            mm=MessageView(request=request,header_text=header_text)
+            return mm.response()
 
         trips=TripRepo(request=request).list(*args, **kwargs)
         context['trips']=trips
@@ -458,8 +458,8 @@ class ServiceManViews(View):
             pass
         else:
             header_text="دسترسی غیر مجاز برای شما"
-            mm=MessageView(header_text=header_text)
-            return mm.response(request=request)
+            mm=MessageView(request=request,header_text=header_text)
+            return mm.response()
 
             
     

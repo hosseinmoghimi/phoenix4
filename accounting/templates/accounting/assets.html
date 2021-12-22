@@ -1,0 +1,46 @@
+{% extends "accounting/layout.html" %}
+{% load static %}
+{% load to_price %}
+{% load to_persian_date %}
+{% load to_transaction_color %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+
+                    لیست دارایی ها
+                </h4>
+
+            </div>
+            <div class="card-body">
+                {% for asset in assets %}
+
+                <div class="text-right">
+
+                    <a  class="farsi" href="{{asset.get_absolute_url}}">
+
+                        {{asset.title}}
+                    </a>
+                    {% if perms.accounting.change_asset %}
+                    <a href="{{asset.get_edit_url}}" target="_blank" title="edit">
+                        <i class="fa fa-edit"></i>
+                    </a>
+
+                    {% endif %}
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

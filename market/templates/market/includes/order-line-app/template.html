@@ -1,0 +1,58 @@
+<div id="order-line-app">
+
+  {% if add_guarantee_form and perms.market.add_guarantee %}
+  {% include "market/includes/order-line-app/form.html" %}
+  {% endif %}
+  <div>
+    <table v-if="guarantees.length>0" class="table table-striped">
+      <thead>
+        <th>
+          شماره سریال
+        </th>
+        <th>
+          بارکد
+        </th>
+        <th>
+          تاریخ گارانتی
+        </th>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+      </thead>
+      <tbody>
+
+        <tr v-for="guarantee in guarantees">
+          <td>
+            <span v-text="guarantee.serial_no"></span>
+          </td>
+          <td>
+            <span v-text="guarantee.barcode"></span>
+          </td>
+          <td>
+            <div>
+              <small class="text-muted" v-text="guarantee.persian_start_date"></small>
+            </div>
+            <div>
+              <small class="text-muted" v-text="guarantee.persian_end_date"></small>
+            </div>
+          </td>
+          <td>
+            <a :href="guarantee.get_absolute_url">
+              <img :src="guarantee.get_qrcode_url" width="128" height="128" alt="">
+            </a>
+          </td>
+          <td>
+            <a :href="guarantee.get_print_url">
+              <i class="material-icons">
+                print
+              </i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
