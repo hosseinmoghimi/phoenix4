@@ -11,6 +11,7 @@ urlpatterns = [
     path('financial_account/<int:financial_account_id>/',login_required(views.FinancialAccountViews().financial_account),name="financial_account"),
     path('financial_accounts/',login_required(views.FinancialAccountViews().financial_accounts),name="financial_accounts"),
     path('asset/<int:asset_id>/',login_required(views.AssetViews().asset),name="asset"),
+    path('assets/',login_required(views.AssetViews().assets),name="assets"),
     path('transaction/<int:pk>/',login_required(views.TransactionViews().transaction),name="transaction"),
     path('transactions/<int:pay_from_id>/<int:pay_to_id>/',login_required(views.TransactionViews().transactions2),name="transactions2"),
     path('money_transaction/<int:pk>/',login_required(views.TransactionViews().money_transaction),name="moneytransaction"),

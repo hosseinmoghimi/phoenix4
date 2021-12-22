@@ -29,6 +29,13 @@ class AssetViews(View):
         return render(request,TEMPLATE_ROOT+"asset.html",context)
 
 
+    def assets(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        assets=AssetRepo(request=request).list(*args, **kwargs)
+        context['assets']=assets
+        return render(request,TEMPLATE_ROOT+"assets.html",context)
+
+
 
 class BasicViews(View):
     def home(self,request,*args, **kwargs):
