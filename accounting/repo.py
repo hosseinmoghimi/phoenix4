@@ -47,16 +47,16 @@ class AssetRepo:
         objects=self.objects.all()
         return objects
     def asset(self,*args, **kwargs):
-        pk=0
         
         if 'asset_id' in kwargs:
             pk=kwargs['asset_id']
+            return self.objects.filter(pk=pk).first()
         elif 'pk' in kwargs:
             pk=kwargs['pk']
+            return self.objects.filter(pk=pk).first()
         elif 'id' in kwargs:
             pk=kwargs['id']
-        asset= self.objects.filter(pk=pk).first()
-        return asset
+            return self.objects.filter(pk=pk).first()
 
 
        

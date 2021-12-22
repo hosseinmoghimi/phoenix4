@@ -24,7 +24,7 @@ def getContext(request,*args, **kwargs):
 class AssetViews(View):
     def asset(self,request,*args, **kwargs):
         context=getContext(request=request)
-        asset=AssetRepo(request=request).asset()
+        asset=AssetRepo(request=request).asset(*args, **kwargs)
         context['asset']=asset
         return render(request,TEMPLATE_ROOT+"asset.html",context)
 
