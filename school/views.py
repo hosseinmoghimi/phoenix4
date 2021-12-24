@@ -2,7 +2,7 @@ from django.shortcuts import render,reverse
 from authentication.repo import ProfileRepo
 from core.views import CoreContext, PageContext,ParametersEnum,ParameterRepo
 from school.repo import ActiveCourseRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.serializers import ActiveCourseSerializer, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from django.views import View
 from .forms import *
@@ -176,6 +176,15 @@ class CourseViews(View):
         course=CourseRepo(request=request).course(*args, **kwargs)
         context['course']=course
         context['books']=course.books.all()
+
+
+        
+
+        
+        active_courses=course.activecourse_set.all()
+        context['active_courses']=active_courses
+        context['active_courses_s']=json.dumps(ActiveCourseSerializer(active_courses,many=True).data)
+
         return render(request,TEMPLATE_ROOT+"course.html",context)
 
 
@@ -226,6 +235,11 @@ class MajorViews(View):
         context=getContext(request=request)
         major=MajorRepo(request=request).major(*args, **kwargs)
         context['major']=major
+        courses=major.courses.order_by('level')
+        context['courses']=courses
+        context['courses_s']=json.dumps(CourseSerializer(courses,many=True).data)
+
+
         return render(request,TEMPLATE_ROOT+"major.html",context)
 
 

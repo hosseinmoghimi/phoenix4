@@ -62,6 +62,7 @@ class Course(models.Model):
     title=models.CharField(_("نام واحد درسی "), max_length=100)
     level=models.IntegerField(_("level"))
     books=models.ManyToManyField("book", verbose_name=_("books"),blank=True)
+    course_count=models.IntegerField(_("تعداد واحد"))
     
 
     class Meta:
@@ -77,6 +78,8 @@ class Course(models.Model):
 
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
     def get_edit_btn(self):
         return f"""
              <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
@@ -116,8 +119,8 @@ class EducationalYear(models.Model):
 
 
 class ActiveCourse(models.Model):
-    year=models.ForeignKey("EducationalYear", verbose_name=_("سال تحصیلی"), on_delete=models.CASCADE)
     class_name="activecourse"
+    year=models.ForeignKey("EducationalYear", verbose_name=_("سال تحصیلی"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=200)
     course=models.ForeignKey("course", verbose_name=_("course"), on_delete=models.CASCADE)
     classroom=models.ForeignKey("classroom", verbose_name=_("classroom"), on_delete=models.CASCADE)
@@ -150,6 +153,8 @@ class ActiveCourse(models.Model):
             </a>
         """
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 
 class ClassRoom(models.Model):
     class_name="classroom"
@@ -210,7 +215,10 @@ class Teacher(models.Model):
         """
 
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 class Session(SchoolPage):
+    class_name="session"
     active_course=models.ForeignKey("activecourse", verbose_name=_("activecourse"), on_delete=models.CASCADE)
     session_no=models.IntegerField(_("جلسه شماره ؟"))
     start_time=models.DateTimeField(_("start"), auto_now=False, auto_now_add=False)
@@ -225,6 +233,8 @@ class Session(SchoolPage):
         verbose_name_plural = _("Sessions")
 
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 class Attendance(models.Model):
     student=models.ForeignKey("student", verbose_name=_("student"), on_delete=models.CASCADE)
     session=models.ForeignKey("session", verbose_name=_("session"), on_delete=models.CASCADE)
@@ -285,6 +295,8 @@ class Book(models.Model):
             </a>
         """
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 
 class Student(models.Model):
     class_name="student"
@@ -314,3 +326,6 @@ class Student(models.Model):
             </a>
         """
 
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""

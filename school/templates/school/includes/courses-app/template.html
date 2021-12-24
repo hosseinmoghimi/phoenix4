@@ -1,0 +1,38 @@
+<div class="card" id="courses-app">
+    <div class="card-header">
+        <h4 class="title">
+            واحد های درسی
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    پایه
+                </th>
+                <th>
+                    درس
+                </th>
+                <th>
+                    واحد
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="course in courses">
+                    <td>
+                        <span v-text="course.level"></span>
+                    </td>
+                    <td>
+                        <a :href="course.get_absolute_url">
+                            <span v-text="course.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="course.course_count"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
