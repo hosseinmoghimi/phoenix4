@@ -1,11 +1,13 @@
+import json
 from authentication.views import ProfileContext
+from core.serializers import ImageSerializer
 from realestate.utils import AdminUtility
 from core.enums import ParametersEnum
 from core.repo import ParameterRepo
 from realestate.models import Property
 from django.shortcuts import render,reverse
 from .apps import APP_NAME
-from core.views import CoreContext, TEMPLATE_ROOT
+from core.views import CoreContext, TEMPLATE_ROOT, PageContext
 from django.views import View
 from .repo import CarRepo, PropertyRepo
 TEMPLATE_ROOT="realestate_new/"
@@ -38,6 +40,11 @@ class PropertyViews(View):
     def property(self,request,*args, **kwargs):
         context=getContext(request=request)
         property=PropertyRepo(request=request).property(*args, **kwargs)
+        images=property.images.all()
+        context['images_s']=json.dumps(ImageSerializer(images,many=True).data)
+
+        # context['image_s']
+        # context['images_s']=json.dumps(PageIma)
         context['property']=property
         return render(request,TEMPLATE_ROOT+'property.html',context)
 class CarViews(View):

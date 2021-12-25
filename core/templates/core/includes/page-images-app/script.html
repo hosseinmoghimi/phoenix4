@@ -10,8 +10,19 @@
             add_page_image_form_file: '',
             show_add_page_image_form: false,
             waiting: false,
+            selected_image: images.length>0?images[0]:false,
         },
         methods: {
+            select_image: function (image_id) {
+                this.images.forEach(image => {
+
+                    if (image.id == image_id) {
+
+                        page_images_app.selected_image = image
+                        console.log(image)
+                    }
+                });
+            },
             add_page_image: function () {
                 page_images_app.waiting = true
                 let title = this.add_page_image_form_title

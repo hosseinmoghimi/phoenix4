@@ -21,6 +21,7 @@ class Property(Asset):
     area=models.IntegerField(_("مساحت"))
     address=models.CharField(_("آدرس"),null=True,blank=True, max_length=500)
     location=models.CharField(_("location"),null=True,blank=True, max_length=5000)
+    images=models.ManyToManyField("core.image",blank=True, verbose_name=_("images"))
     def get_agent_url(self):
         return reverse(APP_NAME+":agent",kwargs={'pk':self.agent.id})
     def image(self):
