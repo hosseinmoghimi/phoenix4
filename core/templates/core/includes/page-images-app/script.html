@@ -1,5 +1,6 @@
 <script>
     let url_add_page_image = "{% url 'core:add_page_image' %}"
+    let url_add_property_image = "{% url 'realestate:add_property_image' %}"
     let images = JSON.parse(`{{images_s|escapejs}}`)
     let page_images_app = new Vue({
         el: "#page-images-app",
@@ -58,6 +59,44 @@
                 });
 
             },
+
+
+            add_property_image: function (property_id) {
+                page_images_app.waiting = true
+                let title = this.add_page_image_form_title
+                let formData = new FormData();
+                let image = $('#add-page-image-form')[0].elements[1].files[0]
+                formData.append("image", image);
+                formData.append("title", title);
+                formData.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+                formData.append("property_id", property_id);
+
+                $.ajax({
+                    url: url_add_property_image,
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        page_images_app.waiting = false
+
+                        if (data != 0) {
+                            //console.log(data)
+                            if (data.result === 'SUCCEED') {
+                                page_images_app.images.push(data.image)
+                                page_images_app.add_page_image_form_title = ''
+                                page_images_app.add_page_image_form_file = ''
+                                page_images_app.show_add_page_image_form = false
+
+                            }
+                        }
+                        else {
+                        }
+                    },
+                });
+
+            },
+
 
         }
     })
