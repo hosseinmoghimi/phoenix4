@@ -18,7 +18,7 @@ def getContext(request):
 
 
 def ProfileContext(request,*args, **kwargs):
-    context=getContext(request=request)
+    context={}
     if 'profile' in kwargs:
         selected_profile=kwargs['profile']
     elif 'profile_id' in kwargs:

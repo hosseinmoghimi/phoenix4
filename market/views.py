@@ -449,8 +449,10 @@ class CustomerViews(View):
 
         customer = CustomerRepo(request=request).customer(*args, **kwargs)
         profile = customer.profile
-        context = getContext(request)
-        context.update(ProfileContext(request=request, profile=profile))
+        context1=ProfileContext(request=request, profile=profile)
+        context2 = getContext(request=request)
+        context2.update(context1)
+        context=context2
         context['customer'] = customer
         context['orders'] = OrderRepo(
             request=request).list(customer_id=customer.id)
