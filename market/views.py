@@ -348,9 +348,8 @@ class ProductViews(View):
     def product(self, request, *args, **kwargs):
 
         product = ProductRepo(request=request).product(*args, **kwargs)
-        page = product
         context = getContext(request=request)
-        context.update(PageContext(request=request, page=page))
+        context.update(PageContext(request=request, page=product))
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form'] = AddProductSpecificationForm()
         context['product'] = product

@@ -158,12 +158,11 @@ class ProductRepo:
 
     def product(self, *args, **kwargs):
         if 'product_id' in kwargs:
-            pk = kwargs['product_id']
+            return self.objects.filter(pk=kwargs['product_id']).first()  
         elif 'pk' in kwargs:
-            pk = kwargs['pk']
+            return self.objects.filter(pk=kwargs['pk']).first() 
         elif 'id' in kwargs:
-            pk = kwargs['id']
-        return self.objects.filter(pk=pk).first()
+            return self.objects.filter(pk=kwargs['id']).first() 
     def add_feature(self,*args, **kwargs):
         feature=ProductFeatureRepo(request=self.request).product_feature(*args, **kwargs)
         product=ProductRepo(request=self.request).product(*args, **kwargs)

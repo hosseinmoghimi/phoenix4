@@ -222,6 +222,34 @@ class BasicPage(models.Model):
     related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط"))
     keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
     @property
+    def price(self):
+        if self.app_name=="market" and self.class_name=="product":
+            from market.models import Product
+            product=Product.objects.filter(pk=self.pk).first()
+            if product is not None:
+                return product.unit_price
+
+        if self.app_name=="projectmanager" and self.class_name=="project":
+            from projectmanager.models import Project
+            project=Project.objects.filter(pk=self.pk).first()
+            if project is not None:
+                return project.sum_total()
+
+                
+        if self.app_name=="projectmanager" and self.class_name=="material":
+            from projectmanager.models import Material
+            material=Material.objects.filter(pk=self.pk).first()
+            if material is not None:
+                return material.unit_price
+
+                
+        if self.app_name=="projectmanager" and self.class_name=="service":
+            from projectmanager.models import Service
+            service=Service.objects.filter(pk=self.pk).first()
+            if service is not None:
+                return service.unit_price
+        return 0
+    @property
     def full_title(self,*args, **kwargs):
         seperator="/"
         if 'seperator' in kwargs:
@@ -366,7 +394,7 @@ class BasicPage(models.Model):
         app_name=self.app_name
         class_name=self.class_name
         pk=self.pk
-        return reverse(app_name+":"+self.class_name, kwargs={"pk": pk})
+        return reverse(app_name+":"+class_name, kwargs={"pk": pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
     def delete(self,*args, **kwargs):
