@@ -3,6 +3,11 @@
 {% block content %}
 <h4 class="text-center">
     {{session.title}}
+    {% if perms.school.change_session %}
+    <a title="ویرایش" target="_blank" href="{{session.get_edit_url}}">
+        <i class="fa fa-edit text-center"></i>
+    </a>
+    {% endif %}
 </h4>
 <div class="row">
     <div class="col-md-4">
@@ -22,17 +27,17 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4">
         {% for book in books %}
         {% include "school/includes/books-app/book-card.html" %}
 
         {% endfor %}
-    </div> 
+    </div>
     <div class="col-md-6">
-    {% include "school/includes/sessions-app/template.html" %}
+        {% include "school/includes/sessions-app/template.html" %}
 
-    </div> 
+    </div>
 
     <div class="col-md-6">
         {% include "core/includes/page-documents-app/template.html" %}
@@ -48,9 +53,29 @@
     <div class="col-md-12">
         {% include "core/includes/page-images-app/template.html" %}
     </div>
-    
+
     <div class="col-md-12">
         {% include "school/includes/attendances-app/template.html" %}
+    </div>
+
+    <div class="col-md-12">
+        {% if session.description %}
+        <div class="card" class="my-3 farsi">
+            <div class="card-header">
+                <h5 class="title">
+                    توضیحات کامل
+                </h5>
+            </div>
+            <div class="card-body">
+                <h5>
+                    {{session.title}}
+                </h5>
+                {{session.description|safe}}
+
+            </div>
+        </div>
+        {% endif %}
+
     </div>
 
 </div>
@@ -59,12 +84,12 @@
 {% block script %}
 <script>
     let students = JSON.parse(`{{students_s|escapejs}}`)
-    let page_id=parseInt("{{page.id}}")
+    let page_id = parseInt("{{page.id}}")
 </script>
 {% include "school/includes/sessions-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
 {% include "core/includes/page-links-app/script.html" %}
 {% include "school/includes/attendances-app/script.html" %}
-  
+
 {% endblock script %}
