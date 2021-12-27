@@ -6,6 +6,14 @@
         واحد درسی در حال آموزش
     </small>
     {{active_course.title}}
+
+
+    {% if perms.school.change_activecourse %}
+    <a title="ویرایش" target="_blank" href="{{active_course.get_edit_url}}">
+        <i class="fa fa-edit text-center"></i>
+    </a>
+    {% endif %}
+
 </h3>
 
 <div class="row">
