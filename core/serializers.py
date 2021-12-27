@@ -11,7 +11,7 @@ class TagSerializer(serializers.ModelSerializer):
 class BasicPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasicPage
-        fields=['id','title','class_name_farsi','price','short_description','get_absolute_url','parent_id','thumbnail','short_description','get_edit_url']
+        fields=['id','title','class_name_farsi','get_price','short_description','get_absolute_url','parent_id','thumbnail','short_description','get_edit_url']
 
 
 class PageLinkSerializer(serializers.ModelSerializer):

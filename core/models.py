@@ -222,7 +222,7 @@ class BasicPage(models.Model):
     related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط"))
     keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
     @property
-    def price(self):
+    def get_price(self):
         if self.app_name=="market" and self.class_name=="product":
             from market.models import Product
             product=Product.objects.filter(pk=self.pk).first()
