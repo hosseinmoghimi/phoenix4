@@ -270,6 +270,8 @@ class Attendance(models.Model):
 
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
     def get_edit_btn(self):
         return f"""
              <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
