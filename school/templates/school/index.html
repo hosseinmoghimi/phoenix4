@@ -1,12 +1,22 @@
 {% extends "school/layout.html" %}
 {% load static %}
+{% load social_share %}
 {% block content %}
 <h4 class="text-center">
 </h4>
 <div class="row">
 
  
+<div class="col-md-12">
+  
 
+  {% post_to_telegram session.title session.get_absolute_url session.title  "" %}
+
+  {% post_to_whatsapp  session.get_absolute_url "Share via WhatsApp" %}
+
+
+
+</div>
 
   <div class="col-md-4 farsi">
     <a href="{% url 'school:students' %}">

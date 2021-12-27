@@ -1,5 +1,7 @@
 {% extends "school/layout.html" %}
 {% load to_persian_date %}
+{% load social_share %}
+
 {% block content %}
 <h4 class="text-center">
     {{session.title}}
@@ -16,6 +18,13 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
+
+
+                {% post_to_telegram session.title session.get_absolute_url session.title  "" %}
+
+                {% post_to_whatsapp  session.get_absolute_url "Share via WhatsApp" %}
+
+
                 <h5>
                     شروع جلسه : {{session.start_time|to_persian_datetime|safe}}
                 </h5>
