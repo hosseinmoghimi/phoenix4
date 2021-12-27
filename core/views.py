@@ -117,7 +117,7 @@ def PageContext(request, page):
     page_images=page.pageimage_set.all()
     # context['images_s']=json.dumps(PageImageSerializer(page_images,many=True).data)
     context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
-    if page.keywords is not None:
+    if page.meta_data is not None:
         context['keywords']=page.meta_data
 
 
