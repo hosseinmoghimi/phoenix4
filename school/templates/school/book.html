@@ -3,4 +3,10 @@
 
 
 {% include "school/includes/books-app/book-card.html" %}
+<div>
+    {% if book.description %}
+    {{book.description|safe}}
+    {% endif %}
+    
+</div>
 {% endblock content %}
