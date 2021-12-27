@@ -11,15 +11,18 @@
                     <span v-text="attendance.student.profile.name"></span>
                 </a>
             </td>
+            {% if not session %}
+              
             <td>
-
+                
                 <a :href="attendance.session.get_absolute_url">
-
+                    
                     <span v-text="attendance.session.title"> </span>
-
+                    
                 </a>
-
+                
             </td>
+            {% endif %}
             <td>
 
 
