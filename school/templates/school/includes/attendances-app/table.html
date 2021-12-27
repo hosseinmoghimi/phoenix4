@@ -5,12 +5,15 @@
                 <span :class="'text-'+attendance.color" v-text="attendance.status"></span>
 
             </td>
+            {% if not student %}
+              
             <td>
                 <a :href="attendance.student.get_absolute_url">
                     <img :src="attendance.student.profile.image" class="rounded-circle" width="32" alt="">
                     <span v-text="attendance.student.profile.name"></span>
                 </a>
             </td>
+            {% endif %}
             {% if not session %}
               
             <td>
