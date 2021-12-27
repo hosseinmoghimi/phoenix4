@@ -245,7 +245,19 @@ class Attendance(models.Model):
     time_added=models.DateTimeField(_("time_added"),null=True,blank=True, auto_now=False, auto_now_add=True)
     description=models.CharField(_("description"), max_length=500)
     class_name="attendance"
-
+    def color(self):
+        colo="primary"
+        if self.status==AttendanceStatusEnum.DELAY:
+            colo="warning"
+        elif self.status==AttendanceStatusEnum.PRESENT:
+            colo="primary"
+        elif self.status==AttendanceStatusEnum.ABSENT:
+            colo="secondary"
+        elif self.status==AttendanceStatusEnum.TASHVIGH:
+            colo="success"
+        elif self.status==AttendanceStatusEnum.TANBIH:
+            colo="danger"
+        return colo
     class Meta:
         verbose_name = _("Attendance")
         verbose_name_plural = _("Attendances")

@@ -15,7 +15,7 @@ class AddStudentForm(forms.Form):
     profile_id=forms.IntegerField( required=True)
 class AddSessionForm(forms.Form):
     active_course_id=forms.IntegerField( required=True)
-class AddSessionStudentStateForm(forms.Form):
+class AddAttendanceForm(forms.Form):
     student_id=forms.IntegerField( required=True)
     session_id=forms.IntegerField( required=True)
     status=forms.CharField( max_length=50, required=True)

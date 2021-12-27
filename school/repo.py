@@ -24,8 +24,10 @@ class AttendanceRepo():
     
     def list(self,*args, **kwargs):
         objects=self.objects.all()
-        if 'school_id' in kwargs:
-            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'session_id' in kwargs:
+            objects=objects.filter(session_id=kwargs['session_id'])
+        if 'student_id' in kwargs:
+            objects=objects.filter(student_id=kwargs['student_id'])
         if 'search_for' in kwargs:
             objects=objects.filter(title__contains=kwargs['search_for'])
         return objects

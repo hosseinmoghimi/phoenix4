@@ -2,7 +2,7 @@ from django.shortcuts import render,reverse
 from authentication.repo import ProfileRepo
 from core.views import CoreContext, PageContext,ParametersEnum,ParameterRepo
 from school.enums import AttendanceStatusEnum
-from school.repo import ActiveCourseRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
 from school.serializers import AttendanceSerializer,ActiveCourseSerializer, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from django.views import View
@@ -159,6 +159,13 @@ class StudentViews(View):
         context=getContext(request=request)
         student=StudentRepo(request=request).student(*args, **kwargs)
         context['student']=student
+
+        
+        attendances=AttendanceRepo(request=request).list(student_id=student.id)
+        context['attendances']=attendances
+        context['attendances_s']=json.dumps(AttendanceSerializer(attendances,many=True).data)
+
+
         return render(request,TEMPLATE_ROOT+"student.html",context)
 
     def students(self,request,*args, **kwargs):
@@ -275,13 +282,13 @@ class BookViews(View):
 class SessionViews(View):
     def session(self,request,*args, **kwargs):
         context=getContext(request=request)
-
-        context['STATUS_PRESENT']=AttendanceStatusEnum.PRESENT
-        context['STATUS_ABSENT']=AttendanceStatusEnum.ABSENT
-        context['STATUS_DELAY']=AttendanceStatusEnum.DELAY
-        context['STATUS_TASHVIGH']=AttendanceStatusEnum.TASHVIGH
-        context['STATUS_TANBIH']=AttendanceStatusEnum.TANBIH
-        
+        if request.user.has_perm(APP_NAME+".add_attendance"):
+            context['STATUS_PRESENT']=AttendanceStatusEnum.PRESENT
+            context['STATUS_ABSENT']=AttendanceStatusEnum.ABSENT
+            context['STATUS_DELAY']=AttendanceStatusEnum.DELAY
+            context['STATUS_TASHVIGH']=AttendanceStatusEnum.TASHVIGH
+            context['STATUS_TANBIH']=AttendanceStatusEnum.TANBIH
+            context['add_attendence_form']=AddAttendanceForm()
          
         session=SessionRepo(request=request).session(*args, **kwargs)
         context.update(PageContext(request=request,page=session))
@@ -293,7 +300,7 @@ class SessionViews(View):
         context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
 
 
-        attendances=session.attendance_set.all()
+        attendances=AttendanceRepo(request=request).list(session_id=session.id)
         context['attendances']=attendances
         context['attendances_s']=json.dumps(AttendanceSerializer(attendances,many=True).data)
 

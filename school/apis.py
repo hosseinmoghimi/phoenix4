@@ -46,7 +46,7 @@ class AttendanceApi(APIView):
         log=1
         if request.method=='POST':
             log=2
-            my_form=AddSessionStudentStateForm(request.POST)
+            my_form=AddAttendanceForm(request.POST)
             if my_form.is_valid():
                 log=3
                 cd=my_form.cleaned_data

@@ -1,22 +1,15 @@
 {% load static %}
 <div id="attendances-app">
     <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+                وضعیت حضور
+            </h4>
+        </div>
+
         <div class="card-body">
-            <div class="farsi text-right">
+            {% include "school/includes/attendances-app/table.html" %}
 
-                <div v-for="attendance in attendances">
-                    <span v-text="attendance.status" class="mx-2"></span>
-                    <span v-text="attendance.student.profile.name" class="mx-2"></span>
-                    <span v-text="attendance.session_id" class="mx-2"></span>
-                    <!-- <span v-text="attendance.persian_enter_time" class="mx-2"></span> -->
-                    <!-- <span v-text="attendance.persian_exit_time" class="mx-2"></span> -->
-                    <span v-text="attendance.persian_time_added" class="mx-2"></span>
-                    <span v-text="attendance.description" class="mx-2"></span>
-                </div>
-            </div>
-            <div class="my-4">
-
-            </div>
             <div v-for="student in students">
 
                 <session-student-component :student="student"></session-student-component>
