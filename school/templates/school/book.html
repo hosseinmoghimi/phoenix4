@@ -5,7 +5,20 @@
 {% include "school/includes/books-app/book-card.html" %}
 <div>
     {% if book.description %}
-    {{book.description|safe}}
+    <div class="card" class="my-3">
+        <div class="card-header">
+            <h5 class="title">
+                توضیحات کامل
+            </h5>
+        </div>
+        <div class="card-body">
+            <h5>
+                {{book.title}}
+            </h5>
+            {{book.description|safe}}
+
+        </div>
+    </div>
     {% endif %}
     
 </div>
