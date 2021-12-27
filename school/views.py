@@ -165,6 +165,26 @@ class StudentViews(View):
         context['attendances']=attendances
         context['attendances_s']=json.dumps(AttendanceSerializer(attendances,many=True).data)
 
+        me_student=StudentRepo(request=request).me
+        me_teacher=TeacherRepo(request=request).me
+        if request.user.has_perm(APP_NAME+'.view_student'):
+            pass
+        elif me_student.id==student.id:
+            pass
+        else:
+            mv=MessageView(request=request)
+            mv.links = []
+            mv.message_text_html = None
+            mv.message_color = 'warning'
+            mv.has_home_link = True
+            mv.header_color = "rose"
+            mv.message_icon = ''
+            mv.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+            mv.message_text = "شما مجوز مشاهده این صفحه را ندارید."
+            mv.header_text = "دسترسی غیر مجاز"
+            mv.message_html = ""
+
+            return mv.response()
 
         return render(request,TEMPLATE_ROOT+"student.html",context)
 
@@ -222,6 +242,26 @@ class TeacherViews(View):
         context=getContext(request=request)
         teacher=TeacherRepo(request=request).teacher(*args, **kwargs)
         context['teacher']=teacher
+        me_student=StudentRepo(request=request).me
+        me_teacher=TeacherRepo(request=request).me
+        if request.user.has_perm(APP_NAME+'.view_teacher'):
+            pass
+        elif me_teacher.id == teacher.id:
+            pass
+        else:
+            mv=MessageView(request=request)
+            mv.links = []
+            mv.message_text_html = None
+            mv.message_color = 'warning'
+            mv.has_home_link = True
+            mv.header_color = "rose"
+            mv.message_icon = ''
+            mv.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+            mv.message_text = "شما مجوز مشاهده این صفحه را ندارید."
+            mv.header_text = "دسترسی غیر مجاز"
+            mv.message_html = ""
+
+            return mv.response()
         return render(request,TEMPLATE_ROOT+"teacher.html",context)
 
 
