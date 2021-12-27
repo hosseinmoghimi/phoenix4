@@ -19,13 +19,13 @@
         <div class="card">
             <div class="card-body farsi">
 
-                <div class="my-2">
+                <div class="my-2 text-right">
 
-                    {% post_to_telegram session.title session.get_absolute_url session.title "" %}
+                    {% post_to_telegram link_text="اشتراک با تلگرام" title=session.title obj_or_url=session.get_absolute_url  %}
 
                 </div>
-                <div class="my-2">
-                    {% post_to_whatsapp session.get_absolute_url "Share via WhatsApp" %}
+                <div class="my-2 text-right">
+                    {% post_to_whatsapp session.get_absolute_url link_text="  واتسپ" %}
                 </div>
 
 
