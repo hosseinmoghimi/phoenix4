@@ -169,7 +169,7 @@ class StudentViews(View):
         me_teacher=TeacherRepo(request=request).me
         if request.user.has_perm(APP_NAME+'.view_student'):
             pass
-        elif me_student.id==student.id:
+        elif me_student is not None and me_student.id==student.id:
             pass
         else:
             mv=MessageView(request=request)
@@ -246,7 +246,7 @@ class TeacherViews(View):
         me_teacher=TeacherRepo(request=request).me
         if request.user.has_perm(APP_NAME+'.view_teacher'):
             pass
-        elif me_teacher.id == teacher.id:
+        elif  me_teacher is not None and  me_teacher.id == teacher.id:
             pass
         else:
             mv=MessageView(request=request)
