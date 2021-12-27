@@ -2,7 +2,7 @@ from django.db.models import fields
 from .apps import APP_NAME
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
-from .models import ActiveCourse, Book, ClassRoom, Course, Major, School, Session, Student, Teacher
+from .models import ActiveCourse, Attendance, Book, ClassRoom, Course, Major, School, Session, Student, Teacher
 
 class StudentSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
@@ -58,3 +58,13 @@ class MajorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Major
         fields=['id','title','get_absolute_url','get_edit_url']
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    session=SessionSerializer()
+    student=StudentSerializer()
+    class Meta:
+        model = Attendance
+        fields=['id','session','status','student','description','persian_time_added','persian_enter_time','persian_exit_time','get_edit_url']
+
+
+

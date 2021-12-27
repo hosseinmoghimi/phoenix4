@@ -1,8 +1,9 @@
 from django.shortcuts import render,reverse
 from authentication.repo import ProfileRepo
 from core.views import CoreContext, PageContext,ParametersEnum,ParameterRepo
+from school.enums import AttendanceStatusEnum
 from school.repo import ActiveCourseRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import ActiveCourseSerializer, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.serializers import AttendanceSerializer,ActiveCourseSerializer, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from django.views import View
 from .forms import *
@@ -274,6 +275,14 @@ class BookViews(View):
 class SessionViews(View):
     def session(self,request,*args, **kwargs):
         context=getContext(request=request)
+
+        context['STATUS_PRESENT']=AttendanceStatusEnum.PRESENT
+        context['STATUS_ABSENT']=AttendanceStatusEnum.ABSENT
+        context['STATUS_DELAY']=AttendanceStatusEnum.DELAY
+        context['STATUS_TASHVIGH']=AttendanceStatusEnum.TASHVIGH
+        context['STATUS_TANBIH']=AttendanceStatusEnum.TANBIH
+        
+         
         session=SessionRepo(request=request).session(*args, **kwargs)
         context.update(PageContext(request=request,page=session))
         context['session']=session
@@ -282,6 +291,11 @@ class SessionViews(View):
         students=session.active_course.students.all()
         context['students']=students
         context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+
+
+        attendances=session.attendance_set.all()
+        context['attendances']=attendances
+        context['attendances_s']=json.dumps(AttendanceSerializer(attendances,many=True).data)
 
         books=session.active_course.course.books.all()
         context['books']=books

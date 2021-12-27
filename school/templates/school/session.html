@@ -1,4 +1,5 @@
 {% extends "school/layout.html" %}
+{% load to_persian_date %}
 {% block content %}
 <h4 class="text-center">
     {{session.title}}
@@ -8,9 +9,20 @@
         {% include "school/includes/courses-app/course-card.html" %}
     </div>
     <div class="col-md-4">
-    {% include "school/includes/students-app/template.html" %}
+        <div class="card">
+            <div class="card-body">
+                <h5>
+                    شروع جلسه : {{session.start_time|to_persian_datetime|safe}}
+                </h5>
 
-    </div> 
+                <h5>
+                    پایان جلسه : {{session.end_time|to_persian_datetime|safe}}
+                </h5>
+
+            </div>
+        </div>
+    </div>
+    
     <div class="col-md-4">
         {% for book in books %}
         {% include "school/includes/books-app/book-card.html" %}
@@ -36,18 +48,23 @@
     <div class="col-md-12">
         {% include "core/includes/page-images-app/template.html" %}
     </div>
+    
+    <div class="col-md-12">
+        {% include "school/includes/attendances-app/template.html" %}
+    </div>
 
 </div>
 {% endblock content %}
 
 {% block script %}
 <script>
+    let students = JSON.parse(`{{students_s|escapejs}}`)
     let page_id=parseInt("{{page.id}}")
 </script>
-{% include "school/includes/students-app/script.html" %}
 {% include "school/includes/sessions-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
 {% include "core/includes/page-links-app/script.html" %}
+{% include "school/includes/attendances-app/script.html" %}
   
 {% endblock script %}

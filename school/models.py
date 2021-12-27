@@ -4,6 +4,7 @@ from core.models import BasicPage
 from django.db import models
 from django.shortcuts import reverse
 from core.settings import ADMIN_URL, STATIC_URL
+from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
 from .settings import *
@@ -241,7 +242,8 @@ class Attendance(models.Model):
     status=models.CharField(_("status"),choices=AttendanceStatusEnum.choices, max_length=50)
     enter_time=models.DateTimeField(_("enter"),null=True,blank=True, auto_now=False, auto_now_add=False)
     exit_time=models.DateTimeField(_("exit"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    
+    time_added=models.DateTimeField(_("time_added"),null=True,blank=True, auto_now=False, auto_now_add=True)
+    description=models.CharField(_("description"), max_length=500)
     class_name="attendance"
 
     class Meta:
@@ -265,7 +267,12 @@ class Attendance(models.Model):
             </a>
         """
 
-  
+    def persian_enter_time(self):
+        return PersianCalendar().from_gregorian(self.enter_time)
+    def persian_exit_time(self):
+        return PersianCalendar().from_gregorian(self.exit_time)
+    def persian_time_added(self):
+        return PersianCalendar().from_gregorian(self.time_added)
 class Book(models.Model):
     class_name="book"
     

@@ -1,10 +1,69 @@
+from django.http import request
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
 import school
-from .models import ActiveCourse, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
+from school.enums import AttendanceStatusEnum
+from .models import ActiveCourse, Attendance, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
 from .apps import APP_NAME
 from django.db.models import Q
 from django.utils import timezone
+
+
+class AttendanceRepo():
+    
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Attendance.objects
+        self.me=ProfileRepo(user=self.user).me
+    
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(title__contains=kwargs['search_for'])
+        return objects
+    
+    def attendance(self,*args, **kwargs):
+        if 'attendance_id' in kwargs:
+            return self.objects.filter(pk=kwargs['attendance_id']).first()
+        elif 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        elif 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+    def add(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_attendance"):
+            return
+        now=timezone.now()
+        session_id=kwargs['session_id'] if 'session_id' in kwargs else 0
+        student_id=kwargs['student_id'] if 'student_id' in kwargs else 0
+        description=kwargs['description'] if 'description' in kwargs else 0
+        status=kwargs['status'] if 'status' in kwargs else AttendanceStatusEnum.NOT_SET
+
+        session=SessionRepo(request=self.request).session(*args, **kwargs)
+        student=StudentRepo(request=self.request).student(*args, **kwargs)
+
+        if session is None or student is None:
+            return
+        enter_time=kwargs['enter_time'] if 'enter_time' in kwargs else session.start_time
+        exit_time=kwargs['exit_time'] if 'exit_time' in kwargs else session.end_time
+
+        attendance=Attendance()
+        attendance.student=student
+        attendance.session=session
+        attendance.enter_time=enter_time
+        attendance.exit_time=exit_time
+        attendance.status=status
+        attendance.description=description
+        attendance.save()
+        return attendance
 class SchoolRepo():
     
     def __init__(self,*args, **kwargs):
@@ -274,7 +333,7 @@ class SessionRepo():
         session.save()
         return session
 
-
+  
 
     
 class TeacherRepo():

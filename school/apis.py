@@ -1,7 +1,8 @@
 from django.http.response import JsonResponse
+from django.utils import timezone
 from school.forms import *
-from school.repo import ClassRoomRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.repo import AttendanceRepo, ClassRoomRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.serializers import AttendanceSerializer, ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -39,7 +40,34 @@ class SessionApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-
+class AttendanceApi(APIView):
+    def add_attendance(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddSessionStudentStateForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                description=cd['description']
+                student_id=cd['student_id']
+                session_id=cd['session_id']
+                # time=cd['time']
+                # if time=="NOW":
+                #     time=timezone.now()
+                status=cd['status']
+                attendance=AttendanceRepo(request=request).add(
+                    student_id=student_id,
+                    session_id=session_id,
+                    status=status,
+                    description=description,
+                    )
+                if attendance is not None:
+                    context['attendance']=AttendanceSerializer(attendance).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
 class TeacherApi(APIView):
     def add_teacher(self,request,*args, **kwargs):
         context={'result':FAILED}
