@@ -1,6 +1,6 @@
 from django.shortcuts import render,reverse
 from authentication.repo import ProfileRepo
-from core.views import CoreContext, PageContext,ParametersEnum,ParameterRepo
+from core.views import CoreContext, MessageView, PageContext,ParametersEnum,ParameterRepo
 from school.enums import AttendanceStatusEnum
 from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
 from school.serializers import AttendanceSerializer,ActiveCourseSerializer, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
@@ -291,6 +291,30 @@ class SessionViews(View):
             context['add_attendence_form']=AddAttendanceForm()
          
         session=SessionRepo(request=request).session(*args, **kwargs)
+        me_student=StudentRepo(request=request).me
+        me_teacher=TeacherRepo(request=request).me
+        if request.user.has_perm(APP_NAME+'.view_session'):
+            pass
+        elif me_student in session.active_course.students.all():
+            pass
+        elif me_teacher in session.active_course.teachers.all():
+            pass
+        else:
+            mv=MessageView(request=request)
+            mv.links = []
+            mv.message_text_html = None
+            mv.message_color = 'warning'
+            mv.has_home_link = True
+            mv.header_color = "rose"
+            mv.message_icon = ''
+            mv.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+            mv.message_text = "شما مجوز مشاهده این صفحه را ندارید."
+            mv.header_text = "دسترسی غیر مجاز"
+            mv.message_html = ""
+
+            return mv.response()
+
+
         context.update(PageContext(request=request,page=session))
         context['session']=session
         context['course']=session.active_course.course

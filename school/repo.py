@@ -348,7 +348,8 @@ class TeacherRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Teacher.objects
-        self.me=ProfileRepo(user=self.user).me
+        self.profile=ProfileRepo(user=self.user).me
+        self.me=Teacher.objects.filter(profile=self.profile).first()
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'school_id' in kwargs:
@@ -390,7 +391,8 @@ class StudentRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Student.objects
-        self.me=ProfileRepo(user=self.user).me
+        self.profile=ProfileRepo(user=self.user).me
+        self.me=Student.objects.filter(profile=self.profile).first()
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'school_id' in kwargs:
