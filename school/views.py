@@ -262,6 +262,14 @@ class TeacherViews(View):
             mv.message_html = ""
 
             return mv.response()
+
+
+        
+        
+        active_courses=teacher.activecourse_set.all()
+        context['active_courses']=active_courses
+        context['active_courses_s']=json.dumps(ActiveCourseSerializer(active_courses,many=True).data)
+
         return render(request,TEMPLATE_ROOT+"teacher.html",context)
 
 
