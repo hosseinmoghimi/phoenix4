@@ -90,6 +90,7 @@ class Course(models.Model):
             </a>
         """
 
+
 class EducationalYear(models.Model):
     title=models.CharField(_("title"), max_length=50)
     start_date=models.DateTimeField(_("start_date"),null=True,blank=True, auto_now=False, auto_now_add=False)
@@ -157,6 +158,7 @@ class ActiveCourse(models.Model):
     def get_delete_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 
+
 class ClassRoom(models.Model):
     class_name="classroom"
     title=models.CharField(_("نام کلاس"), max_length=100)
@@ -218,6 +220,8 @@ class Teacher(models.Model):
 
     def get_delete_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+
 class Session(SchoolPage):
     class_name="session"
     active_course=models.ForeignKey("activecourse", verbose_name=_("activecourse"), on_delete=models.CASCADE)
@@ -236,6 +240,8 @@ class Session(SchoolPage):
 
     def get_delete_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+
 class Attendance(models.Model):
     student=models.ForeignKey("student", verbose_name=_("student"), on_delete=models.CASCADE)
     session=models.ForeignKey("session", verbose_name=_("session"), on_delete=models.CASCADE)
@@ -287,6 +293,8 @@ class Attendance(models.Model):
         return PersianCalendar().from_gregorian(self.exit_time)
     def persian_time_added(self):
         return PersianCalendar().from_gregorian(self.time_added)
+
+
 class Book(models.Model):
     class_name="book"
     
@@ -318,6 +326,7 @@ class Book(models.Model):
 
     def get_delete_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
 
 class Student(models.Model):
     class_name="student"
