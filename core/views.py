@@ -49,7 +49,8 @@ def CoreContext(request, *args, **kwargs):
         'home_url': reverse(app_name+":home"),
         'logo':PictureRepo(request=request,app_name=app_name).picture(name=PictureNameEnums.LOGO),
     }
-    
+    master_keywords=parameter_repo.parameter(name=ParametersEnum.MASTER_KEYWORDS).value
+    context['master_keywords']=master_keywords
 
     if PUSHER_IS_ENABLE and profile is not None and profile.member_set.first() is not None:
         from messenger.views import GetMemberContext

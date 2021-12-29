@@ -212,7 +212,7 @@ class BasicPage(models.Model):
                              choices=ColorEnum.choices, default=ColorEnum.PRIMARY, max_length=50)
     tags = models.ManyToManyField(
         "Tag", verbose_name=_("برچسب ها"), blank=True)
-    meta_data=models.CharField(_("متا دیتا"),null=True,blank=True, max_length=100)
+    meta_data=models.CharField(_("کلیدواژه ها یا متا دیتا"),null=True,blank=True, max_length=100)
     app_name = models.CharField(_("نام اپ"),null=True,blank=True, max_length=50)
     class_name = models.CharField(_("نام کلاس"),null=True,blank=True, max_length=50)
     date_added = models.DateTimeField(

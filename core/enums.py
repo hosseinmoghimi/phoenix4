@@ -109,6 +109,7 @@ class IconsEnum(TextChoices):
 
 
 class ParametersEnum(TextChoices):
+    MASTER_KEYWORDS="کلید واژه های اصلی اپ",_("کلید واژه های اصلی اپ")
     HOME_URL="آدرس خانه",_("آدرس خانه")
     SHOW_ARCHIVES="نمایش فایل های آرشیو شده",_("نمایش فایل های آرشیو شده")
     VISITOR_COUNTER="VISITOR_COUNTER",_("VISITOR_COUNTER")
