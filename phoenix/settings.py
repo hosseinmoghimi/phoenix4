@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     'core',
     'dashboard',
     'farm',
+    'chef',
+    # 'tourleader',
     'market',
     'projectmanager',
     'phoenix_forums',
