@@ -193,6 +193,19 @@ class BookRepo():
             return
         book.documents.add(document)
         return document
+
+    def add_book(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_book"):
+            return
+        book=Book()
+        if 'title' in kwargs:
+            book.title=kwargs['title']
+        book.save()
+        course=CourseRepo(request=self.request).course(*args, **kwargs)
+        if course is None:
+            return
+        course.books.add(book)
+        return book
 class ClassRoomRepo():
    
     def __init__(self,*args, **kwargs):

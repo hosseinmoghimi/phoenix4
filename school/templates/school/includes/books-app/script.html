@@ -9,7 +9,16 @@
     }
     let books_app_methods = {
         add_book: function () {
-            console.log("add_book")
+            let payload = {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                title: this.title,
+                course_id: course_id,
+            }
+            let url="{% url 'school:add_book' %}"
+            $.post(url, payload).done((data) => {
+                books_app.books.push(data.book)
+                books_app.title=""
+            })
         },
         filter: function () {
             this.books = books.filter((book) => {

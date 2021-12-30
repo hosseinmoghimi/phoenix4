@@ -3,7 +3,7 @@ from django.utils import timezone
 from core.serializers import DocumentSerializer
 from school.forms import *
 from school.repo import AttendanceRepo, BookRepo, ClassRoomRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import AttendanceSerializer, ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.serializers import AttendanceSerializer, BookSerializer, ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -39,6 +39,23 @@ class BookApi(APIView):
                 document=BookRepo(request=request).add_document(title=title,book_id=book_id)
                 if document is not None:
                     context['document']=DocumentSerializer(document).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    def add_book(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            add_book_form=AddBookForm(request.POST)
+            if add_book_form.is_valid():
+                log=3
+                cd=add_book_form.cleaned_data
+                title=cd['title']
+                course_id=cd['course_id']
+                book=BookRepo(request=request).add_book(title=title,course_id=course_id)
+                if book is not None:
+                    context['book']=BookSerializer(book).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

@@ -33,6 +33,7 @@ urlpatterns = [
     
     path("books/",login_required(views.BookViews().books),name="books"),
     path("add_document/",login_required(apis.BookApi().add_document),name="add_document"),
+    path("add_book/",login_required(apis.BookApi().add_book),name="add_book"),
     path("book/<int:pk>/",login_required(views.BookViews().book),name="book"),
     
     path("session/<int:pk>/",login_required(views.SessionViews().session),name="session"),

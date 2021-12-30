@@ -213,7 +213,8 @@ class CourseViews(View):
         books=BookRepo(request=request).list(course_id=course.id)
         context['books']=books
         context['books_s']=json.dumps(BookSerializer(books,many=True).data)
-        
+        if request.user.has_perm(APP_NAME+".add_book"):
+            context['add_book_form']=AddBookForm()
 
         
         active_courses=course.activecourse_set.all()

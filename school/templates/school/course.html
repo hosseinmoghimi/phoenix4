@@ -31,6 +31,9 @@
 {% endblock content %}
 
 {% block script %}
+<script>
+    let course_id=parseInt("{{course.id}}")
+</script>
 {% include "school/includes/active-course-app/script.html" %}
 {% include "school/includes/books-app/script.html" %}
 

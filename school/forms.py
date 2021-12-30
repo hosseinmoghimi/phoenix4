@@ -24,3 +24,6 @@ class AddAttendanceForm(forms.Form):
 class AddDocumentForm(forms.Form):
     book_id=forms.IntegerField( required=True)
     title=forms.CharField( max_length=50, required=True)
+class AddBookForm(forms.Form):
+    course_id=forms.IntegerField( required=True)
+    title=forms.CharField( max_length=50, required=True)
