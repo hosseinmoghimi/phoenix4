@@ -161,6 +161,11 @@ class BookRepo():
         objects=self.objects.all()
         if 'school_id' in kwargs:
             objects=objects.filter(school_id=kwargs['school_id'])
+        if 'course_id' in kwargs:
+            course=CourseRepo(request=self.request).course(pk=kwargs['course_id'])
+            if course is not None:
+                return course.books.all()
+            return
         if 'search_for' in kwargs:
             objects=objects.filter(title__contains=kwargs['search_for'])
         return objects

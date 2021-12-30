@@ -1,0 +1,29 @@
+<script>
+
+    let books = JSON.parse("{{books_s|escapejs}}")
+
+    let books_app_data = {
+        books:books,
+        search_for: "",
+        title: "",
+    }
+    let books_app_methods = {
+        add_book: function () {
+            console.log("add_book")
+        },
+        filter: function () {
+            this.books = books.filter((book) => {
+                if (book.title.indexOf(books_app.search_for) > -1)
+                    return true
+
+            })
+        },
+    }
+</script>
+<script>
+    let books_app = new Vue({
+        el: "#books-app",
+        data: books_app_data,
+        methods: books_app_methods,
+    })
+</script>

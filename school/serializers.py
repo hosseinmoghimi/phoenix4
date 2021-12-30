@@ -1,4 +1,5 @@
-from django.db.models import fields
+
+from core.serializers import DocumentSerializer
 from .apps import APP_NAME
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
@@ -37,9 +38,10 @@ class ClassRoomSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    documents=DocumentSerializer(many=True)
     class Meta:
         model = Book
-        fields=['id','title','get_absolute_url','get_edit_url']
+        fields=['id','title','get_absolute_url','get_edit_url','documents','get_delete_url']
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:

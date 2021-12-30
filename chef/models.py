@@ -25,4 +25,4 @@ class Food(ChefPage):
     def save(self,*args, **kwargs):
         self.class_name="food"
         return super(Food,self).save(*args, **kwargs)
- 
+  

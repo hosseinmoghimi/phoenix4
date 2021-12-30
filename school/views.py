@@ -198,6 +198,8 @@ class StudentViews(View):
             profiles=ProfileRepo(request=request).list()
             context['profiles']=profiles
         return render(request,TEMPLATE_ROOT+"students.html",context)
+
+
 class CourseViews(View):
     def course(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -207,6 +209,10 @@ class CourseViews(View):
 
 
         
+        books=BookRepo(request=request).list(course_id=course.id)
+        context['books']=books
+        context['books_s']=json.dumps(BookSerializer(books,many=True).data)
+        
 
         
         active_courses=course.activecourse_set.all()
@@ -214,6 +220,19 @@ class CourseViews(View):
         context['active_courses_s']=json.dumps(ActiveCourseSerializer(active_courses,many=True).data)
 
         return render(request,TEMPLATE_ROOT+"course.html",context)
+
+    def courses(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        courses=CourseRepo(request=request).list(*args, **kwargs)
+        context['courses']=courses
+        context['courses_s']=json.dumps(CourseSerializer(courses,many=True).data)
+
+
+
+
+
+
+        return render(request,TEMPLATE_ROOT+"courses.html",context)
 
 
     def active_course(self,request,*args, **kwargs):
@@ -224,6 +243,14 @@ class CourseViews(View):
         students=active_course.students.all()
         context['students']=students
         context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
+
+
+
+        
+        books=BookRepo(request=request).list(course_id=active_course.course.id)
+        context['books']=books
+        context['books_s']=json.dumps(BookSerializer(books,many=True).data)
+
 
 
         sessions=active_course.session_set.all()

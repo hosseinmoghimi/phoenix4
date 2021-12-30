@@ -44,4 +44,5 @@ urlpatterns = [
     
     path("activecourse/<int:pk>/",login_required(views.CourseViews().active_course),name="activecourse"),
     path("course/<int:pk>/",login_required(views.CourseViews().course),name="course"),
+    path("courses/",login_required(views.CourseViews().courses),name="courses"),
 ]
