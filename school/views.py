@@ -1,5 +1,6 @@
 from django.shortcuts import render,reverse
 from authentication.repo import ProfileRepo
+from core.serializers import DocumentSerializer
 from core.views import CoreContext, MessageView, PageContext,ParametersEnum,ParameterRepo
 from school.enums import AttendanceStatusEnum
 from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
@@ -345,6 +346,9 @@ class BookViews(View):
         context=getContext(request=request)
         book=BookRepo(request=request).book(*args, **kwargs)
         context['book']=book
+        documents=book.documents.all()
+        context['documents']=documents
+        context['documents_s']=json.dumps(DocumentSerializer(documents,many=True).data)
         return render(request,TEMPLATE_ROOT+"book.html",context)
 
     def books(self,request,*args, **kwargs):

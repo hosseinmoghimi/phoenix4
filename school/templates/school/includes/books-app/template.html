@@ -14,18 +14,12 @@
 
 
         </div>
-
-
         <div id="collapseBooks" class="collapse" aria-labelledby="headingBooks" data-parent="#accordion-books">
-
-            <input type="text" v-model="search_for" class="form-control" @input="filter()" placeholder="جستجو ..." >
-
-
             <div class="card-body farsi text-right">
-
-
-             
-
+                <div class="mb-3">
+                    <input type="text" v-model="search_for" class="form-control" @input="filter()"
+                        placeholder="جستجو ...">
+                </div>
                 <div v-for="book in books" class="mb-3">
                     <h5>
                         <small class="text-muted">
@@ -41,30 +35,38 @@
                         </a>
                         {% endif %}
 
-                        {% if perms.core.delete_book %}
+                        {% if perms.school.delete_book %}
                         <a title="حذف" target="_blank" :href="book.get_delete_url">
                             <i class="fa fa-trash text-danger"></i>
                         </a>
                         {% endif %}
-
                     </h5>
-
                     <div class="mr-5" v-for="doc in book.documents">
                         <a :href="doc.get_download_url">
                             <span v-text="doc.title"></span>
                         </a>
+                        {% if perms.school.change_document %}
+                        <a title="ویرایش" target="_blank" :href="doc.get_edit_url">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% endif %}
+            
+                        {% if perms.core.delete_document %}
+                        <a title="حذف" target="_blank" :href="doc.get_delete_url">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                        {% endif %}
+
                     </div>
                     <hr>
                 </div>
-
-
             </div>
             {% if add_book_form %}
-              <div class="card-footer">
-                  <form @submit.prevent="add_book()">
-                      <input type="text" v-model="title" class="form-control" placeholder="عنوان کتاب" >
-                  </form>
-              </div>
+            <div class="card-footer">
+                <form @submit.prevent="add_book()">
+                    <input type="text" v-model="title" class="form-control" placeholder="عنوان کتاب">
+                </form>
+            </div>
             {% endif %}
         </div>
     </div>

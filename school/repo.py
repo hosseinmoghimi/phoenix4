@@ -1,6 +1,7 @@
 from django.http import request
 from authentication.repo import ProfileRepo
 from core import repo as CoreRepo
+from core.models import Document
 import school
 from school.enums import AttendanceStatusEnum
 from .models import ActiveCourse, Attendance, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
@@ -155,7 +156,7 @@ class BookRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.objects = Book.objects
-        self.me=ProfileRepo(user=self.user).me
+        self.profile=ProfileRepo(user=self.user).me
     
     def list(self,*args, **kwargs):
         objects=self.objects.all()
@@ -179,6 +180,19 @@ class BookRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_document(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".change_book"):
+            return
+        document=Document()
+        if 'title' in kwargs:
+            document.title=kwargs['title']
+        document.profile_id=self.profile.id
+        document.save()
+        book=self.book(*args, **kwargs)
+        if book is None:
+            return
+        book.documents.add(document)
+        return document
 class ClassRoomRepo():
    
     def __init__(self,*args, **kwargs):
