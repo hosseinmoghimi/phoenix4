@@ -4,7 +4,7 @@ from core.serializers import DocumentSerializer
 from core.views import CoreContext, MessageView, PageContext,ParametersEnum,ParameterRepo
 from school.enums import AttendanceStatusEnum
 from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import AttendanceSerializer,ActiveCourseSerializer, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.serializers import AttendanceSerializer,ActiveCourseSerializer, CourseSerializerWithMajors, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from django.views import View
 from .forms import *
@@ -227,7 +227,7 @@ class CourseViews(View):
         context=getContext(request=request)
         courses=CourseRepo(request=request).list(*args, **kwargs)
         context['courses']=courses
-        context['courses_s']=json.dumps(CourseSerializer(courses,many=True).data)
+        context['courses_s']=json.dumps(CourseSerializerWithMajors(courses,many=True).data)
 
 
 

@@ -64,7 +64,8 @@ class Course(models.Model):
     level=models.IntegerField(_("level"))
     books=models.ManyToManyField("book", verbose_name=_("books"),blank=True)
     course_count=models.IntegerField(_("تعداد واحد"))
-    
+    def majors(self):
+        return self.major_set.all()
 
     class Meta:
         verbose_name = _("Course")

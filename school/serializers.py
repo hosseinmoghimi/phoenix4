@@ -37,6 +37,12 @@ class ClassRoomSerializer(serializers.ModelSerializer):
 
 
 
+class MajorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Major
+        fields=['id','title','get_absolute_url','get_edit_url']
+
+
 class BookSerializer(serializers.ModelSerializer):
     documents=DocumentSerializer(many=True)
     class Meta:
@@ -49,17 +55,18 @@ class CourseSerializer(serializers.ModelSerializer):
         fields=['id','title','level','course_count','get_absolute_url','get_edit_url']
 
 
+class CourseSerializerWithMajors(serializers.ModelSerializer):
+    majors=MajorSerializer(many=True)
+    class Meta:
+        model = Course
+        fields=['id','title','level','course_count','majors','get_absolute_url','get_edit_url']
+
+
 class ActiveCourseSerializer(serializers.ModelSerializer):
     classroom=ClassRoomSerializer()
     class Meta:
         model = ActiveCourse
         fields=['id','title','classroom','get_absolute_url','get_edit_url']
-
-
-class MajorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Major
-        fields=['id','title','get_absolute_url','get_edit_url']
 
 class AttendanceSerializer(serializers.ModelSerializer):
     session=SessionSerializer()
