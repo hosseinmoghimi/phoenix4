@@ -2,8 +2,8 @@ from django.http.response import JsonResponse
 from django.utils import timezone
 from core.serializers import DocumentSerializer
 from school.forms import *
-from school.repo import AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import AttendanceSerializer, BookSerializer, ClassRoomSerializer, CourseSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.serializers import ActiveCourseSerializer, AttendanceSerializer, BookSerializer, ClassRoomSerializer, CourseSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -43,6 +43,27 @@ class CourseApi(APIView):
                 course=CourseRepo(request=request).add_course(title=title,major_id=major_id,level=level,course_count=course_count)
                 if course is not None:
                     context['course']=CourseSerializer(course).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+
+class ActiveCourseApi(APIView):
+    def add_active_course(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddActiveCourseForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                title=cd['title']
+                classroom_id=cd['classroom_id']
+                course_id=cd['course_id']
+                active_course=ActiveCourseRepo(request=request).add_active_course(title=title,classroom_id=classroom_id,course_id=course_id)
+                if active_course is not None:
+                    context['active_course']=ActiveCourseSerializer(active_course).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

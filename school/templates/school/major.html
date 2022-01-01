@@ -71,6 +71,8 @@
     let major_id = parseInt("{{major.id}}")
 
 </script>
+
+{% if add_course_form %}
 <script>
     let add_course_app = new Vue({
         el: "#add-course-app",
@@ -101,4 +103,5 @@
         }
     })
 </script>
+{% endif %}
 {% endblock script %}

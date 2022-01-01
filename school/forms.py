@@ -28,8 +28,9 @@ class AddBookForm(forms.Form):
     course_id=forms.IntegerField( required=True)
     title=forms.CharField( max_length=50, required=True)
 class AddActiveCourseForm(forms.Form):
+    title=forms.CharField( max_length=500, required=True)
     course_id=forms.IntegerField( required=True)
-    title=forms.CharField( max_length=50, required=True)
+    classroom_id=forms.IntegerField(required=True)
 class AddCourseForm(forms.Form):
     course_count=forms.IntegerField( required=True)
     level=forms.IntegerField( required=True)

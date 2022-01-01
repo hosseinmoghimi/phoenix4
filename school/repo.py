@@ -4,7 +4,7 @@ from core import repo as CoreRepo
 from core.models import Document
 import school
 from school.enums import AttendanceStatusEnum
-from .models import ActiveCourse, Attendance, ClassRoom, Course, Major, School, Session,Student,Teacher,Book
+from .models import ActiveCourse, Attendance, ClassRoom, Course, EducationalYear, Major, School, Session,Student,Teacher,Book
 from .apps import APP_NAME
 from django.db.models import Q
 from django.utils import timezone
@@ -275,6 +275,36 @@ class ActiveCourseRepo():
             pk=kwargs['id']
         return self.objects.filter(pk=pk).first()
 
+    def add_active_course(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_activecourse"):
+            return
+            active_course.end_date=kwargs['start_date']
+        now=timezone.now()
+        active_course=ActiveCourse()
+        if 'title' in kwargs:
+            active_course.title=kwargs['title']
+        if 'classroom_id' in kwargs:
+            active_course.classroom_id=kwargs['classroom_id']
+        if 'course_id' in kwargs:
+            active_course.course_id=kwargs['course_id']
+        if 'start_date' in kwargs:
+            active_course.start_date=kwargs['start_date']
+        else:
+            active_course.start_date=now
+        if 'end_date' in kwargs:
+            active_course.end_date=kwargs['end_date']
+        else:
+            active_course.end_date=now
+
+            
+        if 'year_id' in kwargs:
+            active_course.year_id=kwargs['year_id']
+        else:
+            year_id=EducationalYear.objects.last().id
+            active_course.year_id=year_id
+        active_course.save()
+        return active_course
+        
 
 
 class CourseRepo():
