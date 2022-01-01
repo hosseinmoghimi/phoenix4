@@ -8,13 +8,22 @@
     <div class="col-md-6">
         {% include "school/includes/classrooms-app/template.html" %}
     </div>
+
+
+    <div class="col-md-6">
+        {% include "school/includes/active-course-app/template.html" %}
+    </div>
+
 </div>
 {% endblock content %}
 {% block script %}
+
 <script>
-    let school_id=parseInt("{{school.id}}")
+    let school_id = parseInt("{{school.id}}")
 </script>
+
+
 <script src="{% static 'vendor/js/vue.min.js' %}"></script>
 {% include "school/includes/classrooms-app/script.html" %}
-  
+{% include "school/includes/active-course-app/script.html" %}
 {% endblock script %}

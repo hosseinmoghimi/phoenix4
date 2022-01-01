@@ -43,6 +43,7 @@ urlpatterns = [
     path("classrooms/",login_required(views.ClassRoomViews().classrooms),name="classrooms"),
     path("classroom/<int:pk>/",login_required(views.ClassRoomViews().classroom),name="classroom"),
     path("api/add_classroom/",login_required(apis.ClassRoomApi().add_classroom),name="add_classroom"),
+    path("api/add_course/",login_required(apis.CourseApi().add_course),name="add_course"),
     
     path("activecourse/<int:pk>/",login_required(views.CourseViews().active_course),name="activecourse"),
     path("course/<int:pk>/",login_required(views.CourseViews().course),name="course"),

@@ -261,7 +261,10 @@ class ActiveCourseRepo():
         self.me=ProfileRepo(user=self.user).me
     
     def list(self,*args, **kwargs):
-        return self.objects.all()
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(classroom__school_id=kwargs['school_id'])
+        return objects
     
     def active_course(self,*args, **kwargs):
         if 'active_course_id' in kwargs:
@@ -302,7 +305,23 @@ class CourseRepo():
         return self.objects.filter(pk=pk).first()
 
 
-
+    def add_course(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_course"):
+            return
+        course=Course()
+        if 'title' in kwargs:
+            course.title=kwargs['title']
+        if 'level' in kwargs:
+            course.level=kwargs['level']
+        if 'course_count' in kwargs:
+            course.course_count=kwargs['course_count']
+        course.save()
+        if 'major_id' in kwargs:
+            major=MajorRepo(request=self.request).major(pk=kwargs['major_id'])
+            if major is not None:
+                major.courses.add(course)
+        return course
+        
 
 class SessionRepo():
     def __init__(self,*args, **kwargs):

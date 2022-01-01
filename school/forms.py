@@ -27,3 +27,11 @@ class AddDocumentForm(forms.Form):
 class AddBookForm(forms.Form):
     course_id=forms.IntegerField( required=True)
     title=forms.CharField( max_length=50, required=True)
+class AddActiveCourseForm(forms.Form):
+    course_id=forms.IntegerField( required=True)
+    title=forms.CharField( max_length=50, required=True)
+class AddCourseForm(forms.Form):
+    course_count=forms.IntegerField( required=True)
+    level=forms.IntegerField( required=True)
+    major_id=forms.IntegerField( required=True)
+    title=forms.CharField( max_length=50, required=True)

@@ -137,9 +137,15 @@ class SchoolViews(View):
         context['classrooms']=classrooms
         context['classrooms_s']=json.dumps(ClassRoomSerializer(classrooms,many=True).data)
 
+        active_courses=ActiveCourseRepo(request=request).list(school_id=school.id)
+        context['active_courses']=active_courses
+        context['active_courses_s']=json.dumps(ActiveCourseSerializer(active_courses,many=True).data)
+
         if request.user.has_perm(APP_NAME+".add_classroom"):
             context['add_classroom_form']=AddClassRoomForm()
 
+        if request.user.has_perm(APP_NAME+".add_activecourse"):
+            context['add_active_couse_form']=AddActiveCourseForm()
 
         return render(request,TEMPLATE_ROOT+"school.html",context)
 
@@ -323,6 +329,9 @@ class MajorViews(View):
         courses=major.courses.order_by('level')
         context['courses']=courses
         context['courses_s']=json.dumps(CourseSerializer(courses,many=True).data)
+
+        if request.user.has_perm(APP_NAME+".add_activecourse"):
+            context['add_active_couse_form']=AddActiveCourseForm()
 
 
         return render(request,TEMPLATE_ROOT+"major.html",context)

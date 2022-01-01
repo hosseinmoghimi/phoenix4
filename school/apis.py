@@ -2,8 +2,8 @@ from django.http.response import JsonResponse
 from django.utils import timezone
 from core.serializers import DocumentSerializer
 from school.forms import *
-from school.repo import AttendanceRepo, BookRepo, ClassRoomRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
-from school.serializers import AttendanceSerializer, BookSerializer, ClassRoomSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
+from school.repo import AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.serializers import AttendanceSerializer, BookSerializer, ClassRoomSerializer, CourseSerializer, MajorSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -24,6 +24,30 @@ class SchoolApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+
+
+class CourseApi(APIView):
+    def add_course(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddCourseForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                title=cd['title']
+                major_id=cd['major_id']
+                course_count=cd['course_count']
+                level=cd['level']
+                course=CourseRepo(request=request).add_course(title=title,major_id=major_id,level=level,course_count=course_count)
+                if course is not None:
+                    context['course']=CourseSerializer(course).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+
 class BookApi(APIView):
     def add_document(self,request,*args, **kwargs):
         context={'result':FAILED}
