@@ -36,3 +36,7 @@ class AddCourseForm(forms.Form):
     level=forms.IntegerField( required=True)
     major_id=forms.IntegerField( required=True)
     title=forms.CharField( max_length=50, required=True)
+class AddStudentToActiveCourseForm(forms.Form):
+    student_id=forms.IntegerField( required=False)
+    profile_id=forms.IntegerField( required=True)
+    active_course_id=forms.IntegerField( required=True)

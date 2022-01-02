@@ -99,6 +99,10 @@
 
             </div>
         </div>
+        {% if add_student_to_active_course_form %}
+        {% include "school/includes/add-student-to-active-course-app/template.html" %}
+      
+        {% endif %}
     </div>
 
 
@@ -106,41 +110,8 @@
 
     <div class="col-md-4">
 
-        <div class="card">
-            <div class="card-header">
-
-                <h4>
-                    دبیران
-                </h4>
-            </div>
-            <div class="card-body farsi text-right">
-
-
-                <div>
-                    {% for teacher in active_course.teachers.all %}
-                    <div class="mb-2">
-
-                        <a href="{{teacher.get_absolute_url}}">
-                            <img src="{{teacher.profile.image}}" class="rounded-circle" width="32" alt="">
-                            {{teacher.profile.name}}
-                        </a>
-                        {% if perms.school.change_teacher %}
-                        {{teacher.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </div>
-
-
-                    {% endfor %}
-                </div>
-
-
-
-
-
-            </div>
-        </div>
-
+    
+        {% include "school/includes/teachers-app/template.html" %}
         {% include "school/includes/students-app/template.html" %}
 
 
@@ -169,5 +140,7 @@
 {% include "school/includes/sessions-app/script.html" %}
 {% include "school/includes/students-app/script.html" %}
 {% include "school/includes/books-app/script.html" %}
+{% include "school/includes/add-student-to-active-course-app/script.html" %}
+{% include "school/includes/teachers-app/script.html" %}
 
 {% endblock script %}

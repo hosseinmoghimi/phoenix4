@@ -267,6 +267,10 @@ class ActiveCourseViews(View):
         context['students']=students
         context['students_s']=json.dumps(StudentSerializer(students,many=True).data)
 
+        teachers=active_course.teachers.all()
+        context['teachers']=teachers
+        context['teachers_s']=json.dumps(TeacherSerializer(teachers,many=True).data)
+
 
 
         
@@ -281,6 +285,10 @@ class ActiveCourseViews(View):
         context['sessions_s']=json.dumps(SessionSerializer(sessions,many=True).data)
 
         context['active_course']=active_course
+        if request.user.has_perm(APP_NAME+".change_activecourse"):
+            context['add_student_to_active_course_form']=AddStudentToActiveCourseForm()
+            all_students=StudentRepo(request=request).list()
+            context['all_students']=all_students
         if request.user.has_perm(APP_NAME+".add_session"):
             context['add_session_form']=AddSessionForm()
         return render(request,TEMPLATE_ROOT+"active-course.html",context)
@@ -353,8 +361,8 @@ class MajorViews(View):
         context['courses']=courses
         context['courses_s']=json.dumps(CourseSerializer(courses,many=True).data)
 
-        if request.user.has_perm(APP_NAME+".add_activecourse"):
-            context['add_active_course_form']=AddActiveCourseForm()
+        if request.user.has_perm(APP_NAME+".add_course"):
+            context['add_course_form']=AddCourseForm()
 
 
         return render(request,TEMPLATE_ROOT+"major.html",context)

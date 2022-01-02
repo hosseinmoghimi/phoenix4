@@ -1,0 +1,20 @@
+<div class="card" id="add-student-to-active-course-app">
+    <div class="card-body">
+        <form @submit.prevent="add_student()">
+
+            <div class="form-group">
+                <label for="">شناسه </label>
+                <input type="number" class="form-control" v-model="profile_id" required>
+                <select name="" v-model="profile_id">
+                    {% for student in all_students %}
+
+                    <option value="{{student.profile.id}}">{{student.profile.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">
+                افزودن
+            </button>
+        </form>
+    </div>
+</div>
