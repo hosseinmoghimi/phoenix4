@@ -3,7 +3,7 @@ from authentication.repo import ProfileRepo
 from core.serializers import DocumentSerializer
 from core.views import CoreContext, MessageView, PageContext,ParametersEnum,ParameterRepo
 from school.enums import AttendanceStatusEnum
-from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
+from school.repo import ActiveCourseRepo, AttendanceRepo, BookRepo, ClassRoomRepo, CourseRepo, EducationalYearRepo, MajorRepo, SchoolRepo, SessionRepo, StudentRepo, TeacherRepo
 from school.serializers import AttendanceSerializer,ActiveCourseSerializer, CourseSerializerWithMajors, MajorSerializer, CourseSerializer, BookSerializer, ClassRoomSerializer, SchoolSerializer, SessionSerializer, StudentSerializer, TeacherSerializer
 from .apps import APP_NAME
 from django.views import View
@@ -127,6 +127,18 @@ class ClassRoomViews(View):
         context['classrooms_s']=json.dumps(ClassRoomSerializer(classrooms,many=True).data)
         return render(request,TEMPLATE_ROOT+"classrooms.html",context)
 
+class EducationalYearViews(View):
+    def educational_year(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        educational_year=EducationalYearRepo(request=request).educational_year(*args, **kwargs)
+        context['educational_year']=educational_year
+   
+        active_courses=ActiveCourseRepo(request=request).list(year_id=educational_year.id)
+        context['active_courses']=active_courses
+        context['active_courses_s']=json.dumps(ActiveCourseSerializer(active_courses,many=True).data)
+ 
+
+        return render(request,TEMPLATE_ROOT+"educational-year.html",context)
 
 class SchoolViews(View):
     def school(self,request,*args, **kwargs):
@@ -147,6 +159,7 @@ class SchoolViews(View):
         if request.user.has_perm(APP_NAME+".add_activecourse"):
             context['add_active_course_form']=AddActiveCourseForm()
             context['courses']=CourseRepo(request=request).list()
+            context['years']=EducationalYearRepo(request=request).list()
 
         return render(request,TEMPLATE_ROOT+"school.html",context)
 
@@ -243,6 +256,7 @@ class CourseViews(View):
 
         return render(request,TEMPLATE_ROOT+"courses.html",context)
 
+class ActiveCourseViews(View):
 
     def active_course(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -270,6 +284,14 @@ class CourseViews(View):
         if request.user.has_perm(APP_NAME+".add_session"):
             context['add_session_form']=AddSessionForm()
         return render(request,TEMPLATE_ROOT+"active-course.html",context)
+
+    def active_courses(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        active_courses=ActiveCourseRepo(request=request).list()
+        context['active_courses']=active_courses
+        context['active_courses_s']=json.dumps(ActiveCourseSerializer(active_courses,many=True).data)
+ 
+        return render(request,TEMPLATE_ROOT+"active-courses.html",context)
 
 
         
@@ -366,6 +388,7 @@ class BookViews(View):
         context=getContext(request=request)
         books=BookRepo(request=request).list(*args, **kwargs)
         context['books']=books
+        context['books_s']=json.dumps(BookSerializer(books,many=True).data)
         return render(request,TEMPLATE_ROOT+"books.html",context)
 
         

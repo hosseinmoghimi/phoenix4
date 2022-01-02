@@ -27,6 +27,15 @@
                         <a href="{{active_course.get_absolute_url}}">
                             {{active_course.title}}
                         </a>
+
+
+                        <div>
+
+                            <a href="{{active_course.year.get_absolute_url}}">
+                                {{active_course.year.title}}
+                            </a>
+                        </div>
+
                         {% if perms.school.change_activecourse %}
                         {{active_course.get_edit_btn|safe}}
 
@@ -134,7 +143,7 @@
 
         {% include "school/includes/students-app/template.html" %}
 
-        
+
     </div>
     <div class="col-md-8">
         {% include "school/includes/books-app/template.html" %}
@@ -160,5 +169,5 @@
 {% include "school/includes/sessions-app/script.html" %}
 {% include "school/includes/students-app/script.html" %}
 {% include "school/includes/books-app/script.html" %}
-  
+
 {% endblock script %}

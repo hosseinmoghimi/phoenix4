@@ -1,0 +1,31 @@
+<div class="card" id="books-app">
+    <div class="card-header">
+        <h4 class="title">
+            کتاب ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+                <th>
+                    
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="book in books">
+                    <td>
+                        <a :href="book.get_absolute_url">
+                            <span v-text="book.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

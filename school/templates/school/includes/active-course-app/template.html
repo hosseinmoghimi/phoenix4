@@ -11,6 +11,18 @@
                 <th>
                     عنوان
                 </th>
+                {% if not course %}
+                  
+                <th>
+                    واحد درسی
+                </th>
+                {% endif %}
+                {% if not educational_year %}
+                  
+                <th>
+                    سال تحصیلی
+                </th>
+                {% endif %}
                 {% if not school %}
                   
                 <th>
@@ -19,6 +31,9 @@
                 {% endif %}
                 <th>
                     اتاق
+                </th>
+                <th>
+
                 </th>
             </thead>
             <tbody>
@@ -29,7 +44,23 @@
                             <span v-text="active_course.title"></span>
                         </a>
                     </td>
+                    {% if not course %}
+                  
+                    <td>
+                        <a :href="active_course.course.get_absolute_url">
+                            <span v-text="active_course.course.title"></span>
+                        </a>
                     
+                    </td>
+                    {% endif %}
+                {% if not educational_year %}
+                <td>
+                    <a :href="active_course.year.get_absolute_url">
+                        <span v-text="active_course.year.title"></span>
+                    </a>
+                </td>
+                
+                {% endif %}
                 {% if not school %}
                 <td>
                     <a :href="active_course.classroom.school.get_absolute_url">
@@ -44,7 +75,16 @@
                         </a>
                     </td>
 
-                   
+                   <td>
+                    {% if perms.school.change_activecourse %}
+                    <a :href="active_course.get_edit_url" target="_blank" title="ویرایش"><i class="fa fa-edit text-info"></i></a>
+                  {% endif %}
+
+                  {% if perms.school.delete_activecourse %}
+                  <a :href="active_course.get_delete_url" target="_blank" title="حذف"><i class="fa fa-trash text-danger"></i></a>
+                {% endif %}
+
+                   </td>
                 </tr>
             </tbody>
         </table>

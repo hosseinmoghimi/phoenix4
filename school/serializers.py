@@ -1,9 +1,10 @@
 
 from core.serializers import DocumentSerializer
+from school.repo import EducationalYearRepo
 from .apps import APP_NAME
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
-from .models import ActiveCourse, Attendance, Book, ClassRoom, Course, Major, School, Session, Student, Teacher
+from .models import ActiveCourse, Attendance, Book, ClassRoom, Course, EducationalYear, Major, School, Session, Student, Teacher
 
 class StudentSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
@@ -48,12 +49,17 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields=['id','title','get_absolute_url','get_edit_url','documents','get_delete_url']
+class EducationalYearSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EducationalYear
+        fields=['id','title','get_absolute_url']
+
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields=['id','title','level','course_count','get_absolute_url','get_edit_url']
-
 
 class CourseSerializerWithMajors(serializers.ModelSerializer):
     majors=MajorSerializer(many=True)
@@ -64,9 +70,11 @@ class CourseSerializerWithMajors(serializers.ModelSerializer):
 
 class ActiveCourseSerializer(serializers.ModelSerializer):
     classroom=ClassRoomSerializer()
+    year=EducationalYearSerializer()
+    course=CourseSerializer()
     class Meta:
         model = ActiveCourse
-        fields=['id','title','classroom','get_absolute_url','get_edit_url']
+        fields=['id','title','course','year','classroom','get_absolute_url','get_edit_url']
 
 class AttendanceSerializer(serializers.ModelSerializer):
     session=SessionSerializer()

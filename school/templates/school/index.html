@@ -6,44 +6,67 @@
 </h4>
 <div class="row">
 
- 
-<div class="col-md-12">
-  
- 
 
-</div>
+  <div class="col-md-12">
+
+
+
+  </div>
 
   <div class="col-md-4 farsi">
-    <a href="{% url 'school:students' %}">
-      <h5>
+    <div class="card">
+      <div class="card-header">
+        <h4>
 
-        لیست دانش آموزان
-      </h5>
-    </a>
-    <a href="{% url 'school:schools' %}">
-      <h5>
+          لینک ها
+        </h4>
+      </div>
+      <div class="card-body">
+        <a href="{% url 'school:students' %}">
+          <h5>
 
-        لیست آموزشگاه ها
-      </h5>
-    </a>
-    <a href="{% url 'school:majors' %}">
-      <h5>
+            لیست دانش آموزان
+          </h5>
+        </a>
+        <a href="{% url 'school:schools' %}">
+          <h5>
 
-        لیست رشته های تحصیلی
-      </h5>
-    </a>
-    <a href="{% url 'school:courses' %}">
-      <h5>
+            لیست آموزشگاه ها
+          </h5>
+        </a>
+        <a href="{% url 'school:majors' %}">
+          <h5>
 
-        لیست واحد های درسی
-      </h5>
-    </a>
-    <a href="{% url 'school:teachers' %}">
-      <h5>
+            لیست رشته های تحصیلی
+          </h5>
+        </a>
+        <a href="{% url 'school:courses' %}">
+          <h5>
 
-        لیست دبیران
-      </h5>
-    </a>
+            لیست واحد های درسی
+          </h5>
+        </a>
+        <a href="{% url 'school:teachers' %}">
+          <h5>
+
+            لیست دبیران
+          </h5>
+        </a>
+        <a href="{% url 'school:active_courses' %}">
+          <h5>
+
+            واحد های درسی فعال
+
+          </h5>
+        </a>
+        <a href="{% url 'school:books' %}">
+          <h5>
+کتاب ها
+          </h5>
+        </a>
+      </div>
+    </div>
+
 
   </div>
 

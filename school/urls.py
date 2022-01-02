@@ -36,6 +36,8 @@ urlpatterns = [
     path("add_book/",login_required(apis.BookApi().add_book),name="add_book"),
     path("book/<int:pk>/",login_required(views.BookViews().book),name="book"),
     
+    path("educationalyear/<int:pk>/",login_required(views.EducationalYearViews().educational_year),name="educationalyear"),
+    
     path("session/<int:pk>/",login_required(views.SessionViews().session),name="session"),
     path("api/add_session/",login_required(apis.SessionApi().add_session),name="add_session"),
     path("api/add_attendance/",login_required(apis.AttendanceApi().add_attendance),name="add_attendance"),
@@ -46,7 +48,8 @@ urlpatterns = [
     path("api/add_course/",login_required(apis.CourseApi().add_course),name="add_course"),
     path("api/add_active_course/",login_required(apis.ActiveCourseApi().add_active_course),name="add_active_course"),
     
-    path("activecourse/<int:pk>/",login_required(views.CourseViews().active_course),name="activecourse"),
+    path("activecourses/",login_required(views.ActiveCourseViews().active_courses),name="active_courses"),
+    path("activecourse/<int:pk>/",login_required(views.ActiveCourseViews().active_course),name="activecourse"),
     path("course/<int:pk>/",login_required(views.CourseViews().course),name="course"),
     path("courses/",login_required(views.CourseViews().courses),name="courses"),
 ]

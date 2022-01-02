@@ -264,6 +264,8 @@ class ActiveCourseRepo():
         objects=self.objects.all()
         if 'school_id' in kwargs:
             objects=objects.filter(classroom__school_id=kwargs['school_id'])
+        if 'year_id' in kwargs:
+            objects=objects.filter(year_id=kwargs['year_id'])
         return objects
     
     def active_course(self,*args, **kwargs):
@@ -505,3 +507,33 @@ class StudentRepo():
             student.save()
             return student
 
+
+    
+class EducationalYearRepo():
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = EducationalYear.objects
+        self.profile=ProfileRepo(user=self.user).me
+        self.me=Student.objects.filter(profile=self.profile).first()
+    def list(self,*args, **kwargs):
+        objects=self.objects.all()
+        if 'school_id' in kwargs:
+            objects=objects.filter(school_id=kwargs['school_id'])
+        if 'search_for' in kwargs:
+            objects=objects.filter(Q(profile__user__first_name__contains=kwargs['search_for'])|Q(profile__user__last_name__contains=kwargs['search_for']))
+        return objects
+    def educational_year(self,*args, **kwargs):
+        if 'educational_year_id' in kwargs:
+            return self.objects.filter(pk=kwargs['educational_year_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+
+    
