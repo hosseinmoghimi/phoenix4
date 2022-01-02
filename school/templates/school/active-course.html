@@ -103,6 +103,12 @@
         {% include "school/includes/add-student-to-active-course-app/template.html" %}
       
         {% endif %}
+        
+        {% if add_teacher_to_active_course_form %}
+        {% include "school/includes/add-teacher-to-active-course-app/template.html" %}
+      
+        {% endif %}
+
     </div>
 
 
@@ -137,10 +143,14 @@
 
 
 {% block script %}
+<script>
+    let sctive_course_id=parseInt("{{sctive_course.id}}")
+</script>
 {% include "school/includes/sessions-app/script.html" %}
 {% include "school/includes/students-app/script.html" %}
 {% include "school/includes/books-app/script.html" %}
 {% include "school/includes/add-student-to-active-course-app/script.html" %}
+{% include "school/includes/add-teacher-to-active-course-app/script.html" %}
 {% include "school/includes/teachers-app/script.html" %}
 
 {% endblock script %}

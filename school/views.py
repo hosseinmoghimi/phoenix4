@@ -285,10 +285,20 @@ class ActiveCourseViews(View):
         context['sessions_s']=json.dumps(SessionSerializer(sessions,many=True).data)
 
         context['active_course']=active_course
+
+
         if request.user.has_perm(APP_NAME+".change_activecourse"):
             context['add_student_to_active_course_form']=AddStudentToActiveCourseForm()
             all_students=StudentRepo(request=request).list()
             context['all_students']=all_students
+            context['all_students_s']=json.dumps(StudentSerializer(all_students,many=True).data)
+            
+            context['add_teacher_to_active_course_form']=AddTeacherToActiveCourseForm()
+            all_teachers=TeacherRepo(request=request).list()
+            context['all_teachers']=all_teachers
+            context['all_teachers_s']=json.dumps(TeacherSerializer(all_teachers,many=True).data)
+
+
         if request.user.has_perm(APP_NAME+".add_session"):
             context['add_session_form']=AddSessionForm()
         return render(request,TEMPLATE_ROOT+"active-course.html",context)

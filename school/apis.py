@@ -68,6 +68,47 @@ class ActiveCourseApi(APIView):
         context['log']=log
         return JsonResponse(context)
 
+    def add_student_to_active_course(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddStudentToActiveCourseForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                active_course_id=cd['active_course_id']
+                profile_id=cd['profile_id']
+                student=ActiveCourseRepo(request=request).add_student_to_active_course(
+                    active_course_id=active_course_id,
+                    profile_id=profile_id
+                    )
+                if student is not None:
+                    context['student']=StudentSerializer(student).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+    def add_teacher_to_active_course(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        log=1
+        if request.method=='POST':
+            log=2
+            my_form=AddTeacherToActiveCourseForm(request.POST)
+            if my_form.is_valid():
+                log=3
+                cd=my_form.cleaned_data
+                profile_id=cd['profile_id']
+                active_course_id=cd['active_course_id']
+                teacher=ActiveCourseRepo(request=request).add_teacher_to_active_course(
+                    active_course_id=active_course_id,
+                    profile_id=profile_id
+                    )
+                if teacher is not None:
+                    context['teacher']=TeacherSerializer(teacher).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
 
 class BookApi(APIView):
     def add_document(self,request,*args, **kwargs):

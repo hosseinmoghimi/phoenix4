@@ -308,6 +308,29 @@ class ActiveCourseRepo():
         return active_course
         
 
+    def add_teacher_to_active_course(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".change_activecourse"):
+            return
+        active_course=self.active_course(*args, **kwargs)
+        teacher=Teacher.objects.filter(profile_id=kwargs['profile_id']).first()
+        if active_course is None or teacher is None:
+            return
+        if not teacher in active_course.teachers.all():
+
+            active_course.teachers.add(teacher)
+            return teacher
+        
+        
+    def add_student_to_active_course(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".change_activecourse"):
+            return
+        active_course=self.active_course(*args, **kwargs)
+        student=Student.objects.filter(profile_id=kwargs['profile_id']).first()
+        if active_course is None or student is None:
+            return
+        if not student in active_course.students.all():
+            active_course.students.add(student)
+            return student
 
 class CourseRepo():
     def __init__(self,*args, **kwargs):

@@ -40,3 +40,7 @@ class AddStudentToActiveCourseForm(forms.Form):
     student_id=forms.IntegerField( required=False)
     profile_id=forms.IntegerField( required=True)
     active_course_id=forms.IntegerField( required=True)
+class AddTeacherToActiveCourseForm(forms.Form):
+    teacher_id=forms.IntegerField( required=False)
+    profile_id=forms.IntegerField( required=True)
+    active_course_id=forms.IntegerField( required=True)
