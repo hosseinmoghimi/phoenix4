@@ -99,15 +99,9 @@
 
             </div>
         </div>
-        {% if add_student_to_active_course_form %}
-        {% include "school/includes/add-student-to-active-course-app/template.html" %}
+
       
-        {% endif %}
         
-        {% if add_teacher_to_active_course_form %}
-        {% include "school/includes/add-teacher-to-active-course-app/template.html" %}
-      
-        {% endif %}
 
     </div>
 
@@ -118,11 +112,23 @@
 
     
         {% include "school/includes/teachers-app/template.html" %}
-        {% include "school/includes/students-app/template.html" %}
-
+        
+        {% if add_teacher_to_active_course_form %}
+        {% include "school/includes/add-teacher-to-active-course-app/template.html" %}
+      
+        {% endif %}
 
     </div>
-    <div class="col-md-8">
+    <div class="com-md-4">
+        {% include "school/includes/students-app/template.html" %}
+
+        {% if add_student_to_active_course_form %}
+        {% include "school/includes/add-student-to-active-course-app/template.html" %}
+      
+        {% endif %}
+
+    </div>
+    <div class="col-md-7">
         {% include "school/includes/books-app/template.html" %}
 
     </div>
@@ -132,7 +138,7 @@
 
 
 
-    <div class="col-md-6">
+    <div class="col-md-5">
 
         {% include "school/includes/sessions-app/template.html" %}
     </div>

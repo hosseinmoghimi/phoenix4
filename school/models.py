@@ -328,6 +328,8 @@ class Book(models.Model):
     def get_delete_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 
+    def courses(self):
+        return self.course_set.all()
 
 class Student(models.Model):
     class_name="student"

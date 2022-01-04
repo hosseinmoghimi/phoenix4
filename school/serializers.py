@@ -43,12 +43,6 @@ class MajorSerializer(serializers.ModelSerializer):
         model = Major
         fields=['id','title','get_absolute_url','get_edit_url']
 
-
-class BookSerializer(serializers.ModelSerializer):
-    documents=DocumentSerializer(many=True)
-    class Meta:
-        model = Book
-        fields=['id','title','get_absolute_url','get_edit_url','documents','get_delete_url']
 class EducationalYearSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -84,4 +78,11 @@ class AttendanceSerializer(serializers.ModelSerializer):
         fields=['id','session','status','color','student','get_delete_url','description','persian_time_added','persian_enter_time','persian_exit_time','get_edit_url']
 
 
+
+class BookSerializer(serializers.ModelSerializer):
+    documents=DocumentSerializer(many=True)
+    courses=CourseSerializer(many=True)
+    class Meta:
+        model = Book
+        fields=['id','title','courses','get_absolute_url','get_edit_url','documents','get_delete_url']
 
