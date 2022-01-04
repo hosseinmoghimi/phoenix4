@@ -10,7 +10,7 @@
 </script>
 {% endif %}
 <script>
-    
+
     let maintenances = JSON.parse(`{{maintenances_s|escapejs}}`)
 </script>
 {% if add_maintenance_form %}
@@ -18,26 +18,26 @@
 
     let service_mans = JSON.parse(`{{service_mans_s|escapejs}}`)
     // let maintenance_types = JSON.parse(`{{maintenance_types|escapejs}}`)
-     data= {
+    data = {
         maintenances: maintenances,
-            service_mans: service_mans,
-            event_datetime: current_datetime,
-            service_man_id: "",
-            maintenance_type: "",
-            show_form:false,
-            // maintenance_types: maintenance_types,
-            paid: "",
-            description: "",
-            title:"",
-            kilometer:"",
-        }
+        service_mans: service_mans,
+        event_datetime: current_datetime,
+        service_man_id: "",
+        maintenance_type: "",
+        show_form: false,
+        // maintenance_types: maintenance_types,
+        paid: "",
+        description: "",
+        title: "",
+        kilometer: "",
+    }
 </script>
 {% else %}
 <script>
-    data= {
+    data = {
         maintenances: maintenances,
-          
-        }
+
+    }
 </script>
 {% endif %}
 <script>
@@ -51,7 +51,14 @@
 
         },
         methods: {
-            to_price: value => to_price(value),
+            to_price: (vall,curr) => to_price(vall,curr),
+            total: function () {
+                let tt = 0
+                this.maintenances.forEach(maintenance => {
+                    tt += maintenance.paid
+                });
+                return tt
+            },
             add_maintenance: function () {
                 let url_add_maintenance = "{% url 'vehicles:add_maintenance' %}"
                 let payload = {

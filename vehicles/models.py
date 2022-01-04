@@ -156,6 +156,7 @@ class Vehicle(Asset):
         return reverse(APP_NAME+":trips",kwargs={'category_id':0,'driver_id':0,'passenger_id':0,'vehicle_id':self.pk,'trip_path_id':0})
      
 
+
     def get_edit_url(self):
         return f'{ADMIN_URL}{APP_NAME}/vehicle/{self.pk}/change/'
 

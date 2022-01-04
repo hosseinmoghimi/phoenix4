@@ -1,34 +1,29 @@
 {% extends "vehicles/layout.html" %}
 {% load static %}
+{% load to_persian_date %}
 {% block content %}
 <h4 class="text-center">
-    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات (گزارش)
 </h4>
 <div class="row">
     <div class="col-md-4">
         {% include "vehicles/includes/vehicle-app/vehicle.html" %}
     </div>
+
     <div class="col-md-4">
         <div class="card">
-            <div class="card-body text-right farsi">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link farsi" href="#trips-app">سفر ها</a>
-
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link farsi" href="#work-shifts-app">شیفت های کاری</a>
-
-                    </li>
-                    <li class="nav-item">
-
-                        <a class="nav-link farsi" href="#vehicle-work-events-app">رویداد ها</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link farsi" href="#maintenances-app">تعمیر و نگهداری</a>
-
-                    </li>
-                </ul>
+            <div class="card-header">
+                <h5 class="title">
+                    گزارش
+                </h5>
+            </div>
+            <div class="card-body">
+                <h5>
+                    شروع گزارش : {{start_date|to_persian_date|safe}}
+                </h5>
+                <h5>
+                    پایان گزارش : {{end_date|to_persian_date|safe}}
+                </h5>
             </div>
         </div>
     </div>
@@ -37,17 +32,17 @@
 
     <div class="col-md-12" name="trips-app">
 
-        {% include "vehicles/includes/trips-app/template.html" %}
+        {% include "vehicles/includes/trips-app/print.html" %}
     </div>
     <div class="col-md-12" name="work-shifts-app">
-        {% include "vehicles/includes/work-shifts-app/template.html" %}
+        {% include "vehicles/includes/work-shifts-app/print.html" %}
     </div>
     <div class="col-md-12" name="vehicle-work-events-app">
-        {% include "vehicles/includes/vehicle-work-events-app/template.html" %}
+        {% include "vehicles/includes/vehicle-work-events-app/print.html" %}
 
     </div>
     <div class="col-md-12" name="maintenances-app">
-        {% include "vehicles/includes/maintenances-app/template.html" %}
+        {% include "vehicles/includes/maintenances-app/print.html" %}
 
     </div>
 </div>

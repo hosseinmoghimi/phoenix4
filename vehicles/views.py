@@ -1,11 +1,14 @@
+from datetime import datetime
 from django.http.response import Http404
+from django.utils import timezone
 from projectmanager.repo import LocationRepo
 from django.shortcuts import render
 from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
 from core.views import CoreContext, MessageView
+from utility.persian import PersianCalendar
 from vehicles.enums import MaintenanceEnum, WorkEventEnum
-from vehicles.forms import AddAreaForm, AddDriverForm, AddMaintenanceForm, AddPassengerForm, AddPassengerToTripForm, AddServiceManForm, AddTripForm, AddTripPathForm, AddVehicleForm, AddVehicleWorkEventForm, AddWorkShiftForm, FilterTripsForm
+from vehicles.forms import *
 from vehicles.repo import AreaRepo, DriverRepo, MaintenanceRepo, PassengerRepo, ServiceManRepo, TripPathRepo, TripRepo, VehicleRepo, VehicleWorkEventRepo, WorkShiftRepo
 from vehicles.serializers import AreaSerializer, DriverSerializer, MaintenanceSerializer, PassengerSerilizer, ServiceManSerializer, TripPathSerializer, TripSerializer, VehicleSerializer, VehicleWorkEventSerializer, WorkShiftSerializer
 from .apps import APP_NAME
@@ -67,10 +70,90 @@ class BasicViews(View):
         return render(request,TEMPLATE_FOLDER+"index.html",context)
 
 
-class VehicleViews(View):
+class VehicleViews(View): 
+    def vehicle_report(self,request,*args, **kwargs):
+        if request.method=='POST':
+            my_form=VehicleReportForm(request.POST)
+            if my_form.is_valid():
+                from utility.persian import PERSIAN_MONTH_NAMES,days_in_month,JalaliDate
+                cd=my_form.cleaned_data
+                vehicle_id=cd['vehicle_id']
+                month=cd['month']
+                year=cd['year'] 
+                start_date=str(JalaliDate(year=year,month=month)).replace('-','/')
+                end_date=str(JalaliDate(year=year,month=month,day=days_in_month(year=year,month=month))).replace('-','/')
+                start_date=PersianCalendar().to_gregorian(start_date)
+                end_date=PersianCalendar().to_gregorian(end_date)
+
+                context=getContext(request=request)
+
+
+                context['year']=year
+
+                months=[]
+                for i in range(12):
+                    months.append({'number':i+1,'name':PERSIAN_MONTH_NAMES[i]})
+                context['months']=months
+                context['month']=month
+                context['month_number']=int(month)
+                context['month_name']=PERSIAN_MONTH_NAMES[int(month)-1]
+                context['vehicle_report_form']=VehicleReportForm()
+                
+
+                context['start_date']=start_date
+                context['end_date']=end_date
+                vehicle=VehicleRepo(request=request).vehicle(vehicle_id=vehicle_id)
+                context['vehicle']=vehicle
+        
+                ##
+                maintenances=MaintenanceRepo(request=request).list(*args, **kwargs).filter(vehicle_id=vehicle_id).filter(event_datetime__gte=start_date).filter(event_datetime__lte=end_date)
+                context['maintenances']=maintenances
+                maintenances_s=json.dumps(MaintenanceSerializer(maintenances,many=True).data)
+                context['maintenances_s']=maintenances_s
+            
+                ##
+                work_shifts=WorkShiftRepo(request=request).list(*args, **kwargs).filter(vehicle_id=vehicle_id).filter(start_time__gte=start_date).filter(start_time__lte=end_date)
+                context['work_shifts']=work_shifts
+                work_shifts_s=json.dumps(WorkShiftSerializer(work_shifts,many=True).data)
+                context['work_shifts_s']=work_shifts_s
+
+
+
+                ##
+                vehicle_work_events=VehicleWorkEventRepo(request=request).list(*args, **kwargs).filter(vehicle_id=vehicle_id).filter(event_datetime__gte=start_date).filter(event_datetime__lte=end_date)
+                context['vehicle_work_events']=vehicle_work_events
+                vehicle_work_events_s=json.dumps(VehicleWorkEventSerializer(vehicle_work_events,many=True).data)
+                context['vehicle_work_events_s']=vehicle_work_events_s
+
+                ##
+                trips=TripRepo(request=request).list(*args, **kwargs).filter(vehicle_id=vehicle_id).filter(date_started__gte=start_date).filter(date_started__lte=end_date)
+                context['trips']=trips
+                context['trips_s']=json.dumps(TripSerializer(trips,many=True).data)
+        
+                return render(request,TEMPLATE_FOLDER+"vehicle-report.html",context)
+
+    
+    
     def vehicle(self,request,*args, **kwargs):
         context=getContext(request=request)
 
+        now=PersianCalendar().from_gregorian(timezone.now())
+        month=now[5:7]
+        year=now[:4]
+        context['year']=year
+
+        from utility.persian import PERSIAN_MONTH_NAMES
+        months=[]
+        for i in range(12):
+            months.append({'number':i+1,'name':PERSIAN_MONTH_NAMES[i]})
+        context['months']=months
+        context['month']=month
+        context['month_number']=int(month)
+        context['month_name']=PERSIAN_MONTH_NAMES[int(month)-1]
+        context['vehicle_report_form']=VehicleReportForm()
+
+
+        context['vehicle_report_form']=VehicleReportForm()
 
         vehicle=VehicleRepo(request=request).vehicle(*args, **kwargs)
         context['vehicle']=vehicle

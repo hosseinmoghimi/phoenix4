@@ -23,6 +23,12 @@ class AddAreaForm(forms.Form):
     code=forms.CharField( max_length=50, required=False)
 
 
+class VehicleReportForm(forms.Form):
+    vehicle_id=forms.IntegerField(  required=True)
+    month=forms.IntegerField(  required=True)
+    year=forms.IntegerField(  required=True)
+
+
 class AddPassengerForm(forms.Form):
     profile_id=forms.IntegerField(  required=True)
 
