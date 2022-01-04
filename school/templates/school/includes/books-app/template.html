@@ -30,13 +30,13 @@
                             <span v-text="book.title"></span>
                         </a>
                         {% if perms.school.change_book %}
-                        <a title="ویرایش" target="_blank" :href="book.get_edit_url">
+                        <a title="ویرایش" target="_blank" :href="book.get_edit_url" class="mr-2">
                             <i class="fa fa-edit"></i>
                         </a>
                         {% endif %}
 
                         {% if perms.school.delete_book %}
-                        <a title="حذف" target="_blank" :href="book.get_delete_url">
+                        <a title="حذف" target="_blank" :href="book.get_delete_url" class="mr-2">
                             <i class="fa fa-trash text-danger"></i>
                         </a>
                         {% endif %}
@@ -46,13 +46,13 @@
                             <span v-text="doc.title"></span>
                         </a>
                         {% if perms.school.change_document %}
-                        <a title="ویرایش" target="_blank" :href="doc.get_edit_url">
+                        <a title="ویرایش" target="_blank" :href="doc.get_edit_url" class="mr-2">
                             <i class="fa fa-edit"></i>
                         </a>
                         {% endif %}
             
                         {% if perms.core.delete_document %}
-                        <a title="حذف" target="_blank" :href="doc.get_delete_url">
+                        <a title="حذف" target="_blank" :href="doc.get_delete_url" class="mr-2">
                             <i class="fa fa-trash text-danger"></i>
                         </a>
                         {% endif %}

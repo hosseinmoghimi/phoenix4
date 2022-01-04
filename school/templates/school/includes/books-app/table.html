@@ -34,13 +34,13 @@
                     </td>
                     <td>
                         {% if perms.school.change_book %}
-                          <a :href="book.get_edit_url" title="ویرایش" target="_blank">
+                          <a :href="book.get_edit_url" title="ویرایش" target="_blank" class="mr-2">
                               <i class="fa fa-edit text-info"></i>
                           </a>
                         {% endif %}
 
                         {% if perms.school.delete_book %}
-                          <a :href="book.get_delete_url" title="حذف" target="_blank">
+                          <a :href="book.get_delete_url" title="حذف" target="_blank" class="mr-2">
                               <i class="fa fa-trash text-danger"></i>
                           </a>
                         {% endif %}
