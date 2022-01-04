@@ -26,20 +26,16 @@
                 <th>
                     فاصله
                 </th>
-                <th>
-
-                </th>
+                
             </thead>
             <tbody>
                 <tr v-for="trip in trips">
                     <td>
-                        <a :href="trip.get_absolute_url">
                             <i class="material-icons">
                                 ballot
                             </i>
 
                             <span v-text="trip.title"></span>
-                        </a>
                         <a v-if="trip.category" :href="trip.category.get_trips_url">
                             <span :class="'badge badge-'+trip.category.color">
                                 <span v-text="trip.category.title"></span>
@@ -53,12 +49,10 @@
                     <td>
                         <div v-for="path in trip.paths">
 
-                            <a :href="path.get_absolute_url">
                                 <i class="material-icons">
                                     place
                                 </i>
                                 <span v-text="path.title"></span>
-                            </a>
 
                         </div>
 
@@ -68,20 +62,16 @@
                     <td>
                         <div>
 
-                            <a :href="trip.vehicle.get_absolute_url">
                                 <i class="material-icons">
                                     commute
                                 </i>
                                 <span v-text="trip.vehicle.title"></span>
-                            </a>
                         </div>
                         <div>
-                            <a :href="trip.driver.get_absolute_url">
                                 <span class="material-icons">
                                     badge
                                 </span>
                                 <span v-text="trip.driver.profile.name"></span>
-                            </a>
 
                         </div>
 
@@ -107,15 +97,7 @@
                         <small class="text-muted">km</small>
                         <span v-text="trip.distance"></span>
                     </td>
-                    <td>
-                        {% if perms.vehicles.change_trip %}
-                        <a title="ویرایش" target="_blank" :href="trip.get_edit_url">
-                            <i class="material-icons text-warning">
-                                edit
-                            </i>
-                        </a>
-                        {% endif %}
-                    </td>
+                     
                 </tr>
             </tbody>
         </table>
