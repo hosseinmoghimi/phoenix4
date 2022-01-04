@@ -2,32 +2,81 @@
 {% block content %}
 
 
-<div>
-    {% include "school/includes/book-app/template.html" %}
-</div>
-<div>
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="title text-center my-3">
+            {{book.title}}
+            {% if perms.school.change_book %}
+            <a href="{{book.get_edit_url}}" target="_blank" title="ویرایش">
+                <i class="fa fa-edit text-info"></i>
+            </a>
+            {% endif %}
+        </h4>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5>
+                    واحد های درسی مربوطه:
 
-    {% if book.description %}
-    <div class="card" class="my-3 farsi">
-        <div class="card-header">
-            <h5 class="title">
-                توضیحات کامل
-            </h5>
-        </div>
-        <div class="card-body">
-            <h5>
-                {{book.title}}
-            </h5>
-            {{book.description|safe}}
+                </h5>
+                {% for course in book.course_set.all %}
+                <div>
+                    <h5>
 
+                        <small class="text-muted">واحد : </small>
+                        <a href="{{course.get_absolute_url}}">{{course.title}}</a> ،
+                        <small class="text-muted">رشته : </small>
+                        <a href="{{course.major_set.first.get_absolute_url}}">{{course.major_set.first.title}}</a>
+                    </h5>
+                </div>  
+                {% endfor %}
+            </div>
         </div>
     </div>
-    {% endif %}
+    <div class="col-md-6">
+        {% include "core/includes/page-documents-app/template.html" %}
+
+    </div>
+    <div class="col-md-6">
+        {% include "core/includes/page-links-app/template.html" %}
+
+    </div>
+    <div class="col-md-12">
+        {% if book.description %}
+        <div class="card" class="my-3 farsi">
+            <div class="card-header">
+                <h5 class="title">
+                    متن کتاب
+                </h5>
+            </div>
+            <div class="card-body">
+
+                {{book.description|safe}}
+
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-12">
+        {% include "core/includes/page-comments-app/template.html" %}
+
+    </div>
+
 
 </div>
+
 {% endblock content %}
 
 {% block script %}
-{% include "school/includes/book-app/script.html" %}
+<script>
+    let page_id = parseInt("{{book.id}}")
+
+    let page_comment_component_template=`{% include "core/includes/page-comments-app/component.html" %}`
+</script>
+
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-comments-app/script.html" %}
 
 {% endblock script %}

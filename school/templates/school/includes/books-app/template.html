@@ -43,6 +43,7 @@
                     </h5>
                     <div class="mr-5" v-for="doc in book.documents">
                         <a :href="doc.get_download_url">
+                            <span v-html="doc.get_icon_tag" class="ml-2"></span>
                             <span v-text="doc.title"></span>
                         </a>
                         {% if perms.school.change_document %}
@@ -50,9 +51,27 @@
                             <i class="fa fa-edit"></i>
                         </a>
                         {% endif %}
-            
+
                         {% if perms.core.delete_document %}
                         <a title="حذف" target="_blank" :href="doc.get_delete_url" class="mr-2">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="mr-5" v-for="link in book.links">
+                        <a target="_blank" :href="link.url">
+                            <span v-html="link.get_icon_tag" class="ml-2"></span>
+                            <span v-text="link.title"></span>
+                        </a>
+                        {% if perms.school.change_book %}
+                        <a title="ویرایش" target="_blank" :href="link.get_edit_url" class="mr-2">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% endif %}
+
+                        {% if perms.core.delete_book %}
+                        <a title="حذف" target="_blank" :href="link.get_delete_url" class="mr-2">
                             <i class="fa fa-trash text-danger"></i>
                         </a>
                         {% endif %}

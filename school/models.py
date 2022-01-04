@@ -1,6 +1,7 @@
 # Create your models here.
 
-from core.models import BasicPage
+from tinymce.models import HTMLField
+from core.models import BasicPage, PageLink
 from django.db import models
 from django.shortcuts import reverse
 from core.settings import ADMIN_URL, STATIC_URL
@@ -296,40 +297,18 @@ class Attendance(models.Model):
         return PersianCalendar().from_gregorian(self.time_added)
 
 
-class Book(models.Model):
-    class_name="book"
-    
-    title=models.CharField(_("عنوان کتاب"), max_length=100)
-    documents=models.ManyToManyField("core.document", blank=True,verbose_name=_("documents"))
-
-    def get_delete_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/book/{self.pk}/delete/"
+class Book(SchoolPage): 
     class Meta:
         verbose_name = _("Book")
         verbose_name_plural = _("Books")
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
-
-    def get_edit_url(self):
-        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
-    def get_edit_btn(self):
-        return f"""
-             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
-                <i class="material-icons">
-                    edit
-                </i>
-            </a>
-        """
-
-    def get_delete_url(self):
-        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
-
+ 
     def courses(self):
         return self.course_set.all()
+
+    def save(self,*args, **kwargs):
+        self.class_name='book'
+        return super(Book,self).save(*args, **kwargs)
+
 
 class Student(models.Model):
     class_name="student"

@@ -17,20 +17,20 @@
 
             <div class="card-body">
 
-                <div v-for="document in documents">
+                <div v-for="document in documents" class="mb-3"> 
 
                     <h6>
                         <a class="mr-2" target="_blank" :href="document.get_download_url">
-                            <i class="fa fa-download text-success" aria-hidden="true"></i>
+                            <span v-html="document.get_icon_tag" class=" ml-2 text-success"></span>
                             <span v-text="document.title"></span>
                         </a>
                         {% if perms.core.change_document %}
-                        <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="mx-2 docs-creator">
+                        <a :href="document.get_edit_url" target="_blank" title="ویرایش" class="ml-2 docs-creator">
                             <i class="fa fa-edit text-info" ></i>
                         </a>
                         {% endif %} 
                          {% if perms.core.delete_document %}
-                        <a :href="document.get_delete_url" target="_blank" title="حذف" class="mx-2 docs-creator">
+                        <a :href="document.get_delete_url" target="_blank" title="حذف" class="ml-2 docs-creator">
                             <i class="fa fa-trash text-danger" ></i>
                         </a>
                         {% endif %}

@@ -298,7 +298,7 @@ class PageLinkRepo:
                 pass
             else:
                 return
-        new_page_link=PageLink(title=title,page_id=page.id,url=url,icon_fa="fa fa-tag")
+        new_page_link=PageLink(title=title,page_id=page.id,url=url,icon_fa="fa fa-link")
         new_page_link.new_tab=True
         new_page_link.save()
         return new_page_link
@@ -454,7 +454,7 @@ class DocumentRepo:
                 return
         
 
-        document=PageDocument(icon_material="get_app",title=title,file=file,priority=priority,page=page,profile=self.profile)
+        document=PageDocument(icon_fa="fa fa-download",title=title,file=file,priority=priority,page=page,profile=self.profile)
         document.save()
         document.profiles.add(self.profile)
         return document

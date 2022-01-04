@@ -396,10 +396,8 @@ class BookViews(View):
     def book(self,request,*args, **kwargs):
         context=getContext(request=request)
         book=BookRepo(request=request).book(*args, **kwargs)
+        context.update(PageContext(request=request,page=book))
         context['book']=book
-        documents=book.documents.all()
-        context['documents']=documents
-        context['documents_s']=json.dumps(DocumentSerializer(documents,many=True).data)
         return render(request,TEMPLATE_ROOT+"book.html",context)
 
     def books(self,request,*args, **kwargs):

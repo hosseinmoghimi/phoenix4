@@ -96,6 +96,7 @@
                     if (data.result === 'SUCCEED') {
                         if (typeof courses_app != 'undefined') {
                             courses_app.courses.push(data.course)
+                            courses_app.title=""
                         }
                     }
                 })

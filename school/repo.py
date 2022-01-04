@@ -186,6 +186,7 @@ class BookRepo():
         document=Document()
         if 'title' in kwargs:
             document.title=kwargs['title']
+        document.icon_fa='fa fa-download'
         document.profile_id=self.profile.id
         document.save()
         book=self.book(*args, **kwargs)

@@ -1,5 +1,5 @@
 
-from core.serializers import DocumentSerializer
+from core.serializers import DocumentSerializer, PageLinkSerializer
 from school.repo import EducationalYearRepo
 from .apps import APP_NAME
 from rest_framework import serializers
@@ -80,9 +80,10 @@ class AttendanceSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    links=PageLinkSerializer(many=True)
     documents=DocumentSerializer(many=True)
     courses=CourseSerializer(many=True)
     class Meta:
         model = Book
-        fields=['id','title','courses','get_absolute_url','get_edit_url','documents','get_delete_url']
+        fields=['id','title','courses','get_absolute_url','get_edit_url','documents','links','get_delete_url']
 

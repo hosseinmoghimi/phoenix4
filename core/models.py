@@ -549,7 +549,11 @@ class PageLink(Link):
     class Meta:
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
-
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/pagelink/{self.pk}/change/'
+    def get_delete_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/pagelink/{self.pk}/delete/'
+    
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
     title = models.CharField(_('عنوان'), max_length=200)

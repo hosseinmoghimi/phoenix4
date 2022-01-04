@@ -21,9 +21,10 @@
 
             <div v-for="document in documents" class="mb-3">
                 <a :href="document.get_download_url">
-                    <i class="material-icons ml-2">
-                        get_app
-                    </i><span v-text="document.title"></span>
+                   
+                    
+                    <span v-html="document.get_icon_tag" class="ml-2"></span>
+                    <span v-text="document.title"></span>
                 </a>
                 {% if perms.school.change_document %}
                 <a title="ویرایش" target="_blank" :href="document.get_edit_url">
@@ -38,12 +39,12 @@
                 {% endif %}
 
             </div>
-            {% if perms.school.change_book %}
+            <!-- {% if perms.school.change_book %}
             <form @submit.prevent="add_document()">
                 <input type="text" required placeholder="نام فایل جدید" class="form-control"
                     v-model="new_document_title">
             </form>
-            {% endif %}
+            {% endif %} -->
         </div>
     </div>
 
