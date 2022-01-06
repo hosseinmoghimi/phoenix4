@@ -222,7 +222,7 @@ class BasicPage(models.Model):
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
     related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط"))
-    keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
+    # keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
     @property
     def get_price(self):
         if self.app_name=="market" and self.class_name=="product":
