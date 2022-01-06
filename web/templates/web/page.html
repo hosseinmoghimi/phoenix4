@@ -24,13 +24,13 @@
                 <div class=" text-center">
                     <span class="my-2">
 
-                        {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url  %}
-    
+                        {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
+
                     </span>
                     <span class="my-2">
 
-                    {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
-    
+                        {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
+
                     </span>
                 </div>
             </div>
@@ -55,6 +55,8 @@
                     {{page.panel|safe}}
                     {% endif %}
                 </div>
+                {% if page.pageimage_set.all %}
+
                 <div class="section col-md-10 ml-auto mr-auto">
                     <div class="row rtl">
                         {% for page_image in page.pageimage_set.all %}
@@ -70,13 +72,14 @@
 
                     </div>
                 </div>
+                {% endif %}
+                {% if page.description %}
                 <div class="col-md-8 ml-auto mr-auto farsi">
 
-                    {% if page.description %}
                     {{page.description|safe}}
-                    {% endif %}
-
+                    
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="section section-blog-info">
