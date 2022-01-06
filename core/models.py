@@ -194,8 +194,10 @@ class BasicPage(models.Model):
     panel = HTMLField(_("پنل"), null=True, blank=True)
     short_description = HTMLField(
         _("توضیح کوتاه"), null=True, blank=True)
+    
     description = HTMLField(
         _("توضیح کامل"), null=True, blank=True)
+    meta_description=models.CharField(_("meta_description"), null=True, blank=True, max_length=500)
     image_header_origin =models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Page/Header/', height_field=None, width_field=None, max_length=None)                              
     image_main_origin = models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
