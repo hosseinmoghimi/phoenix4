@@ -1,6 +1,6 @@
 {% extends "web/layout.html" %}
 {% load static %}
-
+{% load social_share %}
 
 {% block page_header %}
 <div class="page-header header-filter" data-parallax="true" style="background-image: url('{{page.image_header}}');">
@@ -21,6 +21,18 @@
                     </span>
                 </a>
                 {% endif %}
+                <div class=" text-center">
+                    <span class="my-2">
+
+                        {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url  %}
+    
+                    </span>
+                    <span class="my-2">
+
+                    {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
+    
+                    </span>
+                </div>
             </div>
         </div>
     </div>
