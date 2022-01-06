@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'school',
     'salary',
     'accounting',
+    'postman',
     'resume',
     'vehicles',
     'help',

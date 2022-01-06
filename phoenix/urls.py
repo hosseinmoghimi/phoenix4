@@ -18,6 +18,7 @@ urlpatterns = [
     path('bms/', include('bms.urls')),
     path('tax/', include('tax.urls')),
     path('school/', include('school.urls')),
+    path('postman/', include('postman.urls')),
     path('map/', include('map.urls')),
     path('chef/', include('chef.urls')),
     path('library/', include('library.urls')),

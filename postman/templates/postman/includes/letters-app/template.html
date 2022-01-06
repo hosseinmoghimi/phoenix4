@@ -1,0 +1,21 @@
+<div class="card" id="letters-app">
+    <div class="card-header">
+        <h4 class="title">
+            لیست نامه ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <div v-for="letter in letters">
+            <a :href="letter.get_absolute_url">
+                <h4 v-text="letter.title"></h4>
+            </a>
+        </div>
+    </div>
+    {% if add_letter_form %}
+      <div class="card-footer">
+          <form @submit.prevent="add_letter()">
+              <input type="text" v-model="title" class="form-control" required id="">
+          </form>
+      </div>
+    {% endif %}
+</div>
