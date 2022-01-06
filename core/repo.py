@@ -475,6 +475,8 @@ class PictureRepo:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
         self.objects=Picture.objects.all()
+    def list(self,*args, **kwargs):
+        return self.objects.filter(app_name=self.app_name)
     def picture(self,*args, **kwargs):
         pk=0
         name=""

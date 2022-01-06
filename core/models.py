@@ -761,7 +761,8 @@ class Picture(models.Model):
 
     def get_absolute_url(self):
         return reverse("Picture_detail", kwargs={"pk": self.pk})
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/picture/{self.pk}/change/"
 
 class SocialLink(Link):
     app_name=models.CharField(_('اپلیکیشن'),max_length=50,null=True,blank=True)

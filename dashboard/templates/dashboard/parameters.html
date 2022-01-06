@@ -61,6 +61,24 @@
     </form>
 
 </div>
+<h3 class="mt-5 text-center">تصاویر</h3>
+<div class="mt-3 row farsi">
+    {% for picture in pictures %}
+    <div class="col-lg-2 col-md-3 col-6">
+        <a target="_blank" href="{{picture.get_edit_url}}">
+            <div class="px-4">
+
+                <img src="{{picture.image}}" class="w-100" alt="">
+            </div>
+          <div class="text-center">
+
+              {{picture.name}}
+          </div>  
+        </a>
+    </div>
+    {% endfor %}
+</div>
+ 
 
 {% endblock %}
 
