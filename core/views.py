@@ -41,13 +41,14 @@ def CoreContext(request, *args, **kwargs):
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
+    picture_repo=PictureRepo(request=request,app_name=app_name)
     parameter_repo = ParameterRepo(request=request,app_name=app_name)
     
     context['app']={
         'title':parameter_repo.parameter(name=ParametersEnum.TITLE).value,
         # 'home_url':parameter_repo.parameter(name=ParametersEnum.HOME_URL).value,
         'home_url': reverse(app_name+":home"),
-        'logo':PictureRepo(request=request,app_name=app_name).picture(name=PictureNameEnums.LOGO),
+        'logo':picture_repo.picture(name=PictureNameEnums.LOGO),
     }
     master_keywords=parameter_repo.parameter(name=ParametersEnum.MASTER_KEYWORDS).value
     context['master_keywords']=master_keywords
@@ -62,6 +63,8 @@ def CoreContext(request, *args, **kwargs):
         context['notifications_s']=notifications_s
     else:
         context['PUSHER_IS_ENABLE'] = False
+
+    context['favicon']=picture_repo.picture(name=PictureNameEnums.FAVICON).image()
     return context
 
 
@@ -120,7 +123,6 @@ def PageContext(request, page):
     context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
     if page.meta_data is not None:
         context['keywords']=page.meta_data
-
 
 
     return context
