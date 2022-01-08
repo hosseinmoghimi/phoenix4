@@ -77,7 +77,7 @@
                 <div class="col-md-8 ml-auto mr-auto farsi">
 
                     {{page.description|safe}}
-                    
+
                 </div>
                 {% endif %}
             </div>
@@ -156,57 +156,18 @@
         </div>
     </div>
 
+
 </div>
-<div class="my-5">
-    {% if related_pages %}
-
+<div class="container">
     <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="title text-center">صفحات مرتبط</h2>
-                    <br>
-                    <div class="row">
-                        {% for related_page in related_pages %}
 
-                        <div class="col-md-4">
-                            <div class="card card-blog">
-                                <div class="card-header card-header-image">
-                                    <a href="{{related_page.get_absolute_url}}">
-                                        <img class="img img-raised" src="{{related_page.thumbnail}}">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h6 class="category text-info">Enterprise</h6>
-                                    <h4 class="card-title">
-                                        <a href="{{related_page.get_absolute_url}}">{{related_page.title}}</a>
-                                    </h4>
-                                    <div class="card-description">
-                                        {% if related_page.short_description %}
-                                        {{related_page.short_description}}
-                                        {% endif %}
+        <div class="my-5">
+            {% include "web/includes/related-pages-app/template.html" %}
 
-                                        <a href="{{related_page.get_absolute_url}}">
-                                            <span class="farsi">
-                                                ادامه مطلب
-                                                <i class="material-icons">reply</i>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-
-    {% endif %}
 </div>
+
 {% endblock %}
 
 {% block script %}
@@ -224,6 +185,7 @@
 {% include "core/includes/page-links-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
 {% endblock %}
 
 
