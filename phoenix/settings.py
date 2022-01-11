@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_social_share',
     'todocalendar',
     'bms',  
+    'hesabyar',
     'mafia',
     'restaurant',
     'messenger',

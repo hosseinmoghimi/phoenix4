@@ -8,9 +8,6 @@ class ChefPage(BasicPage):
 
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
-        print(200*"#")
-        print("APP_NAME")
-        print(APP_NAME)
         return super(ChefPage,self).save(*args, **kwargs)
 
 

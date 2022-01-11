@@ -14,6 +14,7 @@ urlpatterns = [
     # path('phoenix4/', include('market.urls')),#for bad redirect
     path('market/', include('market.urls')), 
     path('salary/', include('salary.urls')),
+    path('hesabyar/', include('hesabyar.urls')),
     path('restaurant/', include('restaurant.urls')),
     path('bms/', include('bms.urls')),
     path('tax/', include('tax.urls')),
