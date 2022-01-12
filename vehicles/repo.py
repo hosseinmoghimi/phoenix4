@@ -166,9 +166,9 @@ class TripRepo():
             return
         trip=TripRepo(request=self.request).trip(*args, **kwargs)
         passenger=PassengerRepo(request=self.request).passenger(*args, **kwargs)
-        if trip is not None and passenger is not None:
+        if trip is not None and passenger is not None and not passenger in trip.passengers.all():
             trip.passengers.add(passenger)
-        return passenger
+            return passenger
 
     def add_trip(self,*args, **kwargs):
         me_passenger=PassengerRepo(request=self.request).me

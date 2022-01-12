@@ -10,32 +10,65 @@
   </a>
 </div>
 <div class="row">
-  <div class="col-md-4 mb-3">
-    {% include "vehicles/includes/vehicles-app/template.html" %}
-  </div>
-
-
-  <div class="col-md-4 mb-3">
-    {% include "vehicles/includes/areas-app/template.html" %}
-
-  </div>
-
-  <div class="col-md-4 mb-3">
-
-    {% include "vehicles/includes/drivers-app/template.html" %}
-  </div>
-
-
-  <div class="col-md-4  mb-3">
-
-    {% include "vehicles/includes/servicemans-app/template.html" %}
 
 
 
-  </div>
-  <div class="col-md-4  mb-3">
 
-    {% include "vehicles/includes/passengers-app/template.html" %}
+  <div class="col-md-4 farsi">
+    <div class="card">
+      <div class="card-header">
+        <h4>
+
+          لینک ها
+        </h4>
+      </div>
+      <div class="card-body">
+        <a href="{% url 'vehicles:trip_request' %}">
+          <h5>
+
+            ثبت سفر جدید
+          </h5>
+        </a>
+        <a href="{% url 'vehicles:vehicles' %}">
+          <h5>
+
+            لیست ماشین ها
+          </h5>
+        </a>
+        <a href="{% url 'vehicles:passengers' %}">
+          <h5>
+
+            لیست مسافر ها</h5>
+        </a>
+        <a href="{% url 'vehicles:drivers' %}">
+          <h5>
+
+            لیست راننده ها</h5>
+        </a>
+        <a href="{% url 'vehicles:trippaths' %}">
+          <h5>
+
+            لیست مسیر ها
+          </h5>
+        </a>
+        <a href="{% url 'vehicles:service_mans' %}">
+          <h5>
+
+            لیست سرویس کار ها
+          </h5>
+        </a>
+        <a href="{% url 'vehicles:areas' %}">
+          <h5>
+
+            لیست محدوده ها
+          </h5>
+        </a>
+       
+        
+      </div>
+    </div>
+
+
   </div>
 
 
