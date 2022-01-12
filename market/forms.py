@@ -9,6 +9,11 @@ class SelectProductForm(forms.Form):
     barcode=forms.CharField(max_length=1000,required=False)
     product_id=forms.IntegerField(required=False)
 
+class SaveOrderForm(forms.Form):
+    description=forms.CharField(max_length=1000,required=False)
+    order_lines=forms.CharField(max_length=1000,required=False)
+    customer_id=forms.IntegerField(required=True)
+    supplier_id=forms.IntegerField(required=True)
 class ConfirmMenuForm(forms.Form):
     description=forms.CharField(max_length=5000,required=False)
 

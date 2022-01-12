@@ -506,7 +506,33 @@ class OrderRepo:
             self.objects=Order.objects.filter(a)
         self.objects = self.objects.order_by("-date_ordered")
         
+    def add_order(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_order"):
+            return
+        order=Order()
+        if 'supplier_id' in kwargs:
+            order.supplier_id=kwargs['supplier_id']
 
+        if 'customer_id' in kwargs:
+            order.customer_id=kwargs['customer_id']
+
+        if 'shipper_id' in kwargs:
+            order.shipper_id=kwargs['shipper_id']
+
+        if 'address' in kwargs:
+            order.address=kwargs['address']
+        
+
+        if 'date_ordered' in kwargs:
+            order.date_ordered=kwargs['date_ordered']
+        else:
+            order.date_ordered=timezone.now()
+
+
+        if 'description' in kwargs:
+            order.description=kwargs['description']
+        order.save()
+        return order
     def orders(self,*args, **kwargs):
         return self.list(*args, **kwargs)
 

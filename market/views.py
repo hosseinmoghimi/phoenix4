@@ -1,5 +1,5 @@
 import json
-
+from .apis import OrderApi
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
 from core.constants import CURRENCY
@@ -518,20 +518,25 @@ class ShipperViews(View):
 
 class OrderViews(View):
     def add_order(self,request,*args, **kwargs):
-        context=getContext(request=request)
+        if request.method=='POST':
+            
+            return OrderApi().save_order(request=request,*args, **kwargs)
+        else:
+                    
+            context=getContext(request=request)
 
-        customers=CustomerRepo(request=request).list()
-        context['customers']=customers
-        context['customers_s']=json.dumps(CustomerSerializer(customers,many=True).data)
+            customers=CustomerRepo(request=request).list()
+            context['customers']=customers
+            context['customers_s']=json.dumps(CustomerSerializer(customers,many=True).data)
 
 
-        
-        suppliers=SupplierRepo(request=request).list()
-        context['suppliers']=suppliers
-        context['suppliers_s']=json.dumps(SupplierSerializerForShop(suppliers,many=True).data)
+            
+            suppliers=SupplierRepo(request=request).list()
+            context['suppliers']=suppliers
+            context['suppliers_s']=json.dumps(SupplierSerializerForShop(suppliers,many=True).data)
 
 
-        return render(request,TEMPLATE_ROOT+"add-order.html",context)
+            return render(request,TEMPLATE_ROOT+"add-order.html",context)
     def financial_report(self, request, *args, **kwargs):
         context = getContext(request)
         financial_report = FinancialReportRepo(

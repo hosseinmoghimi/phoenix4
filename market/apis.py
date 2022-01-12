@@ -2,12 +2,12 @@ import json
 
 from django.db.models import manager
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, UnitNameSerializer, WareHouseSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, OrderSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, UnitNameSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
 from utility.persian import PersianCalendar
-from .repo import CartRepo, CategoryRepo, GuaranteeRepo, ProductRepo, ShopRepo, WareHouseRepo
+from .repo import CartRepo, CategoryRepo, GuaranteeRepo, OrderRepo, ProductRepo, ShopRepo, WareHouseRepo
 from .apps import APP_NAME
 
 class categoryApi(APIView):
@@ -102,6 +102,31 @@ class ShopApi(APIView):
 
 
 class OrderApi(APIView):
+    def save_order(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            save_order_form=SaveOrderForm(request.POST)
+            if save_order_form.is_valid():
+                log=3
+                cd=save_order_form.cleaned_data
+                supplier_id=cd['supplier_id']
+                customer_id=cd['customer_id']
+                description=cd['description']
+                order_lines=cd['order_lines']
+                order=OrderRepo(request=request).add_order(
+                    supplier_id=supplier_id,
+                    customer_id=customer_id,
+                    order_lines=order_lines,
+                    description=description,
+                    )
+                if order is not None:
+                    context['order']=OrderSerializer(order).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
     def edit_order_line(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED

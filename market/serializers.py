@@ -12,7 +12,7 @@ class UnitNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitName
         fields = ['id', 'name']
-        
+
 class CustomerSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:
@@ -81,7 +81,7 @@ class OrderSerializer(serializers.ModelSerializer):
     lines=OrderLineSerializer(many=True)
     class Meta:
         model = Order
-        fields = ['id','lines','customer','supplier','sum_total','lines_total','total']
+        fields = ['id','lines','customer','supplier','sum_total','lines_total','total','get_absolute_url']
 class CartSerializer(serializers.ModelSerializer):
     orders=OrderSerializer(many=True)
     lines=CartLineSerializer(many=True)
