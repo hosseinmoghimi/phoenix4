@@ -24,11 +24,14 @@
 {% endblock content %}
 
 
-{% block script %}
+{% block script %} 
+{% if me_passenger %}
+  
 <script>
     let passenger_id=parseInt("{{passenger_id}}")
+    let me_passenger=JSON.parse("{{me_passenger_s|escapejs}}")
 </script>
-
+{% endif %}
 <script src="{% static 'persian/moment.js' %}"></script>
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>

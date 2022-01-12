@@ -354,6 +354,10 @@ class TripViews(View):
 
 
         context.update(self.add_trip_context(request=request,*args, **kwargs))
+        me_passenger=context['me_passenger']
+        if me_passenger is not None:
+            context['me_passenger_s']=json.dumps(PassengerSerilizer(me_passenger).data)
+
         context['add_trip_form']=AddTripForm()
         return render(request,TEMPLATE_FOLDER+"trip-request.html",context)
 
@@ -372,9 +376,9 @@ class TripViews(View):
         vehicles_s=json.dumps(VehicleSerializer(vehicles,many=True).data)
         context['vehicles_s']=vehicles_s
 
-        passengers=PassengerRepo(request=request).list(*args, **kwargs)
-        passengers_s=json.dumps(PassengerSerilizer(passengers,many=True).data)
-        context['passengers_s']=passengers_s
+        all_passengers=PassengerRepo(request=request).list(*args, **kwargs)
+        all_passengers_s=json.dumps(PassengerSerilizer(all_passengers,many=True).data)
+        context['all_passengers_s']=all_passengers_s
 
         
         drivers=DriverRepo(request=request).list(*args, **kwargs)

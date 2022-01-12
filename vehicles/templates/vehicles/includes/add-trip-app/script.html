@@ -1,16 +1,22 @@
 <script>
+
+    let passengers = []
+    if (typeof me_passenger != "undefined")
+        passengers = [me_passenger]
+
+
     let vehicles = JSON.parse(`{{vehicles_s|escapejs}}`)
     let drivers = JSON.parse(`{{drivers_s|escapejs}}`)
     let all_paths = JSON.parse(`{{paths_s|escapejs}}`)
-    let passengers = JSON.parse(`{{passengers_s|escapejs}}`)
+    let all_passengers = JSON.parse(`{{all_passengers_s|escapejs}}`)
 
     let url_add_new_trip = "{% url 'vehicles:add_new_trip' %}"
 
     let add_trip_app = new Vue({
         el: "#add-trip-app",
         data: {
-            all_passengers: passengers,
-            passengers: [],
+            all_passengers: all_passengers,
+            passengers: passengers,
             delay: 0,
             cost: 0,
             waiting: false,
@@ -27,8 +33,28 @@
             if_show_message: false,
             message_color: "",
             message: "",
+            passenger_profile_id: 0,
+            passenger_id: 0,
+            passenger_name: "",
+            driver_name: "",
+            vehicle_name: "",
         },
         methods: {
+            add_passenger: function () {
+                let passengerss = this.all_passengers.filter(passenger => passenger.id == add_trip_app.passenger_id)
+                if (passengerss.length == 1) {
+                    let tek = false
+                    add_trip_app.passengers.forEach(passenger => {
+                        if (passenger.id == this.passenger_id)
+                            tek = true
+                    });
+                    if (!tek)
+                        add_trip_app.passengers.push(passengerss[0])
+                }
+
+
+
+            },
             show_message: function (message_color, message) {
                 this.if_show_message = true
                 this.message_color = message_color
@@ -50,24 +76,69 @@
                 })
             },
             selected_driver_by_profile_id: function () {
-                let selected_driverr=null
+                let selected_driverr = null
                 drivers.forEach(driver => {
                     if (driver.id == add_trip_app.driver_profile_id)
                         selected_driverr = driver
                 });
-                add_trip_app.driver_id=selected_driverr.id
+                add_trip_app.driver_id = selected_driverr.id
             },
+            selected_passenger_by_profile_id: function () {
+                all_passengers.forEach(passenger => {
+                    if (passenger.profile.id == add_trip_app.passenger_profile_id) {
+
+                        add_trip_app.passenger_id = passenger.id
+                    }
+                });
+            },
+            delete_passengers: function (passenger_id) {
+                this.passengers = this.passengers.filter(p => p.id != passenger_id)
+            },
+            search_passenger: function () {
+                all_passengers.forEach(passenger => {
+                    if (passenger.profile.name.indexOf(add_trip_app.passenger_name) > -1) {
+                        add_trip_app.passenger_id = passenger.id
+                    }
+
+                });
+            },
+
+            
+            search_vehicle: function () {
+                vehicles.forEach(vehicle => {
+                    if (vehicle.title.indexOf(add_trip_app.vehicle_name) > -1) {
+                        add_trip_app.vehicle_id = vehicle.id
+                    }
+
+                    if (vehicle.plaque && vehicle.plaque.indexOf(add_trip_app.vehicle_name) > -1) {
+                        add_trip_app.vehicle_id = vehicle.id
+                    }
+
+
+                });
+            },
+
+            search_driver: function () {
+                drivers.forEach(driver => {
+                    if (driver.profile.name.indexOf(add_trip_app.driver_name) > -1) {
+                        add_trip_app.driver_id = driver.id
+                    }   
+
+                });
+            },
+
+
             add_new_trip: function () {
-                if(add_trip_app.title===""){
-                    add_trip_app.show_message("warning","عنوان سفر را وارد کنید.")
+                if (add_trip_app.title === "") {
+                    add_trip_app.show_message("warning", "عنوان سفر را وارد کنید.")
                     return
                 }
-                if(add_trip_app.vehicle_id==0){
-                    add_trip_app.show_message("warning","وسیله را وارد کنید.")
+                if (add_trip_app.vehicle_id == 0) {
+                    add_trip_app.show_message("warning", "وسیله را وارد کنید.")
                     return
                 }
-                if(add_trip_app.driver_id==0){
-                    add_trip_app.show_message("warning","راننده را وارد کنید.")
+                if (add_trip_app.driver_id == 0) {
+                    add_trip_app.show_message("warning", "راننده را وارد کنید.")
                     return
                 }
                 add_trip_app.waiting = true
@@ -78,9 +149,13 @@
                     })
                 });
                 let paths = JSON.stringify(paths_)
-                let passengers = JSON.stringify([])
-                if (typeof passenger_id != "undefined")
-                    passengers = JSON.stringify([passenger_id])
+
+                passengers = []
+                this.passengers.forEach(passenger => {
+                    passengers.push(passenger.id)
+                });
+                passengers = JSON.stringify(passengers)
+                console.log(this.passengers)
                 let payload = {
                     title: this.title,
                     csrfmiddlewaretoken: csrfmiddlewaretoken,

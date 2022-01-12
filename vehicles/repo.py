@@ -171,6 +171,7 @@ class TripRepo():
             return passenger
 
     def add_trip(self,*args, **kwargs):
+        print(kwargs)
         me_passenger=PassengerRepo(request=self.request).me
         passengers =kwargs['passengers'] if 'passengers' in kwargs else []
         if self.user.has_perm(APP_NAME+".add_trip"):

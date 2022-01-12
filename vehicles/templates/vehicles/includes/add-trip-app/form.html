@@ -81,9 +81,11 @@
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="title">ماشین</label>
+                <input type="text" v-model="vehicle_name" @input="search_vehicle()" class="form-control"
+                    placeholder="جستجو .." id="">
                 <input type="number" v-model="vehicle_id" placeholder="کد ماشین" class="form-control" required>
                 <select class="form-control" required v-model="vehicle_id" id="">
                     <option v-for="vehicle in vehicles" :value="vehicle.id" v-text="vehicle.title">
@@ -93,10 +95,13 @@
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="title">راننده</label>
-                <input type="number" v-model="driver_profile_id" @input="selected_driver_by_profile_id()" placeholder="شناسه پروفایل" class="form-control" required>
+                <input type="text" v-model="driver_name" @input="search_driver()" class="form-control"
+                    placeholder="جستجو .." id="">
+                <input type="number" v-model="driver_profile_id" @input="selected_driver_by_profile_id()"
+                    placeholder="شناسه پروفایل" class="form-control" required>
 
                 <select class="form-control" required v-model="driver_id" id="">
                     <option v-for="driver in drivers" :value="driver.id" v-text="driver.profile.name">
@@ -108,7 +113,7 @@
 
 
 
-        <div class="col-md-12">
+        <div class="col-md-4">
             <div class="text-right">
 
                 <button @click="add_new_trip()" class="btn btn-success">
@@ -123,6 +128,48 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="title">مسافر ها</label>
+                <input type="text" v-model="passenger_name" @input="search_passenger()" class="form-control"
+                    placeholder="جستجو .." id="">
+                <input type="number" v-model="passenger_profile_id" @input="selected_passenger_by_profile_id()"
+                    placeholder="شناسه پروفایل" class="form-control" required>
+
+                <select class="form-control" required v-model="passenger_id" id="">
+                    <option v-for="passenger in all_passengers" :value="passenger.id" v-text="passenger.profile.name">
+                    </option>
+                </select>
+                <button @click="add_passenger()" class="btn btn-warning">افزودن</button>
+            </div>
+
+
+            <div>
+                <h5>
+                    مسافر های انتخاب شده
+                    (
+                    <span v-text="passengers.length"></span>
+
+                    )
+                </h5>
+                <div v-for="passenger in passengers">
+                    <h6>
+                        <a :href="passenger.get_absolute_url">
+
+                            <img :src="passenger.profile.image" class="rounded-circle ml-2" width="32" alt="">
+                            <span v-text="passenger.profile.name">
+
+                            </span>
+                        </a>
+
+                        <i class="fa fa-trash text-danger" style="cursor: pointer;"
+                            @click="delete_passengers(passenger.id)"></i>
+                    </h6>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 </div>
