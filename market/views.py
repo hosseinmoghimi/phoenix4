@@ -12,10 +12,10 @@ from django.views import View
 from utility.persian import PersianCalendar
 
 from market.forms import *
-from market.serializers import (CartLineSerializer, CartSerializer, GuaranteeSerializer,
+from market.serializers import (CartLineSerializer, CartSerializer, CustomerSerializer, GuaranteeSerializer,
                                 MenuLineSerializer, MenuSerializer,
                                 OrderLineSerializer,
-                                ProductSpecificationSerializer, ShopSerializer)
+                                ProductSpecificationSerializer, ShopSerializer, SupplierSerializerForShop)
 
 from .apps import APP_NAME
 from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
@@ -519,6 +519,18 @@ class ShipperViews(View):
 class OrderViews(View):
     def add_order(self,request,*args, **kwargs):
         context=getContext(request=request)
+
+        customers=CustomerRepo(request=request).list()
+        context['customers']=customers
+        context['customers_s']=json.dumps(CustomerSerializer(customers,many=True).data)
+
+
+        
+        suppliers=SupplierRepo(request=request).list()
+        context['suppliers']=suppliers
+        context['suppliers_s']=json.dumps(SupplierSerializerForShop(suppliers,many=True).data)
+
+
         return render(request,TEMPLATE_ROOT+"add-order.html",context)
     def financial_report(self, request, *args, **kwargs):
         context = getContext(request)

@@ -5,9 +5,54 @@
                 ایجاد سفارش جدید
             </h3>
         </div>
-
+        
         <div class="card-body">
             <div class="row">
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">فروشنده</label>
+
+                        <select v-model="supplier_id" class="form-control" id="">
+                            <option v-for="supplier in suppliers" :value="supplier.id" v-text="supplier.title" ></option>
+                        </select>
+                        <div class="media mt-3" v-if="selected_supplier()">
+                            <img class="rounded" width="48" :src="selected_supplier().image" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    <a target="_blank" :href="selected_supplier().get_absolute_url">
+
+                                        <span v-text="selected_supplier().title"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">خریدار</label>
+                        <input type="text" @input="search_customer()" placeholder="جستجوی مشتری" v-model="customer_name" class="form-control">
+                        <select v-model="customer_id" class="form-control" id="">
+                            <option v-for="customer in customers" :value="customer.id" v-text="customer.profile.name" ></option>
+                        </select>
+                        <div class="media mt-3" v-if="selected_customer()">
+                            <img class="rounded" width="48" :src="selected_customer().profile.image" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    <a target="_blank" :href="selected_customer().get_absolute_url">
+
+                                        <span v-text="selected_customer().profile.name"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">محصول / کالا</label>
@@ -19,7 +64,7 @@
                                 
                              
                         </form>
-                        <div class="media" v-if="product">
+                        <div class="media mt-3" v-if="product">
                             <img class="rounded" width="48" :src="product.thumbnail" alt="">
                             <div class="media-body">
                                 <h4>
@@ -31,6 +76,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="">تعداد / مقدار</label>
+                        <input type="number" v-model="quantity" class="form-control" placeholder="..." id="">
+                        <select v-model="unit_name" class="form-control" id="">
+                            <option v-for="unit_name in unit_names" :value="unit_name.name" v-text="unit_name.name"></option>
+                        </select>
+                    </div>
+
                 </div>
             </div>
             <div class="row">

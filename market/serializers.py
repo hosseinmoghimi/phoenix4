@@ -1,5 +1,5 @@
 from market.repo import GuaranteeRepo
-from .models import Brand, Cart, CartLine, Category, Customer, Guarantee, Menu, Order, OrderLine, Product, ProductFeature, ProductSpecification, Shop, Supplier, WareHouse
+from .models import Brand, Cart, CartLine, Category, Customer, Guarantee, Menu, Order, OrderLine, Product, ProductFeature, ProductSpecification, Shop, Supplier, UnitName, WareHouse
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
 
@@ -8,7 +8,11 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'title', 'thumbnail', 'get_absolute_url','barcode']
 
-
+class UnitNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnitName
+        fields = ['id', 'name']
+        
 class CustomerSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:

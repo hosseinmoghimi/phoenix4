@@ -2,7 +2,7 @@ import json
 
 from django.db.models import manager
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, UnitNameSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -239,6 +239,9 @@ class ProductApi(APIView):
                 if product is not None:
                     log=4
                     context['product']=ProductSerializer(product).data
+                    unit_names=product.unit_names.all()
+                    context['unit_names']=UnitNameSerializer(unit_names,many=True).data
+                    unit_names
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

@@ -1,23 +1,65 @@
 <script>
+    let customers = JSON.parse("{{customers_s|escapejs}}")
+    let suppliers = JSON.parse("{{suppliers_s|escapejs}}")
     let add_order_app = new Vue({
         el: "#add-order-app",
         data: {
             product_barcode: "",
-            product:null,
+            product: null,
+            customer_name:"",
+            unit_names: [],
+            quantity: 1,
+            unit_name: "",
+            customers: customers,
+            customer_id: 0,
+            suppliers:suppliers,
+            supplier_id:0,
+
         },
         methods: {
+            search_customer:function(){
+                customers.forEach(customer => {
+                    if (customer.profile.name.indexOf(add_order_app.customer_name) > -1) {
+                        add_order_app.customer_id = customer.id
+                    }
+
+                });
+            },
+            selected_customer: function () {
+                let selected = false
+                let customer_id=this.customer_id
+                this.customers.forEach(customer => {
+                    if (customer.id == customer_id) {
+                        selected = customer
+                    }
+                });
+                return selected
+            },            
+            selected_supplier: function () {
+                let selected = false
+                let supplier_id=this.supplier_id
+                this.suppliers.forEach(supplier => {
+                    if (supplier.id == supplier_id) {
+                        selected = supplier
+                    }
+                });
+                return selected
+            },
+
             select_product: function () {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     barcode: this.product_barcode
                 }
-                let url="{% url 'market:select_product' %}"
+                let url = "{% url 'market:select_product' %}"
                 $.post(url, payload).done((data) => {
                     console.log(data)
-                    if(data.result==='SUCCEED'){
-                        add_order_app.product=data.product
-                        add_order_app.product_barcode=""
-                        
+                    if (data.result === 'SUCCEED') {
+                        add_order_app.unit_names = data.unit_names
+                        add_order_app.product = data.product
+                        add_order_app.product_barcode = ""
+                        add_order_app.unit_name = data.unit_names[0].name
+
                     }
                 })
             }
