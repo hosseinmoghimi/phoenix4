@@ -1,0 +1,41 @@
+<div id="add-order-app">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="title">
+                ایجاد سفارش جدید
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">محصول / کالا</label>
+                        <form @submit.prevent="select_product()">
+
+                            <input type="text" class="form-control" v-model="product_barcode" placeholder="بارکد محصول"
+                                id="">
+
+                                
+                             
+                        </form>
+                        <div class="media" v-if="product">
+                            <img class="rounded" width="48" :src="product.thumbnail" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    <a target="_blank" :href="product.get_absolute_url">
+
+                                        <span v-text="product.title"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -517,6 +517,9 @@ class ShipperViews(View):
 
 
 class OrderViews(View):
+    def add_order(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        return render(request,TEMPLATE_ROOT+"add-order.html",context)
     def financial_report(self, request, *args, **kwargs):
         context = getContext(request)
         financial_report = FinancialReportRepo(

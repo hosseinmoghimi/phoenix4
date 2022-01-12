@@ -1,0 +1,26 @@
+<script>
+    let add_order_app = new Vue({
+        el: "#add-order-app",
+        data: {
+            product_barcode: "",
+            product:null,
+        },
+        methods: {
+            select_product: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    barcode: this.product_barcode
+                }
+                let url="{% url 'market:select_product' %}"
+                $.post(url, payload).done((data) => {
+                    console.log(data)
+                    if(data.result==='SUCCEED'){
+                        add_order_app.product=data.product
+                        add_order_app.product_barcode=""
+                        
+                    }
+                })
+            }
+        }
+    })
+</script>

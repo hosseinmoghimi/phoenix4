@@ -9,6 +9,7 @@ app_name=APP_NAME
 urlpatterns = [
     path("",views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),
+    path('add_order/',views.OrderViews().add_order,name="add_order"),
     path("product/<int:pk>/",views.ProductViews().product,name="product"),
     path("order_line/<int:pk>/",views.OrderViews().order_line,name="order_line"),
     path("guarantee_print/<int:pk>/",views.GuaranteeView().guarantee_print,name="guarantee_print"),
@@ -53,6 +54,7 @@ urlpatterns = [
 
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
+    path("api/select_product/",apis.ProductApi().select_product,name="select_product"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),
     path("api/add_product_for_shoe/",apis.ProductApi().add_product_for_shoe,name="add_product_for_shoe"),
     path("api/add_product_for_shop/",apis.ProductApi().add_product_for_shop,name="add_product_for_shop"),

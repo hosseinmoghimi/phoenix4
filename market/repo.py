@@ -158,7 +158,15 @@ class ProductRepo:
 
     def product(self, *args, **kwargs):
         if 'product_id' in kwargs:
-            return self.objects.filter(pk=kwargs['product_id']).first()  
+            product_id=kwargs['product_id']
+            print(product_id)
+            if product_id is not None and product_id !="":
+                return self.objects.filter(pk=product_id).first()  
+        if 'barcode' in kwargs:
+            barcode=kwargs['barcode']
+            print(barcode)
+            if barcode is not None and barcode !="":
+                return self.objects.filter(barcode=barcode).first()  
         elif 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first() 
         elif 'id' in kwargs:

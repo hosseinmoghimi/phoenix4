@@ -222,6 +222,26 @@ class WareHouseApi(APIView):
 
 
 class ProductApi(APIView):
+    def select_product(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            select_product_form=SelectProductForm(request.POST)
+            if select_product_form.is_valid():
+                log=3
+                cd=select_product_form.cleaned_data
+                product_id=cd['product_id']
+                barcode=cd['barcode']
+                
+                product=ProductRepo(request=request).product(barcode=barcode,product_id=product_id)
+                if product is not None:
+                    log=4
+                    context['product']=ProductSerializer(product).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
     
     def add_feature_for_product(self,request,*args, **kwargs):
         context={}

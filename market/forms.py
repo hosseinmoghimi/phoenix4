@@ -5,6 +5,10 @@ class CheckoutCartForm(forms.Form):
     cart_lines=forms.CharField(max_length=1000,required=True)
     customer_id=forms.IntegerField(required=True)
 
+class SelectProductForm(forms.Form):
+    barcode=forms.CharField(max_length=1000,required=False)
+    product_id=forms.IntegerField(required=False)
+
 class ConfirmMenuForm(forms.Form):
     description=forms.CharField(max_length=5000,required=False)
 
