@@ -64,6 +64,12 @@ def CoreContext(request, *args, **kwargs):
     else:
         context['PUSHER_IS_ENABLE'] = False
 
+    visitor_counter=parameter_repo.parameter(name=ParametersEnum.VISITOR_COUNTER)
+    if str(visitor_counter.value_origin)==ParametersEnum.VISITOR_COUNTER:
+        visitor_counter.value_origin=0
+    visitor_counter.value_origin=int(visitor_counter.value_origin)+1
+    visitor_counter.save()
+    context['visitor_counter']=visitor_counter.value
     context['favicon']=picture_repo.picture(name=PictureNameEnums.FAVICON).image()
     return context
 
