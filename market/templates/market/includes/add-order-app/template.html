@@ -5,15 +5,11 @@
                 ایجاد سفارش جدید
             </h3>
         </div>
-
         <div class="card-body">
             <div class="row">
-
-
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">فروشنده</label>
-
                         <select v-model="supplier_id" class="form-control" id="">
                             <option v-for="supplier in suppliers" :value="supplier.id" v-text="supplier.title"></option>
                         </select>
@@ -22,7 +18,6 @@
                             <div class="media-body">
                                 <h4>
                                     <a target="_blank" :href="selected_supplier().get_absolute_url">
-
                                         <span v-text="selected_supplier().title"></span>
                                     </a>
                                 </h4>
@@ -30,7 +25,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">خریدار</label>
@@ -45,7 +39,6 @@
                             <div class="media-body">
                                 <h4>
                                     <a target="_blank" :href="selected_customer().get_absolute_url">
-
                                         <span v-text="selected_customer().profile.name"></span>
                                     </a>
                                 </h4>
@@ -53,25 +46,17 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">محصول / کالا</label>
                         <form @submit.prevent="select_product()">
-
-                            <input type="text" class="form-control" v-model="product_barcode" placeholder="بارکد محصول"
-                                id="">
-
-
-
+                            <input type="text" class="form-control" v-model="product_barcode" placeholder="بارکد محصول"id="">
                         </form>
                         <div class="media mt-3" v-if="product">
                             <img class="rounded" width="48" :src="product.thumbnail" alt="">
                             <div class="media-body mr-2">
                                 <h4>
                                     <a target="_blank" :href="product.get_absolute_url">
-
                                         <span v-text="product.title"></span>
                                     </a>
                                 </h4>
@@ -96,14 +81,11 @@
                         <input type="text" class="form-control" v-model="line_description">
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="text-right">
-
                         <button @click="add_line()" class="btn btn-warning"> افزودن سطر</button>
                     </div>
                 </div>
-
             </div>
             <div class="row">
                 <table class="table table-striped">
@@ -153,7 +135,6 @@
                 </table>
             </div>
             <div class="row">
-
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="">توضیحات</label>
@@ -165,7 +146,6 @@
 
                         <button @click="save_order()" class="btn btn-success"> ذخیره سفارش</button>
                         <div class="farsi text-right" v-html="message">
-                            
                         </div>
                     </div>
                 </div>
