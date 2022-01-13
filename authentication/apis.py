@@ -1,11 +1,36 @@
 import re
-from authentication.forms import AddProfileForm, EditProfileForm, RegisterForm,UploadProfileImageForm
+from authentication.forms import AddProfileForm, EditProfileForm, AddMembershipRequestForm, RegisterForm,UploadProfileImageForm
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
 from authentication.serializers import ProfileSerializer
 from .repo import *
 from core.constants import SUCCEED,FAILED
+
+class MembershipRequestApi(APIView):
+    
+
+    def add_membership_request(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+        log=1
+        if request.method=='POST':
+            log=2
+            fm=AddMembershipRequestForm(request.POST)
+            if fm.is_valid():
+                log=3              
+                # profile_id=edit_profile_form.cleaned_data['profile_id']
+                mobile=fm.cleaned_data['mobile']
+                app_name=fm.cleaned_data['app_name']
+                req=MembershipRequestRepo(request=request).add_request(mobile=mobile,app_name=app_name)
+                if req is not None:
+                    context['mobile']=req.mobile
+                    context['result']=SUCCEED
+
+        context['log']=log
+        return JsonResponse(context)    
+
 
 class ProfileApi(APIView):
     
@@ -41,7 +66,6 @@ class ProfileApi(APIView):
 
         context['log']=log
         return JsonResponse(context)    
-
 
     def add_profile(self,request,*args, **kwargs):
         context={'result':FAILED}

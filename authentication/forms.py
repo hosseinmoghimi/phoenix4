@@ -8,6 +8,10 @@ class ResetPasswordForm(forms.Form):
 class LoginAsUserForm(forms.Form):
     username=forms.CharField(required=True,max_length=200)
 
+class AddMembershipRequestForm(forms.Form):
+    mobile=forms.CharField(required=True,max_length=200)
+    app_name=forms.CharField(required=True,max_length=200)
+
 class UploadProfileImageForm(forms.Form):
     # profile_id=forms.IntegerField(required=True)
     image=forms.ImageField(required=True)

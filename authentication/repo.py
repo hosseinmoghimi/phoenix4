@@ -9,6 +9,28 @@ from django.contrib.auth.models import User
 def is_not_blank(s):
     return bool(s and not s.isspace())
 
+
+class MembershipRequestRepo:
+    
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = MembershipRequest.objects
+    def add_request(self,*args, **kwargs):
+        mobile=kwargs['mobile']
+        app_name=kwargs['app_name']
+        req=MembershipRequest(mobile=mobile,app_name=app_name)
+        req.save()
+        print(kwargs)
+        print(req)
+        print(100*"#$$")
+        return req
+
 class ProfileRepo():
     def __init__(self,*args, **kwargs):
         self.request=None

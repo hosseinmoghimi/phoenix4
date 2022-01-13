@@ -1,4 +1,6 @@
 import json
+
+from authentication.forms import AddMembershipRequestForm
 from .apis import OrderApi
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
@@ -93,6 +95,9 @@ class BasicViews(View):
             context['add_product_form'] = AddProductForm()
         if request.user.has_perm(APP_NAME+".add_category") and len(products) == 0:
             context['add_category_form'] = AddCategoryForm()
+
+        context['add_membership_request_form'] = AddMembershipRequestForm()
+
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
     def search(self, request, *args, **kwargs):

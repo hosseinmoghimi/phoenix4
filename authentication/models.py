@@ -1,3 +1,4 @@
+from datetime import datetime
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from .enums import ProfileStatusEnum
@@ -161,3 +162,18 @@ class ProfileContact(models.Model):
 
     def __str__(self):
         return f"{str(self.profile)} : {self.name} : {self.value}"
+
+
+
+class MembershipRequest(models.Model):
+    mobile=models.CharField(_("mobile"), max_length=50)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    read=models.BooleanField(_("read?"),default=False)
+    app_name=models.CharField(_("app_name"), max_length=50)
+    class Meta:
+        verbose_name = _("MembershipRequest")
+        verbose_name_plural = _("MembershipRequests")
+
+    def __str__(self):
+        return self.mobile
+ 
