@@ -1,0 +1,34 @@
+
+{% if documents %}
+  
+    <div id="page-documents-app" class="card mb-3">
+        <div class="card-header" id="headingdocuments">
+            <h5 class="text-center">
+                        دانلود ها
+                 
+            </h5>
+        </div>
+
+
+            <div class="card-body">
+                {% for document in documents %}
+                <div>
+
+                    <h6>
+                        <a class="mr-2" target="_blank" href="{{document.get_download_url}}">
+                        {{document.get_icon_tag|safe}}
+                            {{document.title}}
+                        </a>
+                        {% if perms.core.change_document %}
+                        {{document.get_edit_btn|safe}}
+
+                        {% endif %}
+                    </h6>
+                </div>
+                {% endfor %}
+               
+            </div>
+           
+    </div>
+
+{% endif %}

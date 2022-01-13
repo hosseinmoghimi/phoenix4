@@ -83,9 +83,13 @@ def PageContext(request, page):
     if my_like is None:
         my_like={'id':0}
     context['my_like'] =json.dumps(PageLikeSerializer(my_like).data)
+
+    
     related_pages = page.related_pages.all()
     context['related_pages'] = related_pages
     context['related_pages_s'] = json.dumps(BasicPageSerializer(related_pages,many=True).data)
+
+
     my_pages_ids=BasicPageRepo(request=request).my_pages_ids()
     if request.user.has_perm(APP_NAME+".add_link") or page.id in my_pages_ids:
         context['add_page_link_form'] = AddPageLinkForm()
@@ -106,21 +110,27 @@ def PageContext(request, page):
         
     if request.user.has_perm(APP_NAME+".delete_pageimage"):
         context['delete_page_image_form'] = DeletePageImageForm()
+
+    documents= page.documents.all()
+    context['documents'] = documents
+    context['documents_s'] = json.dumps(DocumentSerializer(documents,many=True).data)
+
     page_comments = page.pagecomment_set.all()
-    context['documents_s'] = json.dumps(DocumentSerializer(page.documents.all(),many=True).data)
     context['page_comments'] = page_comments
-    page_comments_s = json.dumps(
-        PageCommentSerializer(page_comments, many=True).data)
-    context['page_comments_s'] = page_comments_s
-    context['page_tags']=page.tags.all()
+    context['page_comments_s'] = json.dumps(PageCommentSerializer(page_comments, many=True).data)
+
+    page_tags=page.tags.all()
+    context['page_tags']=page_tags
+    context['page_tags_s']=json.dumps(TagSerializer(page_tags,many=True).data)
+
+
     links=page.links.all()
-    links_s=json.dumps(PageLinkSerializer(links,many=True).data)
-    context['links_s']=links_s
+    context['links']=links
+    context['links_s']=json.dumps(PageLinkSerializer(links,many=True).data)
     
     context['images_s']=json.dumps(ImageSerializer(page.images(),many=True).data)
     page_images=page.pageimage_set.all()
     # context['images_s']=json.dumps(PageImageSerializer(page_images,many=True).data)
-    context['page_tags_s']=json.dumps(TagSerializer(page.tags.all(),many=True).data)
     if page.meta_data is not None:
         context['keywords']=page.meta_data
 

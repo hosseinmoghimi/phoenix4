@@ -125,7 +125,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-default pull-right btn-round">Follow</button>
+                                <a  class="farsi btn btn-default pull-right btn-round">سایر نوشته ها</a>
                             </div>
                         </div>
                     </div>
@@ -135,16 +135,38 @@
         </div>
         <div class="section section-comments">
             <div class="row">
+                {% if add_page_link_form %}
                 <div class="col-md-4">
+
                     {% include "web/includes/page-links-app/template.html" %}
                 </div>
+                {% else %}
+                <div class="col-md-6">
+                    {% include "web/includes/page-links-app/template-simple.html" %}
 
+                </div>
+                {% endif %}
+
+
+                {% if add_page_document_form %}
                 <div class="col-md-4">
+
                     {% include "web/includes/page-documents-app/template.html" %}
                 </div>
+                {% else %}
+                <div class="col-md-6">
+
+                    {% include "web/includes/page-documents-app/template-simple.html" %}
+                </div>
+
+                {% endif %}
+
+                {% if add_page_tag_form %}
                 <div class="col-md-4">
                     {% include "web/includes/page-tags-app/template.html" %}
                 </div>
+                {% endif %}
+
             </div>
         </div>
         <div class="section section-comments">
@@ -181,9 +203,15 @@
     let page_comment_component_template = `{% include "web/includes/page-comments-app/component.html" %}`
 </script>
 {% include "core/includes/page-comments-app/script.html" %}
-
+{% if add_page_link_form %}
 {% include "core/includes/page-links-app/script.html" %}
+
+{% endif %}
+
+{% if add_page_document_form %}
+
 {% include "core/includes/page-documents-app/script.html" %}
+{% endif %}
 {% include "core/includes/page-tags-app/script.html" %}
 {% include "core/includes/page-related-app/script.html" %}
 {% endblock %}
