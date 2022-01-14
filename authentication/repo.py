@@ -26,9 +26,6 @@ class MembershipRequestRepo:
         app_name=kwargs['app_name']
         req=MembershipRequest(mobile=mobile,app_name=app_name)
         req.save()
-        print(kwargs)
-        print(req)
-        print(100*"#$$")
         return req
 
 class ProfileRepo():
