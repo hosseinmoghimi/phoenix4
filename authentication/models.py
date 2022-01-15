@@ -175,6 +175,7 @@ class MembershipRequest(models.Model):
     date_handled=models.DateTimeField(_("date_handled"),null=True,blank=True, auto_now=False, auto_now_add=False)
     handled_by=models.ForeignKey("authentication.profile", null=True,blank=True,verbose_name=_("profile"), on_delete=models.SET_NULL)
     app_name=models.CharField(_("app_name"), max_length=50)
+    class_name="membershiprequest"
     class Meta:
         verbose_name = _("MembershipRequest")
         verbose_name_plural = _("MembershipRequests")
@@ -185,3 +186,5 @@ class MembershipRequest(models.Model):
         return PersianCalendar().from_gregorian(self.date_added)
     def persian_date_handled(self):
         return PersianCalendar().from_gregorian(self.date_handled)
+    def get_delete_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"

@@ -28,6 +28,9 @@
                         <th>
                             مسئول رسیدگی
                         </th>
+                        <th>
+
+                        </th>
                     </thead>
                     <tbody>
                         <tr v-for="membership_request in membership_requests">
@@ -62,6 +65,11 @@
                                     @submit.prevent="handle_membership_request(membership_request.id)">
                                     <button class="btn btn-info" type="submit">ثبت رسیدگی</button>
                                 </form>
+                            </td>
+                            <td>
+                                <a style="cursor: pointer;" target="_blank" title="حذف" :href="membership_request.get_delete_url">
+                                    <i class="fa fa-trash text-danger"></i>
+                                </a>
                             </td>
                         </tr>
                     </tbody>

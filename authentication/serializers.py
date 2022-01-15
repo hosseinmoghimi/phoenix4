@@ -10,4 +10,4 @@ class MembershipRequestSerializer(serializers.ModelSerializer):
     handled_by=ProfileSerializer()
     class Meta:
         model=MembershipRequest
-        fields=['id','handled_by','mobile','read','app_name','handled','persian_date_added','persian_date_handled']
+        fields=['id','handled_by','mobile','read','app_name','get_delete_url','handled','persian_date_added','persian_date_handled']
