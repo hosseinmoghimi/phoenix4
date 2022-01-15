@@ -66,7 +66,7 @@ class CartLineSerializer(serializers.ModelSerializer):
 class GuaranteeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guarantee
-        fields = ['id','barcode','serial_no','get_absolute_url','get_print_url','get_qrcode_url','persian_start_date','persian_end_date']
+        fields = ['id','barcode','serial_no','get_absolute_url','get_print_url','get_qrcode_url','persian_start_date','persian_end_date','get_edit_url']
 
 class OrderLineSerializer(serializers.ModelSerializer):
     product=ProductSerializer()

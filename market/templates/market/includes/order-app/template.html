@@ -30,7 +30,10 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="media">
-                                            <img width="128" :src="guarantee.get_qrcode_url" alt="">
+                                            <a :href="guarantee.get_absolute_url">
+
+                                                <img width="128" :src="guarantee.get_qrcode_url" alt="">
+                                            </a>
                                             <div class="media-body">
                                                 <div class="text-right">
                                                     <span v-text="guarantee.barcode"></span>
