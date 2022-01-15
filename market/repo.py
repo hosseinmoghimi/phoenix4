@@ -1,3 +1,4 @@
+from django.http import Http404
 from accounting.repo import MarketOrderTransactionRepo,FinancialAccountRepo
 from utility.persian import PersianCalendar
 from django.utils import timezone
@@ -594,7 +595,15 @@ class OrderRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         order_line= OrderLine.objects.filter(pk=pk).first()
-        return order_line
+        if order_line is None:
+            raise Http404
+        if order_line.order.supplier.profile==self.profile:
+            return order_line
+        if order_line.order.customer.profile==self.profile:
+            return order_line
+        if self.user.has_perm(APP_NAME+".view_orderline"):
+            return order_line
+        raise Http404
 
     def do_pack(self, *args, **kwargs):
         order=self.order(*args, **kwargs)
