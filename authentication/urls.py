@@ -19,6 +19,10 @@ urlpatterns = [
     path("login/",views.AuthenticationViews().login,name="login"),
     path('edit_profile_/<int:profile_id>/',apis.ProfileApi().edit_profile,name="edit_profile"),
     path('add_profile/',apis.ProfileApi().add_profile,name="add_profile"),
+    path('membership_requests/',views.MembershipRequestViews().membership_requests,name="membership_requests"),
+    path('membership_requests/<app_name>/',views.MembershipRequestViews().membership_requests,name="membership_requests_app"),
+    
+    path('handle_membership_request/',apis.MembershipRequestApi().handle_membership_request,name="handle_membership_request"),
     path('add_membership_request/',apis.MembershipRequestApi().add_membership_request,name="add_membership_request"),
     path('upload_profile_image/<int:profile_id>/',views.ProfileViews().upload_profile_image,name="upload_profile_image"),
 ]

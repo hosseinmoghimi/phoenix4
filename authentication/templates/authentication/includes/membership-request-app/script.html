@@ -20,7 +20,7 @@
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         membership_request_app.message = `<p class="alert alert-success">درخواست شما برای شماره 
-                            ${data.mobile}
+                            ${data.membership_request.mobile}
                             با موفقیت ثبت شد.</p>`
                         membership_request_app.show_message = true
                         membership_request_app.mobile = ""

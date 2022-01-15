@@ -27,11 +27,18 @@
 <div id="app">
     <div class="text-center">
 
-        <a href="{{my_app.home_url}}" class="btn btn-success">
+        <a target="_blank"  href="{{my_app.home_url}}" class="btn btn-success">
             <i class="material-icons">
                 home
             </i>
             {{my_app.title}}</a>
+
+        <a  target="_blank" href="{% url 'authentication:membership_requests_app' app_name=my_app.name %}" class="btn btn-success">
+            <i class="material-icons">
+                person
+            </i>
+        درخواست های اشتراک
+        </a>
     </div>
     <form @submit.prevent="change_parameter(parameter.id,parameter.name,parameter.value)"
         v-for="parameter in parameters">

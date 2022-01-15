@@ -1,6 +1,8 @@
 from datetime import datetime
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
+
+from utility.persian import PersianCalendar
 from .enums import ProfileStatusEnum
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
@@ -169,6 +171,9 @@ class MembershipRequest(models.Model):
     mobile=models.CharField(_("mobile"), max_length=50)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     read=models.BooleanField(_("read?"),default=False)
+    handled=models.BooleanField(_("handled?") , default=False)
+    date_handled=models.DateTimeField(_("date_handled"),null=True,blank=True, auto_now=False, auto_now_add=False)
+    handled_by=models.ForeignKey("authentication.profile", null=True,blank=True,verbose_name=_("profile"), on_delete=models.SET_NULL)
     app_name=models.CharField(_("app_name"), max_length=50)
     class Meta:
         verbose_name = _("MembershipRequest")
@@ -176,4 +181,7 @@ class MembershipRequest(models.Model):
 
     def __str__(self):
         return self.mobile
- 
+    def persian_date_added(self):
+        return PersianCalendar().from_gregorian(self.date_added)
+    def persian_date_handled(self):
+        return PersianCalendar().from_gregorian(self.date_handled)

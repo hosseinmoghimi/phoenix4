@@ -1,0 +1,118 @@
+{% extends "phoenix/layout.html" %}
+{% block content %}
+
+<div class="row">
+
+
+
+
+    <div class="col-md-12 mb-3" id="membership-requests-app">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="title">
+                    درخواست های عضویت
+                </h4>
+            </div>
+            <div class="card-body farsi text-right">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            شماره همراه
+                        </th>
+                        <th>
+                            زمان درخواست
+                        </th>
+                        <th>
+                            اپلیکیشن درخواست کننده
+                        </th>
+                        <th>
+                            مسئول رسیدگی
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="membership_request in membership_requests">
+                            <td>
+                                <a class="" target="_blank" :href="'tel:'+membership_request.mobile">
+                                    <span class="material-icons text-success">
+                                        local_phone
+                                    </span>
+                                    <span v-text="membership_request.mobile"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <span class="small text-muted" v-text="membership_request.persian_date_added"></span>
+                            </td>
+                            <td>
+                                <a :href="'{{SITE_URL}}'+membership_request.app_name+'/'">
+                                    <span v-text="membership_request.app_name"></span>
+                            </td>
+                            <td>
+                                <div v-if="membership_request.handled_by">
+                                    <a :href="membership_request.handled_by.get_absolute_url">
+                                        <img :src="membership_request.handled_by.image" class="rounded-circle"
+                                            width="48" alt="">
+                                        <span v-text="membership_request.handled_by.name"></span>
+                                    </a>
+                                    <div>
+                                        <span class="small text-muted"
+                                            v-text="membership_request.persian_date_handled"></span>
+                                    </div>
+                                </div>
+                                <form v-if="!membership_request.handled_by"
+                                    @submit.prevent="handle_membership_request(membership_request.id)">
+                                    <button class="btn btn-info" type="submit">ثبت رسیدگی</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+</div>
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let membership_requests = JSON.parse(`{{membership_requests_s|escapejs}}`)
+    let membership_requests_app = new Vue({
+        el: "#membership-requests-app",
+        data: {
+            membership_requests: membership_requests
+        },
+        methods: {
+            handle_membership_request: function (membership_request_id) {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    membership_request_id: membership_request_id
+                }
+                let url = "{% url 'authentication:handle_membership_request' %}"
+                $.post(url, payload).done((data) => {
+                    console.log(data)
+                    if (data.result === "SUCCEED") {
+                        membership_requests_app.membership_requests.forEach(membership_request => {
+                            if (membership_request.id == data.membership_request.id) {
+                                membership_request.handled_by = data.membership_request.handled_by
+                                membership_request.handled = data.membership_request.handled
+                                membership_request.persian_date_handled = data.membership_request.persian_date_handled
+                            }
+
+                        });
+                    }
+                })
+            },
+        }
+    })
+</script>
+{% endblock script %}

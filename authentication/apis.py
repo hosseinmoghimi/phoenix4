@@ -1,13 +1,35 @@
 import re
-from authentication.forms import AddProfileForm, EditProfileForm, AddMembershipRequestForm, RegisterForm,UploadProfileImageForm
+from authentication.forms import AddProfileForm, EditProfileForm, AddMembershipRequestForm, HandleMembershipRequestForm, RegisterForm,UploadProfileImageForm
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from authentication.serializers import ProfileSerializer
+from authentication.serializers import MembershipRequestSerializer, ProfileSerializer
 from .repo import *
 from core.constants import SUCCEED,FAILED
 
 class MembershipRequestApi(APIView):
+    def handle_membership_request(self,request,*args, **kwargs):
+        context={'result':FAILED}
+        if 'profile_id' in kwargs:
+            profile_id=kwargs['profile_id']
+        log=1
+        if request.method=='POST':
+            log=2
+            fm=HandleMembershipRequestForm(request.POST)
+            if fm.is_valid():
+                log=3              
+                # profile_id=edit_profile_form.cleaned_data['profile_id']
+                membership_request_id=fm.cleaned_data['membership_request_id']
+                membership_request=MembershipRequestRepo(request=request).handle_membership_request(membership_request_id=membership_request_id)
+                if membership_request is not None:
+                    context['membership_request']=MembershipRequestSerializer(membership_request).data
+                    context['result']=SUCCEED
+
+        context['log']=log
+        return JsonResponse(context)    
+
+
+
     
 
     def add_membership_request(self,request,*args, **kwargs):
@@ -23,10 +45,10 @@ class MembershipRequestApi(APIView):
                 # profile_id=edit_profile_form.cleaned_data['profile_id']
                 mobile=fm.cleaned_data['mobile']
                 app_name=fm.cleaned_data['app_name']
-                req=MembershipRequestRepo(request=request).add_request(mobile=mobile,app_name=app_name)
-                if req is not None:
-                    context['mobile']=req.mobile
+                membership_request=MembershipRequestRepo(request=request).add_request(mobile=mobile,app_name=app_name)
+                if membership_request is not None:
                     context['result']=SUCCEED
+                    context['membership_request']=MembershipRequestSerializer(membership_request).data
 
         context['log']=log
         return JsonResponse(context)    
