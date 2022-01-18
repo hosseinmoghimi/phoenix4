@@ -17,7 +17,7 @@ class CategoryApi(APIView):
         log=1
         context['result']=FAILED
         categories=CategorySerializer(CategoryRepo(request=request).list(),many=True).data
-        context['categoies']=categories
+        context['categories']=categories
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
