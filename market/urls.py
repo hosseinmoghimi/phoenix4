@@ -1,6 +1,6 @@
 from market import apis
 from .apps import APP_NAME
-from . import views,apis
+from . import views,apis,apk_api
 from django.contrib.auth.decorators import login_required
 from django.urls import path,include
 
@@ -70,5 +70,9 @@ urlpatterns = [
     path("api/add_warehouse/",apis.WareHouseApi().add_warehouse,name="add_warehouse"),
     path("api/add_feature_for_product/",apis.ProductApi().add_feature_for_product,name="add_feature_for_product"),
     path("api/add_guarantee/",apis.GuaranteeApi().add_guarantee,name="add_guarantee"),
+
+
+
+    path("apk-api/",include('market.apk_api')),
     
 ]

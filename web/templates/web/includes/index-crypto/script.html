@@ -1,0 +1,17 @@
+<script>
+    let url_crypto = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=ETH,USD,EUR"
+    get_price()
+
+
+    function get_price() {
+
+        $.get(url_crypto, function (data) {
+            console.log(data.USD)
+        })
+        setTimeout(() => {
+            get_price();
+        }, 10*1000);
+
+
+    }
+</script>
