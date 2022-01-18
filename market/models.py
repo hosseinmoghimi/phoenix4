@@ -49,6 +49,14 @@ class Product(MarketPage):
     features=models.ManyToManyField("productfeature",blank=True, verbose_name=_("features"))
     def category(self):
         return self.category_set.first()
+    def category_id(self):
+        category= self.category()
+        if category is not None:
+            return category.id
+        else:
+            return 0
+
+            
     def is_top_in_category(self):
         cc=CategoryProductTop.objects.filter(product_id=self.pk)
         return len(cc)>0

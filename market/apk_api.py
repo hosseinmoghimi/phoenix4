@@ -1,4 +1,5 @@
 import json
+from unicodedata import category
 from urllib.parse import urlparse
 
 from django.db.models import manager
@@ -23,7 +24,19 @@ class CategoryApi(APIView):
         return JsonResponse(context)
 
 
+class ProductApi(APIView):
+    def products(self,request,*args, **kwargs):
+        context={}
+        log=1
+        context['result']=FAILED
+        products=ProductSerializer(ProductRepo(request=request).list(*args, **kwargs),many=True).data
+        context['products']=products
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
 urlpatterns=[
     path("categories/",CategoryApi().categories,name="apk_categories"),
+    path("products/<int:category_id>/",ProductApi().products,name="products"),
 
 ]
