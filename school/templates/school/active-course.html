@@ -6,6 +6,14 @@
         واحد درسی در حال آموزش
     </small>
     {{active_course.title}}
+
+
+    {% if perms.school.change_activecourse %}
+    <a title="ویرایش" target="_blank" href="{{active_course.get_edit_url}}">
+        <i class="fa fa-edit text-center"></i>
+    </a>
+    {% endif %}
+
 </h3>
 
 <div class="row">
@@ -19,6 +27,15 @@
                         <a href="{{active_course.get_absolute_url}}">
                             {{active_course.title}}
                         </a>
+
+
+                        <div>
+
+                            <a href="{{active_course.year.get_absolute_url}}">
+                                {{active_course.year.title}}
+                            </a>
+                        </div>
+
                         {% if perms.school.change_activecourse %}
                         {{active_course.get_edit_btn|safe}}
 
@@ -82,6 +99,10 @@
 
             </div>
         </div>
+
+      
+        
+
     </div>
 
 
@@ -89,46 +110,25 @@
 
     <div class="col-md-4">
 
-        <div class="card">
-            <div class="card-header">
+    
+        {% include "school/includes/teachers-app/template.html" %}
+        
+        {% if add_teacher_to_active_course_form %}
+        {% include "school/includes/add-teacher-to-active-course-app/template.html" %}
+      
+        {% endif %}
 
-                <h4>
-                    دبیران
-                </h4>
-            </div>
-            <div class="card-body farsi text-right">
-
-
-                <div>
-                    {% for teacher in active_course.teachers.all %}
-                    <div class="mb-2">
-
-                        <a href="{{teacher.get_absolute_url}}">
-                            <img src="{{teacher.profile.image}}" class="rounded-circle" width="32" alt="">
-                            {{teacher.profile.name}}
-                        </a>
-                        {% if perms.school.change_teacher %}
-                        {{teacher.get_edit_btn|safe}}
-
-                        {% endif %}
-                    </div>
-
-
-                    {% endfor %}
-                </div>
-
-
-
-
-
-            </div>
-        </div>
-
+    </div>
+    <div class="com-md-4">
         {% include "school/includes/students-app/template.html" %}
 
-        
+        {% if add_student_to_active_course_form %}
+        {% include "school/includes/add-student-to-active-course-app/template.html" %}
+      
+        {% endif %}
+
     </div>
-    <div class="col-md-4">
+    <div class="col-md-7">
         {% include "school/includes/books-app/template.html" %}
 
     </div>
@@ -138,7 +138,7 @@
 
 
 
-    <div class="col-md-6">
+    <div class="col-md-5">
 
         {% include "school/includes/sessions-app/template.html" %}
     </div>
@@ -149,7 +149,14 @@
 
 
 {% block script %}
+<script>
+    let sctive_course_id=parseInt("{{sctive_course.id}}")
+</script>
 {% include "school/includes/sessions-app/script.html" %}
 {% include "school/includes/students-app/script.html" %}
-  
+{% include "school/includes/books-app/script.html" %}
+{% include "school/includes/add-student-to-active-course-app/script.html" %}
+{% include "school/includes/add-teacher-to-active-course-app/script.html" %}
+{% include "school/includes/teachers-app/script.html" %}
+
 {% endblock script %}

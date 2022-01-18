@@ -1,0 +1,26 @@
+<script>
+    let add_student_to_active_course_app=new Vue({
+        el:"#add-student-to-active-course-app",
+        data:{
+            profile_id:"",
+            all_students:JSON.parse("{{all_students_s|escapejs}}")
+
+        },
+        methods:{
+            add_student:function(){
+                let payload = {
+                    active_course_id: active_course_id,
+                    profile_id: this.profile_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                console.log(payload)
+
+                $.post("{% url 'school:add_student_to_active_course' %}", payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        students_app.students.push(data.student)
+                    }
+                })
+            }
+        }
+    })
+</script>

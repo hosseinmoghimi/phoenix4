@@ -11,6 +11,7 @@
     {% include "web/includes/index-sections/our-works.html" %}
     {% include "web/includes/index-sections/testimonials.html" %}
     {% include "web/includes/index-sections/contactus.html" %}
+    {% include "web/includes/index-crypto/template.html" %}
 
 </div>
 {% endblock %}
@@ -28,6 +29,10 @@
         $(".carousel-item").first().addClass("active")
     })
 </script>
+
+{% include "web/includes/index-crypto/script.html" %}
+
+
 {% endblock %}
 
 

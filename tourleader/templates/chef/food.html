@@ -1,0 +1,21 @@
+{% extends "chef/layout.html" %}
+
+{% block content %}
+
+<h3 class="text-center">
+    {{food.title}}
+    {% if perms.chef.change_food %}
+    <a href="{{food.get_edit_url}}" title="ویرایش" target="_blank">
+        <i class="fa fa-edit text-info"></i>
+    </a>
+    {% endif %}
+    {% if perms.chef.delete_food %}
+    <a href="{{food.get_delete_url}}" title="حذف" target="_blank">
+        <i class="fa fa-trash text-danger"></i>
+    </a>
+    {% endif %}
+</h3>
+{% endblock content %}
+{% block script %}
+
+{% endblock %}

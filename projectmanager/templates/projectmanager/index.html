@@ -19,18 +19,18 @@
     </div>
     {% endif %}
     {% if splash.image %}
-    <div class="col-12 mb-2">
+    <div class="col-12 mb-3">
 
         <img src="{{splash.image}}" class="rounded " width="100%" alt="">
     </div>
     {% endif %}
     {% if perms.core.change_picture %}
-    <div class="col-12">
+    <!-- <div class="col-12">
         <div class="farsi text-center">
 
             {{splash.get_edit_btn|safe}}
         </div>
-    </div>
+    </div> -->
     {% endif %}
 </div>
 <div>

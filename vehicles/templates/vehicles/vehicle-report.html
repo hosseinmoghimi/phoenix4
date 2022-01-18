@@ -1,0 +1,68 @@
+{% extends "vehicles/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+{% block content %}
+<h4 class="text-center">
+    سامانه مدیریت ، مانیتورینگ و کنترل ماشین آلات (گزارش)
+</h4>
+<div class="row">
+    <div class="col-md-4">
+        {% include "vehicles/includes/vehicle-app/vehicle.html" %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="title">
+                    گزارش
+                </h5>
+            </div>
+            <div class="card-body">
+                <h5>
+                    شروع گزارش : {{start_date|to_persian_date|safe}}
+                </h5>
+                <h5>
+                    پایان گزارش : {{end_date|to_persian_date|safe}}
+                </h5>
+            </div>
+        </div>
+    </div>
+    {% include "vehicles/includes/vehicle-report-form.html" %}
+
+
+    <div class="col-md-12" name="trips-app">
+
+        {% include "vehicles/includes/trips-app/print.html" %}
+    </div>
+    <div class="col-md-12" name="work-shifts-app">
+        {% include "vehicles/includes/work-shifts-app/print.html" %}
+    </div>
+    <div class="col-md-12" name="vehicle-work-events-app">
+        {% include "vehicles/includes/vehicle-work-events-app/print.html" %}
+
+    </div>
+    <div class="col-md-12" name="maintenances-app">
+        {% include "vehicles/includes/maintenances-app/print.html" %}
+
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let vehicle_id = parseInt("{{vehicle.id}}")
+</script>
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "vehicles/includes/work-shifts-app/script.html" %}
+{% include "vehicles/includes/vehicle-work-events-app/script.html" %}
+{% include "vehicles/includes/maintenances-app/script.html" %}
+
+{% include "vehicles/includes/trips-app/script.html" %}
+
+{% endblock script %}

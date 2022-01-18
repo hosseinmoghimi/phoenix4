@@ -3,12 +3,19 @@
 <div class="card-body">
     <div class="row">
         <div class="col-md-12">
-            <h5>
+            <h5 class="text-center">
 
                 {{guarantee.orderline.product.title}}
             </h5>
+
             <hr>
         </div>
+        <!-- <div class="col-md-2">
+            <div style="writing-mode: vertical-rl;text-orientation: mixed;text-align: center;">
+                    {{guarantee.orderline.order.supplier.title}}
+    
+            </div>
+        </div> -->
         <div class="col-md-8">
             <div>
                 {{guarantee.orderline.unit_price|to_price}}
@@ -38,5 +45,16 @@
             <img src="{{guarantee.get_qrcode_url}}" alt="">
 
         </div>
+        {% if show_supplier %}
+
+        <div class="col-md-12">
+            <h6 class="text-center">
+                {{guarantee.orderline.order.supplier.title}}/
+                {{guarantee.orderline.order.supplier.tel}}/
+                {{guarantee.orderline.order.supplier.address}}/
+
+            </h6>
+        </div>
+        {% endif %}
     </div>
 </div>

@@ -1,53 +1,50 @@
 <footer class="footer footer-white">
   <div class="container">
-    <a class="footer-brand float-right" href="http://www.khafonline.com/">Khaf Online</a>
-    <ul class="pull-center">
+
+    <a class="footer-brand float-right farsi" href="{{app.home_url}}">{{app.title}}</a>
+
+
+    <ul class="pull-center rtl farsi">
+
       <li>
-        <a href="https://www.creative-tim.com/" target="_blank">
-          Creative Tim
+        <a href="{% url 'market:home' %}" target="_blank">
+          فروشگاه
         </a>
       </li>
       <li>
-        <a href="https://www.creative-tim.com/presentation" target="_blank">
-          About Us
+        <a href="{% url 'web:home' %}" target="_blank">
+          وب سایت
         </a>
       </li>
       <li>
-        <a href="http://blog.creative-tim.com/" target="_blank">
-          Blog
+        <a href="{% url 'projectmanager:home' %}" target="_blank">
+          مدیریت پروژه
         </a>
       </li>
       <li>
-        <a href="https://www.creative-tim.com/license" target="_blank">
-          Licenses
+        <a href="{% url 'school:home' %}" target="_blank">
+          آموزشگاه
         </a>
+      </li>
+      <li>
+        <SMALL class="farsi">
+          بازدید از سایت :
+          {{visitor_counter}}
+        </SMALL>
       </li>
     </ul>
     <ul class="social-buttons float-left">
-      <!-- <li>
-        <a href="https://twitter.com/CreativeTim" target="_blank" class="btn btn-just-icon btn-link btn-twitter">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a href="https://www.facebook.com/CreativeTim" target="_blank" class="btn btn-just-icon btn-link btn-dribbble">
-          <i class="fa fa-dribbble"></i>
-        </a>
-      </li>
-      <li>
-        <a href="https://www.instagram.com/CreativeTimOfficial" target="_blank"
-          class="btn btn-just-icon btn-link btn-instagram">
-          <i class="fa fa-instagram"></i>
-        </a>
-      </li> -->
+
+
       <li>
         <div class="copyright rtl float-left text-left">
-          <span class="farsi rtl">
+          <span class="farsi rtl small text-muted">
             توسعه و اجرا :
           </span>
 
-          <a title="حسین مقیمی" href="https://www.linkedin.com/in/hossein-moghimi-4597b973/" class="btn btn-linkedin docs-creator">
-            <i class="fa fa-linkedin-square"></i> 
+          <a title="حسین مقیمی" target="_blank" href="https://www.linkedin.com/in/hossein-moghimi-4597b973/"
+            class="btn btn-linkedin docs-creator">
+            <i class="fa fa-linkedin-square"></i>
             <span class="farsi">
 
               صفرویک

@@ -1,0 +1,145 @@
+<div class="card" id="work-shifts-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            گزارش شیفت های کاری
+        </h4>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+
+                </th>
+                {% if not area %}
+
+                <th>
+                    محدوده
+                </th>
+                {% endif %}
+
+                {% if not vehicle %}
+                <th>
+                    ماشین
+                </th>
+                {% endif %}
+
+                {% if not driver %}
+
+                <th>
+                    راننده
+                </th>
+                {% endif %}
+                <th>
+                    شروع / پایان
+                </th>
+                <th>
+                    درآمد
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="work_shift in work_shifts">
+                    <td>
+                        <a target="_blank" title="جزئیات" :href="work_shift.get_absolute_url">
+
+
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                        </a>
+                    </td>
+                    {% if not area %}
+
+                    <td>
+                        <a :href="work_shift.area.get_absolute_url">
+
+                            <span v-text="work_shift.area.name"></span>
+                        </a>
+
+                    </td>
+                    {% endif %}
+                    {% if not vehicle %}
+
+                    <td>
+                        <a :href="work_shift.vehicle.get_absolute_url">
+
+                            <span v-text="work_shift.vehicle.title"></span>
+                        </a>
+                    </td>
+                    {% endif %}
+                    {% if not driver %}
+
+                    <td>
+                        <a :href="work_shift.driver.get_absolute_url">
+
+                            <img :src="work_shift.driver.profile.image" class="rounded-circle" width="48">
+                            <span v-text="work_shift.driver.profile.name"></span>
+                        </a>
+
+                    </td>
+                    {% endif %}
+                    <td>
+                        <div>
+                            <small class="text-secondary" v-text="work_shift.persian_start_time"></small>
+
+                        </div>
+                        <div>
+                            <small class="text-secondary" v-text="work_shift.persian_end_time"></small>
+
+                        </div>
+
+                    </td>
+                    <td>
+                        <div class="text-success">
+                            <span v-text="to_price(work_shift.income)"></span>
+                            <small class="text-muted mx-2">
+
+                                {{CURRENCY}}
+                            </small>
+
+                        </div>
+
+                        <div class="text-danger">
+                            <span v-text="to_price(work_shift.outcome)"></span>
+                            <small class="text-muted mx-2">
+
+                                {{CURRENCY}}
+                            </small>
+
+                        </div>
+
+
+                    </td>
+                    <td>
+
+
+                        <a target="_blank" title="ویرایش" :href="work_shift.get_edit_url">
+
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+    </div>
+    <div class="card-footer">
+        <div>
+            <h6>
+
+                مجموع درآمد ها :
+                <span v-text="to_price(total(),'{{CURRENCY}}')"></span>
+            </h6>
+        </div>
+
+         
+    </div>
+</div>

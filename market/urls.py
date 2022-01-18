@@ -1,6 +1,6 @@
 from market import apis
 from .apps import APP_NAME
-from . import views,apis
+from . import views,apis,apk_api
 from django.contrib.auth.decorators import login_required
 from django.urls import path,include
 
@@ -9,10 +9,13 @@ app_name=APP_NAME
 urlpatterns = [
     path("",views.BasicViews().home,name="home"),
     path('search/',views.BasicViews().search,name="search"),
+    path('add_order/',views.OrderViews().add_order,name="add_order"),
     path("product/<int:pk>/",views.ProductViews().product,name="product"),
     path("order_line/<int:pk>/",views.OrderViews().order_line,name="order_line"),
     path("guarantee_print/<int:pk>/",views.GuaranteeView().guarantee_print,name="guarantee_print"),
+    path("guarantee_print/<int:pk>/<show_supplier>/",views.GuaranteeView().guarantee_print,name="guarantee_print_2"),
     path("order_line_print/<int:pk>/",views.OrderViews().order_line_print,name="order_line_print"),
+    path("order_line_print/<int:pk>/<show_supplier>/",views.OrderViews().order_line_print,name="order_line_print2"),
     path("financial_report/<int:pk>/",views.OrderViews().financial_report,name="financial_report"),
     path("category/<int:pk>/",views.CategoryViews().category,name="category"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
@@ -53,6 +56,7 @@ urlpatterns = [
 
 
     path("api/products/<int:category_id>/",apis.ProductApi().products,name="products"),
+    path("api/select_product/",apis.ProductApi().select_product,name="select_product"),
     path("api/add_product/",apis.ProductApi().add_product,name="add_product"),
     path("api/add_product_for_shoe/",apis.ProductApi().add_product_for_shoe,name="add_product_for_shoe"),
     path("api/add_product_for_shop/",apis.ProductApi().add_product_for_shop,name="add_product_for_shop"),
@@ -66,5 +70,9 @@ urlpatterns = [
     path("api/add_warehouse/",apis.WareHouseApi().add_warehouse,name="add_warehouse"),
     path("api/add_feature_for_product/",apis.ProductApi().add_feature_for_product,name="add_feature_for_product"),
     path("api/add_guarantee/",apis.GuaranteeApi().add_guarantee,name="add_guarantee"),
+
+
+
+    path("apk-api/",include('market.apk_api')),
     
 ]

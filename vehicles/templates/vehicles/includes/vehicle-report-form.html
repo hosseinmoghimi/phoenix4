@@ -1,0 +1,55 @@
+{% if vehicle_report_form %}
+
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+
+                گزارش
+            </h4>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'vehicles:vehicle_report' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="vehicle_id" value="{{vehicle.id}}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">
+                                ماه
+                            </label>
+                            <select name="month" id="" class="form-control">
+                                <option selected value="{{month_number}}">{{month_name}}</option>
+
+                                {% for month in months %}
+
+                                <option value="{{month.number}}">{{month.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">
+                                سال
+                            </label>
+                            <select name="year" id="" class="form-control">
+
+                                <option value="{{year}}" selected >{{year}}</option>
+                                <option value="1400">1400</option>
+                                <option value="1401">1401</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-info">گزارش</button>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}

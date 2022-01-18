@@ -1,0 +1,118 @@
+<script>
+    let customers = JSON.parse("{{customers_s|escapejs}}")
+    let suppliers = JSON.parse("{{suppliers_s|escapejs}}")
+
+
+
+
+
+
+    let add_order_app = new Vue({
+        el: "#add-order-app",
+        data: {
+            product_barcode: "",
+            product: null,
+            customer_name: "",
+            unit_names: [],
+            quantity: 1,
+            unit_name: "",
+            customers: customers,
+            customer_id: 0,
+            suppliers: suppliers,
+            supplier_id: 0,
+            order_lines: [],
+            line_description: "",
+            description: "",
+            message: "",
+        },
+        methods: {
+            save_order: function () {
+                let url = "{% url 'market:add_order' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    supplier_id: this.supplier_id,
+                    customer_id: this.customer_id,
+                    order_lines: this.order_lines,
+                    description: this.description,
+                }
+                console.log(payload)
+                $.post(url, payload).done((data) => {
+                    console.log(data)
+                    if (data.result === "SUCCEED") {
+                        add_order_app.message = `<div class="alert alert-success">
+                            <a href="${data.order.get_absolute_url}">
+                                سفارش شماره 
+                                ${data.order.id}
+                            </a>
+                            با موفقیت ثبت شد.
+                            </div>`
+                    }
+                })
+            },
+            add_line: function () {
+                let added = false
+                this.order_lines.forEach(order_line => {
+                    if (order_line.product == add_order_app.product && order_line.unit_name == add_order_app.unit_name) {
+                        order_line.quantity = add_order_app.quantity
+                        added = true
+
+                    }
+                });
+                if (!added) {
+
+                    this.order_lines.push({
+                        product: this.product,
+                        quantity: this.quantity,
+                        unit_name: this.unit_name,
+                        description: this.line_description
+
+                    })
+                }
+                this.line_description = ""
+            },
+            search_customer: function () {
+                customers.forEach(customer => {
+                    if (customer.profile.name.indexOf(add_order_app.customer_name) > -1) {
+                        add_order_app.customer_id = customer.id
+                    }
+                });
+            },
+            selected_customer: function () {
+                let selected = false
+                let customer_id = this.customer_id
+                this.customers.forEach(customer => {
+                    if (customer.id == customer_id) {
+                        selected = customer
+                    }
+                });
+                return selected
+            },
+            selected_supplier: function () {
+                let selected = false
+                let supplier_id = this.supplier_id
+                this.suppliers.forEach(supplier => {
+                    if (supplier.id == supplier_id) {
+                        selected = supplier
+                    }
+                });
+                return selected
+            },
+            select_product: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    barcode: this.product_barcode
+                }
+                let url = "{% url 'market:select_product' %}"
+                $.post(url, payload).done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                        add_order_app.unit_names = data.unit_names
+                        add_order_app.product = data.product
+                        add_order_app.product_barcode = ""
+                        add_order_app.unit_name = data.unit_names[0].name
+                    }
+                })
+            }
+        }
+    })
+</script>

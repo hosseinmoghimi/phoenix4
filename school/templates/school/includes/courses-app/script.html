@@ -1,0 +1,19 @@
+<script>
+    let courses = JSON.parse("{{courses_s|escapejs}}")
+    let courses_app = new Vue({
+        el: "#courses-app",
+        data: {
+            courses: courses,
+            search_for: "",
+        },
+        methods: {
+            filter: function () {
+                this.courses = courses.filter((course) => {
+                    return (course.title.indexOf(courses_app.search_for) > -1)
+
+                })
+            },
+
+        }
+    })
+</script>

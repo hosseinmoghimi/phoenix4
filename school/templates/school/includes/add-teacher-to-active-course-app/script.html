@@ -1,0 +1,24 @@
+<script>
+    let add_teacher_to_active_course_app=new Vue({
+        el:"#add-teacher-to-active-course-app",
+        data:{
+            profile_id:"",
+            all_teachers:JSON.parse("{{all_teachers_s|escapejs}}")
+        },
+        methods:{
+            add_teacher:function(){
+                let payload = {
+                    active_course_id: active_course_id,
+                    profile_id: this.profile_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                console.log(payload)
+                $.post("{% url 'school:add_teacher_to_active_course' %}", payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        teachers_app.teachers.push(data.teacher)
+                    }
+                })
+            }
+        }
+    })
+</script>

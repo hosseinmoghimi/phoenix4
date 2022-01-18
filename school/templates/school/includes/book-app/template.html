@@ -1,0 +1,51 @@
+<div id="book-app">
+    <div class="card">
+        <div class="card-header">
+            <h5>
+                {{book.title}}
+                {% if perms.school.change_book %}
+                <a title="ویرایش" target="_blank" href="{{book.get_edit_url}}">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {% endif %}
+
+                {% if perms.school.delete_book %}
+                <a title="حذف" target="_blank" href="{{book.get_delete_url}}">
+                    <i class="fa fa-trash text-danger"></i>
+                </a>
+                {% endif %}
+
+            </h5>
+        </div>
+        <div class="card-body text-right farsi">
+
+            <div v-for="document in documents" class="mb-3">
+                <a :href="document.get_download_url">
+                   
+                    
+                    <span v-html="document.get_icon_tag" class="ml-2"></span>
+                    <span v-text="document.title"></span>
+                </a>
+                {% if perms.school.change_document %}
+                <a title="ویرایش" target="_blank" :href="document.get_edit_url">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {% endif %}
+
+                {% if perms.core.delete_document %}
+                <a title="حذف" target="_blank" :href="document.get_delete_url">
+                    <i class="fa fa-trash text-danger"></i>
+                </a>
+                {% endif %}
+
+            </div>
+            <!-- {% if perms.school.change_book %}
+            <form @submit.prevent="add_document()">
+                <input type="text" required placeholder="نام فایل جدید" class="form-control"
+                    v-model="new_document_title">
+            </form>
+            {% endif %} -->
+        </div>
+    </div>
+
+</div>

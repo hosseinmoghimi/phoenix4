@@ -1,7 +1,8 @@
+from decimal import getcontext
 from django.db.models.query import EmptyQuerySet
 from core.constants import FAILED, SUCCEED
 from django.http.response import Http404
-from authentication.serializers import ProfileSerializer
+from authentication.serializers import MembershipRequestSerializer, ProfileSerializer
 from core.settings import SITE_URL
 from phoenix.server_settings import ALLOW_REGISTER_ONLINE
 from django.shortcuts import render,redirect
@@ -18,7 +19,7 @@ def getContext(request):
 
 
 def ProfileContext(request,*args, **kwargs):
-    context=getContext(request=request)
+    context={}
     if 'profile' in kwargs:
         selected_profile=kwargs['profile']
     elif 'profile_id' in kwargs:
@@ -36,6 +37,13 @@ class BasicViews(View):
     def home(self,request,*args, **kwargs):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"index.html",context)
+class MembershipRequestViews(View):
+    def membership_requests(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        membership_requests=MembershipRequestRepo(request=request).list(*args, **kwargs)
+        context['membership_requests']=membership_requests
+        context['membership_requests_s']=json.dumps(MembershipRequestSerializer(membership_requests,many=True).data)
+        return render(request,TEMPLATE_ROOT+"membership-requests.html",context)
 
 
 class ProfileViews(View):

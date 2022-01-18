@@ -1,3 +1,4 @@
+from core.models import Image
 from .apps import APP_NAME
 from authentication.repo import ProfileRepo
 from .models import Car, Property, PropertyFeature,PropertyMedia
@@ -58,6 +59,21 @@ class PropertyRepo():
     
     def get(self, *args, **kwargs):
         return self.project(*args, **kwargs)
+
+
+    def add_image(self,title,image,*args, **kwargs):
+        
+        property=self.property(*args, **kwargs)
+         
+        
+        image=Image(title=title,image_main_origin=image)
+        image.save()
+        property.images.add(image)
+        
+        property.save()
+        return image
+
+    
 
     def list(self, *args, **kwargs):
         objects = self.objects

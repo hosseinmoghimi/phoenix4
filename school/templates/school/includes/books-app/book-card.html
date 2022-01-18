@@ -14,7 +14,7 @@
             </a>
             {% endif %}
 
-            {% if perms.core.delete_book %}
+            {% if perms.school.delete_book %}
             <a title="حذف" target="_blank" href="{{book.get_delete_url}}">
                 <i class="fa fa-trash text-danger"></i>
             </a>

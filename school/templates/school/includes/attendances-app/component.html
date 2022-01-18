@@ -1,0 +1,31 @@
+<div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="media">
+                <a :href="student.get_absolute_url">
+                    <img :src="student.profile.image"class="rounded-circle" width="96" alt="">
+                </a>
+                <div class="media-body">
+                    <a :href="student.get_absolute_url">
+
+                        <span class="farsi" v-text="student.profile.name"></span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-8">
+            <input type="text" class="form-control" placeholder="توضیحات ..."  v-model="description">
+            <button @click="present()" class="btn btn-primary">حاضر</button>
+            <button @click="delay()" class="btn btn-warning">تاخیر</button>
+            <button @click="absent()" class="btn btn-secondary">غایب</button>
+            <button @click="tashvigh()" class="btn btn-success">تشویق</button>
+            <button @click="tanbih()" class="btn btn-danger">تنبیه</button>
+      
+
+        </div>
+        <div class="col-md-12">
+            <hr>
+        </div>
+    </div>
+</div>

@@ -11,27 +11,30 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-body text-right farsi">
-                <ul  class="nav flex-column" >
+                <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a  class="nav-link farsi"  href="#trips-app">سفر ها</a>
+                        <a class="nav-link farsi" href="#trips-app">سفر ها</a>
 
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link farsi"  href="#work-shifts-app">شیفت های کاری</a>
+                        <a class="nav-link farsi" href="#work-shifts-app">شیفت های کاری</a>
 
                     </li>
                     <li class="nav-item">
 
-                        <a  class="nav-link farsi"  href="#vehicle-work-events-app">رویداد ها</a>
+                        <a class="nav-link farsi" href="#vehicle-work-events-app">رویداد ها</a>
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link farsi"  href="#maintenances-app">تعمیر و نگهداری</a>
+                        <a class="nav-link farsi" href="#maintenances-app">تعمیر و نگهداری</a>
 
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+    {% include "vehicles/includes/vehicle-report-form.html" %}
+
+
     <div class="col-md-12" name="trips-app">
 
         {% include "vehicles/includes/trips-app/template.html" %}

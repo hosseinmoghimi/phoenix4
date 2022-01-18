@@ -1,5 +1,5 @@
 from market.repo import GuaranteeRepo
-from .models import Brand, Cart, CartLine, Category, Customer, Guarantee, Menu, Order, OrderLine, Product, ProductFeature, ProductSpecification, Shop, Supplier, WareHouse
+from .models import Brand, Cart, CartLine, Category, Customer, Guarantee, Menu, Order, OrderLine, Product, ProductFeature, ProductSpecification, Shop, Supplier, UnitName, WareHouse
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
 
@@ -8,6 +8,10 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'title', 'thumbnail', 'get_absolute_url','barcode']
 
+class UnitNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnitName
+        fields = ['id', 'name']
 
 class CustomerSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
@@ -62,7 +66,7 @@ class CartLineSerializer(serializers.ModelSerializer):
 class GuaranteeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guarantee
-        fields = ['id','barcode','serial_no','get_absolute_url','get_print_url','get_qrcode_url','persian_start_date','persian_end_date']
+        fields = ['id','barcode','serial_no','get_absolute_url','get_print_url','get_qrcode_url','persian_start_date','persian_end_date','get_edit_url']
 
 class OrderLineSerializer(serializers.ModelSerializer):
     product=ProductSerializer()
@@ -77,7 +81,7 @@ class OrderSerializer(serializers.ModelSerializer):
     lines=OrderLineSerializer(many=True)
     class Meta:
         model = Order
-        fields = ['id','lines','customer','supplier','sum_total','lines_total','total']
+        fields = ['id','lines','customer','supplier','sum_total','lines_total','total','get_absolute_url']
 class CartSerializer(serializers.ModelSerializer):
     orders=OrderSerializer(many=True)
     lines=CartLineSerializer(many=True)

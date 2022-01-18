@@ -1,5 +1,7 @@
 import json
 
+from authentication.forms import AddMembershipRequestForm
+from .apis import OrderApi
 from authentication.repo import ProfileRepo
 from authentication.views import ProfileContext
 from core.constants import CURRENCY
@@ -12,10 +14,10 @@ from django.views import View
 from utility.persian import PersianCalendar
 
 from market.forms import *
-from market.serializers import (CartLineSerializer, CartSerializer, GuaranteeSerializer,
+from market.serializers import (CartLineSerializer, CartSerializer, CustomerSerializer, GuaranteeSerializer,
                                 MenuLineSerializer, MenuSerializer,
                                 OrderLineSerializer,
-                                ProductSpecificationSerializer, ShopSerializer)
+                                ProductSpecificationSerializer, ShopSerializer, SupplierSerializerForShop)
 
 from .apps import APP_NAME
 from .enums import OrderStatusEnum, ParameterEnum, PictureEnum, ShopLevelEnum
@@ -93,6 +95,9 @@ class BasicViews(View):
             context['add_product_form'] = AddProductForm()
         if request.user.has_perm(APP_NAME+".add_category") and len(products) == 0:
             context['add_category_form'] = AddCategoryForm()
+
+        context['add_membership_request_form'] = AddMembershipRequestForm()
+
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
     def search(self, request, *args, **kwargs):
@@ -348,9 +353,8 @@ class ProductViews(View):
     def product(self, request, *args, **kwargs):
 
         product = ProductRepo(request=request).product(*args, **kwargs)
-        page = product
         context = getContext(request=request)
-        context.update(PageContext(request=request, page=page))
+        context.update(PageContext(request=request, page=product))
         if request.user.has_perm(APP_NAME+".add_productspecification"):
             context['add_product_specification_form'] = AddProductSpecificationForm()
         context['product'] = product
@@ -449,8 +453,10 @@ class CustomerViews(View):
 
         customer = CustomerRepo(request=request).customer(*args, **kwargs)
         profile = customer.profile
-        context = getContext(request)
-        context.update(ProfileContext(request=request, profile=profile))
+        context1=ProfileContext(request=request, profile=profile)
+        context2 = getContext(request=request)
+        context2.update(context1)
+        context=context2
         context['customer'] = customer
         context['orders'] = OrderRepo(
             request=request).list(customer_id=customer.id)
@@ -476,7 +482,13 @@ class GuaranteeView(View):
         context['guarantee'] = guarantee
         return render(request, TEMPLATE_ROOT+'guarantee.html', context)
     def guarantee_print(self,request,*args, **kwargs):
-        context = getContext(request)
+        context = getContext(request=request)
+        if 'show_supplier' in kwargs:
+            show_supplier=str(kwargs['show_supplier'])=="1"
+        else:
+            show_supplier=True
+        context['show_supplier']=show_supplier
+
         guarantee = GuaranteeRepo(request=request).guarantee(*args, **kwargs)
         context['guarantee'] = guarantee
         return render(request, TEMPLATE_ROOT+'guarantee-print.html', context)
@@ -516,6 +528,26 @@ class ShipperViews(View):
 
 
 class OrderViews(View):
+    def add_order(self,request,*args, **kwargs):
+        if request.method=='POST':
+            
+            return OrderApi().save_order(request=request,*args, **kwargs)
+        else:
+                    
+            context=getContext(request=request)
+
+            customers=CustomerRepo(request=request).list()
+            context['customers']=customers
+            context['customers_s']=json.dumps(CustomerSerializer(customers,many=True).data)
+
+
+            
+            suppliers=SupplierRepo(request=request).list()
+            context['suppliers']=suppliers
+            context['suppliers_s']=json.dumps(SupplierSerializerForShop(suppliers,many=True).data)
+
+
+            return render(request,TEMPLATE_ROOT+"add-order.html",context)
     def financial_report(self, request, *args, **kwargs):
         context = getContext(request)
         financial_report = FinancialReportRepo(
@@ -785,6 +817,14 @@ class OrderViews(View):
         guarantees = order_line.guarantee_set.all()
         context['guarantees'] = guarantees
         context['order_line'] = order_line
+
+        
+        if 'show_supplier' in kwargs:
+            show_supplier=str(kwargs['show_supplier'])=="1"
+        else:
+            show_supplier=True
+        context['show_supplier']=show_supplier
+
         return render(request, TEMPLATE_ROOT+'order-line-print.html', context)
 
 class OfferViews(View):

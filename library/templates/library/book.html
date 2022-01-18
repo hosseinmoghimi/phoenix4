@@ -12,16 +12,16 @@
 
                 <h4>
                     {{book.title}}
-                {% if perms.library.change_book %}
-                <a href="{{book.get_edit_url}}" title="ویرایش" target="_blank">
-                    <i class="fa fa-edit text-info"></i>
-                </a>
-                {% endif %}
+                    {% if perms.library.change_book %}
+                    <a href="{{book.get_edit_url}}" title="ویرایش" target="_blank">
+                        <i class="fa fa-edit text-info"></i>
+                    </a>
+                    {% endif %}
                 </h4>
                 <h6>
-                    {{book.amount|to_price|safe}}
+                    {{book.price|to_price|safe}}
                 </h6>
-               
+
             </div>
         </div>
     </div>
@@ -38,18 +38,22 @@
         {% include "core/includes/page-images-app/template.html" %}
     </div>
     <div class="col-md-12">
+        {% if book.description %}
         <div class="card">
             <div class="card-body">
 
-               
+
                 <div class="farsi text-right">
                     {{book.description|safe}}
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 
 </div>
+ 
+
 {% endblock content %}
 
 

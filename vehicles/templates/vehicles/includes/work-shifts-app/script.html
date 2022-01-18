@@ -38,7 +38,14 @@
 
         },
         methods: {
-            to_price: value => to_price(value),
+            to_price: (vall,curr) => to_price(vall,curr),
+            total: function () {
+                let tt = 0
+                this.work_shifts.forEach(work_shift => {
+                    tt += (work_shift.income-work_shift.outcome)
+                });
+                return tt
+            },
             add_work_shift: function () {
                 let url_add_work_shift = "{% url 'vehicles:add_work_shift' %}"
                 let payload = {

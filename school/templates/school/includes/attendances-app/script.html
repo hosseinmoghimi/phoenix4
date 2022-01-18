@@ -1,0 +1,137 @@
+<script>
+    let attendances = JSON.parse("{{attendances_s|escapejs}}")
+
+</script>
+{% if add_attendence_form %}
+<script>
+
+    let STATUS_PRESENT = "{{STATUS_PRESENT}}"
+    let STATUS_ABSENT = "{{STATUS_ABSENT}}"
+    let STATUS_DELAY = "{{STATUS_DELAY}}"
+    let STATUS_TASHVIGH = "{{STATUS_TASHVIGH}}"
+    let STATUS_TANBIH = "{{STATUS_TANBIH}}"
+     
+    let session_id = parseInt("{{session.id}}")
+    let url_add_attendance = "{% url 'school:add_attendance' %}"
+
+    let session_student_component_template = `{% include 'school/includes/attendances-app/component.html' %}`
+    let session_student_component = Vue.component('session-student-component', {
+        data: function () {
+            return {
+                description: "",
+            }
+        },
+        methods: {
+
+            absent: function () {
+
+                let payload = {
+                    student_id: this.student.id,
+                    session_id: session_id,
+                    status: STATUS_ABSENT,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                $.post(url_add_attendance, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        attendances_app.attendances.push(data.attendance)
+                    }
+                })
+            },
+            present: function () {
+
+                let payload = {
+                    student_id: this.student.id,
+                    session_id: session_id,
+                    status: STATUS_PRESENT,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                $.post(url_add_attendance, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        attendances_app.attendances.push(data.attendance)
+                    }
+                })
+            },
+            delay: function () {
+
+                let payload = {
+                    student_id: this.student.id,
+                    session_id: session_id,
+                    status: STATUS_DELAY,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                $.post(url_add_attendance, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        attendances_app.attendances.push(data.attendance)
+                    }
+                })
+            },
+            tanbih: function () {
+
+                let payload = {
+                    student_id: this.student.id,
+                    session_id: session_id,
+                    status: STATUS_TANBIH,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                $.post(url_add_attendance, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        attendances_app.attendances.push(data.attendance)
+                    }
+                })
+            },
+            tashvigh: function () {
+
+                let payload = {
+                    student_id: this.student.id,
+                    session_id: session_id,
+                    status: STATUS_TASHVIGH,
+                    description: this.description,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken
+                }
+                $.post(url_add_attendance, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        attendances_app.attendances.push(data.attendance)
+                    }
+                })
+            },
+        },
+        props: ['student'],
+        template: session_student_component_template,
+    })
+
+    let attendances_app_data = {
+        students: students,
+        attendances: attendances,
+        session_id: session_id,
+        show_form:false,
+    }
+    
+    let attendances_app_components = {
+        session_student_component,
+    }
+
+
+</script>
+{% else %}
+<script>
+    let attendances_app_data = {
+        attendances: attendances,
+    }
+    let attendances_app_components = {
+    }
+</script>
+{% endif %}
+<script>
+
+    let attendances_app = new Vue({
+        el: "#attendances-app",
+        data: attendances_app_data,
+        methods: {
+        },
+        components: attendances_app_components,
+    })
+</script>

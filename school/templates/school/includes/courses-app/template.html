@@ -1,0 +1,57 @@
+<div class="card" id="courses-app">
+    <div class="card-header">
+        <h4 class="title">
+            واحد های درسی
+        </h4>
+    </div>
+    <div class="card-body">
+        <input type="text" v-model="search_for" class="form-control" @input="filter()">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    پایه
+                </th>
+                <th>
+                    درس
+                </th>
+                <th>
+                    واحد
+                </th>
+                {% if not major %}
+                <th>
+                    رشته
+                </th>
+                {% endif %}
+            </thead>
+            <tbody>
+                <tr v-for="course in courses">
+                    <td>
+                        <span v-text="course.level"></span>
+                    </td>
+                    <td>
+                        <a :href="course.get_absolute_url">
+                            <span v-text="course.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="course.course_count"></span>
+                    </td>
+                    {% if not major %}
+                    <td>
+                        <div v-for="major in course.majors">
+
+                            <a :href="major.get_absolute_url" class="mx-2">
+
+                                <span v-text="major.title"></span>
+                            </a>
+
+                        </div>
+                    </td>
+
+                    {% endif %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

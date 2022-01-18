@@ -1,0 +1,21 @@
+<div class="card" id="foods-app">
+    <div class="card-header">
+        <h4 class="title">
+            لیست غذاها
+        </h4>
+    </div>
+    <div class="card-body">
+        <div v-for="food in foods">
+            <a :href="food.get_absolute_url">
+                <h4 v-text="food.title"></h4>
+            </a>
+        </div>
+    </div>
+    {% if add_food_form %}
+      <div class="card-footer">
+          <form @submit.prevent="add_food()">
+              <input type="text" v-model="title" class="form-control" required id="">
+          </form>
+      </div>
+    {% endif %}
+</div>

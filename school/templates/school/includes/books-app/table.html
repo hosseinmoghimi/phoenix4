@@ -1,0 +1,53 @@
+<div class="card" id="books-app">
+    <div class="card-header">
+        <h4 class="title">
+            کتاب ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+                <th>
+                    واحد های درسی
+                </th>
+                <th>
+                    
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="book in books">
+                    <td>
+                        <a :href="book.get_absolute_url">
+                            <span v-text="book.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <div v-for="course in book.courses">
+                            <a :href="course.get_absolute_url">
+
+                                <span v-text="course.title"></span>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        {% if perms.school.change_book %}
+                          <a :href="book.get_edit_url" title="ویرایش" target="_blank" class="mr-2">
+                              <i class="fa fa-edit text-info"></i>
+                          </a>
+                        {% endif %}
+
+                        {% if perms.school.delete_book %}
+                          <a :href="book.get_delete_url" title="حذف" target="_blank" class="mr-2">
+                              <i class="fa fa-trash text-danger"></i>
+                          </a>
+                        {% endif %}
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

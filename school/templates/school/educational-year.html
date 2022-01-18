@@ -1,0 +1,40 @@
+{% extends "school/layout.html" %}
+{% load static %}
+{% load social_share %}
+{% block content %}
+<h4 class="text-center">
+</h4>
+<div class="row">
+
+  
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-body">
+            <h4>
+                {{educational_year.title}}
+                {% if perms.school.change_educationalyear %}
+                <a title="ویرایش" target="_blank" href="{{educational_year.get_edit_url}}"><i class="fa fa-edit text-info"></i></a>
+                {% endif %}
+                {% if perms.school.delete_educationalyear %}
+                <a title="حذف" target="_blank" href="{{educational_year.get_delete_url}}"><i class="fa fa-trash text-danger"></i></a>
+                {% endif %}
+
+            </h4>
+        </div>
+    </div>
+</div>
+  <div class="col-md-12">
+
+    {% include "school/includes/active-course-app/template.html" %}
+
+  </div>
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "school/includes/active-course-app/script.html" %}
+
+{% endblock script %}

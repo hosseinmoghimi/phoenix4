@@ -43,6 +43,9 @@
             </div>
             <div class="card-footer">
 
+
+                {% if add_page_document_form %}
+
                 <p class="text-right" v-if="!show_add_document_form">
 
                     <a style="cursor: pointer;" class="farsi a" @click="show_add_document_form=true">
@@ -52,9 +55,6 @@
                         افزودن دانلود جدید
                     </a>
                 </p>
-
-                {% if add_page_document_form %}
-
                 <form id="add-document-form" v-if="show_add_document_form" @submit.prevent="add_page_document()"
                     enctype="multipart/form-data">
                     <div class="row">

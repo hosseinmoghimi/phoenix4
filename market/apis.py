@@ -2,33 +2,15 @@ import json
 
 from django.db.models import manager
 from market.forms import *
-from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, WareHouseSerializer
+from market.serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, OrderSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, UnitNameSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
 from utility.persian import PersianCalendar
-from .repo import CartRepo, CategoryRepo, GuaranteeRepo, ProductRepo, ShopRepo, WareHouseRepo
+from .repo import CartRepo, CategoryRepo, GuaranteeRepo, OrderRepo, ProductRepo, ShopRepo, WareHouseRepo
 from .apps import APP_NAME
 
-class categoryApi(APIView):
-    def add_category(self,request,*args, **kwargs):
-        context={}
-        context['result']=FAILED
-        log=1
-        if request.method=='POST':
-            log=2
-            add_category_form=AddCategoryForm(request.POST)
-            if add_category_form.is_valid():
-                log=3
-                title=add_category_form.cleaned_data['title']
-                parent_id=add_category_form.cleaned_data['parent_id']
-                category=CategoryRepo(request=request).add_category(title=title,parent_id=parent_id)
-                if category is not None:
-                    context['category']=CategorySerializer(category).data
-                    context['result']=SUCCEED
-        return JsonResponse(context)
-
-
+ 
 class GuaranteeApi(APIView):
     def add_guarantee(self,request,*args, **kwargs):
         context={}
@@ -102,6 +84,31 @@ class ShopApi(APIView):
 
 
 class OrderApi(APIView):
+    def save_order(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            save_order_form=SaveOrderForm(request.POST)
+            if save_order_form.is_valid():
+                log=3
+                cd=save_order_form.cleaned_data
+                supplier_id=cd['supplier_id']
+                customer_id=cd['customer_id']
+                description=cd['description']
+                order_lines=cd['order_lines']
+                order=OrderRepo(request=request).add_order(
+                    supplier_id=supplier_id,
+                    customer_id=customer_id,
+                    order_lines=order_lines,
+                    description=description,
+                    )
+                if order is not None:
+                    context['order']=OrderSerializer(order).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
     def edit_order_line(self,request,*args, **kwargs):
         context={}
         context['result']=FAILED
@@ -197,7 +204,7 @@ class CategoryApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
-
+ 
 
 class WareHouseApi(APIView):
     def add_warehouse(self,request,*args, **kwargs):
@@ -222,6 +229,29 @@ class WareHouseApi(APIView):
 
 
 class ProductApi(APIView):
+    def select_product(self,request,*args, **kwargs):
+        context={}
+        context['result']=FAILED
+        log=1
+        if request.method=='POST':
+            log=2
+            select_product_form=SelectProductForm(request.POST)
+            if select_product_form.is_valid():
+                log=3
+                cd=select_product_form.cleaned_data
+                product_id=cd['product_id']
+                barcode=cd['barcode']
+                
+                product=ProductRepo(request=request).product(barcode=barcode,product_id=product_id)
+                if product is not None:
+                    log=4
+                    context['product']=ProductSerializer(product).data
+                    unit_names=product.unit_names.all()
+                    context['unit_names']=UnitNameSerializer(unit_names,many=True).data
+                    unit_names
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
     
     def add_feature_for_product(self,request,*args, **kwargs):
         context={}

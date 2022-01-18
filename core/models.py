@@ -194,8 +194,10 @@ class BasicPage(models.Model):
     panel = HTMLField(_("پنل"), null=True, blank=True)
     short_description = HTMLField(
         _("توضیح کوتاه"), null=True, blank=True)
+    
     description = HTMLField(
         _("توضیح کامل"), null=True, blank=True)
+    meta_description=models.CharField(_("meta_description"), null=True, blank=True, max_length=500)
     image_header_origin =models.ImageField(_("تصویر سربرگ"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Page/Header/', height_field=None, width_field=None, max_length=None)                              
     image_main_origin = models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
@@ -212,7 +214,7 @@ class BasicPage(models.Model):
                              choices=ColorEnum.choices, default=ColorEnum.PRIMARY, max_length=50)
     tags = models.ManyToManyField(
         "Tag", verbose_name=_("برچسب ها"), blank=True)
-    meta_data=models.CharField(_("متا دیتا"),null=True,blank=True, max_length=100)
+    meta_data=models.CharField(_("کلیدواژه ها یا متا دیتا"),null=True,blank=True, max_length=100)
     app_name = models.CharField(_("نام اپ"),null=True,blank=True, max_length=50)
     class_name = models.CharField(_("نام کلاس"),null=True,blank=True, max_length=50)
     date_added = models.DateTimeField(
@@ -220,7 +222,35 @@ class BasicPage(models.Model):
     date_updated = models.DateTimeField(
         _("اصلاح شده در"), auto_now_add=False, auto_now=True)
     related_pages=models.ManyToManyField("BasicPage", blank=True,verbose_name=_("صفحات مرتبط"))
-    keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
+    # keywords=models.CharField(_("keywords"),null=True,blank=True, max_length=50)
+    @property
+    def get_price(self):
+        if self.app_name=="market" and self.class_name=="product":
+            from market.models import Product
+            product=Product.objects.filter(pk=self.pk).first()
+            if product is not None:
+                return product.unit_price
+
+        if self.app_name=="projectmanager" and self.class_name=="project":
+            from projectmanager.models import Project
+            project=Project.objects.filter(pk=self.pk).first()
+            if project is not None:
+                return project.sum_total()
+
+                
+        if self.app_name=="projectmanager" and self.class_name=="material":
+            from projectmanager.models import Material
+            material=Material.objects.filter(pk=self.pk).first()
+            if material is not None:
+                return material.unit_price
+
+                
+        if self.app_name=="projectmanager" and self.class_name=="service":
+            from projectmanager.models import Service
+            service=Service.objects.filter(pk=self.pk).first()
+            if service is not None:
+                return service.unit_price
+        return 0
     @property
     def full_title(self,*args, **kwargs):
         seperator="/"
@@ -366,7 +396,7 @@ class BasicPage(models.Model):
         app_name=self.app_name
         class_name=self.class_name
         pk=self.pk
-        return reverse(app_name+":"+self.class_name, kwargs={"pk": pk})
+        return reverse(app_name+":"+class_name, kwargs={"pk": pk})
         # return reverse("core:page", kwargs={"pk": self.pk})
 
     def delete(self,*args, **kwargs):
@@ -521,7 +551,11 @@ class PageLink(Link):
     class Meta:
         verbose_name = _("لینک صفحات")
         verbose_name_plural = _("لینک های صفحات")
-
+    def get_edit_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/pagelink/{self.pk}/change/'
+    def get_delete_url(self):
+        return f'{ADMIN_URL}{APP_NAME}/pagelink/{self.pk}/delete/'
+    
 class Document(Icon):
     download_counter=models.IntegerField(_("تعداد دانلود"),default=0)
     title = models.CharField(_('عنوان'), max_length=200)
@@ -727,7 +761,8 @@ class Picture(models.Model):
 
     def get_absolute_url(self):
         return reverse("Picture_detail", kwargs={"pk": self.pk})
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/picture/{self.pk}/change/"
 
 class SocialLink(Link):
     app_name=models.CharField(_('اپلیکیشن'),max_length=50,null=True,blank=True)

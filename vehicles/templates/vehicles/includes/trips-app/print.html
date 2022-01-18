@@ -1,0 +1,117 @@
+<div class="card" id="trips-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            گزارش سفر ها
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+                <th>
+                    مسیر ها
+                </th>
+                <th>
+
+                    وسیله
+                </th>
+                <th>
+                    شروع / پایان
+                </th>
+                <th>
+                    هزینه
+                </th>
+                <th>
+                    فاصله
+                </th>
+                
+            </thead>
+            <tbody>
+                <tr v-for="trip in trips">
+                    <td>
+                            <i class="material-icons">
+                                ballot
+                            </i>
+
+                            <span v-text="trip.title"></span>
+                        <a v-if="trip.category" :href="trip.category.get_trips_url">
+                            <span :class="'badge badge-'+trip.category.color">
+                                <span v-text="trip.category.title"></span>
+                            </span>
+                        </a>
+                        <span :class="'badge badge-'+trip.get_status_color">
+                            <span v-text="trip.status"></span>
+                        </span>
+
+                    </td>
+                    <td>
+                        <div v-for="path in trip.paths">
+
+                                <i class="material-icons">
+                                    place
+                                </i>
+                                <span v-text="path.title"></span>
+
+                        </div>
+
+
+
+                    </td>
+                    <td>
+                        <div>
+
+                                <i class="material-icons">
+                                    commute
+                                </i>
+                                <span v-text="trip.vehicle.title"></span>
+                        </div>
+                        <div>
+                                <span class="material-icons">
+                                    badge
+                                </span>
+                                <span v-text="trip.driver.profile.name"></span>
+
+                        </div>
+
+                    </td>
+                    <td>
+                        <div class="small text-muted" v-text="trip.persian_date_started"></div>
+                        <div class="small text-muted" v-text="trip.persian_date_ended"></div>
+
+                    </td>
+                    <td>
+                        <span v-text="to_price(trip.cost,'{{CURRENCY}}')"></span>
+                        <div>
+                            <span v-if="trip.delay>0" class="badge badge-danger">
+                                <span v-text="trip.delay"></span>
+                                <small class="">
+                                    دقیقه
+                                </small>
+                            </span>
+                        </div>
+
+                    </td>
+                    <td>
+                        <small class="text-muted">km</small>
+                        <span v-text="trip.distance"></span>
+                    </td>
+                     
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="card-footer">
+        <div class="text-right farsi">
+            <span class="mx-5">
+
+                مجموع هزینه ها :
+                <span v-text="to_price(sum_trips())"></span>
+            </span>
+         
+        </div>
+    </div>
+
+</div>

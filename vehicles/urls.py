@@ -21,6 +21,7 @@ urlpatterns = [
     
     path("vehicles/",login_required(views.VehicleViews().vehicles),name="vehicles"),
     path("vehicle/<int:vehicle_id>/",login_required(views.VehicleViews().vehicle),name="vehicle"),
+    path("vehicle_report/",login_required(views.VehicleViews().vehicle_report),name="vehicle_report"),
     
     path("trips/<int:category_id>/<int:vehicle_id>/<int:driver_id>/<int:trip_path_id>/<int:passenger_id>/",login_required(views.TripViews().trips),name="trips"),
     path("trip/<int:trip_id>/",login_required(views.TripViews().trip),name="trip"),

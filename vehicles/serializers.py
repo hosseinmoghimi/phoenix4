@@ -8,7 +8,7 @@ from authentication.serializers import ProfileSerializer
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model=Vehicle
-        fields=['id','title','brand','model_name','vehicle_type','owner','get_absolute_url']
+        fields=['id','title','brand','model_name','plaque','vehicle_type','owner','get_absolute_url']
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:

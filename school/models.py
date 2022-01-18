@@ -1,9 +1,11 @@
 # Create your models here.
 
-from core.models import BasicPage
+from tinymce.models import HTMLField
+from core.models import BasicPage, PageLink
 from django.db import models
 from django.shortcuts import reverse
 from core.settings import ADMIN_URL, STATIC_URL
+from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
 from .settings import *
@@ -62,7 +64,9 @@ class Course(models.Model):
     title=models.CharField(_("نام واحد درسی "), max_length=100)
     level=models.IntegerField(_("level"))
     books=models.ManyToManyField("book", verbose_name=_("books"),blank=True)
-    
+    course_count=models.IntegerField(_("تعداد واحد"))
+    def majors(self):
+        return self.major_set.all()
 
     class Meta:
         verbose_name = _("Course")
@@ -77,6 +81,8 @@ class Course(models.Model):
 
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
     def get_edit_btn(self):
         return f"""
              <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
@@ -85,6 +91,7 @@ class Course(models.Model):
                 </i>
             </a>
         """
+
 
 class EducationalYear(models.Model):
     title=models.CharField(_("title"), max_length=50)
@@ -116,8 +123,8 @@ class EducationalYear(models.Model):
 
 
 class ActiveCourse(models.Model):
-    year=models.ForeignKey("EducationalYear", verbose_name=_("سال تحصیلی"), on_delete=models.CASCADE)
     class_name="activecourse"
+    year=models.ForeignKey("EducationalYear", verbose_name=_("سال تحصیلی"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=200)
     course=models.ForeignKey("course", verbose_name=_("course"), on_delete=models.CASCADE)
     classroom=models.ForeignKey("classroom", verbose_name=_("classroom"), on_delete=models.CASCADE)
@@ -149,6 +156,9 @@ class ActiveCourse(models.Model):
                 </i>
             </a>
         """
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
 
 
 class ClassRoom(models.Model):
@@ -210,7 +220,12 @@ class Teacher(models.Model):
         """
 
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+
 class Session(SchoolPage):
+    class_name="session"
     active_course=models.ForeignKey("activecourse", verbose_name=_("activecourse"), on_delete=models.CASCADE)
     session_no=models.IntegerField(_("جلسه شماره ؟"))
     start_time=models.DateTimeField(_("start"), auto_now=False, auto_now_add=False)
@@ -225,15 +240,32 @@ class Session(SchoolPage):
         verbose_name_plural = _("Sessions")
 
 
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
+
+
 class Attendance(models.Model):
     student=models.ForeignKey("student", verbose_name=_("student"), on_delete=models.CASCADE)
     session=models.ForeignKey("session", verbose_name=_("session"), on_delete=models.CASCADE)
     status=models.CharField(_("status"),choices=AttendanceStatusEnum.choices, max_length=50)
     enter_time=models.DateTimeField(_("enter"),null=True,blank=True, auto_now=False, auto_now_add=False)
     exit_time=models.DateTimeField(_("exit"),null=True,blank=True, auto_now=False, auto_now_add=False)
-    
+    time_added=models.DateTimeField(_("time_added"),null=True,blank=True, auto_now=False, auto_now_add=True)
+    description=models.CharField(_("description"), max_length=500)
     class_name="attendance"
-
+    def color(self):
+        colo="primary"
+        if self.status==AttendanceStatusEnum.DELAY:
+            colo="warning"
+        elif self.status==AttendanceStatusEnum.PRESENT:
+            colo="primary"
+        elif self.status==AttendanceStatusEnum.ABSENT:
+            colo="secondary"
+        elif self.status==AttendanceStatusEnum.TASHVIGH:
+            colo="success"
+        elif self.status==AttendanceStatusEnum.TANBIH:
+            colo="danger"
+        return colo
     class Meta:
         verbose_name = _("Attendance")
         verbose_name_plural = _("Attendances")
@@ -246,6 +278,8 @@ class Attendance(models.Model):
 
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""
     def get_edit_btn(self):
         return f"""
              <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
@@ -255,35 +289,25 @@ class Attendance(models.Model):
             </a>
         """
 
-  
-class Book(models.Model):
-    class_name="book"
-    
-    title=models.CharField(_("عنوان کتاب"), max_length=100)
-    documents=models.ManyToManyField("core.document", blank=True,verbose_name=_("documents"))
+    def persian_enter_time(self):
+        return PersianCalendar().from_gregorian(self.enter_time)
+    def persian_exit_time(self):
+        return PersianCalendar().from_gregorian(self.exit_time)
+    def persian_time_added(self):
+        return PersianCalendar().from_gregorian(self.time_added)
 
-    def get_delete_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/book/{self.pk}/delete/"
+
+class Book(SchoolPage): 
     class Meta:
         verbose_name = _("Book")
         verbose_name_plural = _("Books")
+ 
+    def courses(self):
+        return self.course_set.all()
 
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
-
-    def get_edit_url(self):
-        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
-    def get_edit_btn(self):
-        return f"""
-             <a href="{self.get_edit_url()}" target="_blank" title="ویرایش">
-                <i class="material-icons">
-                    edit
-                </i>
-            </a>
-        """
+    def save(self,*args, **kwargs):
+        self.class_name='book'
+        return super(Book,self).save(*args, **kwargs)
 
 
 class Student(models.Model):
@@ -314,3 +338,6 @@ class Student(models.Model):
             </a>
         """
 
+
+    def get_delete_url(self):
+        return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"""

@@ -1,6 +1,6 @@
 {% extends "web/layout.html" %}
 {% load static %}
-
+{% load social_share %}
 
 {% block page_header %}
 <div class="page-header header-filter" data-parallax="true" style="background-image: url('{{page.image_header}}');">
@@ -21,6 +21,18 @@
                     </span>
                 </a>
                 {% endif %}
+                <div class=" text-center">
+                    <span class="my-2">
+
+                        {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
+
+                    </span>
+                    <span class="my-2">
+
+                        {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
+
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -34,7 +46,7 @@
 
 
     <div class="container">
-        <div class="section section-text">
+        <div class="section section-text" style="padding-top: 10px !important;">
             <div class="row">
                 <div class="col-md-8 ml-auto mr-auto">
                     <h3 class="title text-center">{{page.title}}</h3>
@@ -43,6 +55,8 @@
                     {{page.panel|safe}}
                     {% endif %}
                 </div>
+                {% if page.pageimage_set.all %}
+
                 <div class="section col-md-10 ml-auto mr-auto">
                     <div class="row rtl">
                         {% for page_image in page.pageimage_set.all %}
@@ -58,13 +72,14 @@
 
                     </div>
                 </div>
-                <div class="col-md-8 ml-auto mr-auto">
+                {% endif %}
+                {% if page.description %}
+                <div class="col-md-8 ml-auto mr-auto farsi">
 
-                    {% if page.description %}
                     {{page.description|safe}}
-                    {% endif %}
 
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="section section-blog-info">
@@ -110,7 +125,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-default pull-right btn-round">Follow</button>
+                                <a  class="farsi btn btn-default pull-right btn-round">سایر نوشته ها</a>
                             </div>
                         </div>
                     </div>
@@ -120,16 +135,38 @@
         </div>
         <div class="section section-comments">
             <div class="row">
+                {% if add_page_link_form %}
                 <div class="col-md-4">
+
                     {% include "web/includes/page-links-app/template.html" %}
                 </div>
+                {% else %}
+                <div class="col-md-6">
+                    {% include "web/includes/page-links-app/template-simple.html" %}
 
+                </div>
+                {% endif %}
+
+
+                {% if add_page_document_form %}
                 <div class="col-md-4">
+
                     {% include "web/includes/page-documents-app/template.html" %}
                 </div>
+                {% else %}
+                <div class="col-md-6">
+
+                    {% include "web/includes/page-documents-app/template-simple.html" %}
+                </div>
+
+                {% endif %}
+
+                {% if add_page_tag_form %}
                 <div class="col-md-4">
                     {% include "web/includes/page-tags-app/template.html" %}
                 </div>
+                {% endif %}
+
             </div>
         </div>
         <div class="section section-comments">
@@ -141,57 +178,18 @@
         </div>
     </div>
 
+
 </div>
-<div class="my-5">
-    {% if related_pages %}
-
+<div class="container">
     <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="title text-center">صفحات مرتبط</h2>
-                    <br>
-                    <div class="row">
-                        {% for related_page in related_pages %}
 
-                        <div class="col-md-4">
-                            <div class="card card-blog">
-                                <div class="card-header card-header-image">
-                                    <a href="{{related_page.get_absolute_url}}">
-                                        <img class="img img-raised" src="{{related_page.thumbnail}}">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h6 class="category text-info">Enterprise</h6>
-                                    <h4 class="card-title">
-                                        <a href="{{related_page.get_absolute_url}}">{{related_page.title}}</a>
-                                    </h4>
-                                    <div class="card-description">
-                                        {% if related_page.short_description %}
-                                        {{related_page.short_description}}
-                                        {% endif %}
+        <div class="my-5">
+            {% include "web/includes/related-pages-app/template.html" %}
 
-                                        <a href="{{related_page.get_absolute_url}}">
-                                            <span class="farsi">
-                                                ادامه مطلب
-                                                <i class="material-icons">reply</i>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-
-    {% endif %}
 </div>
+
 {% endblock %}
 
 {% block script %}
@@ -205,10 +203,17 @@
     let page_comment_component_template = `{% include "web/includes/page-comments-app/component.html" %}`
 </script>
 {% include "core/includes/page-comments-app/script.html" %}
-
+{% if add_page_link_form %}
 {% include "core/includes/page-links-app/script.html" %}
+
+{% endif %}
+
+{% if add_page_document_form %}
+
 {% include "core/includes/page-documents-app/script.html" %}
+{% endif %}
 {% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
 {% endblock %}
 
 

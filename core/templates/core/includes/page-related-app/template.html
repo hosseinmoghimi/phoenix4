@@ -20,7 +20,12 @@
                 <div class="row">
              
                     <div class="col-md-4 mb-3" v-for="related_page in related_pages">
+                        <a :href="related_page.get_absolute_url">
+                            <div class="text-center">
 
+                                <img :src="related_page.thumbnail" class="rounded" width="80%" alt="">
+                            </div>
+                        </a>
                         <h6 class="text-muted text-center">
                             <span v-text="related_page.class_name_farsi"></span>
                         </h6>

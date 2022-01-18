@@ -1,7 +1,7 @@
 from core.serializers import ParameterSerializer
 import json
 from django.http.response import Http404
-from core.repo import ParameterRepo
+from core.repo import ParameterRepo, PictureRepo
 from django.shortcuts import render
 from core.views import CoreContext
 from .apps import APP_NAME
@@ -33,4 +33,10 @@ class BasicViews():
         for my_app in my_apps:
             if my_app['name']==app_name:
                 context['my_app']=my_app
+
+        
+        pictures=PictureRepo(request=request,app_name=app_name).list()
+        context['pictures']=pictures
         return render(request,TEMPLATE_ROOT+"parameters.html",context)
+
+         

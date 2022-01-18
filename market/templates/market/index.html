@@ -188,44 +188,9 @@
 
     {% endif %}
 
-    <div class="subscribe-line subscribe-line-image" data-parallax="true"
-        style="background-image: url(&apos;../assets/img/examples/ecommerce-header.jpg&apos;);">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 ml-auto mr-auto">
-                    <div class="text-center">
-                        <h3 class="title text-center">مشترک شوید</h3>
-                        <p class="description text-center">
-                            با اشتراک در مجموعه ما از تخفیف ها و جشنواره ها خبردار شوید.
-                        </p>
-                    </div>
-                    <div class="card card-raised card-form-horizontal">
-                        <div class="card-body">
-                            <form method="" action="">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="material-icons">phone</i>
-                                                </span>
-                                            </div>
-                                            <input type="text" class="form-control farsi "
-                                                placeholder="شماره همراه شما 09... ">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <button type="button" class="btn btn-rose btn-block farsi">ثبت شماره
-                                            همراه</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
+    {% include "authentication/includes/membership-request-app/template.html" %}
 </div>
 {% endblock %}
 {% block script %}
@@ -233,7 +198,7 @@
 <script>
     let category_id = 0
 </script>
-<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "authentication/includes/membership-request-app/script.html" %}
 {% if add_product_form or add_category_form %}
 {% include "market/includes/list-app/script.html" %}
 

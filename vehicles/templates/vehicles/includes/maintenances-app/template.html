@@ -134,9 +134,16 @@
             </tbody>
         </table>
     </div>
-    {% if add_maintenance_form %}
     <div class="card-footer ">
+        <div>
+            <h6>
+
+                مجموع هزینه ها :
+                <span v-text="to_price(total(),'{{CURRENCY}}')"></span>
+            </h6>
+        </div>
+        {% if add_maintenance_form %}
         {% include "vehicles/includes/maintenances-app/form.html" %}
+        {% endif %}
     </div>
-    {% endif %}
 </div>

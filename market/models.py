@@ -49,6 +49,14 @@ class Product(MarketPage):
     features=models.ManyToManyField("productfeature",blank=True, verbose_name=_("features"))
     def category(self):
         return self.category_set.first()
+    def category_id(self):
+        category= self.category()
+        if category is not None:
+            return category.id
+        else:
+            return 0
+
+
     def is_top_in_category(self):
         cc=CategoryProductTop.objects.filter(product_id=self.pk)
         return len(cc)>0
@@ -75,7 +83,8 @@ class Product(MarketPage):
             
         else:
             return unit_price.unit_price
-
+    def price(self):
+        return self.unit_price()
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("محصولات و کالاها")
@@ -264,10 +273,12 @@ class Order(models.Model):
     shipper=models.ForeignKey("shipper", verbose_name=_("shipper"),null=True,blank=True, on_delete=models.CASCADE)
     ship_fee=models.IntegerField(_("ship_fee"),default=0)
     description=models.CharField(_("description"),max_length=500,null=True,blank=True)
-    address=models.CharField(_("description"),max_length=500,null=True,blank=True)
-    no_ship=models.BooleanField(_("خود مشتری مراجعه و تحویل میگیرد؟"))
+    address=models.CharField(_("description"),default="",max_length=500,null=True,blank=True)
+    no_ship=models.BooleanField(_("خود مشتری مراجعه و تحویل میگیرد؟"),default=False)
     
     class_name="order"
+    def lines(self):
+        return OrderLine.objects.filter(order=self)
     def get_edit_view_url(self):
         return reverse(APP_NAME+":edit_order",kwargs={'pk':self.pk})
     def sum_total(self):

@@ -45,9 +45,13 @@
             </a>
           </td>
           <td>
-            <a :href="guarantee.get_print_url">
-              <i class="material-icons">
+            <a class="mx-2" target="_blank" :href="guarantee.get_print_url">
+              <i class="material-icons text-primary">
                 print
+              </i>
+            </a>
+            <a class="mx-2" target="_blank" :href="guarantee.get_edit_url">
+              <i class="fa fa-edit text-info">
               </i>
             </a>
           </td>

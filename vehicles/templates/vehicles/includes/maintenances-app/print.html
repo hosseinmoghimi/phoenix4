@@ -1,0 +1,149 @@
+<div class="card" id="maintenances-app">
+    <div class="card-header">
+        <h4 class="title text-center">
+            گزارش تعمیر و نگهداری و سرویس ماشین آلات
+        </h4>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+
+                </th>
+                <th>
+                    سرویس کار
+                </th>
+
+                {% if not vehicle %}
+                <th>
+                    ماشین
+                </th>
+                {% endif %}
+
+                {% if not maintenance %}
+                <th>
+                    سرویس
+                </th>
+                {% endif %}
+                <th>
+                    کارکرد ماشین
+                </th>
+                <th>
+                    تاریخ سرویس
+                </th>
+                <th>
+                    هزینه پرداخت شده
+                </th>
+                <th>
+
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="maintenance in maintenances">
+                    <td>
+                        <a target="_blank" title="جزئیات" :href="maintenance.get_absolute_url">
+
+
+                            <i class="material-icons">
+                                ballot
+                            </i>
+                        </a>
+                    </td>
+                    <td>
+                        <div class="media">
+                            <a :href="maintenance.service_man.get_absolute_url">
+                                <img :src="maintenance.service_man.profile.image" class="rounded-circle" width="48">
+
+                            </a>
+                            <div class="media-body">
+                                <div>
+                                    <a :href="maintenance.service_man.get_absolute_url">
+                                        <span v-text="maintenance.service_man.name"></span>
+
+                                    </a>
+                                </div>
+                                <div>
+                                    <a :href="maintenance.service_man.profile.get_absolute_url">
+
+                                        <small v-text="maintenance.service_man.profile.name"></small>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </td>
+                    {% if not vehicle %}
+
+                    <td>
+                        <a :href="maintenance.vehicle.get_absolute_url">
+
+                            <span v-text="maintenance.vehicle.title"></span>
+                        </a>
+                    </td>
+                    {% endif %}
+                    {% if not maintenance %}
+
+                    <td>
+                        <a :href="maintenance.get_absolute_url">
+
+                            <span v-text="maintenance.maintenance_type"></span>
+                        </a>
+
+
+                    </td>
+                    {% endif %}
+                    <td>
+                        <span v-text="to_price(maintenance.kilometer,'')"></span>
+
+
+                    </td>
+                    <td>
+                        <div>
+                            <small class="text-secondary" v-text="maintenance.persian_event_datetime"></small>
+
+                        </div>
+
+
+
+
+                    </td>
+                    <td>
+                        <div class="text-danger">
+                            <span v-text="to_price(maintenance.paid)"></span>
+                            <small class="text-muted mx-2">
+
+                                {{CURRENCY}}
+                            </small>
+
+                        </div>
+                    </td>
+                    <td>
+
+
+                        <a target="_blank" title="ویرایش" :href="maintenance.get_edit_url">
+
+                            <i class="material-icons">
+                                edit
+                            </i>
+                        </a>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer ">
+        <div>
+            <h6>
+
+                مجموع هزینه ها :
+                <span v-text="to_price(total(),'{{CURRENCY}}')"></span>
+            </h6>
+        </div>
+        {% if add_maintenance_form %}
+        {% include "vehicles/includes/maintenances-app/form.html" %}
+        {% endif %}
+    </div>
+</div>

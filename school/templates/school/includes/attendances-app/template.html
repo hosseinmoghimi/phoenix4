@@ -1,0 +1,39 @@
+{% load static %}
+<div id="attendances-app">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title">
+                وضعیت حضور
+            </h4>
+        </div>
+
+        <div class="card-body">
+            {% include "school/includes/attendances-app/table.html" %}
+            <hr>
+            {% if add_attendence_form %}
+            <div class="text-right mb-3">
+
+                <button v-if="!show_form" @click="show_form=true" class="btn btn-success">نمایش فرم</button>
+            </div>
+            <div v-if="show_form">
+
+                <div class="text-right mb-3">
+
+                    <button @click="show_form=false" class="btn btn-secondary">مخفی کردن فرم</button>
+                </div>
+
+                <div v-for="student in students">
+
+                    <session-student-component :student="student"></session-student-component>
+                </div>
+
+                <div class="text-right">
+
+                    <button @click="show_form=false" class="btn btn-secondary">مخفی کردن فرم</button>
+                </div>
+
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

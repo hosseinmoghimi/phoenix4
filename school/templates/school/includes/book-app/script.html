@@ -1,0 +1,32 @@
+<script>
+    let book_id = parseInt("{{book.id}}")
+    let documents = JSON.parse("{{documents_s|escapejs}}")
+
+    let book_app_data = {
+        documents: documents,
+        new_document_title: "",
+
+    }
+    let book_app_methods = {
+        add_document: function () {
+            let payload = {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                title: this.new_document_title,
+                book_id: book_id,
+            }
+            let url="{% url 'school:add_document' %}"
+            $.post(url, payload).done((data) => {
+                book_app.documents.push(data.document)
+                book_app.new_document_title=""
+            })
+        },
+
+    }
+</script>
+<script>
+    let book_app = new Vue({
+        el: "#book-app",
+        data: book_app_data,
+        methods: book_app_methods,
+    })
+</script>

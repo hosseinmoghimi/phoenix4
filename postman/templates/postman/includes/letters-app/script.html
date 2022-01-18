@@ -1,0 +1,27 @@
+<script>
+    let letters=JSON.parse("{{letters_s|escapejs}}")
+    let letters_app_data={
+        letters:letters,
+        title:"",
+    }
+    let letters_app=new Vue({
+        el:"#letters-app",
+        data:letters_app_data,
+        methods:{
+            add_letter:function(){
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    title:this.title
+
+                }
+                let url="{% url 'postman:add_letter' %}"
+                $.post(url,payload).done((data)=>{
+                    if(data.result==='SUCCEED'){
+                        letters_app.letters.push(data.letter)
+                        letters_app.title=""
+                    }
+                })
+            }
+        }
+    })
+</script>

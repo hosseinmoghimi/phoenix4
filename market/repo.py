@@ -1,3 +1,4 @@
+from django.http import Http404
 from accounting.repo import MarketOrderTransactionRepo,FinancialAccountRepo
 from utility.persian import PersianCalendar
 from django.utils import timezone
@@ -158,12 +159,19 @@ class ProductRepo:
 
     def product(self, *args, **kwargs):
         if 'product_id' in kwargs:
-            pk = kwargs['product_id']
+            product_id=kwargs['product_id']
+            print(product_id)
+            if product_id is not None and product_id !="":
+                return self.objects.filter(pk=product_id).first()  
+        if 'barcode' in kwargs:
+            barcode=kwargs['barcode']
+            print(barcode)
+            if barcode is not None and barcode !="":
+                return self.objects.filter(barcode=barcode).first()  
         elif 'pk' in kwargs:
-            pk = kwargs['pk']
+            return self.objects.filter(pk=kwargs['pk']).first() 
         elif 'id' in kwargs:
-            pk = kwargs['id']
-        return self.objects.filter(pk=pk).first()
+            return self.objects.filter(pk=kwargs['id']).first() 
     def add_feature(self,*args, **kwargs):
         feature=ProductFeatureRepo(request=self.request).product_feature(*args, **kwargs)
         product=ProductRepo(request=self.request).product(*args, **kwargs)
@@ -499,7 +507,33 @@ class OrderRepo:
             self.objects=Order.objects.filter(a)
         self.objects = self.objects.order_by("-date_ordered")
         
+    def add_order(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_order"):
+            return
+        order=Order()
+        if 'supplier_id' in kwargs:
+            order.supplier_id=kwargs['supplier_id']
 
+        if 'customer_id' in kwargs:
+            order.customer_id=kwargs['customer_id']
+
+        if 'shipper_id' in kwargs:
+            order.shipper_id=kwargs['shipper_id']
+
+        if 'address' in kwargs:
+            order.address=kwargs['address']
+        
+
+        if 'date_ordered' in kwargs:
+            order.date_ordered=kwargs['date_ordered']
+        else:
+            order.date_ordered=timezone.now()
+
+
+        if 'description' in kwargs:
+            order.description=kwargs['description']
+        order.save()
+        return order
     def orders(self,*args, **kwargs):
         return self.list(*args, **kwargs)
 
@@ -561,7 +595,15 @@ class OrderRepo:
         elif 'id' in kwargs:
             pk = kwargs['id']
         order_line= OrderLine.objects.filter(pk=pk).first()
-        return order_line
+        if order_line is None:
+            raise Http404
+        if order_line.order.supplier.profile==self.profile:
+            return order_line
+        if order_line.order.customer.profile==self.profile:
+            return order_line
+        if self.user.has_perm(APP_NAME+".view_orderline"):
+            return order_line
+        raise Http404
 
     def do_pack(self, *args, **kwargs):
         order=self.order(*args, **kwargs)

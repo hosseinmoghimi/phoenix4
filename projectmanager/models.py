@@ -358,11 +358,7 @@ class Material(ProjectManagerPage):
         self.class_name = "material"
         return super(Material, self).save(*args, **kwargs)
 
-    def thumbnail(self):
-        if self.image_thumbnail_origin:
-            return super(Material, self).thumbnail()
-        return STATIC_URL+"projectmanager/img/pages/thumbnail/material.png"
-
+ 
     def count_requested(self):
         count = 0
         for req in self.materialrequest_set.all():

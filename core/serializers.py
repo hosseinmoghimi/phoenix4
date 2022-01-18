@@ -11,25 +11,25 @@ class TagSerializer(serializers.ModelSerializer):
 class BasicPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasicPage
-        fields=['id','title','class_name_farsi','short_description','get_absolute_url','parent_id','thumbnail','short_description','get_edit_url']
+        fields=['id','title','class_name_farsi','get_price','short_description','get_absolute_url','parent_id','thumbnail','short_description','get_edit_url']
 
 
 class PageLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageLink
-        fields=['id','title','url','get_edit_url']
+        fields=['id','title','url','get_icon_tag','get_delete_url','get_edit_url']
 
 
 class PageDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageDocument
-        fields=['id','title','get_download_url','get_edit_url','get_delete_url']
+        fields=['id','title','get_icon_tag','get_download_url','get_edit_url','get_delete_url']
 
 
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
-        fields=['id','title','get_download_url','get_edit_url','get_delete_url']
+        fields=['id','title','get_icon_tag','get_download_url','get_edit_url','get_delete_url']
 
 
 class ParameterSerializer(serializers.ModelSerializer):

@@ -1,0 +1,153 @@
+<div id="add-order-app">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="title">
+                ایجاد سفارش جدید
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">فروشنده</label>
+                        <select v-model="supplier_id" class="form-control" id="">
+                            <option v-for="supplier in suppliers" :value="supplier.id" v-text="supplier.title"></option>
+                        </select>
+                        <div class="media mt-3" v-if="selected_supplier()">
+                            <img class="rounded" width="48" :src="selected_supplier().image" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    <a target="_blank" :href="selected_supplier().get_absolute_url">
+                                        <span v-text="selected_supplier().title"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">خریدار</label>
+                        <input type="text" @input="search_customer()" placeholder="جستجوی مشتری" v-model="customer_name"
+                            class="form-control">
+                        <select v-model="customer_id" class="form-control" id="">
+                            <option v-for="customer in customers" :value="customer.id" v-text="customer.profile.name">
+                            </option>
+                        </select>
+                        <div class="media mt-3" v-if="selected_customer()">
+                            <img class="rounded-circle" width="48" :src="selected_customer().profile.image" alt="">
+                            <div class="media-body">
+                                <h4>
+                                    <a target="_blank" :href="selected_customer().get_absolute_url">
+                                        <span v-text="selected_customer().profile.name"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">محصول / کالا</label>
+                        <form @submit.prevent="select_product()">
+                            <input type="text" class="form-control" v-model="product_barcode" placeholder="بارکد محصول"id="">
+                        </form>
+                        <div class="media mt-3" v-if="product">
+                            <img class="rounded" width="48" :src="product.thumbnail" alt="">
+                            <div class="media-body mr-2">
+                                <h4>
+                                    <a target="_blank" :href="product.get_absolute_url">
+                                        <span v-text="product.title"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="">تعداد / مقدار</label>
+                        <input type="number" v-model="quantity" class="form-control" placeholder="..." id="">
+                        <select v-model="unit_name" class="form-control" id="">
+                            <option v-for="unit_name in unit_names" :value="unit_name.name" v-text="unit_name.name">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">توضیحات</label>
+                        <input type="text" class="form-control" v-model="line_description">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-right">
+                        <button @click="add_line()" class="btn btn-warning"> افزودن سطر</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            ردیف
+                        </th>
+                        <th>
+                            کالا
+                        </th>
+                        <th>
+                            تعداد/مقدار
+                        </th>
+                        <th>
+                            توضیحات
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(order_line,itemObjKey) in order_lines">
+                            <td>
+                                <span v-text="itemObjKey+1">
+                                </span>
+                            </td>
+                            <td>
+                                <div class="media ">
+                                    <a :href="order_line.product.title">
+                                        <img class="rounded" width="96" :src="order_line.product.thumbnail" alt="">
+                                    </a>
+                                    <div class="media-body mr-2">
+                                        <h6>
+                                            <a target="_blank" :href="order_line.product.get_absolute_url">
+                                                <span v-text="order_line.product.title"></span>
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span v-text="order_line.quantity"></span>
+                                <span v-text="order_line.unit_name"></span>
+                            </td>
+                            <td>
+                                <span v-text="order_line.description"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="">توضیحات</label>
+                        <input type="text" class="form-control" v-model="description">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-right">
+                        <button @click="save_order()" class="btn btn-success"> ذخیره سفارش</button>
+                        <div class="farsi text-right" v-html="message">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

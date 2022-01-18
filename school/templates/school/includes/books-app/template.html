@@ -1,6 +1,6 @@
 <div id="accordion-books">
 
-    <div class="card">
+    <div class="card" id="books-app">
         <div class="card-header" id="headingBooks">
 
 
@@ -14,20 +14,79 @@
 
 
         </div>
-
-
         <div id="collapseBooks" class="collapse" aria-labelledby="headingBooks" data-parent="#accordion-books">
-
             <div class="card-body farsi text-right">
+                <div class="mb-3">
+                    <input type="text" v-model="search_for" class="form-control" @input="filter()"
+                        placeholder="جستجو ...">
+                </div>
+                <div v-for="book in books" class="mb-3">
+                    <h5>
+                        <small class="text-muted">
+                            <i class="fa fa-book"></i>
+                            کتاب
+                        </small>
+                        <a :href="book.get_absolute_url">
+                            <span v-text="book.title"></span>
+                        </a>
+                        {% if perms.school.change_book %}
+                        <a title="ویرایش" target="_blank" :href="book.get_edit_url" class="mr-2">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% endif %}
 
+                        {% if perms.school.delete_book %}
+                        <a title="حذف" target="_blank" :href="book.get_delete_url" class="mr-2">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                        {% endif %}
+                    </h5>
+                    <div class="mr-5" v-for="doc in book.documents">
+                        <a :href="doc.get_download_url">
+                            <span v-html="doc.get_icon_tag" class="ml-2"></span>
+                            <span v-text="doc.title"></span>
+                        </a>
+                        {% if perms.school.change_document %}
+                        <a title="ویرایش" target="_blank" :href="doc.get_edit_url" class="mr-2">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% endif %}
 
-                {% for book in books %}
-                {% include "school/includes/books-app/book-card.html" %}
+                        {% if perms.core.delete_document %}
+                        <a title="حذف" target="_blank" :href="doc.get_delete_url" class="mr-2">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                        {% endif %}
 
-                {% endfor %}
+                    </div>
+                    <div class="mr-5" v-for="link in book.links">
+                        <a target="_blank" :href="link.url">
+                            <span v-html="link.get_icon_tag" class="ml-2"></span>
+                            <span v-text="link.title"></span>
+                        </a>
+                        {% if perms.school.change_book %}
+                        <a title="ویرایش" target="_blank" :href="link.get_edit_url" class="mr-2">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% endif %}
 
+                        {% if perms.core.delete_book %}
+                        <a title="حذف" target="_blank" :href="link.get_delete_url" class="mr-2">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                        {% endif %}
 
+                    </div>
+                    <hr>
+                </div>
             </div>
+            {% if add_book_form %}
+            <div class="card-footer">
+                <form @submit.prevent="add_book()">
+                    <input type="text" v-model="title" class="form-control" placeholder="عنوان کتاب جدید">
+                </form>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

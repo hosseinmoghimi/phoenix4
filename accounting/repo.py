@@ -1,3 +1,4 @@
+from django.http import request
 from django.utils import timezone
 from django.utils import translation
 from .apps import APP_NAME
@@ -70,8 +71,15 @@ class FinancialAccountRepo:
         if 'user' in kwargs:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=FinancialAccount.objects.all()
+        # self.objects=FinancialAccount.objects.all()
         self.me=FinancialAccount.objects.filter(profile_id=self.profile.id).first()
+        if self.user.has_perm(APP_NAME+".view_financialaccount"):
+            self.objects=FinancialAccount.objects.all()
+        elif self.me is not None:
+            self.objects=FinancialAccount.objects.filter(pk=self.me.pk)
+        else:
+            self.objects=FinancialAccount.objects.filter(pk__lte=0)
+
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         return objects
@@ -258,7 +266,14 @@ class TransactionRepo:
         if 'user' in kwargs:
             self.user=kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        self.objects=Transaction.objects.order_by('date_paid')
+        self.objects=Transaction.objects.order_by('date_paid').filter(pk__lte=0)
+        if self.user.has_perm(APP_NAME+".view_transaction"):
+            self.objects=Transaction.objects.order_by('date_paid')
+        else:
+            me=FinancialAccountRepo(request=self.request).me
+            self.objects=Transaction.objects.order_by('date_paid').filter(Q(pay_to_id=me.id)|Q(pay_from_id=me.id))
+
+
     def list(self,*args, **kwargs):
         objects=self.objects.all()
         if 'financial_account_id' in kwargs:

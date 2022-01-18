@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.core.checks import messages
 from django.http import request
 from core.constants import FAILED, SUCCEED
@@ -8,6 +9,54 @@ from django.contrib.auth.models import User
 
 def is_not_blank(s):
     return bool(s and not s.isspace())
+
+
+class MembershipRequestRepo:
+    
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        if self.user.has_perm(APP_NAME+".view_membershiprequest"):
+
+            self.objects = MembershipRequest.objects.all().order_by('-date_added')
+        else:
+            self.objects = MembershipRequest.objects.filter(id__lte=0)
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'app_name' in kwargs:
+            objects=objects.filter(app_name=kwargs['app_name'])
+        return objects
+    def membership_request(self,*args, **kwargs):
+        if 'membership_request_id' in kwargs:
+            return self.objects.filter(pk=kwargs['membership_request_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+    def add_request(self,*args, **kwargs):
+        mobile=kwargs['mobile']
+        app_name=kwargs['app_name']
+        membership_request=MembershipRequest(mobile=mobile,app_name=app_name)
+        membership_request.save()
+        return membership_request
+    def handle_membership_request(self,*args, **kwargs):
+        membership_request=self.membership_request(*args, **kwargs)
+        me=ProfileRepo(request=self.request).me
+        if membership_request is None or me is None:
+            return
+        membership_request.handled_by=me
+        membership_request.handled=True
+        membership_request.read=True
+        membership_request.date_handled=timezone.now()
+        membership_request.save()
+        return membership_request
+
+
 
 class ProfileRepo():
     def __init__(self,*args, **kwargs):

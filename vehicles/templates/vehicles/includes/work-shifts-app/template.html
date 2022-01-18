@@ -131,11 +131,19 @@
 
 
     </div>
-    {% if add_work_shift_form %}
     <div class="card-footer">
+        <div>
+            <h6>
+
+                مجموع درآمد ها :
+                <span v-text="to_price(total(),'{{CURRENCY}}')"></span>
+            </h6>
+        </div>
+
+        {% if add_work_shift_form %}
 
         {% include "vehicles/includes/work-shifts-app/form.html" %}
 
+        {% endif %}
     </div>
-    {% endif %}
 </div>

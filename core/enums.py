@@ -5,7 +5,7 @@ from enum import Enum
 
 class PictureNameEnums(TextChoices):
     LOGO="لوگو",_("لوگو")
-
+    FAVICON="آیکون",_("آیکون")
 
 class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")
@@ -109,9 +109,10 @@ class IconsEnum(TextChoices):
 
 
 class ParametersEnum(TextChoices):
+    MASTER_KEYWORDS="کلید واژه های اصلی اپ",_("کلید واژه های اصلی اپ")
     HOME_URL="آدرس خانه",_("آدرس خانه")
     SHOW_ARCHIVES="نمایش فایل های آرشیو شده",_("نمایش فایل های آرشیو شده")
-    VISITOR_COUNTER="VISITOR_COUNTER",_("VISITOR_COUNTER")
+    VISITOR_COUNTER="تعداد بازدید از سایت",_("تعداد بازدید از سایت")
     GOOGLE_API_KEY='GOOGLE_API_KEY',_('GOOGLE_API_KEY')
     GOOGLE_GPS_X='GOOGLE_GPS_X',_('GOOGLE_GPS_X')
     GOOGLE_GPS_Y='GOOGLE_GPS_Y',_('GOOGLE_GPS_Y')

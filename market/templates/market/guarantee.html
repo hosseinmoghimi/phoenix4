@@ -37,7 +37,21 @@
                                 سفارش شماره {{guarantee.orderline.order.id}}
                             </a>
                             {{guarantee.orderline.order.get_status_tag|safe}}
+                            <a target="_blank" href="{{guarantee.get_print_url}}">
+                                <i class="material-icons text-primary">
+                                  print
+                                </i>
+                              </a>
+
+                              <a class="mx-2" target="_blank" href="{{guarantee.get_edit_url}}">
+                                <i class="fa fa-edit text-info">
+                                </i>
+                              </a>
+
                         </h4>
+                        <div class="text-right"> 
+                            
+                        </div>
                         <h4 class="card-title farsi text-right">
                             <span>بارکد : </span>
                             <span>{{guarantee.barcode}}</span>

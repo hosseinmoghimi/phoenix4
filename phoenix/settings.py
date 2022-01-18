@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'allauth.account',   # <--
     'allauth.socialaccount',   # <--
     'allauth.socialaccount.providers.google', 
+    'django_social_share',
     'todocalendar',
     'bms',  
+    'hesabyar',
     'mafia',
     'restaurant',
     'messenger',
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
     'school',
     'salary',
     'accounting',
+    'postman',
     'resume',
     'vehicles',
     'help',
@@ -61,6 +64,8 @@ INSTALLED_APPS = [
     'core',
     'dashboard',
     'farm',
+    'chef',
+    # 'tourleader',
     'market',
     'projectmanager',
     'phoenix_forums',

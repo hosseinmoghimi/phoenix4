@@ -10,10 +10,33 @@
                     {{course.title}}
                 </a>
                 {% if perms.school.change_course %}
-                {{course.get_edit_btn|safe}}
 
+                <a class="mx-2" href="{{course.get_edit_url}}" title="ویرایش" target="_blank"><i
+                        class="fa fa-edit text-info"></i></a>
                 {% endif %}
+
+                {% if perms.school.delete_course %}
+
+                <a class="mx-2" href="{{course.get_delete_url}}" title="حذف" target="_blank">
+                    <i class="fa fa-trash text-danger">
+                    </i>
+                </a>
+                {% endif %}
+
             </h4>
+            <h5>
+                رشته:
+
+            </h5>
+            {% for major in course.major_set.all %}
+            <a href="{{major.get_absolute_url}}">
+                <h5>
+
+                    {{major.title}}
+                </h5>
+
+            </a>
+            {% endfor %}
         </div>
 
 

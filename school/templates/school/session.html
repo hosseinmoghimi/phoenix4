@@ -1,26 +1,55 @@
 {% extends "school/layout.html" %}
+{% load to_persian_date %}
+{% load social_share %}
+
 {% block content %}
 <h4 class="text-center">
     {{session.title}}
+    {% if perms.school.change_session %}
+    <a title="ویرایش" target="_blank" href="{{session.get_edit_url}}">
+        <i class="fa fa-edit text-center"></i>
+    </a>
+    {% endif %}
 </h4>
 <div class="row">
     <div class="col-md-4">
         {% include "school/includes/courses-app/course-card.html" %}
     </div>
     <div class="col-md-4">
-    {% include "school/includes/students-app/template.html" %}
+        <div class="card">
+            <div class="card-body farsi">
 
-    </div> 
+                <div class="my-2 text-right">
+
+                    {% post_to_telegram link_text="اشتراک با تلگرام" title=session.title obj_or_url=session.get_absolute_url  %}
+
+                </div>
+                <div class="my-2 text-right">
+                    {% post_to_whatsapp session.get_absolute_url link_text="  واتسپ" %}
+                </div>
+
+
+                <h5>
+                    شروع جلسه : {{session.start_time|to_persian_datetime|safe}}
+                </h5>
+
+                <h5>
+                    پایان جلسه : {{session.end_time|to_persian_datetime|safe}}
+                </h5>
+
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-4">
-        {% for book in books %}
-        {% include "school/includes/books-app/book-card.html" %}
+        {% include "school/includes/books-app/template.html" %}
 
-        {% endfor %}
-    </div> 
+    </div>
+
     <div class="col-md-6">
-    {% include "school/includes/sessions-app/template.html" %}
+        {% include "school/includes/sessions-app/template.html" %}
 
-    </div> 
+    </div>
 
     <div class="col-md-6">
         {% include "core/includes/page-documents-app/template.html" %}
@@ -37,17 +66,43 @@
         {% include "core/includes/page-images-app/template.html" %}
     </div>
 
+    <div class="col-md-12">
+        {% include "school/includes/attendances-app/template.html" %}
+    </div>
+
+    <div class="col-md-12">
+        {% if session.description %}
+        <div class="card" class="my-3 farsi">
+            <div class="card-header">
+                <h5 class="title">
+                    توضیحات کامل
+                </h5>
+            </div>
+            <div class="card-body">
+                <h5>
+                    {{session.title}}
+                </h5>
+                {{session.description|safe}}
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
 </div>
 {% endblock content %}
 
 {% block script %}
 <script>
-    let page_id=parseInt("{{page.id}}")
+    let students = JSON.parse(`{{students_s|escapejs}}`)
+    let page_id = parseInt("{{page.id}}")
 </script>
-{% include "school/includes/students-app/script.html" %}
 {% include "school/includes/sessions-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}
 {% include "core/includes/page-images-app/script.html" %}
 {% include "core/includes/page-links-app/script.html" %}
-  
+{% include "school/includes/attendances-app/script.html" %}
+{% include "school/includes/books-app/script.html" %}
+
 {% endblock script %}

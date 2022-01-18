@@ -15,7 +15,9 @@ PERSIAN_MONTH_NAMES=[
  'بهمن',
  'اسفند'
 ]
-
+def days_in_month(year,month,day=1):
+    nn=JalaliDate(year=year,month=month,day=day)
+    return nn.daysinmonth
 
 
 class PersianCalendar:

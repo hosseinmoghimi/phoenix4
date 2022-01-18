@@ -166,9 +166,9 @@ class TripRepo():
             return
         trip=TripRepo(request=self.request).trip(*args, **kwargs)
         passenger=PassengerRepo(request=self.request).passenger(*args, **kwargs)
-        if trip is not None and passenger is not None:
+        if trip is not None and passenger is not None and not passenger in trip.passengers.all():
             trip.passengers.add(passenger)
-        return passenger
+            return passenger
 
     def add_trip(self,*args, **kwargs):
         me_passenger=PassengerRepo(request=self.request).me
@@ -180,10 +180,11 @@ class TripRepo():
         else:
             return
         trip=Trip()
+        now=timezone.now()
         trip.title=kwargs['title'] if 'title' in kwargs else None
         trip.vehicle_id=kwargs['vehicle_id'] if 'vehicle_id' in kwargs else None
-        # trip.source_id =kwargs['source_id'] if 'source_id' in kwargs else None
-        # trip.destination_id =kwargs['destination_id'] if 'destination_id' in kwargs else None
+        trip.date_started =kwargs['date_started'] if 'date_started' in kwargs else now
+        trip.date_ended =kwargs['date_ended'] if 'date_ended' in kwargs else now
         trip.driver_id =kwargs['driver_id'] if 'driver_id' in kwargs else None
         trip.cost =kwargs['cost'] if 'cost' in kwargs else 10000
         trip.distance =kwargs['distance'] if 'distance' in kwargs else 5
