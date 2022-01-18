@@ -57,6 +57,7 @@ class MembershipRequestApi(APIView):
 class ProfileApi(APIView):
     def login(self,request,*args, **kwargs):
         context={}
+        
         context['result']=FAILED
         if request.method=='POST':
             username=request.data['username']
