@@ -25,4 +25,7 @@ urlpatterns = [
     path('handle_membership_request/',apis.MembershipRequestApi().handle_membership_request,name="handle_membership_request"),
     path('add_membership_request/',apis.MembershipRequestApi().add_membership_request,name="add_membership_request"),
     path('upload_profile_image/<int:profile_id>/',views.ProfileViews().upload_profile_image,name="upload_profile_image"),
+
+
+    path('apk-api/login/',apis.ProfileApi().login,name="apk_login"),
 ]
