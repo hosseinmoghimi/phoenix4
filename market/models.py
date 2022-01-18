@@ -56,7 +56,7 @@ class Product(MarketPage):
         else:
             return 0
 
-            
+
     def is_top_in_category(self):
         cc=CategoryProductTop.objects.filter(product_id=self.pk)
         return len(cc)>0
@@ -83,7 +83,8 @@ class Product(MarketPage):
             
         else:
             return unit_price.unit_price
-
+    def price(self):
+        return self.unit_price()
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("محصولات و کالاها")
