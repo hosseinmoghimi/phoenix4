@@ -137,14 +137,19 @@ class ProfileRepo():
         pk=0
         if 'profile_id' in kwargs:
             pk=kwargs['profile_id']
+            return self.objects.filter(pk=pk).first()
         elif 'pk' in kwargs:
             pk=kwargs['pk']
+            return self.objects.filter(pk=pk).first()
         elif 'id' in kwargs:
             pk=kwargs['id']
+            return self.objects.filter(pk=pk).first()
         elif 'username' in kwargs:
             username=kwargs['username']
             return Profile.objects.filter(user__username=username).first()
-        return self.objects.filter(pk=pk).first()
+        elif 'user' in kwargs:
+            user=kwargs['user']
+            return Profile.objects.filter(user=user).first()
 
     @classmethod
     def logout(self,request):
