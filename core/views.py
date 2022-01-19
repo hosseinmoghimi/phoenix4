@@ -247,10 +247,10 @@ class PageViews(View):
 
     def download(self, request, *args, **kwargs):
         me=ProfileRepo(request=request).me
-        if me is None :
-            raise Http404
         document = DocumentRepo(request=request).document(*args, **kwargs)
-        if request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
+        if me is None and not document.is_open:
+            pass
+        elif request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
             if document is None:
                 raise Http404
             return document.download_response()
@@ -266,7 +266,7 @@ class PageViews(View):
         message_view.header_color = "rose"
         message_view.message_icon = ''
         message_view.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
-        message_view.message_text = 'مجوز شما برای دسترسی به این صفحه مجاز نمی باشد.'
+        message_view.message_text = ' شما مجوز دسترسی به این صفحه را ندارید.'
         message_view.header_text = 'دسترسی غیر مجاز'
 
         return message_view.response()
