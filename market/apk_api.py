@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 from django.db.models import manager
 from market.forms import *
-from market.apk_serializers import CartLineSerializer, CategorySerializer, GuaranteeSerializer, OrderSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, UnitNameSerializer, WareHouseSerializer
+from market.apk_serializers import ProductFullSerializer,CartLineSerializer, CategorySerializer, GuaranteeSerializer, OrderSerializer, ProductFeatureSerializer, ProductSerializer, ProductSpecificationSerializer, ShopSerializer, UnitNameSerializer, WareHouseSerializer
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from core.constants import SUCCEED,FAILED
@@ -34,9 +34,19 @@ class ProductApi(APIView):
         context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+    def product(self,request,*args, **kwargs):
+        context={}
+        log=1
+        context['result']=FAILED
+        products=ProductFullSerializer(ProductRepo(request=request).product(*args, **kwargs)).data
+        context['product']=products
+        context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
 
 urlpatterns=[
     path("categories/",CategoryApi().categories,name="apk_categories"),
     path("products/<int:category_id>/",ProductApi().products,name="products"),
+    path("product/<int:product_id>/",ProductApi().product,name="product"),
 
 ]

@@ -104,7 +104,8 @@ class Product(MarketPage):
 
     def get_order_lines_url(self):
         return reverse(APP_NAME+":order_lines",kwargs={'product_id':self.pk,'order_id':0})
-
+    def shops(self):
+        return Shop.objects.filter(product=self)
 class Category(MarketPage):
     default_unit_name=models.CharField(_("واحد پیش فرض"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))
@@ -298,7 +299,8 @@ class Order(models.Model):
     def title(self):
         return f"سفارش شماره {self.pk}"
     def get_absolute_url(self):
-        return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
+        if self.pk is not None:
+            return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
 
     def get_delete_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"

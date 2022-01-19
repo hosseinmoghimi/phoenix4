@@ -3,6 +3,8 @@ from .models import Brand, Cart, CartLine, Category, Customer, Guarantee, Menu, 
 from rest_framework import serializers
 from authentication.serializers import ProfileSerializer
 
+
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -29,7 +31,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class SupplierSerializerForShop(serializers.ModelSerializer):
     class Meta:
         model = Supplier
-        fields = ['id', 'title','get_absolute_url','region','image']
+        fields = ['id', 'title','get_absolute_url','thumbnail','region','image']
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -114,3 +116,15 @@ class MenuLineSerializer(serializers.ModelSerializer):
         fields = ['id','shops','title', 'get_absolute_url']
 
 
+class ShopBriefSerializer(serializers.ModelSerializer):
+    supplier=SupplierSerializerForShop()
+    specifications=ProductSpecificationSerializer(many=True)
+    class Meta:
+        model = Shop
+        fields = ['id','specifications', 'supplier','level', 'unit_name', 'available', 'unit_price']
+
+class ProductFullSerializer(serializers.ModelSerializer):
+    shops=ShopBriefSerializer(many=True)
+    class Meta:
+        model = Product
+        fields = ['id','shops', 'title','price','category_id','description', 'thumbnail', 'get_absolute_url']
