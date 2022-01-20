@@ -61,10 +61,11 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = ['id','specifications', 'supplier','level','product', 'unit_name', 'available', 'unit_price','get_edit_url']
 
 class CartLineSerializer(serializers.ModelSerializer):
-    shop=ShopSerializer()
+    # shop=ShopSerializer()
+    supplier=SupplierSerializerForShop()
     class Meta:
         model = CartLine
-        fields = ['id','quantity','shop','line_total']
+        fields = ['id','quantity','supplier','line_total']
 
 class GuaranteeSerializer(serializers.ModelSerializer):
     class Meta:

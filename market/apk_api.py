@@ -36,12 +36,13 @@ class CartApi(ObtainAuthToken):
         log=1
         context['result']=FAILED
         token=request.headers['token']
-        context['token']=token
+        # context['token']=token
         request=ProfileRepo(request=request).login_by_token()
         context['username']=request.user.username
         customer=CustomerRepo(request=request).me
         cart=CartRepo(request=request).cart(customer=customer)
-        context['cart']=CartSerializer(cart).data
+        # context['cart']=CartSerializer(cart).data
+        context['cartLines']=CartLineSerializer(cart.lines,many=True).data
         context['result']=SUCCEED
         context['customer']=CustomerSerializer(customer).data
         context['log']=log

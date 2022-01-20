@@ -387,7 +387,8 @@ class CartLine(models.Model):
 
     def get_profit(self):
         return self.quantity*(self.shop.unit_price-self.shop.buy_price)
-
+    def supplier(self):
+        return self.shop.supplier
 
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))
