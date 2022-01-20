@@ -162,9 +162,13 @@ class ProfileRepo():
             user=kwargs['user']
             return Profile.objects.filter(user=user).first()
 
-    @classmethod
-    def logout(self,request):
-        logout(request=request)
+    
+    def logout(self,*args, **kwargs):
+        if 'request' in kwargs:
+            logout(request=kwargs['request'])
+        else:
+            logout(request=self.request)
+            
 
     def login(self,request,username,password):
         logout(request=request)

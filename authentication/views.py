@@ -214,5 +214,5 @@ class AuthenticationViews(View):
                     return redirect(profile.get_absolute_url())
         return render(request,TEMPLATE_ROOT+"reset-password.html",context)
     def logout(self,request):
-        ProfileRepo.logout(request)
+        ProfileRepo(request=request).logout()
         return redirect(reverse('authentication:login'))
