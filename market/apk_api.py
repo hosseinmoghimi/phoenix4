@@ -1,5 +1,6 @@
 import json
 from unicodedata import category
+from unittest import result
 from urllib.parse import urlparse
 
 from django.db.models import manager
@@ -38,13 +39,14 @@ class CartApi(ObtainAuthToken):
         token=request.headers['token']
         # context['token']=token
         request=ProfileRepo(request=request).login_by_token()
-        context['username']=request.user.username
-        customer=CustomerRepo(request=request).me
-        cart=CartRepo(request=request).cart(customer=customer)
-        # context['cart']=CartSerializer(cart).data
-        context['cartLines']=CartLineSerializer(cart.lines,many=True).data
-        context['result']=SUCCEED
-        context['customer']=CustomerSerializer(customer).data
+        if request.user is not None and request.user.is_authenticated:
+            context['username']=request.user.username
+            customer=CustomerRepo(request=request).me
+            cart=CartRepo(request=request).cart(customer=customer)
+            # context['cart']=CartSerializer(cart).data
+            context['cartLines']=CartLineSerializer(cart.lines,many=True).data
+            context['result']=SUCCEED
+            context['customer']=CustomerSerializer(customer).data
         context['log']=log
         return JsonResponse(context)
 
