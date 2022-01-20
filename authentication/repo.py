@@ -1,3 +1,4 @@
+from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from django.core.checks import messages
 from django.http import request
@@ -76,6 +77,16 @@ class ProfileRepo():
             self.objects = Profile.objects.filter(enabled=True)
             self.me = self.objects.filter(user=self.user).first()         
         self.objects = Profile.objects.filter(enabled=True)
+
+    def login_by_token(self,*args, **kwargs):
+        if 'token' in kwargs:
+            token=kwargs['token']
+        else:
+            token=self.request.headers['token']
+        token=Token.objects.filter(key=token).first()
+        if token is not None:
+            user=token.user
+            return self.login_as_user(user.username,force=True)
 
     def reset_password(self,*args, **kwargs):
         result=FAILED

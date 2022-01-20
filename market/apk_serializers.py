@@ -33,6 +33,7 @@ class SupplierSerializerForShop(serializers.ModelSerializer):
         model = Supplier
         fields = ['id', 'title','get_absolute_url','thumbnail','region','image']
 
+ 
 
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
@@ -84,12 +85,17 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id','lines','customer','supplier','sum_total','lines_total','total','get_absolute_url']
+class OrderForCartSerializer(serializers.ModelSerializer):
+    supplier=SupplierSerializerForShop()
+    class Meta:
+        model = Order
+        fields = ['supplier','sum_total','lines_total','total']
 class CartSerializer(serializers.ModelSerializer):
-    orders=OrderSerializer(many=True)
+    # orders=OrderForCartSerializer(many=True)
     lines=CartLineSerializer(many=True)
     class Meta:
         model = Cart
-        fields = ['id','customer','orders','lines']
+        fields = ['id','customer','lines']
 class WareHouseSerializer(serializers.ModelSerializer):
 
     class Meta:
