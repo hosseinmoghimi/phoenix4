@@ -2,6 +2,10 @@ from django.db.models.enums import TextChoices
 from django.utils.translation import gettext as _
 
 class ParameterEnum(TextChoices):
+    OFFICE_ADDRESS="آدرس دفتر",_("آدرس دفتر")
+    OFFICE_TEL="تلفن دفتر",_("تلفن دفتر")
+    OFFICE_MOBILE="تماس  دفتر",_("تماس  دفتر")
+    OFFICE_EMAIL="ایمیل دفتر",_("ایمیل دفتر")
     FeatureTitle="عنوان خدمات ما",_("عنوان خدمات ما")
     FeatureDescription="توضیح خدمات ما",_("توضیح خدمات ما")
     BlogsTitle="عنوان مقالات",_("عنوان مقالات")

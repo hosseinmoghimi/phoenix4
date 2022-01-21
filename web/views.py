@@ -60,6 +60,12 @@ class BasicViews(View):
 
         context['ourteam_title_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamTitle)
         context['ourteam_description_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamDescription)
+
+        param_repo=ParameterRepo(request=request)
+        context['office_address']=parameter_repo.parameter(name=ParameterEnum.OFFICE_ADDRESS).value
+        context['office_tel']=parameter_repo.parameter(name=ParameterEnum.OFFICE_TEL).value
+        context['office_mobile']=parameter_repo.parameter(name=ParameterEnum.OFFICE_MOBILE).value
+        context['office_email']=parameter_repo.parameter(name=ParameterEnum.OFFICE_EMAIL).value
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class OurWorkViews(View):
