@@ -160,6 +160,8 @@ def DefaultContext(request, app_name='core', *args, **kwargs):
 class MessageView(View):
     def __init__(self, *args, **kwargs):
         self.links = []
+        self.title = None
+        self.body = None
         self.message_text_html = None
         self.message_color = 'warning'
         self.has_home_link = True
@@ -169,6 +171,16 @@ class MessageView(View):
         self.message_text = ""
         self.header_text = ""
         self.message_html = ""
+        if 'app_name' in kwargs:
+            self.app_name = kwargs['app_name']
+        else:
+            self.app_name = 'web'
+        if 'title' in kwargs:
+            self.title = kwargs['title']
+        if 'body' in kwargs:
+            self.body = kwargs['body']
+        if 'message_text_html' in kwargs:
+            self.message_text_html = kwargs['message_text_html']
         if 'message_html' in kwargs:
             self.message_html = kwargs['message_html']
         if 'message_color' in kwargs:
@@ -219,9 +231,11 @@ class MessageView(View):
         context['message_icon'] = self.message_icon
         context['message_text'] = self.message_text
         context['message_html'] = self.message_html
+        context['body'] = self.body
+        context['title'] = self.title
 
         context['search_form'] = None
-        return render(self.request, TEMPLATE_ROOT+'error.html', context)
+        return render(self.request, TEMPLATE_ROOT+'message.html', context)
 
 
 class BasicViews(View):

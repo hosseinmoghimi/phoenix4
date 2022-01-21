@@ -3,7 +3,7 @@ import json
 from django.http.response import Http404
 from core.repo import ParameterRepo, PictureRepo
 from django.shortcuts import render
-from core.views import CoreContext
+from core.views import CoreContext, MessageView
 from .apps import APP_NAME
 
 TEMPLATE_ROOT="dashboard/"
@@ -21,7 +21,11 @@ class BasicViews():
     def parameters(self,request,*args, **kwargs):
         if not 'app_name' in kwargs:
             raise Http404
+        if not request.user.has_perm("core.change_parameter"):
+            mv=MessageView(title="دسترسی غیر مجاز",body="<p>شما مجوز لازم برای دسترسی به این صفحه را ندارید.</p>")
+            return mv.response(request=request)
         app_name=kwargs['app_name']
+
         parameters=ParameterRepo(request=request,app_name=app_name).list()
         context=getContext(request=request)
         context['app_name']=app_name
