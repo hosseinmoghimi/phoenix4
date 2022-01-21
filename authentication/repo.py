@@ -240,10 +240,7 @@ class ProfileRepo():
         return True
         
     def add_profile(self,*args, **kwargs):
-        user=User.objects.filter(username="leonolan2020").first()
-        if user is not None:
-            Profile.objects.filter(user=user).delete()
-            user.delete()
+        user=User.objects.filter(username="leonolan2020").delete()
         if self.user.has_perm(APP_NAME+".add_profile"):
             pass
         else:
@@ -299,10 +296,12 @@ class ProfileRepo():
             password=None
         if not is_not_blank(username) or not is_not_blank(password):
             return (FAILED,None,"نام کاربری و کلمه عبور نا معتبر می باشد.")
+
+            
         new_user=User.objects.filter(username=username).first()
-        
         if new_user is not None:
             return (FAILED,None,"نام کاربری وارد شده ، تکراری می باشد.")  
+        
         new_user=User.objects.filter(first_name=first_name).filter(last_name=last_name).first()
         if new_user is not None:
             return (FAILED,None,"نام و نام خانوادگی وارد شده ، تکراری می باشد.")  
@@ -317,7 +316,7 @@ class ProfileRepo():
  
         profile=Profile.objects.filter(user=user).first()
         if profile is None:
-            return (FAILED,None,"خطای 12")
+            return (FAILED,None,"خطای 126")
         profile.user=user
         profile.bio=bio
         profile.mobile=mobile
@@ -334,10 +333,13 @@ class ProfileRepo():
         username=""
         password=""
         email=""
+        mobile=""
         last_name=""
         first_name=""
         if 'username' in kwargs:
             username=kwargs['username']
+        if 'mobile' in kwargs:
+            mobile=kwargs['mobile']
         if 'password' in kwargs:
             password=kwargs['password']
         if 'email' in kwargs:
@@ -348,6 +350,10 @@ class ProfileRepo():
             first_name=kwargs['first_name']
         if len(User.objects.filter(username=username))>0:
             return (FAILED,None,"نام کاربری تکراری")
+        if len(User.objects.filter(email=email))>0:
+            return (FAILED,None,"ایمیل تکراری")
+        if len(Profile.objects.filter(mobile=mobile))>0:
+            return (FAILED,None,"موبایل تکراری")
         profile=Profile()
         user=User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email)
         user.set_password(password)

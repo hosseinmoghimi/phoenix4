@@ -15,6 +15,8 @@
 
 
     </div>
+    {% if profile %}
+      
     <h3 class="title text-center">نظر خود را ثبت کنید.</h3>
     <div class="media media-post">
         <a class="author float-left" title="{{profile.name}}" href="#pablo">
@@ -33,4 +35,5 @@
             </div>
         </div>
     </div> <!-- end media-post -->
+    {% endif %}
 </div>

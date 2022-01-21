@@ -21,18 +21,7 @@
                     </span>
                 </a>
                 {% endif %}
-                <div class=" text-center">
-                    <span class="my-2">
-
-                        {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
-
-                    </span>
-                    <span class="my-2">
-
-                        {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
-
-                    </span>
-                </div>
+               
             </div>
         </div>
     </div>
@@ -50,7 +39,18 @@
             <div class="row">
                 <div class="col-md-8 ml-auto mr-auto">
                     <h3 class="title text-center">{{page.title}}</h3>
-
+                    <div class=" text-center mb-3">
+                        <span class="my-2">
+    
+                            {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
+    
+                        </span>
+                        <span class="my-2">
+    
+                            {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
+    
+                        </span>
+                    </div>
                     {% if page.panel %}
                     {{page.panel|safe}}
                     {% endif %}

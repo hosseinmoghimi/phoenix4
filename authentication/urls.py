@@ -30,4 +30,5 @@ urlpatterns = [
     # path('apk-api/login_/',apk_apis.ProfileApi().login,name="apk_login"),
     path('apk-api/login/',apk_apis.CustomAuthToken.as_view()),
     path('apk-api/edit_profile/<int:profile_id>/',apk_apis.EditProfile.as_view()),
+    path('apk-api/register/',apk_apis.RegisterProfile.as_view()),
 ]

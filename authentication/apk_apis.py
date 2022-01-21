@@ -19,11 +19,45 @@ from .models import Profile
 
 
 
+class RegisterProfile(APIView):
+
+    def post(self,request,*args, **kwargs):
+        raise Http404
+        result=FAILED
+        context={'result':FAILED}
+
+            # profile_id=edit_profile_form.cleaned_data['profile_id']
+        first_name=request.data['first_name']
+        last_name=request.data['last_name']
+        email=request.data['email']
+        bio=request.data['bio']
+        mobile=request.data['mobile']
+        address=request.data['address']
+        result1=ProfileRepo(request=request).add_profile(first_name=first_name,
+        last_name=last_name,
+        email=email,
+        bio=bio,
+        mobile=mobile,
+        address=address,
+        )
+        if result1:
+            result=SUCCEED
+            context['result']=SUCCEED
+            profile=Profile.objects.filter(user=request.user).first()
+            if profile is not None:
+                context={
+                    'result':result,
+                    'user_id': profile.user.pk,
+                    'email': profile.user.email,
+                    'profile':ProfileSerializer(Profile.objects.filter(user=request.user).first()).data,
+                }
+                ProfileRepo(request=request).logout()
+            return JsonResponse(context)
+
+
 
 
 class EditProfile(APIView):
-    permission_classes = [AllowAny]
-
     def post(self,request,*args, **kwargs):
         result=FAILED
         context={'result':FAILED}
