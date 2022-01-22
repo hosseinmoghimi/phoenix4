@@ -35,6 +35,8 @@ class BasicViews(View):
                 context['search_for'] = search_for
                 context['blogs'] = BlogRepo(
                     request=request).list(search_for=search_for) 
+                context['crypto_tokens'] = CryptoTokenRepo(
+                    request=request).list(search_for=search_for) 
                 context['log'] = log
                 context['header_image'] = PictureRepo(
                     request=request, app_name=APP_NAME).picture(name=PictureNameEnums.SEARCH_HEADER)
@@ -144,6 +146,23 @@ class BlogViews(View):
         context['blogs']=blogs
         return render(request,TEMPLATE_ROOT+"blogs.html",context)
 
+
+class CryptoTokenViews(View):
+    def crypto_token(self,request,*args, **kwargs):
+        context=getContext(request)
+        context['body_class']="blog-post"
+        context['main_class']='main-raised'
+        crypto_token=CryptoTokenRepo(request=request).crypto_token(*args, **kwargs)
+        context.update(PageContext(request=request,page=crypto_token))
+        context['crypto_token']=crypto_token
+        return render(request,TEMPLATE_ROOT+"crypto-token.html",context)
+
+    def crypto_tokens(self,request,*args, **kwargs):
+        context=getContext(request)
+        # parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        blogs=BlogRepo(request=request).list(*args, **kwargs)
+        context['blogs']=blogs
+        return render(request,TEMPLATE_ROOT+"blogs.html",context)
 
 
 class ResumeViews(View):

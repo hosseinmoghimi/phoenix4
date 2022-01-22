@@ -1,0 +1,27 @@
+<script>
+    let crypto_tokens=JSON.parse("{{crypto_tokens_s|escapejs}}")
+    let crypto_tokens_app_data={
+        crypto_tokens:crypto_tokens,
+        title:"",
+    }
+    let crypto_tokens_app=new Vue({
+        el:"#crypto0tokens-app",
+        data:crypto_tokens_app_data,
+        methods:{
+            add_crypto_token:function(){
+                let payload={
+                    csrfmiddlewaretoken:csrfmiddlewaretoken,
+                    title:this.title
+
+                }
+                let url="{% url 'crypto:add_crypto_token' %}"
+                $.post(url,payload).done((data)=>{
+                    if(data.result==='SUCCEED'){
+                        crypto_tokens_app.crypto_tokens.push(data.crypto_token)
+                        crypto_tokens_app.title=""
+                    }
+                })
+            }
+        }
+    })
+</script>

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'library',
     'tinymce',
     'school',
+    # 'crypto',
     'salary',
     'accounting',
     'postman',

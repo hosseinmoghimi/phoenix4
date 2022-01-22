@@ -83,6 +83,48 @@
             {% endfor %}
 
 
+            {% for page in crypto_tokens %}
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <a href="{{page.get_absolute_url}}">
+                        <img src="{{page.thumbnail}}" class="w-100 rounded" alt="">
+                    </a>
+                </div>
+                <div class="col-md-8 text-right">
+                        <span class="farsi text-muted small">
+                        رمزارز    
+                        </span>
+                    <a href="{{page.get_absolute_url}}">
+                        
+                        <h4>
+                          {{page.title}}
+
+                        </h4>
+
+                    </a>
+                    {% if page.short_description %}
+                    <div class="text-muted small mt-2">
+
+                        {{page.short_description|safe}}
+                    </div>
+                    {% endif %}
+                    <div>
+
+                        {% for tag in page.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+                            
+                            <span class="badge badge-success farsi">
+                                {{tag.title}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
 
 
         </div>

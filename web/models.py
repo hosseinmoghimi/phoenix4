@@ -29,6 +29,21 @@ class Blog(WebPage):
         return super(Blog,self).save(*args, **kwargs)
 
 
+
+class CryptoToken(WebPage):
+
+    
+
+    class Meta:
+        verbose_name = _("CryptoToken")
+        verbose_name_plural = _("CryptoTokens")
+
+
+    def save(self,*args, **kwargs):
+        self.class_name="cryptotoken"
+        return super(CryptoToken,self).save(*args, **kwargs)
+
+
 class Carousel(models.Model):
     app_name=models.CharField(_("app_name"), max_length=50)
     image_banner = models.ImageField(_("تصویر اسلایدر  1333*2000 "), upload_to=IMAGE_FOLDER +
