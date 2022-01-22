@@ -16,6 +16,7 @@ urlpatterns = [
     path("ourworks/",views.BasicViews().home,name="ourworks"),
     path("about/",views.BasicViews().home,name="about"),
     path("contact/",views.BasicViews().contact,name="contact"),
+    path("search/",views.BasicViews().search,name="search"),
 
 
     path("add_blog/",apis.BasicApi().add_blog,name="add_blog"),

@@ -1,3 +1,5 @@
+
+from .apps import APP_NAME  
 from django import forms
 from core import forms as CoreForms
 
@@ -67,8 +69,8 @@ class AddToMyFavoritesForm(forms.Form):
 
 class RemoveFromMyFavoritesForm(forms.Form):
     product_id=forms.IntegerField(required=False)
-
-class SearchForm(forms.Form):
+class SearchForm(forms.Form): 
+    url=("/"+APP_NAME+"/search/")
     search_for=forms.CharField(max_length=50,required=True)
 
 class RemoveShopForm(forms.Form):

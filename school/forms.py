@@ -1,6 +1,10 @@
 from django import forms
 
+from .apps import APP_NAME
+
 class SearchForm(forms.Form):
+    
+    url=("/"+APP_NAME+"/search/")
     search_for=forms.CharField( max_length=50, required=True)
 class AddSchoolForm(forms.Form):
     title=forms.CharField( max_length=50, required=True)

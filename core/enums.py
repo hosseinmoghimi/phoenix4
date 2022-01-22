@@ -6,6 +6,7 @@ from enum import Enum
 class PictureNameEnums(TextChoices):
     LOGO="لوگو",_("لوگو")
     FAVICON="آیکون",_("آیکون")
+    SEARCH_HEADER="سربرگ جستجو",_("سربرگ جستجو")
 
 class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")

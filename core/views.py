@@ -42,8 +42,9 @@ def CoreContext(request, *args, **kwargs):
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
     picture_repo=PictureRepo(request=request,app_name=app_name)
+    nav_repo=NavLinkRepo(request=request,app_name=app_name)
     parameter_repo = ParameterRepo(request=request,app_name=app_name)
-    
+    context['nav_bar_links']=nav_repo.list(app_name=app_name)
     context['app']={
         'title':parameter_repo.parameter(name=ParametersEnum.TITLE).value,
         # 'home_url':parameter_repo.parameter(name=ParametersEnum.HOME_URL).value,

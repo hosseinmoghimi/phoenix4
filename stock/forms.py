@@ -1,8 +1,10 @@
 from django import forms
-
+from .apps import APP_NAME
 class ImportDataForm(forms.Form):
     data=forms.CharField(max_length=1000000,required=True)
 class SearchForm(forms.Form):
+    
+    url=("/"+APP_NAME+"/search/")
     app_name=forms.CharField(max_length=50, required=True)
     search_for=forms.CharField(max_length=200,required=True)
 

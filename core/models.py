@@ -785,6 +785,7 @@ class SocialLink(Link):
 
 
 class NavLink(Link):
+    parent=models.ForeignKey("navlink", verbose_name=_("navlink"),null=True,blank=True, on_delete=models.CASCADE)
     app_name=models.CharField(_("app_name"),choices=AppNameEnum.choices, max_length=50)
 
 

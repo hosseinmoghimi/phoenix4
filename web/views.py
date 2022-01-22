@@ -7,6 +7,7 @@ from .repo import *
 from django.views import View
 from core.views import CoreContext, PageContext
 from .enums import ParameterEnum
+from .forms import *
 
 
 LAYOUT_PARENT='material-kit-pro/layout.html'
@@ -15,10 +16,34 @@ TEMPLATE_ROOT="web/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
-     
+    context['search_form'] = SearchForm()
+    context['navbar'] = APP_NAME+"/includes/nav-bar.html"
     return context
 
 class BasicViews(View):
+    
+    
+    def search(self, request, *args, **kwargs):
+        context = getContext(request)
+        log = 1
+        if request.method == 'POST':
+            log += 1
+            search_form = SearchForm(request.POST)
+            if search_form.is_valid():
+                log += 1
+                search_for = search_form.cleaned_data['search_for']
+                context['search_for'] = search_for
+                context['blogs'] = BlogRepo(
+                    request=request).list(search_for=search_for) 
+                context['log'] = log
+                context['header_image'] = PictureRepo(
+                    request=request, app_name=APP_NAME).picture(name=PictureNameEnums.SEARCH_HEADER)
+
+                return render(request, TEMPLATE_ROOT+"search.html", context)
+        return BasicViews().home(request=request)
+
+
+
     def contact(self,request,*args, **kwargs):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"contact.html",context)

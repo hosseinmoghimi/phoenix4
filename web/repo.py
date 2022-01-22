@@ -1,4 +1,6 @@
+from ast import keyword
 from khayyam import constants
+from django.db.models import Q
 from authentication.repo import ProfileRepo
 from .models import *
 
@@ -65,6 +67,9 @@ class BlogRepo:
         objects= self.objects.all()
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(title__contains=search_for) | Q(meta_data__contains=search_for)|Q(description__contains=search_for))
         return objects
     def blog(self,*args, **kwargs):
         pk=0

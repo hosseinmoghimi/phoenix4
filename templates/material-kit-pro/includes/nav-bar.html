@@ -203,7 +203,7 @@
 
                 {% if search_form %}
                 <li class="button-container nav-item iframe-extern">
-                    <form action="{% url 'market:search' %}" method="POST">
+                    <form action="{{search_form.url}}" method="POST">
                         {% csrf_token %}
                         <input type="text" style="padding: 20px 30px;background-color: #eeeeee66;border-radius:100px"
                             required class="mx-2 form-control farsi search-for" placeholder="جستجو ..." name="search_for">
