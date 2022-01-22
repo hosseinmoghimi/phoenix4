@@ -7,20 +7,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto text-center">
-                <h2 class="title text-center">{{page.title}}</h2>
+                <!-- <h2 class="title text-center">{{page.title}}</h2> -->
                 {% if page.panel %}
                 {{page.panel|safe}}
                 {% endif %}
                 <br>
-                {% if perms.web.change_webpage %}
-
-                <a href="{{page.get_edit_url}}" target="_blank" class="btn btn-rose btn-round btn-lg">
-                    <i class="material-icons">edit</i>
-                    <span class="farsi">
-                        ویرایش
-                    </span>
-                </a>
-                {% endif %}
+             
                
             </div>
         </div>
@@ -40,6 +32,16 @@
                 <div class="col-md-8 ml-auto mr-auto">
                     <h3 class="title text-center">{{page.title}}</h3>
                     <div class=" text-center mb-3">
+                        {% if perms.web.change_webpage %}
+
+                        <a href="{{page.get_edit_url}}" target="_blank" class="btn btn-rose btn-round btn-lg">
+                            <i class="material-icons">edit</i>
+                            <span class="farsi">
+                                ویرایش
+                            </span>
+                        </a>
+                        {% endif %}
+                        
                         <span class="my-2">
     
                             {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
