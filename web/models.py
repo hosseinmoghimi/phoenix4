@@ -1,6 +1,6 @@
 from core.enums import ColorEnum
 from tinymce.models import HTMLField
-from core.settings import ADMIN_URL, MEDIA_URL
+from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
@@ -31,14 +31,24 @@ class Blog(WebPage):
 
 
 class CryptoToken(WebPage):
-
-    
-
+    rank=models.IntegerField(_("rank"),null=True,blank=True)
+    road_map=models.CharField(_("roadmap"),null=True,blank=True, max_length=5000)
+    symbol=models.CharField(_("symbol"),null=True,blank=True, max_length=25)
+    trading_view=models.CharField(_("trading_view"),null=True,blank=True, max_length=5000)
+    coin_market_cap=models.CharField(_("coin_market_cap"),null=True,blank=True, max_length=5000)
+    vendor_url=models.CharField(_("vendor_url"),null=True,blank=True, max_length=5000)
+    vendor_img_origin = models.ImageField(_("تصویر آیکون"),null=True,blank=True, upload_to=IMAGE_FOLDER +
+                                     'Token/icon/', height_field=None, width_field=None, max_length=None)
+    price=models.CharField(_("price"),null=True,blank=True, max_length=50)
     class Meta:
         verbose_name = _("CryptoToken")
         verbose_name_plural = _("CryptoTokens")
 
-
+    def vendor_img(self):
+        if self.vendor_img_origin:
+            return MEDIA_URL+str(self.vendor_img_origin)
+        else:
+            return STATIC_URL+"web/icon/token.png"
     def save(self,*args, **kwargs):
         self.class_name="cryptotoken"
         return super(CryptoToken,self).save(*args, **kwargs)

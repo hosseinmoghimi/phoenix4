@@ -12,8 +12,8 @@
                 {{page.panel|safe}}
                 {% endif %}
                 <br>
-             
-               
+
+
             </div>
         </div>
     </div>
@@ -41,31 +41,87 @@
                             </span>
                         </a>
                         {% endif %}
-                        
+
                         <span class="my-2">
-    
+
                             {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
-    
+
                         </span>
                         <span class="my-2">
-    
+
                             {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
-    
+
                         </span>
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="Coin Market Cap" href="{{crypto_token.coin_market_cap}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="/static/web/icons/coin_market_cap.png" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="Trading View" href="{{crypto_token.trading_view}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="/static/web/icons/trading_view.png" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="Road Map" href="{{crypto_token.road_map}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="/static/web/icons/road_map.png" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="{{title}}" href="{{crypto_token.vendor_url}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="{{crypto_token.vendor_img}}" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+                        <span id="price-app">
+                            <h1 class="text-center mt-2">
+
+                                <strong class="strong" v-text="current_price"></strong>
+                                <span class="small text-muted mx-3">$</span>
+                            </h1>
+                        </span>
+
+
                     </div>
 
 
-                    <div>
-                        {{crypto_token.market_cap}}
-                        <br>
-                        
-                        {{crypto_token.price}}
-                        <br>
-                        
-                        {{crypto_token.market_cap}}
-                        <br>
-                        
-                    </div>
+
                     {% if page.panel %}
                     {{page.panel|safe}}
                     {% endif %}
@@ -140,7 +196,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <a  class="farsi btn btn-default pull-right btn-round">سایر نوشته ها</a>
+                                <a class="farsi btn btn-default pull-right btn-round">سایر نوشته ها</a>
                             </div>
                         </div>
                     </div>
@@ -217,6 +273,46 @@
 
     let page_comment_component_template = `{% include "web/includes/page-comments-app/component.html" %}`
 </script>
+
+<script>
+    let url_crypto = `https://min-api.cryptocompare.com/data/price?fsym={{crypto_token.symbol}}&tsyms=ETH,USD,EUR`
+
+
+
+    function get_price() {
+
+        $.get(url_crypto, function (data) {
+            console.log(data.USD)
+            price_app.current_price=data.USD
+        })
+        setTimeout(() => {
+            get_price();
+        }, 10 * 1000);
+
+
+    }
+    let price_app = new Vue({
+        el: "#price-app",
+        data: {
+            current_price: 0,
+            previus_price: 0
+
+        },
+        methods: {
+            get_price: get_price,
+
+        }
+
+    })
+    $(document).ready(() => {
+        price_app.get_price()
+    })
+
+
+
+</script>
+
+
 {% include "core/includes/page-comments-app/script.html" %}
 {% if add_page_link_form %}
 {% include "core/includes/page-links-app/script.html" %}
