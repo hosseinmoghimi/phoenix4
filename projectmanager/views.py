@@ -1,5 +1,4 @@
 import json
-
 from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
 from authentication.views import ProfileContext
@@ -9,7 +8,7 @@ from core.repo import BasicPageRepo, ParameterRepo, PictureRepo, TagRepo
 from core.serializers import BasicPageSerializer
 from core.views import DefaultContext, MessageView, PageContext
 from django.http.response import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,reverse
 from django.views import View
 from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
