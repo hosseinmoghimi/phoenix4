@@ -38,6 +38,7 @@ def CoreContext(request, *args, **kwargs):
     context['DEBUG'] = DEBUG
     context['ADMIN_URL'] = ADMIN_URL
     context['MEDIA_URL'] = MEDIA_URL
+    context['STATIC_URL'] = STATIC_URL
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
@@ -51,6 +52,9 @@ def CoreContext(request, *args, **kwargs):
         'home_url': reverse(app_name+":home"),
         'logo':picture_repo.picture(name=PictureNameEnums.LOGO),
     }
+    farsi_font_name=parameter_repo.parameter(name=ParametersEnum.FARSI_FONT_NAME).value
+    if not farsi_font_name==ParametersEnum.FARSI_FONT_NAME and not farsi_font_name=="Default":
+        context['farsi_font_name']=farsi_font_name
     master_keywords=parameter_repo.parameter(name=ParametersEnum.MASTER_KEYWORDS).value
     context['master_keywords']=master_keywords
 
