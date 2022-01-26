@@ -227,7 +227,15 @@ class ProjectViews(View):
 
     def project_materials_order(self, request, *args, **kwargs):
         context = getContext(request)
-        TAX_PERCENT = 0
+        
+        TAX_PERCENT=kwargs['tax_percent']
+        context['TAX_PERCENT']=TAX_PERCENT
+        unit=kwargs['unit'] if 'unit' in kwargs else 't'
+        if unit=='t':
+            unit='-tuman'
+        else:
+            unit='-rial'
+            context['CURRENCY']="ریال"
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
@@ -248,7 +256,7 @@ class ProjectViews(View):
         ship_fee = 0
 
         descriptions = [
-            f"واحد مبلغ ها {CURRENCY} می باشد.",
+            f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
             f"""مربوط به {project.full_title}     ({project.id})""",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
         ]
@@ -273,11 +281,18 @@ class ProjectViews(View):
         context['order_lines'] = order_lines
         context['order'] = order
         context['project'] = project
-        return render(request, TEMPLATE_ROOT+"invoice.html", context)
+        return render(request, TEMPLATE_ROOT+"invoice"+unit+".html", context)
 
     def project_services_order(self, request, *args, **kwargs):
         context = getContext(request)
-        TAX_PERCENT = 0
+        unit=kwargs['unit'] if 'unit' in kwargs else 't'
+        if unit=='t':
+            unit='-tuman'
+        else:
+            unit='-rial'
+            context['CURRENCY']="ریال"
+        TAX_PERCENT=kwargs['tax_percent']
+        context['TAX_PERCENT']=TAX_PERCENT
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
@@ -297,7 +312,7 @@ class ProjectViews(View):
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
         descriptions = [
-            f"واحد مبلغ ها {CURRENCY} می باشد.",
+            f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
             f"""مربوط به {project.full_title}     ( کد {project.id} )""",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
             f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
@@ -323,7 +338,7 @@ class ProjectViews(View):
         context['order'] = order
         context['order_lines'] = order_lines
         context['project'] = project
-        return render(request, TEMPLATE_ROOT+"invoice.html", context)
+        return render(request, TEMPLATE_ROOT+"invoice"+unit+".html", context)
 
     def project(self, request, *args, **kwargs):
         project = ProjectRepo(request=request).project(*args, **kwargs)

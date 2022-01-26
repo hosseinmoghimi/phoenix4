@@ -59,6 +59,9 @@
                         <th>
                             وضعیت
                         </th>
+                        <th>
+                            
+                        </th>
                     </thead>
                     <tbody>
 
@@ -115,6 +118,8 @@
                             </td>
                             <td>
                                 <span v-html="material_request.get_status_tag"></span>
+                            </td>
+                            <td>
 
 
                                 {% if perms.projectmanager.change_materialrequest %}
@@ -122,6 +127,14 @@
                                     <i class="material-icons">edit</i>
                                 </a>
                                 {% endif %}
+                                {% if perms.projectmanager.delete_materialrequest %}
+                                <a title="حذف" target="_blank" :href="material_request.get_delete_url">
+                                    <i class="fa fa-trash text-danger">
+
+                                    </i>
+                                </a>
+                                {% endif %}
+
                             </td>
                         </tr>
                     </tbody>
@@ -181,7 +194,7 @@
                 </p>
                 {% endif %}
                 <p>
-                   جمع :  <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')"></span>
+                    جمع : <span v-text="to_price(sum_material_requests,'{{CURRENCY}}')"></span>
                 </p>
             </div>
         </div>
