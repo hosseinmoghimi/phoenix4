@@ -31,262 +31,270 @@
 
             <div class="col-lg-8">
 
-                        <table class="table">
-                            <tr>
-                                <td colspan="5" style="border:none;text-align: center;">
-                                 <div class="mb-5">
+                <table class="table">
+                    <tr class="bordered">
+                        <td colspan="5" style="text-align: center;">
+                            <div class="mb-5">
 
-                                     <div class="text-center mb-2">
-                                         <img src="{{order.supplier.logo}}" width="96" alt="">
-                                    </div>
-                                    <h3 class="text-center">
-                                        {{order.supplier.title}}
-                                    </h3>
-                                    {% if order.supplier.pre_title %}
-                                    
-                                    
-                                    <h5 class="text-center">
-                                        {{order.supplier.pre_title}}
-                                    </h5>
-                                    {% endif %}
-                                    
+                                <div class="text-center mb-2">
+                                    <img src="{{order.supplier.logo}}" width="96" alt="">
                                 </div>
-
-                                    <div class="row">
-                                        <div class="col text-right">
-                                            خریدار : {{order.customer.title}}
-
-                                        </div>
-                                        <div class="col text-left">
-                                            <span class="mx-5">
-                                                تاریخ : {{order.print_date|to_persian_date|safe}} </span>
-                                        </div>
-                                    </div>
-                                    <div class="container">
+                                <h3 class="text-center">
+                                    {{order.supplier.title}}
+                                </h3>
+                                {% if order.supplier.pre_title %}
 
 
-                                    </div>
+                                <h5 class="text-center">
+                                    {{order.supplier.pre_title}}
+                                </h5>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col text-right">
+                                    خریدار : {{order.customer.title}}
+
+                                </div>
+                                <div class="col text-left">
+                                    <span class="mx-5">
+                                        تاریخ : {{order.print_date|to_persian_date|safe}} </span>
+                                </div>
+                            </div>
+                            <div class="container">
 
 
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="table-header">
-
-                                    <small>
-                                        ردیف
-                                    </small>
-                                </td>
-                                <td class="table-header">
-
-                                    کالا
-                                </td>
-                                <td class="table-header">
-                                    تعداد
-                                </td>
-                                <td class="table-header">
-                                    قیمت
-                                    <small>
-
-                                        ( {{CURRENCY}} )
-                                    </small>
-                                </td>
-                                <td class="table-header">
-                                    جمع
-                                    <small>
-
-                                        ( {{CURRENCY}} )
-                                    </small>
-                                </td>
-                            </tr>
-
-                            {% for order_line in order_lines %}
-                            <tr class="bordered">
-                                <td>
-
-                                    {{forloop.counter}}
-                                </td>
-                                <td>
-
-                                    {{order_line.product.title}}
-
-                                </td>
-                                <td>
-                                    {{order_line.quantity}}
-                                    <small class="text-secondary">
-
-                                        {{order_line.unit_name}}
-                                    </small>
-
-                                </td>
-                                <td>
-                                    {{order_line.unit_price|to_price_x10}}
-
-                                </td>
-                                <td>
-                                    {{order_line.line_total|to_price_x10}}
-
-                                </td>
-                            </tr>
-                            {% endfor %}
-
-                            <tr>
-                                <td colspan="4">
-                                    <div class="text-left text-secondary">
-                                        جمع
-                                        <!-- {{order.lines_total|to_horuf}} {{CURRENCY}} -->
-                                    </div>
-                                </td>
-                                <td class="lines_total">
-                                    {{order.lines_total|to_price_x10}}
-
-                                </td>
-                            </tr>
+                            </div>
 
 
-                            {% if not order.ship_fee == 0 %}
+                        </td>
+                    </tr>
 
-                            <tr>
-                                <td colspan="4">
-                                    <div class="text-left">
-                                        <span class="text-secondary">
-                                            هزینه ارسال
-                                        </span>
-                                        <!-- {{order.ship_fee|to_horuf}} {{CURRENCY}} -->
-                                    </div>
-                                </td>
-                                <td class="lines_total">
+                    <tr class="bordered">
+                        <td class="table-header">
 
-                                    {{order.ship_fee|to_price_x10}}
+                            <small>
+                                ردیف
+                            </small>
+                        </td>
+                        <td class="table-header">
 
-                                </td>
-                            </tr>
-                            {% endif %}
-                            {% if order.tax %}
-                            <tr>
-                                <td colspan="4">
-                                    <div class="text-left">
-                                        <span class="text-secondary">
-                                            {{TAX_PERCENT}}
-                                            درصد
-                                            مالیات
-                                            بر ارزش افزوده
-                                        </span>
+                            کالا
+                        </td>
+                        <td class="table-header">
+                            تعداد
+                        </td>
+                        <td class="table-header">
+                            قیمت
+                            <small>
 
-                                        <!-- {{order.tax|to_horuf}} {{CURRENCY}} -->
-                                    </div>
-                                </td>
-                                <td class="lines_total">
-                                    {{order.tax|to_price_x10}}
+                                ( {{CURRENCY}} )
+                            </small>
+                        </td>
+                        <td class="table-header">
+                            جمع
+                            <small>
 
-                                </td>
-                            </tr>
-                            {% endif %}
+                                ( {{CURRENCY}} )
+                            </small>
+                        </td>
+                    </tr>
+
+                    {% for order_line in order_lines %}
+                    <tr class="bordered">
+                        <td>
+
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+
+                            {{order_line.product.title}}
+
+                        </td>
+                        <td>
+                            {{order_line.quantity}}
+                            <small class="text-secondary">
+
+                                {{order_line.unit_name}}
+                            </small>
+
+                        </td>
+                        <td>
+                            {{order_line.unit_price|to_price_x10}}
+
+                        </td>
+                        <td>
+                            {{order_line.line_total|to_price_x10}}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    <tr class="bordered">
+                        <td colspan="4">
+                            <div class="text-left text-secondary">
+                                جمع
+                                <!-- {{order.lines_total|to_horuf}} {{CURRENCY}} -->
+                            </div>
+                        </td>
+                        <td class="lines_total">
+                            {{order.lines_total|to_price_x10}}
+
+                        </td>
+                    </tr>
 
 
-                            <tr style="background-color: #ddd;">
-                                <td colspan="4">
-                                    <div class="text-left">
-                                        $
-                                        <small>
-                                            قابل پرداخت :
+                    {% if not order.ship_fee == 0 %}
 
-                                            {{order.total_for_pay|to_horuf_x10}} {{CURRENCY}}
-                                            <br>
-                                            {{order.total_for_pay|to_horuf}}
-                                            تومان
+                    <tr class="bordered">
+                        <td colspan="4">
+                            <div class="text-left">
+                                <span class="text-secondary">
+                                    هزینه ارسال
+                                </span>
+                                <!-- {{order.ship_fee|to_horuf}} {{CURRENCY}} -->
+                            </div>
+                        </td>
+                        <td class="lines_total">
 
-                                        </small>
-                                    </div>
-                                </td>
-                                <td class="lines_total">
-                                    {{order.total_for_pay|to_price_x10}} ریال
+                            {{order.ship_fee|to_price_x10}}
+
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if order.tax %}
+                    <tr class="bordered">
+                        <td colspan="4">
+                            <div class="text-left">
+                                <span class="text-secondary">
+                                    {{TAX_PERCENT}}
+                                    درصد
+                                    مالیات
+                                    بر ارزش افزوده
+                                </span>
+
+                                <!-- {{order.tax|to_horuf}} {{CURRENCY}} -->
+                            </div>
+                        </td>
+                        <td class="lines_total">
+                            {{order.tax|to_price_x10}}
+
+                        </td>
+                    </tr>
+                    {% endif %}
+
+
+                    <tr style="background-color: #ddd;" class="bordered">
+                        <td colspan="4">
+                            <div class="text-left">
+                                $
+                                <small>
+                                    قابل پرداخت :
+
+                                    {{order.total_for_pay|to_horuf_x10}} {{CURRENCY}}
                                     <br>
-                                    {{order.total_for_pay|to_price_pure}} تومان
-                                  
+                                    {{order.total_for_pay|to_horuf}}
+                                    تومان
 
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="5">
-                                    <div class="row">
-                                        <div class="col-10">
-
-                                            <h5>
-                                                توضیحات :
-
-                                            </h5>
-
-                                            {% if order.descriptions %}
-                                            <ul>
-                                                {% for description in order.descriptions %}
-                                                <li>
-                                                    <small>
-
-                                                        {{description|safe}}
-                                                    </small>
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-2">
-                                            <img src="{{order.get_qrcode_url}}" width="100%" alt="">
-                                        </div>
-                                    </div>
-
-                                </td>
-                            </tr>
-                            <tr>
-
-                                <td colspan="5" class="text-center">
-
-                                    <div class="row">
-                                        <div class="col text-center">
-                                            <span>
-                                                <small>
-
-                                                    کارفرما / خریدار
-                                                </small>
-                                            </span>
-                                            <br>
-
-                                            {{order.customer.title}}
-
-                                            <br>
-                                            {{order.customer.profile.name}}
-                                        </div>
-                                        <div class="col text-center">
-                                            <span>
-                                                <small>
-
-                                                    پیمانکار / فروشنده
-                                                </small>
-                                            </span>
-                                            <br>
+                                </small>
+                            </div>
+                        </td>
+                        <td class="lines_total">
+                            {{order.total_for_pay|to_price_x10}} ریال
+                            <br>
+                            {{order.total_for_pay|to_price_pure}} تومان
 
 
-                                            {{order.supplier.title}}
+                        </td>
+                    </tr>
 
-                                            <br>
+                    <tr class="bordered">
+                        <td colspan="5">
+                            <div class="row">
+                                <div class="col-10">
 
-                                            {{order.supplier.profile.name}}
+                                    <h5>
+                                        توضیحات :
 
-                                        </div>
-                                    </div>
+                                    </h5>
+
+                                    {% if order.descriptions %}
+                                    <ul>
+                                        {% for description in order.descriptions %}
+                                        <li>
+                                            <small>
+
+                                                {{description|safe}}
+                                            </small>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="col-2">
+                                    <img src="{{order.get_qrcode_url}}" width="100%" alt="">
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr class="bordered">
+
+                        <td colspan="5" class="text-center">
+                            <div class="mb-2">
+                                &nbsp;
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <span>
+                                        <small>
+
+                                            کارفرما / خریدار
+                                        </small>
+                                    </span>
+                                    <br>
+
+                                    {{order.customer.title}}
+
+                                    <br>
+                                    {{order.customer.profile.name}}
+                                </div>
+                                <div class="col text-center">
+                                    <span>
+                                        <small>
+
+                                            پیمانکار / فروشنده
+                                        </small>
+                                    </span>
+                                    <br>
 
 
+                                    {{order.supplier.title}}
+
+                                    <br>
+
+                                    {{order.supplier.profile.name}}
+
+                                </div>
+                            </div>
 
 
-                            </tr>
-                            </tbody>
-                        </table>
-                    
+                            <div class="mb-5">
+                                &nbsp;
+                            </div>
+
+                            <div class="mb-5">
+                                &nbsp;
+                            </div>
+
+                    </tr>
+                    </tbody>
+                </table>
+
             </div>
 
-     
+
         </div>
     </div>
 
