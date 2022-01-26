@@ -257,8 +257,9 @@ class ProjectViews(View):
 
         descriptions = [
             f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
-            f"""مربوط به {project.full_title}     ({project.id})""",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
+            f"""مربوط به {project.full_title}     ({project.id})""",
+            f"""امضای این برگه توسط کارفرما به معنای تحویل کامل کالاهای لیست فوق می باشد.""",
         ]
         if project.contractor is not None and project.contractor.owner is not None:
             from accounting.repo import BankAccountRepo
