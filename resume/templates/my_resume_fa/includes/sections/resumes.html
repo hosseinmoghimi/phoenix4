@@ -8,8 +8,10 @@
             <h2>رزومه ها</h2>
 
             <div>
-
-                {{resume_index.resume_top|safe}}
+{% if resume_index.resume_top %}
+  
+{{resume_index.resume_top|safe}}
+{% endif %}
             </div>
         </div>
         <div class="text-center">
