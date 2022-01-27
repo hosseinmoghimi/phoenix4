@@ -82,9 +82,9 @@ class ResumeIndex(models.Model):
 
     facts_top=models.TextField(_("facts_top"),null=True,blank=True)
     skills_top=models.TextField(_("skills_top"),null=True,blank=True)
-    resume_top=models.TextField(_("resume_top"),null=True,blank=True)
-    portfolio_top=models.TextField(_("portfolio_top"),null=True,blank=True)
-    services_top=models.TextField(_("services_top"),null=True,blank=True)
+    resume_top=HTMLField(_("resume_top"),null=True,blank=True)
+    portfolio_top=HTMLField(_("portfolio_top"),null=True,blank=True)
+    services_top=HTMLField(_("services_top"),null=True,blank=True)
 
     location=models.CharField(_("location"),null=True,blank=True, max_length=200)
     call=models.CharField(_("call"),null=True,blank=True, max_length=50)

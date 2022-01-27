@@ -37,10 +37,10 @@
                         {% endif %}
 
                         <a target="_blank" class="btn btn-fab btn-success btn-round" rel="tooltip" title="رزومه"
-                        href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
-                        <i class="fa fa-edit"></i>
+                            href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
+                            <i class="fa fa-edit"></i>
 
-                    </a>
+                        </a>
 
                     </div>
                 </div>
@@ -51,23 +51,23 @@
                 {{our_team.description|safe}}
                 {% endif %}
             </div>
-          
+
             <div class="text-center mb-5 rtl">
-                <a target="_blank" class="btn btn-success btn-round"  
-                href="{% url 'resume:resume_index_language' profile_id=our_team.profile.id language_index=2 %}">
-                <i class="fa fa-edit"></i>
-                <span class="farsi">
-                    رزومه فارسی    
+                <a target="_blank" class="btn btn-success btn-round"
+                    href="{% url 'resume:resume_index_language' profile_id=our_team.profile.id language_index=2 %}">
+                    <i class="fa fa-edit"></i>
+                    <span class="farsi">
+                        رزومه فارسی
 
-                </span>
-            </a>
+                    </span>
+                </a>
 
 
-            <a target="_blank" class="btn btn-rose btn-round" 
-            href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
-            <i class="fa fa-edit"></i>
-        Resume
-        </a>
+                <a target="_blank" class="btn btn-rose btn-round"
+                    href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
+                    <i class="fa fa-edit"></i>
+                    Resume
+                </a>
 
             </div>
         </div>
