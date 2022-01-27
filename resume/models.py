@@ -80,8 +80,8 @@ class ResumeIndex(models.Model):
 
 
 
-    facts_top=models.TextField(_("facts_top"),null=True,blank=True)
-    skills_top=models.TextField(_("skills_top"),null=True,blank=True)
+    facts_top=HTMLField(_("facts_top"),null=True,blank=True)
+    skills_top=HTMLField(_("skills_top"),null=True,blank=True)
     resume_top=HTMLField(_("resume_top"),null=True,blank=True)
     portfolio_top=HTMLField(_("portfolio_top"),null=True,blank=True)
     services_top=HTMLField(_("services_top"),null=True,blank=True)
