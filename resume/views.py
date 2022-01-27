@@ -67,8 +67,10 @@ class BasicViews(View):
         context['facts_s']=json.dumps(ResumeFactSerializer(facts,many=True).data)
 
 
-        portfolio_categories = PortfolioRepo(request=request).category_list()
-        context['portfolio_categories'] = portfolio_categories
+        # portfolio_categories = PortfolioRepo(request=request).category_list()
+        # context['portfolio_categories'] = portfolio_categories
+        portfolio_filters = PortfolioRepo(request=request).filter_list()
+        context['portfolio_filters'] = portfolio_filters
         profile = ProfileRepo(request=request).me
         if profile is not None and (profile.id == profile_id or request.user.has_perm(APP_NAME+"change_resumeindex")):
             # user can change resume

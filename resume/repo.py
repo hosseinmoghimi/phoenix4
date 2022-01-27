@@ -58,6 +58,17 @@ class PortfolioRepo:
                     category_list.append(category)
 
         return category_list
+    def filter_list(self,*args, **kwargs):
+        filter_list=[]
+        try:
+            filter_list=(i[0] for i in self.objects.values('filter').distinct('filter'))
+        except:
+            for ii in self.objects.all():
+                filter=ii.filter
+                if not filter in filter_list:
+                    filter_list.append(filter)
+
+        return filter_list
     def portfolio(self,*args, **kwargs):
         pk=0
         if 'portfolio_id' in kwargs:
