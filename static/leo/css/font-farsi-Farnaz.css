@@ -5,5 +5,5 @@
     font-weight: regular;
 } 
 .farsi{
-    font-family: "HMFONT" ;
+    font-family: "HMFONT" !important ;
 }

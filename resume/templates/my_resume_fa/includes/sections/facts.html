@@ -5,7 +5,7 @@
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
-                <h2>Facts</h2>
+                <h2>افتخارات و دستاورد ها</h2>
                 <div>
 
                     {{resume_index.facts_top|safe}}
@@ -14,17 +14,24 @@
 
             <div class="row justify-content-md-center">
                 {% if perms.resume.add_resumefact %}
-                {{admin_utility.get_add_fact_btn|safe}}
+
+                <div class="text-center">
+                    <a target="_blank" href="{{admin_utility.get_add_fact_link}}?resume_index={{resume_index.id}}">
+                        <i class="material-icons">add</i>
+                    </a>
+                </div>  
+    
+    
                 {% endif %}
                 {% for fact in resume_index.resumefact_set.all %}
                   
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6 farsi text-{{fact.color}}">
                     <div class="count-box">
                         {{fact.icon|safe}}
                         
                         <span data-purecounter-start="0" data-purecounter-end="{{fact.count}}" data-purecounter-duration="1"
                             class="purecounter"></span>
-                        <p>{{fact.title}}</p>
+                        <p class="farsi">{{fact.title}}</p>
                     </div>
                     {% if perms.resume.change_resumefact %}
                     <div class="text-center">

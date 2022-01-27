@@ -33,6 +33,12 @@
     }
   </style>
 
+
+{% if farsi_font_name %}
+<link href="{{STATIC_URL}}leo/css/font-farsi-{{farsi_font_name}}.css" rel="stylesheet">
+{% else %}
+<link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
+{% endif %}
 </head>
 
 <body>
@@ -46,6 +52,10 @@
     <nav id="navbar" class="navbar nav-menu">
       <ul>
         <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Home</span></a></li>
+        {% if resume_index %}
+          
+        <li><a href="{% url 'resume:resume_index_language' language_index=2 profile_id=resume_index.profile.id%}" class="nav-link scrollto active"><i class="bx bx-home"></i> <span class="farsi">فارسی</span></a></li>
+        {% endif %}
         <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>About</span></a></li>
         <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
         <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Portfolio</span></a>
@@ -53,7 +63,7 @@
         <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Services</span></a></li>
         <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Contact</span></a></li>
         {% if perms.resume.change_resumeindex %}
-        <li><a href="https://bootstrapmade.com/demo/MyResume/" class="nav-link scrollto" target="_blank"><i
+        <li><a href="https://bootstrapmade.com/demo/MyRresume_index_languageesume/" class="nav-link scrollto" target="_blank"><i
               class="material-icons">settings</i> <span>Origin</span></a></li>
         <li><a href="{{resume_index.get_edit_url}}" class="nav-link scrollto" target="_blank"><i
               class="material-icons">edit</i> <span>Edit</span></a></li>

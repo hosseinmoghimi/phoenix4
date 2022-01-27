@@ -6,7 +6,7 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-            <h2>Skills</h2>
+            <h2>مهارت ها</h2>
 
 
             <div>
@@ -17,8 +17,15 @@
 
         
         <div class="row skills-content">
-            {% if perms.resume.add_resumeskill %}
-            {{admin_utility.get_add_skill_btn|safe}}
+            {% if perms.resume.add_resumeskill %} 
+
+            <div class="text-center">
+                <a target="_blank" href="{{admin_utility.get_add_skill_link}}?resume_index={{resume_index.id}}">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>  
+
+
             {% endif %}
             
             {% for skill in resume_index.resumeskill_set.all %}
@@ -26,7 +33,7 @@
             <div class="col-lg-6">
 
                 <div class="progress">
-                    <span class="skill">{{skill.title}}
+                    <span class="skill farsi">{{skill.title}}
                         {% if perms.resume.change_resumeskill %}
 
                         {{skill.get_edit_btn|safe}}

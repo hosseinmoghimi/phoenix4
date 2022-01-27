@@ -242,11 +242,12 @@ class CountDownItem(models.Model):
 
 
 class OurTeam(models.Model):
+    class_name="ourteam"
     app_name=models.CharField(_("app_name"),null=True,blank=True, max_length=50)
     profile = models.ForeignKey("authentication.Profile", verbose_name=_(
         "پروفایل"), on_delete=models.CASCADE)
     job = models.CharField(_("سمت"), max_length=100)
-    description = models.CharField(_("توضیحات"),null=True,blank=True, max_length=500)
+    description = HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
     priority = models.IntegerField(_("ترتیب"), default=1000)
     social_links = models.ManyToManyField(
         "core.SocialLink", verbose_name=_("social_links"), blank=True)
@@ -267,7 +268,8 @@ class OurTeam(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":ourteam",kwargs={'pk':self.pk})
 
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 class ContactMessage(models.Model):
     full_name = models.CharField(_("نام کامل"), max_length=50)
     mobile = models.CharField(_("شماره تماس"), max_length=50)

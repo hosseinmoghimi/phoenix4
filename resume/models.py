@@ -61,11 +61,11 @@ class ResumeIndex(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"),null=True,blank=True, max_length=100)
     typing_text=models.CharField(_("typing_text"), null=True,blank=True,default="Developer,Designer,Programmer",max_length=500)
-    about_top=models.TextField(_("about_top"),null=True,blank=True)
+    about_top=HTMLField(_("about_top"),null=True,blank=True)
     image_main_origin = models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Resume/Main/', height_field=None, width_field=None, max_length=None)
     job_title=models.CharField(_("job_title"),null=True,blank=True, max_length=300)
-    about_middle=models.TextField(_("about_middle"),null=True,blank=True)
+    about_middle=HTMLField(_("about_middle"),null=True,blank=True)
 
     birth_day=models.DateField(_("birth_day"),null=True,blank=True, auto_now=False, auto_now_add=False)
     website=models.CharField(_("website"),null=True,blank=True, max_length=500)
@@ -76,7 +76,7 @@ class ResumeIndex(models.Model):
     degree=models.CharField(_("degree"),null=True,blank=True, max_length=100)
     email=models.CharField(_("email"),null=True,blank=True, max_length=100)
     freelance=models.CharField(_("freelance"),null=True,blank=True, max_length=100)
-    about_bottom=models.TextField(_("about_bottom"),null=True,blank=True)
+    about_bottom=HTMLField(_("about_bottom"),null=True,blank=True)
 
 
 

@@ -109,7 +109,7 @@ class OurWorkViews(View):
 class OurTeamViews(View):
     def ourteam(self,request,*args, **kwargs):
         context=getContext(request)
-        context['body_class']="blog-post"
+        context['body_class']="profile-page sidebar-collapse"
         context['main_class']='main-raised'
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
         our_team=OurTeamRepo(request=request).our_team(*args, **kwargs)

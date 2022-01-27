@@ -1,1 +1,76 @@
-{% extends "authentication/profile.html" %}
+{% extends "web/layout.html" %}
+{% block content %}
+<div class="page-header header-filter" data-parallax="true"
+    style="background-image: url('../assets/img/city-profile.jpg');"></div>
+<div class="main main-raised">
+    <div class="profile-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 ml-auto mr-auto">
+                    <div class="profile">
+                        <div class="avatar">
+                            <img src="{{our_team.profile.image}}" alt="Circle Image"
+                                class="img-raised rounded-circle img-fluid">
+                        </div>
+                        <div class="name">
+                            <h3 class="title text-center">{{our_team.profile.name}}
+
+
+
+                            </h3>
+                            <h6 class="title text-center">{{our_team.job}}</h6>
+                            <a href="#pablo" class="btn btn-just-icon btn-link btn-dribbble"><i
+                                    class="fa fa-dribbble"></i></a>
+                            <a href="#pablo" class="btn btn-just-icon btn-link btn-twitter"><i
+                                    class="fa fa-twitter"></i></a>
+                            <a href="#pablo" class="btn btn-just-icon btn-link btn-pinterest"><i
+                                    class="fa fa-pinterest"></i></a>
+                        </div>
+                    </div>
+                    <div class="follow">
+                        {% if perms.change_profile %}
+                        <a target="_blank" class="btn btn-fab btn-warning btn-round" rel="tooltip" title=""
+                            href="{{our_team.get_edit_url}}">
+                            <i class="fa fa-edit"></i>
+
+                        </a>
+                        {% endif %}
+
+                        <a target="_blank" class="btn btn-fab btn-success btn-round" rel="tooltip" title="رزومه"
+                        href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
+                        <i class="fa fa-edit"></i>
+
+                    </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="description text-center farsi">
+
+                {% if our_team.description %}
+                {{our_team.description|safe}}
+                {% endif %}
+            </div>
+          
+            <div class="text-center mb-5 rtl">
+                <a target="_blank" class="btn btn-success btn-round"  
+                href="{% url 'resume:resume_index_language' profile_id=our_team.profile.id language_index=2 %}">
+                <i class="fa fa-edit"></i>
+                <span class="farsi">
+                    رزومه فارسی    
+
+                </span>
+            </a>
+
+
+            <a target="_blank" class="btn btn-rose btn-round" 
+            href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
+            <i class="fa fa-edit"></i>
+        Resume
+        </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
