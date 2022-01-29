@@ -1,4 +1,5 @@
 import json
+from core.models import PageComment
 
 from resume.serializers import ResumeFactSerializer, ResumeSkillSerializer
 from .apps import APP_NAME
@@ -12,7 +13,7 @@ from .utils import AdminUtility
 from django.http import Http404
 from authentication.repo import ProfileRepo
 from core.repo import ParameterRepo
-from core.views import CoreContext
+from core.views import CoreContext, PageContext
 from django.shortcuts import render
 from django.views import View
 
@@ -43,6 +44,8 @@ class PortfolioViews(View):
             TEMPLATE_ROOT="my_resume_fa/" 
         if str(portfolio.resume_index.language)==str(LanguageEnum.ENGLISH):
             TEMPLATE_ROOT="my_resume_en/" 
+        context['layout_parent']='material-kit-pro/layout.html'
+        context.update(PageContext(request=request,page=portfolio))
         return render(request, TEMPLATE_ROOT+"portfolio.html", context)
 
 class BasicViews(View):
