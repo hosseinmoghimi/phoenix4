@@ -11,9 +11,15 @@
                             <div class="carousel-item carousel-item2">
                                 <div class="card card-testimonial card-plain">
                                     <div class="card-avatar">
-                                        <img class="img" src="{{testimonial.image}}">
+                                        <a href="{{testimonial.profile.get_absolute_url}}">
+                                            <img class="img" src="{{testimonial.profile.image}}">
+                                        </a>
                                     </div>
                                     <div class="card-body">
+                                        <a href="{{testimonial.profile.get_absolute_url}}">
+
+                                            <h4 class="card-title text-center">{{testimonial.profile.name}}</h4>
+                                        </a>
                                         <h4 class="card-title text-center">{{testimonial.title}}</h4>
                                         <h5 class="card-description text-center">"{{testimonial.body}}"
                                         </h5>
@@ -25,6 +31,11 @@
                                             <i class="material-icons text-warning">star</i>
                                             <i class="material-icons text-warning">star</i>
                                         </div>
+                                        {% if perms.web.change_testimonial %}
+                                        <a target="_blank" href="{{testimonial.get_edit_url}}">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

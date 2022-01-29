@@ -113,8 +113,6 @@ class OurWork(WebPage):
 
 class Testimonial(models.Model):
     for_home = models.BooleanField(_("نمایش در صفحه خانه"), default=False)
-    image_origin = models.ImageField(_("تصویر"), upload_to=IMAGE_FOLDER+'Testimonial/',
-                                     null=True, blank=True, height_field=None, width_field=None, max_length=None)
     title = models.CharField(_("عنوان"), max_length=2000)
     body = models.CharField(_("متن"), max_length=2000, null=True, blank=True)
     footer = models.CharField(_("پانوشت"), max_length=200)
