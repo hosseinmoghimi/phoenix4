@@ -105,24 +105,24 @@
                         </div>
                     </div>
                     <hr>
-                    {% if page.creator %}
+                    {% if page.author %}
 
                     <div class="card card-profile card-plain">
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="card-avatar">
-                                    <a href="{{page.creator.get_absolute_url}}">
-                                        <img class="img" src="{{page.creator.image}}">
+                                    <a href="{{page.author.get_absolute_url}}">
+                                        <img class="img" src="{{page.author.profile.image}}">
                                     </a>
                                     <div class="ripple-container"></div>
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <a href="{{page.creator.get_absolute_url}}">
-                                    <h4 class="card-title">{{page.creator.name}}</h4>
+                                <a href="{{page.author.get_absolute_url}}">
+                                    <h4 class="card-title">{{page.author.profile.name}}</h4>
                                 </a>
                                 <p class="description">
-                                    {{page.creator.bio}}
+                                    {{page.author.profile.bio}}
 
                                 </p>
                             </div>

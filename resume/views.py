@@ -23,6 +23,7 @@ TEMPLATE_ROOT = "my_resume_en/"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     language = LanguageEnum.ENGLISH
+    print(context['app'])
     if 'language' in kwargs:
         language = kwargs['language']
     context['language'] = language

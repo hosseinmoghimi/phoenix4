@@ -10,6 +10,7 @@ from django.shortcuts import reverse
 
 
 class WebPage(BasicPage):
+    author=models.ForeignKey("ourteam", verbose_name=_("ourteam"),null=True,blank=True, on_delete=models.CASCADE)
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(WebPage,self).save(*args, **kwargs)
