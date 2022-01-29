@@ -5,6 +5,8 @@ from core.constants import SUCCEED
 from projectmanager.enums import ProjectStatusEnum, RequestStatusEnum, SignatureStatusEnum, UnitNameEnum, WareHouseSheetDirectionEnum
 from authentication.repo import ProfileRepo
 from django.db.models import Q,Sum
+
+from resume.models import ResumeService
 from .apps import APP_NAME
 from .models import Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
 from core.repo import BasicPageRepo, ParameterRepo
@@ -727,7 +729,7 @@ class ServiceRepo():
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Service.objects
+        self.objects = ResumeService.objects
         self.me=ProfileRepo(user=self.user).me
         self.employee=EmployeeRepo(request=self.request).me
 

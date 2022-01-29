@@ -1,5 +1,6 @@
 import json
 from core.models import PageComment
+from projectmanager.repo import ServiceRepo
 
 from resume.serializers import ResumeFactSerializer, ResumeSkillSerializer
 from .apps import APP_NAME
@@ -36,7 +37,7 @@ def getContext(request, *args, **kwargs):
     context['TEMPLATE_ROOT'] = TEMPLATE_ROOT
     return context
 class PortfolioViews(View):
-    def portolio(self,request,*args, **kwargs):
+    def portfolio(self,request,*args, **kwargs):
         portfolio=PortfolioRepo(request=request).portfolio(*args, **kwargs)
         context = getContext(request=request,language=portfolio.resume_index.language)
         context['portfolio']=portfolio
@@ -47,6 +48,18 @@ class PortfolioViews(View):
         context['layout_parent']='material-kit-pro/layout.html'
         context.update(PageContext(request=request,page=portfolio))
         return render(request, TEMPLATE_ROOT+"portfolio.html", context)
+class ServiceViews(View):
+    def service(self,request,*args, **kwargs):
+        service=ServiceRepo(request=request).service(*args, **kwargs)
+        context = getContext(request=request,language=service.resume_index.language)
+        context['service']=service
+        if str(service.resume_index.language)==str(LanguageEnum.FARSI):
+            TEMPLATE_ROOT="my_resume_fa/" 
+        if str(service.resume_index.language)==str(LanguageEnum.ENGLISH):
+            TEMPLATE_ROOT="my_resume_en/" 
+        context['layout_parent']='material-kit-pro/layout.html'
+        context.update(PageContext(request=request,page=service))
+        return render(request, TEMPLATE_ROOT+"service.html", context)
 
 class BasicViews(View):
 
@@ -93,21 +106,21 @@ class BasicViews(View):
         TEMPLATE_ROOT = context['TEMPLATE_ROOT']
         return render(request, TEMPLATE_ROOT+"/index.html", context)
 
-    def portfolio(self, request, *args, **kwargs):
-        context = getContext(request=request)
-        if 'pk' in kwargs:
-            portfolio = PortfolioRepo(
-                request=request).portfolio(*args, **kwargs)
-            context['portfolio'] = portfolio
-            return render(request, TEMPLATE_ROOT+"portfolio-details.html", context)
+    # def portfolio(self, request, *args, **kwargs):
+    #     context = getContext(request=request)
+    #     if 'pk' in kwargs:
+    #         portfolio = PortfolioRepo(
+    #             request=request).portfolio(*args, **kwargs)
+    #         context['portfolio'] = portfolio
+    #         return render(request, TEMPLATE_ROOT+"portfolio-details.html", context)
 
-    def resume_service(self, request, *args, **kwargs):
-        context = getContext(request=request)
-        if 'pk' in kwargs:
-            resume_service = ResumeServiceRepo(
-                request=request).resume_service(*args, **kwargs)
-            context['resume_service'] = resume_service
-            return render(request, TEMPLATE_ROOT+"resume-service.html", context)
+    # def resume_service(self, request, *args, **kwargs):
+    #     context = getContext(request=request)
+    #     if 'pk' in kwargs:
+    #         resume_service = ResumeServiceRepo(
+    #             request=request).resume_service(*args, **kwargs)
+    #         context['resume_service'] = resume_service
+    #         return render(request, TEMPLATE_ROOT+"resume-service.html", context)
 
     def resume(self, request, *args, **kwargs):
         context = getContext(request=request)
