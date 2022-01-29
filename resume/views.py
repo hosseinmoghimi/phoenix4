@@ -39,13 +39,10 @@ class PortfolioViews(View):
         portfolio=PortfolioRepo(request=request).portfolio(*args, **kwargs)
         context = getContext(request=request,language=portfolio.resume_index.language)
         context['portfolio']=portfolio
-        TEMPLATE_ROOT="my_resume_fa/" if str(portfolio.resume_index.language)==str(LanguageEnum.FARSI) else ""
-        TEMPLATE_ROOT="my_resume_en/" if str(portfolio.resume_index.language)==str(LanguageEnum.ENGLISH) else ""
-        print(portfolio.resume_index.language)
-        print(100*"*")
-        print(LanguageEnum.FARSI)
-        print(LanguageEnum.ENGLISH)
-        print(TEMPLATE_ROOT)
+        if str(portfolio.resume_index.language)==str(LanguageEnum.FARSI):
+            TEMPLATE_ROOT="my_resume_fa/" 
+        if str(portfolio.resume_index.language)==str(LanguageEnum.ENGLISH):
+            TEMPLATE_ROOT="my_resume_en/" 
         return render(request, TEMPLATE_ROOT+"portfolio.html", context)
 
 class BasicViews(View):

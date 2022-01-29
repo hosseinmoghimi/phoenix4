@@ -53,8 +53,10 @@
                         {% endif %}
 
                         <a target="_blank" class="btn btn-fab btn-success btn-round" rel="tooltip" title="رزومه"
-                            href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
-                            <i class="fa fa-edit"></i>
+                            href="{% url 'resume:resume_index_language' profile_id=our_team.profile.id language_index=2 %}">
+                        <i class="material-icons">
+                            ballot
+                        </i>
 
                         </a>
 
