@@ -14,26 +14,33 @@
                         </div>
                         <div class="name">
                             <h3 class="title text-center">
-<a title="پر.فایل" href="{{our_team.profile.get_absolute_url}}" target="_blank">
-                                
-                                {{our_team.profile.name}}
-</a>
-{% if perms.web.change_ourteam %}
-  
-<a title="ویرایش" href="{{our_team.get_edit_url}}" target="_blank">
-    <i class="fa fa-edit text-info"></i>
-</a>
-{% endif %}
+                                <a title="پروفایل" href="{{our_team.profile.get_absolute_url}}" target="_blank">
+
+                                    {{our_team.profile.name}}
+                                </a>
+                                {% if perms.web.change_ourteam %}
+
+                                <a title="ویرایش" href="{{our_team.get_edit_url}}" target="_blank">
+                                    <i class="fa fa-edit text-info"></i>
+                                </a>
+                                {% endif %}
 
 
                             </h3>
                             <h6 class="title text-center">{{our_team.job}}</h6>
-                            <a href="#pablo" class="btn btn-just-icon btn-link btn-dribbble"><i
-                                    class="fa fa-dribbble"></i></a>
-                            <a href="#pablo" class="btn btn-just-icon btn-link btn-twitter"><i
-                                    class="fa fa-twitter"></i></a>
-                            <a href="#pablo" class="btn btn-just-icon btn-link btn-pinterest"><i
-                                    class="fa fa-pinterest"></i></a>
+                            <div class="text-center">
+
+                                {% for profile_contact in our_team.profile.profilecontact_set.all %}
+                                {% if profile_contact.url %}
+
+                                <a target="_blank" title="{{profile_contact.name}}" href="{{profile_contact.url}}"
+                                    class="btn btn-just-icon btn-link btn-dribbble">
+                                    {{profile_contact.icon|safe}}
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+
                         </div>
                     </div>
                     <div class="follow">
@@ -54,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div class="description text-center farsi">
+            <div class="description farsi">
 
                 {% if our_team.description %}
                 {{our_team.description|safe}}
