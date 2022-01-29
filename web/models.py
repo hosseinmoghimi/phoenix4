@@ -125,7 +125,10 @@ class Testimonial(models.Model):
     class Meta:
         verbose_name = _("Testimonial")
         verbose_name_plural = _("گفته های مشتریان")
-
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+        return STATIC_URL+"web/testimonial/icon.png"
     def __str__(self):
         return self.title
 

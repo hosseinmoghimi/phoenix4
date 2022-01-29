@@ -158,7 +158,8 @@ class ResumePortfolio(ResumePage):
         return super(ResumePortfolio,self).save(*args, **kwargs)
 
 
-
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":portfolio",kwargs={'pk':self.pk})
 class ResumeSkill(models.Model):
     resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)

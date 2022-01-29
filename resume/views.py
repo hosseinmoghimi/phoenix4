@@ -23,7 +23,6 @@ TEMPLATE_ROOT = "my_resume_en/"
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
     language = LanguageEnum.ENGLISH
-    print(context['app'])
     if 'language' in kwargs:
         language = kwargs['language']
     context['language'] = language
@@ -35,6 +34,19 @@ def getContext(request, *args, **kwargs):
     context['title'] = 'Resume'
     context['TEMPLATE_ROOT'] = TEMPLATE_ROOT
     return context
+class PortfolioViews(View):
+    def portolio(self,request,*args, **kwargs):
+        portfolio=PortfolioRepo(request=request).portfolio(*args, **kwargs)
+        context = getContext(request=request,language=portfolio.resume_index.language)
+        context['portfolio']=portfolio
+        TEMPLATE_ROOT="my_resume_fa/" if str(portfolio.resume_index.language)==str(LanguageEnum.FARSI) else ""
+        TEMPLATE_ROOT="my_resume_en/" if str(portfolio.resume_index.language)==str(LanguageEnum.ENGLISH) else ""
+        print(portfolio.resume_index.language)
+        print(100*"*")
+        print(LanguageEnum.FARSI)
+        print(LanguageEnum.ENGLISH)
+        print(TEMPLATE_ROOT)
+        return render(request, TEMPLATE_ROOT+"portfolio.html", context)
 
 class BasicViews(View):
 

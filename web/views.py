@@ -69,6 +69,11 @@ class BasicViews(View):
 
         features=FeatureRepo(request=request).list(for_home=True,*args, **kwargs)
         context['features']=features
+        
+        testimonials=TestimonialRepo(request=request).list(*args, **kwargs)
+        context['testimonials']=testimonials
+        print(testimonials)
+
 
 
         our_works=OurWorkRepo(request=request).list(for_home=True,*args, **kwargs)

@@ -166,6 +166,34 @@ class OurTeamRepo:
    
    
 
+
+class TestimonialRepo:
+    def __init__(self,*args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Testimonial.objects.order_by('priority')
+        self.me=ProfileRepo(user=self.user).me
+    def list(self,*args, **kwargs):
+        objects= self.objects.all()
+        if 'for_home' in kwargs:
+            objects=objects.filter(for_home=kwargs['for_home'])
+        return objects
+    def testimonial(self,*args, **kwargs):
+        pk=0
+        if 'testimonial_id' in kwargs:
+            pk=kwargs['testimonial_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+   
+   
 class FeatureRepo:
     def __init__(self,*args, **kwargs):
         self.request = None
