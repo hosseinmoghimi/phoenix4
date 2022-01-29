@@ -1,4 +1,5 @@
 from decimal import getcontext
+import profile
 from django.db.models.query import EmptyQuerySet
 from core.constants import FAILED, SUCCEED
 from django.http.response import Http404
@@ -83,6 +84,8 @@ class ProfileViews(View):
         context['selected_profile']=selected_profile
         if request.user.has_perm(APP_NAME+".change_profile"):
             context['send_mail_form']=SendEmailForm()
+        profile_contacts=ProfileContactRepo(request=request).list(profile_id=selected_profile.id)
+        context['profile_contacts']=profile_contacts
         return render(request,TEMPLATE_ROOT+"profile.html",context)
     def profile2(self,request,*args, **kwargs):
         context=getContext(request)

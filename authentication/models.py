@@ -156,8 +156,10 @@ class ProfileContact(models.Model):
     profile=models.ForeignKey("profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     name=models.CharField(_("name"), max_length=50)
     value=models.CharField(_("value"), max_length=50)
-    icon=models.CharField(_("icon"), null=True,blank=True, max_length=50)
+    url=models.CharField(_("url"),null=True,blank=True, max_length=5000)
+    icon=models.CharField(_("icon"), null=True,blank=True, max_length=5000)
     bs_class=models.CharField(_("bootstrap class"), null=True,blank=True, max_length=50)
+    class_name="profilecontact"
     class Meta:
         verbose_name = _("ProfileContact")
         verbose_name_plural = _("ProfileContacts")
@@ -166,7 +168,8 @@ class ProfileContact(models.Model):
         return f"{str(self.profile)} : {self.name} : {self.value}"
 
 
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 class MembershipRequest(models.Model):
     mobile=models.CharField(_("mobile"), max_length=50)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)

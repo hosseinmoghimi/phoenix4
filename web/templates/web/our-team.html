@@ -13,8 +13,17 @@
                                 class="img-raised rounded-circle img-fluid">
                         </div>
                         <div class="name">
-                            <h3 class="title text-center">{{our_team.profile.name}}
-
+                            <h3 class="title text-center">
+<a title="پر.فایل" href="{{our_team.profile.get_absolute_url}}" target="_blank">
+                                
+                                {{our_team.profile.name}}
+</a>
+{% if perms.web.change_ourteam %}
+  
+<a title="ویرایش" href="{{our_team.get_edit_url}}" target="_blank">
+    <i class="fa fa-edit text-info"></i>
+</a>
+{% endif %}
 
 
                             </h3>

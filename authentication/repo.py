@@ -59,6 +59,25 @@ class MembershipRequestRepo:
 
 
 
+
+class ProfileContactRepo():
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.me=None
+        self.objects=None   
+        self.user=None
+        self.app_name=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']        
+        self.objects = ProfileContact.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'profile_id' in kwargs:
+            objects=objects.filter(profile_id=kwargs['profile_id'])
+        return objects
 class ProfileRepo():
     def __init__(self,*args, **kwargs):
         self.request=None
