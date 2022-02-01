@@ -37,18 +37,11 @@
                             <div class="mb-5">
 
                                 <div class="text-center mb-2">
-                                    <img src="{{order.supplier.logo}}" width="96" alt="">
                                 </div>
                                 <h3 class="text-center">
-                                    {{order.supplier.title}}
+                                 صورتحساب
                                 </h3>
-                                {% if order.supplier.pre_title %}
-
-
-                                <h5 class="text-center">
-                                    {{order.supplier.pre_title}}
-                                </h5>
-                                {% endif %}
+                                
 
                             </div>
 
@@ -170,6 +163,7 @@
                         <td colspan="5">
                             <div class="text-left text-secondary">
                                 مانده کل
+                                {{CURRENCY}}
                             </div>
                         </td>
                         <td class="lines_total">
@@ -177,6 +171,18 @@
 
                         </td>
                     </tr>
+
+                    <tr class="bordered">
+                        <td colspan="6" style="background-color: #ddd;">
+                            <div class="text-right">
+                            {{rest|to_horuf}}
+                               
+                                {{CURRENCY}}
+                            </div>
+                       
+                        </td>
+                    </tr>
+
 
 
 
@@ -192,9 +198,9 @@
 
                                     </h5>
 
-                                    {% if order.descriptions %}
+                                    {% if descriptions %}
                                     <ul>
-                                        {% for description in order.descriptions %}
+                                        {% for description in descriptions %}
                                         <li>
                                             <small>
 
@@ -220,10 +226,8 @@
                             <div class="row">
                                 <div class="col text-center">
                                     <span>
-                                        <small>
 
                                             {{pay_from.profile.name}}
-                                        </small>
                                     </span>
                                     <br>
 
@@ -231,11 +235,9 @@
                                 </div>
                                 <div class="col text-center">
                                     <span>
-                                        <small>
 
                                             {{pay_to.profile.name}}
 
-                                        </small>
                                     </span>
                                     <br>
 

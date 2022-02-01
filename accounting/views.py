@@ -151,7 +151,10 @@ class TransactionViews(View):
         context['transactions']=transactions
         transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
         context['transactions_s']=transactions_s
-        
+        descriptions = [
+            f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
+        ]
+        context['descriptions']=descriptions
         total=0
         # for transaction in transactions:
         #     if transaction.pay_to_id==financial_account_id:
