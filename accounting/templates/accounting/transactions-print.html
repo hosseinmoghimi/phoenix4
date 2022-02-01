@@ -39,15 +39,15 @@
                                 <div class="text-center mb-2">
                                 </div>
                                 <h3 class="text-center">
-                                 صورتحساب
+                                    صورتحساب
                                 </h3>
-                                
+
 
                             </div>
 
                             <div class="row">
                                 <div class="col text-right">
-                                    صورتحساب  : {{pay_from.profile.name}}
+                                    صورتحساب : {{pay_from.profile.name}}
                                     <br>
                                     طرف حساب : {{pay_to.profile.name}}
 
@@ -75,22 +75,26 @@
                         </td>
                         <td class="table-header">
 
-                            شرح
+                            شرح تراکنش
                         </td>
                         <td class="table-header">
                             تاریخ
                         </td>
                         <td class="table-header">
                             بدهکار
-                           
+
                         </td>
                         <td class="table-header">
                             بستانکار
-                            
+
                         </td>
                         <td class="table-header">
-                            مانده<small>(&nbsp;{{CURRENCY}}&nbsp;)
-                            </small>
+                            مانده
+                            <div>
+
+                                <small>(&nbsp;{{CURRENCY}}&nbsp;)
+                                </small>
+                            </div>
                         </td>
                     </tr>
 
@@ -101,12 +105,12 @@
                             {{forloop.counter}}
                         </td>
                         <td>
-<small>
+                            <small>
 
-    {{transaction.title}}
-    {{transaction.order.title}}
-    {{transaction.project.title}}
-</small>
+                                {{transaction.title}}
+                                {{transaction.order.title}}
+                                {{transaction.project.title}}
+                            </small>
 
                         </td>
                         <td>
@@ -158,8 +162,8 @@
                                 مانده کل
                                 (
 
-                                    {{CURRENCY}}
-                                    )
+                                {{CURRENCY}}
+                                )
                             </div>
                         </td>
                         <td class="lines_total">
@@ -171,11 +175,11 @@
                     <tr class="bordered">
                         <td colspan="6" style="background-color: #ddd;">
                             <div class="text-right">
-                            {{rest|to_horuf}}
-                               
+                                {{rest|to_horuf}}
+
                                 {{CURRENCY}}
                             </div>
-                       
+
                         </td>
                     </tr>
 
@@ -223,21 +227,21 @@
                                 <div class="col text-center">
                                     <span>
 
-                                            {{pay_from.profile.name}}
+                                        {{pay_from.profile.name}}
                                     </span>
                                     <br>
 
-                                   
+
                                 </div>
                                 <div class="col text-center">
                                     <span>
 
-                                            {{pay_to.profile.name}}
+                                        {{pay_to.profile.name}}
 
                                     </span>
                                     <br>
 
- 
+
 
                                 </div>
                             </div>
