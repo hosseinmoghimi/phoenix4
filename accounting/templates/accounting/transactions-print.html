@@ -101,10 +101,12 @@
                             {{forloop.counter}}
                         </td>
                         <td>
+<small>
 
-                            {{transaction.title}}
-                            {{transaction.order.title}}
-                            {{transaction.project.title}}
+    {{transaction.title}}
+    {{transaction.order.title}}
+    {{transaction.project.title}}
+</small>
 
                         </td>
                         <td>
@@ -154,7 +156,10 @@
                         <td colspan="5">
                             <div class="text-left text-secondary">
                                 مانده کل
-                                {{CURRENCY}}
+                                (
+
+                                    {{CURRENCY}}
+                                    )
                             </div>
                         </td>
                         <td class="lines_total">
