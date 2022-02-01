@@ -154,6 +154,8 @@ class TransactionViews(View):
         descriptions = [
             f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
         ]
+        title="صورتحساب "+pay_from.profile.name+" و " +pay_to.profile.name
+        context['app']['title']=title
         context['descriptions']=descriptions
         total=0
         # for transaction in transactions:
