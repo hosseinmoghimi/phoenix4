@@ -6,7 +6,7 @@ from core.constants import CURRENCY
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import BasicPageRepo, ParameterRepo, PictureRepo, TagRepo
 from core.serializers import BasicPageSerializer
-from core.views import DefaultContext, MessageView, PageContext
+from core.views import CoreContext, MessageView, PageContext
 from django.http.response import Http404
 from django.shortcuts import redirect, render,reverse
 from django.views import View
@@ -43,7 +43,7 @@ def getContext(request):
         # mv=MessageView()
         # mv.message_text_html="دسترسی غیر مجاز"
         # return mv.response(request=request)
-    context = DefaultContext(request=request, app_name=APP_NAME)
+    context = CoreContext(request=request, app_name=APP_NAME)
     context["me_employee"] = me_employee
     context['layout_parent'] = "material-dashboard-5-rtl/layout.html"
     context['layout_parent'] = "material-kit-pro/layout.html"
@@ -261,6 +261,7 @@ class ProjectViews(View):
             f"""مربوط به {project.full_title}     ({project.id})""",
             f"""امضای این برگه توسط کارفرما به معنای تحویل کامل کالاهای لیست فوق می باشد.""",
         ]
+        context['app']['title']='لیست متریال های '+project.title
         if project.contractor is not None and project.contractor.owner is not None:
             from accounting.repo import BankAccountRepo
             bank_account = BankAccountRepo(request=request).bank_account(
@@ -318,6 +319,7 @@ class ProjectViews(View):
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
             f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
         ]
+        context['app']['title']='لیست خدمات '+project.title
         if project.contractor is not None and project.contractor.owner is not None:
             from accounting.repo import BankAccountRepo
             bank_account = BankAccountRepo(request=request).bank_account(
