@@ -69,6 +69,7 @@ class Profile(models.Model):
     bio=models.CharField(_("bio"),null=True,blank=True, max_length=50)
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     image_origin=models.ImageField(_("image"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/", height_field=None, width_field=None, max_length=None)
+    header_origin=models.ImageField(_("header_origin"),null=True,blank=True, upload_to=IMAGE_FOLDER+"profile/header/", height_field=None, width_field=None, max_length=None)
     enabled=models.BooleanField(_("enabled"),default=True)
     def get_edit_url_panel(self):
         return reverse(APP_NAME+":edit_profile_view",kwargs={'profile_id':self.pk})
@@ -111,6 +112,11 @@ class Profile(models.Model):
         if self.image_origin:
             return MEDIA_URL+str(self.image_origin)
         return STATIC_URL+APP_NAME+"/images/default-avatar.png"
+    @property
+    def header_image(self):
+        if self.header_origin:
+            return MEDIA_URL+str(self.header_origin)
+        return STATIC_URL+"material-kit-pro/assets/img/city-profile.jpg"
     @property
     def last_name(self):
         return self.user.last_name

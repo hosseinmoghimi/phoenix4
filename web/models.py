@@ -261,6 +261,8 @@ class OurTeam(models.Model):
     def __unicode__(self):
         return self.name
 
+    def blogs(self):
+        return Blog.objects.filter(author=self)
     class Meta:
         db_table = 'OurTeam'
         managed = True
@@ -270,6 +272,8 @@ class OurTeam(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":ourteam",kwargs={'pk':self.pk})
 
+    def sociallinks(self):
+        return self.social_links.order_by('priority')
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 class ContactMessage(models.Model):
