@@ -9,11 +9,11 @@
 <link href="{% static 'vendor/css/bootstrap.min.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/css/font-awesome.min.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/css/material-icons.css' %}" rel="stylesheet">
-{% if farsi_font_name %}
-<link href="{{STATIC_URL}}leo/css/font-farsi-{{farsi_font_name}}.css" rel="stylesheet">
-{% else %}
-<link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
-{% endif %}
+
+
+{% include "phoenix/includes/head-farsi-font.html" %}
+
+
 <link href="{% static 'leo/css/leo.css' %}" rel="stylesheet">
 
 {% include "phoenix/includes/metadata.html" %}

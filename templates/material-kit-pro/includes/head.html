@@ -48,11 +48,8 @@
 </script>
 <!-- End Google Tag Manager -->
 
-{% if farsi_font_name %}
-<link href="{{STATIC_URL}}leo/css/font-farsi-{{farsi_font_name}}.css" rel="stylesheet">
-{% else %}
-<link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
-{% endif %}
+{% include "phoenix/includes/head-farsi-font.html" %}
+
 <style>
   label,
   h1,
