@@ -28,7 +28,7 @@
         <div class="row rtl">
             {% for service in resume_index.resumeservice_set.all %}
 
-            <div class="col-lg-4 col-md-6 " data-aos="zoom-in" data-aos-delay="{{forloop.counter}}00">
+            <div class="col-lg-4 col-md-6 mb-5" data-aos="zoom-in" data-aos-delay="{{forloop.counter}}00">
                 <div class="text-center">
                     {{service.icon.get_icon_tag|safe}}
 
