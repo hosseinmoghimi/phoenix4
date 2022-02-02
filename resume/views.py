@@ -1,6 +1,7 @@
 import json
 from core.models import PageComment
 from projectmanager.repo import ServiceRepo
+import resume
 
 from resume.serializers import ResumeFactSerializer, ResumeSkillSerializer
 from .apps import APP_NAME
@@ -20,6 +21,14 @@ from django.views import View
 
 
 TEMPLATE_ROOT = "my_resume_en/"
+def get_resume_index_context(request,*args, **kwargs):
+    resume_index=None
+    if 'resume_index' in kwargs:
+        resume_index=kwargs['resume_index']
+    else:
+        resume_index=ResumeIndexRepo(request=request).resume_index(*args, **kwargs)
+    if resume_index is None:
+        return
 
 
 def getContext(request, *args, **kwargs):
@@ -92,6 +101,7 @@ class BasicViews(View):
         context['facts']=facts
         context['facts_s']=json.dumps(ResumeFactSerializer(facts,many=True).data)
 
+        context['portfolios'] = resume_index.resumeportfolio_set.all()
 
         # portfolio_categories = PortfolioRepo(request=request).category_list()
         # context['portfolio_categories'] = portfolio_categories
@@ -121,6 +131,46 @@ class BasicViews(View):
     #             request=request).resume_service(*args, **kwargs)
     #         context['resume_service'] = resume_service
     #         return render(request, TEMPLATE_ROOT+"resume-service.html", context)
+
+
+    def resume_print(self, request, *args, **kwargs):
+        
+        language = LanguageEnum.ENGLISH
+        # language=LanguageEnum.ENGLISH
+        if 'language_index' in kwargs:
+                language = languageToIndex(index=kwargs['language_index'])
+        context = getContext(request=request,language=language)
+        
+        resume_index = ResumeIndexRepo(
+            request=request).resume_index(*args, **kwargs)
+        context['resume_index'] = resume_index
+        parameter_repo = ParameterRepo(request=request, app_name=APP_NAME)
+        context['location'] = parameter_repo.get(name='location')
+        context['email'] = parameter_repo.get(name='email')
+        context['call'] = parameter_repo.get(name='call')
+        context['resume_index'] = resume_index
+        context['title'] = resume_index.title
+        context['portfolios'] = resume_index.resumeportfolio_set.all()
+
+
+        skills=resume_index.resumeskill_set.order_by('priority')
+        context['skills']=skills
+
+
+        facts=resume_index.resumefact_set.order_by('priority')
+        context['facts']=facts
+
+        # portfolio_categories = PortfolioRepo(request=request).category_list()
+        # context['portfolio_categories'] = portfolio_categories
+        portfolio_filters = PortfolioRepo(request=request).filter_list()
+        context['portfolio_filters'] = portfolio_filters
+        profile = ProfileRepo(request=request).me
+        if resume_index.language==LanguageEnum.ENGLISH:
+            TEMPLATE_ROOT = "my_resume_en/"
+        if resume_index.language==LanguageEnum.FARSI:
+            TEMPLATE_ROOT = "my_resume_fa/"
+        return render(request, TEMPLATE_ROOT+"resume-print.html", context)
+
 
     def resume(self, request, *args, **kwargs):
         context = getContext(request=request)

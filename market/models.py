@@ -557,11 +557,7 @@ class Guarantee(models.Model):
         file_address=os.path.join(QRCODE_ROOT,file_name)
    
         content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
-        print(content)
-        print(file_address)
-        print(file_name)
-        print(file_path)
-        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path)
     def save(self):
 
         self.generate_qrcode()

@@ -1,0 +1,21 @@
+{% load to_price %}
+
+                {% if facts %}
+                <hr>
+                <div class="my-5">
+                <h5>آمار </h5>
+                <ul class="nav flex-column">
+                    {% for fact in facts %}
+
+                    <li class="nav-item">
+                        {{fact.title}}
+
+                        <span class="badge badge-primary">
+
+                            {{fact.count|to_price_pure}}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+                {% endif %}

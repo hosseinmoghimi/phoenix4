@@ -1,0 +1,22 @@
+{% if skills %}
+
+<hr>
+<div class="my-5">
+
+
+<h5>مهارت ها</h5>
+<ul class="nav flex-column">
+    {% for skill in skills %}
+
+    <li class="nav-item">
+        {{skill.title}}
+
+        <span class="badge badge-primary">
+
+            {{skill.percentage}}%
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}

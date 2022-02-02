@@ -1,0 +1,23 @@
+{% if resumes %}
+
+
+
+<hr>
+<div class="my-5">
+
+<h5>تحصیلات آکادمیک</h5>
+<ul class="nav flex-column">
+    {% for resume in resumes %}
+
+    <li class="nav-item">
+        {{skill.title}}
+
+        <span class="badge badge-primary">
+
+            {{skill.percentage}}%
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}

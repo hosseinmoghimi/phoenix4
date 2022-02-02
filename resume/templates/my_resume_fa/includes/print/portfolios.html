@@ -1,0 +1,16 @@
+{% if portfolios %}
+<hr>
+<div class="my-5">
+    <h5>کارها و پروژه های انجام شده </h5>
+    <ul class="nav flex-column">
+        {% for portfolio in portfolios %}
+
+        <li class="nav-item">
+            {{portfolio.title}}
+
+
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

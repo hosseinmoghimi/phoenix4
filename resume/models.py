@@ -1,3 +1,4 @@
+import imp
 from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum, languageToIndex
 from django.db.models.fields import DateField
 from tinymce.models import HTMLField
@@ -89,6 +90,25 @@ class ResumeIndex(models.Model):
     location=models.CharField(_("location"),null=True,blank=True, max_length=200)
     call=models.CharField(_("call"),null=True,blank=True, max_length=50)
 
+    def get_qrcode_url(self):
+        from phoenix.settings import QRCODE_ROOT,SITE_FULL_BASE_ADDRESS,QRCODE_URL
+        from utility.qrcode import generate_qrcode
+        
+        if self.pk is None:
+            super(ResumeIndex,self).save()
+        import os
+        file_path = QRCODE_ROOT
+        file_name=APP_NAME+"_"+self.class_name+str(self.pk)+".svg"
+        # file_address=os.path.join(file_path,file_name)
+        file_address=os.path.join(QRCODE_ROOT,file_name)
+   
+        content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path)
+
+        file_name=APP_NAME+"_"+self.class_name+str(self.pk)+".svg"   
+        return f"{QRCODE_URL}{file_name}"
+    def get_print_url(self):
+        return reverse(APP_NAME+":resume_print",kwargs={'pk':self.pk})
     class Meta:
         verbose_name = _("ResumeIndex")
         verbose_name_plural = _("ResumeIndexs")
