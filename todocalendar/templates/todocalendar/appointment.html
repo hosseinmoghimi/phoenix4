@@ -1,0 +1,58 @@
+{% extends "todocalendar/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{appointment.title}}
+                </h4>
+            </div>
+            <div class="card-body">
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    افراد مرتبط
+                </h4>
+            </div>
+            <div class="card-body">
+                <ul class="nav flex-column">
+                    {% for person in appointment.persons.all %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{person.get_absolute_url}}">
+                            <div class="media">
+                                <img src="{{person.image}}" width="64" class="rounded-circle" alt="">
+                                <div class="media-body mr-2">
+                                    <h5 class="mt-2">{{person.name}}</h5>
+                                    <h6 class="text-muted">{{person.mobile}}</h6>
+
+                                </div>
+                            </div>
+
+
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "calendar/layout.html" %}
+{% extends "todocalendar/layout.html" %}
 {% load static %}
 {% load to_persian_date %}
 
@@ -12,7 +12,7 @@
                     {% for appointment in appointments %}
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{appointment.get_absolute_url}}">{{appointment.title}}</a>
+                        <a class="nav-link" href="{{appointment.get_absolute_url}}">{{appointment.title}}</a>
                     </li>
                     {% endfor %}
                 </ul>
