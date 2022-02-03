@@ -41,21 +41,16 @@
                     {{resume_index.title}}
                 </h4>
             </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-6 farsi">
-        
+            <div class="col-md-12">
+
                 {% include "my_resume_fa/includes/print/about.html" %}
 
 
             </div>
-            <div class="col-md-2">
-                <img src="{{resume_index.get_qrcode_url}}" width="128" height="128" alt="">
 
-            </div>
             <div class="col-md-2"></div>
-            <div class="col-lg-2">
-            </div>
-            <div class="col-lg-8">
+           
+            <div class="col-md-8">
                 {% if skills %}
 
                 {% include "my_resume_fa/includes/print/skills.html" %}
@@ -93,7 +88,7 @@
 
 
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2">
             </div>
         </div>
     </div>
