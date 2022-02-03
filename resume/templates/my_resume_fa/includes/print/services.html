@@ -1,27 +1,27 @@
-{% if skills %}
+{% if services %}
 
 <div class="my-5">
 
 
-    <h5>مهارت ها</h5>
+    <h5>خدمات</h5>
 
-    {% if resume_index.skills_top %}
+    {% if resume_index.services_top %}
 
     <div class="farsi">
 
-        {{resume_index.skills_top|safe}}
+        {{resume_index.services_top|safe}}
     </div>
     {% endif %}
 
     <ul class="nav flex-column">
-        {% for skill in skills %}
+        {% for service in services %}
 
         <li class="nav-item">
-            {{skill.title}}
+            {{service.title}}
 
             <span class="badge badge-primary">
 
-                {{skill.percentage}}%
+                {{service.percentage}}%
             </span>
         </li>
         {% endfor %}

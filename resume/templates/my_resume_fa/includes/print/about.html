@@ -1,7 +1,6 @@
 {% load to_persian_date %}
 <div class="row rtl">
-    <div class="col-md-2"></div>
-    <div class="col-md-6">
+    <div class="col-md-9">
 
         <h5 class="text-right">
             {{resume_index.profile.name}}
@@ -9,18 +8,18 @@
         {{resume_index.about_top|safe}}
 
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
+        {% if resume_index.image %}
 
-        <img src="{{resume_index.get_qrcode_url}}" width="128" height="128" alt="">
+        <img src="{{resume_index.image}}" class="rounded-circle" width="100%"  alt="">
 
+        {% endif %}
     </div>
-    <div class="col-md-2"></div>
 </div>
 
 <div class="row rtl">
-    <div class="col-md-2"></div>
 
-    <div class="col-lg-4">
+    <div class="col-md-6">
         <ul>
 
             {% if resume_index.birth_day %}
@@ -44,7 +43,7 @@
 
             {% endif %}
     </div>
-    <div class="col-lg-4">
+    <div class="col-md-6">
         <ul>
             {% if resume_index.degree %}
             <li class="text-right"><i class="bi bi-chevron-left"></i> <strong>مدرک تحصیلی:</strong>
@@ -59,7 +58,7 @@
 
             {% endif %}
 
-            
+
             {% if resume_index.city %}
             <li class="text-right"><i class="bi bi-chevron-left"></i> <strong>متولد:</strong>
                 <span>{{resume_index.city}}</span>
@@ -68,18 +67,14 @@
             {% endif %}
         </ul>
     </div>
+    <div class="col-md-10">
 
-    <div class="col-md-2"></div>
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
         <ul>
 
             {% if resume_index.website %}
             <li class="text-right"><i class="bi bi-chevron-left"></i> <strong>وب سایت:</strong>
-                <a target="_blank" href="{{resume_index.website}}">
 
-                    <span>{{resume_index.website}}</span>
-                </a>
+                <span>{{resume_index.website}}</span>
             </li>
 
             {% endif %}
@@ -91,18 +86,36 @@
 
             {% endif %}
 
+
+            {% if resume_index.location %}
+            <li class="text-right"><i class="bi bi-chevron-left"></i> <strong>آدرس:</strong>
+
+                <span>{{resume_index.location|safe}}</span>
+            </li>
+
+            {% endif %}
+            {% if resume_index.call %}
+            <li class="text-right"><i class="bi bi-chevron-left"></i> <strong>تماس:</strong>
+
+                <span>{{resume_index.call|safe}}</span>
+            </li>
+
+            {% endif %}
+
         </ul>
+    </div>
+    <div class="col-md-2">
+        <img src="{{resume_index.get_qrcode_url}}" width="100%" alt="">
 
     </div>
-    <div class="col-md-2"></div>
 </div>
-
-<div class="row">
-    <hr>
-
-    {{resume_index.about_middle|safe}}
-    <hr>
-    {{resume_index.about_bottom|safe}}
+{% if resume_index.about_middle %}
 
 
-</div>
+{{resume_index.about_middle|safe}}
+{% endif %}
+{% if resume_index.about_bottom %}
+
+{{resume_index.about_bottom|safe}}
+
+{% endif %}

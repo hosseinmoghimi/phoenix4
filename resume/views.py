@@ -92,6 +92,10 @@ class BasicViews(View):
         context['title'] = resume_index.title
 
 
+        services=resume_index.resumeservice_set.all().order_by('priority')
+        context['services']=services
+
+
         skills=resume_index.resumeskill_set.order_by('priority')
         context['skills']=skills
         context['skills_s']=json.dumps(ResumeSkillSerializer(skills,many=True).data)
@@ -153,6 +157,11 @@ class BasicViews(View):
         context['portfolios'] = resume_index.resumeportfolio_set.all()
 
 
+        services=resume_index.resumeservice_set.all().order_by('priority')
+        context['services']=services
+
+        context['resume_categories']=resume_index.resumecategory_set.all()
+        context['app']['title']=resume_index.title
         skills=resume_index.resumeskill_set.order_by('priority')
         context['skills']=skills
 

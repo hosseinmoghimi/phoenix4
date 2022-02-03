@@ -6,6 +6,8 @@
     {% load static %}
     {% load to_price %}
     {% include "phoenix/includes/head.html" %}
+
+    <link href="{% static 'my_resume_en/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
     <style>
         .table-header {
             text-align: right;
@@ -35,35 +37,36 @@
 
     <div class="container rtl pt-5">
         <div class="row mt-3">
-            <div class="col-md-12">
+
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
 
                 <h4 class="text-center">
                     {{resume_index.title}}
                 </h4>
-            </div>
-            <div class="col-md-12">
+
 
                 {% include "my_resume_fa/includes/print/about.html" %}
 
 
-            </div>
 
-            <div class="col-md-2"></div>
-           
-            <div class="col-md-8">
+
                 {% if skills %}
 
+                <hr>
                 {% include "my_resume_fa/includes/print/skills.html" %}
                 {% endif %}
 
-                {% if resumes %}
+                {% if resume_index.resumecategory_set.all %}
+                <hr>
                 {% include "my_resume_fa/includes/print/resumes.html" %}
 
 
                 {% endif %}
 
-
                 {% if facts %}
+                <hr>
+
                 {% include "my_resume_fa/includes/print/facts.html" %}
 
 
@@ -72,7 +75,16 @@
 
 
                 {% if portfolios %}
+                <hr>
                 {% include "my_resume_fa/includes/print/portfolios.html" %}
+
+
+                {% endif %}
+
+
+                {% if services %}
+                <hr>
+                {% include "my_resume_fa/includes/print/services.html" %}
 
 
                 {% endif %}
@@ -85,15 +97,14 @@
 
 
 
+            </div>
+            <div class="col-md-1"></div>
 
 
-            </div>
-            <div class="col-md-2">
-            </div>
+
+
         </div>
     </div>
-    {% csrf_token %}
-    {% include "phoenix/includes/layout-scripts.html" %}
 </body>
 
 </html>

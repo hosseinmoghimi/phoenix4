@@ -8,26 +8,28 @@
         <div class="section-title">
             <h2>مهارت ها</h2>
 
+            {% if resume_index.skills_top %}
 
             <div class="farsi">
 
                 {{resume_index.skills_top|safe}}
             </div>
+            {% endif %}
         </div>
 
-        
+
         <div class="row skills-content rtl">
-            {% if perms.resume.add_resumeskill %} 
+            {% if perms.resume.add_resumeskill %}
 
             <div class="text-center">
                 <a target="_blank" href="{{admin_utility.get_add_skill_link}}?resume_index={{resume_index.id}}">
                     <i class="material-icons">add</i>
                 </a>
-            </div>  
+            </div>
 
 
             {% endif %}
-            
+
             {% for skill in resume_index.resumeskill_set.all %}
 
             <div class="col-lg-6">
