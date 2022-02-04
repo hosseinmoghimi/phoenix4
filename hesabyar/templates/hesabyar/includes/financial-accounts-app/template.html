@@ -1,0 +1,45 @@
+{% load to_persian_date %}
+{% load to_price %}
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    حساب
+                </th>
+                <th>
+                    مانده
+                </th>
+            </thead>
+            <tbody>
+                {% for financial_account in financial_accounts %}
+
+                <tr>
+                    <td>
+                        <a href="{{financial_account.get_absolute_url}}">
+
+                            {{financial_account.title}}
+                        </a>
+
+                        {% for tag in financial_account.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+
+                            <span class="badge badge-{{tag.color}}">
+                                {{tag.name}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <span>
+
+                            {{financial_account.rest|to_price}}
+                        </span>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

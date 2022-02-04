@@ -1,0 +1,86 @@
+{% load static %}
+
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script>
+    let rest=parseInt("{{rest}}")
+    let financial_documents = JSON.parse(`{{financial_documents_s|escapejs}}`)
+</script>
+{% if add_financial_document_form %}
+
+<script>
+
+    let financial_documents_app_data = {
+        financial_documents: financial_documents,
+        title: 'aa',
+        bestankar: 0,
+        bedehkar: 0,
+        document_date: current_date,
+        document_time: { hour: "0", minute: "0" },
+        category_id: "",
+        show_form: false,
+        waiting: false,
+        rest:rest,
+    }
+
+
+    let financial_documents_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "{{CURRENCY}}")
+        },
+        add_financial_document: function () {
+            financial_documents_app.waiting = true
+            let document_datetime = this.document_date + " " + (parseInt(this.document_time.hour) > 9 ? this.document_time.hour : ("0" + this.document_time.hour)) + ":" + (parseInt(this.document_time.minute) > 9 ? this.document_time.minute : ("0" + this.document_time.minute)) + ":00"
+            let payload = {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                title: this.title,
+                account_id: financial_account_id,
+                bestankar: this.bestankar,
+                bedehkar: this.bedehkar,
+                document_datetime: document_datetime,
+                category_id: this.category_id,
+            }
+            console.log(payload)
+            let url = "{% url 'hesabyar:add_financial_document' %}"
+            $.post(url, payload).done((data) => {
+                financial_documents_app.waiting = false
+                console.log(data)
+                if (data.result === 'SUCCEED') {
+                    financial_documents_app.financial_documents.push(data.financial_document)
+                    financial_documents_app.rest=data.rest
+                }
+            })
+        }
+    }
+
+
+</script>
+{% else %}
+
+<script>
+
+    let financial_documents_app_data = {
+        financial_documents: financial_documents,
+        rest:rest,
+
+    }
+    let financial_documents_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "{{CURRENCY}}")
+        }
+    }
+</script>
+{% endif %}
+<script>
+    let financial_documents_app = new Vue({
+        el: "#financial-documents-app",
+        data: financial_documents_app_data,
+        components: {
+            DatePicker: VuePersianDatetimePicker
+
+        },
+        methods: financial_documents_app_methods,
+    })
+</script>

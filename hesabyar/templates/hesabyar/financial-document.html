@@ -1,0 +1,42 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+<h4 class="text-center">
+    {{financial_document.title}}
+</h4>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <p>
+
+                    حساب مربوطه:
+                    <a href="{{financial_document.account.get_absolute_url}}">
+
+                        {{financial_document.account.title}}
+                    </a>
+                    <br>
+                    تاریخ :
+                    {{financial_document.document_datetime|to_persian_datetime|safe}}
+                    <br>
+
+                    بدهکار :
+                    {{financial_document.bedehkar|to_price}}
+                    <br>
+                    بسنانکار :
+                    {{financial_document.bestankar|to_price}}
+
+
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

@@ -1,0 +1,74 @@
+{% load static %}
+
+
+<div>
+    <form @submit.prevent="add_financial_document()">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">عنوان</label>
+                    <input type="text" class="form-control" v-model="title" required>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">دسته بندی</label>
+                   <select v-model="category_id" class="form-control">
+                    {% for category in document_categories %}
+                      
+                    <option value="{{category.id}}">{{category.title}}</option>
+                    {% endfor %}   
+                   </select>
+                </div>
+            </div>
+
+
+
+            
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">بدهکار</label>
+                    <input type="number" min="0" class="form-control" v-model="bedehkar" required>
+                </div>
+            </div>
+
+              
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">بستانکار</label>
+                    <input type="number" min="0" class="form-control" v-model="bestankar" required>
+                </div>
+            </div>
+
+
+            
+              
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">تاریخ</label>
+                <date-picker v-model="document_date"></date-picker>
+                    <input type="number"  max="23" min="0" v-model="document_time.hour" class="form-control" placeholder="ساعت">
+                    <input type="number" max="59" min="0"  v-model="document_time.minute" class="form-control" placeholder="دقیقه">
+                </div>
+            </div>
+
+
+
+
+            <div class="col-md-4">
+                {% if sdfgdgtry %}
+                  
+                <button @click="add_financial_document()" class="btn btn-success">تایید</button>
+                {% endif %}
+            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+                <button type="submit" class="btn btn-success">تایید</button>
+                <button @click="show_form=false" class="btn btn-secondary">انصراف</button>
+            </div>
+        </div>
+    </form>
+</div>
