@@ -1,0 +1,104 @@
+{% load to_persian_date %}
+{% load to_price %}
+<div class="card" id="financial-documents-app">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                {% if not financial_account %}
+                <th>
+                    حساب
+                </th>
+                {% endif %}
+                <th>
+                    عنوان سند
+                </th>
+                <th>
+                    تاریخ
+                </th>
+                <th>
+                    بدهکار
+                </th>
+                <th>
+                    بستانکار
+                </th>
+            </thead>
+            <tbody>
+                <!-- {% for financial_document in financial_documents %}
+
+                <tr>
+                    {% if not financial_account %}
+                    <td>
+                        <a href="{{financial_document.account.get_absolute_url}}">
+                            {{financial_document.account.title}}
+                        </a>
+                    </td>
+                    {% endif %}
+
+                    <td>
+                        <a href="{{financial_document.get_absolute_url}}">
+
+                            {{financial_document.title}}
+                        </a>
+                    </td>
+                    <td>
+                        {{financial_document.document_datetime|to_persian_datetime|safe}}
+
+                    </td>
+                    <td>
+                        {{financial_document.bedehkar|to_price}}
+
+                    </td>
+                    <td>
+                        {{financial_document.bestankar|to_price}}
+
+                    </td>
+                </tr>
+                {% endfor %} -->
+
+
+                <tr v-for="financial_document in financial_documents">
+                    {% if not financial_account %}
+                    <td>
+                        <a :href="financial_document.account.get_absolute_url">
+                                <span v-text="financial_document.account.title"></span>
+                        </a>
+                    </td>
+                    {% endif %}
+
+                    <td>
+                        <a :href="financial_document.get_absolute_url">
+                            <span v-text="financial_document.title"></span>
+
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="financial_document.persian_document_datetime"></span>
+
+                    </td>
+                    <td>
+                        <span v-text="to_price(financial_document.bedehkar)"></span>
+
+                    </td>
+                    <td>
+                        <span v-text="to_price(financial_document.bestankar)"></span>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <p>
+            مانده : <span v-text="to_price(rest)"></span>
+
+        </p>
+        {% if add_financial_document_form %}
+        <button  v-if="!show_form" @click="show_form=true" class="btn btn-success">افزودن سند جدید</button>
+        <div v-if="show_form">
+
+            {% include "hesabyar/includes/financial-documents-app/form.html" %}
+        </div>
+        {% endif %}
+    </div>
+</div>
