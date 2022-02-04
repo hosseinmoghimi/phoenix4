@@ -1,31 +1,36 @@
 {% load to_price %}
 
 {% if facts %}
-<div class="my-5">
-    <h5> دستاورد ها و افتخارات </h5>
+<div class="card my-5">
+    <div class="card-header">
 
-    {% if resume_index.facts_top %}
-
-
-
-    <div class="farsi">
-
-        {{resume_index.facts_top|safe}}
+        <h5> دستاورد ها و افتخارات </h5>
     </div>
-    {% endif %}
+    <div class="card-body">
 
-    <ul class="nav flex-column">
-        {% for fact in facts %}
+        {% if resume_index.facts_top %}
 
-        <li class="nav-item">
-            {{fact.title}}
 
-            <span class="badge badge-primary">
 
-                {{fact.count|to_price_pure}}
-            </span>
-        </li>
-        {% endfor %}
-    </ul>
+        <div class="farsi">
+
+            {{resume_index.facts_top|safe}}
+        </div>
+        {% endif %}
+
+        <ul class="nav flex-column">
+            {% for fact in facts %}
+
+            <li class="nav-item">
+                {{fact.title}}
+
+                <span class="badge badge-primary">
+
+                    {{fact.count|to_price_pure}}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endif %}
