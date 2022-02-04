@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views,apis
+from . import views,apis,apk_apis
 from .apps import APP_NAME, AuthenticationConfig
 
 app_name=APP_NAME
@@ -27,5 +27,8 @@ urlpatterns = [
     path('upload_profile_image/<int:profile_id>/',views.ProfileViews().upload_profile_image,name="upload_profile_image"),
 
 
-    path('apk-api/login/',apis.ProfileApi().login,name="apk_login"),
+    # path('apk-api/login_/',apk_apis.ProfileApi().login,name="apk_login"),
+    path('apk-api/login/',apk_apis.CustomAuthToken.as_view()),
+    path('apk-api/edit_profile/<int:profile_id>/',apk_apis.EditProfile.as_view()),
+    path('apk-api/register/',apk_apis.RegisterProfile.as_view()),
 ]

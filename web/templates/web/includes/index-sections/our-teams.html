@@ -33,7 +33,10 @@
                             </a>
                         </div>
                         <div class="card-body ">
-                            <h4 class="card-title text-center">{{team.profile.name}}</h4>
+                            <a href="{{team.get_absolute_url}}">
+                                <h4 class="card-title text-center">{{team.profile.name}}</h4>
+                            </a>
+                            
                             <h6 class="card-category text-muted text-center">{{team.job}}</h6>
                             <p class="card-description text-center">
                                 {% if team.short_description %}

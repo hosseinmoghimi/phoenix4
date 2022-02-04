@@ -6,7 +6,9 @@ class BankNameEnum(TextChoices):
     SEPAH='بانک سپه',_('بانک سپه')
     REFAH='بانک رفاه',_('بانک رفاه')
     SADERAT='بانک صادرات',_('بانک صادرات')
+    KESHAVARZI='بانک کشاورزی',_('بانک کشاورزی')
     MASKAN='بانک مسکن',_('بانک مسکن')
+    MEHR_IRAN='بانک قرض الحسنه مهر ایران',_('بانک قرض الحسنه مهر ایران')
     TAAVON='بانک توسعه تعاون',_('بانک توسعه تعاون')
     
 class PaymetMethodEnum(TextChoices):

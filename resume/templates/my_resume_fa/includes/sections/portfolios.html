@@ -1,35 +1,41 @@
 {% load static %}
 <!-- ======= Portfolio Section ======= -->
-<section id="portfolio" class="portfolio section-bg">
+<section id="portfolio" class="portfolio section-bg farsi">
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-            <h2>Portfolio</h2>
+            <h2>کارهای انجام شده</h2>
 
             <div>
 
                 {{resume_index.portfolio_top|safe}}
             </div>
         </div>
-
-        <div class="row">
+{% if perms.resume.add_porfolio %}
+<div class="text-center">
+    <a target="_blank" href="{{admin_utility.get_add_portfolio_link}}?resume_index={{resume_index.id}}">
+        <i class="material-icons">add</i>
+    </a>
+</div>  
+{% endif %}
+        <div class="row rtl">
             <div class="col-lg-12 d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
                 <ul id="portfolio-flters">
                     <li data-filter="*" class="filter-active">All</li>
-                    {% for category in portfolio_categories %}
-                    <li data-filter=".filter-{{category}}">{{category}}</li>
+                    {% for filter in portfolio_filters %}
+                    <li data-filter=".filter-{{filter}}">{{filter}}</li>
                     {% endfor %}
 
                 </ul>
             </div>
         </div>
 
-        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
-            {% for portfolio in resume_index.resumeportfolio_set.all %}
+        <div class="row portfolio-container rtl" data-aos="fade-up" data-aos-delay="200">
+            {% for portfolio in portfolios %}
 
             <div class="col-lg-4 col-md-6 portfolio-item filter-{{portfolio.category}}">
                 <div class="portfolio-wrap">
-                    <img src="{{portfolio.image}}" class="img-fluid" alt="">
+                    <img src="{{portfolio.image}}" class="img-fluid w-100" alt="">
                     <div class="portfolio-info">
                         <h4>{{portfolio.title}}</h4>
                         <p>{{portfolio.category}}</p>
@@ -43,8 +49,7 @@
 
 
 
-                            <a href="{{portfolio.get_absolute_url}}" class="portfolio-details-lightbox"
-                                data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
+                            <a href="{{portfolio.get_absolute_url}}" target="_blank"  title="Portfolio Details"><i class="bx bx-link"></i></a>
                         </div>
                     </div>
                 </div>

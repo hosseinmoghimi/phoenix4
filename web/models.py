@@ -1,6 +1,6 @@
 from core.enums import ColorEnum
 from tinymce.models import HTMLField
-from core.settings import ADMIN_URL, MEDIA_URL
+from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.db import models
 from .apps import APP_NAME
 from django.utils.translation import gettext as _
@@ -10,6 +10,7 @@ from django.shortcuts import reverse
 
 
 class WebPage(BasicPage):
+    author=models.ForeignKey("ourteam", verbose_name=_("ourteam"),null=True,blank=True, on_delete=models.CASCADE)
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(WebPage,self).save(*args, **kwargs)
@@ -27,6 +28,31 @@ class Blog(WebPage):
     def save(self,*args, **kwargs):
         self.class_name="blog"
         return super(Blog,self).save(*args, **kwargs)
+
+
+
+class CryptoToken(WebPage):
+    rank=models.IntegerField(_("rank"),null=True,blank=True)
+    road_map=models.CharField(_("roadmap"),null=True,blank=True, max_length=5000)
+    symbol=models.CharField(_("symbol"),null=True,blank=True, max_length=25)
+    trading_view=models.CharField(_("trading_view"),null=True,blank=True, max_length=5000)
+    coin_market_cap=models.CharField(_("coin_market_cap"),null=True,blank=True, max_length=5000)
+    vendor_url=models.CharField(_("vendor_url"),null=True,blank=True, max_length=5000)
+    vendor_img_origin = models.ImageField(_("تصویر آیکون"),null=True,blank=True, upload_to=IMAGE_FOLDER +
+                                     'Token/icon/', height_field=None, width_field=None, max_length=None)
+    price=models.CharField(_("price"),null=True,blank=True, max_length=50)
+    class Meta:
+        verbose_name = _("CryptoToken")
+        verbose_name_plural = _("CryptoTokens")
+
+    def vendor_img(self):
+        if self.vendor_img_origin:
+            return MEDIA_URL+str(self.vendor_img_origin)
+        else:
+            return STATIC_URL+"web/icon/token.png"
+    def save(self,*args, **kwargs):
+        self.class_name="cryptotoken"
+        return super(CryptoToken,self).save(*args, **kwargs)
 
 
 class Carousel(models.Model):
@@ -87,8 +113,6 @@ class OurWork(WebPage):
 
 class Testimonial(models.Model):
     for_home = models.BooleanField(_("نمایش در صفحه خانه"), default=False)
-    image_origin = models.ImageField(_("تصویر"), upload_to=IMAGE_FOLDER+'Testimonial/',
-                                     null=True, blank=True, height_field=None, width_field=None, max_length=None)
     title = models.CharField(_("عنوان"), max_length=2000)
     body = models.CharField(_("متن"), max_length=2000, null=True, blank=True)
     footer = models.CharField(_("پانوشت"), max_length=200)
@@ -99,7 +123,10 @@ class Testimonial(models.Model):
     class Meta:
         verbose_name = _("Testimonial")
         verbose_name_plural = _("گفته های مشتریان")
-
+    def image(self):
+        if self.image_origin:
+            return MEDIA_URL+str(self.image_origin)
+        return STATIC_URL+"web/testimonial/icon.png"
     def __str__(self):
         return self.title
 
@@ -217,11 +244,12 @@ class CountDownItem(models.Model):
 
 
 class OurTeam(models.Model):
+    class_name="ourteam"
     app_name=models.CharField(_("app_name"),null=True,blank=True, max_length=50)
     profile = models.ForeignKey("authentication.Profile", verbose_name=_(
         "پروفایل"), on_delete=models.CASCADE)
     job = models.CharField(_("سمت"), max_length=100)
-    description = models.CharField(_("توضیحات"),null=True,blank=True, max_length=500)
+    description = HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
     priority = models.IntegerField(_("ترتیب"), default=1000)
     social_links = models.ManyToManyField(
         "core.SocialLink", verbose_name=_("social_links"), blank=True)
@@ -233,6 +261,8 @@ class OurTeam(models.Model):
     def __unicode__(self):
         return self.name
 
+    def blogs(self):
+        return Blog.objects.filter(author=self)
     class Meta:
         db_table = 'OurTeam'
         managed = True
@@ -242,7 +272,10 @@ class OurTeam(models.Model):
     def get_absolute_url(self):
         return reverse(APP_NAME+":ourteam",kwargs={'pk':self.pk})
 
-
+    def sociallinks(self):
+        return self.social_links.order_by('priority')
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
 class ContactMessage(models.Model):
     full_name = models.CharField(_("نام کامل"), max_length=50)
     mobile = models.CharField(_("شماره تماس"), max_length=50)

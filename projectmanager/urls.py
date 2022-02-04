@@ -20,8 +20,10 @@ urlpatterns = [
     path('project_events_chart/<int:project_id>/',login_required(views.EventViews().project_events_chart),name="project_events_chart"),
     path('project_events_chart2/<int:project_id>/',login_required(views.EventViews().project_events_chart2),name="project_events_chart2"),
     path('project_events_chart3/<int:project_id>/',login_required(views.EventViews().project_events_chart3),name="project_events_chart3"),
-    path('project-materials-order/<int:pk>/',login_required(views.ProjectViews().project_materials_order),name="project_materials_order"),
-    path('project-services-order/<int:pk>/',login_required(views.ProjectViews().project_services_order),name="project_services_order"),
+    
+    path('project-materials-order/<int:pk>/<int:tax_percent>/<unit>/',login_required(views.ProjectViews().project_materials_order),name="project_materials_order"),
+    path('project-services-order/<int:pk>/<int:tax_percent>/<unit>/',login_required(views.ProjectViews().project_services_order),name="project_services_order"),
+    
     path('projects-chart/<int:pk>/',login_required(views.ProjectViews().projects_chart),name="projects_chart"),
     path('organization_units_chart/<int:employer_id>/',login_required(views.OrganizationUnitViews().organization_units_chart),name="organization_units_chart"),
     path('employer/<int:pk>/',login_required(views.OrganizationUnitViews().employer),name="employer"),

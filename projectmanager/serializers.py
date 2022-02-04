@@ -54,7 +54,7 @@ class MaterialRequestSerializer(serializers.ModelSerializer):
     handler=EmployeeSerializer()
     class Meta:
         model=MaterialRequest
-        fields=['id','total','material','persian_date_requested','quantity','persian_date_added','get_edit_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
+        fields=['id','total','material','persian_date_requested','quantity','persian_date_added','get_edit_url','get_delete_url','get_status_tag','project','handler','unit_name','unit_price','get_absolute_url']
 
 
 class EventSerializerForChart(serializers.ModelSerializer):
@@ -69,7 +69,7 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
     handler=EmployeeSerializer()
     class Meta:
         model=ServiceRequest
-        fields=['id','service','handler','total','quantity','persian_date_requested','persian_date_added','get_edit_url','get_status_tag','project','unit_name','unit_price','get_absolute_url']
+        fields=['id','service','handler','total','quantity','persian_date_requested','get_delete_url','persian_date_added','get_edit_url','get_status_tag','project','unit_name','unit_price','get_absolute_url']
 
 class ProjectBriefSerializer(serializers.ModelSerializer):
     class Meta:

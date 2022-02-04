@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load to_persian_date %}
+    {% load static %}
+    {% load to_price %}
+    {% include "phoenix/includes/head.html" %}
+    <style>
+        .table-header {
+            text-align: right;
+            background-color: #ddd;
+            color: #222;
+        }
+
+        .bordered>td,
+        th,
+        .lines_total {
+            border: 3px solid #888;
+        }
+    </style>
+</head>
+
+<body class="farsi rtl">
+
+    <div class="container rtl">
+        <div class="row mt-3">
+            <div class="col-lg-2">
+
+            </div>
+
+            <div class="col-lg-8">
+
+                <table class="table">
+                    <tr class="bordered">
+                        <td colspan="6" style="text-align: center;">
+                            <div class="mb-5">
+
+                                <div class="text-center mb-2">
+                                </div>
+                                <h3 class="text-center">
+                                    صورتحساب
+                                </h3>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col text-right">
+                                    صورتحساب : {{pay_from.profile.name}}
+                                    <br>
+                                    طرف حساب : {{pay_to.profile.name}}
+
+                                </div>
+                                <div class="col text-left">
+                                    <span class="mx-5">
+                                        تاریخ گزارش : {{print_date|to_persian_date|safe}} </span>
+                                </div>
+                            </div>
+                            <div class="container">
+
+
+                            </div>
+
+
+                        </td>
+                    </tr>
+
+                    <tr class="bordered">
+                        <td class="table-header">
+
+                            <small>
+                                ردیف
+                            </small>
+                        </td>
+                        <td class="table-header">
+
+                            شرح تراکنش
+                        </td>
+                        <td class="table-header">
+                            تاریخ
+                        </td>
+                        <td class="table-header">
+                            بدهکار
+
+                        </td>
+                        <td class="table-header">
+                            بستانکار
+
+                        </td>
+                        <td class="table-header">
+                            مانده
+                            <div>
+
+                                <small>(&nbsp;{{CURRENCY}}&nbsp;)
+                                </small>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% for transaction in transactions %}
+                    <tr class="bordered">
+                        <td>
+
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+                            <small>
+
+                                {{transaction.title}}
+                                {{transaction.order.title}}
+                                {{transaction.project.title}}
+                            </small>
+
+                        </td>
+                        <td>
+                            <small class="text-secondary">
+                                {{transaction.date_paid|to_persian_date|safe}}
+
+                            </small>
+
+                        </td>
+                        <td>
+                            {% ifequal transaction.pay_to.id pay_from_id %}
+                            <span class="d-block text-center">
+                                {{transaction.amount|to_price_pure}}
+
+                            </span>
+
+                            {% else %}
+                            <small class="d-block text-center text-muted">
+                                -----
+                            </small>
+                            {% endifequal %}
+
+                        </td>
+                        <td>
+                            {% ifequal transaction.pay_from.id pay_from_id %}
+
+                            <span class="d-block text-center">
+
+                                {{transaction.amount|to_price_pure}}
+                            </span>
+                            {% else %}
+                            <small class="d-block text-center text-muted">
+                                -----
+                            </small>
+                            {% endifequal %}
+
+
+                        </td>
+                        <td>
+                            {{transaction.rest|to_price_pure}}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    <tr class="bordered">
+                        <td colspan="5">
+                            <div class="text-left text-secondary">
+                                مانده کل
+                                (
+
+                                {{CURRENCY}}
+                                )
+                            </div>
+                        </td>
+                        <td class="lines_total">
+                            {{rest|to_price_pure}}
+
+                        </td>
+                    </tr>
+
+                    <tr class="bordered">
+                        <td colspan="6" style="background-color: #ddd;">
+                            <div class="text-right">
+                                {{rest|to_horuf}}
+
+                                {{CURRENCY}}
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+
+
+
+
+                    <tr class="bordered">
+                        <td colspan="6">
+                            <div class="row">
+                                <div class="col-10">
+
+                                    <h5>
+                                        توضیحات :
+
+                                    </h5>
+
+                                    {% if descriptions %}
+                                    <ul>
+                                        {% for description in descriptions %}
+                                        <li>
+                                            <small>
+
+                                                {{description|safe}}
+                                            </small>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="col-2">
+                                    <img src="{{order.get_qrcode_url}}" width="100%" alt="">
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr class="bordered">
+
+                        <td colspan="6" class="text-center">
+
+                            <div class="mb-2">&nbsp;</div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <span>
+
+                                        {{pay_from.profile.name}}
+                                    </span>
+                                    <br>
+
+
+                                </div>
+                                <div class="col text-center">
+                                    <span>
+
+                                        {{pay_to.profile.name}}
+
+                                    </span>
+                                    <br>
+
+
+
+                                </div>
+                            </div>
+
+                            <div class="mb-5">&nbsp;</div>
+                            <div class="mb-5">&nbsp;</div>
+
+
+                    </tr> 
+                </table>
+
+            </div>
+
+            <div class="col-lg-2">
+
+            </div>
+        </div>
+    </div>
+
+    {% csrf_token %}
+
+    {% include "phoenix/includes/layout-scripts.html" %}
+</body>
+
+</html>

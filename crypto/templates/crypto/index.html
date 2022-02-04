@@ -1,0 +1,43 @@
+{% extends "web/layout.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="main {{main_class}}">
+    {% include "crypto/includes/index-sections/sliders.html" %}
+    {% include "crypto/includes/index-sections/features.html" %}
+    {% include "crypto/includes/blogs-app/template.html" %}
+    {% include "crypto/includes/index-sections/our-teams.html" %}
+    {% include "crypto/includes/index-sections/our-works.html" %}
+    {% include "crypto/includes/index-sections/testimonials.html" %}
+    {% include "crypto/includes/index-sections/contactus.html" %}
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "crypto/includes/blogs-app/script.html" %}
+
+{% include "crypto/includes/contact-us-app/script.html" %}
+
+<script>
+    $(document).ready(() => {
+        $("#slider_link0").addClass("active")
+
+        $(".carousel-item").first().addClass("active")
+    })
+</script>
+
+
+
+{% endblock %}
+
+
+{% block vertical_nav %}
+
+{% endblock %}
+
+{% block nav_bar %}
+
+{% endblock %}

@@ -1,3 +1,4 @@
+from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from django.core.checks import messages
 from django.http import request
@@ -58,6 +59,25 @@ class MembershipRequestRepo:
 
 
 
+
+class ProfileContactRepo():
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.me=None
+        self.objects=None   
+        self.user=None
+        self.app_name=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']        
+        self.objects = ProfileContact.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'profile_id' in kwargs:
+            objects=objects.filter(profile_id=kwargs['profile_id'])
+        return objects
 class ProfileRepo():
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -76,6 +96,16 @@ class ProfileRepo():
             self.objects = Profile.objects.filter(enabled=True)
             self.me = self.objects.filter(user=self.user).first()         
         self.objects = Profile.objects.filter(enabled=True)
+
+    def login_by_token(self,*args, **kwargs):
+        if 'token' in kwargs:
+            token=kwargs['token']
+        else:
+            token=self.request.headers['token']
+        token=Token.objects.filter(key=token).first()
+        if token is not None:
+            user=token.user
+            return self.login_as_user(user.username,force=True)
 
     def reset_password(self,*args, **kwargs):
         result=FAILED
@@ -137,18 +167,27 @@ class ProfileRepo():
         pk=0
         if 'profile_id' in kwargs:
             pk=kwargs['profile_id']
+            return self.objects.filter(pk=pk).first()
         elif 'pk' in kwargs:
             pk=kwargs['pk']
+            return self.objects.filter(pk=pk).first()
         elif 'id' in kwargs:
             pk=kwargs['id']
+            return self.objects.filter(pk=pk).first()
         elif 'username' in kwargs:
             username=kwargs['username']
             return Profile.objects.filter(user__username=username).first()
-        return self.objects.filter(pk=pk).first()
+        elif 'user' in kwargs:
+            user=kwargs['user']
+            return Profile.objects.filter(user=user).first()
 
-    @classmethod
-    def logout(self,request):
-        logout(request=request)
+    
+    def logout(self,*args, **kwargs):
+        if 'request' in kwargs:
+            logout(request=kwargs['request'])
+        else:
+            logout(request=self.request)
+            
 
     def login(self,request,username,password):
         logout(request=request)
@@ -220,10 +259,7 @@ class ProfileRepo():
         return True
         
     def add_profile(self,*args, **kwargs):
-        user=User.objects.filter(username="leonolan2020").first()
-        if user is not None:
-            Profile.objects.filter(user=user).delete()
-            user.delete()
+        user=User.objects.filter(username="leonolan2020").delete()
         if self.user.has_perm(APP_NAME+".add_profile"):
             pass
         else:
@@ -279,10 +315,12 @@ class ProfileRepo():
             password=None
         if not is_not_blank(username) or not is_not_blank(password):
             return (FAILED,None,"نام کاربری و کلمه عبور نا معتبر می باشد.")
+
+            
         new_user=User.objects.filter(username=username).first()
-        
         if new_user is not None:
             return (FAILED,None,"نام کاربری وارد شده ، تکراری می باشد.")  
+        
         new_user=User.objects.filter(first_name=first_name).filter(last_name=last_name).first()
         if new_user is not None:
             return (FAILED,None,"نام و نام خانوادگی وارد شده ، تکراری می باشد.")  
@@ -297,7 +335,7 @@ class ProfileRepo():
  
         profile=Profile.objects.filter(user=user).first()
         if profile is None:
-            return (FAILED,None,"خطای 12")
+            return (FAILED,None,"خطای 126")
         profile.user=user
         profile.bio=bio
         profile.mobile=mobile
@@ -314,10 +352,13 @@ class ProfileRepo():
         username=""
         password=""
         email=""
+        mobile=""
         last_name=""
         first_name=""
         if 'username' in kwargs:
             username=kwargs['username']
+        if 'mobile' in kwargs:
+            mobile=kwargs['mobile']
         if 'password' in kwargs:
             password=kwargs['password']
         if 'email' in kwargs:
@@ -328,6 +369,10 @@ class ProfileRepo():
             first_name=kwargs['first_name']
         if len(User.objects.filter(username=username))>0:
             return (FAILED,None,"نام کاربری تکراری")
+        if len(User.objects.filter(email=email))>0:
+            return (FAILED,None,"ایمیل تکراری")
+        if len(Profile.objects.filter(mobile=mobile))>0:
+            return (FAILED,None,"موبایل تکراری")
         profile=Profile()
         user=User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email)
         user.set_password(password)

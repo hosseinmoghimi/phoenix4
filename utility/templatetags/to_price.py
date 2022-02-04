@@ -3,15 +3,31 @@ from django import template
 register = template.Library()
 from utility.currency import to_price as to_price_origin
 from utility.num import to_horuf as to_horuf_num,to_tartib as to_tartib_
-
+RIAL="ریال"
 @register.filter
 def to_price(value):
     return to_price_origin(value=value)
+
+@register.filter
+def to_price_rial(value):
+    return to_price_x10(value=value*10)+" "+RIAL
+
+
+@register.filter
+def to_price_x10(value):
+    return to_price_pure(value=value*10)
 
 
 @register.filter
 def to_horuf(value):
     return to_horuf_num(value)
+
+
+
+
+@register.filter
+def to_horuf_x10(value):
+    return to_horuf_num(value*10)
 
 
 

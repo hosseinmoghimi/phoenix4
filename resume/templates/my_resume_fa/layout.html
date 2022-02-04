@@ -9,28 +9,77 @@
   {% endblock head %}
 
 
-<style>
- .contact-sent-message{
-    color: #fff;
-    background: #18d26e;
-    text-align: center;
-    padding: 15px;
-    font-weight: 600;
-  }
-  .contact-error-message{
-    color: #fff;
-    background: #e71919;
-    text-align: center;
-    padding: 15px;
-    font-weight: 600;
-  }
-  .contact-loading {
-    background: #fff;
-    text-align: center;
-    padding: 15px;
-}
+  <style>
+    .contact-sent-message {
+      color: #fff;
+      background: #18d26e;
+      text-align: center;
+      padding: 15px;
+      font-weight: 600;
+    }
 
-</style>
+    .contact-error-message {
+      color: #fff;
+      background: #e71919;
+      text-align: center;
+      padding: 15px;
+      font-weight: 600;
+    }
+
+    .contact-loading {
+      background: #fff;
+      text-align: center;
+      padding: 15px;
+    }
+  </style>
+
+
+
+
+  {% if farsi_font_name %}
+  <link href="{{STATIC_URL}}leo/css/font-farsi-{{farsi_font_name}}.css" rel="stylesheet">
+  {% else %}
+  <link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
+  {% endif %}
+  <style>
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    label,
+    th,
+    td,
+    select,
+    input,
+    button,
+    .form-control {
+      font-family: "HMFONT";
+    }
+
+
+
+    .rtl {
+      direction: rtl !important;
+    }
+
+
+
+    .resume-item1::before {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50px;
+      right: -9px;
+      top: 0;
+      background: #fff;
+      border: 2px solid #0563bb;
+    }
+  </style>
+
 
 </head>
 
@@ -40,22 +89,42 @@
   <!-- <button type="button" class="mobile-nav-toggle d-xl-none"><i class="bi bi-list mobile-nav-toggle"></i></button> -->
   <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
   <!-- ======= Header ======= -->
-  <header id="header" class="d-flex flex-column justify-content-center">
+  <header id="header" class="d-flex flex-column justify-content-center" style=" ">
 
     <nav id="navbar" class="navbar nav-menu">
       <ul>
-        <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>خانه</span></a></li>
-        <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>خانه</span></a></li>
-        <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>About</span></a></li>
-        <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
-        <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Portfolio</span></a>
+        <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span
+              class="farsi">خانه</span></a></li>
+
+        <li><a href="#hero" class="nav-link scrollto"><i class="bx bx-home"></i> <span class="farsi">سربرگ</span></a>
         </li>
-        <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Services</span></a></li>
-        <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Contact</span></a></li>
+        <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span class="farsi">درباره
+              ...</span></a></li>
+        <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span class="farsi">رزومه
+              ها</span></a></li>
+        <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span class="farsi">کار
+              ها</span></a>
+        </li>
+        <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span
+              class="farsi">خدمات</span></a></li>
+        <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span
+              class="farsi">ارتباط</span></a></li>
+        <li><a href="{{resume_index.get_print_url}}" class="nav-link scrollto"><i class="bx bx-printer"></i> <span
+              class="farsi">چاپ</span></a></li>
         {% if perms.resume.change_resumeindex %}
         <li><a href="{{resume_index.get_edit_url}}" class="nav-link scrollto" target="_blank"><i
               class="material-icons">edit</i> <span>Edit</span></a></li>
 
+        {% endif %}
+        {% if resume_index %}
+
+        <li><a href="{% url 'resume:resume_index_language' language_index=1 profile_id=resume_index.profile.id%}"
+            class="nav-link scrollto">
+
+
+            EN
+
+            <span class="">Resume</span></a></li>
         {% endif %}
       </ul>
     </nav><!-- .nav-menu -->

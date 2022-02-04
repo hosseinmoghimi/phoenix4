@@ -10,7 +10,6 @@ class HesabYarPage(BasicPage):
     def save(self,*args, **kwargs):
         self.app_name=APP_NAME
         return super(HesabYarPage,self).save(*args, **kwargs)
-
  
 class FinancialDocument(HesabYarPage):
     financial_year=models.ForeignKey("FinancialYear", verbose_name=_("financial_year"), on_delete=models.CASCADE)
@@ -43,16 +42,7 @@ class FinancialAccount(models.Model):
     def save(self,*args, **kwargs):
         self.class_name='financialdocument'
         return super(FinancialAccount,self).save(*args, **kwargs)
-
-
-
-
-
-
-
-
-
-
+ 
 class ProfileFinancialAccount(FinancialAccount):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     class_name='profilefinancialaccount'
@@ -72,8 +62,6 @@ class ProfileFinancialAccount(FinancialAccount):
         if self.title is None or self.title=="":
             self.title=self.profile.name
         return super(ProfileFinancialAccount,self).save(*args, **kwargs)
-
-
 
 class EmployerFinancialAccount(FinancialAccount):
     employer=models.ForeignKey("projectmanager.employer", verbose_name=_("employer"), on_delete=models.CASCADE)
@@ -95,12 +83,6 @@ class EmployerFinancialAccount(FinancialAccount):
             self.title=self.employer.name
         return super(EmployerFinancialAccount,self).save(*args, **kwargs)
 
-
-
-
-
-
-
 class Cash(FinancialAccount):
 
     class_name='cash'
@@ -117,8 +99,6 @@ class Cash(FinancialAccount):
 
     def save(self,*args, **kwargs):
         return super(Cash,self).save(*args, **kwargs)
-
-
 
 class BankAccount(ProfileFinancialAccount):
     bank=models.ForeignKey("bank", verbose_name=_("bank"), on_delete=models.CASCADE)
@@ -145,14 +125,6 @@ class BankAccount(ProfileFinancialAccount):
         self.title=f"""حساب {self.bank.name}  {(self.branch or "")} {self.profile.name}"""
         return super(BankAccount,self).save(*args, **kwargs)
 
-
-
-
-
-
-
-
-
 class FinancialYear(models.Model):
     title=models.CharField(_("عنوان"), max_length=50)
     start_date=models.DateTimeField(_("start_date"), auto_now=False, auto_now_add=False)
@@ -167,8 +139,6 @@ class FinancialYear(models.Model):
         verbose_name = _("FinancialYear")
         verbose_name_plural = _("FinancialYears")
  
-
-
 class Bank(models.Model):
     name=models.CharField(_("عنوان"), max_length=50)
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)

@@ -38,18 +38,23 @@ def CoreContext(request, *args, **kwargs):
     context['DEBUG'] = DEBUG
     context['ADMIN_URL'] = ADMIN_URL
     context['MEDIA_URL'] = MEDIA_URL
+    context['STATIC_URL'] = STATIC_URL
     context['SITE_URL'] = SITE_URL
     context['CURRENCY'] = CURRENCY
     context['PUSHER_IS_ENABLE'] = PUSHER_IS_ENABLE
     picture_repo=PictureRepo(request=request,app_name=app_name)
+    nav_repo=NavLinkRepo(request=request,app_name=app_name)
     parameter_repo = ParameterRepo(request=request,app_name=app_name)
-    
+    context['nav_bar_links']=nav_repo.list(app_name=app_name)
     context['app']={
         'title':parameter_repo.parameter(name=ParametersEnum.TITLE).value,
         # 'home_url':parameter_repo.parameter(name=ParametersEnum.HOME_URL).value,
         'home_url': reverse(app_name+":home"),
         'logo':picture_repo.picture(name=PictureNameEnums.LOGO),
     }
+    farsi_font_name=parameter_repo.parameter(name=ParametersEnum.FARSI_FONT_NAME).value
+    if not farsi_font_name==ParametersEnum.FARSI_FONT_NAME and not farsi_font_name=="Default":
+        context['farsi_font_name']=farsi_font_name
     master_keywords=parameter_repo.parameter(name=ParametersEnum.MASTER_KEYWORDS).value
     context['master_keywords']=master_keywords
 
@@ -160,6 +165,8 @@ def DefaultContext(request, app_name='core', *args, **kwargs):
 class MessageView(View):
     def __init__(self, *args, **kwargs):
         self.links = []
+        self.title = None
+        self.body = None
         self.message_text_html = None
         self.message_color = 'warning'
         self.has_home_link = True
@@ -169,6 +176,16 @@ class MessageView(View):
         self.message_text = ""
         self.header_text = ""
         self.message_html = ""
+        if 'app_name' in kwargs:
+            self.app_name = kwargs['app_name']
+        else:
+            self.app_name = 'web'
+        if 'title' in kwargs:
+            self.title = kwargs['title']
+        if 'body' in kwargs:
+            self.body = kwargs['body']
+        if 'message_text_html' in kwargs:
+            self.message_text_html = kwargs['message_text_html']
         if 'message_html' in kwargs:
             self.message_html = kwargs['message_html']
         if 'message_color' in kwargs:
@@ -219,9 +236,11 @@ class MessageView(View):
         context['message_icon'] = self.message_icon
         context['message_text'] = self.message_text
         context['message_html'] = self.message_html
+        context['body'] = self.body
+        context['title'] = self.title
 
         context['search_form'] = None
-        return render(self.request, TEMPLATE_ROOT+'error.html', context)
+        return render(self.request, TEMPLATE_ROOT+'message.html', context)
 
 
 class BasicViews(View):
@@ -247,10 +266,10 @@ class PageViews(View):
 
     def download(self, request, *args, **kwargs):
         me=ProfileRepo(request=request).me
-        if me is None :
-            raise Http404
         document = DocumentRepo(request=request).document(*args, **kwargs)
-        if request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
+        if me is None and not document.is_open:
+            pass
+        elif request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
             if document is None:
                 raise Http404
             return document.download_response()
@@ -266,7 +285,7 @@ class PageViews(View):
         message_view.header_color = "rose"
         message_view.message_icon = ''
         message_view.header_icon = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
-        message_view.message_text = 'مجوز شما برای دسترسی به این صفحه مجاز نمی باشد.'
+        message_view.message_text = ' شما مجوز دسترسی به این صفحه را ندارید.'
         message_view.header_text = 'دسترسی غیر مجاز'
 
         return message_view.response()

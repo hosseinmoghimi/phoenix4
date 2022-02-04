@@ -58,6 +58,9 @@
                         <th>
                             وضعیت
                         </th>
+                        <th>
+
+                        </th>
                     </thead>
                     <tbody>
 
@@ -127,6 +130,8 @@
                             </td>
                             <td>
                                 <span v-html="service_request.get_status_tag"></span>
+                            </td>
+                            <td>
 
 
                                 {% if perms.projectmanager.change_servicerequest %}
@@ -134,6 +139,16 @@
                                     <i class="material-icons">edit</i>
                                 </a>
                                 {% endif %}
+
+
+                                {% if perms.projectmanager.delete_servicerequest %}
+                                <a title="حذف" target="_blank" :href="service_request.get_delete_url">
+                                    <i class="fa fa-trash text-danger">
+
+                                    </i>
+                                </a>
+                                {% endif %}
+
                             </td>
                         </tr>
 

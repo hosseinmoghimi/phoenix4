@@ -1,5 +1,4 @@
 import json
-
 from authentication.repo import ProfileRepo
 from authentication.serializers import ProfileSerializer
 from authentication.views import ProfileContext
@@ -7,9 +6,9 @@ from core.constants import CURRENCY
 from core.enums import AppNameEnum, ParametersEnum
 from core.repo import BasicPageRepo, ParameterRepo, PictureRepo, TagRepo
 from core.serializers import BasicPageSerializer
-from core.views import DefaultContext, MessageView, PageContext
+from core.views import CoreContext, MessageView, PageContext
 from django.http.response import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,reverse
 from django.views import View
 from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
@@ -44,7 +43,7 @@ def getContext(request):
         # mv=MessageView()
         # mv.message_text_html="دسترسی غیر مجاز"
         # return mv.response(request=request)
-    context = DefaultContext(request=request, app_name=APP_NAME)
+    context = CoreContext(request=request, app_name=APP_NAME)
     context["me_employee"] = me_employee
     context['layout_parent'] = "material-dashboard-5-rtl/layout.html"
     context['layout_parent'] = "material-kit-pro/layout.html"
@@ -228,7 +227,15 @@ class ProjectViews(View):
 
     def project_materials_order(self, request, *args, **kwargs):
         context = getContext(request)
-        TAX_PERCENT = 0
+        
+        TAX_PERCENT=kwargs['tax_percent']
+        context['TAX_PERCENT']=TAX_PERCENT
+        unit=kwargs['unit'] if 'unit' in kwargs else 't'
+        if unit=='t':
+            unit='-tuman'
+        else:
+            unit='-rial'
+            context['CURRENCY']="ریال"
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
@@ -249,10 +256,12 @@ class ProjectViews(View):
         ship_fee = 0
 
         descriptions = [
-            f"واحد مبلغ ها {CURRENCY} می باشد.",
-            f"""مربوط به {project.full_title}     ({project.id})""",
+            f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
+            f"""مربوط به {project.full_title}     ({project.id})""",
+            f"""امضای این برگه توسط کارفرما به معنای تحویل کامل کالاهای لیست فوق می باشد.""",
         ]
+        context['app']['title']='لیست متریال های '+project.title
         if project.contractor is not None and project.contractor.owner is not None:
             from accounting.repo import BankAccountRepo
             bank_account = BankAccountRepo(request=request).bank_account(
@@ -274,11 +283,18 @@ class ProjectViews(View):
         context['order_lines'] = order_lines
         context['order'] = order
         context['project'] = project
-        return render(request, TEMPLATE_ROOT+"invoice.html", context)
+        return render(request, TEMPLATE_ROOT+"invoice"+unit+".html", context)
 
     def project_services_order(self, request, *args, **kwargs):
         context = getContext(request)
-        TAX_PERCENT = 0
+        unit=kwargs['unit'] if 'unit' in kwargs else 't'
+        if unit=='t':
+            unit='-tuman'
+        else:
+            unit='-rial'
+            context['CURRENCY']="ریال"
+        TAX_PERCENT=kwargs['tax_percent']
+        context['TAX_PERCENT']=TAX_PERCENT
         project = ProjectRepo(request=request).project(*args, **kwargs)
         order_lines = []
         lines_total = 0
@@ -298,11 +314,12 @@ class ProjectViews(View):
         tax = int(TAX_PERCENT*(lines_total)/100)
         ship_fee = 0
         descriptions = [
-            f"واحد مبلغ ها {CURRENCY} می باشد.",
+            f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
             f"""مربوط به {project.full_title}     ( کد {project.id} )""",
             f"""تاریخ اجرای پروژه   {project.persian_start_date()[:10]} ~ {project.persian_end_date()[:10]}""",
             f"""امضای این برگه توسط کارفرما به معنای تایید انجام کامل خدمات لیست فوق می باشد.""",
         ]
+        context['app']['title']='لیست خدمات '+project.title
         if project.contractor is not None and project.contractor.owner is not None:
             from accounting.repo import BankAccountRepo
             bank_account = BankAccountRepo(request=request).bank_account(
@@ -324,7 +341,7 @@ class ProjectViews(View):
         context['order'] = order
         context['order_lines'] = order_lines
         context['project'] = project
-        return render(request, TEMPLATE_ROOT+"invoice.html", context)
+        return render(request, TEMPLATE_ROOT+"invoice"+unit+".html", context)
 
     def project(self, request, *args, **kwargs):
         project = ProjectRepo(request=request).project(*args, **kwargs)

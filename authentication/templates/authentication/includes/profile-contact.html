@@ -44,7 +44,7 @@
             </h6>
             <a href="{{customer.get_absolute_url}}">
                 <span class="text-secondary farsi">
-                    {{customer.id}} {{customer.title}}
+                    {{customer.title}}
                 </span>
             </a>
         </li>
@@ -61,7 +61,7 @@
             </h6>
             <a href="{{financialaccount.get_absolute_url}}">
                 <span class="text-secondary farsi">
-                صورت حساب مالی
+                    صورت حساب مالی
                 </span>
             </a>
         </li>
@@ -78,16 +78,40 @@
 
             </h6>
             <a href="{{employee.get_absolute_url}}">
-                <span class="text-secondary farsi" title="{{employee.organization_unit.title}} {{employee.organization_unit.employer.title}}">
-                    {{employee.organization_unit.title}} {{employee.organization_unit.employer.title}}
+                <span class="text-secondary farsi"
+                    title="{{employee.organization_unit.title}} {{employee.organization_unit.employer.title}}">
+                    {{employee.organization_unit.title}} ، {{employee.organization_unit.employer.title}}
                 </span>
             </a>
 
-            
+
 
         </li>
         {% endfor %}
 
+
+
+        {% for our_team in selected_profile.ourteam_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <h6 class="mb-0">
+                <span class="material-icons">
+                    engineering
+                </span>
+                تیم وب
+
+            </h6>
+            <a href="{{our_team.get_absolute_url}}">
+                <span class="text-secondary farsi" title="{{our_team.job}}">
+                    {{our_team.profile.name}}
+                </span>
+            </a>
+
+
+
+        </li>
+        {% endfor %}
+
+<!-- 
         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
             <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -137,7 +161,66 @@
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>Facebook</h6>
             <span class="text-secondary">bootdey</span>
+        </li> -->
+
+
+        {% for profile_contact in profile_contacts %}
+
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <h6 class="mb-0">
+                {% if profile_contact.icon %}
+                <span class="ml-1"> 
+
+                    {{profile_contact.icon|safe}}
+                </span>
+                {% endif %}
+
+                {% if perms.authentication.change_profile %}
+                <a href="{{profile_contact.get_edit_url}}" target="_blank" title="ویرایش">
+
+                    {% endif %}
+                    <span class="text-dark">
+
+                        {{profile_contact.name}}
+                    </span>
+                    {% if perms.authentication.change_profile %}
+
+                </a>
+                {% endif %}
+            </h6>
+            <span class="text-secondary">
+                {% if profile_contact.url %}
+                <a target="_blank" title="{{profile_contact.name}}" href="{{profile_contact.url}}">
+                    {% endif %}
+                    <span class="text-muted">
+
+                        {{profile_contact.value}}
+                    </span>
+                    {% if profile_contact.url %}
+                </a>
+                {% endif %}
+            </span>
         </li>
+        {% endfor %}
+
+
+        {% if perms.authentication.change_profile %}
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <h6 class="mb-0">
+                <i class="fa fa-plus">
+
+                </i>
+                add
+            </h6>
+            <a href="{{ADMIN_URL}}{{APP_NAME}}/profilecontact/add/?profile={{selected_profile.id}}">
+                <span class="text-secondary">
+                    افزودن</span>
+
+            </a>
+        </li>
+
+
+        {% endif %}
 
     </ul>
 </div>

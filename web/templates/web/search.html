@@ -1,0 +1,137 @@
+{% extends "web/layout.html" %}
+{% load to_price %}
+{% load static %}
+
+
+
+{% block page_header %}
+<div class="page-header header-filter header-small" data-parallax="true"
+    style="background-image: url('{{header_image.image}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <div class="brand">
+                    <h4 class="text-center">
+                        جستجو برای
+                    </h4>
+                    <h1 class="title text-center">{{category.title}}
+
+                        {{search_for}}
+                    </h1>
+                    {% if perms.core.change_picture %}
+                    <div class="text-center">
+                        {{header_image.get_edit_btn|safe}}
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="main {{main_class}}">
+
+    <div class="section">
+        <div class="container">
+
+            {% for page in blogs %}
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <a href="{{page.get_absolute_url}}">
+                        <img src="{{page.thumbnail}}" class="w-100 rounded" alt="">
+                    </a>
+                </div>
+                <div class="col-md-8 text-right">
+                        <span class="farsi text-muted small">
+                             مقاله
+                        </span>
+                    <a href="{{page.get_absolute_url}}">
+                        
+                        <h4>
+                          {{page.title}}
+
+                        </h4>
+
+                    </a>
+                    {% if page.short_description %}
+                    <div class="text-muted small mt-2">
+
+                        {{page.short_description|safe}}
+                    </div>
+                    {% endif %}
+                    <div>
+
+                        {% for tag in page.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+                            
+                            <span class="badge badge-success farsi">
+                                {{tag.title}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+            {% for page in crypto_tokens %}
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <a href="{{page.get_absolute_url}}">
+                        <img src="{{page.thumbnail}}" class="w-100 rounded" alt="">
+                    </a>
+                </div>
+                <div class="col-md-8 text-right">
+                        <span class="farsi text-muted small">
+                        رمزارز    
+                        </span>
+                    <a href="{{page.get_absolute_url}}">
+                        
+                        <h4>
+                          {{page.title}}
+
+                        </h4>
+
+                    </a>
+                    {% if page.short_description %}
+                    <div class="text-muted small mt-2">
+
+                        {{page.short_description|safe}}
+                    </div>
+                    {% endif %}
+                    <div>
+
+                        {% for tag in page.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+                            
+                            <span class="badge badge-success farsi">
+                                {{tag.title}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+
+
+        </div>
+    </div><!-- section -->
+
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% endblock %}

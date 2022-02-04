@@ -1,3 +1,4 @@
+import imp
 from resume.enums import FilterEnum, IconEnum, LinkClassEnum,ServiceColorEnum,LanguageEnum, languageToIndex
 from django.db.models.fields import DateField
 from tinymce.models import HTMLField
@@ -61,11 +62,11 @@ class ResumeIndex(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"),null=True,blank=True, max_length=100)
     typing_text=models.CharField(_("typing_text"), null=True,blank=True,default="Developer,Designer,Programmer",max_length=500)
-    about_top=models.TextField(_("about_top"),null=True,blank=True)
+    about_top=HTMLField(_("about_top"),null=True,blank=True)
     image_main_origin = models.ImageField(_("تصویر اصلی"),null=True, blank=True, upload_to=IMAGE_FOLDER +
                                      'Resume/Main/', height_field=None, width_field=None, max_length=None)
     job_title=models.CharField(_("job_title"),null=True,blank=True, max_length=300)
-    about_middle=models.TextField(_("about_middle"),null=True,blank=True)
+    about_middle=HTMLField(_("about_middle"),null=True,blank=True)
 
     birth_day=models.DateField(_("birth_day"),null=True,blank=True, auto_now=False, auto_now_add=False)
     website=models.CharField(_("website"),null=True,blank=True, max_length=500)
@@ -76,19 +77,38 @@ class ResumeIndex(models.Model):
     degree=models.CharField(_("degree"),null=True,blank=True, max_length=100)
     email=models.CharField(_("email"),null=True,blank=True, max_length=100)
     freelance=models.CharField(_("freelance"),null=True,blank=True, max_length=100)
-    about_bottom=models.TextField(_("about_bottom"),null=True,blank=True)
+    about_bottom=HTMLField(_("about_bottom"),null=True,blank=True)
 
 
 
-    facts_top=models.TextField(_("facts_top"),null=True,blank=True)
-    skills_top=models.TextField(_("skills_top"),null=True,blank=True)
-    resume_top=models.TextField(_("resume_top"),null=True,blank=True)
-    portfolio_top=models.TextField(_("portfolio_top"),null=True,blank=True)
-    services_top=models.TextField(_("services_top"),null=True,blank=True)
+    facts_top=HTMLField(_("facts_top"),null=True,blank=True)
+    skills_top=HTMLField(_("skills_top"),null=True,blank=True)
+    resume_top=HTMLField(_("resume_top"),null=True,blank=True)
+    portfolio_top=HTMLField(_("portfolio_top"),null=True,blank=True)
+    services_top=HTMLField(_("services_top"),null=True,blank=True)
 
     location=models.CharField(_("location"),null=True,blank=True, max_length=200)
     call=models.CharField(_("call"),null=True,blank=True, max_length=50)
 
+    def get_qrcode_url(self):
+        from phoenix.settings import QRCODE_ROOT,SITE_FULL_BASE_ADDRESS,QRCODE_URL
+        from utility.qrcode import generate_qrcode
+        
+        if self.pk is None:
+            super(ResumeIndex,self).save()
+        import os
+        file_path = QRCODE_ROOT
+        file_name=APP_NAME+"_"+self.class_name+str(self.pk)+".svg"
+        # file_address=os.path.join(file_path,file_name)
+        file_address=os.path.join(QRCODE_ROOT,file_name)
+   
+        content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path)
+
+        file_name=APP_NAME+"_"+self.class_name+str(self.pk)+".svg"   
+        return f"{QRCODE_URL}{file_name}"
+    def get_print_url(self):
+        return reverse(APP_NAME+":resume_print",kwargs={'pk':self.pk})
     class Meta:
         verbose_name = _("ResumeIndex")
         verbose_name_plural = _("ResumeIndexs")
@@ -158,7 +178,8 @@ class ResumePortfolio(ResumePage):
         return super(ResumePortfolio,self).save(*args, **kwargs)
 
 
-
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":portfolio",kwargs={'pk':self.pk})
 class ResumeSkill(models.Model):
     resume_index=models.ForeignKey("resumeindex", verbose_name=_("resume"), on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)

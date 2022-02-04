@@ -1,3 +1,5 @@
+from django.http import request
+from todocalendar.apps import APP_NAME
 from .models import Appointment
 from authentication.repo import ProfileRepo
 class AppointmentRepo():
@@ -10,12 +12,30 @@ class AppointmentRepo():
         if 'user' in kwargs:
             self.user = kwargs['user']
         self.profile=ProfileRepo(user=self.user).me
-        if self.profile is not None:
+        if self.user is not None and self.user.has_perm(APP_NAME+".view_appointment"):
+            self.objects=Appointment.objects.all()
+        elif self.profile is not None:
             self.objects=Appointment.objects.filter(creator=self.profile)
         else:
             self.objects=Appointment.objects.filter(pk=0)
 
   
+
+    def add_person(self, *args, **kwargs):
+        # print(kwargs)
+        # print(10*"#$*&^_")
+        person_id=kwargs['profile_id']
+        appointment_id=kwargs['appointment_id']
+        appointment=self.appointment(appointment_id=appointment_id)    
+        if self.user.has_perm(APP_NAME+".change_appointment"):
+            pass
+        if appointment.creator.id==self.profile.id:
+            pass
+        else:
+            return
+        person=ProfileRepo(request=self.request).profile(profile_id=person_id)
+        appointment.persons.add(person)
+        return person
 
     def add_appointment(self, *args, **kwargs):        
         pass

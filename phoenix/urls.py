@@ -43,6 +43,7 @@ urlpatterns = [
     path('', include(HOME_APP_URLS)),
     path('stock/', include('stock.urls')),
     path('realestate/', include('realestate.urls')),
+    # path('crypto/', include('crypto.urls')),
     path('forums/', include('phoenix_forums.urls')),
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),

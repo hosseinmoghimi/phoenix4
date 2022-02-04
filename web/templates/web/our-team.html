@@ -1,1 +1,174 @@
-{% extends "authentication/profile.html" %}
+{% extends "web/layout.html" %}
+{% block content %}
+<div class="page-header header-filter" data-parallax="true"
+    style="background-image: url('{{our_team.profile.header_image}}');"></div>
+<div class="main main-raised">
+    <div class="profile-content pb-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 ml-auto mr-auto">
+                    <div class="profile">
+                        <div class="avatar">
+                            <img src="{{our_team.profile.image}}" alt="Circle Image"
+                                class="img-raised rounded-circle img-fluid">
+                        </div>
+                        <div class="name">
+                            <h3 class="title text-center">
+                                <a title="پروفایل" href="{{our_team.profile.get_absolute_url}}" target="_blank">
+
+                                    {{our_team.profile.name}}
+                                </a>
+                                {% if perms.web.change_ourteam %}
+
+                                <a title="ویرایش" href="{{our_team.get_edit_url}}" target="_blank">
+                                    <i class="fa fa-edit text-info"></i>
+                                </a>
+                                {% endif %}
+
+
+                            </h3>
+                            <h6 class="title text-center">{{our_team.job}}</h6>
+                            <div class="text-center">
+
+                                {% for profile_contact in our_team.profile.profilecontact_set.all %}
+                                {% if profile_contact.url %}
+
+                                <!-- <a target="_blank" title="{{profile_contact.name}}" href="{{profile_contact.url}}"
+                                    class="btn btn-just-icon btn-link btn-dribbble">
+                                    <span style="height: 30px;">
+                                        {{profile_contact.icon|safe}}
+                                    </span>
+                                </a> -->
+                                {% endif %}
+                                {% endfor %}
+
+                                {% for profile_contact in our_team.sociallinks %}
+                                <a target="_blank" title="{{profile_contact.name}}" href="{{profile_contact.url}}"
+                                    class="btn btn-just-icon btn-link btn-dribbble">
+                                    <span style="height: 30px;">
+                                        {{profile_contact.get_icon_tag|safe}}
+                                    </span>
+                                </a>
+                                {% endfor %}
+
+                            </div>
+                            {% if perms.web.change_ourteam %}
+                            <div class="text-center">
+
+
+                                {% for profile_contact in our_team.social_links.all %}
+                                <a target="_blank" title="ویرایش" href="{{profile_contact.get_edit_url}}"
+                                    class="btn btn-just-icon btn-link btn-dribbble">
+                                    <span style="height: 30px;">
+                                        <i class="fa fa-edit"></i>
+                                    </span>
+                                </a>
+                                {% endfor %}
+
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="follow">
+                        {% if perms.change_profile %}
+                        <a target="_blank" class="btn btn-fab btn-warning btn-round" rel="tooltip" title=""
+                            href="{{our_team.get_edit_url}}">
+                            <i class="fa fa-edit"></i>
+
+                        </a>
+                        {% endif %}
+
+                        <a target="_blank" class="btn btn-fab btn-success btn-round" rel="tooltip" title="رزومه"
+                            href="{% url 'resume:resume_index_language' profile_id=our_team.profile.id language_index=2 %}">
+                            <i class="material-icons">
+                                ballot
+                            </i>
+
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="description farsi">
+
+                {% if our_team.description %}
+                {{our_team.description|safe}}
+                {% endif %}
+            </div>
+
+            <div class="text-center mb-5 rtl">
+                <a target="_blank" class="btn btn-success btn-round"
+                    href="{% url 'resume:resume_index_language' profile_id=our_team.profile.id language_index=2 %}">
+                    <span class="farsi">
+                        رزومه فارسی
+
+                    </span>
+                </a>
+
+
+                <a target="_blank" class="btn btn-rose btn-round"
+                    href="{% url 'resume:resume_index' profile_id=our_team.profile.id %}">
+                    <i class="fa fa-edit"></i>
+                    Resume
+                </a>
+
+            </div>
+
+
+
+
+
+<div class="row">
+    <div class="col-md-6">
+
+
+        <div id="accordion" role="tablist">
+
+
+
+            <div class="card card-collapse">
+                <div class="card-header" role="tab" id="headingDescription">
+                    <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapseDescription" aria-expanded="true"
+                            aria-controls="collapseShortDescription">
+                            مقالات
+                            <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseDescription" class="collapse" role="tabpanel"
+                    aria-labelledby="headingDescription" data-parent="#accordion">
+                    <div class="card-body">
+
+
+                        <ul class="nav flex-column">
+                            {% for blog in our_team.blogs %}
+
+                            <li class="nav-item">
+                                <a class="nav-link text-right farsi" target="_blank" href="{{blog.get_absolute_url}}">
+                                    {{blog.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+
+    </div>
+</div>
+ 
+<div class="mb-5"></div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

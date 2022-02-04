@@ -1,0 +1,347 @@
+{% extends "web/layout.html" %}
+{% load static %}
+{% load social_share %}
+
+{% block page_header %}
+<div class="page-header header-filter" data-parallax="true" style="background-image: url('{{page.image_header}}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 ml-auto mr-auto text-center">
+                <!-- <h2 class="title text-center">{{page.title}}</h2> -->
+                {% if page.panel %}
+                {{page.panel|safe}}
+                {% endif %}
+                <br>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="main {{main_class}}">
+
+
+    <div class="container">
+        <div class="section section-text" style="padding-top: 10px !important;">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    <h2 class="title text-center">{{page.title}}
+                    </h2>
+                    <h3 class="text-center ltr">
+                        <span id="price-app">
+                            <span class="  ">
+                                <strong class="strong" v-text="current_price"></strong>
+                                <span class="small text-muted mx-2">$</span>
+                            </span>
+                       
+                            <span class="  ">
+                                <strong class="strong" v-text="rank"></strong>
+                                <span class="small text-muted mx-2">#</span>
+                            </span>
+                        </span>
+
+
+                    </h3>
+                    <div class=" text-center mb-3">
+                        {% if perms.web.change_webpage %}
+
+                        <a href="{{page.get_edit_url}}" target="_blank" class="btn btn-rose btn-round btn-lg">
+                            <i class="material-icons">edit</i>
+                            <span class="farsi">
+                                ویرایش
+                            </span>
+                        </a>
+                        {% endif %}
+
+                        <span class="my-2">
+
+                            {% post_to_telegram link_text=" . " title=page.title obj_or_url=page.get_absolute_url %}
+
+                        </span>
+                        <span class="my-2">
+
+                            {% post_to_whatsapp page.get_absolute_url link_text=" . " %}
+
+                        </span>
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="Coin Market Cap" href="{{crypto_token.coin_market_cap}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="/static/web/icons/coin_market_cap.png" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="Trading View" href="{{crypto_token.trading_view}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="/static/web/icons/trading_view.png" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="Road Map" href="{{crypto_token.road_map}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="/static/web/icons/road_map.png" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+
+                        <span class="my-2">
+
+
+                            <span class="telegram-this">
+                                <a title="{{title}}" href="{{crypto_token.vendor_url}}" class="docs-creator"
+                                    target="_blank">
+                                    <img src="{{crypto_token.vendor_img}}" width="64" alt="" class="mx-2">
+                                </a>
+                            </span>
+
+
+                        </span>
+
+                       
+
+
+                    </div>
+
+
+
+                    {% if page.panel %}
+                    {{page.panel|safe}}
+                    {% endif %}
+                </div>
+                {% if page.pageimage_set.all %}
+
+                <div class="section col-md-10 ml-auto mr-auto">
+                    <div class="row rtl">
+                        {% for page_image in page.pageimage_set.all %}
+                        <div class="col-md-4  ml-auto mr-auto">
+                            <a target="_blank" href="{{page_image.image.get_absolute_url}}">
+
+                                <img class="img-raised rounded img-fluid" alt="Raised Image"
+                                    src="{{page_image.image.thumbnail}}">
+                            </a>
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                {% endif %}
+                {% if page.description %}
+                <div class="col-md-8 ml-auto mr-auto farsi">
+
+                    {{page.description|safe}}
+
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="section section-blog-info">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="blog-tags farsi text-right">
+                                برچسب ها :
+                                {% for tag in page.tags.all %}
+                                <a href="{{tag.get_absolute_url}}">
+
+                                    <span class="badge badge-primary badge-pill">
+                                        {{tag.title}}
+                                    </span>
+                                </a>
+
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr>
+                    {% if page.creator %}
+
+                    <div class="card card-profile card-plain">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="card-avatar">
+                                    <a href="{{page.creator.get_absolute_url}}">
+                                        <img class="img" src="{{page.creator.image}}">
+                                    </a>
+                                    <div class="ripple-container"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <a href="{{page.creator.get_absolute_url}}">
+                                    <h4 class="card-title">{{page.creator.name}}</h4>
+                                </a>
+                                <p class="description">
+                                    {{page.creator.bio}}
+
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <a class="farsi btn btn-default pull-right btn-round">سایر نوشته ها</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="section section-comments">
+            <div class="row">
+                {% if add_page_link_form %}
+                <div class="col-md-4">
+
+                    {% include "web/includes/page-links-app/template.html" %}
+                </div>
+                {% else %}
+                <div class="col-md-6">
+                    {% include "web/includes/page-links-app/template-simple.html" %}
+
+                </div>
+                {% endif %}
+
+
+                {% if add_page_document_form %}
+                <div class="col-md-4">
+
+                    {% include "web/includes/page-documents-app/template.html" %}
+                </div>
+                {% else %}
+                <div class="col-md-6">
+
+                    {% include "web/includes/page-documents-app/template-simple.html" %}
+                </div>
+
+                {% endif %}
+
+                {% if add_page_tag_form %}
+                <div class="col-md-4">
+                    {% include "web/includes/page-tags-app/template.html" %}
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        <div class="section section-comments">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    {% include "web/includes/page-comments-app/template.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="container">
+    <div class="section">
+
+        <div class="my-5">
+            {% include "web/includes/related-pages-app/template.html" %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+    let page_id = parseInt("{{page.id}}")
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+
+    let page_comment_component_template = `{% include "web/includes/page-comments-app/component.html" %}`
+</script>
+
+<script>
+    let url_crypto = `https://min-api.cryptocompare.com/data/price?fsym={{crypto_token.symbol}}&tsyms=ETH,USD,EUR`
+
+
+
+    function get_price() {
+
+        $.get(url_crypto, function (data) {
+            console.log(data.USD)
+            price_app.current_price=data.USD
+        })
+        setTimeout(() => {
+            get_price();
+        }, 2 * 1000);
+
+
+    }
+    let price_app = new Vue({
+        el: "#price-app",
+        data: {
+            current_price: 0,
+            rank: parseInt(`{{crypto_token.rank}}`)
+
+        },
+        methods: {
+            get_price: get_price,
+
+        }
+
+    })
+    $(document).ready(() => {
+        price_app.get_price()
+    })
+
+
+
+</script>
+
+
+{% include "core/includes/page-comments-app/script.html" %}
+{% if add_page_link_form %}
+{% include "core/includes/page-links-app/script.html" %}
+
+{% endif %}
+
+{% if add_page_document_form %}
+
+{% include "core/includes/page-documents-app/script.html" %}
+{% endif %}
+{% include "core/includes/page-tags-app/script.html" %}
+{% include "core/includes/page-related-app/script.html" %}
+{% endblock %}
+
+
+{% block vertical_nav %}
+
+{% endblock %}
+
+{% block nav_bar %}
+
+{% endblock %}

@@ -2,7 +2,8 @@ from django.db.models.fields import BooleanField
 from core.settings import SITE_URL
 from django import forms
 from .apps import APP_NAME
-from django.shortcuts import reverse
+ 
+
 class AddProjectForm(forms.Form):
     parent_id=forms.IntegerField(required=False)
     title=forms.CharField(max_length=50, required=True)
@@ -79,7 +80,8 @@ class AddEmployeeForm(forms.Form):
     first_name=forms.CharField(max_length=50,required=False)
     last_name=forms.CharField(max_length=50,required=False)
                
-class SearchForm(forms.Form):
+class SearchForm(forms.Form): 
+    url=("/"+APP_NAME+"/search/")
     search_for=forms.CharField(max_length=50, required=True)
           
 class AddExistingLocationForm(forms.Form):

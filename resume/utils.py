@@ -43,6 +43,9 @@ class AdminUtility():
 
     def get_add_fact_btn(self):
         return self.get_add_btn(class_name='resumefact')
+    def get_add_portfolio_link(self):
+        return self.get_add_link(class_name='resumeportfolio')
+
     def get_add_fact_link(self):
         return self.get_add_link(class_name='resumefact')
 

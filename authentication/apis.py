@@ -55,23 +55,7 @@ class MembershipRequestApi(APIView):
 
 
 class ProfileApi(APIView):
-    def login(self,request,*args, **kwargs):
-        context={}
-        
-        context['result']=FAILED
-        if request.method=='POST':
-            username=request.data['username']
-            password=request.data['password']
-            print(username)
-            print(password)
-            print(100*"#@$")
-            profile=ProfileRepo(request=request).login(request,username,password)
-            profile=ProfileRepo(request=request).me
-            if profile is not None:
-                context['profile']=ProfileSerializer(profile).data
-                context['result']=SUCCEED
-        return JsonResponse(context)
-    
+      
 
     def edit_profile(self,request,*args, **kwargs):
         context={'result':FAILED}

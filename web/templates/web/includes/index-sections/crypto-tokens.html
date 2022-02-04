@@ -1,0 +1,61 @@
+<div class="cd-section" id="crypto_tokens">
+    <!--     *********    TEAM 1     *********      -->
+    <div class="crypto_token-1" id="crypto_token-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto text-center">
+                    <h2 class="title text-center">
+                        {{ourcrypto_token_title_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{ourcrypto_token_title_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+                    </h2>
+                    <h5 class="description text-center">
+                        {{ourcrypto_token_description_param.value}}
+                        {% if perms.core.change_parameter %}
+                        {{ourcrypto_token_description_param.get_edit_btn|safe}}
+                          
+                        {% endif %}
+
+                    </h5>
+                </div>
+            </div>
+            <div class="row">
+                {% for crypto_token in crypto_tokens %}
+
+
+                <div class="col-md-3 mr-auto ml-auto">
+                    <div class="card card-profile card-plain">
+                        <div class="card-header card-avatar">
+                            <a href="{{crypto_token.get_absolute_url}}">
+                                <img class="img" src="{{crypto_token.profile.image}}" />
+                            </a>
+                        </div>
+                        <div class="card-body ">
+                            <h4 class="card-title text-center">{{crypto_token.profile.name}}</h4>
+                            <h6 class="card-category text-muted text-center">{{crypto_token.job}}</h6>
+                            <p class="card-description text-center">
+                                {% if crypto_token.short_description %}
+
+                                {{crypto_token.short_description}}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer justify-content-center">
+                            <a href="#pablo" class="btn btn-just-icon btn-link btn-twitter"><i
+                                    class="fa fa-twitter"></i></a>
+                            <a href="#pablo" class="btn btn-just-icon btn-link btn-facebook"><i
+                                    class="fa fa-facebook-square"></i></a>
+                            <a href="#pablo" class="btn btn-just-icon btn-link btn-google"><i
+                                    class="fa fa-google"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--     *********    END TEAM 1      *********      -->
+</div>

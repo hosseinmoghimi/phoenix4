@@ -7,6 +7,7 @@ from .repo import *
 from django.views import View
 from core.views import CoreContext, PageContext
 from .enums import ParameterEnum
+from .forms import *
 
 
 LAYOUT_PARENT='material-kit-pro/layout.html'
@@ -15,10 +16,36 @@ TEMPLATE_ROOT="web/"
 def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['layout_parent']=LAYOUT_PARENT
-     
+    context['search_form'] = SearchForm()
+    context['navbar'] = APP_NAME+"/includes/nav-bar.html"
     return context
 
 class BasicViews(View):
+    
+    
+    def search(self, request, *args, **kwargs):
+        context = getContext(request)
+        log = 1
+        if request.method == 'POST':
+            log += 1
+            search_form = SearchForm(request.POST)
+            if search_form.is_valid():
+                log += 1
+                search_for = search_form.cleaned_data['search_for']
+                context['search_for'] = search_for
+                context['blogs'] = BlogRepo(
+                    request=request).list(search_for=search_for) 
+                context['crypto_tokens'] = CryptoTokenRepo(
+                    request=request).list(search_for=search_for) 
+                context['log'] = log
+                context['header_image'] = PictureRepo(
+                    request=request, app_name=APP_NAME).picture(name=PictureNameEnums.SEARCH_HEADER)
+
+                return render(request, TEMPLATE_ROOT+"search.html", context)
+        return BasicViews().home(request=request)
+
+
+
     def contact(self,request,*args, **kwargs):
         context=getContext(request)
         return render(request,TEMPLATE_ROOT+"contact.html",context)
@@ -42,6 +69,11 @@ class BasicViews(View):
 
         features=FeatureRepo(request=request).list(for_home=True,*args, **kwargs)
         context['features']=features
+        
+        testimonials=TestimonialRepo(request=request).list(*args, **kwargs)
+        context['testimonials']=testimonials
+        print(testimonials)
+
 
 
         our_works=OurWorkRepo(request=request).list(for_home=True,*args, **kwargs)
@@ -60,6 +92,12 @@ class BasicViews(View):
 
         context['ourteam_title_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamTitle)
         context['ourteam_description_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamDescription)
+
+        param_repo=ParameterRepo(request=request)
+        context['office_address']=parameter_repo.parameter(name=ParameterEnum.OFFICE_ADDRESS).value
+        context['office_tel']=parameter_repo.parameter(name=ParameterEnum.OFFICE_TEL).value
+        context['office_mobile']=parameter_repo.parameter(name=ParameterEnum.OFFICE_MOBILE).value
+        context['office_email']=parameter_repo.parameter(name=ParameterEnum.OFFICE_EMAIL).value
         return render(request,TEMPLATE_ROOT+"index.html",context)
 
 class OurWorkViews(View):
@@ -76,7 +114,7 @@ class OurWorkViews(View):
 class OurTeamViews(View):
     def ourteam(self,request,*args, **kwargs):
         context=getContext(request)
-        context['body_class']="blog-post"
+        context['body_class']="profile-page sidebar-collapse"
         context['main_class']='main-raised'
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
         our_team=OurTeamRepo(request=request).our_team(*args, **kwargs)
@@ -113,6 +151,23 @@ class BlogViews(View):
         context['blogs']=blogs
         return render(request,TEMPLATE_ROOT+"blogs.html",context)
 
+
+class CryptoTokenViews(View):
+    def crypto_token(self,request,*args, **kwargs):
+        context=getContext(request)
+        context['body_class']="blog-post"
+        context['main_class']='main-raised'
+        crypto_token=CryptoTokenRepo(request=request).crypto_token(*args, **kwargs)
+        context.update(PageContext(request=request,page=crypto_token))
+        context['crypto_token']=crypto_token
+        return render(request,TEMPLATE_ROOT+"crypto-token.html",context)
+
+    def crypto_tokens(self,request,*args, **kwargs):
+        context=getContext(request)
+        # parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        blogs=BlogRepo(request=request).list(*args, **kwargs)
+        context['blogs']=blogs
+        return render(request,TEMPLATE_ROOT+"blogs.html",context)
 
 
 class ResumeViews(View):

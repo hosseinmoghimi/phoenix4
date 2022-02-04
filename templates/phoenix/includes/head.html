@@ -9,7 +9,11 @@
 <link href="{% static 'vendor/css/bootstrap.min.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/css/font-awesome.min.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/css/material-icons.css' %}" rel="stylesheet">
-<link href="{% static 'leo/css/font-farsi.css' %}" rel="stylesheet">
+
+
+{% include "phoenix/includes/head-farsi-font.html" %}
+
+
 <link href="{% static 'leo/css/leo.css' %}" rel="stylesheet">
 
 {% include "phoenix/includes/metadata.html" %}
@@ -40,8 +44,7 @@
     select,
     input,
     button,
-    .form-control
-    {
+    .form-control {
         font-family: "HMFONT";
     }
 
@@ -54,10 +57,11 @@
         margin-right: 1em;
     }
 
-    .media-body{
+    .media-body {
         text-align: right;
         font-family: "HMFONT";
     }
+
     p {
         text-align: right;
         direction: rtl;
@@ -83,24 +87,29 @@
         margin-bottom: 1em;
     }
 
-    .card-icon,.card-header-icon {
+    .card-icon,
+    .card-header-icon {
         text-align: right;
     }
 
-    .nav-link,.input-group-text,option,.bmd-help {
+    .nav-link,
+    .input-group-text,
+    option,
+    .bmd-help {
         font-family: "HMFONT";
-        
+
     }
 
-    .bmd-label-floating,.form-group{
+    .bmd-label-floating,
+    .form-group {
         text-align: right;
     }
-    .nav.flex-column {
-                            text-align: right;
-                        }
 
+    .nav.flex-column {
+        text-align: right;
+    }
 </style>
-<title> 
+<title>
     {{app.title}}
 
 

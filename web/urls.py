@@ -11,11 +11,13 @@ urlpatterns = [
     path("blogs/",views.BlogViews().blogs,name="blogs"),
     path("feature/<int:pk>/",views.FeatureViews().feature,name="feature"),
     path("blog/<int:pk>/",views.BlogViews().blog,name="blog"),
+    path("crypto-token/<int:pk>/",views.CryptoTokenViews().crypto_token,name="cryptotoken"),
     path("ourwork/<int:pk>/",views.OurWorkViews().ourwork,name="ourwork"),
     path("ourteam/<int:pk>/",views.OurTeamViews().ourteam,name="ourteam"),
     path("ourworks/",views.BasicViews().home,name="ourworks"),
     path("about/",views.BasicViews().home,name="about"),
     path("contact/",views.BasicViews().contact,name="contact"),
+    path("search/",views.BasicViews().search,name="search"),
 
 
     path("add_blog/",apis.BasicApi().add_blog,name="add_blog"),

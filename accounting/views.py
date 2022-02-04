@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.http.response import Http404
 from accounting.enums import PaymetMethodEnum
 from accounting.serializers import FinancialAccountSerializer, TransactionSerializer
@@ -92,6 +93,10 @@ class TransactionViews(View):
     
     def transactions2(self,request,*args, **kwargs):
         context=getContext(request=request)
+        pay_to_id=kwargs['pay_to_id']
+        pay_from_id=kwargs['pay_from_id']
+        context['pay_to_id']=pay_to_id
+        context['pay_from_id']=pay_from_id
         # financial_account=None
         # pay_from_id=0
         # pay_to_id=0
@@ -120,6 +125,52 @@ class TransactionViews(View):
         context['rest']=total
         return render(request,TEMPLATE_ROOT+"transactions.html",context)
     
+    
+    def transactions2_print(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        pay_to_id=kwargs['pay_to_id']
+        pay_from_id=kwargs['pay_from_id']
+        context['pay_to_id']=pay_to_id
+        context['pay_from_id']=pay_from_id
+        financial_account_repo=FinancialAccountRepo(request=request)
+
+        pay_to=financial_account_repo.financial_account(pk=pay_to_id)
+        pay_from=financial_account_repo.financial_account(pk=pay_from_id)
+        context['pay_to']=pay_to
+        context['pay_from']=pay_from
+        context['print_date']=timezone.now()
+        # financial_account=None
+        # pay_from_id=0
+        # pay_to_id=0
+        # if 'pay_from_id' in kwargs:
+        #     pay_from_id=kwargs['pay_from_id']
+        # if 'pay_to_id' in kwargs:
+        #     pay_to_id=kwargs['pay_to_id']
+        # financial_account=FinancialAccountRepo(request=request).financial_account(financial_account_id=financial_account_id)
+        transactions=TransactionRepo(request=request).list(*args, **kwargs)
+        context['transactions']=transactions
+        transactions_s=json.dumps(TransactionSerializer(transactions,many=True).data)
+        context['transactions_s']=transactions_s
+        descriptions = [
+            f"واحد مبلغ ها {context['CURRENCY']} می باشد.",
+        ]
+        title="صورتحساب "+pay_from.profile.name+" و " +pay_to.profile.name
+        context['app']['title']=title
+        context['descriptions']=descriptions
+        total=0
+        # for transaction in transactions:
+        #     if transaction.pay_to_id==financial_account_id:
+        #         total-=transaction.amount
+        #     if transaction.pay_from_id==financial_account_id:
+        #         total+=transaction.amount
+        if len(transactions)>0:
+            tra=transactions.order_by('date_paid').last()
+            tra.calculate_rest(pay_to_id=kwargs['pay_to_id'],pay_from_id=kwargs['pay_from_id'])
+            total=tra.rest
+        context['total']=total
+        
+        context['rest']=total
+        return render(request,TEMPLATE_ROOT+"transactions-print.html",context)
     def getTransactionContext(self,request,*args, **kwargs):
         transaction=TransactionRepo(request=request).transaction(*args, **kwargs)
         context=PageContext(request=request,page=transaction)

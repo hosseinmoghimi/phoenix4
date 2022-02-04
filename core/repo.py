@@ -452,9 +452,12 @@ class DocumentRepo:
                 pass
             else:
                 return
-        
+        if page.app_name=='web':
+            is_open=True
+        else:
+            is_open=False
 
-        document=PageDocument(icon_fa="fa fa-download",title=title,file=file,priority=priority,page=page,profile=self.profile)
+        document=PageDocument(icon_fa="fa fa-download",title=title,is_open=is_open,file=file,priority=priority,page=page,profile=self.profile)
         document.save()
         document.profiles.add(self.profile)
         return document

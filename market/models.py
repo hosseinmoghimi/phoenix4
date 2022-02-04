@@ -104,7 +104,8 @@ class Product(MarketPage):
 
     def get_order_lines_url(self):
         return reverse(APP_NAME+":order_lines",kwargs={'product_id':self.pk,'order_id':0})
-
+    def shops(self):
+        return Shop.objects.filter(product=self)
 class Category(MarketPage):
     default_unit_name=models.CharField(_("واحد پیش فرض"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     products=models.ManyToManyField("Product", blank=True,verbose_name=_("products"))
@@ -298,7 +299,8 @@ class Order(models.Model):
     def title(self):
         return f"سفارش شماره {self.pk}"
     def get_absolute_url(self):
-        return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
+        if self.pk is not None:
+            return reverse(APP_NAME+":order", kwargs={"pk": self.pk})
 
     def get_delete_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
@@ -385,7 +387,8 @@ class CartLine(models.Model):
 
     def get_profit(self):
         return self.quantity*(self.shop.unit_price-self.shop.buy_price)
-
+    def supplier(self):
+        return self.shop.supplier
 
 class Offer(MarketPage):
     shops=models.ManyToManyField("shop", verbose_name=_("shops"))
@@ -554,11 +557,7 @@ class Guarantee(models.Model):
         file_address=os.path.join(QRCODE_ROOT,file_name)
    
         content=SITE_FULL_BASE_ADDRESS+self.get_absolute_url()
-        print(content)
-        print(file_address)
-        print(file_name)
-        print(file_path)
-        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path,)
+        generate_qrcode(content=content,file_name=file_name,file_address=file_address,file_path=file_path)
     def save(self):
 
         self.generate_qrcode()

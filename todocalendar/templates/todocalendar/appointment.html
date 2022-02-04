@@ -1,0 +1,140 @@
+{% extends "todocalendar/layout.html" %}
+{% load static %}
+{% load to_persian_date %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="title">
+                    {{appointment.title}}
+                </h4>
+            </div>
+            <div class="card-body">
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" id="persons-app">
+            <div class="card-header">
+                <h4 class="title">
+                    افراد مرتبط
+                </h4>
+            </div>
+            <div class="card-body">
+                <ul class="nav flex-column">
+                    {% for person in appointment.persons.all %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{person.get_absolute_url}}">
+                            <div class="media">
+                                <img src="{{person.image}}" width="64" class="rounded-circle" alt="">
+                                <div class="media-body mr-2">
+                                    <h5 class="mt-2">{{person.name}}</h5>
+                                    <h6 class="text-muted">{{person.mobile}}</h6>
+
+                                </div>
+                            </div>
+
+
+                        </a>
+                    </li>
+                    {% endfor %}
+
+                    <li class="nav-item" v-for="person in persons">
+                        <a class="nav-link" :href="person.get_absolute_url">
+                            <div class="media">
+                                <img :src="person.image" width="64" class="rounded-circle" alt="">
+                                <div class="media-body mr-2">
+                                    <h5 class="mt-2">
+                                        <span v-text="person.name"></span>
+                                    </h5>
+                                    <h6 class="text-muted">
+                                        <span v-text="person.mobile"></span>
+
+                                    </h6>
+
+                                </div>
+                            </div>
+
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            {% if add_person_form %}
+            <div class="card-footer">
+                <form @submit.prevent="add_person()">
+                    <div class="row">
+                        <div class="col-9">
+                            <select type="text" v-model="profile_id" id="" class="form-control farsi">
+                                {% for profile in profiles %}
+                                <option value="{{profile.id}}">{{profile.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="number" class="form-control" required placeholder="شناسه پروفایل"
+                                v-model="profile_id" id="">
+                        </div>
+                        <div class="col-3">
+
+                            <button class="btn btn-success btn-sm" type="submit">
+
+                                <span class="material-icons">
+                                    add
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% include "core/includes/page-links-app/template.html" %}
+        {% include "core/includes/page-documents-app/template.html" %}
+
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    let page_id = parseInt("{{page.id}}")
+</script>
+{% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+<script>
+    let persons_app = new Vue({
+        el: "#persons-app",
+        data: {
+            profile_id: 0,
+            persons: [],
+        },
+        methods: {
+            add_person: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    profile_id: this.profile_id,
+                    appointment_id: page_id
+                }
+                let url="{% url 'todocalendar:add_person' %}"
+                $.post(url, payload).done((data) => {
+                    persons_app.persons.push(data.person)
+                })
+            },
+        }
+    })
+</script>
+{% endblock %}

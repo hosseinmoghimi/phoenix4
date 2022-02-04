@@ -1,0 +1,35 @@
+{% if skills %}
+
+<div class=" card my-5">
+
+    <div class="card-header">
+
+        <h5>مهارت ها</h5>
+    </div>
+    <div class="card-body">
+
+        {% if resume_index.skills_top %}
+
+        <div class="farsi">
+
+            {{resume_index.skills_top|safe}}
+        </div>
+        {% endif %}
+
+        <ul class="nav flex-column">
+            {% for skill in skills %}
+
+            <li class="nav-item">
+                {{skill.title}}
+
+                <span class="badge badge-primary">
+
+                    {{skill.percentage}}%
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endif %}

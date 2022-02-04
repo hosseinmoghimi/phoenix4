@@ -1,0 +1,64 @@
+ 
+{% if not profile %}
+<li class="button-container nav-item iframe-extern">
+    <a href="{% url 'authentication:login' %}" target="_blank" class="btn  btn-success mx-2 btn-round btn-block">
+        <i class="material-icons">vpn_key</i>
+        <span class="farsi">
+
+            ورود
+        </span>
+    </a>
+</li>
+{% endif %}
+{% if profile %}
+
+<li class="dropdown nav-item">
+    <a href="#" class="dropdown-toggle nav-link rtl " data-toggle="dropdown">
+        <img src="{{profile.image}}" class="rounded-circle" width="32" alt="">
+
+        <span class="farsi">
+
+            {{profile.name}}
+
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-with-icons">
+
+        <div class="">
+            <a href="{{profile.get_absolute_url}}" class="dropdown-item text-center">
+
+                <img src="{{profile.image}}" class="rounded-circle" width="96" alt="">
+            </a>
+        </div>
+
+
+        <a href="{{profile.get_absolute_url}}" class="dropdown-item">
+            <i class="material-icons">line_style</i>
+            <span class="farsi">
+
+                {{profile.name}}
+            </span>
+        </a>
+
+
+
+
+
+
+        <a href="{% url 'authentication:logout' %}" class="dropdown-item">
+            <i class="material-icons">
+
+                logout
+            </i>
+            <span class="farsi">
+                خروج
+            </span>
+        </a>
+
+
+
+
+
+    </div>
+</li>
+{% endif %}

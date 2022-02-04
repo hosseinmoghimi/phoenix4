@@ -1,0 +1,21 @@
+<div class="card" id="crypto-tokens-app">
+    <div class="card-header">
+        <h4 class="title">
+            لیست غذاها
+        </h4>
+    </div>
+    <div class="card-body">
+        <div v-for="crypto_token in crypto_tokens">
+            <a :href="crypto_token.get_absolute_url">
+                <h4 v-text="crypto_token.title"></h4>
+            </a>
+        </div>
+    </div>
+    {% if add_crypto_token_form %}
+      <div class="card-footer">
+          <form @submit.prevent="add_crypto_token()">
+              <input type="text" v-model="title" class="form-control" required id="">
+          </form>
+      </div>
+    {% endif %}
+</div>

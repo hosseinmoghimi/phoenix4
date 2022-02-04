@@ -6,6 +6,7 @@ from enum import Enum
 class PictureNameEnums(TextChoices):
     LOGO="لوگو",_("لوگو")
     FAVICON="آیکون",_("آیکون")
+    SEARCH_HEADER="سربرگ جستجو",_("سربرگ جستجو")
 
 class UnitNameEnum(TextChoices):
     ADAD="عدد",_("عدد")
@@ -109,6 +110,7 @@ class IconsEnum(TextChoices):
 
 
 class ParametersEnum(TextChoices):
+    FARSI_FONT_NAME="نام فونت فارسی",_("نام فونت فارسی")
     MASTER_KEYWORDS="کلید واژه های اصلی اپ",_("کلید واژه های اصلی اپ")
     HOME_URL="آدرس خانه",_("آدرس خانه")
     SHOW_ARCHIVES="نمایش فایل های آرشیو شده",_("نمایش فایل های آرشیو شده")

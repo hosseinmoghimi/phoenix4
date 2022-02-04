@@ -1,13 +1,13 @@
 @font-face {
     font-family: "HMFONT";
-    src: url("./ISM.woff2") format("woff2");
+    src: url("../font-farsi/ISM.woff2") format("woff2");
     font-style: normal;
     font-weight: normal;
 }
 
 @font-face {
     font-family: "HMFONT";
-    src: url("./ISB.woff2") format("woff2");
+    src: url("../font-farsi/ISB.woff2") format("woff2");
     font-style: normal;
     font-weight: regular;
 }
@@ -15,7 +15,7 @@
 
 @font-face {
     font-family: "HMFONT2";
-    src: url("./Tanha.eot") format("woff2");
+    src: url("../font-farsi/Tanha.eot") format("woff2");
     font-style: normal;
     font-weight: normal;
 }
@@ -33,5 +33,5 @@
     font-weight: regular;
 }
 .farsi{
-    font-family: "HMFONT" ;
+    font-family: "HMFONT" !important;
 }

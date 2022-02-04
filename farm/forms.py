@@ -13,10 +13,7 @@ class DoKoshtarForm(forms.Form):
     lashe_price=forms.IntegerField(required=False)
     lashe_weight=forms.FloatField(required=False)
     description = forms.CharField(required=False,max_length=500)
-
-class SearchForm(forms.Form):
-    search_for=forms.CharField(max_length=50, required=True)
-    
+ 
 class AddNewAnimalForm(forms.Form):
     category=forms.CharField(max_length=50, required=True)
     saloon_id=forms.IntegerField(required=True)
