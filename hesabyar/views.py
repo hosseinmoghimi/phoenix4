@@ -2,8 +2,8 @@ import json
 from django.shortcuts import render
 from hesabyar.forms import AddFinancialDocumentForm
 
-from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, TagRepo
-from hesabyar.serializers import FinancialDocumentSerializer
+from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, TagRepo
+from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineSerializer
 from .apps import APP_NAME
 from core.views import CoreContext
 from django.views import View
@@ -91,3 +91,16 @@ class ReportViews(View):
         financial_document = FinancialDocumentRepo().financial_document(*args, **kwargs)
         context['financial_document'] = financial_document
         return render(request, TEMPLATE_ROOT+"financial-document.html", context)
+class ProductViews(View):
+    def product(self,request,*args, **kwargs):
+        pass
+class InvoiceViews(View):
+    def invoice(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        invoice_lines=invoice.invoice_lines()
+        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        context['invoice']=invoice
+        context['invoice_lines']=invoice_lines
+        context['invoice_lines_s']=invoice_lines_s
+        return render(request,TEMPLATE_ROOT+"invoice.html",context)

@@ -1,8 +1,11 @@
 from django.contrib import admin
 
-from .models import Bank, BankAccount, Cash, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, ProfileFinancialAccount, Store, Tag
+from .models import Bank, BankAccount, Cash, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceLine, Product, ProfileFinancialAccount, Store, Tag
 
 # Register your models here.
+admin.site.register(Product)
+admin.site.register(Invoice)
+admin.site.register(InvoiceLine)
 admin.site.register(FinancialAccount)
 admin.site.register(ProfileFinancialAccount)
 admin.site.register(FinancialYear)

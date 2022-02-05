@@ -2,7 +2,7 @@ from django.utils import timezone
 from urllib import request
 from django import forms
 from .apps import APP_NAME
-from .models import FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, ProfileFinancialAccount, Tag
+from .models import FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, ProfileFinancialAccount, Tag
 from authentication.repo import ProfileRepo
 
 class FinancialDocumentCategoryRepo:
@@ -233,6 +233,66 @@ class TagRepo:
     def tag(self, *args, **kwargs):
         if 'tag_id' in kwargs:
             return self.objects.filter(pk= kwargs['tag_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+        
+
+class ProductRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Product.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def product(self, *args, **kwargs):
+        if 'product_id' in kwargs:
+            return self.objects.filter(pk= kwargs['product_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+        
+        
+class InvoiceRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Invoice.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def invoice(self, *args, **kwargs):
+        if 'invoice_id' in kwargs:
+            return self.objects.filter(pk= kwargs['invoice_id']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:

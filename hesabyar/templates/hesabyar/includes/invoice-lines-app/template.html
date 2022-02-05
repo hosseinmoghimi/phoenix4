@@ -1,0 +1,52 @@
+<div class="card" id="invoice-lines-app">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    ردیف
+                </th>
+                <th>
+                    شرح
+                </th>
+
+                <th>
+                    تعداد
+                </th>
+
+                <th>
+                    فی
+                </th>
+
+                <th>
+                    جمع
+                </th>
+
+            </thead>
+            <tbody>
+                <tr v-for="invoice_line in invoice_lines">
+                    <td>
+                        <span v-text="invoice_line.row"></span>
+                    </td>
+                    <td>
+                        <a :href="invoice_line.product.get_absolute_url">
+                            <span v-text="invoice_line.product.title"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span v-text="invoice_line.quantity"></span>
+                    </td>
+
+                    <td>
+                        <span v-text="to_price(invoice_line.unit_price)"></span>
+                    </td>
+
+                    <td>
+                        <span v-text="to_price(invoice_line.unit_price*invoice_line.quantity)"></span>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

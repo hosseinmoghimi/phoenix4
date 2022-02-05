@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import CharField
 from core.settings import ADMIN_URL
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
@@ -31,7 +32,6 @@ class FinancialYear(models.Model):
         verbose_name = _("FinancialYear")
         verbose_name_plural = _("FinancialYears")
 
-
 class FinancialDocument(HesabYarPage):
     financial_year=models.ForeignKey("FinancialYear", verbose_name=_("financial_year"), on_delete=models.CASCADE)
     account=models.ForeignKey("FinancialAccount",verbose_name=_("account"), on_delete=models.CASCADE)
@@ -49,9 +49,51 @@ class FinancialDocument(HesabYarPage):
 
 
     def save(self,*args, **kwargs):
-        self.class_name='financialdocument'
         return super(FinancialDocument,self).save(*args, **kwargs)
 
+
+class Product(HesabYarPage):
+    
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
+    def save(self,*args, **kwargs):
+        self.class_name="product"
+        return super(Product,self).save(*args, **kwargs)
+ 
+
+class Invoice(FinancialDocument):
+
+    class Meta:
+        verbose_name = _("Invoice")
+        verbose_name_plural = _("Invoices")
+
+    def save(self,*args, **kwargs):
+        self.class_name='invoice'
+        return super(Invoice,self).save(*args, **kwargs)
+ 
+    def invoice_lines(self):
+        return InvoiceLine.objects.filter(invoice=self).order_by('row')
+
+class InvoiceLine(models.Model):
+    invoice=models.ForeignKey("invoice", verbose_name=_("invoice"), on_delete=models.CASCADE)
+    row=models.IntegerField(_("row"))
+    product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)
+    quantity=models.FloatField(_("quantity"))
+    unit_price=models.IntegerField(_("unit_price"))
+    description=models.CharField(_("description"),null=True,blank=True, max_length=50)
+
+    class Meta:
+        verbose_name = _("InvoiceLine")
+        verbose_name_plural = _("InvoiceLines")
+
+    def __str__(self):
+        return f"{self.invoice.title} {self.row} - {self.product.title} "
+
+    def get_absolute_url(self):
+        return reverse("InvoiceLine_detail", kwargs={"pk": self.pk})
 
 class FinancialDocumentCategory(models.Model):
     title=models.CharField(_("دسته بندی"),max_length=100) 

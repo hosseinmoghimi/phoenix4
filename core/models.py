@@ -301,11 +301,11 @@ class BasicPage(models.Model):
             return MEDIA_URL+str(self.image_header_origin)
         elif len(self.pageimage_set.all())>0:
             return self.pageimage_set.all().first().image.thumbnail()
-        if self.class_name=='product':
+        if self.class_name=='product' and self.app_name=="market":
             category= self.category_set.first()
             if category is not None:
                 return category.thumbnail()
-        if self.class_name=='category':
+        if self.class_name=='category' and self.app_name=="market":
             if self.parent is not None:
                 return self.parent.thumbnail()
         return f'{STATIC_URL}{self.app_name}/img/pages/thumbnail/{self.class_name}.png'

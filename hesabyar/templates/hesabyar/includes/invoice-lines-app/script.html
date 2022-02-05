@@ -1,0 +1,30 @@
+{% if add %}
+<script>
+    let invoice_lines_app_data = {
+
+    }
+    let invoice_lines_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "")
+        }
+    }
+</script>
+{% else %}
+<script>
+    let invoice_lines_app_data = {
+        invoice_lines: JSON.parse(`{{invoice_lines_s|escapejs}}`)
+    }
+    let invoice_lines_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "")
+        }
+    }
+</script>
+{% endif %}
+<script>
+    let invoice_lines_app = new Vue({
+        el: "#invoice-lines-app",
+        data: invoice_lines_app_data,
+        methods: invoice_lines_app_methods,
+    })
+</script>
