@@ -144,7 +144,11 @@ class Invoice(models.Model,LinkHelper):
     class_name='invoice'
     @property
     def title(self):
-        return "فاکتور شماره "+str(self.pk)
+        try:
+
+            return "فاکتور شماره "+str(self.pk)
+        except:
+            return "فاکتور شماره "+str(0)
     def persian_invoice_datetime(self):
         return PersianCalendar().from_gregorian(self.invoice_datetime)
     def tax_amount(self):
