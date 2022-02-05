@@ -1,9 +1,11 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render,reverse
 from hesabyar.forms import AddFinancialDocumentForm
 
-from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
 from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from projectmanager.forms import SearchForm
+from projectmanager.serializers import ServiceSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
 from django.views import View
@@ -15,11 +17,39 @@ TEMPLATE_ROOT = "hesabyar/"
 
 def getContext(request, *args, **kwargs):
     context = CoreContext(request=request, app_name=APP_NAME)
+    context['search_form'] = SearchForm()
+    context['search_action'] = reverse(APP_NAME+":search")
     context['LAYOUT_PARENT'] = LAYOUT_PARENT
     return context
 
 
 class BasicViews(View):
+    def search(self, request, *args, **kwargs):
+        context = getContext(request)
+        log = 1
+        if request.method == 'POST':
+            log += 1
+            search_form = SearchForm(request.POST)
+            if search_form.is_valid():
+                log += 1
+                search_for = search_form.cleaned_data['search_for']
+                context['search_for'] = search_for
+                financial_accounts = FinancialAccountRepo(request=request).list(search_for=search_for)
+                products = ProductRepo(request=request).list(search_for=search_for)
+                services = ServiceRepo(request=request).list(search_for=search_for)
+                
+                
+                context['financial_accounts'] = financial_accounts
+                context['products'] = products
+                context['services'] = services
+
+                if len(financial_accounts)>0  or len(products)>0  or len(services)>0  :
+                    context['message']=""
+                else:
+                    context['message']=f"""<span class="material-icons">search_off</span> موردی پیدا نشد."""
+                context['log'] = log
+                return render(request, TEMPLATE_ROOT+"search.html", context)
+        return BasicViews().home(request=request)
     def home(self, request, *args, **kwargs):
         context = getContext(request=request)
         context['title'] = "HesabYar Ver 1.0.0"
@@ -56,6 +86,8 @@ class ReportViews(View):
         context['title'] = "HesabYar Ver 1.0.0"
         profile_financial_account = ProfileFinancialAccountRepo(
             request=request).profile_financial_account(*args, **kwargs)
+        financial_account=profile_financial_account
+        context['financial_account'] = financial_account
         context['profile_financial_account'] = profile_financial_account
         context['financial_account'] = profile_financial_account
         financial_documents = FinancialDocumentRepo().list(
@@ -65,6 +97,8 @@ class ReportViews(View):
             FinancialDocumentSerializer(financial_documents, many=True).data)
         context['financial_documents_s'] = financial_documents_s
         context['financial_documents'] = financial_documents
+        context['rest']=financial_account.rest()
+
         return render(request, TEMPLATE_ROOT+"profile-financial-account.html", context)
 
     def financial_account(self, request, *args, **kwargs):
@@ -121,7 +155,28 @@ class ProductViews(View):
 
 class ServiceViews(View):
     def service(self,request,*args, **kwargs):
-        pass
+        service=ServiceRepo(request=request).service(*args, **kwargs)
+        context=getContext(request=request)
+        context.update(PageContext(request=request,page=service))
+        
+        context['service']=service
+
+
+        invoice_lines=InvoiceLineRepo(request=request).list(service_id=service.id)
+        invoice_lines_s=json.dumps(InvoiceLineForProductOrServiceSerializer(invoice_lines,many=True).data)
+        context['invoice_lines_s']=invoice_lines_s
+
+        return render(request,TEMPLATE_ROOT+"service.html",context)
+
+
+    def services(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        services=ServiceRepo(request=request).list()
+        context['services']=services
+        services_s=json.dumps(ServiceSerializer(services,many=True).data)
+        context['services_s']=services_s
+        return render(request,TEMPLATE_ROOT+"services.html",context)
+
 
 
 class WareHouseSheetViews(View):
@@ -142,6 +197,11 @@ class InvoiceViews(View):
         invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         context['invoice_lines_s']=invoice_lines_s
         return render(request,TEMPLATE_ROOT+"invoice.html",context)
+    def invoices(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoices=InvoiceRepo(request=request).list(*args, **kwargs)
+        context['invoices']=invoices
+        return render(request,TEMPLATE_ROOT+"invoices.html",context)
 class FinancialDocumentViews(View):
     def financial_documents(self,request,*args, **kwargs):
         context=getContext(request=request)

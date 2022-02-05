@@ -142,6 +142,9 @@ class Invoice(models.Model,LinkHelper):
     discount=models.IntegerField(_("تخفیف"),default=0)
     description=HTMLField(_("description"),max_length=50000,blank=True,null=True)
     class_name='invoice'
+    @property
+    def title(self):
+        return "فاکتور شماره "+str(self.pk)
     def persian_invoice_datetime(self):
         return PersianCalendar().from_gregorian(self.invoice_datetime)
     def tax_amount(self):
@@ -192,7 +195,7 @@ class Invoice(models.Model,LinkHelper):
         verbose_name_plural = _("Invoices")
     
     def __str__(self):
-        return f"فاکتور شماره {self.pk}"
+        return self.title
     # def save(self,*args, **kwargs):
     #     self.class_name='invoice'
     #     return super(Invoice,self).save(*args, **kwargs)

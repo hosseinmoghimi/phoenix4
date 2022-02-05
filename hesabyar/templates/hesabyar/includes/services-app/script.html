@@ -1,0 +1,18 @@
+<script>
+    let services_app_data = {
+        services: JSON.parse(`{{services_s|escapejs}}`)
+    }
+    let services_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "")
+        },
+        
+    }
+</script> 
+<script>
+    let services_app = new Vue({
+        el: "#services-app",
+        data: services_app_data,
+        methods: services_app_methods,
+    })
+</script>

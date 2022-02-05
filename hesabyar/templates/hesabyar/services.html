@@ -1,0 +1,19 @@
+{% extends "hesabyar/layout.html" %}
+
+{% block content %}
+  <h4 class="text-center">
+    خدمات
+  </h4>
+  
+
+<div class="row"> 
+  <div class="col-md-12">
+{% include "hesabyar/includes/services-app/template.html" %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+{% include "hesabyar/includes/services-app/script.html" %}
+  
+{% endblock script %}

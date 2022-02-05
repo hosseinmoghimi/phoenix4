@@ -1,5 +1,7 @@
 from django import forms
 
+class SearchFrom(forms.Form):
+    search_for=forms.CharField( max_length=200, required=True)
 class AddFinancialDocumentForm(forms.Form):
     title=forms.CharField( max_length=200, required=True)
     document_datetime=forms.CharField(max_length=20, required=True)

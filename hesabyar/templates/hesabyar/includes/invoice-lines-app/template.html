@@ -61,8 +61,7 @@
 
                     <td class="bordered">
                         <a :href="invoice_line.invoice.get_absolute_url">
-                            فاکتور شماره
-                            <span v-text="invoice_line.invoice.id"></span>
+                            <span v-text="invoice_line.invoice.title"></span>
                         </a>
                     </td>
                     <td class="bordered">

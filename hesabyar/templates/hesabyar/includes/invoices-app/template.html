@@ -1,0 +1,61 @@
+{% load to_persian_date %}
+{% load to_price %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="title">
+            فاکتور ها
+        </h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>
+                    فاکتور
+                </th>
+                <th>
+                    جمع
+                </th>
+                <th>
+                    فروشنده
+                </th>
+                <th>
+                    خریدار
+                </th>
+                <th>
+                    تاریخ
+                </th>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+
+                <tr>
+                    <td>
+                        <a href="{{invoice.get_absolute_url}}">
+                            {{invoice.title}}
+                        </a>
+                    </td>
+                    <td>
+                        {{invoice.sum_total|to_price}}
+                    </td>
+                    <td>
+                        <a href="{{invoice.seller.get_absolute_url}}">
+                            {{invoice.seller.title}}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{invoice.customer.get_absolute_url}}">
+                            {{invoice.customer.title}}
+                        </a>
+                    </td>
+                    <td>
+                        <small class="text-muted">
+
+                            {{invoice.invoice_datetime|to_persian_datetime|safe}}
+                        </small>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

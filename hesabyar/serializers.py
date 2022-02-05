@@ -61,7 +61,7 @@ class WareHouseSheetSerializer(serializers.ModelSerializer):
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
-        fields = ['id','get_absolute_url','persian_invoice_datetime']
+        fields = ['id','title','get_absolute_url','persian_invoice_datetime']
 
 
 

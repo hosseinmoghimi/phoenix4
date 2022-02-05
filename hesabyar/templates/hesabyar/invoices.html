@@ -1,0 +1,34 @@
+{% extends "hesabyar/layout.html" %}
+
+{% load to_persian_date %}
+
+{% load to_variz_text %}
+{% block content %}
+<div class="text-center">
+    <img src="{{invoice.seller.logo}}" height="96" class="my-3" alt="">
+
+</div>
+<h4 class="text-center my-3">
+
+    فاکتور ها
+</h4>
+<div class="row">
+
+    
+
+    <div class="col-md-12">
+
+        {% include "hesabyar/includes/invoices-app/template.html" %}
+    </div>
+
+
+   
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+{% include "hesabyar/includes/invoices-app/script.html" %}
+
+{% endblock script %}

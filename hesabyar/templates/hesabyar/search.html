@@ -1,0 +1,102 @@
+{% extends "hesabyar/layout.html" %}
+{% load static %}
+ 
+{% block content %} 
+<div class="row mt-4">
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <small>
+
+                        جستجو برای :
+                    </small>
+                    <strong>
+                        {{search_for}}
+                    </strong>
+                </h4>
+            </div>
+            <div class="card-body">
+
+                <p>
+                    {{message|safe}}
+                </p>
+                {% if financial_accounts %}
+                <h5 class="mt-4">
+                    حساب ها :
+                </h5>
+                {% for financial_account in financial_accounts %}
+                <p class="mr-5">
+                    <a href="{{financial_account.get_absolute_url}}">
+
+                        {{financial_account.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
+
+
+
+
+
+
+
+   
+  {% if products %}
+  <h5 class="mt-4">
+      کالا ها :
+  </h5>
+  {% for product in products %}
+  <p class="mr-5">
+      <a href="{{product.get_absolute_url}}">
+
+          {{product.title}}
+      </a>
+  </p>
+  {% endfor %}
+
+  {% endif %}
+
+
+
+
+
+
+  
+  {% if services %}
+                <h5 class="mt-4">
+                    خدمات :
+                </h5>
+                {% for service in services %}
+                <p class="mr-5">
+                    <a href="{{service.get_absolute_url}}">
+
+                        {{service.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+{% endblock %}
+{% block script %} 
+
+
+
+
+{% endblock %}
