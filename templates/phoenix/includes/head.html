@@ -15,9 +15,18 @@
 
 
 <link href="{% static 'leo/css/leo.css' %}" rel="stylesheet">
-
+{% block style %}
+  
+{% endblock style %}
 {% include "phoenix/includes/metadata.html" %}
 <style>
+    .bordered{
+        border:2px solid rgb(144, 142, 142) !important;
+    }
+    .filled{
+        background-color: rgb(5, 2, 2) !important;
+        color:white!important;
+    }
     div {
         direction: rtl;
     }

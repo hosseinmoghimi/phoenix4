@@ -1,0 +1,31 @@
+{% extends "hesabyar/layout.html" %}
+
+{% block content %}
+  <h4 class="text-center">
+    {{product.title}}
+    
+    {% if perms.hesabyar.change_product %}
+    <a href="{{product.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i class="fa fa-edit text-info"></i></a>
+    {% endif %}
+    {% if perms.hesabyar.delete_product %}
+    <a href="{{product.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i class="fa fa-trash text-danger"></i></a>
+    {% endif %}
+
+  </h4>
+  
+
+<div class="row"> 
+  <div class="col-md-4">
+{% include "core/includes/page-links-app/template.html" %}
+
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  let page_id=parseInt("{{page.id}}")
+</script>
+{% include "core/includes/page-links-app/script.html" %}
+  
+{% endblock script %}

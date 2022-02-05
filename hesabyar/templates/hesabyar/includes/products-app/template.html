@@ -1,0 +1,33 @@
+{% load to_price %}
+<div class="card" id="products-app">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+
+                <th>
+                    کالا
+                </th>
+                <th>
+                    موجودی در انبار ها
+                </th>
+
+            </thead>
+            <tbody>
+                <tr v-for="product in products">
+
+                    <td>
+                        <a :href="product.get_absolute_url">
+                            <span v-text="product.title"></span>
+                        </a>
+                    </td>
+
+<td>
+    <span v-text="product.available"></span>
+
+</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

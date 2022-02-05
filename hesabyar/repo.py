@@ -2,7 +2,7 @@ from django.utils import timezone
 from urllib import request
 from django import forms
 from .apps import APP_NAME
-from .models import FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, ProfileFinancialAccount, Tag
+from .models import FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceFinancialDocument, PaymentFinancialDocument, Product, ProfileFinancialAccount, Store, Tag
 from authentication.repo import ProfileRepo
 
 class FinancialDocumentCategoryRepo:
@@ -293,6 +293,93 @@ class InvoiceRepo:
     def invoice(self, *args, **kwargs):
         if 'invoice_id' in kwargs:
             return self.objects.filter(pk= kwargs['invoice_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+        
+class StoreRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Store.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def store(self, *args, **kwargs):
+        if 'store_id' in kwargs:
+            return self.objects.filter(pk= kwargs['store_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+        
+class InvoiceFinancialDocumentRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = InvoiceFinancialDocument.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def invoice_financial_document(self, *args, **kwargs):
+        if 'invoice_financial_document_id' in kwargs:
+            return self.objects.filter(pk= kwargs['invoice_financial_document_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+        
+class PaymentFinancialDocumentRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = PaymentFinancialDocument.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def payment_financial_document(self, *args, **kwargs):
+        if 'payment_financial_document_id' in kwargs:
+            return self.objects.filter(pk= kwargs['payment_financial_document_id']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:

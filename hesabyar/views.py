@@ -1,11 +1,12 @@
 import json
+from multiprocessing import context
 from django.shortcuts import render
 from hesabyar.forms import AddFinancialDocumentForm
 
-from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, TagRepo
-from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineSerializer
+from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, StoreRepo, TagRepo
+from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineSerializer, ProductSerializer
 from .apps import APP_NAME
-from core.views import CoreContext
+from core.views import CoreContext, PageContext
 from django.views import View
 
 # Create your views here.
@@ -93,7 +94,27 @@ class ReportViews(View):
         return render(request, TEMPLATE_ROOT+"financial-document.html", context)
 class ProductViews(View):
     def product(self,request,*args, **kwargs):
+        product=ProductRepo(request=request).product(*args, **kwargs)
+        context=getContext(request=request)
+        context.update(PageContext(request=request,page=product))
+        
+        context['product']=product
+        return render(request,TEMPLATE_ROOT+"product.html",context)
+
+
+    def products(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        products=ProductRepo(request=request).list()
+        context['products']=products
+        products_s=json.dumps(ProductSerializer(products,many=True).data)
+        context['products_s']=products_s
+        return render(request,TEMPLATE_ROOT+"products.html",context)
+
+
+class ServiceViews(View):
+    def service(self,request,*args, **kwargs):
         pass
+
 class InvoiceViews(View):
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -104,3 +125,38 @@ class InvoiceViews(View):
         context['invoice_lines']=invoice_lines
         context['invoice_lines_s']=invoice_lines_s
         return render(request,TEMPLATE_ROOT+"invoice.html",context)
+class FinancialDocumentViews(View):
+    def invoice_financial_document(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice_financial_document=InvoiceFinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
+        invoice=invoice_financial_document.invoice
+        invoice_lines=invoice.invoice_lines()
+        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        context['invoice']=invoice
+        context['invoice_lines']=invoice_lines
+        context['invoice_lines_s']=invoice_lines_s
+        return render(request,TEMPLATE_ROOT+"invoice.html",context)
+    def payment_financial_document(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        payment_financial_document=PaymentFinancialDocumentRepo(request=request).payment_financial_document(*args, **kwargs)
+        payment=payment_financial_document.payment
+        
+        context['payment']=payment
+        return render(request,TEMPLATE_ROOT+"payment.html",context)
+class BankAccountViews(View):
+    def bank_account(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice_financial_document=InvoiceFinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
+        invoice=invoice_financial_document.invoice
+        invoice_lines=invoice.invoice_lines()
+        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        context['invoice']=invoice
+        context['invoice_lines']=invoice_lines
+        context['invoice_lines_s']=invoice_lines_s
+        return render(request,TEMPLATE_ROOT+"invoice.html",context)
+class StoreViews(View):
+    def store(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        store=StoreRepo(request=request).store(*args, **kwargs)
+        context['store']=store
+        return render(request,TEMPLATE_ROOT+"store.html",context)

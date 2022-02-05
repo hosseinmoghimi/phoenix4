@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import Bank, BankAccount, Cash, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceLine, Product, ProfileFinancialAccount, Store, Tag
+from .models import Bank, BankAccount, Cash, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice,Payment, InvoiceLine, Product, ProductOrService, ProfileFinancialAccount, Service, Store, Tag, WareHouse, WareHouseSheet
 
 # Register your models here.
+admin.site.register(WareHouse)
+admin.site.register(WareHouseSheet)
+admin.site.register(Payment)
 admin.site.register(Product)
 admin.site.register(Invoice)
+admin.site.register(Service)
 admin.site.register(InvoiceLine)
 admin.site.register(FinancialAccount)
 admin.site.register(ProfileFinancialAccount)
