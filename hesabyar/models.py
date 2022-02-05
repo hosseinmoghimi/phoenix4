@@ -142,6 +142,8 @@ class Invoice(models.Model,LinkHelper):
     discount=models.IntegerField(_("تخفیف"),default=0)
     description=HTMLField(_("description"),max_length=50000,blank=True,null=True)
     class_name='invoice'
+    def persian_invoice_datetime(self):
+        return PersianCalendar().from_gregorian(self.invoice_datetime)
     def tax_amount(self):
         
         sum=self.lines_total()
@@ -392,8 +394,9 @@ class WareHouse(HesabYarPage):
         return super(WareHouse,self).save(*args, **kwargs)
 
 
-class WareHouseSheet(models.Model):
+class WareHouseSheet(models.Model,LinkHelper):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    date_registered=models.DateTimeField(_("date_registered"), auto_now=False, auto_now_add=False)
     creator=models.ForeignKey("authentication.profile", verbose_name=_("creator"), on_delete=models.CASCADE)    
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)    
     quantity=models.IntegerField(_("quantity"))
@@ -401,9 +404,12 @@ class WareHouseSheet(models.Model):
     ware_house=models.ForeignKey("warehouse", verbose_name=_("ware_house"), on_delete=models.CASCADE)
     status=models.CharField(_("status"),choices=WareHouseSheetStatusEnum.choices,default=WareHouseSheetStatusEnum.INITIAL, max_length=50)
     description=HTMLField(_("description"),null=True,blank=True,max_length=50000)
+    class_name="warehousesheet"
     class Meta:
         verbose_name = _("WareHouseSheet")
         verbose_name_plural = _("WareHouseSheets")
+    def persian_date_registered(self):
+        return PersianCalendar().from_gregorian(self.date_registered)
 
     def save(self,*args, **kwargs):
         self.class_name="warehousesheet"

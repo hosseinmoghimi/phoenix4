@@ -1,0 +1,18 @@
+<script>
+    let warehouse_sheets_app_data = {
+        warehouse_sheets: JSON.parse(`{{warehouse_sheets_s|escapejs}}`)
+    }
+    let warehouse_sheets_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "")
+        },
+        
+    }
+</script> 
+<script>
+    let warehouse_sheets_app = new Vue({
+        el: "#warehouse-sheets-app",
+        data: warehouse_sheets_app_data,
+        methods: warehouse_sheets_app_methods,
+    })
+</script>

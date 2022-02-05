@@ -1,0 +1,67 @@
+{% load to_price %}
+<div class="card" id="warehouse-sheets-app">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+
+                <th>
+                    تاریخ
+                </th>
+                <th>
+                    کالا
+                </th>
+
+
+                <th>
+                    انبار
+                </th>
+
+                <th>
+                    تعداد
+                </th>
+
+                <th>
+                    جهت
+                </th>
+
+                <th>
+                    وضعیت
+                </th>
+
+            </thead>
+            <tbody>
+                <tr v-for="warehouse_sheet in warehouse_sheets">
+                    <td>
+                        <span v-text="warehouse_sheet.persian_date_registered"></span>
+                    </td>
+                    <td>
+                        <a :href="warehouse_sheet.product.get_absolute_url">
+                            <span v-text="warehouse_sheet.product.title"></span>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a :href="warehouse_sheet.ware_house.get_absolute_url">
+                            <span v-text="warehouse_sheet.ware_house.title"></span>
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <span v-text="warehouse_sheet.quantity"></span>
+                    </td>
+
+                    <td>
+                        <span v-text="warehouse_sheet.direction"></span>
+                    </td>
+                    <td>
+                        <span v-text="warehouse_sheet.status"></span>
+                    </td>
+
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

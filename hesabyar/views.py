@@ -1,10 +1,9 @@
 import json
-from multiprocessing import context
 from django.shortcuts import render
 from hesabyar.forms import AddFinancialDocumentForm
 
-from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, StoreRepo, TagRepo
-from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineSerializer, ProductSerializer
+from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
 from django.views import View
@@ -99,6 +98,15 @@ class ProductViews(View):
         context.update(PageContext(request=request,page=product))
         
         context['product']=product
+        warehouse_sheets=WareHouseSheetRepo(request=request).list(product_id=product.id).order_by('date_registered')
+        warehouse_sheets_s=json.dumps(WareHouseSheetSerializer(warehouse_sheets,many=True).data)
+        context['warehouse_sheets_s']=warehouse_sheets_s
+
+
+        invoice_lines=InvoiceLineRepo(request=request).list(product_id=product.id)
+        invoice_lines_s=json.dumps(InvoiceLineForProductOrServiceSerializer(invoice_lines,many=True).data)
+        context['invoice_lines_s']=invoice_lines_s
+
         return render(request,TEMPLATE_ROOT+"product.html",context)
 
 
@@ -115,17 +123,35 @@ class ServiceViews(View):
     def service(self,request,*args, **kwargs):
         pass
 
+
+class WareHouseSheetViews(View):
+    def ware_house_sheet(self,request,*args, **kwargs):
+        pass
+
+class WareHouseViews(View):
+    def ware_house(self,request,*args, **kwargs):
+        pass
+
 class InvoiceViews(View):
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
         invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
         invoice_lines=invoice.invoice_lines()
-        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         context['invoice']=invoice
         context['invoice_lines']=invoice_lines
+        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         context['invoice_lines_s']=invoice_lines_s
         return render(request,TEMPLATE_ROOT+"invoice.html",context)
 class FinancialDocumentViews(View):
+    def financial_documents(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        financial_documents=FinancialDocumentRepo(request=request).list()
+        context['financial_documents']=financial_documents
+        financial_documents_s = json.dumps(
+            FinancialDocumentSerializer(financial_documents, many=True).data)
+        context['financial_documents_s'] = financial_documents_s
+        
+        return render(request,TEMPLATE_ROOT+"financial-documents.html",context)
     def invoice_financial_document(self,request,*args, **kwargs):
         context=getContext(request=request)
         invoice_financial_document=InvoiceFinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
