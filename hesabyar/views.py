@@ -57,8 +57,13 @@ class ReportViews(View):
         profile_financial_account = ProfileFinancialAccountRepo(
             request=request).profile_financial_account(*args, **kwargs)
         context['profile_financial_account'] = profile_financial_account
+        context['financial_account'] = profile_financial_account
         financial_documents = FinancialDocumentRepo().list(
             account_id=profile_financial_account.id)
+        context['financial_documents'] = financial_documents
+        financial_documents_s = json.dumps(
+            FinancialDocumentSerializer(financial_documents, many=True).data)
+        context['financial_documents_s'] = financial_documents_s
         context['financial_documents'] = financial_documents
         return render(request, TEMPLATE_ROOT+"profile-financial-account.html", context)
 
