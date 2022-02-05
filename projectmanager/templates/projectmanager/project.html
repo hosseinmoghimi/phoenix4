@@ -38,8 +38,8 @@
                         <a title="ویرایش" target="_blank" href="{{project.get_edit_url}}">
                             <i class="fa fa-edit text-info"></i>
                         </a>
-                        {% endif %}   
-                         {% if perms.projectmanager.delete_project %}
+                        {% endif %}
+                        {% if perms.projectmanager.delete_project %}
                         <a title="حذف" target="_blank" href="{{project.get_delete_url}}">
                             <i class="fa fa-trash text-danger"></i>
                         </a>
@@ -169,7 +169,7 @@
                         <span class="text-primary">
                             {{project.sum_weight}}
                         </span>
-
+                    </p>
 
                     <div class="progress mb-3" style="height: 5px;">
                         <div role="progressbar" aria-valuenow="{{project.percentage_completed}}" aria-valuemin="0"
@@ -177,7 +177,6 @@
                             style="width: {{project.percentage_completed}}%;"></div>
                     </div>
 
-                    </P>
                     <p>
 
                         <a href="{{project.get_chart_url}}" target="_blank">

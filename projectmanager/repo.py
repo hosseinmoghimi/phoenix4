@@ -8,7 +8,7 @@ from django.db.models import Q,Sum
 
 from resume.models import ResumeService
 from .apps import APP_NAME
-from .models import Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, ProjectManagerPage, RequestSignature, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
+from .models import Employee, Employer, Event, Material, MaterialRequest, Project, OrganizationUnit, ProjectManagerPage, RequestSignature, SampleForm, Service, ServiceRequest, WareHouse, WareHouseExportSheet, WareHouseImportSheet, WareHouseMaterial, WareHouseSheet, WareHouseSheetLine
 from core.repo import BasicPageRepo, ParameterRepo
 from .enums import ParametersEnum
 from map.repo import LocationRepo
@@ -17,6 +17,44 @@ def show_archives(request):
         parameter_repo = ParameterRepo(request=request,app_name=APP_NAME)
         show_archives=parameter_repo.parameter(ParametersEnum.SHOW_ARCHIVES).boolesan_value
         return show_archives
+
+class SampleFormRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        
+        self.objects=SampleForm.objects.all()
+        self.profile=ProfileRepo(*args, **kwargs).me
+       
+
+    def sample_form(self, *args, **kwargs):
+        pk=0
+        if 'sample_form_id' in kwargs:
+            pk=kwargs['sample_form_id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        return self.objects.filter(pk=pk).first()
+     
+    def list(self, *args, **kwargs):
+        objects = self.objects
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(Q(title__contains=search_for)|Q(short_description__contains=search_for)|Q(description__contains=search_for))
+        if 'for_home' in kwargs:
+            objects = objects.filter(Q(for_home=kwargs['for_home']))
+        if 'parent_id' in kwargs:
+            objects=objects.filter(parent_id=kwargs['parent_id'])
+        return objects.all()
+
+   
+
 
 
 class ProjectRepo():

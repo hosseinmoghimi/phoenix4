@@ -984,3 +984,16 @@ class WareHouseMaterial(models.Model):
         </a>
         """
 
+
+
+class SampleForm(ProjectManagerPage):
+    
+
+    class Meta:
+        verbose_name = _("SampleForm")
+        verbose_name_plural = _("SampleForms")
+
+    def save(self):
+        self.class_name="sampleform"
+        return super(SampleForm,self).save()
+ 

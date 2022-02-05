@@ -15,6 +15,8 @@ urlpatterns = [
     path('material_requests/',login_required(views.MaterialRequestViews().material_requests),name="material_requests"),
     path('service_requests/',login_required(views.ServiceRequestViews().service_requests),name="service_requests"),
     path('project/<int:pk>/',login_required(views.ProjectViews().project),name="project"),
+    path('sampleform/<int:pk>/',login_required(views.SampleFormViews().sampleform),name="sampleform"),
+    
     path('dashboard/<int:employee_id>/',login_required(views.EmployeeViews().dashboard),name="dashboard"),
     path('guantt/<int:project_id>/',login_required(views.ProjectViews().guantt),name="guantt"),
     path('project_events_chart/<int:project_id>/',login_required(views.EventViews().project_events_chart),name="project_events_chart"),

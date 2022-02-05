@@ -20,7 +20,7 @@ from .forms import *
 from map.repo import LocationRepo
 from .repo import (EmployeeRepo, EmployerRepo, EventRepo,
                    MaterialRepo, MaterialRequestRepo, OrganizationUnitRepo,
-                   ProjectRepo, ServiceRepo, ServiceRequestRepo,
+                   ProjectRepo, SampleFormRepo, ServiceRepo, ServiceRequestRepo,
                    WareHouseMaterialRepo, WareHouseRepo,
                    WareHouseSheetLineRepo, WareHouseSheetRepo)
 from .serializers import (EmployeeSerializer, EmployeeSerializer2,
@@ -78,6 +78,7 @@ class BasicViews(View):
                 projects = ProjectRepo(request=request).list(search_for=search_for)
                 tags = TagRepo(request=request).list(search_for=search_for)
                 events = EventRepo(request=request).search(search_for=search_for)
+                sample_forms = SampleFormRepo(request=request).list(search_for=search_for)
                 organization_units = OrganizationUnitRepo(request=request).list(search_for=search_for)
 
 
@@ -88,6 +89,7 @@ class BasicViews(View):
                 context['services'] = services
                 context['employers'] = employers
                 context['employees'] = employees
+                context['sample_forms'] = sample_forms
                 context['projects'] = projects
                 context['tags'] = tags
                 context['events'] = events
@@ -110,6 +112,7 @@ class BasicViews(View):
         splash = picture_repo.get(name="index.splash")
         context['splash'] = splash
         context['locations'] = LocationRepo(request=request).list()
+        context['sample_forms'] = SampleFormRepo(request=request).list()
         carousels = carousel_repo.list()
         if len(carousels) > 0:
             context['carousels'] = carousels
@@ -892,12 +895,18 @@ class ServiceRequestViews(View):
         context['service_requests_s'] = json.dumps(
             ServiceRequestSerializer(service_requests, many=True).data)
         return render(request, TEMPLATE_ROOT+"service-requests.html", context)
+class SampleFormViews(View):
+    def sampleform(self, request, *args, **kwargs):
+        context = getContext(request)
+        sample_form = SampleFormRepo(request=request).sample_form(*args, **kwargs)
 
+        context.update(PageContext(request=request, page=sample_form))
+        context['sample_form']=sample_form
+        return render(request, TEMPLATE_ROOT+"sample-form.html", context)
 
 class EventViews(View):
     def eventsContext(self, request, *args, **kwargs):
         project = ProjectRepo(request=request).project(*args, **kwargs)
-        context = getContext(request)
         events = project.event_set.all().order_by("event_datetime")
         context['events'] = events
         context['events_s'] = json.dumps(
