@@ -148,7 +148,7 @@ class Invoice(models.Model,LinkHelper):
 
             return "فاکتور شماره "+str(self.pk)
         except:
-            return "فاکتور شماره "+str(0)
+            return "فاکتور شماره 0"
     def persian_invoice_datetime(self):
         return PersianCalendar().from_gregorian(self.invoice_datetime)
     def tax_amount(self):
