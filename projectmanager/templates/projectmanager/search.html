@@ -33,11 +33,6 @@
                     {{message|safe}}
                 </p>
                 {% if tags %}
-
-
-
-
-
                 <h5 class="mt-4">
                     برچسب ها :
                 </h5>
@@ -50,13 +45,27 @@
                 </p>
                 {% endfor %}
 
+                {% endif %}
 
 
 
 
+                
+                {% if sample_forms %}
+                <h5 class="mt-4">
+                    فرم های اداری :
+                </h5>
+                {% for sample_form in sample_forms %}
+                <p class="mr-5">
+                    <a href="{{sample_form.get_absolute_url}}">
 
+                        {{sample_form.title}}
+                    </a>
+                </p>
+                {% endfor %}
 
                 {% endif %}
+
 
 
 
