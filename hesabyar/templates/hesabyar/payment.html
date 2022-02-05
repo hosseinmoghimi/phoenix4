@@ -1,39 +1,54 @@
 {% extends "hesabyar/layout.html" %}
 {% load to_price %}
 {% block content %}
-  <h4 class="text-center">
-      {{payment.title}}
-      {% if perms.hesabyar.change_payment %}
-      <a href="{{payment.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i class="fa fa-edit text-info"></i></a>
-      {% endif %}
-      {% if perms.hesabyar.delete_payment %}
-      <a href="{{payment.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i class="fa fa-trash text-danger"></i></a>
-      {% endif %}
+<h4 class="text-center">
+    {{payment.title}}
+    {% if perms.hesabyar.change_payment %}
+    <a href="{{payment.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+            class="fa fa-edit text-info"></i></a>
+    {% endif %}
+    {% if perms.hesabyar.delete_payment %}
+    <a href="{{payment.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+            class="fa fa-trash text-danger"></i></a>
+    {% endif %}
 
-      
-  </h4>
-  
 
-<div class="row farsi"> 
+</h4>
+
+
+<div class="row farsi">
     <div class="col-md-4">
-        مبلغ : 
+        مبلغ :
         {{payment.amount|to_price}}
     </div>
     <div class="col-md-4">
-        پرداخت کننده : 
+        پرداخت کننده :
         <a href="{{payment.pay_from.get_absolute_url}}">
             {{payment.pay_from.title}}
         </a>
     </div>
     <div class="col-md-4">
-        دریافت کننده : 
+        دریافت کننده :
         <a href="{{payment.pay_to.get_absolute_url}}">
             {{payment.pay_to.title}}
         </a>
+    </div>
+    <div class="col-md-4">
+        {% include "core/includes/page-links-app/template.html" %}
+
+    </div>
+    <div class="col-md-4">
+        {% include "core/includes/page-documents-app/template.html" %}
+
     </div>
 </div>
 {% endblock content %}
 
 {% block script %}
-  
+<script>
+    let page_id=parseInt("{{page.id}}")
+</script>
+{% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+
 {% endblock script %}

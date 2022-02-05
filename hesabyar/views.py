@@ -1,4 +1,5 @@
 import json
+from multiprocessing import context
 from django.shortcuts import render,reverse
 from hesabyar.forms import AddFinancialDocumentForm
 
@@ -203,6 +204,10 @@ class InvoiceViews(View):
         context['invoices']=invoices
         return render(request,TEMPLATE_ROOT+"invoices.html",context)
 class FinancialDocumentViews(View):
+    def getFinancialDocumentContext(self,request,financial_document):
+        context=PageContext(request=request,page=financial_document)
+        context['financial_document']=financial_document
+        return context
     def financial_documents(self,request,*args, **kwargs):
         context=getContext(request=request)
         financial_documents=FinancialDocumentRepo(request=request).list()
@@ -216,16 +221,18 @@ class FinancialDocumentViews(View):
         context=getContext(request=request)
         invoice_financial_document=InvoiceFinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
         invoice=invoice_financial_document.invoice
+        context.update(self.getFinancialDocumentContext(request=request,financial_document=invoice_financial_document))
         invoice_lines=invoice.invoice_lines()
         invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         context['invoice']=invoice
         context['invoice_lines']=invoice_lines
         context['invoice_lines_s']=invoice_lines_s
-        return render(request,TEMPLATE_ROOT+"invoice.html",context)
+        return render(request,TEMPLATE_ROOT+"invoice-financial-document.html",context)
     def payment_financial_document(self,request,*args, **kwargs):
         context=getContext(request=request)
         payment_financial_document=PaymentFinancialDocumentRepo(request=request).payment_financial_document(*args, **kwargs)
         payment=payment_financial_document.payment
+        context.update(self.getFinancialDocumentContext(request=request,financial_document=payment_financial_document))
         
         context['payment']=payment
         return render(request,TEMPLATE_ROOT+"payment.html",context)
