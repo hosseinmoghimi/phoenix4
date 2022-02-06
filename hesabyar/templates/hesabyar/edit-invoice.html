@@ -67,24 +67,10 @@
                     <th class="bordered">
                         ردیف
                     </th>
-                    {% if not product and not service %}
 
                     <th class="bordered">
                         شرح
                     </th>
-                    {% endif %}
-
-
-                    {% if not invoice %}
-
-                    <th class="bordered">
-                        فاکتور
-                    </th>
-                    <th class="bordered">
-                        تاریخ
-                    </th>
-                    {% endif %}
-
 
                     <th class="bordered">
                         تعداد
@@ -104,46 +90,11 @@
 
                 </thead>
                 <tbody>
-                    <tr v-for="invoice_line in invoice_lines">
-                        <td class="bordered">
-                            <span v-text="invoice_line.row"></span>
-                        </td>
-                        {% if not product and not service %}
+                    <template v-for="invoice_line in invoice_lines">
 
-                        <td class="bordered">
-                            <a :href="invoice_line.productorservice.get_absolute_url">
-                                <span v-text="invoice_line.productorservice.title"></span>
-                            </a>
-                        </td>
-                        {% endif %}
-
-
-                        {% if not invoice %}
-
-                        <td class="bordered">
-                            <a :href="invoice_line.invoice.get_absolute_url">
-                                <span v-text="invoice_line.invoice.title"></span>
-                            </a>
-                        </td>
-                        <td class="bordered">
-                            <span v-text="invoice_line.invoice.persian_invoice_datetime"></span>
-                        </td>
-                        {% endif %}
-
-                        <td class="bordered">
-                            <span v-text="invoice_line.quantity"></span>
-                        </td>
-
-                        <td class="bordered">
-                            <span v-text="to_price(invoice_line.unit_price)"></span>
-                        </td>
-
-                        <td class="bordered">
-                            <span v-text="to_price(invoice_line.unit_price*invoice_line.quantity)"></span>
-                        </td>
-
-                    </tr>
-                    {% if invoice %}
+                        <invoice-line-component  :invoice_line="invoice_line"></invoice-line-component>
+                    </template>
+                   
 
                     <tr>
                         <td colspan="4">
@@ -157,10 +108,7 @@
                         </td>
 
                     </tr>
-                    {% endif %}
-                    {% if invoice %}
 
-                    {% if invoice.ship_fee > 0 %}
 
                     <tr>
                         <td colspan="4">
@@ -177,7 +125,6 @@
                         </td>
 
                     </tr>
-                    {% endif %}
                     <tr>
                         <td colspan="4">
                             <div class="text-left">
@@ -197,7 +144,6 @@
                         </td>
 
                     </tr>
-                    {% if invoice.discount %}
 
                     <tr>
                         <td colspan="4">
@@ -214,7 +160,6 @@
                         </td>
 
                     </tr>
-                    {% endif %}
                     <tr>
                         <td colspan="4">
                             <div class="text-left">
@@ -232,7 +177,6 @@
 
                     </tr>
 
-                    {% endif %}
 
 
 
@@ -287,7 +231,6 @@
 
 {% block script %}
 <script>
-    let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
 </script>
 {% include "hesabyar/edit-invoice-script.html" %}
 

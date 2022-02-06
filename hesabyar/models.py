@@ -1,3 +1,4 @@
+from random import choice
 from tinymce.models import HTMLField
 from django.db import models
 
@@ -5,7 +6,7 @@ from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
-from core.enums import ColorEnum
+from core.enums import ColorEnum, UnitNameEnum
 from hesabyar.enums import InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
@@ -92,7 +93,9 @@ class PaymentFinancialDocument(FinancialDocument):
  
 
 class ProductOrService(HesabYarPage):
+    unit_price=models.IntegerField(_("unit_price"),default=0)
     
+    unit_name=models.CharField(_("unit_name"),max_length=50,choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD)
 
     class Meta:
         verbose_name = _("ProductOrService")
@@ -214,6 +217,7 @@ class InvoiceLine(models.Model):
     productorservice=models.ForeignKey("productorservice", verbose_name=_("productorservice"), on_delete=models.CASCADE)
     quantity=models.FloatField(_("quantity"))
     unit_price=models.IntegerField(_("unit_price"))
+    unit_name=models.CharField(_("unit_name"),max_length=50,choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD)
     description=models.CharField(_("description"),null=True,blank=True, max_length=50)
     def save(self,*args, **kwargs):
         super(InvoiceLine,self).save(*args, **kwargs)

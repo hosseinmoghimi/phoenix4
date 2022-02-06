@@ -2,6 +2,8 @@ from operator import inv
 from django.utils import timezone
 from urllib import request
 from django import forms
+
+from core.enums import UnitNameEnum
 from .apps import APP_NAME
 from .models import FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceFinancialDocument, InvoiceLine, PaymentFinancialDocument, Product, ProfileFinancialAccount, Service, Store, Tag, WareHouseSheet
 from authentication.repo import ProfileRepo
@@ -424,8 +426,16 @@ class InvoiceRepo:
             invoice.invoice_datetime=kwargs['invoice_datetime']
         else:
             invoice.invoice_datetime=timezone.now()
-
         invoice.save()
+        invoice_line=InvoiceLine()
+        invoice_line.invoice=invoice
+        invoice_line.productorservice=Product.objects.first()
+        invoice_line.quantity=7
+        invoice_line.unit_price=18000
+        invoice_line.unit_name=UnitNameEnum.ADAD
+        invoice_line.row=1
+
+        invoice_line.save()
         return invoice
 class StoreRepo:
     def __init__(self, *args, **kwargs):

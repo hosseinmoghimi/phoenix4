@@ -101,6 +101,6 @@ class InvoiceLineSerializer(serializers.ModelSerializer):
     productorservice=ProductOrServiceSerializer()
     class Meta:
         model = InvoiceLine
-        fields = ['id', 'row','productorservice', 'quantity', 'unit_price',
+        fields = ['id', 'row','productorservice','unit_name', 'quantity', 'unit_price',
                   'description']
 

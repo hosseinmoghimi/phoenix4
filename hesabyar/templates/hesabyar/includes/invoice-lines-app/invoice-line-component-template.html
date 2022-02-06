@@ -1,0 +1,26 @@
+<tr>
+
+    <td class="bordered">
+        <span v-text="invoice_line.row"></span>
+    </td>
+
+    <td class="bordered">
+        <a :href="invoice_line.productorservice.get_absolute_url">
+            <span v-text="invoice_line.productorservice.title"></span>
+        </a>
+    </td>
+
+
+
+    <td class="bordered">
+        <span v-text="invoice_line.quantity"></span>
+    </td>
+
+    <td class="bordered">
+        <span v-text="to_price(invoice_line.unit_price)"></span>
+    </td>
+
+    <td class="bordered">
+        <span v-text="to_price(invoice_line.unit_price*invoice_line.quantity)"></span>
+    </td>
+</tr>

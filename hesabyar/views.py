@@ -1,5 +1,6 @@
 import json
 from multiprocessing import context
+from operator import inv
 from django.shortcuts import render,reverse
 from hesabyar.forms import AddFinancialDocumentForm
 
@@ -195,6 +196,7 @@ class InvoiceViews(View):
         invoice=InvoiceRepo(request=request).add(*args, **kwargs)
         context['invoice']=invoice
         invoice_lines=invoice.invoice_lines()
+        
         context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         customers=ProfileFinancialAccountRepo(request=request).list()
         context['customers']=customers

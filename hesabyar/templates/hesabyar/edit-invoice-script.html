@@ -5,6 +5,27 @@
 
 <script>
     let invoice = JSON.parse(`{{invoice_s|escapejs}}`)
+    let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
+    let invoice_line_component_template=`{% include "hesabyar/includes/invoice-lines-app/invoice-line-component-template.html" %}`
+    let invoice_line_component=Vue.component('invoice-line-component', {
+        data: function () {
+            return {
+
+            }
+        },
+        methods: {
+         
+
+            to_price: function (vall) {
+                return to_price(vall, "")
+            },
+
+        },
+        props: ['invoice_line'],
+        template: invoice_line_component_template,
+    })
+
+
     let edit_invoice_app = new Vue({
         el: "#edit-invoice-app",
         data: {
@@ -15,7 +36,8 @@
 
         },
         components: {
-            DatePicker: VuePersianDatetimePicker
+            DatePicker: VuePersianDatetimePicker,
+            invoice_line_component,
 
         },
         methods: {
