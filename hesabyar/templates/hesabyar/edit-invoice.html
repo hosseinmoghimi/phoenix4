@@ -1,5 +1,5 @@
 {% extends "hesabyar/layout.html" %}
-
+{% load to_price %}
 {% load to_persian_date %}
 
 {% load to_variz_text %}
@@ -62,9 +62,186 @@
         </div>
 
         <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <th class="bordered">
+                        ردیف
+                    </th>
+                    {% if not product and not service %}
+
+                    <th class="bordered">
+                        شرح
+                    </th>
+                    {% endif %}
+
+
+                    {% if not invoice %}
+
+                    <th class="bordered">
+                        فاکتور
+                    </th>
+                    <th class="bordered">
+                        تاریخ
+                    </th>
+                    {% endif %}
+
+
+                    <th class="bordered">
+                        تعداد
+                    </th>
+
+                    <th class="bordered">
+                        فی
+                    </th>
+
+                    <th class="bordered">
+                        جمع
+                        <small class="text-muted">
+
+                            ( {{CURRENCY}} )
+                        </small>
+                    </th>
+
+                </thead>
+                <tbody>
+                    <tr v-for="invoice_line in invoice_lines">
+                        <td class="bordered">
+                            <span v-text="invoice_line.row"></span>
+                        </td>
+                        {% if not product and not service %}
+
+                        <td class="bordered">
+                            <a :href="invoice_line.productorservice.get_absolute_url">
+                                <span v-text="invoice_line.productorservice.title"></span>
+                            </a>
+                        </td>
+                        {% endif %}
+
+
+                        {% if not invoice %}
+
+                        <td class="bordered">
+                            <a :href="invoice_line.invoice.get_absolute_url">
+                                <span v-text="invoice_line.invoice.title"></span>
+                            </a>
+                        </td>
+                        <td class="bordered">
+                            <span v-text="invoice_line.invoice.persian_invoice_datetime"></span>
+                        </td>
+                        {% endif %}
+
+                        <td class="bordered">
+                            <span v-text="invoice_line.quantity"></span>
+                        </td>
+
+                        <td class="bordered">
+                            <span v-text="to_price(invoice_line.unit_price)"></span>
+                        </td>
+
+                        <td class="bordered">
+                            <span v-text="to_price(invoice_line.unit_price*invoice_line.quantity)"></span>
+                        </td>
+
+                    </tr>
+                    {% if invoice %}
+
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-left">
+                                جمع
+                            </div>
+                        </td>
+
+                        <td class="bordered">
+                            <span v-text="to_price(sum_total())"></span>
+                        </td>
+
+                    </tr>
+                    {% endif %}
+                    {% if invoice %}
+
+                    {% if invoice.ship_fee > 0 %}
+
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-left">
+
+                                هزینه ارسال
+                            </div>
+                        </td>
+
+                        <td class="bordered">
+                            <span>
+                                {{invoice.ship_fee|to_price}}
+                            </span>
+                        </td>
+
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-left">
+
+                                <span>
+                                    {{invoice.tax_percent}}
+                                </span>
+                                درصد
+                                مالیات بر ارزش افزوده
+                            </div>
+                        </td>
+
+                        <td class="bordered">
+                            <span>
+                                {{invoice.tax_amount|to_price}}
+                            </span>
+                        </td>
+
+                    </tr>
+                    {% if invoice.discount %}
+
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-left">
+
+                                تخفیف
+                            </div>
+                        </td>
+
+                        <td class="bordered">
+                            <span>
+                                {{invoice.discount|to_price}}
+                            </span>
+                        </td>
+
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-left">
+
+                                قابل پرداخت : {{invoice.sum_total|to_horuf}}
+                                {{CURRENCY}}
+                            </div>
+                        </td>
+
+                        <td class="bordered filled">
+                            <span>
+                                {{invoice.sum_total|to_price}}
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+
+
+
+
+                </tbody>
+            </table>
 
         </div>
-
 
         {% if invoice.seller.bank_account %}
         <div class="col-md-12">
@@ -73,6 +250,8 @@
 
                 {{invoice.seller.bank_account|to_variz_text}}
             </p>
+
+
         </div>
         {% endif %}
         <div class="col-md-12">
@@ -89,16 +268,16 @@
             <textarea v-model="description" class="form-control" id="" class="w-100" rows="2"></textarea>
 
 
-        </div>      
+        </div>
 
-       <div class="col-md-2"></div>
-       <div class="col-md-12">
-  <button class="btn btn-success" @click="save()">
-            ذخیره کن
-        </button>
+        <div class="col-md-2"></div>
+        <div class="col-md-12">
+            <button class="btn btn-success" @click="save()">
+                ذخیره کن
+            </button>
 
-       </div>
-      
+        </div>
+
 
     </div>
 </div>
@@ -107,5 +286,9 @@
 
 
 {% block script %}
+<script>
+    let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
+</script>
 {% include "hesabyar/edit-invoice-script.html" %}
+
 {% endblock script %}

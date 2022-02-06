@@ -1,7 +1,7 @@
 {% if add %}
 <script>
     let invoice_lines_app_data = {
-        invoice_lines: JSON.parse(`{{invoice_lines_s|escapejs}}`)
+        invoice_lines: invoice_lines
     }
     let invoice_lines_app_methods = {
         to_price: function (vall) {
@@ -20,7 +20,7 @@
 {% else %}
 <script>
     let invoice_lines_app_data = {
-        invoice_lines: JSON.parse(`{{invoice_lines_s|escapejs}}`)
+        invoice_lines: invoice_lines
     }
     let invoice_lines_app_methods = {
         to_price: function (vall) {

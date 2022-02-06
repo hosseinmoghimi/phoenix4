@@ -194,6 +194,8 @@ class InvoiceViews(View):
         
         invoice=InvoiceRepo(request=request).add(*args, **kwargs)
         context['invoice']=invoice
+        invoice_lines=invoice.invoice_lines()
+        context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         customers=ProfileFinancialAccountRepo(request=request).list()
         context['customers']=customers
         context['invoice_s']=json.dumps(InvoiceFullSerializer(invoice).data)

@@ -11,12 +11,24 @@
             invoice_date: invoice.persian_invoice_datetime.slice(0, 10),
             description: invoice.description,
             customer_id: invoice.customer.id,
+            invoice_lines: invoice_lines
+
         },
         components: {
             DatePicker: VuePersianDatetimePicker
 
         },
         methods: {
+            to_price: function (vall) {
+                return to_price(vall, "")
+            }, sum_total: function () {
+                let sum = 0
+                this.invoice_lines.forEach(invoice_line => {
+                    sum += invoice_line.quantity * invoice_line.unit_price
+
+                })
+                return sum
+            },
             save: function () {
                 let payload = {
                     // csrfmiddlewaretoken: csrfmiddlewaretoken,

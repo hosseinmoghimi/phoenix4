@@ -87,6 +87,7 @@
 {% block script %}
 <script>
     let page_id = parseInt("{{page.id}}")
+    let invoice_lines=JSON.parse(`{{invoice_lines_s|escapejs}}`)
 </script>
 {% include "hesabyar/includes/invoice-lines-app/script.html" %}
 
