@@ -5,6 +5,8 @@
 
 <script>
     let invoice = JSON.parse(`{{invoice_s|escapejs}}`)
+    let products = JSON.parse(`{{products_s|escapejs}}`)
+    let services = JSON.parse(`{{services_s|escapejs}}`)
     let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
     let invoice_line_component_template = `{% include "hesabyar/includes/invoice-lines-app/invoice-line-component-template.html" %}`
     let invoice_line_component = Vue.component('invoice-line-component', {
@@ -29,6 +31,9 @@
     let edit_invoice_app = new Vue({
         el: "#edit-invoice-app",
         data: {
+            product_search_items: [],
+            service_search_items: [],
+            search_for: "",
             invoice_date: invoice.persian_invoice_datetime.slice(0, 10),
             invoice: invoice,
             invoice_lines: invoice_lines,
@@ -47,19 +52,46 @@
 
         },
         methods: {
-            add_line: function () {
+            filter: function () {
+                if (this.search_for.length > 0) {
+
+                    this.product_search_items = products.filter((product) => {
+                        return product.title.indexOf(this.search_for) > -1
+                    })
+                    this.service_search_items = services.filter((service) => {
+                        return service.title.indexOf(this.search_for) > -1
+                    })
+                }
+                else {
+                    this.product_search_items = []
+                    this.service_search_items = []
+                }
+            },
+            add_product: function (product) {
                 let line = {
-                    productorservice: {
-                        id: 0,
-                        title: "aaaaa",
-                        get_absolute_url: "/",
-                    },
-                    quantity: 5,
-                    unit_name: "عدد",
-                    unit_price: 120000,
-                    row: this.invoice_lines.length+1,
+                    productorservice: product,
+                    quantity: 1,
+                    unit_name: product.unit_name,
+                    unit_price: product.unit_price,
+                    row: this.invoice_lines.length + 1,
                 }
                 this.invoice_lines.push(line)
+                this.search_for = ""
+                this.product_search_items = []
+                this.service_search_items = []
+            },
+            add_service: function (service) {
+                let line = {
+                    productorservice: service,
+                    quantity: 1,
+                    unit_name: service.unit_name,
+                    unit_price: service.unit_price,
+                    row: this.invoice_lines.length + 1,
+                }
+                this.invoice_lines.push(line)
+                this.search_for = ""
+                this.product_search_items = []
+                this.service_search_items = []
             },
             tax_amount: function () {
                 let a = this.invoice.tax_percent / 100.0
@@ -95,19 +127,35 @@
                 return sum
             },
             save: function () {
-                let payload = {
-                    // csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    invoce_lines: this.invoice_lines,
-                    invoice2: {
-                        invoice_datetime: this.invoice_date,
-                        description: this.invoice.description,
-                        customer_id: this.invoice.customer.id,
-                        ship_fee: this.invoice.ship_fee,
+                let lines = []
+                this.invoice_lines.forEach(invoice_line => {
+                    lines.push({
+                        productorservice_id: invoice_line.productorservice.id,
+                        quantity: invoice_line.quantity,
+                        unit_name: invoice_line.unit_name,
+                        unit_price: invoice_line.unit_price,
+                        row: invoice_line.row,
+                    })
+                });
 
-                    },
-                    invoice: invoice,
+                let payload = {
+                    invoice_id:this.invoice.id,
+                    lines: JSON.stringify(lines),
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    invoice_datetime2: this.invoice_date,
+                    invoice_datetime: this.invoice.persian_invoice_datetime,
+                    description: this.invoice.description,
+                    customer_id: this.invoice.customer.id,
+                    seller_id: this.invoice.seller.id,
+                    ship_fee: parseInt(this.invoice.ship_fee),
+                    tax_percent: parseInt(this.invoice.tax_percent),
+                    discount: parseInt(this.invoice.discount),
                 }
                 console.log(payload)
+                let url = "{% url 'hesabyar:edit_invoice_post' %}"
+                $.post(url, payload).done((data) => {
+                    console.log(data)
+                })
             }
         }
     })

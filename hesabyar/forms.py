@@ -9,3 +9,14 @@ class AddFinancialDocumentForm(forms.Form):
     account_id=forms.IntegerField(required=True)
     bedehkar=forms.IntegerField(required=True)
     category_id=forms.IntegerField(required=True)
+class EditInvoiceForm(forms.Form):
+    invoice_id=forms.IntegerField(required=True)
+    discount=forms.IntegerField(required=True)
+    lines=forms.CharField(max_length=50000, required=True)
+    description=forms.CharField(max_length=5000, required=True)
+    invoice_datetime=forms.CharField(max_length=20, required=True)
+    customer_id=forms.IntegerField(required=True)
+    seller_id=forms.IntegerField(required=True)
+    tax_percent=forms.IntegerField(required=True)
+    ship_fee=forms.IntegerField(required=True)
+    

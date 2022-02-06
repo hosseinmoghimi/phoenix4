@@ -405,6 +405,52 @@ class InvoiceRepo:
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
     
+    def edit_invoice(self,*args, **kwargs):
+        print(kwargs)
+        print(100*"##$#")
+        if not self.user.has_perm(APP_NAME+".change_invoice"):
+            return
+        invoice=self.invoice(*args, **kwargs)
+        if invoice is None:
+            return
+
+        if 'seller_id' in kwargs:
+            invoice.seller_id=kwargs['seller_id']
+
+        if 'customer_id' in kwargs:
+            invoice.customer_id=kwargs['customer_id']
+
+        if 'invoice_datetime' in kwargs:
+            invoice.invoice_datetime=kwargs['invoice_datetime']
+
+        if 'description' in kwargs:
+            invoice.description=kwargs['description']
+
+        if 'discount' in kwargs:
+            invoice.discount=kwargs['discount']
+
+        if 'ship_fee' in kwargs:
+            invoice.ship_fee=kwargs['ship_fee']
+
+        if 'tax_percent' in kwargs:
+            invoice.tax_percent=kwargs['tax_percent']
+
+        invoice.save()
+        if 'lines' in kwargs:
+            invoice_lines=kwargs['lines']
+            invoice.invoice_lines().delete()
+            for line in invoice_lines:
+                invoice_line=InvoiceLine()
+                invoice_line.invoice=invoice
+                invoice_line.productorservice_id=line['productorservice_id']
+                invoice_line.quantity=line['quantity']
+                invoice_line.row=line['row']
+                invoice_line.unit_price=line['unit_price']
+                invoice_line.unit_name=line['unit_name']
+                invoice_line.save()
+        
+        return invoice
+        
     def add(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_invoice"):
             return

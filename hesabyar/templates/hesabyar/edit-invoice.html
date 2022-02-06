@@ -11,7 +11,7 @@
 </style>
 <div id="edit-invoice-app">
 
-   
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -19,10 +19,10 @@
 
                     <div class="text-center">
                         <img src="{{invoice.seller.logo}}" height="96" class="my-3" alt="">
-                
+
                     </div>
                     <h4 class="text-center my-3">
-                
+
                         {{invoice.seller.title}}
                         {% if perms.hesabyar.change_invoice %}
                         <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
@@ -33,7 +33,7 @@
                                 class="fa fa-trash text-danger"></i></a>
                         {% endif %}
                     </h4>
-                    
+
                     <div class="row">
 
                         <div class="col-md-6">
@@ -240,7 +240,71 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5>    افزودن کالا/ خدمات به فاکتور:</h5>
+                    <input type="text" @input="filter()" class="form-control" v-model="search_for"
+                        placeholder="جستجو ...">
 
+                    <table class="table table-striped">
+                        <tr v-for="product in product_search_items">
+                            <td>
+                                کالا
+                            </td>
+                            <td>
+                                <a :href="product.get_absolute_url">
+
+                                    <span v-text="product.title"></span>
+                                </a>
+                            </td>
+
+
+                            <td>
+                                <span v-text="to_price(product.unit_price)"></span>
+
+                            </td>
+                            <td>
+                                موجودی :
+                                <span v-text="product.available"></span>
+                                <span v-text="product.unit_name"></span>
+
+
+                            </td>
+
+                            <td>
+                                <button class="btn btn-success" @click="add_product(product)">
+                                    اضافه کن </button>
+                            </td>
+                        </tr>
+                        <tr v-for="service in service_search_items">
+                            <td>
+                                خدمات
+                            </td>
+                            <td>
+                                <a :href="service.get_absolute_url">
+
+                                    <span v-text="service.title"></span>
+                                </a>
+                            </td>
+
+
+                            <td colspan="2">
+                                <span v-text="to_price(service.unit_price)"></span>
+
+                            </td>
+
+
+                            <td>
+                                <button class="btn btn-warning" @click="add_service(service)">
+                                    اضافه کن </button>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
@@ -254,7 +318,7 @@
                     </p>
                     {% endif %}
 
- 
+
                     <div class="row">
 
 
@@ -277,17 +341,16 @@
 
 
 
-        <button class="btn btn-success" @click="add_line()">
-            اضافه کن </button>
 
 
 
-        <button class="btn btn-success" @click="save()">
-            ذخیره کن
-        </button>
 
-    </div>
-</div>
+                    <button class="btn btn-success" @click="save()">
+                        ذخیره کن
+                    </button>
+
+                </div>
+            </div>
 
 
 

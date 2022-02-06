@@ -1,14 +1,13 @@
 import json
-from multiprocessing import context
 from operator import inv
+import re
 from django.shortcuts import render,reverse
 from core.enums import UnitNameEnum
 from hesabyar.forms import AddFinancialDocumentForm
 
 from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
-from hesabyar.serializers import FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
-from projectmanager.forms import SearchForm
-from projectmanager.serializers import ServiceSerializer
+from hesabyar.serializers import ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from projectmanager.forms import SearchForm 
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
 from django.views import View
@@ -195,6 +194,19 @@ class InvoiceViews(View):
         context={}
         customers=ProfileFinancialAccountRepo(request=request).list()
         context['customers']=customers
+        
+
+        
+        products=ProductRepo(request=request).list()
+        context['products']=products
+        context['products_s']=json.dumps(ProductSerializer(products,many=True).data)
+
+
+        
+        services=ServiceRepo(request=request).list()
+        context['services']=services
+        context['services_s']=json.dumps(ServiceSerializer(services,many=True).data)
+
         context['unit_names']=(u[0] for u in UnitNameEnum.choices)
         return context
     def sell(self,request,*args, **kwargs):

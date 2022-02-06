@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from authentication.serializers import ProfileSerializer
-from .models import FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Product, ProductOrService, ProfileFinancialAccount, Store, WareHouse, WareHouseSheet
+from .models import FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Product, ProductOrService, ProfileFinancialAccount, Service, Store, WareHouse, WareHouseSheet
 
 
 class FinancialAccountSerializer(serializers.ModelSerializer):
@@ -41,13 +41,17 @@ class WareHouseSerializer(serializers.ModelSerializer):
                   'thumbnail']
 
 
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'title', 'get_absolute_url','unit_price','unit_name','thumbnail']
+
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title', 'get_absolute_url','available',
-                  'thumbnail']
+        fields = ['id', 'title', 'get_absolute_url','available','unit_price','unit_name','thumbnail']
 
 
 class WareHouseSheetSerializer(serializers.ModelSerializer):

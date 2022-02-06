@@ -25,8 +25,9 @@ urlpatterns = [
     path('financial_document/<pk>/',login_required(views.ReportViews().financial_document),name="financialdocument"),
     path('bank_account/<pk>/',login_required(views.BankAccountViews().bank_account),name="bank_account"),
     path('tag/<pk>/',login_required(views.BasicViews().tag),name="tag"),
-    path('add_financial_document/',login_required(apis.BasicApi().add_financial_document),name="add_financial_document"),
     path('financial_document_category/<pk>/',login_required(views.ReportViews().financial_document_category),name="financial_document_category"),
 
 
+    path('add_financial_document/',login_required(apis.BasicApi().add_financial_document),name="add_financial_document"),
+    path('edit_invoice_post/',login_required(apis.BasicApi().edit_invoice),name="edit_invoice_post"),
 ]
