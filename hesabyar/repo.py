@@ -406,8 +406,6 @@ class InvoiceRepo:
             return self.objects.filter(pk= kwargs['id']).first()
     
     def edit_invoice(self,*args, **kwargs):
-        print(kwargs)
-        print(100*"##$#")
         if not self.user.has_perm(APP_NAME+".change_invoice"):
             return
         invoice=self.invoice(*args, **kwargs)
@@ -440,14 +438,15 @@ class InvoiceRepo:
             invoice_lines=kwargs['lines']
             invoice.invoice_lines().delete()
             for line in invoice_lines:
-                invoice_line=InvoiceLine()
-                invoice_line.invoice=invoice
-                invoice_line.productorservice_id=line['productorservice_id']
-                invoice_line.quantity=line['quantity']
-                invoice_line.row=line['row']
-                invoice_line.unit_price=line['unit_price']
-                invoice_line.unit_name=line['unit_name']
-                invoice_line.save()
+                if int(line['quantity'])>0:
+                    invoice_line=InvoiceLine()
+                    invoice_line.invoice=invoice
+                    invoice_line.productorservice_id=int(line['productorservice_id'])
+                    invoice_line.quantity=int(line['quantity'])
+                    invoice_line.row=int(line['row'])
+                    invoice_line.unit_price=line['unit_price']
+                    invoice_line.unit_name=line['unit_name']
+                    invoice_line.save()
         
         return invoice
         
