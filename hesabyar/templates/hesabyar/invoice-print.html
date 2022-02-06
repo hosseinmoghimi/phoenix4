@@ -17,28 +17,13 @@
                 <h4 class="text-center my-3">
 
                     {{invoice.seller.title}}
-                    <a href="{{invoice.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i class="material-icons text-success">print</i></a>
-
-                    {% if perms.hesabyar.change_invoice %}
-                    <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
-                            class="fa fa-edit text-info"></i></a>
-
-
-                    <a href="{{invoice.get_edit_url2}}" target="_blank" title="ویرایش" class="mx-2"><i
-                            class="fa fa-edit text-success"></i></a>
-
-                    {% endif %}
-                    {% if perms.hesabyar.delete_invoice %}
-                    <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
-                            class="fa fa-trash text-danger"></i></a>
-                    {% endif %}
+                    
                 </h4>
                 <div class="row">
                     <div class="col-md-6">
                         <p class="text-right mx-5">
-                            خریدار : <a href="{{invoice.customer.get_absolute_url}}">
+                            خریدار : 
                                 {{invoice.customer.title}}
-                            </a>
                         </p>
                     </div>
 
@@ -56,7 +41,7 @@
 
     <div class="col-md-12">
 
-        {% include "hesabyar/includes/invoice-lines-app/template.html" %}
+        {% include "hesabyar/includes/invoice-lines-app/template-print.html" %}
     </div>
 
 
@@ -101,16 +86,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <p class="text-center">
-                            فروشنده : <a href="{{invoice.seller.get_absolute_url}}">
+                            فروشنده : 
                                 {{invoice.seller.title}}
-                            </a>
                         </p>
                     </div>
                     <div class="col-md-6">
                         <p class="text-center">
-                            خریدار : <a href="{{invoice.customer.get_absolute_url}}">
+                            خریدار : 
                                 {{invoice.customer.title}}
-                            </a>
                         </p>
                     </div>
 

@@ -12,6 +12,8 @@ urlpatterns = [
     path('products/',login_required(views.ProductViews().products),name="products"),
     path('services/',login_required(views.ServiceViews().services),name="services"),
     path('edit_invoice/<int:pk>/',login_required(views.InvoiceViews().edit_invoice),name="edit_invoice"),
+    path('invoice_print/<int:pk>/',login_required(views.InvoiceViews().invoice_print),name="invoice_print"),
+    
     path('sell/',login_required(views.InvoiceViews().sell),name="sell"),
     path('ware_house_sheet/<pk>/',login_required(views.WareHouseSheetViews().ware_house_sheet),name="warehousesheet"),
     path('ware_house/<pk>/',login_required(views.WareHouseViews().ware_house),name="warehouse"),

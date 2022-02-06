@@ -148,6 +148,8 @@ class Invoice(models.Model,LinkHelper):
     class_name='invoice'
     def get_edit_url2(self):
         return reverse(APP_NAME+":edit_invoice",kwargs={'pk':self.pk})
+    def get_print_url(self):
+        return reverse(APP_NAME+":invoice_print",kwargs={'pk':self.pk})
     @property
     def title(self):
         try:

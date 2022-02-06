@@ -234,6 +234,15 @@ class InvoiceViews(View):
         context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         context['invoice_s']=json.dumps(InvoiceFullSerializer(invoice).data)
         return render(request,TEMPLATE_ROOT+"edit-invoice.html",context)
+    def invoice_print(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        invoice_lines=invoice.invoice_lines()
+        context['invoice']=invoice
+        context['invoice_lines']=invoice_lines
+        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        context['invoice_lines_s']=invoice_lines_s
+        return render(request,TEMPLATE_ROOT+"invoice-print.html",context)
 
 
     def invoice(self,request,*args, **kwargs):
