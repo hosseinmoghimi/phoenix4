@@ -14,6 +14,11 @@
     {% if perms.hesabyar.change_invoice %}
     <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
             class="fa fa-edit text-info"></i></a>
+
+            
+    <a href="{{invoice.get_edit_url2}}" target="_blank" title="ویرایش" class="mx-2"><i
+        class="fa fa-edit text-success"></i></a>
+
     {% endif %}
     {% if perms.hesabyar.delete_invoice %}
     <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i

@@ -146,6 +146,8 @@ class Invoice(models.Model,LinkHelper):
     discount=models.IntegerField(_("تخفیف"),default=0)
     description=HTMLField(_("توضیحات"),max_length=50000,blank=True,null=True)
     class_name='invoice'
+    def get_edit_url2(self):
+        return reverse(APP_NAME+":edit_invoice",kwargs={'pk':self.pk})
     @property
     def title(self):
         try:

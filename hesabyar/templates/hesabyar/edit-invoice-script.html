@@ -6,15 +6,15 @@
 <script>
     let invoice = JSON.parse(`{{invoice_s|escapejs}}`)
     let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
-    let invoice_line_component_template=`{% include "hesabyar/includes/invoice-lines-app/invoice-line-component-template.html" %}`
-    let invoice_line_component=Vue.component('invoice-line-component', {
+    let invoice_line_component_template = `{% include "hesabyar/includes/invoice-lines-app/invoice-line-component-template.html" %}`
+    let invoice_line_component = Vue.component('invoice-line-component', {
         data: function () {
             return {
 
             }
         },
         methods: {
-         
+
 
             to_price: function (vall) {
                 return to_price(vall, "")
@@ -30,15 +30,14 @@
         el: "#edit-invoice-app",
         data: {
             invoice_date: invoice.persian_invoice_datetime.slice(0, 10),
-            description: invoice.description,
-            customer_id: invoice.customer.id,
+            invoice: invoice,
             invoice_lines: invoice_lines,
-            new_invoice_line:{
-                row:invoice_lines.length+1,
-                unit_price:0,
-                unit_name:"",
-                productorservice:{title:"جدید",get_absolute_url:""},
-                quantity:0,
+            new_invoice_line: {
+                row: invoice_lines.length + 1,
+                unit_price: 0,
+                unit_name: "",
+                productorservice: { title: "جدید", get_absolute_url: "" },
+                quantity: 0,
             }
 
         },
@@ -48,9 +47,32 @@
 
         },
         methods: {
+            tax_amount: function () {
+                let a = this.invoice.tax_percent / 100.0
+                let b = parseInt(this.invoice.ship_fee) + this.lines_total()
+
+                return (parseInt(a * b))
+            },
+
             to_price: function (vall) {
                 return to_price(vall, "")
-            }, sum_total: function () {
+            },
+
+            sum_total: function () {
+                let a = parseInt(this.lines_total())
+                let b = parseInt(this.invoice.ship_fee)
+                let c = parseInt(this.tax_amount())
+                let d = parseInt(this.invoice.discount)
+                // console.log("@@@@@@@@@@")
+                // console.log(a)
+                // console.log(b)
+                // console.log(c)
+                // console.log(d)
+                // console.log(a + b + c - d)
+                return this.to_price(parseInt(a + b + c - d))
+
+            },
+            lines_total: function () {
                 let sum = 0
                 this.invoice_lines.forEach(invoice_line => {
                     sum += invoice_line.quantity * invoice_line.unit_price
@@ -61,12 +83,17 @@
             save: function () {
                 let payload = {
                     // csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    invoice_datetime: this.invoice_date,
-                    description: this.description,
-                    customer_id: this.customer_id,
+                    invoce_lines: this.invoice.invoice_lines,
+                    invoice2: {
+                        invoice_datetime: this.invoice_date,
+                        description: this.invoice.description,
+                        customer_id: this.invoice.customer.id,
+                        ship_fee: this.invoice.ship_fee,
 
+                    },
+                    invoice: invoice,
                 }
-                console.log(payload)
+                console.log(payload.invoice)
             }
         }
     })

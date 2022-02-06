@@ -37,6 +37,8 @@
 {% block script %}
 <script>
   let page_id = parseInt("{{page.id}}")
+  let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
+
 </script>
 {% include "core/includes/page-links-app/script.html" %}
 {% include "hesabyar/includes/warehouse-sheets-app/script.html" %}

@@ -32,6 +32,8 @@
 
 {% block script %}
 <script>
+    let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
+
   let page_id = parseInt("{{page.id}}")
 </script>
 {% include "core/includes/page-links-app/script.html" %}

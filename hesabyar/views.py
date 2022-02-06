@@ -2,6 +2,7 @@ import json
 from multiprocessing import context
 from operator import inv
 from django.shortcuts import render,reverse
+from core.enums import UnitNameEnum
 from hesabyar.forms import AddFinancialDocumentForm
 
 from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
@@ -190,18 +191,38 @@ class WareHouseViews(View):
         pass
 
 class InvoiceViews(View):
+    def get_edit_invoice_context(self,request,*args, **kwargs):
+        context={}
+        customers=ProfileFinancialAccountRepo(request=request).list()
+        context['customers']=customers
+        context['unit_names']=(u[0] for u in UnitNameEnum.choices)
+        return context
     def sell(self,request,*args, **kwargs):
         context=getContext(request=request)
+        context.update(self.get_edit_invoice_context(request=request))
         
         invoice=InvoiceRepo(request=request).add(*args, **kwargs)
         context['invoice']=invoice
         invoice_lines=invoice.invoice_lines()
         
         context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
-        customers=ProfileFinancialAccountRepo(request=request).list()
-        context['customers']=customers
         context['invoice_s']=json.dumps(InvoiceFullSerializer(invoice).data)
         return render(request,TEMPLATE_ROOT+"edit-invoice.html",context)
+
+
+        
+    def edit_invoice(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        context.update(self.get_edit_invoice_context(request=request))
+        
+        invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        context['invoice']=invoice
+        invoice_lines=invoice.invoice_lines()
+        
+        context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        context['invoice_s']=json.dumps(InvoiceFullSerializer(invoice).data)
+        return render(request,TEMPLATE_ROOT+"edit-invoice.html",context)
+
 
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
