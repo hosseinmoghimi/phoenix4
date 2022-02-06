@@ -38,7 +38,7 @@
 
                 </div>
                 <div class="col-6">
-                    <select class="form-control" v-model="customer_id">
+                    <select class="form-control" v-model="invoice.customer.id">
                         {% for customer in customers %}
                         <option value="{{customer.id}}">{{customer.profile.name}}</option>
 
@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-6">
 
-                    <date-picker v-model="invoice_date"></date-picker>
+                    <date-picker v-model="invoice.persian_invoice_datetime"></date-picker>
 
                 </div>
             </div>
@@ -141,7 +141,9 @@
                         </td>
 
                         <td class="bordered">
-                            <span v-text="to_price(sum_total())"></span>
+                            <span v-text="to_price(lines_total())"></span>
+                            <span class="small.text-muted">{{CURRENCY}}</span>
+
                         </td>
 
                     </tr>
@@ -156,28 +158,25 @@
                         </td>
 
                         <td class="bordered">
-                            <span>
-                                {{invoice.ship_fee|to_price}}
-                            </span>
+                                <input type="number" class="form-control"  v-model="invoice.ship_fee">
                         </td>
 
                     </tr>
                     <tr>
                         <td colspan="4">
                             <div class="text-left">
+                                <input style="width: 4em;display: inline;" type="number" class="form-control" v-model="invoice.tax_percent">
 
-                                <span>
-                                    {{invoice.tax_percent}}
-                                </span>
+                              
                                 درصد
                                 مالیات بر ارزش افزوده
                             </div>
                         </td>
 
                         <td class="bordered">
-                            <span>
-                                {{invoice.tax_amount|to_price}}
+                            <span v-text="to_price(tax_amount())">
                             </span>
+                            <span class="small.text-muted">{{CURRENCY}}</span>
                         </td>
 
                     </tr>
@@ -191,9 +190,8 @@
                         </td>
 
                         <td class="bordered">
-                            <span>
-                                {{invoice.discount|to_price}}
-                            </span>
+                                <input type="number" class="form-control" v-model="invoice.discount">
+
                         </td>
 
                     </tr>
@@ -201,14 +199,13 @@
                         <td colspan="4">
                             <div class="text-left">
 
-                                قابل پرداخت : {{invoice.sum_total|to_horuf}}
+                                قابل پرداخت : 
                                 {{CURRENCY}}
                             </div>
                         </td>
 
                         <td class="bordered filled">
-                            <span>
-                                {{invoice.sum_total|to_price}}
+                            <span v-text="sum_total()">
                             </span>
                         </td>
 
@@ -246,7 +243,7 @@
             </span>
         </div>
         <div class="col-md-10 mb-4">
-            <textarea v-model="description" class="form-control" id="" class="w-100" rows="2"></textarea>
+            <textarea v-model="invoice.description" class="form-control" id="" class="w-100" rows="2"></textarea>
 
 
         </div>
