@@ -5,254 +5,291 @@
 {% load to_variz_text %}
 {% block content %}
 <style>
-    .new_row>td{
+    .new_row>td {
         background-color: rgb(155, 202, 165);
     }
 </style>
 <div id="edit-invoice-app">
 
-    <div class="text-center">
-        <img src="{{invoice.seller.logo}}" height="96" class="my-3" alt="">
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="text-center">
+                        <img src="{{invoice.seller.logo}}" height="96" class="my-3" alt="">
+                
+                    </div>
+                    <h4 class="text-center my-3">
+                
+                        {{invoice.seller.title}}
+                        {% if perms.hesabyar.change_invoice %}
+                        <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+                                class="fa fa-edit text-info"></i></a>
+                        {% endif %}
+                        {% if perms.hesabyar.delete_invoice %}
+                        <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+                                class="fa fa-trash text-danger"></i></a>
+                        {% endif %}
+                    </h4>
+                    
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-3">
+                                    <span class="farsi text-left">
+
+                                        خریدار :
+                                    </span>
+
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control" v-model="invoice.customer.id">
+                                        {% for customer in customers %}
+                                        <option value="{{customer.id}}">{{customer.profile.name}}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-6 text-left ">
+                                    <span class="farsi text-left">
+
+                                        تاریخ :
+                                    </span>
+                                </div>
+                                <div class="col-6">
+
+                                    <date-picker v-model="invoice.persian_invoice_datetime"></date-picker>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <th class="bordered">
+                                ردیف
+                            </th>
+
+                            <th class="bordered">
+                                شرح
+                            </th>
+
+                            <th class="bordered">
+                                تعداد
+                            </th>
+
+                            <th class="bordered">
+                                فی
+                            </th>
+
+                            <th class="bordered">
+                                جمع
+                                <small class="text-muted">
+
+                                    ( {{CURRENCY}} )
+                                </small>
+                            </th>
+
+                        </thead>
+                        <tbody>
+                            <template v-for="invoice_line in invoice_lines">
+
+                                <invoice-line-component :invoice_line="invoice_line"></invoice-line-component>
+                            </template>
+
+
+
+                            <tr v-if="false" class="new_row">
+
+                                <td class="bordered">
+                                    <span v-text="new_invoice_line.row"></span>
+                                </td>
+
+                                <td class="bordered">
+                                    <a :href="new_invoice_line.productorservice.get_absolute_url">
+
+                                        <span v-text="new_invoice_line.productorservice.title"></span>
+                                    </a>
+                                </td>
+
+
+
+                                <td class="bordered">
+                                    <span v-text="new_invoice_line.quantity"></span>
+                                    <span v-text="new_invoice_line.unit_name"></span>
+                                </td>
+
+                                <td class="bordered">
+                                    <span v-text="to_price(new_invoice_line.unit_price)"></span>
+                                </td>
+
+                                <td class="bordered">
+                                    <span
+                                        v-text="to_price(new_invoice_line.unit_price*new_invoice_line.quantity)"></span>
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-left">
+                                        جمع
+                                    </div>
+                                </td>
+
+                                <td class="bordered">
+                                    <span v-text="to_price(lines_total())"></span>
+                                    <span class="small.text-muted">{{CURRENCY}}</span>
+
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-left">
+
+                                        هزینه ارسال
+                                    </div>
+                                </td>
+
+                                <td class="bordered">
+                                    <input type="number" class="form-control" v-model="invoice.ship_fee">
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-left">
+                                        <input style="width: 4em;display: inline;" type="number" class="form-control"
+                                            v-model="invoice.tax_percent">
+
+
+                                        درصد
+                                        مالیات بر ارزش افزوده
+                                    </div>
+                                </td>
+
+                                <td class="bordered">
+                                    <span v-text="to_price(tax_amount())">
+                                    </span>
+                                    <span class="small.text-muted">{{CURRENCY}}</span>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-left">
+
+                                        تخفیف
+                                    </div>
+                                </td>
+
+                                <td class="bordered">
+                                    <input type="number" class="form-control" v-model="invoice.discount">
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-left">
+
+                                        قابل پرداخت :
+                                        {{CURRENCY}}
+                                    </div>
+                                </td>
+
+                                <td class="bordered filled">
+                                    <span v-text="sum_total()">
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <p class=" mx-5">
+                        واحد مبلغ ها تومان می باشد.
+                    </p>
+                    {% if invoice.seller.bank_account %}
+                    <p class=" mx-5">
+
+                        {{invoice.seller.bank_account|to_variz_text}}
+                    </p>
+                    {% endif %}
+
+ 
+                    <div class="row">
+
+
+                        <div class="col-md-2">
+                            <span class="farsi text-left">
+                                توضیحات :
+                            </span>
+                        </div>
+                        <div class="col-md-10 mb-4">
+                            <textarea v-model="invoice.description" class="form-control" id="" class="w-100"
+                                rows="2"></textarea>
+
+
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                    </div>
+
+
+
+
+        <button class="btn btn-success" @click="add_line()">
+            اضافه کن </button>
+
+
+
+        <button class="btn btn-success" @click="save()">
+            ذخیره کن
+        </button>
 
     </div>
-    <h4 class="text-center my-3">
+</div>
 
-        {{invoice.seller.title}}
-        {% if perms.hesabyar.change_invoice %}
-        <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
-                class="fa fa-edit text-info"></i></a>
-        {% endif %}
-        {% if perms.hesabyar.delete_invoice %}
-        <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
-                class="fa fa-trash text-danger"></i></a>
-        {% endif %}
-    </h4>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-3">
-                    <span class="farsi text-left">
 
-                        خریدار :
-                    </span>
-
-                </div>
-                <div class="col-6">
-                    <select class="form-control" v-model="invoice.customer.id">
-                        {% for customer in customers %}
-                        <option value="{{customer.id}}">{{customer.profile.name}}</option>
-
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-6 text-left ">
-                    <span class="farsi text-left">
-
-                        تاریخ :
-                    </span>
-                </div>
-                <div class="col-6">
-
-                    <date-picker v-model="invoice.persian_invoice_datetime"></date-picker>
-
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-md-12">
-            <table class="table table-striped">
-                <thead>
-                    <th class="bordered">
-                        ردیف
-                    </th>
-
-                    <th class="bordered">
-                        شرح
-                    </th>
-
-                    <th class="bordered">
-                        تعداد
-                    </th>
-
-                    <th class="bordered">
-                        فی
-                    </th>
-
-                    <th class="bordered">
-                        جمع
-                        <small class="text-muted">
-
-                            ( {{CURRENCY}} )
-                        </small>
-                    </th>
-
-                </thead>
-                <tbody>
-                    <template v-for="invoice_line in invoice_lines">
-
-                        <invoice-line-component :invoice_line="invoice_line"></invoice-line-component>
-                    </template>
-
-
-
-                    <tr class="new_row">
-
-                        <td class="bordered">
-                            <span v-text="new_invoice_line.row"></span>
-                        </td>
-
-                        <td class="bordered">
-                            <a :href="new_invoice_line.productorservice.get_absolute_url">
-
-                                <span v-text="new_invoice_line.productorservice.title"></span>
-                            </a>
-                        </td>
-
-
-
-                        <td class="bordered">
-                            <span v-text="new_invoice_line.quantity"></span>
-                            <span v-text="new_invoice_line.unit_name"></span>
-                        </td>
-
-                        <td class="bordered">
-                            <span v-text="to_price(new_invoice_line.unit_price)"></span>
-                        </td>
-
-                        <td class="bordered">
-                            <span v-text="to_price(new_invoice_line.unit_price*new_invoice_line.quantity)"></span>
-                        </td>
-                    </tr>
-
-
-
-                    <tr>
-                        <td colspan="4">
-                            <div class="text-left">
-                                جمع
-                            </div>
-                        </td>
-
-                        <td class="bordered">
-                            <span v-text="to_price(lines_total())"></span>
-                            <span class="small.text-muted">{{CURRENCY}}</span>
-
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-                        <td colspan="4">
-                            <div class="text-left">
-
-                                هزینه ارسال
-                            </div>
-                        </td>
-
-                        <td class="bordered">
-                                <input type="number" class="form-control"  v-model="invoice.ship_fee">
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <div class="text-left">
-                                <input style="width: 4em;display: inline;" type="number" class="form-control" v-model="invoice.tax_percent">
-
-                              
-                                درصد
-                                مالیات بر ارزش افزوده
-                            </div>
-                        </td>
-
-                        <td class="bordered">
-                            <span v-text="to_price(tax_amount())">
-                            </span>
-                            <span class="small.text-muted">{{CURRENCY}}</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td colspan="4">
-                            <div class="text-left">
-
-                                تخفیف
-                            </div>
-                        </td>
-
-                        <td class="bordered">
-                                <input type="number" class="form-control" v-model="invoice.discount">
-
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <div class="text-left">
-
-                                قابل پرداخت : 
-                                {{CURRENCY}}
-                            </div>
-                        </td>
-
-                        <td class="bordered filled">
-                            <span v-text="sum_total()">
-                            </span>
-                        </td>
-
-                    </tr>
-
-
-
-
-
-
-                </tbody>
-            </table>
-
-        </div>
-
-        {% if invoice.seller.bank_account %}
-        <div class="col-md-12">
-
-            <p class=" mx-5">
-
-                {{invoice.seller.bank_account|to_variz_text}}
-            </p>
-
-
-        </div>
-        {% endif %}
-        <div class="col-md-12">
-            <p class=" mx-5">
-                واحد مبلغ ها تومان می باشد.
-            </p>
-        </div>
-        <div class="col-md-2">
-            <span class="farsi text-left">
-                توضیحات :
-            </span>
-        </div>
-        <div class="col-md-10 mb-4">
-            <textarea v-model="invoice.description" class="form-control" id="" class="w-100" rows="2"></textarea>
-
-
-        </div>
-
-        <div class="col-md-2"></div>
-        <div class="col-md-12">
-            <button class="btn btn-success" @click="save()">
-                ذخیره کن
-            </button>
 
         </div>
 

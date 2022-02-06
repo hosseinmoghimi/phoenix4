@@ -5,35 +5,25 @@
     </td>
 
     <td class="bordered">
-        <a :href="invoice_line.productorservice.get_absolute_url">
+        <a target="_blank" :href="invoice_line.productorservice.get_absolute_url">
             <span v-text="invoice_line.productorservice.title"></span>
         </a>
     </td>
     <td class="bordered">
-        <div class="row">
-            <div class="col-6">
-                <input type="number" v-model="invoice_line.quantity" class="form-control">
-            </div>
-            <div class="col-6">
-                <select class="form-control" v-model="invoice_line.unit_name">
-                    {% for unit_name in unit_names %}
-                    <option value="{{unit_name}}">{{unit_name}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
+        <input min="0" type="number" style="width:5em;display: inline;" v-model="invoice_line.quantity"
+            class="form-control">
+
+        <select style="width: 6em;display: inline;" class="form-control" v-model="invoice_line.unit_name">
+            {% for unit_name in unit_names %}
+            <option value="{{unit_name}}">{{unit_name}}</option>
+            {% endfor %}
+        </select>
+
     </td>
     <td class="bordered">
-        <div class="row">
-            <div class="col-9">
-                <input type="number" v-model="invoice_line.unit_price" class="form-control">
+        <input style="display: inline;width: 10em;" type="number" v-model="invoice_line.unit_price" class="form-control">
+        {{CURRENCY}}
 
-            </div>
-            <div class="col-3">
-                {{CURRENCY}}
-
-            </div>
-        </div>
     </td>
 
     <td class="bordered">

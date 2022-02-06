@@ -47,6 +47,20 @@
 
         },
         methods: {
+            add_line: function () {
+                let line = {
+                    productorservice: {
+                        id: 0,
+                        title: "aaaaa",
+                        get_absolute_url: "/",
+                    },
+                    quantity: 5,
+                    unit_name: "عدد",
+                    unit_price: 120000,
+                    row: this.invoice_lines.length+1,
+                }
+                this.invoice_lines.push(line)
+            },
             tax_amount: function () {
                 let a = this.invoice.tax_percent / 100.0
                 let b = parseInt(this.invoice.ship_fee) + this.lines_total()
@@ -83,7 +97,7 @@
             save: function () {
                 let payload = {
                     // csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    invoce_lines: this.invoice.invoice_lines,
+                    invoce_lines: this.invoice_lines,
                     invoice2: {
                         invoice_datetime: this.invoice_date,
                         description: this.invoice.description,
@@ -93,7 +107,7 @@
                     },
                     invoice: invoice,
                 }
-                console.log(payload.invoice)
+                console.log(payload)
             }
         }
     })
