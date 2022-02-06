@@ -4,7 +4,7 @@ from django.shortcuts import render,reverse
 from hesabyar.forms import AddFinancialDocumentForm
 
 from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
-from hesabyar.serializers import FinancialDocumentSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from hesabyar.serializers import FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from projectmanager.forms import SearchForm
 from projectmanager.serializers import ServiceSerializer
 from .apps import APP_NAME
@@ -189,6 +189,16 @@ class WareHouseViews(View):
         pass
 
 class InvoiceViews(View):
+    def sell(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        
+        invoice=InvoiceRepo(request=request).add(*args, **kwargs)
+        context['invoice']=invoice
+        customers=ProfileFinancialAccountRepo(request=request).list()
+        context['customers']=customers
+        context['invoice_s']=json.dumps(InvoiceFullSerializer(invoice).data)
+        return render(request,TEMPLATE_ROOT+"edit-invoice.html",context)
+
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
         invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)

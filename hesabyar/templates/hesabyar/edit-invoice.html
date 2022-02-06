@@ -1,0 +1,111 @@
+{% extends "hesabyar/layout.html" %}
+
+{% load to_persian_date %}
+
+{% load to_variz_text %}
+{% block content %}
+<div id="edit-invoice-app">
+
+    <div class="text-center">
+        <img src="{{invoice.seller.logo}}" height="96" class="my-3" alt="">
+
+    </div>
+    <h4 class="text-center my-3">
+
+        {{invoice.seller.title}}
+        {% if perms.hesabyar.change_invoice %}
+        <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+                class="fa fa-edit text-info"></i></a>
+        {% endif %}
+        {% if perms.hesabyar.delete_invoice %}
+        <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+                class="fa fa-trash text-danger"></i></a>
+        {% endif %}
+    </h4>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-3">
+                    <span class="farsi text-left">
+
+                        خریدار :
+                    </span>
+
+                </div>
+                <div class="col-6">
+                    <select class="form-control" v-model="customer_id">
+                        {% for customer in customers %}
+                        <option value="{{customer.id}}">{{customer.profile.name}}</option>
+
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-6 text-left ">
+                    <span class="farsi text-left">
+
+                        تاریخ :
+                    </span>
+                </div>
+                <div class="col-6">
+
+                    <date-picker v-model="invoice_date"></date-picker>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+
+        </div>
+
+
+        {% if invoice.seller.bank_account %}
+        <div class="col-md-12">
+
+            <p class=" mx-5">
+
+                {{invoice.seller.bank_account|to_variz_text}}
+            </p>
+        </div>
+        {% endif %}
+        <div class="col-md-12">
+            <p class=" mx-5">
+                واحد مبلغ ها تومان می باشد.
+            </p>
+        </div>
+        <div class="col-md-2">
+            <span class="farsi text-left">
+                توضیحات :
+            </span>
+        </div>
+        <div class="col-md-10 mb-4">
+            <textarea v-model="description" class="form-control" id="" class="w-100" rows="2"></textarea>
+
+
+        </div>      
+
+       <div class="col-md-2"></div>
+       <div class="col-md-12">
+  <button class="btn btn-success" @click="save()">
+            ذخیره کن
+        </button>
+
+       </div>
+      
+
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block script %}
+{% include "hesabyar/edit-invoice-script.html" %}
+{% endblock script %}

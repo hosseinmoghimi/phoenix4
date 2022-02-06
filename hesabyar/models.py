@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from core.enums import ColorEnum
-from hesabyar.enums import WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
+from hesabyar.enums import InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from core.models import BasicPage
@@ -133,14 +133,15 @@ class Service(ProductOrService):
         return super(Service,self).save(*args, **kwargs)
 
 class Invoice(models.Model,LinkHelper):
-    customer=models.ForeignKey("profilefinancialaccount", verbose_name=_("customer"), on_delete=models.CASCADE)
-    seller=models.ForeignKey("store", verbose_name=_("store"), on_delete=models.CASCADE)
-    tax_percent=models.IntegerField(_("tax percent"),default=9)
+    status=models.CharField(_("وضعیت"),choices=InvoiceStatusEnum.choices,default=InvoiceStatusEnum.DRAFT, max_length=50)
+    customer=models.ForeignKey("profilefinancialaccount", null=True,blank=True,verbose_name=_("مشتری"), on_delete=models.SET_NULL)
+    seller=models.ForeignKey("store", verbose_name=_("فروشنده"), on_delete=models.CASCADE)
+    tax_percent=models.IntegerField(_("درصد مالیات"),default=9)
     invoice_datetime=models.DateTimeField(_("تاریخ فاکتور"), auto_now=False, auto_now_add=False)
     date_added=models.DateTimeField(_("تاریخ ثبت"), auto_now=False, auto_now_add=True)
     ship_fee=models.IntegerField(_("هزینه حمل"),default=0)
     discount=models.IntegerField(_("تخفیف"),default=0)
-    description=HTMLField(_("description"),max_length=50000,blank=True,null=True)
+    description=HTMLField(_("توضیحات"),max_length=50000,blank=True,null=True)
     class_name='invoice'
     @property
     def title(self):
@@ -170,30 +171,30 @@ class Invoice(models.Model,LinkHelper):
         return sum
     def save(self,*args, **kwargs):
         super(Invoice,self).save(*args, **kwargs)
-        financial_year=FinancialYear.get_by_date(date=self.invoice_datetime)
-        FinancialDocumentCategory.objects.get_or_create(title="فروش")
-        category=FinancialDocumentCategory.objects.get(title="فروش")
-        InvoiceFinancialDocument.objects.filter(invoice=self).delete()
+        # financial_year=FinancialYear.get_by_date(date=self.invoice_datetime)
+        # FinancialDocumentCategory.objects.get_or_create(title="فروش")
+        # category=FinancialDocumentCategory.objects.get(title="فروش")
+        # InvoiceFinancialDocument.objects.filter(invoice=self).delete()
 
-        ifd1=InvoiceFinancialDocument()
-        ifd1.financial_year=financial_year
-        ifd1.category=category
-        ifd1.account=self.customer
-        ifd1.invoice=self
-        ifd1.bedehkar=self.sum_total()
-        ifd1.title=str(self)
-        ifd1.document_datetime=self.invoice_datetime
-        ifd1.save()
+        # ifd1=InvoiceFinancialDocument()
+        # ifd1.financial_year=financial_year
+        # ifd1.category=category
+        # ifd1.account=self.customer
+        # ifd1.invoice=self
+        # ifd1.bedehkar=self.sum_total()
+        # ifd1.title=str(self)
+        # ifd1.document_datetime=self.invoice_datetime
+        # ifd1.save()
 
-        ifd1=InvoiceFinancialDocument()
-        ifd1.bestankar=self.sum_total()
-        ifd1.invoice=self
-        ifd1.title=str(self)
-        ifd1.financial_year=financial_year
-        ifd1.category=category
-        ifd1.document_datetime=self.invoice_datetime
-        ifd1.account=self.seller.owner
-        ifd1.save()
+        # ifd1=InvoiceFinancialDocument()
+        # ifd1.bestankar=self.sum_total()
+        # ifd1.invoice=self
+        # ifd1.title=str(self)
+        # ifd1.financial_year=financial_year
+        # ifd1.category=category
+        # ifd1.document_datetime=self.invoice_datetime
+        # ifd1.account=self.seller.owner
+        # ifd1.save()
     class Meta:
         verbose_name = _("Invoice")
         verbose_name_plural = _("Invoices")

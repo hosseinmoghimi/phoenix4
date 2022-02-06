@@ -7,3 +7,7 @@ class WareHouseSheetStatusEnum(TextChoices):
     INITIAL="تعریف اولیه",_("تعریف اولیه")
     IN_PROGRESS="در جریان",_("در جریان")
     DONE="تمام شده",_("تمام شده")
+class InvoiceStatusEnum(TextChoices):
+    DRAFT="پیش فاکتور",_("پیش فاکتور")
+    IN_PROGRESS="در جریان",_("در جریان")
+    DELIVERED="تحویل شده",_("تحویل شده")

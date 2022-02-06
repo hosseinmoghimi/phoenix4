@@ -1,3 +1,4 @@
+from operator import inv
 from django.utils import timezone
 from urllib import request
 from django import forms
@@ -155,6 +156,10 @@ class ProfileFinancialAccountRepo:
             self.user = kwargs['user']
         self.objects = ProfileFinancialAccount.objects
         self.profile = ProfileRepo(user=self.user).me
+        if self.profile is not None:
+            self.me=ProfileFinancialAccount.objects.filter(profile=self.profile).first()
+        else:
+            self.me=None
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -397,7 +402,31 @@ class InvoiceRepo:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
-        
+    
+    def add(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".add_invoice"):
+            return
+        invoice=Invoice()
+        me_store=StoreRepo(request=self.request).me
+        me_p=ProfileFinancialAccountRepo(request=self.request).me
+
+        if 'seller_id' in kwargs:
+            invoice.seller_id=kwargs['seller_id'] 
+        else:
+            invoice.seller_id=me_store.id
+
+        if 'customer_id' in kwargs:
+            invoice.customer_id=kwargs['customer_id'] 
+        else:
+            invoice.customer_id=me_p.id
+
+        if 'invoice_datetime' in kwargs:
+            invoice.invoice_datetime=kwargs['invoice_datetime']
+        else:
+            invoice.invoice_datetime=timezone.now()
+
+        invoice.save()
+        return invoice
 class StoreRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -409,6 +438,11 @@ class StoreRepo:
             self.user = kwargs['user']
         self.objects = Store.objects
         self.profile = ProfileRepo(user=self.user).me
+        pfa=ProfileFinancialAccountRepo(request=self.request).me
+        if pfa is not None:
+            self.me=Store.objects.filter(owner=pfa).first()
+        else:
+            self.me=None
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()

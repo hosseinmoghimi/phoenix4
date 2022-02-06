@@ -1,0 +1,32 @@
+{% load static %}
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script>
+    let invoice = JSON.parse(`{{invoice_s|escapejs}}`)
+    let edit_invoice_app = new Vue({
+        el: "#edit-invoice-app",
+        data: {
+            invoice_date: invoice.persian_invoice_datetime.slice(0, 10),
+            description: invoice.description,
+            customer_id: invoice.customer.id,
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker
+
+        },
+        methods: {
+            save: function () {
+                let payload = {
+                    // csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    invoice_datetime: this.invoice_date,
+                    description: this.description,
+                    customer_id: this.customer_id,
+
+                }
+                console.log(payload)
+            }
+        }
+    })
+</script>

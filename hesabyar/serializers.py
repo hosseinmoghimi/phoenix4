@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Product, ProductOrService, WareHouse, WareHouseSheet
+
+from authentication.serializers import ProfileSerializer
+from .models import FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Product, ProductOrService, ProfileFinancialAccount, Store, WareHouse, WareHouseSheet
 
 
 class FinancialAccountSerializer(serializers.ModelSerializer):
@@ -62,7 +64,28 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ['id','title','get_absolute_url','persian_invoice_datetime']
+class ProfileFinancialAccountSerializer(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    class Meta:
+        model = ProfileFinancialAccount
+        fields = ['id','profile','get_absolute_url']
+class StoreSerializer(serializers.ModelSerializer):
+    owner=ProfileFinancialAccountSerializer()
+    class Meta:
+        model = Store
+        fields = ['id','owner','title','get_absolute_url']
 
+
+
+
+
+
+class InvoiceFullSerializer(serializers.ModelSerializer):
+    customer=ProfileFinancialAccountSerializer()
+    seller=StoreSerializer()
+    class Meta:
+        model = Invoice
+        fields = ['id','title','customer','seller','description','get_absolute_url','persian_invoice_datetime']
 
 
 class InvoiceLineForProductOrServiceSerializer(serializers.ModelSerializer):
