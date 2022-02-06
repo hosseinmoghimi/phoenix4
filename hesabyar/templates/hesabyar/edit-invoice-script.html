@@ -32,7 +32,14 @@
             invoice_date: invoice.persian_invoice_datetime.slice(0, 10),
             description: invoice.description,
             customer_id: invoice.customer.id,
-            invoice_lines: invoice_lines
+            invoice_lines: invoice_lines,
+            new_invoice_line:{
+                row:invoice_lines.length+1,
+                unit_price:0,
+                unit_name:"",
+                productorservice:{title:"جدید",get_absolute_url:""},
+                quantity:0,
+            }
 
         },
         components: {
