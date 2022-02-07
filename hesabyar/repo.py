@@ -453,9 +453,34 @@ class InvoiceRepo:
                     invoice_line.unit_price=line['unit_price']
                     invoice_line.unit_name=line['unit_name']
                     invoice_line.save()
-        
+        self.update_financial_documents(invoice)
         return invoice
-        
+    def update_financial_documents(self,invoice,*args, **kwargs):
+        financial_year=FinancialYear.get_by_date(date=invoice.invoice_datetime)
+        FinancialDocumentCategory.objects.get_or_create(title="فروش")
+        category=FinancialDocumentCategory.objects.get(title="فروش")
+        InvoiceFinancialDocument.objects.filter(invoice=invoice).delete()
+
+        ifd1=InvoiceFinancialDocument()
+        ifd1.financial_year=financial_year
+        ifd1.category=category
+        ifd1.account=invoice.customer
+        ifd1.invoice=invoice
+        ifd1.bedehkar=invoice.sum_total()
+        ifd1.title=str(invoice)
+        ifd1.document_datetime=invoice.invoice_datetime
+        ifd1.save()
+
+        ifd1=InvoiceFinancialDocument()
+        ifd1.bestankar=invoice.sum_total()
+        ifd1.invoice=invoice
+        ifd1.title=str(invoice)
+        ifd1.financial_year=financial_year
+        ifd1.category=category
+        ifd1.document_datetime=invoice.invoice_datetime
+        ifd1.account=invoice.seller.owner
+        ifd1.save()
+          
     def add(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_invoice"):
             return

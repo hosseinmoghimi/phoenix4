@@ -41,42 +41,79 @@
     </div>
 
 
-    {% if invoice.seller.bank_account %}
+  
     <div class="col-md-12">
+        <div class="card">
+            <div class="card-body px-5 farsi text-right">
+                <div>
 
-        <p class=" mx-5">
+                    واحد مبلغ ها تومان می باشد.
+                </div>
 
-            {{invoice.seller.bank_account|to_variz_text}}
-        </p>
+                {% if invoice.seller.bank_account %}
+                <div>
+
+                    {{invoice.seller.bank_account|to_variz_text}}
+                </div>
+                {% endif %}
+
+                <div class="text-right farsi">
+                    
+                    {{invoice.status}}
+                    /
+                    
+                    {{invoice.payment_method}}
+
+
+                </div>
+                {% if invoice.description %}
+                <div class=" ">
+
+                    {{invoice.description|safe}}
+                </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+
+
+
     </div>
-    {% endif %}
     <div class="col-md-12">
-        <p class=" mx-5">
-            واحد مبلغ ها تومان می باشد.
-        </p>
-    </div>
-    {% if invoice.description %}
-    <div class="text-right farsi">
+        <div class="card">
+            <div class="card-body">
 
-        {{invoice.description|safe}}
-    </div>
+                <div class="mb-5"></div>
 
-    {% endif %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-center">
+                            فروشنده : <a href="{{invoice.seller.get_absolute_url}}">
+                                {{invoice.seller.title}}
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-center">
+                            خریدار : <a href="{{invoice.customer.get_absolute_url}}">
+                                {{invoice.customer.title}}
+                            </a>
+                        </p>
+                    </div>
 
-    <div class="col-md-6">
-        <p class="text-center">
-            فروشنده : <a href="{{invoice.seller.get_absolute_url}}">
-                {{invoice.seller.title}}
-            </a>
-        </p>
+                </div>
+
+
+                <div class="mb-5"></div>
+                <div class="mb-5"></div>
+                <div class="mb-5"></div>
+                <div class="mb-5"></div>
+                <div class="mb-5"></div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <p class="text-center">
-            خریدار : <a href="{{invoice.customer.get_absolute_url}}">
-                {{invoice.customer.title}}
-            </a>
-        </p>
-    </div>
+    
 
     <div class="col-md-4">
         {% include "core/includes/page-links-app/template.html" %}
@@ -94,6 +131,7 @@
 {% block script %}
 <script>
     let page_id = parseInt("{{page.id}}")
+    let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
 </script>
 {% include "hesabyar/includes/invoice-lines-app/script.html" %}
 {% include "core/includes/page-links-app/script.html" %}
