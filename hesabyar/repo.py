@@ -415,6 +415,12 @@ class InvoiceRepo:
         if 'seller_id' in kwargs:
             invoice.seller_id=kwargs['seller_id']
 
+        if 'payment_method' in kwargs:
+            invoice.payment_method=kwargs['payment_method']
+
+        if 'status' in kwargs:
+            invoice.status=kwargs['status']
+
         if 'customer_id' in kwargs:
             invoice.customer_id=kwargs['customer_id']
 

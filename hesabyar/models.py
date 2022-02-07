@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from core.enums import ColorEnum, UnitNameEnum
-from hesabyar.enums import InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
+from hesabyar.enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from core.models import BasicPage
@@ -136,6 +136,7 @@ class Service(ProductOrService):
         return super(Service,self).save(*args, **kwargs)
 
 class Invoice(models.Model,LinkHelper):
+    payment_method=models.CharField(_("نحوه پرداخت"),choices=InvoicePaymentMethodEnum.choices,default=InvoicePaymentMethodEnum.NO_PAYMENT, max_length=50)
     status=models.CharField(_("وضعیت"),choices=InvoiceStatusEnum.choices,default=InvoiceStatusEnum.DRAFT, max_length=50)
     customer=models.ForeignKey("profilefinancialaccount", null=True,blank=True,verbose_name=_("مشتری"), on_delete=models.SET_NULL)
     seller=models.ForeignKey("store", verbose_name=_("فروشنده"), on_delete=models.CASCADE)

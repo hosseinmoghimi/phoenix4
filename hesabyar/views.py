@@ -3,6 +3,7 @@ from operator import inv
 import re
 from django.shortcuts import render,reverse
 from core.enums import UnitNameEnum
+from hesabyar.enums import InvoicePaymentMethodEnum, InvoiceStatusEnum
 from hesabyar.forms import AddFinancialDocumentForm
 
 from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
@@ -194,8 +195,7 @@ class InvoiceViews(View):
         context={}
         customers=ProfileFinancialAccountRepo(request=request).list()
         context['customers']=customers
-        
-
+         
         
         products=ProductRepo(request=request).list()
         context['products']=products
@@ -208,6 +208,9 @@ class InvoiceViews(View):
         context['services_s']=json.dumps(ServiceSerializer(services,many=True).data)
 
         context['unit_names']=(u[0] for u in UnitNameEnum.choices)
+        context['invoice_statuses']=(u[0] for u in InvoiceStatusEnum.choices)
+        context['invoice_payment_method']=(u[0] for u in InvoicePaymentMethodEnum.choices)
+        
         return context
     def sell(self,request,*args, **kwargs):
         context=getContext(request=request)

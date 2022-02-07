@@ -19,4 +19,6 @@ class EditInvoiceForm(forms.Form):
     seller_id=forms.IntegerField(required=True)
     tax_percent=forms.IntegerField(required=True)
     ship_fee=forms.IntegerField(required=True)
+    status=forms.CharField(max_length=50, required=True)
+    payment_method=forms.CharField(max_length=50, required=True)
     

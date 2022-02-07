@@ -89,7 +89,7 @@ class InvoiceFullSerializer(serializers.ModelSerializer):
     seller=StoreSerializer()
     class Meta:
         model = Invoice
-        fields = ['id','title','customer','seller','description','get_absolute_url','persian_invoice_datetime','ship_fee','discount','tax_percent']
+        fields = ['id','title','payment_method','status','customer','seller','description','get_absolute_url','persian_invoice_datetime','ship_fee','discount','tax_percent']
 
 
 class InvoiceLineForProductOrServiceSerializer(serializers.ModelSerializer):

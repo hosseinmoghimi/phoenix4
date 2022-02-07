@@ -243,7 +243,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5>    افزودن کالا/ خدمات به فاکتور:</h5>
+                    <h5> افزودن کالا/ خدمات به فاکتور:</h5>
                     <input type="text" @input="filter()" class="form-control" v-model="search_for"
                         placeholder="جستجو ...">
 
@@ -330,11 +330,46 @@
                         <div class="col-md-10 mb-4">
                             <textarea v-model="invoice.description" class="form-control" id="" class="w-100"
                                 rows="2"></textarea>
+                         
+                        </div>
+ 
 
+                        <div class="col-md-2">
+                            <span class="farsi text-left">
+                                وضعیت فاکتور :
+                            </span>
 
                         </div>
+                        <div class="col-md-4">
+                            <div class="text-right">
+                                <select v-model="invoice.status" class="form-control">
+                                    {% for status in invoice_statuses %}
+                                    <option value="{{status}}">{{status}}</option>
 
-                        <div class="col-md-2"></div>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                        </div>
+
+                        
+                        <div class="col-md-2">
+                            <span class="farsi text-left">
+                                نحوه پرداخت :
+                            </span>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-right">
+                                <select v-model="invoice.payment_method" class="form-control">
+                                    {% for payment_method in invoice_payment_method %}
+                                    <option value="{{payment_method}}">{{payment_method}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                        </div>
 
                     </div>
 
