@@ -78,6 +78,16 @@
                     {{invoice.seller.bank_account|to_variz_text}}
                 </div>
                 {% endif %}
+
+                <div class="text-right farsi">
+                    
+                    {{invoice.status}}
+                    /
+                    
+                    {{invoice.payment_method}}
+
+
+                </div>
                 {% if invoice.description %}
                 <div class=" ">
 
