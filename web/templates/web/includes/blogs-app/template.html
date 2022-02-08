@@ -35,13 +35,7 @@
                                             {{blog.title}}
                                         </a>
                                     </h4>
-                                    {% if blog.get_absolute_url %}
-                                    <div class="card-description">
-                                        {% if blog.short_description %}
-                                        {{blog.short_description|safe}}
-                                        {% endif %}
-                                    </div>
-                                    {% endif %}
+                                   
                                     <p>
                                         <a href="{{blog.get_absolute_url}}">
                                             ادامه مطلب
