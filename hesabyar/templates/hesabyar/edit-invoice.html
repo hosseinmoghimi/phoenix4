@@ -330,9 +330,9 @@
                         <div class="col-md-10 mb-4">
                             <textarea v-model="invoice.description" class="form-control" id="" class="w-100"
                                 rows="2"></textarea>
-                         
+
                         </div>
- 
+
 
                         <div class="col-md-2">
                             <span class="farsi text-left">
@@ -349,10 +349,10 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            
+
                         </div>
 
-                        
+
                         <div class="col-md-2">
                             <span class="farsi text-left">
                                 نحوه پرداخت :
@@ -368,7 +368,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            
+
                         </div>
 
                     </div>
@@ -378,12 +378,18 @@
 
 
 
+                    <div class="text-right fars">
 
 
-                    <button class="btn btn-success" @click="save()">
-                        ذخیره کن
-                    </button>
-
+                        <button class="btn btn-success" @click="save()">
+                            ذخیره کن
+                        </button>
+                        <div class="my-3" v-if="message.show">
+                            <span :class="'alert alert-'+message.color">
+                                <span class="farsi" v-text="message.body"></span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -31,6 +31,11 @@
     let edit_invoice_app = new Vue({
         el: "#edit-invoice-app",
         data: {
+            message:{
+                show:false,
+                body:"",
+                color:"success",
+            },
             product_search_items: [],
             service_search_items: [],
             search_for: "",
@@ -43,7 +48,7 @@
                 unit_name: "",
                 productorservice: { title: "جدید", get_absolute_url: "" },
                 quantity: 0,
-            }
+            },
 
         },
         components: {
@@ -157,6 +162,12 @@
                 let url = "{% url 'hesabyar:edit_invoice_post' %}"
                 $.post(url, payload).done((data) => {
                     console.log(data)
+                    if(data.result==='SUCCEED'){
+                        edit_invoice_app.message={show:true,body:"با موفقیت ذخیره شد.",color:'success'}
+                    }
+                    if(data.result==='FAILED'){
+                        edit_invoice_app.message={show:true,body:"خطا در ذخیره فاکتور.",color:'danger'}
+                    }
                 })
             }
         }

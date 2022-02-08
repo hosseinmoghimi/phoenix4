@@ -458,6 +458,10 @@ class InvoiceRepo:
     def update_financial_documents(self,invoice,*args, **kwargs):
         financial_year=FinancialYear.get_by_date(date=invoice.invoice_datetime)
         FinancialDocumentCategory.objects.get_or_create(title="فروش")
+        FinancialDocumentCategory.objects.get_or_create(title="پرداخت با کارتخوان")
+        FinancialDocumentCategory.objects.get_or_create(title="پرداخت نقدی")
+
+        
         category=FinancialDocumentCategory.objects.get(title="فروش")
         InvoiceFinancialDocument.objects.filter(invoice=invoice).delete()
 
