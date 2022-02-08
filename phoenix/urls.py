@@ -26,7 +26,7 @@ urlpatterns = [
     path('vehicles/', include('vehicles.urls')),
     path('utility/', include('utility.urls')),
     path('hse/', include('hse.urls')),
-    path('projectmanager/', include('projectmanager.urls')),
+    path('pm/', include('projectmanager.urls')),
     # path('accounts/login/', AuthenticationView().login),
     # path('projectmanager/', include('projectmanager.urls')),
     path('dashboard/', include('dashboard.urls')),

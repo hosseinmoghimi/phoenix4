@@ -93,6 +93,8 @@ class BasicViews(View):
         context['ourteam_title_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamTitle)
         context['ourteam_description_param']=parameter_repo.parameter(name=ParameterEnum.OurTeamDescription)
 
+        context['testimonial_title_param']=parameter_repo.parameter(name=ParameterEnum.TestimonialTitle)
+        
         param_repo=ParameterRepo(request=request)
         context['office_address']=parameter_repo.parameter(name=ParameterEnum.OFFICE_ADDRESS).value
         context['office_tel']=parameter_repo.parameter(name=ParameterEnum.OFFICE_TEL).value

@@ -17,4 +17,5 @@ class ParameterEnum(TextChoices):
     OurWorksDescription="توضیح پروژه های ما",_("توضیح پروژه های ما")
     OurTeamTitle="عنوان تیم ما",_("عنوان تیم ما")
     OurTeamDescription="توضیح تیم ما",_("توضیح تیم ما")
+    TestimonialTitle="عنوان گفته هایی مورد ما",_("عنوان گفته هایی مورد ما")
 

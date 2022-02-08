@@ -2,7 +2,16 @@
     <!--     *********    TESTIMONIALS 2     *********      -->
     <div class="testimonials-2 section-dark">
         <div class="container">
+                <h2 class="title text-center">
+               {{testimonial_title_param.value}}
+               
+               {% if perms.core.change_parameter %}
+               {{testimonial_title_param.get_edit_btn|safe}}
+                 
+               {% endif %}
+                </h2>
             <div class="row">
+                
                 <div class="col-md-12">
                     <div id="carouselExampleIndicatorss" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
