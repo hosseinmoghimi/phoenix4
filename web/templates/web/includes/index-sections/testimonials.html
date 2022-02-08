@@ -25,13 +25,17 @@
                                         </a>
                                     </div>
                                     <div class="card-body">
-                                        <a href="{{testimonial.profile.get_absolute_url}}">
+                                        <a href="{{testimonial.profile.get_absolute_url}}" class="mb-5">
 
                                             <h4 class="card-title text-center">{{testimonial.profile.name}}</h4>
                                         </a>
+                                        <div class="mb-5"></div>
+                                        {% if testimonial.title %}
+                                          
                                         <h4 class="card-title text-center">{{testimonial.title}}</h4>
-                                        <h5 class="card-description text-center">"{{testimonial.body}}"
-                                        </h5>
+                                        {% endif %}
+                                        <div class="card-description text-center farsi">"{{testimonial.body|safe}}"
+                                        </div>
                                         <h6 class="card-category text-muted text-center">{{testimonial.footer}}</h6>
                                         <div class="footer">
                                             <i class="material-icons text-warning">star</i>

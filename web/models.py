@@ -113,7 +113,7 @@ class OurWork(WebPage):
 
 class Testimonial(models.Model):
     for_home = models.BooleanField(_("نمایش در صفحه خانه"), default=False)
-    title = models.CharField(_("عنوان"), max_length=2000)
+    title = models.CharField(_("عنوان"),null=True,blank=True, max_length=2000)
     body = HTMLField(_("متن"), max_length=20000, null=True, blank=True)
     footer = models.CharField(_("پانوشت"), max_length=200)
     priority = models.IntegerField(_("ترتیب"), default=100)
