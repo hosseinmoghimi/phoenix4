@@ -135,6 +135,7 @@ class Service(ProductOrService):
         self.class_name="service"
         return super(Service,self).save(*args, **kwargs)
 
+
 class Invoice(models.Model,LinkHelper):
     payment_method=models.CharField(_("نحوه پرداخت"),choices=InvoicePaymentMethodEnum.choices,default=InvoicePaymentMethodEnum.NO_PAYMENT, max_length=50)
     status=models.CharField(_("وضعیت"),choices=InvoiceStatusEnum.choices,default=InvoiceStatusEnum.DRAFT, max_length=50)
@@ -475,3 +476,25 @@ class Payment(models.Model,LinkHelper):
         ifd1.document_datetime=self.date_paid
         ifd1.account=self.pay_from
         ifd1.save()
+    
+
+
+class Cheque(models.Model,LinkHelper):
+    owner=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_owned", verbose_name=_("owner"), on_delete=models.CASCADE)
+    receiver=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_received", verbose_name=_("receiver"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"), max_length=50)
+    cheque_date=models.DateField(_("تاریخ چک"), auto_now=False, auto_now_add=False)
+    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=50)
+    amount=models.IntegerField(_("مبلغ"))
+
+    def persian_cheque_date(self):
+        return PersianCalendar().from_gregorian(self.cheque_date)
+
+    class_name="cheque"
+    class Meta:
+        verbose_name = _("چک")
+        verbose_name_plural = _("چک ها")
+
+    def __str__(self):
+        return self.title
+ 

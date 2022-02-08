@@ -5,7 +5,7 @@ from django import forms
 
 from core.enums import UnitNameEnum
 from .apps import APP_NAME
-from .models import FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceFinancialDocument, InvoiceLine, PaymentFinancialDocument, Product, ProfileFinancialAccount, Service, Store, Tag, WareHouseSheet
+from .models import Cheque, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceFinancialDocument, InvoiceLine, PaymentFinancialDocument, Product, ProfileFinancialAccount, Service, Store, Tag, WareHouseSheet
 from authentication.repo import ProfileRepo
 
 class FinancialDocumentCategoryRepo:
@@ -461,7 +461,7 @@ class InvoiceRepo:
         FinancialDocumentCategory.objects.get_or_create(title="پرداخت با کارتخوان")
         FinancialDocumentCategory.objects.get_or_create(title="پرداخت نقدی")
 
-        
+
         category=FinancialDocumentCategory.objects.get(title="فروش")
         InvoiceFinancialDocument.objects.filter(invoice=invoice).delete()
 
@@ -517,6 +517,8 @@ class InvoiceRepo:
 
         invoice_line.save()
         return invoice
+
+
 class StoreRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -546,6 +548,39 @@ class StoreRepo:
     def store(self, *args, **kwargs):
         if 'store_id' in kwargs:
             return self.objects.filter(pk= kwargs['store_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+class ChequeRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Cheque.objects
+        self.profile = ProfileRepo(user=self.user).me
+        pfa=ProfileFinancialAccountRepo(request=self.request).me
+        if pfa is not None:
+            self.me=Store.objects.filter(owner=pfa).first()
+        else:
+            self.me=None
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def cheque(self, *args, **kwargs):
+        if 'cheque_id' in kwargs:
+            return self.objects.filter(pk= kwargs['cheque_id']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:

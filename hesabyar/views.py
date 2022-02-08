@@ -6,8 +6,8 @@ from core.enums import UnitNameEnum
 from hesabyar.enums import InvoicePaymentMethodEnum, InvoiceStatusEnum
 from hesabyar.forms import AddFinancialDocumentForm
 
-from hesabyar.repo import FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
-from hesabyar.serializers import ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from hesabyar.repo import ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from hesabyar.serializers import ChequeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from projectmanager.forms import SearchForm 
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
@@ -58,6 +58,12 @@ class BasicViews(View):
         context['title'] = "HesabYar Ver 1.0.0"
         financial_accounts = FinancialAccountRepo(request=request).list()
         context['financial_accounts'] = financial_accounts
+
+        cheques=ChequeRepo(request=request).list()
+        cheques_s=json.dumps(ChequeSerializer(cheques,many=True).data)
+        context['cheques_s']=cheques_s
+
+        
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
     def tag(self, request, *args, **kwargs):
@@ -312,3 +318,9 @@ class StoreViews(View):
         store=StoreRepo(request=request).store(*args, **kwargs)
         context['store']=store
         return render(request,TEMPLATE_ROOT+"store.html",context)
+class ChequeViews(View):
+    def cheque(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        cheque=ChequeRepo(request=request).cheque(*args, **kwargs)
+        context['cheque']=cheque
+        return render(request,TEMPLATE_ROOT+"cheque.html",context)

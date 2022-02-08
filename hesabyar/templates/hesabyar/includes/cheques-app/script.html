@@ -1,0 +1,12 @@
+<script>
+    let cheques=JSON.parse(`{{cheques_s|escapejs}}`)
+    let cheques_app=new Vue({
+        el:"#cheques-app",
+        data:{
+            cheques:cheques,
+        },
+        methods:{
+
+        }
+    })
+</script>

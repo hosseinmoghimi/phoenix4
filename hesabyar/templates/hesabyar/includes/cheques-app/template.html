@@ -1,0 +1,17 @@
+<div class="card" id="cheques-app">
+    <div class="card-header">
+      <h5 class="title">
+        چک ها
+      </h5>
+    </div>
+    <div class="card-body">
+      <ul class="nav">
+        <li class="nav-item" v-for="cheque in cheques">
+          <a :href="cheque.get_absolute_url" class="nav-link">
+              <span v-text="cheque.title"></span>
+          </a>
+       
+        </li>
+      </ul>
+    </div>
+  </div>
