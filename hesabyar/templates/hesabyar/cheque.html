@@ -1,19 +1,75 @@
 {% extends "hesabyar/layout.html" %}
 
 {% load to_persian_date %}
+{% load to_price %}
 
 {% load to_variz_text %}
 {% block content %}
 
 <h4 class="text-center my-3">
+    {{cheque.title}}
+    {% if perms.hesabyar.change_cheque %}
+    <a href="{{cheque.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+            class="fa fa-edit text-info"></i></a>
 
-چک
+
+
+
+    {% endif %}
+    {% if perms.hesabyar.delete_cheque %}
+    <a href="{{cheque.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+            class="fa fa-trash text-danger"></i></a>
+    {% endif %}
+    <span class="badge badge-{{cheque.color}}">
+        {{cheque.status}}
+    </span>
+
 </h4>
 <div class="row">
     <div class="col-md-12">
+        <div class="card">
+            <div class="card-body farsi text-right">
+                <div>
+وضعیت :
+<span class="badge badge-{{cheque.color}}">
 
-    {{cheque.title}}
+    {{cheque.status}}
+</span>
+                </div>
+
+
+                <div>
+مبلغ چک : 
+                    {{cheque.amount|to_price}}
+                </div>
+                <div>
+تاریخ چک :
+                    {{cheque.cheque_date|to_persian_date|safe}}
+                </div>
+
+
+                <div>
+                    <a href="{{cheque.owner.get_absolute_url}}">
+                        <img src="{{cheque.owner.profile.image}}" class="rounded-circle" width="64" alt="">
+                        {{cheque.owner.profile.name}}
+                    </a>
+                </div>
+
+
+
+                <div>
+                    <a href="{{cheque.receiver.get_absolute_url}}">
+                        <img src="{{cheque.receiver.profile.image}}" class="rounded-circle" width="64" alt="">
+                        {{cheque.receiver.profile.name}}
+                    </a>
+                </div>
+
+            </div>
+        </div>
     </div>
+
+
+
 </div>
 {% endblock content %}
 

@@ -568,6 +568,19 @@ class ChequeRepo:
             self.me=Store.objects.filter(owner=pfa).first()
         else:
             self.me=None
+    def add_cheque(self,*args, **kwargs):
+        if not self.request.user.has_perm(APP_NAME+".add_cheque"):
+            return
+        cheque=Cheque()
+        if 'title' in kwargs:
+            cheque.title=kwargs['title']
+        if 'cheque_date' in kwargs:
+            cheque.cheque_date=kwargs['cheque_date']
+        else:
+            cheque.cheque_date=timezone.now()
+
+        cheque.save()
+        return cheque
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()

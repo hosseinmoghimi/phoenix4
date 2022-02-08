@@ -9,6 +9,11 @@ class AddFinancialDocumentForm(forms.Form):
     account_id=forms.IntegerField(required=True)
     bedehkar=forms.IntegerField(required=True)
     category_id=forms.IntegerField(required=True)
+class SearchForm(forms.Form):
+    search_for=forms.CharField( max_length=500, required=True)
+
+class AddChequeForm(forms.Form):
+    title=forms.CharField( max_length=500, required=True)
 class EditInvoiceForm(forms.Form):
     invoice_id=forms.IntegerField(required=True)
     discount=forms.IntegerField(required=True)

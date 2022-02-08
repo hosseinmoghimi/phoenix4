@@ -33,4 +33,6 @@ urlpatterns = [
 
     path('add_financial_document/',login_required(apis.BasicApi().add_financial_document),name="add_financial_document"),
     path('edit_invoice_post/',login_required(apis.BasicApi().edit_invoice),name="edit_invoice_post"),
+    path('add_cheque/',login_required(apis.CheuqeApi().add_cheque),name="add_cheque"),
+    
 ]

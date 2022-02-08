@@ -1,4 +1,4 @@
-from random import choice
+
 from tinymce.models import HTMLField
 from django.db import models
 
@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from core.enums import ColorEnum, UnitNameEnum
-from hesabyar.enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
+from hesabyar.enums import ChequeStatusEnum,InvoicePaymentMethodEnum, InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from core.models import BasicPage
@@ -480,13 +480,14 @@ class Payment(models.Model,LinkHelper):
 
 
 class Cheque(models.Model,LinkHelper):
-    owner=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_owned", verbose_name=_("owner"), on_delete=models.CASCADE)
-    receiver=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_received", verbose_name=_("receiver"), on_delete=models.CASCADE)
+    owner=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_owned", verbose_name=_("owner"),null=True,blank=True, on_delete=models.CASCADE)
+    receiver=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_received", verbose_name=_("receiver"),null=True,blank=True, on_delete=models.CASCADE)
     title=models.CharField(_("title"), max_length=50)
     cheque_date=models.DateField(_("تاریخ چک"), auto_now=False, auto_now_add=False)
     description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=50)
-    amount=models.IntegerField(_("مبلغ"))
-
+    amount=models.IntegerField(_("مبلغ"),default=0)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    status=models.CharField(_("status"),choices=ChequeStatusEnum.choices,default=ChequeStatusEnum.DRAFT, max_length=50)
     def persian_cheque_date(self):
         return PersianCalendar().from_gregorian(self.cheque_date)
 
@@ -497,4 +498,14 @@ class Cheque(models.Model,LinkHelper):
 
     def __str__(self):
         return self.title
- 
+    
+    def color(self):
+        color='primary'
+        if self.status==ChequeStatusEnum.DRAFT:
+            return 'secondary'
+        if self.status==ChequeStatusEnum.RETURNED:
+            return 'danger'
+        if self.status==ChequeStatusEnum.PAID:
+            return 'success'
+
+        return color

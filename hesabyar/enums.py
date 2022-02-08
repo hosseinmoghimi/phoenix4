@@ -11,6 +11,10 @@ class InvoiceStatusEnum(TextChoices):
     DRAFT="پیش فاکتور",_("پیش فاکتور")
     IN_PROGRESS="در جریان",_("در جریان")
     DELIVERED="تحویل شده",_("تحویل شده")
+class ChequeStatusEnum(TextChoices):
+    DRAFT="پیش نویس",_("پیش نویس")
+    RETURNED="برگشت خورده",_("برگشت خورده")
+    PAID="تسویه شده",_("تسویه شده")
 class InvoicePaymentMethodEnum(TextChoices):
     NO_PAYMENT="پرداخت نشده",_("پرداخت نشده")
     CARD="کارتخوان",_("کارتخوان")

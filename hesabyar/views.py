@@ -1,14 +1,11 @@
 import json
-from operator import inv
-import re
 from django.shortcuts import render,reverse
 from core.enums import UnitNameEnum
-from hesabyar.enums import InvoicePaymentMethodEnum, InvoiceStatusEnum
-from hesabyar.forms import AddFinancialDocumentForm
+from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum
+from .forms import *
 
-from hesabyar.repo import ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
-from hesabyar.serializers import ChequeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
-from projectmanager.forms import SearchForm 
+from .repo import ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from .serializers import ChequeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
 from django.views import View
@@ -62,7 +59,8 @@ class BasicViews(View):
         cheques=ChequeRepo(request=request).list()
         cheques_s=json.dumps(ChequeSerializer(cheques,many=True).data)
         context['cheques_s']=cheques_s
-
+        if request.user.has_perm(APP_NAME+".add_cheque"):
+            context['add_cheque_form']=AddChequeForm()
         
         return render(request, TEMPLATE_ROOT+"index.html", context)
 

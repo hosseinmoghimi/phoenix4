@@ -1,12 +1,28 @@
 <script>
-    let cheques=JSON.parse(`{{cheques_s|escapejs}}`)
-    let cheques_app=new Vue({
-        el:"#cheques-app",
-        data:{
-            cheques:cheques,
+    let cheques = JSON.parse(`{{cheques_s|escapejs}}`)
+    let cheques_app = new Vue({
+        el: "#cheques-app",
+        data: {
+            cheques: cheques,
+            title: "",
         },
-        methods:{
-
+        methods: {
+            to_price: function (vall) {
+                return to_price(vall, "")
+            },
+            add_cheque: function () {
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    title: this.title,
+                }
+                let url = "{% url 'hesabyar:add_cheque' %}"
+                $.post(url, payload).done((data) => {
+                    if (data.result === 'SUCCEED') {
+                        cheques_app.cheques.push(data.cheque)
+                        cheques_app.title = ""
+                    }
+                })
+            }
         }
     })
 </script>

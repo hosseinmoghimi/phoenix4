@@ -4,10 +4,10 @@ from core.constants import FAILED,SUCCEED
 from rest_framework.views import APIView
 
 from utility.persian import PersianCalendar
-from .repo import FinancialDocumentRepo, InvoiceRepo
+from .repo import ChequeRepo, FinancialDocumentRepo, InvoiceRepo
 from django.http import JsonResponse
 from .forms import *
-from .serializers import FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer
+from .serializers import ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer
 class BasicApi(APIView):
     def add_financial_document(self,request,*args, **kwargs):
         context={}
@@ -88,6 +88,31 @@ class BasicApi(APIView):
                 if invoice is not None:
                     context['invoice']=InvoiceFullSerializer(invoice).data
                     context['invoice_lines']=InvoiceLineSerializer(invoice.invoice_lines(),many=True).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+class CheuqeApi(APIView):
+    def add_cheque(self,request,*args, **kwargs):
+        context={}
+        log=1
+        context['result']=FAILED
+        if request.method=='POST':
+            log=2
+            add_cheque_form=AddChequeForm(request.POST)
+
+
+
+            
+            if add_cheque_form.is_valid():
+                log=3
+                fm=add_cheque_form.cleaned_data
+                title=fm['title']
+                cheque=ChequeRepo(request=request).add_cheque(
+                    title=title,
+                )
+                if cheque is not None:
+                    context['cheque']=ChequeSerializer(cheque).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

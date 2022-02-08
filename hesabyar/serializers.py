@@ -86,7 +86,7 @@ class ChequeSerializer(serializers.ModelSerializer):
     receiver=ProfileFinancialAccountSerializer()
     class Meta:
         model = Cheque
-        fields = ['id','title','owner','receiver','description','amount','get_absolute_url','persian_cheque_date']
+        fields = ['id','title','status','color','owner','receiver','description','amount','get_absolute_url','persian_cheque_date']
 
 
 
