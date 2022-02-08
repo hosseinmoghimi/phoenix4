@@ -56,11 +56,7 @@ class BasicViews(View):
         financial_accounts = FinancialAccountRepo(request=request).list()
         context['financial_accounts'] = financial_accounts
 
-        cheques=ChequeRepo(request=request).list()
-        cheques_s=json.dumps(ChequeSerializer(cheques,many=True).data)
-        context['cheques_s']=cheques_s
-        if request.user.has_perm(APP_NAME+".add_cheque"):
-            context['add_cheque_form']=AddChequeForm()
+      
         
         return render(request, TEMPLATE_ROOT+"index.html", context)
 
@@ -322,3 +318,11 @@ class ChequeViews(View):
         cheque=ChequeRepo(request=request).cheque(*args, **kwargs)
         context['cheque']=cheque
         return render(request,TEMPLATE_ROOT+"cheque.html",context)
+    def cheques(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        cheques=ChequeRepo(request=request).list()
+        cheques_s=json.dumps(ChequeSerializer(cheques,many=True).data)
+        context['cheques_s']=cheques_s
+        if request.user.has_perm(APP_NAME+".add_cheque"):
+            context['add_cheque_form']=AddChequeForm()
+        return render(request,TEMPLATE_ROOT+"cheques.html",context)

@@ -6,6 +6,7 @@ app_name=APP_NAME
 urlpatterns = [
     path('',login_required(views.BasicViews().home),name="home"),
     path('search/',login_required(views.BasicViews().search),name="search"),
+    path('cheques/',login_required(views.ChequeViews().cheques),name="cheques"),
     path('profile_financial_account/<pk>/',login_required(views.ReportViews().profile_financial_account),name="profile_financial_account"),
     path('service/<pk>/',login_required(views.ServiceViews().service),name="service"),
     path('payment_financial_document/<pk>/',login_required(views.FinancialDocumentViews().payment_financial_document),name="paymentfinancialdocument"),

@@ -1,0 +1,23 @@
+{% extends "hesabyar/layout.html" %}
+
+{% block content %}
+<h4 class="text-center">
+  چک ها
+</h4>
+
+
+<div class="row">
+  
+  <div class="col-md-6">
+    {% include "hesabyar/includes/cheques-app/template.html" %}
+ 
+   
+     
+  </div> 
+</div>
+{% endblock content %}
+
+{% block script %}
+{% include "hesabyar/includes/cheques-app/script.html" %}
+
+{% endblock script %}
