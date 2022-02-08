@@ -83,33 +83,9 @@
 
                 </div>
                 {% endif %}
-                {% if page.author %}
 
-                <div class="card card-profile card-plain">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="card-avatar">
-                                <a href="{{page.author.get_absolute_url}}">
-                                    <img class="img" src="{{page.author.profile.image}}">
-                                </a>
-                                <div class="ripple-container"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <a href="{{page.author.get_absolute_url}}">
-                                <h4 class="card-title">{{page.author.profile.name}}</h4>
-                            </a>
-                            <p class="description">
-                                {{page.author.job}}
-
-                            </p>
-                        </div>
-                        <div class="col-md-2">
-                            <a href="{{page.author.get_absolute_url}}"  class="farsi btn btn-primary pull-right btn-round">سایر نوشته ها</a>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
+            
+                
 
                 {% if page.description %}
                 <div class="col-md-8 ml-auto mr-auto farsi">
