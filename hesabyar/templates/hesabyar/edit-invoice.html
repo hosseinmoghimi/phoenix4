@@ -362,7 +362,7 @@
                         <div class="col-md-4">
                             <div class="text-right">
                                 <select v-model="invoice.payment_method" class="form-control">
-                                    {% for payment_method in invoice_payment_method %}
+                                    {% for payment_method in invoice_payment_methods %}
                                     <option value="{{payment_method}}">{{payment_method}}</option>
 
                                     {% endfor %}

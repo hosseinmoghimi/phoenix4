@@ -17,21 +17,43 @@
 
 
 <div class="row farsi">
-    <div class="col-md-4">
-        مبلغ :
-        {{payment.amount|to_price}}
-    </div>
-    <div class="col-md-4">
-        پرداخت کننده :
-        <a href="{{payment.pay_from.get_absolute_url}}">
-            {{payment.pay_from.title}}
-        </a>
-    </div>
-    <div class="col-md-4">
-        دریافت کننده :
-        <a href="{{payment.pay_to.get_absolute_url}}">
-            {{payment.pay_to.title}}
-        </a>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            مبلغ :
+                            {{payment.amount|to_price}}
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            پرداخت کننده :
+                            <a href="{{payment.pay_from.get_absolute_url}}">
+                                {{payment.pay_from.title}}
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            دریافت کننده :
+                            <a href="{{payment.pay_to.get_absolute_url}}">
+                                {{payment.pay_to.title}}
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
     </div>
     <div class="col-md-4">
         {% include "core/includes/page-links-app/template.html" %}
@@ -46,7 +68,7 @@
 
 {% block script %}
 <script>
-    let page_id=parseInt("{{page.id}}")
+    let page_id = parseInt("{{page.id}}")
 </script>
 {% include "core/includes/page-links-app/script.html" %}
 {% include "core/includes/page-documents-app/script.html" %}

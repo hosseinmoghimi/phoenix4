@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from core.enums import ColorEnum, UnitNameEnum
-from hesabyar.enums import ChequeStatusEnum,InvoicePaymentMethodEnum, InvoiceStatusEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
+from hesabyar.enums import ChequeStatusEnum,InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from core.models import BasicPage
@@ -442,7 +442,11 @@ class Payment(models.Model,LinkHelper):
     amount=models.IntegerField(_("amount"))
     date_paid=models.DateTimeField(_("date_paid"), auto_now=False, auto_now_add=False)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.CARD, max_length=50)
+    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=50000)
     class_name="payment"
+    def persian_date_paid(self):
+        return PersianCalendar().from_gregorian(self.date_paid)
     def __str__(self):
         return self.title
         

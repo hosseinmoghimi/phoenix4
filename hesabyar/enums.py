@@ -19,3 +19,6 @@ class InvoicePaymentMethodEnum(TextChoices):
     NO_PAYMENT="پرداخت نشده",_("پرداخت نشده")
     CARD="کارتخوان",_("کارتخوان")
     IN_CASH="پرداخت نقدی",_("پرداخت نقدی")
+class PaymentMethodEnum(TextChoices):
+    IN_CASH="نقدی",_("نقدی")
+    CARD="کارت به کارت",_("کارت به کارت")

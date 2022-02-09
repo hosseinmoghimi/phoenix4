@@ -1,0 +1,93 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<h4 class="text-center">
+    پرداخت ها
+</h4>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>
+                            عنوان
+                        </th>
+
+
+                        <th>
+                            پرداخت کننده
+                        </th>
+
+
+                        <th>
+                            دریافت کننده
+                        </th>
+
+
+                        
+                        <th>
+                            مبلغ
+                        </th>
+
+                        <th>
+                            تاریخ
+                        </th>
+
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td>
+                                <a href="{{payment.get_absolute_url}}">
+                                    {{payment.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                <a href="{{payment.pay_from.get_absolute_url}}">
+                                    {{payment.pay_from.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                <a href="{{payment.pay_to.get_absolute_url}}">
+                                    {{payment.pay_to.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                {{payment.amount|to_price}}
+                            </td>
+
+
+                            
+
+                            <td>
+                                {{payment.date_paid|to_persian_date|safe}}
+                            </td>
+
+
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+{% include "hesabyar/includes/products-app/script.html" %}
+
+{% endblock script %}

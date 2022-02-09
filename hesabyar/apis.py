@@ -1,13 +1,12 @@
 import json
-from pydoc import doc
 from core.constants import FAILED,SUCCEED
 from rest_framework.views import APIView
 
 from utility.persian import PersianCalendar
-from .repo import ChequeRepo, FinancialDocumentRepo, InvoiceRepo
+from .repo import ChequeRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo
 from django.http import JsonResponse
 from .forms import *
-from .serializers import ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer
+from .serializers import PaymentSerializer,ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer
 class BasicApi(APIView):
     def add_financial_document(self,request,*args, **kwargs):
         context={}
@@ -113,6 +112,41 @@ class CheuqeApi(APIView):
                 )
                 if cheque is not None:
                     context['cheque']=ChequeSerializer(cheque).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+class PaymentApi(APIView):
+    def add_payment(self,request,*args, **kwargs):
+        context={}
+        log=1
+        context['result']=FAILED
+        if request.method=='POST':
+            log=2
+            add_payment_form=AddPaymentForm(request.POST)
+
+            if add_payment_form.is_valid():
+                log=3
+                fm=add_payment_form.cleaned_data
+                title=fm['title']
+                pay_to_id=fm['pay_to_id']
+                pay_from_id=fm['pay_from_id']
+                amount=fm['amount']
+                date_paid=fm['date_paid']
+                payment_method=fm['payment_method']
+                description=fm['description']
+                date_paid=PersianCalendar().to_gregorian(date_paid+"  00:00:00")
+                payment=PaymentRepo(request=request).add_payment(
+                    title=title,
+                    pay_to_id=pay_to_id,
+                    pay_from_id=pay_from_id,
+                    amount=amount,
+                    date_paid=date_paid,
+                    payment_method=payment_method,
+                    description=description,
+                )
+                if payment is not None:
+                    context['payment']=PaymentSerializer(payment).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

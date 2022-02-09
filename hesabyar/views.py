@@ -1,10 +1,10 @@
 import json
 from django.shortcuts import render,reverse
 from core.enums import UnitNameEnum
-from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum
+from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum
 from .forms import *
 
-from .repo import ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from .repo import ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, PaymentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
 from .serializers import ChequeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
@@ -209,7 +209,7 @@ class InvoiceViews(View):
 
         context['unit_names']=(u[0] for u in UnitNameEnum.choices)
         context['invoice_statuses']=(u[0] for u in InvoiceStatusEnum.choices)
-        context['invoice_payment_method']=(u[0] for u in InvoicePaymentMethodEnum.choices)
+        context['invoice_payment_methods']=(u[0] for u in InvoicePaymentMethodEnum.choices)
         
         return context
     def sell(self,request,*args, **kwargs):
@@ -326,3 +326,23 @@ class ChequeViews(View):
         if request.user.has_perm(APP_NAME+".add_cheque"):
             context['add_cheque_form']=AddChequeForm()
         return render(request,TEMPLATE_ROOT+"cheques.html",context)
+
+class PaymentViews(View):
+    def new_payment(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        financial_accounts=FinancialAccountRepo(request=request).list(*args, **kwargs)
+        context['payment_methods']=(u[0] for u in PaymentMethodEnum.choices)
+        context['financial_accounts']=financial_accounts
+        if request.user.has_perm(APP_NAME+".add_payment"):
+            context['add_payment_form']=AddPaymentForm()
+        return render(request,TEMPLATE_ROOT+"new-payment.html",context)
+    def payments(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        payments=PaymentRepo(request=request).list()
+        context['payments']=payments
+        return render(request,TEMPLATE_ROOT+"payments.html",context)
+    def payment(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        payment=PaymentRepo(request=request).payment(*args, **kwargs)
+        context['payment']=payment
+        return render(request,TEMPLATE_ROOT+"payment.html",context)
