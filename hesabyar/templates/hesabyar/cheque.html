@@ -49,18 +49,18 @@
 
 
                 <div>
-                    <a href="{{cheque.owner.get_absolute_url}}">
-                        <img src="{{cheque.owner.profile.image}}" class="rounded-circle" width="64" alt="">
-                        {{cheque.owner.profile.name}}
+                    <a href="{{cheque.pay_from.get_absolute_url}}">
+                        <img src="{{cheque.pay_from.profile.image}}" class="rounded-circle" width="64" alt="">
+                        {{cheque.pay_from.title}}
                     </a>
                 </div>
 
 
 
                 <div>
-                    <a href="{{cheque.receiver.get_absolute_url}}">
-                        <img src="{{cheque.receiver.profile.image}}" class="rounded-circle" width="64" alt="">
-                        {{cheque.receiver.profile.name}}
+                    <a href="{{cheque.pay_to.get_absolute_url}}">
+                        <img src="{{cheque.pay_to.profile.image}}" class="rounded-circle" width="64" alt="">
+                        {{cheque.pay_to.title}}
                     </a>
                 </div>
 

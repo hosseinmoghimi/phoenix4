@@ -1,5 +1,6 @@
 {% extends "hesabyar/layout.html" %}
 {% load to_price %}
+{% load to_persian_date %}
 {% block content %}
 <h4 class="text-center">
     {{payment.title}}
@@ -21,13 +22,22 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-
                     <div class="col-md-4">
-                        <div class="text-center">
-                            مبلغ :
-                            {{payment.amount|to_price}}
-                        </div>
+                        <div class="text-right">
+                            {{payment.title}}
+                            <span class="badge badge-primary">
 
+                                {{payment.payment_method}}
+                            </span>
+                            <div class="text-right">
+                                مبلغ :
+                                {{payment.amount|to_price}}
+                            </div>
+                            <div class="text-right farsi">
+
+                                {{payment.amount|to_horuf}} {{CURRENCY}}
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="text-center">
@@ -37,14 +47,24 @@
                             </a>
                         </div>
 
-                    </div>
-                    <div class="col-md-4">
+
                         <div class="text-center">
                             دریافت کننده :
                             <a href="{{payment.pay_to.get_absolute_url}}">
                                 {{payment.pay_to.title}}
                             </a>
                         </div>
+
+                    </div>
+                    <div class="col-md-4">
+
+
+
+                        <div class="text-center">
+                            تاریخ :
+                            {{payment.transaction_datetime|to_persian_datetime|safe}}
+                        </div>
+
 
                     </div>
                 </div>

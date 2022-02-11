@@ -29,7 +29,7 @@
                         </th>
 
 
-                        
+
                         <th>
                             مبلغ
                         </th>
@@ -43,6 +43,10 @@
                         {% for payment in payments %}
                         <tr>
                             <td>
+                                <span class="badge badge-primary">
+
+                                    {{payment.payment_method}}
+                                </span>
                                 <a href="{{payment.get_absolute_url}}">
                                     {{payment.title}}
                                 </a>
@@ -68,10 +72,14 @@
                             </td>
 
 
-                            
+
 
                             <td>
-                                {{payment.date_paid|to_persian_date|safe}}
+
+                                <small class="text-muted">
+
+                                    {{payment.transaction_datetime|to_persian_datetime|safe}}
+                                </small>
                             </td>
 
 

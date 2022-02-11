@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from authentication.serializers import ProfileSerializer
-from .models import Cheque, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Payment, Product, ProductOrService, ProfileFinancialAccount, Service, Store, WareHouse, WareHouseSheet
+from .models import Cheque, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Store, WareHouse, WareHouseSheet
 
 
 class FinancialAccountSerializer(serializers.ModelSerializer):
@@ -59,7 +59,7 @@ class WareHouseSheetSerializer(serializers.ModelSerializer):
     product=ProductSerializer()
     class Meta:
         model = WareHouseSheet
-        fields = ['id','persian_date_registered', 'ware_house','product','direction','status', 'get_absolute_url','quantity']
+        fields = ['id','persian_date_registered','unit_name','color', 'ware_house','product','direction','status', 'get_absolute_url','quantity']
 
 
 
@@ -68,49 +68,44 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ['id','title','get_absolute_url','persian_invoice_datetime']
-class ProfileFinancialAccountSerializer(serializers.ModelSerializer):
+class StoreSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:
-        model = ProfileFinancialAccount
-        fields = ['id','profile','get_absolute_url']
-class StoreSerializer(serializers.ModelSerializer):
-    owner=ProfileFinancialAccountSerializer()
-    class Meta:
         model = Store
-        fields = ['id','owner','title','get_absolute_url']
+        fields = ['id','profile','title','get_absolute_url']
 
 
 
 class ChequeSerializer(serializers.ModelSerializer):
-    owner=ProfileFinancialAccountSerializer()
-    receiver=ProfileFinancialAccountSerializer()
+    pay_to=FinancialAccountSerializer()
+    pay_from=FinancialAccountSerializer()
     class Meta:
         model = Cheque
-        fields = ['id','title','status','color','owner','receiver','description','amount','get_absolute_url','persian_cheque_date']
+        fields = ['id','title','status','color','pay_to','pay_from','description','amount','get_absolute_url','persian_cheque_date']
 
 
 
 
 class InvoiceFullSerializer(serializers.ModelSerializer):
-    customer=ProfileFinancialAccountSerializer()
-    seller=StoreSerializer()
+    pay_to=FinancialAccountSerializer()
+    pay_from=FinancialAccountSerializer()
     class Meta:
         model = Invoice
-        fields = ['id','title','payment_method','status','customer','seller','description','get_absolute_url','persian_invoice_datetime','ship_fee','discount','tax_percent']
+        fields = ['id','title','payment_method','status','pay_to','pay_from','description','get_absolute_url','persian_invoice_datetime','ship_fee','discount','tax_percent']
 
 
 class InvoiceLineForProductOrServiceSerializer(serializers.ModelSerializer):
     invoice=InvoiceSerializer()
     class Meta:
         model = InvoiceLine
-        fields = ['id', 'row','invoice', 'quantity', 'unit_price',
+        fields = ['id', 'row','invoice', 'quantity', 'unit_price','unit_name',
                   'description']
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ['id', 'amount','payment_method', 'title', 'persian_date_paid',
+        fields = ['id', 'amount','payment_method', 'title', 'persian_transaction_datetime',
                   'description'
                   ]
 

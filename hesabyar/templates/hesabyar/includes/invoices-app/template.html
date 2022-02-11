@@ -31,11 +31,20 @@
                 <tr>
                     <td>
                         <a href="{{invoice.get_absolute_url}}">
-                            {{invoice.title}}
+                            {{invoice.get_title}}
                         </a>
                     </td>
                     <td>
-                        {{invoice.sum_total|to_price}}
+                        <div>
+
+                            {{invoice.amount|to_price}}
+                        </div>
+                        <div>
+<small class="text-muted">
+مالیات : 
+    {{invoice.tax_amount|to_price}}
+</small>
+                        </div>
                     </td>
                     <td>
                         <a href="{{invoice.seller.get_absolute_url}}">

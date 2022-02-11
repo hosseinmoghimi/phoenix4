@@ -5,30 +5,75 @@
         </h5>
     </div>
     <div class="card-body">
-        <div class="farsi mb-2 text-right" v-for="cheque in cheques">
-            <a :href="cheque.get_absolute_url" class="">
-                <span v-text="cheque.title"></span>
-                <small class="text-primary ">
+        <table class="table">
+            <thead>
+                <th>
+                    چک
+                </th>
+                <th>
+                    صاحب چک
+                </th>
+                <th>
+                    گیرنده چک
+                </th>
+                <th>
+                    مبلغ
+                </th>
+                <th>
+                    تاریخ
+                </th>
+            </thead>
 
-                    (
-                    <span v-text="to_price(cheque.amount)"></span>
+            <tbody>
+                <tr v-for="cheque in cheques">
+                    <td class="farsi mb-2 text-right">
+                        <a :href="cheque.get_absolute_url" class="">
+                            <span v-text="cheque.title"></span>
+                        </a>
+                        <span :class="'badge badge-'+cheque.color ">
+                            <small>
+                                <span v-text="cheque.status"></span>
+                            </small>
 
-                    )
-                </small>
 
-                <span :class="'badge badge-'+cheque.color ">
-<small>
+                        </span>
 
-    
-    <span v-text="cheque.status"></span>
-</small>
+                    </td>
 
-                    
-                </span>
 
-            </a>
+                    <td class="farsi mb-2 text-right">
+                        <a :href="cheque.pay_from.get_absolute_url" class="">
+                            <span v-text="cheque.pay_from.title"></span>
+                        </a>
+                    </td>
 
-        </div>
+
+                    <td class="farsi mb-2 text-right">
+                        <a :href="cheque.pay_to.get_absolute_url" class="">
+                            <span v-text="cheque.pay_to.title"></span>
+                        </a>
+                    </td>
+
+
+
+                    <td>
+                        <small class="text-primary ">
+
+                            (
+                            <span v-text="to_price(cheque.amount)"></span>
+
+                            )
+                        </small>
+                    </td>
+
+                    <td>
+                        <span v-text="cheque.persian_cheque_date"></span>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
     <div class="card-footer">
         {% if add_cheque_form %}

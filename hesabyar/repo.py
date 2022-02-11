@@ -4,8 +4,9 @@ from urllib import request
 from django import forms
 
 from core.enums import UnitNameEnum
+from hesabyar.enums import InvoiceStatusEnum, PaymentMethodEnum, TransactionStatusEnum
 from .apps import APP_NAME
-from .models import Cheque, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceFinancialDocument, InvoiceLine, Payment, PaymentFinancialDocument, Product, ProfileFinancialAccount, Service, Store, Tag, WareHouseSheet
+from .models import Cheque, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceLine, Payment, Product, Service, Store, Tag, WareHouse, WareHouseSheet
 from authentication.repo import ProfileRepo
 
 class FinancialDocumentCategoryRepo:
@@ -147,38 +148,41 @@ class FinancialDocumentRepo:
             financial_document_.category_id= kwargs['category_id']
         financial_document_.save()
         return financial_document_
-class ProfileFinancialAccountRepo:
-    def __init__(self, *args, **kwargs):
-        self.request = None
-        self.user = None
-        if 'request' in kwargs:
-            self.request = kwargs['request']
-            self.user = self.request.user
-        if 'user' in kwargs:
-            self.user = kwargs['user']
-        self.objects = ProfileFinancialAccount.objects
-        self.profile = ProfileRepo(user=self.user).me
-        if self.profile is not None:
-            self.me=ProfileFinancialAccount.objects.filter(profile=self.profile).first()
-        else:
-            self.me=None
 
-    def list(self, *args, **kwargs):
-        objects = self.objects.all()
-        if 'for_home' in kwargs:
-            objects = objects.filter(for_home=kwargs['for_home'])
-        if 'search_for' in kwargs:
-            search_for=kwargs['search_for']
-            objects = objects.filter(title__contains=search_for) 
-        return objects
 
-    def profile_financial_account(self, *args, **kwargs):
-        if 'profile_financial_account_id' in kwargs:
-            return self.objects.filter(pk= kwargs['profile_financial_account_id']).first()
-        if 'pk' in kwargs:
-            return self.objects.filter(pk= kwargs['pk']).first()
-        if 'id' in kwargs:
-            return self.objects.filter(pk= kwargs['id']).first()
+
+# class ProfileFinancialAccountRepo:
+#     def __init__(self, *args, **kwargs):
+#         self.request = None
+#         self.user = None
+#         if 'request' in kwargs:
+#             self.request = kwargs['request']
+#             self.user = self.request.user
+#         if 'user' in kwargs:
+#             self.user = kwargs['user']
+#         self.objects = ProfileFinancialAccount.objects
+#         self.profile = ProfileRepo(user=self.user).me
+#         if self.profile is not None:
+#             self.me=ProfileFinancialAccount.objects.filter(profile=self.profile).first()
+#         else:
+#             self.me=None
+
+#     def list(self, *args, **kwargs):
+#         objects = self.objects.all()
+#         if 'for_home' in kwargs:
+#             objects = objects.filter(for_home=kwargs['for_home'])
+#         if 'search_for' in kwargs:
+#             search_for=kwargs['search_for']
+#             objects = objects.filter(title__contains=search_for) 
+#         return objects
+
+#     def profile_financial_account(self, *args, **kwargs):
+#         if 'profile_financial_account_id' in kwargs:
+#             return self.objects.filter(pk= kwargs['profile_financial_account_id']).first()
+#         if 'pk' in kwargs:
+#             return self.objects.filter(pk= kwargs['pk']).first()
+#         if 'id' in kwargs:
+#             return self.objects.filter(pk= kwargs['id']).first()
         
 
 class FinancialAccountRepo:
@@ -192,6 +196,7 @@ class FinancialAccountRepo:
             self.user = kwargs['user']
         self.objects = FinancialAccount.objects
         self.profile = ProfileRepo(user=self.user).me
+        self.me=FinancialAccount.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -306,6 +311,31 @@ class ProductRepo:
             return self.objects.filter(pk= kwargs['id']).first()
         
         
+
+
+        
+class WareHouseRepo():
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.profile=ProfileRepo(*args, **kwargs).me
+        self.objects=WareHouse.objects
+    def list(self):
+        objects=self.objects
+        return objects
+    def ware_house(self, *args, **kwargs):
+        if 'ware_house_id' in kwargs:
+            return self.objects.filter(pk=kwargs['ware_house_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk=kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk=kwargs['id']).first()
+            
 class WareHouseSheetRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -331,7 +361,7 @@ class WareHouseSheetRepo:
             objects = objects.filter(title__contains=search_for) 
         return objects
 
-    def ware_house_sheet(self, *args, **kwargs):
+    def warehouse_sheet(self, *args, **kwargs):
         if 'ware_house_sheet_id' in kwargs:
             return self.objects.filter(pk= kwargs['ware_house_sheet_id']).first()
         if 'pk' in kwargs:
@@ -412,8 +442,10 @@ class InvoiceRepo:
         if invoice is None:
             return
 
-        if 'seller_id' in kwargs:
-            invoice.seller_id=kwargs['seller_id']
+        if 'title' in kwargs:
+            invoice.title=kwargs['title']
+        if 'pay_from_id' in kwargs:
+            invoice.pay_from_id=kwargs['pay_from_id']
 
         if 'payment_method' in kwargs:
             invoice.payment_method=kwargs['payment_method']
@@ -421,8 +453,8 @@ class InvoiceRepo:
         if 'status' in kwargs:
             invoice.status=kwargs['status']
 
-        if 'customer_id' in kwargs:
-            invoice.customer_id=kwargs['customer_id']
+        if 'pay_to_id' in kwargs:
+            invoice.pay_to_id=kwargs['pay_to_id']
 
         if 'invoice_datetime' in kwargs:
             invoice.invoice_datetime=kwargs['invoice_datetime']
@@ -443,6 +475,7 @@ class InvoiceRepo:
         if 'lines' in kwargs:
             invoice_lines=kwargs['lines']
             invoice.invoice_lines().delete()
+            amount=0
             for line in invoice_lines:
                 if int(line['quantity'])>0:
                     invoice_line=InvoiceLine()
@@ -450,62 +483,93 @@ class InvoiceRepo:
                     invoice_line.productorservice_id=int(line['productorservice_id'])
                     invoice_line.quantity=int(line['quantity'])
                     invoice_line.row=int(line['row'])
-                    invoice_line.unit_price=line['unit_price']
+                    invoice_line.unit_price=int(line['unit_price'])
                     invoice_line.unit_name=line['unit_name']
                     invoice_line.save()
-        self.update_financial_documents(invoice)
+                    amount1=invoice_line.unit_price*invoice_line.quantity
+                    # print(amount1)
+                    # print(10*"%$#@#$%^")
+                    amount=amount+amount1
+        tax_amount=int(0.01*invoice.tax_percent*(amount+invoice.ship_fee))
+        invoice.amount=amount+invoice.ship_fee+tax_amount-invoice.discount
+        invoice.tax_amount=tax_amount
+        if invoice.title is None or invoice.title=="":
+            invoice.title=f"فاکتور شماره {invoice.pk}"
+        invoice.save()
+        print(invoice.payment_method)
+        print(10*"#$$%")
+        if invoice.payment_method==PaymentMethodEnum.CARD or invoice.payment_method==PaymentMethodEnum.POS:
+            payment=Payment()
+            payment.title="پرداخت برای "+invoice.title
+            payment.pay_from=invoice.pay_to
+            payment.pay_to=invoice.pay_from
+            payment.creator=self.profile
+            payment.amount=invoice.amount
+            payment.transaction_datetime=invoice.transaction_datetime
+            payment.payment_method=invoice.payment_method
+            payment.save()
+        # self.update_financial_documents(invoice)
         return invoice
-    def update_financial_documents(self,invoice,*args, **kwargs):
-        financial_year=FinancialYear.get_by_date(date=invoice.invoice_datetime)
-        FinancialDocumentCategory.objects.get_or_create(title="فروش")
-        FinancialDocumentCategory.objects.get_or_create(title="پرداخت با کارتخوان")
-        FinancialDocumentCategory.objects.get_or_create(title="پرداخت نقدی")
+    # def update_financial_documents(self,invoice,*args, **kwargs):
+    #     financial_year=FinancialYear.get_by_date(date=invoice.invoice_datetime)
+    #     FinancialDocumentCategory.objects.get_or_create(title="فروش")
+    #     FinancialDocumentCategory.objects.get_or_create(title="پرداخت با کارتخوان")
+    #     FinancialDocumentCategory.objects.get_or_create(title="پرداخت نقدی")
 
+    #     if invoice.status==InvoiceStatusEnum.APPROVED:
+    #         pass
+    #     else:
+    #         return
+    #     category=FinancialDocumentCategory.objects.get(title="فروش")
+    #     FinancialDocument.objects.filter(transaction=invoice).delete()
 
-        category=FinancialDocumentCategory.objects.get(title="فروش")
-        InvoiceFinancialDocument.objects.filter(invoice=invoice).delete()
+    #     ifd1=FinancialDocument()
+    #     ifd1.financial_year=financial_year
+    #     ifd1.category=category
+    #     ifd1.account=invoice.customer
+    #     ifd1.transaction=invoice
+    #     ifd1.bedehkar=invoice.sum_total()
+    #     ifd1.title=str(invoice)
+    #     ifd1.document_datetime=invoice.invoice_datetime
+    #     ifd1.save()
 
-        ifd1=InvoiceFinancialDocument()
-        ifd1.financial_year=financial_year
-        ifd1.category=category
-        ifd1.account=invoice.customer
-        ifd1.invoice=invoice
-        ifd1.bedehkar=invoice.sum_total()
-        ifd1.title=str(invoice)
-        ifd1.document_datetime=invoice.invoice_datetime
-        ifd1.save()
-
-        ifd1=InvoiceFinancialDocument()
-        ifd1.bestankar=invoice.sum_total()
-        ifd1.invoice=invoice
-        ifd1.title=str(invoice)
-        ifd1.financial_year=financial_year
-        ifd1.category=category
-        ifd1.document_datetime=invoice.invoice_datetime
-        ifd1.account=invoice.seller.owner
-        ifd1.save()
+    #     ifd1=FinancialDocument()
+    #     ifd1.bestankar=invoice.sum_total()
+    #     ifd1.transaction=invoice
+    #     ifd1.title=str(invoice)
+    #     ifd1.financial_year=financial_year
+    #     ifd1.category=category
+    #     ifd1.document_datetime=invoice.invoice_datetime
+    #     ifd1.account=invoice.seller
+    #     ifd1.save()
           
     def add(self,*args, **kwargs):
         if not self.user.has_perm(APP_NAME+".add_invoice"):
             return
         invoice=Invoice()
         me_store=StoreRepo(request=self.request).me
-        me_p=ProfileFinancialAccountRepo(request=self.request).me
+        me_p=FinancialAccountRepo(request=self.request).me
 
-        if 'seller_id' in kwargs:
-            invoice.seller_id=kwargs['seller_id'] 
+        if 'pay_from_id' in kwargs:
+            invoice.pay_from_id=kwargs['pay_from_id'] 
         else:
-            invoice.seller_id=me_store.id
+            invoice.pay_from_id=me_store.id
 
-        if 'customer_id' in kwargs:
-            invoice.customer_id=kwargs['customer_id'] 
+        if 'pay_to_id' in kwargs:
+            invoice.pay_to_id=kwargs['pay_to_id'] 
         else:
-            invoice.customer_id=me_p.id
+            invoice.pay_to_id=me_p.id
 
         if 'invoice_datetime' in kwargs:
             invoice.invoice_datetime=kwargs['invoice_datetime']
         else:
             invoice.invoice_datetime=timezone.now()
+
+        if 'transaction_datetime' in kwargs:
+            invoice.transaction_datetime=kwargs['transaction_datetime']
+        else:
+            invoice.transaction_datetime=timezone.now()
+        invoice.creator=self.profile
         invoice.save()
         invoice_line=InvoiceLine()
         invoice_line.invoice=invoice
@@ -530,11 +594,7 @@ class StoreRepo:
             self.user = kwargs['user']
         self.objects = Store.objects
         self.profile = ProfileRepo(user=self.user).me
-        pfa=ProfileFinancialAccountRepo(request=self.request).me
-        if pfa is not None:
-            self.me=Store.objects.filter(owner=pfa).first()
-        else:
-            self.me=None
+        self.me=Store.objects.filter(profile=self.profile).first()
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -565,21 +625,49 @@ class ChequeRepo:
             self.user = kwargs['user']
         self.objects = Cheque.objects
         self.profile = ProfileRepo(user=self.user).me
-        pfa=ProfileFinancialAccountRepo(request=self.request).me
+        pfa=FinancialAccountRepo(request=self.request).me
         if pfa is not None:
-            self.me=Store.objects.filter(owner=pfa).first()
+            self.me=Store.objects.filter(profile=self.profile).first()
         else:
             self.me=None
     def add_cheque(self,*args, **kwargs):
         if not self.request.user.has_perm(APP_NAME+".add_cheque"):
             return
         cheque=Cheque()
+        me_acc=FinancialAccountRepo(request=self.request).me
+
         if 'title' in kwargs:
             cheque.title=kwargs['title']
         if 'cheque_date' in kwargs:
             cheque.cheque_date=kwargs['cheque_date']
         else:
             cheque.cheque_date=timezone.now()
+
+
+            
+        if 'pay_to_id' in kwargs:
+            cheque.pay_to_id=kwargs['pay_to_id']
+        else:
+            cheque.pay_to_id=me_acc.id
+        if 'pay_from_id' in kwargs:
+            cheque.pay_from_id=kwargs['pay_from_id']
+        else:
+            cheque.pay_from_id=me_acc.id
+
+
+        cheque.creator=self.profile
+
+
+        if 'transaction_datetime' in kwargs:
+            cheque.transaction_datetime=kwargs['transaction_datetime']
+        else:
+            cheque.transaction_datetime=timezone.now()
+            
+        if 'amount' in kwargs:
+            cheque.amount=kwargs['amount']
+        else:
+            cheque.amount=0
+
 
         cheque.save()
         return cheque
@@ -612,9 +700,9 @@ class PaymentRepo:
             self.user = kwargs['user']
         self.objects = Payment.objects
         self.profile = ProfileRepo(user=self.user).me
-        pfa=ProfileFinancialAccountRepo(request=self.request).me
+        pfa=FinancialAccountRepo(request=self.request).me
         if pfa is not None:
-            self.me=Store.objects.filter(owner=pfa).first()
+            self.me=Store.objects.filter(profile=self.profile).first()
         else:
             self.me=None
     def add_payment(self,*args, **kwargs):
@@ -636,14 +724,14 @@ class PaymentRepo:
         if 'payment_method' in kwargs:
             payment.payment_method=kwargs['payment_method']
 
-        if 'date_paid' in kwargs:
-            payment.date_paid=kwargs['date_paid']
+        if 'transaction_datetime' in kwargs:
+            payment.transaction_datetime=kwargs['transaction_datetime']
         else:
-            payment.date_paid=timezone.now()
+            payment.transaction_datetime=timezone.now()
         if 'financial_year_id' in kwargs:
             payment.financial_year_id=kwargs['financial_year_id']
         else:
-            payment.financial_year_id=FinancialYear.get_by_date(date=payment.date_paid).id
+            payment.financial_year_id=FinancialYear.get_by_date(date=payment.transaction_datetime).id
 
         payment.save()
         return payment
@@ -660,64 +748,6 @@ class PaymentRepo:
     def payment(self, *args, **kwargs):
         if 'payment_id' in kwargs:
             return self.objects.filter(pk= kwargs['payment_id']).first()
-        if 'pk' in kwargs:
-            return self.objects.filter(pk= kwargs['pk']).first()
-        if 'id' in kwargs:
-            return self.objects.filter(pk= kwargs['id']).first()
-        
-class InvoiceFinancialDocumentRepo:
-    def __init__(self, *args, **kwargs):
-        self.request = None
-        self.user = None
-        if 'request' in kwargs:
-            self.request = kwargs['request']
-            self.user = self.request.user
-        if 'user' in kwargs:
-            self.user = kwargs['user']
-        self.objects = InvoiceFinancialDocument.objects
-        self.profile = ProfileRepo(user=self.user).me
-
-    def list(self, *args, **kwargs):
-        objects = self.objects.all()
-        if 'for_home' in kwargs:
-            objects = objects.filter(for_home=kwargs['for_home'])
-        if 'search_for' in kwargs:
-            search_for=kwargs['search_for']
-            objects = objects.filter(title__contains=search_for) 
-        return objects
-
-    def invoice_financial_document(self, *args, **kwargs):
-        if 'invoice_financial_document_id' in kwargs:
-            return self.objects.filter(pk= kwargs['invoice_financial_document_id']).first()
-        if 'pk' in kwargs:
-            return self.objects.filter(pk= kwargs['pk']).first()
-        if 'id' in kwargs:
-            return self.objects.filter(pk= kwargs['id']).first()
-        
-class PaymentFinancialDocumentRepo:
-    def __init__(self, *args, **kwargs):
-        self.request = None
-        self.user = None
-        if 'request' in kwargs:
-            self.request = kwargs['request']
-            self.user = self.request.user
-        if 'user' in kwargs:
-            self.user = kwargs['user']
-        self.objects = PaymentFinancialDocument.objects
-        self.profile = ProfileRepo(user=self.user).me
-
-    def list(self, *args, **kwargs):
-        objects = self.objects.all()
-        if 'for_home' in kwargs:
-            objects = objects.filter(for_home=kwargs['for_home'])
-        if 'search_for' in kwargs:
-            search_for=kwargs['search_for']
-            objects = objects.filter(title__contains=search_for) 
-        return objects
-
-    def payment_financial_document(self, *args, **kwargs):
-        if 'payment_financial_document_id' in kwargs:
-            return self.objects.filter(pk= kwargs['payment_financial_document_id']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:

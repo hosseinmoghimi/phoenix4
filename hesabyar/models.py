@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from core.enums import ColorEnum, UnitNameEnum
-from hesabyar.enums import ChequeStatusEnum,InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
+from hesabyar.enums import ChequeStatusEnum,TransactionStatusEnum,InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from core.models import BasicPage
@@ -51,46 +51,76 @@ class FinancialDocument(HesabYarPage):
     category=models.ForeignKey("financialdocumentcategory", verbose_name=_("category"), on_delete=models.CASCADE)
     bedehkar=models.IntegerField(_("bedehkar"),default=0)
     bestankar=models.IntegerField(_("bestankar"),default=0)
+    transaction=models.ForeignKey("transaction",blank=True,null=True, verbose_name=_("transaction"), on_delete=models.SET_NULL)
     document_datetime=models.DateTimeField(_("document_datetime"), auto_now=False, auto_now_add=False)
+    
     def category_title(self):
         return self.category.title
+
     def persian_document_datetime(self):
         return PersianCalendar().from_gregorian(self.document_datetime)
+    
     class Meta:
         verbose_name = _("FinancialDocument")
         verbose_name_plural = _("FinancialDocuments")
 
 
     def save(self,*args, **kwargs):
+        self.class_name="financialdocument"
         return super(FinancialDocument,self).save(*args, **kwargs)
 
-class InvoiceFinancialDocument(FinancialDocument):
-    invoice=models.ForeignKey("invoice", verbose_name=_("invoice"), on_delete=models.CASCADE)
+ 
+
+class Transaction(models.Model,LinkHelper):
+    title=models.CharField(_("عنوان"), max_length=50)
+    status=models.CharField(_("وضعیت"),choices=TransactionStatusEnum.choices,default=TransactionStatusEnum.DRAFT, max_length=50)
+    pay_from=models.ForeignKey("financialaccount",related_name="paid_set", verbose_name=_("بستانکار"), on_delete=models.CASCADE)
+    pay_to=models.ForeignKey("financialaccount",related_name="received_set", verbose_name=_("بدهکار"), on_delete=models.CASCADE)
+    creator=models.ForeignKey("authentication.profile", verbose_name=_("ثبت شده توسط"), on_delete=models.CASCADE)
+    amount=models.IntegerField(_("مبلغ"),default=0)
+    transaction_datetime=models.DateTimeField(_("transaction_datetime"), auto_now=False, auto_now_add=False)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.CARD, max_length=50)
+    description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
+    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
     
 
     class Meta:
-        verbose_name = _("InvoiceFinancialDocument")
-        verbose_name_plural = _("InvoiceFinancialDocuments")
+        verbose_name = _("Transaction")
+        verbose_name_plural = _("Transactions")
 
+    def persian_transaction_datetime(self):
+        return PersianCalendar().from_gregorian(self.transaction_datetime)
+    def __str__(self):
+        return self.title
+   
     def save(self,*args, **kwargs):
-        self.class_name="invoicefinancialdocument"
-        super(InvoiceFinancialDocument,self).save(*args, **kwargs)
- 
+        super(Transaction,self).save(*args, **kwargs)
+        financial_year=FinancialYear.get_by_date(date=self.transaction_datetime)
+        FinancialDocumentCategory.objects.get_or_create(title="واریز")
+        category=FinancialDocumentCategory.objects.get(title="واریز")
+        FinancialDocument.objects.filter(transaction=self).delete()
 
+        ifd1=FinancialDocument()
+        ifd1.financial_year=financial_year
+        ifd1.category=category
+        ifd1.transaction=self
+        ifd1.bedehkar=self.amount
+        ifd1.title=str(self)
+        ifd1.document_datetime=self.transaction_datetime
+        ifd1.account=self.pay_to
+        ifd1.save()
 
-class PaymentFinancialDocument(FinancialDocument):
-    payment=models.ForeignKey("payment", verbose_name=_("payment"), on_delete=models.CASCADE)
-    
+        ifd1=FinancialDocument()
+        ifd1.bestankar=self.amount
+        ifd1.transaction=self
+        ifd1.title=str(self)
+        ifd1.financial_year=financial_year
+        ifd1.category=category
+        ifd1.document_datetime=self.transaction_datetime
+        ifd1.account=self.pay_from
+        ifd1.save()
 
-    class Meta:
-        verbose_name = _("PaymentFinancialDocument")
-        verbose_name_plural = _("PaymentFinancialDocuments")
-
-    def save(self,*args, **kwargs):
-        self.class_name="paymentfinancialdocument"
-        super(PaymentFinancialDocument,self).save(*args, **kwargs)
-
- 
 
 class ProductOrService(HesabYarPage):
     unit_price=models.IntegerField(_("unit_price"),default=0)
@@ -136,29 +166,33 @@ class Service(ProductOrService):
         return super(Service,self).save(*args, **kwargs)
 
 
-class Invoice(models.Model,LinkHelper):
-    payment_method=models.CharField(_("نحوه پرداخت"),choices=InvoicePaymentMethodEnum.choices,default=InvoicePaymentMethodEnum.NO_PAYMENT, max_length=50)
-    status=models.CharField(_("وضعیت"),choices=InvoiceStatusEnum.choices,default=InvoiceStatusEnum.DRAFT, max_length=50)
-    customer=models.ForeignKey("profilefinancialaccount", null=True,blank=True,verbose_name=_("مشتری"), on_delete=models.SET_NULL)
-    seller=models.ForeignKey("store", verbose_name=_("فروشنده"), on_delete=models.CASCADE)
+class Invoice(Transaction):
     tax_percent=models.IntegerField(_("درصد مالیات"),default=9)
     invoice_datetime=models.DateTimeField(_("تاریخ فاکتور"), auto_now=False, auto_now_add=False)
-    date_added=models.DateTimeField(_("تاریخ ثبت"), auto_now=False, auto_now_add=True)
     ship_fee=models.IntegerField(_("هزینه حمل"),default=0)
     discount=models.IntegerField(_("تخفیف"),default=0)
-    description=HTMLField(_("توضیحات"),max_length=50000,blank=True,null=True)
-    class_name='invoice'
+    tax_amount=models.IntegerField(_("مبلغ مالیات"),default=0)
+    def get_title(self):
+        return self.title or f"فاکتور شماره {self.pk}"
+    @property
+    def customer(self):
+        return self.pay_to
+    @property
+    def seller(self):
+        return self.pay_from
+
+
     def get_edit_url2(self):
         return reverse(APP_NAME+":edit_invoice",kwargs={'pk':self.pk})
     def get_print_url(self):
         return reverse(APP_NAME+":invoice_print",kwargs={'pk':self.pk})
-    @property
-    def title(self):
-        try:
+    # @property
+    # def title(self):
+    #     try:
 
-            return "فاکتور شماره "+str(self.pk)
-        except:
-            return "فاکتور شماره 0"
+    #         return "فاکتور شماره "+str(self.pk)
+    #     except:
+    #         return "فاکتور شماره 0"
     def persian_invoice_datetime(self):
         return PersianCalendar().from_gregorian(self.invoice_datetime)
     def tax_amount(self):
@@ -179,6 +213,7 @@ class Invoice(models.Model,LinkHelper):
         sum-=self.discount
         return sum
     def save(self,*args, **kwargs):
+        self.class_name='invoice'
         super(Invoice,self).save(*args, **kwargs)
         # financial_year=FinancialYear.get_by_date(date=self.invoice_datetime)
         # FinancialDocumentCategory.objects.get_or_create(title="فروش")
@@ -274,9 +309,10 @@ class Tag(models.Model):
 
 
 class FinancialAccount(models.Model):
+    profile=models.ForeignKey("authentication.profile",related_name="hesabyar_accounts", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"),blank=True, max_length=200)
     tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
-    class_name=models.CharField(_("class_name"), max_length=50)
+    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
     def rest(self):
         rest=0
         for t in FinancialDocument.objects.filter(account=self):
@@ -294,7 +330,10 @@ class FinancialAccount(models.Model):
 
 
     def save(self,*args, **kwargs):
-        # self.class_name='financialdocument'
+        if self.title is None or self.title=="":
+            self.title=self.profile.name
+        if self.class_name is None or self.class_name=="":
+            self.class_name='financialaccount'
         return super(FinancialAccount,self).save(*args, **kwargs)
 
     def get_edit_url(self):
@@ -302,41 +341,8 @@ class FinancialAccount(models.Model):
     def get_delete_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
 
-class ProfileFinancialAccount(FinancialAccount):
-    profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name = _("ProfileFinancialAccount")
-        verbose_name_plural = _("ProfileFinancialAccounts")
-
-    def __str__(self):
-        return self.profile.name
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":profile_financial_account", kwargs={"pk": self.pk})
-
-
-    def save(self,*args, **kwargs):
-        if self.title is None or self.title=="":
-            self.title=self.profile.name
-        self.class_name='profilefinancialaccount'
-        
-        return super(ProfileFinancialAccount,self).save(*args, **kwargs)
- 
-
-class Cash(FinancialAccount):
-    store=models.ForeignKey("store", verbose_name=_("فروشگاه"), on_delete=models.CASCADE)
-    class Meta:
-        verbose_name = _("Cash")
-        verbose_name_plural = _("Cashes")
- 
-
-    def save(self,*args, **kwargs):
-        self.class_name="cash"
-        return super(Cash,self).save(*args, **kwargs)
-
-
-class BankAccount(ProfileFinancialAccount):
+class BankAccount(FinancialAccount):
     bank=models.ForeignKey("bank", verbose_name=_("bank"), on_delete=models.CASCADE)
     account_no=models.CharField(_("shomareh"),null=True,blank=True, max_length=50)
     card_no=models.CharField(_("card"),null=True,blank=True, max_length=50)
@@ -377,13 +383,13 @@ class Bank(models.Model):
         verbose_name_plural = _("Banks")
  
 
-class Store(HesabYarPage):
+class Store(FinancialAccount,LinkHelper):
     logo_origin=models.ImageField(_("logo"),null=True,blank=True, upload_to=IMAGE_FOLDER+"store/", height_field=None, width_field=None, max_length=None)
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     tel=models.CharField(_("tel"),null=True,blank=True, max_length=50)
     bank_account=models.ForeignKey("bankaccount",related_name="stores",null=True,blank=True, verbose_name=_("bankaccount"), on_delete=models.CASCADE)
-    owner=models.ForeignKey("profilefinancialaccount", verbose_name=_("owner"), on_delete=models.CASCADE)
-    
+    # prpfile=models.ForeignKey("FinancialAccount", verbose_name=_("owner"), on_delete=models.CASCADE)
+
     def logo(self):
         if self.logo_origin:
             return MEDIA_URL+str(self.logo_origin)
@@ -397,11 +403,12 @@ class Store(HesabYarPage):
         self.class_name="store"
         return super(Store,self).save(*args, **kwargs)
 
-
+    def __str__(self):
+        return self.title
 class WareHouse(HesabYarPage):
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     tel=models.CharField(_("tel"),null=True,blank=True, max_length=50)
-    owner=models.ForeignKey("profilefinancialaccount", verbose_name=_("owner"), on_delete=models.CASCADE)
+    owner=models.ForeignKey("FinancialAccount", verbose_name=_("owner"), on_delete=models.CASCADE)
     
     class Meta:
         verbose_name = _("WareHouse")
@@ -418,6 +425,7 @@ class WareHouseSheet(models.Model,LinkHelper):
     creator=models.ForeignKey("authentication.profile", verbose_name=_("creator"), on_delete=models.CASCADE)    
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)    
     quantity=models.IntegerField(_("quantity"))
+    unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
     direction=models.CharField(_("direction"),choices=WareHouseSheetDirectionEnum.choices, max_length=50)
     ware_house=models.ForeignKey("warehouse", verbose_name=_("ware_house"), on_delete=models.CASCADE)
     status=models.CharField(_("status"),choices=WareHouseSheetStatusEnum.choices,default=WareHouseSheetStatusEnum.INITIAL, max_length=50)
@@ -433,65 +441,52 @@ class WareHouseSheet(models.Model,LinkHelper):
         self.class_name="warehousesheet"
         super(WareHouseSheet,self).save(*args, **kwargs)
 
+    def color(self):
+        color="primary"
+        if self.direction==WareHouseSheetDirectionEnum.ENTER:
+            color="success"
+        if self.direction==WareHouseSheetDirectionEnum.EXIT:
+            color="danger"
+        return color
+class Payment(Transaction):
+    
 
-class Payment(models.Model,LinkHelper):
-    title=models.CharField(_("title"),default='پرداخت', max_length=50)
-    pay_from=models.ForeignKey("financialaccount",related_name="paid_set", verbose_name=_("pay_from"), on_delete=models.CASCADE)
-    pay_to=models.ForeignKey("financialaccount",related_name="received_set", verbose_name=_("pay_to"), on_delete=models.CASCADE)
-    creator=models.ForeignKey("authentication.profile", verbose_name=_("creator"), on_delete=models.CASCADE)
-    amount=models.IntegerField(_("amount"))
-    date_paid=models.DateTimeField(_("date_paid"), auto_now=False, auto_now_add=False)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.CARD, max_length=50)
-    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=50000)
-    class_name="payment"
-    def persian_date_paid(self):
-        return PersianCalendar().from_gregorian(self.date_paid)
-    def __str__(self):
-        return self.title
+
         
     class Meta:
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
 
     def save(self,*args, **kwargs):
+        self.class_name="payment"
         super(Payment,self).save(*args, **kwargs)
-        financial_year=FinancialYear.get_by_date(date=self.date_paid)
+        financial_year=FinancialYear.get_by_date(date=self.transaction_datetime)
         FinancialDocumentCategory.objects.get_or_create(title="واریز")
         category=FinancialDocumentCategory.objects.get(title="واریز")
-        PaymentFinancialDocument.objects.filter(payment=self).delete()
+        FinancialDocument.objects.filter(transaction=self).delete()
 
-        ifd1=PaymentFinancialDocument()
+        ifd1=FinancialDocument()
         ifd1.financial_year=financial_year
         ifd1.category=category
         ifd1.account=self.pay_to
-        ifd1.payment=self
+        ifd1.transaction=self
         ifd1.bedehkar=self.amount
         ifd1.title=str(self)
-        ifd1.document_datetime=self.date_paid
+        ifd1.document_datetime=self.transaction_datetime
         ifd1.save()
 
-        ifd1=PaymentFinancialDocument()
+        ifd1=FinancialDocument()
         ifd1.bestankar=self.amount
-        ifd1.payment=self
+        ifd1.transaction=self
         ifd1.title=str(self)
         ifd1.financial_year=financial_year
         ifd1.category=category
-        ifd1.document_datetime=self.date_paid
+        ifd1.document_datetime=self.transaction_datetime
         ifd1.account=self.pay_from
         ifd1.save()
-    
 
-
-class Cheque(models.Model,LinkHelper):
-    owner=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_owned", verbose_name=_("owner"),null=True,blank=True, on_delete=models.CASCADE)
-    receiver=models.ForeignKey("ProfileFinancialAccount",related_name="cheque_received", verbose_name=_("receiver"),null=True,blank=True, on_delete=models.CASCADE)
-    title=models.CharField(_("title"), max_length=50)
+class Cheque(Transaction,LinkHelper):
     cheque_date=models.DateField(_("تاریخ چک"), auto_now=False, auto_now_add=False)
-    description=models.CharField(_("توضیحات"),null=True,blank=True, max_length=50)
-    amount=models.IntegerField(_("مبلغ"),default=0)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    status=models.CharField(_("status"),choices=ChequeStatusEnum.choices,default=ChequeStatusEnum.DRAFT, max_length=50)
     def persian_cheque_date(self):
         return PersianCalendar().from_gregorian(self.cheque_date)
 
@@ -513,3 +508,9 @@ class Cheque(models.Model,LinkHelper):
             return 'success'
 
         return color
+
+
+    def save(self,*args, **kwargs):
+        self.class_name="cheque"
+        super(Cheque,self).save(*args, **kwargs)
+      

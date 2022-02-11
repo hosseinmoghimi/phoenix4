@@ -24,6 +24,7 @@ class UnitNameEnum(TextChoices):
     POCKET="کیسه",_("کیسه")
     SHOT="شات",_("شات")
     CUP="فنجان",_("فنجان")
+    JOFT="جفت",_("جفت")
 
 class AppNameEnum(TextChoices):
     # drassistant='drassistant',_('drassistant')

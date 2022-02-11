@@ -1,6 +1,7 @@
 {% extends "hesabyar/layout.html" %}
 
 {% load to_persian_date %}
+{% load to_price %}
 
 {% load to_variz_text %}
 {% block content %}
@@ -66,6 +67,9 @@
                 <div>
 
                     واحد مبلغ ها تومان می باشد.
+                </div>
+                <div>
+                 میزان مالیات :   {{invoice.tax_amount|to_price}}
                 </div>
 
                 {% if invoice.seller.bank_account %}

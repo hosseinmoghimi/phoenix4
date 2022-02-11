@@ -60,8 +60,8 @@ class BasicApi(APIView):
                 fm=edit_invoice_form.cleaned_data
                 lines=fm['lines']
                 lines=json.loads(lines)
-                seller_id=fm['seller_id']
-                customer_id=fm['customer_id']
+                pay_to_id=fm['pay_to_id']
+                pay_from_id=fm['pay_from_id']
                 invoice_datetime=fm['invoice_datetime']
                 ship_fee=fm['ship_fee']
                 tax_percent=fm['tax_percent']
@@ -78,9 +78,9 @@ class BasicApi(APIView):
                     payment_method=payment_method,
                     description=description,
                     discount=discount,
-                    customer_id=customer_id,
+                    pay_from_id=pay_from_id,
                     invoice_datetime=invoice_datetime,
-                    seller_id=seller_id,
+                    pay_to_id=pay_to_id,
                     tax_percent=tax_percent,
                     ship_fee=ship_fee,
                 )
@@ -132,16 +132,16 @@ class PaymentApi(APIView):
                 pay_to_id=fm['pay_to_id']
                 pay_from_id=fm['pay_from_id']
                 amount=fm['amount']
-                date_paid=fm['date_paid']
+                transaction_datetime=fm['transaction_datetime']
                 payment_method=fm['payment_method']
                 description=fm['description']
-                date_paid=PersianCalendar().to_gregorian(date_paid+"  00:00:00")
+                transaction_datetime=PersianCalendar().to_gregorian(transaction_datetime+"  00:00:00")
                 payment=PaymentRepo(request=request).add_payment(
                     title=title,
                     pay_to_id=pay_to_id,
                     pay_from_id=pay_from_id,
                     amount=amount,
-                    date_paid=date_paid,
+                    transaction_datetime=transaction_datetime,
                     payment_method=payment_method,
                     description=description,
                 )

@@ -61,7 +61,7 @@
 
                                     <div class="col-8">
 
-                                        <date-picker v-model="date_paid"></date-picker>
+                                        <date-picker v-model="transaction_datetime"></date-picker>
 
                                     </div>
                                 </div>
@@ -159,7 +159,7 @@
             pay_to_id: 0,
             pay_from_id: 0,
             amount: 0,
-            date_paid: current_date,
+            transaction_datetime: current_date,
             payment_method: "",
             title: "",
             description: "",
@@ -181,7 +181,7 @@
                     title: this.title,
                     description: this.description,
                     amount: this.amount,
-                    date_paid: this.date_paid,
+                    transaction_datetime: this.transaction_datetime,
                     payment_method: this.payment_method,
 
                 }

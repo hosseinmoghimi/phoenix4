@@ -28,8 +28,12 @@
                     <br>
                     بسنانکار :
                     {{financial_document.bestankar|to_price}}
+<br>
+                    تراکنش مربوطه:
+                    <a href="{{financial_document.transaction.get_absolute_url}}">
 
-
+                        {{financial_document.transaction.title}}
+                    </a>
                 </p>
             </div>
         </div>

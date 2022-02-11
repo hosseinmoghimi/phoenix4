@@ -7,14 +7,19 @@
                 <th>
                     تاریخ
                 </th>
+                {% if not product %}
+
                 <th>
                     کالا
                 </th>
+                {% endif %}
 
+                {% if not ware_house %}
 
                 <th>
                     انبار
                 </th>
+                {% endif %}
 
                 <th>
                     تعداد
@@ -27,6 +32,9 @@
                 <th>
                     وضعیت
                 </th>
+                <th>
+
+                </th>
 
             </thead>
             <tbody>
@@ -34,31 +42,43 @@
                     <td>
                         <span v-text="warehouse_sheet.persian_date_registered"></span>
                     </td>
+                    {% if not product %}
+
                     <td>
                         <a :href="warehouse_sheet.product.get_absolute_url">
                             <span v-text="warehouse_sheet.product.title"></span>
                         </a>
                     </td>
+                    {% endif %}
+                    {% if not ware_house %}
 
                     <td>
                         <a :href="warehouse_sheet.ware_house.get_absolute_url">
                             <span v-text="warehouse_sheet.ware_house.title"></span>
                         </a>
                     </td>
+                    {% endif %}
 
 
                     <td>
                         <span v-text="warehouse_sheet.quantity"></span>
+                        <span class="text-muted" v-text="warehouse_sheet.unit_name"></span>
                     </td>
 
                     <td>
-                        <span v-text="warehouse_sheet.direction"></span>
+                        <span :class="'badge badge-'+warehouse_sheet.color">
+                            <span v-text="warehouse_sheet.direction"></span>
+                        </span>
                     </td>
                     <td>
+                        
                         <span v-text="warehouse_sheet.status"></span>
                     </td>
 
+                    <td>
 
+                        <a :href="warehouse_sheet.get_absolute_url"><i class="material-icons">ballot</i></a>
+                    </td>
                 </tr>
             </tbody>
         </table>

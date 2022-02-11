@@ -1,10 +1,10 @@
 import json
 from django.shortcuts import render,reverse
-from core.enums import UnitNameEnum
+from core.enums import UnitNameEnum 
 from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum
 from .forms import *
 
-from .repo import ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo, InvoiceFinancialDocumentRepo, InvoiceLineRepo, InvoiceRepo, PaymentFinancialDocumentRepo, PaymentRepo, ProductRepo, ProfileFinancialAccountRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from .repo import WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
 from .serializers import ChequeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
@@ -84,25 +84,25 @@ class ReportViews(View):
         context['rest']=0
         return render(request, TEMPLATE_ROOT+"financial-document-category.html", context)
 
-    def profile_financial_account(self, request, *args, **kwargs):
-        context = getContext(request=request)
-        context['title'] = "HesabYar Ver 1.0.0"
-        profile_financial_account = ProfileFinancialAccountRepo(
-            request=request).profile_financial_account(*args, **kwargs)
-        financial_account=profile_financial_account
-        context['financial_account'] = financial_account
-        context['profile_financial_account'] = profile_financial_account
-        context['financial_account'] = profile_financial_account
-        financial_documents = FinancialDocumentRepo().list(
-            account_id=profile_financial_account.id)
-        context['financial_documents'] = financial_documents
-        financial_documents_s = json.dumps(
-            FinancialDocumentSerializer(financial_documents, many=True).data)
-        context['financial_documents_s'] = financial_documents_s
-        context['financial_documents'] = financial_documents
-        context['rest']=financial_account.rest()
+    # def profile_financial_account(self, request, *args, **kwargs):
+    #     context = getContext(request=request)
+    #     context['title'] = "HesabYar Ver 1.0.0"
+    #     profile_financial_account = ProfileFinancialAccountRepo(
+    #         request=request).profile_financial_account(*args, **kwargs)
+    #     financial_account=profile_financial_account
+    #     context['financial_account'] = financial_account
+    #     context['profile_financial_account'] = profile_financial_account
+    #     context['financial_account'] = profile_financial_account
+    #     financial_documents = FinancialDocumentRepo().list(
+    #         account_id=profile_financial_account.id)
+    #     context['financial_documents'] = financial_documents
+    #     financial_documents_s = json.dumps(
+    #         FinancialDocumentSerializer(financial_documents, many=True).data)
+    #     context['financial_documents_s'] = financial_documents_s
+    #     context['financial_documents'] = financial_documents
+    #     context['rest']=financial_account.rest()
 
-        return render(request, TEMPLATE_ROOT+"profile-financial-account.html", context)
+    #     return render(request, TEMPLATE_ROOT+"profile-financial-account.html", context)
 
     def financial_account(self, request, *args, **kwargs):
         context = getContext(request=request)
@@ -184,17 +184,32 @@ class ServiceViews(View):
 
 class WareHouseSheetViews(View):
     def ware_house_sheet(self,request,*args, **kwargs):
-        pass
+        context=getContext(request=request)
+        warehouse_sheet=WareHouseSheetRepo(request=request).warehouse_sheet(*args, **kwargs)
+        context['warehouse_sheet']=warehouse_sheet
+        return render(request,TEMPLATE_ROOT+"ware-house-sheet.html",context)
 
 class WareHouseViews(View):
     def ware_house(self,request,*args, **kwargs):
-        pass
+        print(kwargs)
+        context=getContext(request=request)
+        ware_house=WareHouseRepo(request=request).ware_house(*args, **kwargs)
+        context['ware_house']=ware_house
+        
+        warehouse_sheets=WareHouseSheetRepo(request=request).list().order_by('date_registered')
+        warehouse_sheets_s=json.dumps(WareHouseSheetSerializer(warehouse_sheets,many=True).data)
+        context['warehouse_sheets_s']=warehouse_sheets_s
+
+        return render(request,TEMPLATE_ROOT+"ware-house.html",context)
 
 class InvoiceViews(View):
     def get_edit_invoice_context(self,request,*args, **kwargs):
         context={}
-        customers=ProfileFinancialAccountRepo(request=request).list()
+        customers=FinancialAccountRepo(request=request).list()
         context['customers']=customers
+
+        stores=StoreRepo(request=request).list()
+        context['stores']=stores
          
         
         products=ProductRepo(request=request).list()
@@ -235,6 +250,8 @@ class InvoiceViews(View):
         invoice_lines=invoice.invoice_lines()
         
         context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        # customer=invoice.customer.profile
+        # seller=invoice.seller.profile
         context['invoice_s']=json.dumps(InvoiceFullSerializer(invoice).data)
         return render(request,TEMPLATE_ROOT+"edit-invoice.html",context)
     def invoice_print(self,request,*args, **kwargs):
@@ -278,7 +295,7 @@ class FinancialDocumentViews(View):
         return render(request,TEMPLATE_ROOT+"financial-documents.html",context)
     def invoice_financial_document(self,request,*args, **kwargs):
         context=getContext(request=request)
-        invoice_financial_document=InvoiceFinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
+        invoice_financial_document=FinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
         invoice=invoice_financial_document.invoice
         context.update(self.getFinancialDocumentContext(request=request,financial_document=invoice_financial_document))
         invoice_lines=invoice.invoice_lines()
@@ -298,7 +315,7 @@ class FinancialDocumentViews(View):
 class BankAccountViews(View):
     def bank_account(self,request,*args, **kwargs):
         context=getContext(request=request)
-        invoice_financial_document=InvoiceFinancialDocumentRepo(request=request).invoice_financial_document(*args, **kwargs)
+        invoice_financial_document=FinancialDocumentRepo(request=request).financial_document(*args, **kwargs)
         invoice=invoice_financial_document.invoice
         invoice_lines=invoice.invoice_lines()
         invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)

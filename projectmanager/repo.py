@@ -470,7 +470,6 @@ class WareHouseRepo():
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=WareHouse.objects
     def ware_house(self, *args, **kwargs):
-        pk=0
         if 'ware_house_id' in kwargs:
             return self.objects.filter(pk=kwargs['ware_house_id']).first()
         if 'pk' in kwargs:
