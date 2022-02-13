@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from authentication.serializers import ProfileSerializer
-from .models import Cheque, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Store, WareHouse, WareHouseSheet
+from .models import Cheque, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Guarantee, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Store, WareHouse, WareHouseSheet
 
 
 class FinancialAccountSerializer(serializers.ModelSerializer):
@@ -58,6 +58,11 @@ class InvoiceBriefSerializer(serializers.ModelSerializer):
         model = Invoice
         fields = ['id','title','get_absolute_url']
 
+class ProductBriefSerializer(serializers.ModelSerializer):
+      class Meta:
+        model = Product
+        fields = ['id','title','get_absolute_url']
+
 class WareHouseSheetSerializer(serializers.ModelSerializer):
     ware_house=WareHouseSerializer()
     product=ProductSerializer()
@@ -69,10 +74,20 @@ class WareHouseSheetSerializer(serializers.ModelSerializer):
 
 
 
+class GuaranteeSerializer(serializers.ModelSerializer):
+    invoice=InvoiceBriefSerializer()
+    product=ProductBriefSerializer()
+    class Meta:
+        model = Guarantee
+        fields = ['id', 'invoice','product','type','get_edit_url','status','serial_no','persian_start_date','persian_end_date', 'get_absolute_url']
+
+
 class InvoiceSerializer(serializers.ModelSerializer):
+    pay_from=FinancialAccountSerializer()
+    pay_to=FinancialAccountSerializer()
     class Meta:
         model = Invoice
-        fields = ['id','title','get_absolute_url','persian_invoice_datetime']
+        fields = ['id','title','pay_from','pay_to','get_absolute_url','persian_invoice_datetime']
 class StoreSerializer(serializers.ModelSerializer):
     profile=ProfileSerializer()
     class Meta:

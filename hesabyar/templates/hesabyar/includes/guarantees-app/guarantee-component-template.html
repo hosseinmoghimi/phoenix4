@@ -1,0 +1,47 @@
+<tr>
+    <td>
+        <a :href="guarantee.product.get_absolute_url">
+
+            <span v-text="guarantee.product.title"></span>
+        </a>
+    </td>
+    {% if not invoice %}
+      
+    <td>
+        <a :href="guarantee.invoice.get_absolute_url">
+            
+            <span v-text="guarantee.invoice.title"></span>
+        </a>
+    </td>
+    {% endif %}
+    <td>
+        <small v-text="guarantee.serial_no"></small>
+
+    </td>
+    <td>
+        <div>
+            <small v-text="guarantee.persian_start_date"></small>
+        </div>
+
+        <div>
+            <small v-text="guarantee.persian_end_date"></small>
+        </div>
+    </td>
+    <td>
+        <small v-text="guarantee.type"></small>
+        
+    </td>
+    <td>
+        <small v-text="guarantee.status"></small>
+        
+    </td>
+    <td>
+        <a :href="guarantee.get_absolute_url">
+            <i class="material-icons">ballot</i>
+        </a>
+
+        <a :href="guarantee.get_edit_url">
+            <i class="fa fa-edit text-info"></i>
+        </a>
+    </td>
+</tr>

@@ -38,12 +38,8 @@
                     {% endif %}
 
                     <td>
-                        <a :href="financial_document.category.get_absolute_url">
-                            <span :class="'badge badge-'+financial_document.category.color">
 
                                 <span v-text="financial_document.category.title"></span>
-                            </span>
-                        </a>
 
                     </td>
                     <td>
@@ -75,21 +71,7 @@
             مانده : <span v-text="to_price(rest)"></span>
 
         </p>
-        {% if financial_account %}
-          
-        <p>
-            
-            <a href="{{financial_account.get_print_url}}" class="btn btn-info">
-                <i class="fa fa-print"></i>
-            </a>
-        </p>
-        {% endif %}
-        {% if add_financial_document_form1 %}
-        <button v-if="!show_form" @click="show_form=true" class="btn btn-success">افزودن سند جدید</button>
-        <div v-if="show_form">
-
-            {% include "hesabyar/includes/financial-documents-app/form.html" %}
-        </div>
-        {% endif %}
+        
+        
     </div>
 </div>

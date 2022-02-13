@@ -36,7 +36,12 @@
 
     </div>
     <div class="col-md-12">
-        <h4>برگه های انبار</h4>
+        <h4 class="text-center my-3">موجودی انبار</h4>
+{% include "hesabyar/includes/warehouse-availables/template.html" %}
+
+    </div>
+    <div class="col-md-12">
+        <h4 class="text-center my-3">برگه های انبار</h4>
         {% include "hesabyar/includes/warehouse-sheets-app/template.html" %}
 
     </div>
@@ -45,5 +50,6 @@
 
 {% block script %}
 {% include "hesabyar/includes/warehouse-sheets-app/script.html" %}
+{% include "hesabyar/includes/warehouse-availables/script.html" %}
 
 {% endblock script %}

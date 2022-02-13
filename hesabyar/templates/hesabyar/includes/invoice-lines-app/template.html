@@ -63,6 +63,24 @@
                         <a :href="invoice_line.invoice.get_absolute_url">
                             <span v-text="invoice_line.invoice.title"></span>
                         </a>
+                        <div class="row">
+                            <div class="col-6">
+                                
+                                <a :href="invoice_line.invoice.pay_from.get_absolute_url">
+                                    <small>
+                                        <span v-text="invoice_line.invoice.pay_from.title"></span>
+                                    </small>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a :href="invoice_line.invoice.pay_to.get_absolute_url">
+                                    <small>
+                                        <span v-text="invoice_line.invoice.pay_to.title"></span>
+                                    </small>
+                                </a>
+
+                            </div>
+                        </div>
                     </td>
                     <td class="bordered">
                         <span v-text="invoice_line.invoice.persian_invoice_datetime"></span>

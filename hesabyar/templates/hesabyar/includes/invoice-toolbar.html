@@ -1,0 +1,26 @@
+<a href="{{invoice.get_absolute_url}}" title="جزئیات فاکتور" class="mx-2"><i
+        class="material-icons text-primary">ballot</i></a>
+<a href="{{invoice.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i
+        class="material-icons text-success">print</i></a>
+
+<a href="{% url 'hesabyar:invoice_deliver' pk=invoice.pk %}" title="تحویل" class="mx-2"><i
+        class="material-icons text-warning">archive</i></a>
+<a href="{% url 'hesabyar:invoice_guarantees' pk=invoice.pk %}" title="گارانتی" class="mx-2"><i
+        class="material-icons text-info">model_training</i></a>
+{% if perms.hesabyar.change_invoice %}
+{% if invoice.editable %}
+
+<a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i class="fa fa-edit text-info"></i></a>
+{% endif %}
+
+{% if invoice.editable %}
+
+<a href="{{invoice.get_edit_url2}}" target="_blank" title="ویرایش" class="mx-2"><i
+        class="fa fa-edit text-success"></i></a>
+{% endif %}
+
+{% endif %}
+{% if perms.hesabyar.delete_invoice %}
+<a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+        class="fa fa-trash text-danger"></i></a>
+{% endif %}

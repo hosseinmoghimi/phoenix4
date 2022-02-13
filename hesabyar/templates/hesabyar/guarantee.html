@@ -1,0 +1,91 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<h4 class="text-center">
+    {{payment.title}}
+    {% if perms.hesabyar.change_guarantee %}
+    <a href="{{guarantee.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+            class="fa fa-edit text-info"></i></a>
+    {% endif %}
+    {% if perms.hesabyar.delete_guarantee %}
+    <a href="{{guarantee.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+            class="fa fa-trash text-danger"></i></a>
+    {% endif %}
+
+
+</h4>
+
+
+<div class="row farsi">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-right">
+                            <a href="{{guarantee.product.get_absolute_url}}">
+
+                                {{guarantee.product.title}}
+                            </a>
+                            <span class="badge badge-primary">
+
+                                {{guarantee.status}}
+                            </span>
+                            <span class="badge badge-danger">
+
+                                {{guarantee.type}}
+                            </span>
+                           
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            فاکتور :
+                            <a href="{{guarantee.invoice.get_absolute_url}}">
+                                {{guarantee.invoice.title}}
+                            </a>
+                        </div>
+
+
+                        <div class="text-center">
+                           شماره سریال :
+                                {{guarantee.serial_no}}
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+
+
+
+                        <div class="text-center">
+                            تاریخ شروع گارانتی
+                            {{guarantee.start_date|to_persian_datetime|safe}}
+                        </div>
+
+                        <div class="text-center">
+                            تاریخ اتمام گارانتی
+                            {{guarantee.end_date|to_persian_datetime|safe}}
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+    
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    
+</script>
+
+{% endblock script %}

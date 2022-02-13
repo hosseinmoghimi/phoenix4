@@ -1,0 +1,10 @@
+
+<script>
+    let availables_list=JSON.parse(`{{availables_list|escapejs}}`)
+    let availables_list_app=new Vue({
+        el:"#availables-list",
+        data:{
+            availables_list:availables_list
+        }
+    })
+</script>

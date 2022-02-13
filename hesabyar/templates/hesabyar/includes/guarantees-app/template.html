@@ -1,0 +1,54 @@
+{% load to_price %}
+<div class="card" id="guarantees-app">
+    <div class="card-body">
+        <div class="table-responsive">
+            
+        <table class="table table-striped">
+            <thead>
+
+                {% if not product %}
+
+                <th>
+                    کالا
+                </th>
+                {% endif %}
+
+                
+                {% if not invoice %}
+
+                <th>
+                    فاکتور
+                </th>
+                {% endif %}
+
+                <th>
+                    سریال
+                </th>
+                <th>
+                    تاریخ
+                </th>
+
+                <th>
+                    نوع
+                </th>
+
+                <th>
+                    وضعیت
+                </th>
+                <th>
+
+                </th>
+
+            </thead>
+            <tbody>
+                <template v-for="guarantee in guarantees">
+
+                    <guarantee-component :guarantee="guarantee"></guarantee-component>
+                </template>
+             
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>

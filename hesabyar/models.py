@@ -1,5 +1,4 @@
 
-from modulefinder import IMPORT_NAME
 from tinymce.models import HTMLField
 from django.db import models
 
@@ -8,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from core.enums import ColorEnum, UnitNameEnum
-from hesabyar.enums import ChequeStatusEnum,TransactionStatusEnum,InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum, WareHouseSheetDirectionEnum, WareHouseSheetStatusEnum
+from .enums import *
 from utility.persian import PersianCalendar
 from .apps import APP_NAME
 from core.models import BasicPage
@@ -173,6 +172,23 @@ class Invoice(Transaction):
     ship_fee=models.IntegerField(_("هزینه حمل"),default=0)
     discount=models.IntegerField(_("تخفیف"),default=0)
     tax_amount=models.IntegerField(_("مبلغ مالیات"),default=0)
+    def color(self):
+        color="primary"
+        if self.status==TransactionStatusEnum.DRAFT:
+            color="secondary"
+        if self.status==TransactionStatusEnum.APPROVED:
+            color="success"
+        if self.status==TransactionStatusEnum.IN_PROGRESS:
+            color="warning"
+        if self.status==TransactionStatusEnum.CANCELED:
+            color="secondary"
+        return color
+    def editable(self):
+        if self.status==TransactionStatusEnum.DRAFT:
+            return True
+        if self.status==TransactionStatusEnum.IN_PROGRESS:
+            return True
+        return False
     def get_title(self):
         return self.title or f"فاکتور شماره {self.pk}"
     @property
@@ -214,8 +230,11 @@ class Invoice(Transaction):
         sum-=self.discount
         return sum
     def save(self,*args, **kwargs):
-        self.class_name='invoice'
         super(Invoice,self).save(*args, **kwargs)
+        self.class_name='invoice'
+        if self.title is None or self.title=="":
+            self.title=f"فاکتورشماره {self.pk}"
+            self.save()
         # financial_year=FinancialYear.get_by_date(date=self.invoice_datetime)
         # FinancialDocumentCategory.objects.get_or_create(title="فروش")
         # category=FinancialDocumentCategory.objects.get(title="فروش")
@@ -329,6 +348,8 @@ class FinancialAccount(models.Model):
     def __str__(self):
         return self.title 
 
+    def get_print_url(self):
+        return reverse(APP_NAME+":financial_account_print",kwargs={'pk':self.pk})
 
     def save(self,*args, **kwargs):
         if self.title is None or self.title=="":
@@ -420,6 +441,25 @@ class WareHouse(HesabYarPage):
         self.class_name="warehouse"
         return super(WareHouse,self).save(*args, **kwargs)
 
+class Guarantee(models.Model,LinkHelper):
+    invoice=models.ForeignKey("invoice", verbose_name=_("فاکتور"), on_delete=models.CASCADE)
+    product=models.ForeignKey("product", verbose_name=_("کالا"), on_delete=models.CASCADE)
+    start_date=models.DateField(_("شروع گارانتی"), auto_now=False, auto_now_add=False)
+    end_date=models.DateField(_("پابان گارانتی"), auto_now=False, auto_now_add=False)
+    status=models.CharField(_("وضعیت"),choices=GuaranteeStatusEnum.choices,default=GuaranteeStatusEnum.VALID, max_length=50)
+    type=models.CharField(_("نوع گارانتی"),choices=GuaranteeTypeEnum.choices,default=GuaranteeTypeEnum.REPAIR, max_length=50)
+    serial_no=models.CharField(_("شماره سریال"), max_length=50)
+    conditions=models.CharField(_("شرایط"),null=True,blank=True, max_length=5000)
+    description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
+    class_name="guarantee"    
+    def persian_end_date(self):
+        return PersianCalendar().from_gregorian(self.end_date)
+    def persian_start_date(self):
+        return PersianCalendar().from_gregorian(self.start_date)
+    class Meta:
+        verbose_name = _("Guarantee")
+        verbose_name_plural = _("Guarantees")
+            
 
 class WareHouseSheet(models.Model,LinkHelper):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)

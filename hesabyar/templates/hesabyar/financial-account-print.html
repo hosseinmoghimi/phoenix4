@@ -1,0 +1,24 @@
+{% extends "hesabyar/layout.html" %}
+
+{% block content %}
+<h4 class="text-center">
+  {{financial_account.title}}
+ 
+
+</h4>
+
+
+<div class="row">
+  <div class="col-md-12">
+{% include "hesabyar/includes/financial-documents-app/print.html" %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    let financial_account_id=parseInt("{{financial_account.id}}")
+</script>
+{% include "hesabyar/includes/financial-documents-app/script.html" %}
+
+{% endblock script %}

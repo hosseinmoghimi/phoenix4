@@ -18,22 +18,11 @@
                 <h4 class="text-center my-3">
 
                     {{invoice.seller.title}}
-                    <a href="{{invoice.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i class="material-icons text-success">print</i></a>
 
-                    <a href="{% url 'hesabyar:invoice_deliver' pk=invoice.pk %}" target="_blank" title="تحویل" class="mx-2"><i class="fa fa-trash text-warning"></i></a>
-                    {% if perms.hesabyar.change_invoice %}
-                    <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
-                            class="fa fa-edit text-info"></i></a>
+                </h4>
+                <h4 class="text-center my-3">
 
-
-                    <a href="{{invoice.get_edit_url2}}" target="_blank" title="ویرایش" class="mx-2"><i
-                            class="fa fa-edit text-success"></i></a>
-
-                    {% endif %}
-                    {% if perms.hesabyar.delete_invoice %}
-                    <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
-                            class="fa fa-trash text-danger"></i></a>
-                    {% endif %}
+                    {% include "hesabyar/includes/invoice-toolbar.html" %}
                 </h4>
                 <div class="row">
                     <div class="col-md-6">
@@ -70,7 +59,7 @@
                     واحد مبلغ ها تومان می باشد.
                 </div>
                 <div>
-                 میزان مالیات :   {{invoice.tax_amount|to_price}}
+                    میزان مالیات : {{invoice.tax_amount|to_price}}
                 </div>
 
                 {% if invoice.seller.bank_account %}
@@ -81,10 +70,10 @@
                 {% endif %}
 
                 <div class="text-right farsi">
-                    
+
                     {{invoice.status}}
                     /
-                    
+
                     {{invoice.payment_method}}
 
 
@@ -136,7 +125,7 @@
             </div>
         </div>
     </div>
-   
+
 
 
 

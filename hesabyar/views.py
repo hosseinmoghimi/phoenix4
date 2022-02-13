@@ -3,11 +3,11 @@ from django.shortcuts import render,reverse
 from django.utils import timezone
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum 
-from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum, WareHouseSheetDirectionEnum
+from .enums import InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
 from .forms import *
 
-from .repo import WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
-from .serializers import ChequeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from .repo import GuaranteeRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from .serializers import ChequeSerializer, GuaranteeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
 from django.views import View
@@ -39,9 +39,11 @@ class BasicViews(View):
                 financial_accounts = FinancialAccountRepo(request=request).list(search_for=search_for)
                 products = ProductRepo(request=request).list(search_for=search_for)
                 services = ServiceRepo(request=request).list(search_for=search_for)
+                invoices = InvoiceRepo(request=request).list(search_for=search_for)
                 
                 
                 context['financial_accounts'] = financial_accounts
+                context['invoices'] = invoices
                 context['products'] = products
                 context['services'] = services
 
@@ -71,41 +73,7 @@ class BasicViews(View):
         context['financial_accounts'] = financial_accounts
         return render(request, TEMPLATE_ROOT+"tag.html", context)
 
-
-class ReportViews(View):
-    def financial_document_category(self, request, *args, **kwargs):
-        context = getContext(request=request)
-        financial_document_category=FinancialDocumentCategoryRepo(request=request).financial_document_category(*args, **kwargs)
-        financial_documents = FinancialDocumentRepo().list(
-            category_id=financial_document_category.id)
-        context['financial_documents'] = financial_documents
-        financial_documents_s = json.dumps(
-            FinancialDocumentSerializer(financial_documents, many=True).data)
-        context['financial_documents_s'] = financial_documents_s
-        context['financial_document_category'] = financial_document_category
-        context['rest']=0
-        return render(request, TEMPLATE_ROOT+"financial-document-category.html", context)
-
-    # def profile_financial_account(self, request, *args, **kwargs):
-    #     context = getContext(request=request)
-    #     context['title'] = "HesabYar Ver 1.0.0"
-    #     profile_financial_account = ProfileFinancialAccountRepo(
-    #         request=request).profile_financial_account(*args, **kwargs)
-    #     financial_account=profile_financial_account
-    #     context['financial_account'] = financial_account
-    #     context['profile_financial_account'] = profile_financial_account
-    #     context['financial_account'] = profile_financial_account
-    #     financial_documents = FinancialDocumentRepo().list(
-    #         account_id=profile_financial_account.id)
-    #     context['financial_documents'] = financial_documents
-    #     financial_documents_s = json.dumps(
-    #         FinancialDocumentSerializer(financial_documents, many=True).data)
-    #     context['financial_documents_s'] = financial_documents_s
-    #     context['financial_documents'] = financial_documents
-    #     context['rest']=financial_account.rest()
-
-    #     return render(request, TEMPLATE_ROOT+"profile-financial-account.html", context)
-
+class FinancialAccountViews(View):
     def financial_account(self, request, *args, **kwargs):
         context = getContext(request=request)
         context['title'] = "HesabYar Ver 1.0.0"
@@ -125,11 +93,22 @@ class ReportViews(View):
             context['add_financial_document_form'] = AddFinancialDocumentForm()
         return render(request, TEMPLATE_ROOT+"financial-account.html", context)
 
-    def financial_document(self, request, *args, **kwargs):
+    def financial_account_print(self, request, *args, **kwargs):
         context = getContext(request=request)
-        financial_document = FinancialDocumentRepo().financial_document(*args, **kwargs)
-        context['financial_document'] = financial_document
-        return render(request, TEMPLATE_ROOT+"financial-document.html", context)
+        context['title'] = "HesabYar Ver 1.0.0"
+        financial_account = FinancialAccountRepo(
+            request=request).financial_account(*args, **kwargs)
+        context['financial_account'] = financial_account
+        financial_documents = FinancialDocumentRepo().list(
+            account_id=financial_account.id)
+        context['financial_documents'] = financial_documents
+        financial_documents_s = json.dumps(
+            FinancialDocumentSerializer(financial_documents, many=True).data)
+        context['financial_documents_s'] = financial_documents_s
+        context['rest']=financial_account.rest()
+        
+        return render(request, TEMPLATE_ROOT+"financial-account-print.html", context)
+
 class ProductViews(View):
     def product(self,request,*args, **kwargs):
         product=ProductRepo(request=request).product(*args, **kwargs)
@@ -202,6 +181,18 @@ class WareHouseViews(View):
         warehouse_sheets_s=json.dumps(WareHouseSheetSerializer(warehouse_sheets,many=True).data)
         context['warehouse_sheets_s']=warehouse_sheets_s
 
+
+        products=ProductRepo(request=request).list()
+        availables_list=[]
+        for product in products:    
+            line=warehouse_sheets.filter(product_id=product.id).filter(ware_house=ware_house).first()
+            if line is not None:
+                list_item={'product':{'id':product.pk,'title':product.title,'get_absolute_url':product.get_absolute_url()}}
+                list_item['available']=line.available()
+                list_item['unit_name']=line.unit_name
+                availables_list.append(list_item)
+        context['availables_list']=json.dumps(availables_list)
+
         return render(request,TEMPLATE_ROOT+"ware-house.html",context)
 
 class InvoiceViews(View):
@@ -225,7 +216,7 @@ class InvoiceViews(View):
         context['services_s']=json.dumps(ServiceSerializer(services,many=True).data)
 
         context['unit_names']=(u[0] for u in UnitNameEnum.choices)
-        context['invoice_statuses']=(u[0] for u in InvoiceStatusEnum.choices)
+        context['invoice_statuses']=(u[0] for u in TransactionStatusEnum.choices)
         context['invoice_payment_methods']=(u[0] for u in InvoicePaymentMethodEnum.choices)
         
         return context
@@ -299,6 +290,32 @@ class InvoiceViews(View):
         context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
         
         return render(request,TEMPLATE_ROOT+"invoice-deliver.html",context)
+    
+    def invoice_guarantees(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        context['invoice']=invoice
+        invoice_lines=invoice.invoice_lines()
+        
+        guarantee_repo=GuaranteeRepo(request=request)
+        me=ProfileRepo(request=request).me
+         
+        for invoice_line in invoice_lines:
+            for i in range(int(invoice_line.quantity)):
+                guarantee=guarantee_repo.objects.filter(invoice=invoice).filter(serial_no=str(i+1)).filter(product=invoice_line.productorservice).first()
+                if guarantee is None:
+                    guarantee=guarantee_repo.objects.create(invoice=invoice,serial_no=str(i+1),product_id=invoice_line.productorservice.id,start_date=timezone.now(),end_date=timezone.now())
+            
+        
+        guarantees=guarantee_repo.list(invoice_id=invoice.id)
+        guarantees_s=json.dumps(GuaranteeSerializer(guarantees,many=True).data)
+        context['guarantees_s']=guarantees_s
+
+
+        context['invoice_lines']=invoice_lines
+        context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        
+        return render(request,TEMPLATE_ROOT+"invoice-guarantees.html",context)
 
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -315,6 +332,26 @@ class InvoiceViews(View):
         context['invoices']=invoices
         return render(request,TEMPLATE_ROOT+"invoices.html",context)
 class FinancialDocumentViews(View):
+    
+    def financial_document(self, request, *args, **kwargs):
+        context = getContext(request=request)
+        financial_document = FinancialDocumentRepo().financial_document(*args, **kwargs)
+        context['financial_document'] = financial_document
+        return render(request, TEMPLATE_ROOT+"financial-document.html", context)
+
+    def financial_document_category(self, request, *args, **kwargs):
+        context = getContext(request=request)
+        financial_document_category=FinancialDocumentCategoryRepo(request=request).financial_document_category(*args, **kwargs)
+        financial_documents = FinancialDocumentRepo().list(
+            category_id=financial_document_category.id)
+        context['financial_documents'] = financial_documents
+        financial_documents_s = json.dumps(
+            FinancialDocumentSerializer(financial_documents, many=True).data)
+        context['financial_documents_s'] = financial_documents_s
+        context['financial_document_category'] = financial_document_category
+        context['rest']=0
+        return render(request, TEMPLATE_ROOT+"financial-document-category.html", context)
+
     def getFinancialDocumentContext(self,request,financial_document):
         context=PageContext(request=request,page=financial_document)
         context['financial_document']=financial_document
@@ -326,7 +363,10 @@ class FinancialDocumentViews(View):
         financial_documents_s = json.dumps(
             FinancialDocumentSerializer(financial_documents, many=True).data)
         context['financial_documents_s'] = financial_documents_s
-        
+        rest=0
+        for doc in financial_documents:
+            rest=rest+doc.bedehkar-doc.bestankar
+        context['rest']=rest
         return render(request,TEMPLATE_ROOT+"financial-documents.html",context)
     def invoice_financial_document(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -339,14 +379,7 @@ class FinancialDocumentViews(View):
         context['invoice_lines']=invoice_lines
         context['invoice_lines_s']=invoice_lines_s
         return render(request,TEMPLATE_ROOT+"invoice-financial-document.html",context)
-    def payment_financial_document(self,request,*args, **kwargs):
-        context=getContext(request=request)
-        payment_financial_document=PaymentFinancialDocumentRepo(request=request).payment_financial_document(*args, **kwargs)
-        payment=payment_financial_document.payment
-        context.update(self.getFinancialDocumentContext(request=request,financial_document=payment_financial_document))
-        
-        context['payment']=payment
-        return render(request,TEMPLATE_ROOT+"payment.html",context)
+     
 class BankAccountViews(View):
     def bank_account(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -398,3 +431,23 @@ class PaymentViews(View):
         payment=PaymentRepo(request=request).payment(*args, **kwargs)
         context['payment']=payment
         return render(request,TEMPLATE_ROOT+"payment.html",context)
+    
+
+
+class GuaranteeViews(View):
+    def guarantee(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        guarantee=GuaranteeRepo(request=request).guarantee(*args, **kwargs)
+        context['guarantee']=guarantee
+        return render(request,TEMPLATE_ROOT+"guarantee.html",context)
+    
+    
+    def guarantees(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        guarantees=GuaranteeRepo(request=request).list(*args, **kwargs)
+        context['guarantees']=guarantees
+        guarantees_s=json.dumps(GuaranteeSerializer(guarantees,many=True).data)
+        context['guarantees_s']=guarantees_s
+        return render(request,TEMPLATE_ROOT+"guarantees.html",context)
+    
+    

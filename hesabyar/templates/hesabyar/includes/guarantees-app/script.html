@@ -1,0 +1,57 @@
+<script>
+    let guarantees_app_data = {
+        guarantees: JSON.parse(`{{guarantees_s|escapejs}}`)
+    }
+    let guarantees_app_methods = {
+        to_price: function (vall) {
+            return to_price(vall, "")
+        },
+
+    }
+</script>
+<script>
+    let guarantee_component_template = `{% include "hesabyar/includes/guarantees-app/guarantee-component-template.html" %}`
+    let guarantee_component = Vue.component('guarantee-component', {
+        data: function () {
+            return {
+                message: { color: '', show: false, body: "" }
+            }
+        },
+        methods: {
+
+            change_state: function (status) {
+                let aaa = this.warehouse_sheet
+                let url = "{% url 'hesabyar:change_warehouse_sheet_state' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    warehouse_sheet_id: this.warehouse_sheet.id,
+                    status: status,
+                }
+                $.post(url, payload).done(data => {
+                    console.log(data)
+
+                    data.warehouse_sheet
+                    guarantees_app.guarantees.forEach(warehouse_sheet => {
+                        if (warehouse_sheet.id == data.warehouse_sheet.id) {
+                            warehouse_sheet.status = data.warehouse_sheet.status
+                            console.log(warehouse_sheet.status)
+                        }
+                    });
+                })
+                console.log(this.warehouse_sheet.id)
+                console.log(payload)
+            },
+        },
+        props: ['guarantee'],
+        template: guarantee_component_template,
+    })
+
+    let guarantees_app = new Vue({
+        el: "#guarantees-app",
+        data: guarantees_app_data,
+        components: {
+            guarantee_component,
+        },
+        methods: guarantees_app_methods,
+    })
+</script>

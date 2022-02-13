@@ -33,6 +33,10 @@
                         <a href="{{invoice.get_absolute_url}}">
                             {{invoice.get_title}}
                         </a>
+                                <span class="badge badge-{{invoice.color}}"> 
+
+                                    {{invoice.status}}
+                                </span>
                     </td>
                     <td>
                         <div>

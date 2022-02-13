@@ -1,7 +1,7 @@
 {% extends "hesabyar/layout.html" %}
 {% load static %}
- 
-{% block content %} 
+
+{% block content %}
 <div class="row mt-4">
 
     <div class="col-12">
@@ -46,29 +46,29 @@
 
 
 
-   
-  {% if products %}
-  <h5 class="mt-4">
-      کالا ها :
-  </h5>
-  {% for product in products %}
-  <p class="mr-5">
-      <a href="{{product.get_absolute_url}}">
 
-          {{product.title}}
-      </a>
-  </p>
-  {% endfor %}
+                {% if products %}
+                <h5 class="mt-4">
+                    کالا ها :
+                </h5>
+                {% for product in products %}
+                <p class="mr-5">
+                    <a href="{{product.get_absolute_url}}">
 
-  {% endif %}
+                        {{product.title}}
+                    </a>
+                </p>
+                {% endfor %}
 
-
+                {% endif %}
 
 
 
 
-  
-  {% if services %}
+
+
+
+                {% if services %}
                 <h5 class="mt-4">
                     خدمات :
                 </h5>
@@ -84,6 +84,24 @@
                 {% endif %}
 
 
+                
+                {% if invoices %}
+                <h5 class="mt-4">
+                    فاکتور ها :
+                </h5>
+                {% for invoice in invoices %}
+                <p class="mr-5">
+                    <a href="{{invoice.get_absolute_url}}">
+
+                        {{invoice.title}}
+                    </a>
+                </p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
 
             </div>
         </div>
@@ -94,7 +112,7 @@
 </div>
 
 {% endblock %}
-{% block script %} 
+{% block script %}
 
 
 

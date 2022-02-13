@@ -1,0 +1,30 @@
+{% extends "hesabyar/layout.html" %}
+
+{% load to_persian_date %}
+{% load to_price %}
+
+{% load to_variz_text %}
+{% block content %}
+<h4 class="text-center">
+    گارانتی ها
+</h4>
+<div class="row">
+
+    <div class="col-md-12">
+
+        {% include "hesabyar/includes/guarantees-app/template.html" %}
+    </div>
+
+ 
+   
+
+</div>
+
+{% endblock content %}
+
+
+{% block script %}
+ 
+{% include "hesabyar/includes/guarantees-app/script.html" %}
+
+{% endblock script %}

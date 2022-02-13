@@ -1,18 +1,23 @@
 from django.utils.translation import gettext as _
 from django.db.models import TextChoices
+class GuaranteeTypeEnum(TextChoices):
+    REPAIR="تعمیر",_("تعمیر")
+    CHANGE="تعویض",_("تعویض")
+class GuaranteeStatusEnum(TextChoices):
+    VALID="معتبر",_("معتبر")
+    INVALID="نامعتبر",_("نامعتبر")
+    OVERED="پایان یافته",_("پایان یافته")
+    IN_PROGRESS="در جریان",_("در جریان")
+    CHANGED="تعویض شده",_("تعویض شده")
+    REPAIRED="تعمیر شده",_("تعمیر شده")
+    DENIED="برگشت داده شده",_("برگشت داده شده")
 class WareHouseSheetDirectionEnum(TextChoices):
     IMPORT="ورود به انبار",_("ورود به انبار")
     EXPORT="خروج از انبار",_("خروج از انبار")
 class WareHouseSheetStatusEnum(TextChoices):
     INITIAL="تعریف اولیه",_("تعریف اولیه")
     IN_PROGRESS="در جریان",_("در جریان")
-    DONE="تمام شده",_("تمام شده")
-class InvoiceStatusEnum(TextChoices):
-    DRAFT="پیش فاکتور",_("پیش فاکتور")
-    IN_PROGRESS="در جریان",_("در جریان")
-    DELIVERED="تحویل شده",_("تحویل شده")
-    APPROVED="تایید شده",_("تایید شده")
-
+    DONE="تمام شده",_("تمام شده") 
 class ChequeStatusEnum(TextChoices):
     DRAFT="پیش نویس",_("پیش نویس")
     RETURNED="برگشت خورده",_("برگشت خورده")
@@ -31,3 +36,4 @@ class TransactionStatusEnum(TextChoices):
     IN_PROGRESS="در جریان",_("در جریان")
     DELIVERED="تحویل شده",_("تحویل شده")
     APPROVED="تایید شده",_("تایید شده")
+    CANCELED="کنسل شده",_("کنسل شده")

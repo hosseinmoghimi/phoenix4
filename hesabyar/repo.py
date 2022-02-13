@@ -4,9 +4,9 @@ from urllib import request
 from django import forms
 
 from core.enums import UnitNameEnum
-from hesabyar.enums import InvoiceStatusEnum, PaymentMethodEnum, TransactionStatusEnum
+from hesabyar.enums import PaymentMethodEnum, TransactionStatusEnum
 from .apps import APP_NAME
-from .models import Cheque, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Invoice, InvoiceLine, Payment, Product, Service, Store, Tag, WareHouse, WareHouseSheet
+from .models import Cheque, FinancialAccount, FinancialDocument, FinancialDocumentCategory, FinancialYear, Guarantee, Invoice, InvoiceLine, Payment, Product, Service, Store, Tag, WareHouse, WareHouseSheet
 from authentication.repo import ProfileRepo
 
 class FinancialDocumentCategoryRepo:
@@ -349,7 +349,7 @@ class WareHouseSheetRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = WareHouseSheet.objects
+        self.objects = WareHouseSheet.objects.order_by('-date_registered')
         self.profile = ProfileRepo(user=self.user).me
 
     def list(self, *args, **kwargs):
@@ -459,9 +459,9 @@ class InvoiceRepo:
         invoice=self.invoice(*args, **kwargs)
         if invoice is None:
             return
-        if invoice.status==InvoiceStatusEnum.DELIVERED:
+        if invoice.status==TransactionStatusEnum.DELIVERED:
             return None
-        if invoice.status==InvoiceStatusEnum.APPROVED:
+        if invoice.status==TransactionStatusEnum.APPROVED:
             return None
         if 'title' in kwargs:
             invoice.title=kwargs['title']
@@ -528,7 +528,7 @@ class InvoiceRepo:
             payment.payment_method=invoice.payment_method
             payment.save()
         # self.update_financial_documents(invoice)
-        if invoice.status==InvoiceStatusEnum.DELIVERED:
+        if invoice.status==TransactionStatusEnum.DELIVERED:
             for invoice_line in invoice.invoice_lines():
                 wh_sheet=WareHouseSheet()
                 wh_sheet.invoice=invoice
@@ -541,7 +541,7 @@ class InvoiceRepo:
     #     FinancialDocumentCategory.objects.get_or_create(title="پرداخت با کارتخوان")
     #     FinancialDocumentCategory.objects.get_or_create(title="پرداخت نقدی")
 
-    #     if invoice.status==InvoiceStatusEnum.APPROVED:
+    #     if invoice.status==TransactionStatusEnum.APPROVED:
     #         pass
     #     else:
     #         return
@@ -606,6 +606,39 @@ class InvoiceRepo:
 
         invoice_line.save()
         return invoice
+
+class GuaranteeRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Guarantee.objects
+        self.profile = ProfileRepo(user=self.user).me
+        self.me=Store.objects.filter(profile=self.profile).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'invoice_id' in kwargs:
+            objects = objects.filter(invoice_id=kwargs['invoice_id'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def guarantee(self, *args, **kwargs):
+        if 'guarantee_id' in kwargs:
+            return self.objects.filter(pk= kwargs['guarantee_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+
 
 
 class StoreRepo:
