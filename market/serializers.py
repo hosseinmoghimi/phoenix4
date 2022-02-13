@@ -55,7 +55,7 @@ class ShopSerializer(serializers.ModelSerializer):
     specifications=ProductSpecificationSerializer(many=True)
     class Meta:
         model = Shop
-        fields = ['id','specifications', 'supplier','level','product', 'unit_name', 'available', 'unit_price','get_edit_url']
+        fields = ['id','specifications', 'supplier','level','product', 'unit_name', 'available', 'unit_price','get_edit_url','get_delete_url']
 
 class CartLineSerializer(serializers.ModelSerializer):
     shop=ShopSerializer()

@@ -39,15 +39,13 @@
                     <div>
 
                         <a href="{{shop.supplier.get_absolute_url}}">
-                            <img src="{{shop.supplier.thumbnail}}" width="32" class="rounded-circle" alt="">
-                            {{shop.supplier.title}}
+                            <img src="{{shop.supplier.thumbnail}}" width="32" class="rounded-circle" alt=""> {{shop.supplier.title}}
                         </a>
                     </div>
                     <div>
                         <i class="material-icons">
                             public
-                        </i>
-                        {{shop.supplier.region}}
+                        </i> {{shop.supplier.region}}
                     </div>
 
                 </td>
@@ -86,9 +84,7 @@
                         <button class="btn btn-info btn-sm">
                             {{specification.name}}
                         </button>
-                    </span>
-
-                    {% endfor %}
+                    </span> {% endfor %}
 
                 </td>
                 <td class="text-right">
@@ -111,7 +107,14 @@
                         </i>
                     </a>
                 </td>
+                {% endif %} {% if perms.market.delete_shop %}
+                <td class="text-right">
+                    <a target="_blank" title="حذف" href="{{shop.get_delete_url}}">
+                        <i class="fa fa-trash text-danger"></i>
+                    </a>
+                </td>
                 {% endif %}
+
 
             </tr>
             {% endfor %}
@@ -189,14 +192,17 @@
                         </i>
                     </a>
                 </td>
+                {% endif %} {% if perms.market.delete_shop %}
+                <td class="text-right">
+                    <a target="_blank" title="حذف" :href="shop.get_delete_url">
+                        <i class="fa fa-trash text-danger"></i>
+                    </a>
+                </td>
                 {% endif %}
 
             </tr>
 
         </table>
     </div>
-    {% if add_shop_form %}
-
-    {% include "market/includes/product-shops-app/form.html" %}
-    {% endif %}
+    {% if add_shop_form %} {% include "market/includes/product-shops-app/form.html" %} {% endif %}
 </div>
