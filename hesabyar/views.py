@@ -164,10 +164,10 @@ class ServiceViews(View):
 class ReportViews(View):
     def report(self,request,*args, **kwargs):
         context=getContext(request=request)
-        start_date=timezone.now()
+        end_date=timezone.now()
         from datetime import timedelta
         delta=timedelta(days=30)
-        end_date=start_date+delta
+        start_date=end_date-delta
         sell_benefit=12530000
         tax=1000000
         wages=5000000
@@ -191,40 +191,40 @@ class ReportViews(View):
         context['costs']=costs
         context['rest']=rest
 
-        rest_=0
         
-        sell_=105000000
-        rest_+=sell_
-        context['sell_']=sell_
+
+
+
+
+
+
 
         buy_=25000000
-        rest_-=buy_
-        context['buy_']=buy_
-
+        sell_=105000000
         cost_internet=250000
-        rest_-=cost_internet
-        context['cost_internet']=cost_internet
-
-        cost_water=140000
-        rest_-=cost_water
-        context['cost_water']=cost_water
-
-        cost_electricity=550000
-        rest_-=cost_electricity
-        context['cost_electricity']=cost_electricity
-
         cost_gas=25000
-        rest_-=cost_gas
-        context['cost_gas']=cost_gas
-
+        cost_water=140000
         cost_transport=132000
-        rest_-=cost_transport
-        context['cost_transport']=cost_transport
-
         cost_rent=1254000
+        cost_electricity=550000
+        rest_=0
+        rest_+=sell_
+        rest_-=cost_internet
+        rest_-=buy_
+        rest_-=cost_electricity
+        rest_-=cost_gas
+        rest_-=cost_water
+        rest_-=cost_transport
         rest_-=cost_rent
-        context['cost_rent']=cost_rent
 
+        context['buy_']=buy_
+        context['sell_']=sell_
+        context['cost_internet']=cost_internet
+        context['cost_water']=cost_water
+        context['cost_electricity']=cost_electricity
+        context['cost_gas']=cost_gas
+        context['cost_transport']=cost_transport
+        context['cost_rent']=cost_rent
         context['rest_']=rest_
         return render(request,TEMPLATE_ROOT+"report.html",context)
 
