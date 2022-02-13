@@ -8,6 +8,7 @@ urlpatterns = [
     path('search/',login_required(views.BasicViews().search),name="search"),
     path('cheques/',login_required(views.ChequeViews().cheques),name="cheques"),
     # path('profile_financial_account/<pk>/',login_required(views.ReportViews().profile_financial_account),name="profile_financial_account"),
+    path('report/',login_required(views.ReportViews().report),name="report"),
     path('service/<int:pk>/',login_required(views.ServiceViews().service),name="service"),
     path('products/',login_required(views.ProductViews().products),name="products"),
     path('services/',login_required(views.ServiceViews().services),name="services"),

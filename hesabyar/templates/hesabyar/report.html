@@ -1,0 +1,323 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_persian_date %}
+{% load to_price %}
+{% block content %}
+
+
+<div class="row mt-3">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+
+                <h4 class="text-center">
+                    گزارش
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="farsi text-center">
+                    از
+                    <span class="mx-3">
+                        {{start_date|to_persian_date|safe}}
+                    </span>
+                    تا
+                    <span class="mx-3">
+                        {{end_date|to_persian_date|safe}}
+                    </span>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+
+                        </th>
+                        <th>
+                            عنوان
+                        </th>
+                        <th>
+                            مبلغ
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="badge badge-success">+</span>
+                            </td>
+                            <td>
+                                سود حاصل از فروش
+                            </td>
+                            <td>
+                                {{sell_benefit|to_price}}
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-success">+</span>
+                            </td>
+                            <td>
+                                فروش خدمات
+                            </td>
+                            <td>
+                                {{sell_service|to_price}}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                خرید خدمات
+                            </td>
+                            <td>
+                                {{buy_service|to_price}}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه های جاری
+                            </td>
+                            <td>
+                                {{costs|to_price}}
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                حقوق پرسنل
+                            </td>
+                            <td>
+                                {{wages|to_price}}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                مالیات </td>
+                            <td>
+                                {{tax|to_price}}
+                            </td>
+
+                        </tr>
+
+                        <!-- <tr>
+                            <td>
+                                <span class="badge badge-info">o</span>
+                            </td>
+                            <td>
+                                سود خالص
+
+                            </td>
+                            <td>
+                                {{rest|to_price}}
+                            </td>
+
+                        </tr> -->
+
+                    </tbody>
+                    <tfoot>
+                        <th>
+
+                        </th>
+                        <th>
+                            سود خالص
+
+                        </th>
+                        <th>
+                            {{rest|to_price}}
+
+                        </th>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+
+</div>
+
+
+<div class="row mt-3">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+
+                <h4 class="text-center">
+                    گزارش
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="farsi text-center">
+                    از
+                    <span class="mx-3">
+                        {{start_date|to_persian_date|safe}}
+                    </span>
+                    تا
+                    <span class="mx-3">
+                        {{end_date|to_persian_date|safe}}
+                    </span>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+
+                        </th>
+                        <th>
+                            عنوان
+                        </th>
+                        <th>
+                            مبلغ
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="badge badge-success">+</span>
+                            </td>
+                            <td>
+                                 فروش
+                            </td>
+                            <td>
+                                {{sell_|to_price}}
+                            </td>
+
+                        </tr>
+
+                       
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                خرید          
+                                               </td>
+                            <td>
+                                {{buy_|to_price}}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه ایاب و ذهاب </td>
+                            <td>
+                                {{cost_transport|to_price}}
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه اجاره </td>
+                            <td>
+                                {{cost_rent|to_price}}
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه آب </td>
+                            <td>
+                                {{cost_water|to_price}}
+                            </td>
+
+                        </tr>
+
+
+                        
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه برق </td>
+                            <td>
+                                {{cost_electricity|to_price}}
+                            </td>
+
+                        </tr>
+
+                        
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه گاز </td>
+                            <td>
+                                {{cost_gas|to_price}}
+                            </td>
+
+                        </tr>
+
+                        
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">-</span>
+                            </td>
+                            <td>
+                                هزینه اینترنت </td>
+                            <td>
+                                {{cost_internet|to_price}}
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+                    <tfoot>
+                        <th>
+
+                        </th>
+                        <th>
+                            سود 
+
+                        </th>
+                        <th>
+                            {{rest_|to_price}}
+
+                        </th>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+
+</div>
+
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}
