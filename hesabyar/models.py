@@ -1,16 +1,16 @@
 
-from tinymce.models import HTMLField
-from django.db import models
-
+from django.forms import CharField
+from core.enums import ColorEnum, UnitNameEnum
+from core.models import BasicPage
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
+from django.db import models
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
-
-from core.enums import ColorEnum, UnitNameEnum
-from .enums import *
+from tinymce.models import HTMLField
 from utility.persian import PersianCalendar
+
 from .apps import APP_NAME
-from core.models import BasicPage
+from .enums import *
 
 IMAGE_FOLDER=APP_NAME+"/images/"
 class HesabYarPage(BasicPage):
@@ -329,7 +329,7 @@ class Tag(models.Model):
 
 
 class FinancialAccount(models.Model):
-    profile=models.ForeignKey("authentication.profile",related_name="hesabyar_accounts", verbose_name=_("profile"), on_delete=models.CASCADE)
+    profile=models.ForeignKey("authentication.profile",null=True,blank=True,related_name="hesabyar_accounts", verbose_name=_("profile"), on_delete=models.CASCADE)
     title=models.CharField(_("title"),blank=True, max_length=200)
     tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
@@ -564,16 +564,37 @@ class Cheque(Transaction,LinkHelper):
         self.class_name="cheque"
         super(Cheque,self).save(*args, **kwargs)
       
-class Cost(models.Model):
-
+class Spend(Transaction,LinkHelper):    
+    spend_type=models.CharField(_("spend_type"),choices=SpendTypeEnum.choices, max_length=50)
+    class_name="spend"
     
+    class Meta:
+        verbose_name = _("Spend")
+        verbose_name_plural = _("Spends")
 
+    def save(self,*args, **kwargs):
+        super(Spend,self).save(*args, **kwargs)
+   
+class Cost(Spend,LinkHelper):    
+    cost_type=models.CharField(_("cost"),choices=CostTypeEnum.choices, max_length=50)
+    class_name="cost"
+    
     class Meta:
         verbose_name = _("Cost")
         verbose_name_plural = _("Costs")
 
-    def __str__(self):
-        return self.name
+   
+    def save(self,*args, **kwargs):
+        self.class_name="cost"
+        super(Cost,self).save(*args, **kwargs)
+class Wage(Spend,LinkHelper):    
+    class_name="wage"
+    
+    class Meta:
+        verbose_name = _("Wage")
+        verbose_name_plural = _("Wages")
 
-    def get_absolute_url(self):
-        return reverse("Cost_detail", kwargs={"pk": self.pk})
+   
+    def save(self,*args, **kwargs):
+        self.class_name="wage"
+        super(Spend,self).save(*args, **kwargs)

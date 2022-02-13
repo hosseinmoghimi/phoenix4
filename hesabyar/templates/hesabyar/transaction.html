@@ -1,0 +1,90 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<h4 class="text-center">
+    {{transaction.title}}
+    {% if perms.hesabyar.change_transaction %}
+    <a href="{{transaction.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+            class="fa fa-edit text-info"></i></a>
+    {% endif %}
+    {% if perms.hesabyar.delete_transaction %}
+    <a href="{{transaction.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+            class="fa fa-trash text-danger"></i></a>
+    {% endif %}
+
+
+</h4>
+
+
+<div class="row farsi">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-right">
+                            {{transaction.title}}
+                            <span class="badge badge-primary">
+
+                                {{transaction.transaction_method}}
+                            </span>
+                            <div class="text-right">
+                                مبلغ :
+                                {{transaction.amount|to_price}}
+                            </div>
+                            <div class="text-right farsi">
+
+                                {{transaction.amount|to_horuf}} {{CURRENCY}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            پرداخت کننده :
+                            <a href="{{transaction.pay_from.get_absolute_url}}">
+                                {{transaction.pay_from.title}}
+                            </a>
+                        </div>
+
+
+                        <div class="text-center">
+                            دریافت کننده :
+                            <a href="{{transaction.pay_to.get_absolute_url}}">
+                                {{transaction.pay_to.title}}
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+
+
+
+                        <div class="text-center">
+                            تاریخ :
+                            {{transaction.transaction_datetime|to_persian_datetime|safe}}
+                        </div>
+
+
+                        <div class="text-center">
+                            نحوه پرداخت :
+                            {{transaction.payment_method}}
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+    
+</div>
+{% endblock content %}
+
+{% block script %}
+ 
+{% endblock script %}

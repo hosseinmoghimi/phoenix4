@@ -4,10 +4,10 @@ from rest_framework.views import APIView
 from hesabyar.enums import WareHouseSheetStatusEnum
 
 from utility.persian import PersianCalendar
-from .repo import ChequeRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo, WareHouseSheetRepo
+from .repo import ChequeRepo, CostRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo, WareHouseSheetRepo
 from django.http import JsonResponse
 from .forms import *
-from .serializers import PaymentSerializer,ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer, WareHouseSheetSerializer
+from .serializers import CostSerializer, PaymentSerializer,ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer, WareHouseSheetSerializer
 class BasicApi(APIView):
     def add_financial_document(self,request,*args, **kwargs):
         context={}
@@ -151,6 +151,45 @@ class PaymentApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+class CostApi(APIView):
+    def add_cost(self,request,*args, **kwargs):
+        context={}
+        log=1
+        context['result']=FAILED
+        if request.method=='POST':
+            log=2
+            add_cost_form=AddCostForm(request.POST)
+
+            if add_cost_form.is_valid():
+                log=3
+                fm=add_cost_form.cleaned_data
+                title=fm['title']
+                pay_to_id=fm['pay_to_id']
+                pay_from_id=fm['pay_from_id']
+                amount=fm['amount']
+                cost_type=fm['cost_type']
+                transaction_datetime=fm['transaction_datetime']
+                payment_method=fm['payment_method']
+                description=fm['description']
+                transaction_datetime=PersianCalendar().to_gregorian(transaction_datetime+"  00:00:00")
+                cost=CostRepo(request=request).add_cost(
+                    title=title,
+                    cost_type=cost_type,
+                    pay_to_id=pay_to_id,
+                    pay_from_id=pay_from_id,
+                    amount=amount,
+                    transaction_datetime=transaction_datetime,
+                    payment_method=payment_method,
+                    description=description,
+                )
+                if cost is not None:
+                    context['cost']=CostSerializer(cost).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+
+
 
 class WareHouseSheetApi(APIView):
     def change_warehouse_sheet_state(self,request,*args, **kwargs):

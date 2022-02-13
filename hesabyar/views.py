@@ -1,12 +1,13 @@
 import json
+from urllib import request
 from django.shortcuts import render,reverse
 from django.utils import timezone
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum 
-from .enums import InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
+from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
 from .forms import *
 
-from .repo import GuaranteeRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from .repo import CostRepo,GuaranteeRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
 from .serializers import ChequeSerializer, GuaranteeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
@@ -204,12 +205,14 @@ class ReportViews(View):
         cost_internet=250000
         cost_gas=25000
         cost_water=140000
+        cost_telephone=85000
         cost_transport=132000
         cost_rent=1254000
         cost_electricity=550000
         rest_=0
         rest_+=sell_
         rest_-=cost_internet
+        rest_-=cost_telephone
         rest_-=buy_
         rest_-=cost_electricity
         rest_-=cost_gas
@@ -219,6 +222,7 @@ class ReportViews(View):
 
         context['buy_']=buy_
         context['sell_']=sell_
+        context['cost_telephone']=cost_telephone
         context['cost_internet']=cost_internet
         context['cost_water']=cost_water
         context['cost_electricity']=cost_electricity
@@ -228,6 +232,27 @@ class ReportViews(View):
         context['rest_']=rest_
         return render(request,TEMPLATE_ROOT+"report.html",context)
 
+class CostViews(View):
+    def cost(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        cost=CostRepo(request=request).cost(*args, **kwargs)
+        context['cost']=cost
+        context['transaction']=cost
+        return render(request,TEMPLATE_ROOT+"cost.html",context)
+
+
+    def new_cost(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        financial_accounts=FinancialAccountRepo(request=request).list(*args, **kwargs)
+        context['payment_methods']=(u[0] for u in PaymentMethodEnum.choices)
+        context['cost_types']=(u[0] for u in CostTypeEnum.choices)
+        context['financial_accounts']=financial_accounts
+        
+        if request.user.has_perm(APP_NAME+".add_cost"):
+            context['add_cost_form']=AddCostForm()
+        return render(request,TEMPLATE_ROOT+"new-cost.html",context)
+
+
 
 class WareHouseSheetViews(View):
     def ware_house_sheet(self,request,*args, **kwargs):
@@ -236,6 +261,12 @@ class WareHouseSheetViews(View):
         context['warehouse_sheet']=warehouse_sheet
         return render(request,TEMPLATE_ROOT+"ware-house-sheet.html",context)
 
+class WageViews(View):
+    def wage(self,request,*args, **kwargs):
+        pass
+class SpendViews(View):
+    def spend(self,request,*args, **kwargs):
+        pass
 class WareHouseViews(View):
     def ware_house(self,request,*args, **kwargs):
         print(kwargs)
@@ -262,6 +293,8 @@ class WareHouseViews(View):
         return render(request,TEMPLATE_ROOT+"ware-house.html",context)
 
 class InvoiceViews(View):
+    def buy(self,request,*args, **kwargs):
+        pass
     def get_edit_invoice_context(self,request,*args, **kwargs):
         context={}
         customers=FinancialAccountRepo(request=request).list()
@@ -496,6 +529,7 @@ class PaymentViews(View):
         context=getContext(request=request)
         payment=PaymentRepo(request=request).payment(*args, **kwargs)
         context['payment']=payment
+        context['transaction']=payment
         return render(request,TEMPLATE_ROOT+"payment.html",context)
     
 

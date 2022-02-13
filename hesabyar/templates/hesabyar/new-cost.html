@@ -9,9 +9,9 @@
 <div class="row">
 
     <div class="col-md-12">
-        <div class="card" id="new-payment-app">
+        <div class="card" id="new-cost-app">
             <div class="card-body">
-                <form @submit.prevent="add_payment()">
+                <form @submit.prevent="add_cost()">
 
                     <div class="row">
 
@@ -30,22 +30,13 @@
                         </div>
 
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="">پرداخت کننده</label>
-                                <select class="form-control" v-model="pay_from_id" name="" id="">
-                                    {% for financial_account in financial_accounts %}
-                                    <option value="{{financial_account.id}}">{{financial_account.title}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
+                   
 
 
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="">دریافت کننده</label>
+                                <label for="">هزینه برای</label>
                                 <select class="form-control" v-model="pay_to_id" name="" id="">
                                     {% for financial_account in financial_accounts %}
                                     <option value="{{financial_account.id}}">{{financial_account.title}}</option>
@@ -53,6 +44,25 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">هزینه</label>
+
+
+                                <select v-model="cost_type" class="form-control">
+                                    {% for cost_type in cost_types %}
+                                    <option value="{{cost_type}}">{{cost_type}}</option>
+
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+
+
+                        </div>
+
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">تاریخ</label>
@@ -84,7 +94,7 @@
 
 
                         </div>
-
+ 
 
                         <div class="col-md-4">
                             <div class="form-group">
@@ -152,10 +162,10 @@
 
 
 <script>
-    let new_payment_app = new Vue({
-        el: "#new-payment-app",
+    let new_cost_app = new Vue({
+        el: "#new-cost-app",
         data: {
-            payments: [],
+            costs: [],
             pay_to_id: 0,
             pay_from_id: 0,
             amount: 0,
@@ -163,6 +173,7 @@
             payment_method: "",
             title: "",
             description: "",
+            cost_type:"",
             message: { color: "success", body: "", show: false }
         },
         components: {
@@ -173,20 +184,21 @@
             to_price: function (vall) {
                 return to_price(vall, "{{CURRENCY}}")
             },
-            add_payment: function () {
+            add_cost: function () {
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     pay_to_id: parseInt(this.pay_to_id),
                     pay_from_id: parseInt(this.pay_from_id),
                     title: this.title,
                     description: this.description,
+                    cost_type: this.cost_type,
                     amount: parseInt(this.amount),
                     transaction_datetime: this.transaction_datetime,
                     payment_method: this.payment_method,
 
                 }
                 console.log(payload)
-                let url = "{% url 'hesabyar:add_payment' %}"
+                let url = "{% url 'hesabyar:add_cost' %}"
                 $.post(url, payload).done((data) => {
 
                     if (data.result === 'SUCCEED') {

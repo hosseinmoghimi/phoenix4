@@ -27,6 +27,18 @@ class InvoicePaymentMethodEnum(TextChoices):
     POS="کارتخوان",_("کارتخوان")
     CARD="کارت به کارت",_("کارت به کارت")
     IN_CASH="پرداخت نقدی",_("پرداخت نقدی")
+
+class SpendTypeEnum(TextChoices):
+    COST="هزینه",("هزینه")
+    Wage="حقوق",("حقوق")
+class CostTypeEnum(TextChoices):
+    WATER="هزینه آب",_("هزینه آب")
+    TELEPHONE="هزینه تلفن",_("هزینه تلفن")
+    ELECTRICITY="هزینه برق",_("هزینه برق")
+    INTERNET="هزینه اینترنت",_("هزینه اینترنت")
+    GAS="هزینه گاز",_("هزینه گاز")
+    TRANSPORT="هزینه حمل ونقل",_("هزینه حمل ونقل")
+    RENT="هزینه اجاره",_("هزینه اجاره")
 class PaymentMethodEnum(TextChoices):
     DRAFT="پیش نویس",_("پیش نویس")
     IN_CASH="نقدی",_("نقدی")
