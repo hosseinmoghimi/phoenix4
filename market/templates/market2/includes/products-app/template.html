@@ -2,7 +2,7 @@
 <div id="products-app">
     <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
     <div class="row">
-        <div class="col-md-4 col-4" v-for="product in products">
+        <div class="col-md-4 col-4"   v-for="product in products">
             <div class="card">
                 <div class="card-body farsi py-3">
                     <div class="text-center">
@@ -10,6 +10,11 @@
                         <div @click="select_product(product)" style="cursor: pointer;" class="my-3">
                             <span v-text="product.title" class="text-primary"></span>
 
+
+                        </div>
+
+                        <div class="text-center">
+                            <span class="farsi" v-text="to_price(product.price,'{{CURRENCY}}')"></span>
 
                         </div>
                     </div>

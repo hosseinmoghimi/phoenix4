@@ -6,7 +6,7 @@ from authentication.serializers import ProfileSerializer
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title', 'thumbnail', 'get_absolute_url','barcode']
+        fields = ['id', 'title','price', 'thumbnail', 'get_absolute_url','barcode']
 
 class UnitNameSerializer(serializers.ModelSerializer):
     class Meta:
