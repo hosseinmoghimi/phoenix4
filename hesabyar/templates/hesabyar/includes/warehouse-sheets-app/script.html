@@ -6,13 +6,52 @@
         to_price: function (vall) {
             return to_price(vall, "")
         },
-        
+
     }
-</script> 
+</script>
 <script>
+    let warehouse_sheet_component_template = `{% include "hesabyar/includes/warehouse-sheets-app/warehouse-sheet-component-template.html" %}`
+    let warehouse_sheet_component = Vue.component('warehouse-sheet-component', {
+        data: function () {
+            return {
+                message: { color: '', show: false, body: "" }
+            }
+        },
+        methods: {
+
+            change_state: function (status) {
+                let aaa = this.warehouse_sheet
+                let url = "{% url 'hesabyar:change_warehouse_sheet_state' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    warehouse_sheet_id: this.warehouse_sheet.id,
+                    status: status,
+                }
+                $.post(url, payload).done(data => {
+                    console.log(data)
+
+                    data.warehouse_sheet
+                    warehouse_sheets_app.warehouse_sheets.forEach(warehouse_sheet => {
+                        if (warehouse_sheet.id == data.warehouse_sheet.id) {
+                            warehouse_sheet.status = data.warehouse_sheet.status
+                            console.log(warehouse_sheet.status)
+                        }
+                    });
+                })
+                console.log(this.warehouse_sheet.id)
+                console.log(payload)
+            },
+        },
+        props: ['warehouse_sheet'],
+        template: warehouse_sheet_component_template,
+    })
+
     let warehouse_sheets_app = new Vue({
         el: "#warehouse-sheets-app",
         data: warehouse_sheets_app_data,
+        components: {
+            warehouse_sheet_component,
+        },
         methods: warehouse_sheets_app_methods,
     })
 </script>

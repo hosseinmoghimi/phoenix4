@@ -374,8 +374,20 @@ class WareHouseSheetRepo:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
+        if 'warehouse_sheet_id' in kwargs:
+            return self.objects.filter(pk= kwargs['warehouse_sheet_id']).first()
         
-          
+    def change_state(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_warehousesheet"):
+            return 
+        warehouse_sheet=self.warehouse_sheet(*args, **kwargs) 
+        print(warehouse_sheet)
+        if 'status' in kwargs:
+            status=kwargs['status']
+            if warehouse_sheet is not None:
+                warehouse_sheet.status=status
+                warehouse_sheet.save()
+                return warehouse_sheet
 class InvoiceLineRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -447,7 +459,7 @@ class InvoiceRepo:
         invoice=self.invoice(*args, **kwargs)
         if invoice is None:
             return
-
+        if invoice.
         if 'title' in kwargs:
             invoice.title=kwargs['title']
         if 'pay_from_id' in kwargs:

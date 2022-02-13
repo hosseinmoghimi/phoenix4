@@ -42,5 +42,6 @@ urlpatterns = [
     path('edit_invoice_post/',login_required(apis.BasicApi().edit_invoice),name="edit_invoice_post"),
     path('add_cheque/',login_required(apis.CheuqeApi().add_cheque),name="add_cheque"),
     path('add_payment/',login_required(apis.PaymentApi().add_payment),name="add_payment"),
+    path('change_warehouse_sheet_state/',login_required(apis.WareHouseSheetApi().change_warehouse_sheet_state),name="change_warehouse_sheet_state"),
     
 ]

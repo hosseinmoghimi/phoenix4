@@ -269,6 +269,9 @@ class Project(ProjectManagerPage):
         return Project.objects.filter(pk=self.parent_id).first()
 
     def update_accounting_data(self, *args, **kwargs):
+        
+        if not self.status==ProjectStatusEnum.DRAFT:
+            self.update_accounting_data()
         if self.employer is None or self.employer.owner is None:
             return
         if self.contractor is None or self.contractor.owner is None:
@@ -288,8 +291,8 @@ class Project(ProjectManagerPage):
         pt.save()
 
     def save(self, *args, **kwargs):
-
-        self.update_accounting_data()
+        if not self.status==ProjectStatusEnum.DRAFT:
+            self.update_accounting_data()
         self.class_name = "project"
         if self.contractor is None and self.parent is not None:
             self.contractor = self.parent_project().contractor

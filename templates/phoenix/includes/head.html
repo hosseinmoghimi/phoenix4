@@ -16,17 +16,27 @@
 
 <link href="{% static 'leo/css/leo.css' %}" rel="stylesheet">
 {% block style %}
-  
+
 {% endblock style %}
 {% include "phoenix/includes/metadata.html" %}
 <style>
-    .bordered{
-        border:2px solid rgb(144, 142, 142) !important;
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
     }
-    .filled{
+
+    .bordered {
+        border: 2px solid rgb(144, 142, 142) !important;
+    }
+
+    .filled {
         background-color: rgb(5, 2, 2) !important;
-        color:white!important;
+        color: white !important;
     }
+
     div {
         direction: rtl;
     }

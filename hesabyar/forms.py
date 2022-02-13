@@ -34,4 +34,7 @@ class EditInvoiceForm(forms.Form):
     ship_fee=forms.IntegerField(required=True)
     status=forms.CharField(max_length=50, required=True)
     payment_method=forms.CharField(max_length=50, required=True)
+class ChangeWarehouseSheetStateForm(forms.Form):
+    warehouse_sheet_id=forms.IntegerField(required=True)
+    status=forms.CharField(max_length=50, required=True)
     

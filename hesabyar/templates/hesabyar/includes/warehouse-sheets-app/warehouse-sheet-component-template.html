@@ -1,0 +1,74 @@
+<tr >
+    <td>
+        <span v-text="warehouse_sheet.persian_date_registered"></span>
+    </td>
+    {% if not product %}
+
+    <td>
+        <a :href="warehouse_sheet.product.get_absolute_url">
+            <span v-text="warehouse_sheet.product.title"></span>
+        </a>
+    </td>
+    {% endif %}
+    {% if not ware_house %}
+
+    <td>
+        <a :href="warehouse_sheet.ware_house.get_absolute_url">
+            <span v-text="warehouse_sheet.ware_house.title"></span>
+        </a>
+    </td>
+    {% endif %}
+    {% if not invoice %}
+
+    <td>
+        <a :href="warehouse_sheet.invoice.get_absolute_url">
+            <span v-text="warehouse_sheet.invoice.title"></span>
+        </a>
+    </td>
+    {% endif %}
+
+
+    <td>
+        <span v-text="warehouse_sheet.quantity"></span>
+        <span class="text-muted" v-text="warehouse_sheet.unit_name"></span>
+        <div>
+            <small class="text-muted">
+
+                موجودی کل :
+                <span v-text="warehouse_sheet.available"></span>
+            </small>
+                
+        </div>
+    </td>
+
+    <td>
+        <div>
+
+            <span :class="'badge badge-'+warehouse_sheet.color">
+                <span v-text="warehouse_sheet.direction"></span>
+            </span>
+        </div>
+        <div>
+        <small v-text="warehouse_sheet.status"></small>
+
+        </div>
+    </td>
+    <td>
+        
+        <div>
+            <button class="btn btn-sm mb-1 btn-success" @click="change_state('DONE')">تایید نهایی</button>
+        </div>   
+        <div>
+            <button class="btn btn-sm mb-1 btn-warning" @click="change_state('IN_PROGRESS')">در حال انجام</button>
+        </div>
+        <div>
+            <button class="btn btn-sm mb-1 btn-danger" @click="change_state('INITIAL')">تعریف اولیه</button>
+        </div>
+    </td>
+
+    <td>
+
+        <a :href="warehouse_sheet.get_absolute_url"><i class="material-icons">ballot</i></a>
+        <a :href="warehouse_sheet.get_edit_url"><i class="fa fa-edit text-warning"></i></a>
+    </td>
+</tr>
