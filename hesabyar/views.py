@@ -1,7 +1,9 @@
 import json
 from django.shortcuts import render,reverse
+from django.utils import timezone
+from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum 
-from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum
+from .enums import InvoicePaymentMethodEnum, InvoiceStatusEnum, PaymentMethodEnum, WareHouseSheetDirectionEnum
 from .forms import *
 
 from .repo import WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
@@ -196,7 +198,7 @@ class WareHouseViews(View):
         ware_house=WareHouseRepo(request=request).ware_house(*args, **kwargs)
         context['ware_house']=ware_house
         
-        warehouse_sheets=WareHouseSheetRepo(request=request).list().order_by('date_registered')
+        warehouse_sheets=WareHouseSheetRepo(request=request).list(ware_house_id=ware_house.id).order_by('date_registered')
         warehouse_sheets_s=json.dumps(WareHouseSheetSerializer(warehouse_sheets,many=True).data)
         context['warehouse_sheets_s']=warehouse_sheets_s
 
@@ -264,6 +266,39 @@ class InvoiceViews(View):
         context['invoice_lines_s']=invoice_lines_s
         return render(request,TEMPLATE_ROOT+"invoice-print.html",context)
 
+    def invoice_deliver(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        context['invoice']=invoice
+        invoice_lines=invoice.invoice_lines()
+        to_ware_house=WareHouseRepo(request=request).ware_house(owner_id=invoice.pay_to.id)
+        if to_ware_house is None:
+            to_ware_house=WareHouseRepo(request=request).objects.create(owner_id=invoice.pay_to.id,title="انبار "+invoice.pay_to.title)
+        from_ware_house=WareHouseRepo(request=request).ware_house(owner_id=invoice.pay_from.id)
+        if from_ware_house is None:
+            from_ware_house=WareHouseRepo(request=request).objects.create(owner_id=invoice.pay_from.id,title="انبار "+invoice.pay_from.title)
+        
+        ware_house_sheet_repo=WareHouseSheetRepo(request=request)
+        me=ProfileRepo(request=request).me
+        for invoice_line in invoice_lines:
+            warehouse_sheet=ware_house_sheet_repo.objects.filter(ware_house=to_ware_house).filter(invoice=invoice).filter(product=invoice_line.productorservice).first()
+            if warehouse_sheet is None:
+                warehouse_sheet=ware_house_sheet_repo.objects.create(ware_house=to_ware_house,invoice=invoice,product_id=invoice_line.productorservice.id,creator_id=me.id,direction=WareHouseSheetDirectionEnum.IMPORT,date_registered=timezone.now(),unit_name=invoice_line.unit_name,quantity=invoice_line.quantity)
+            warehouse_sheet=ware_house_sheet_repo.objects.filter(ware_house=from_ware_house).filter(invoice=invoice).filter(product=invoice_line.productorservice).first()
+            if warehouse_sheet is None:
+                warehouse_sheet=ware_house_sheet_repo.objects.create(ware_house=from_ware_house,invoice=invoice,product_id=invoice_line.productorservice.id,creator_id=me.id,direction=WareHouseSheetDirectionEnum.EXPORT,date_registered=timezone.now(),unit_name=invoice_line.unit_name,quantity=invoice_line.quantity)
+            
+
+        
+        warehouse_sheets=WareHouseSheetRepo(request=request).list(invoice_id=invoice.id).order_by('date_registered')
+        warehouse_sheets_s=json.dumps(WareHouseSheetSerializer(warehouse_sheets,many=True).data)
+        context['warehouse_sheets_s']=warehouse_sheets_s
+
+
+        context['invoice_lines']=invoice_lines
+        context['invoice_lines_s']=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        
+        return render(request,TEMPLATE_ROOT+"invoice-deliver.html",context)
 
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)

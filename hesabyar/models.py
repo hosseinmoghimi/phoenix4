@@ -1,4 +1,5 @@
 
+from modulefinder import IMPORT_NAME
 from tinymce.models import HTMLField
 from django.db import models
 
@@ -140,9 +141,9 @@ class Product(ProductOrService):
     def available(self):
         aa=0
         for sheet in WareHouseSheet.objects.filter(status=WareHouseSheetStatusEnum.DONE).filter(product=self):
-            if sheet.direction==WareHouseSheetDirectionEnum.ENTER:
+            if sheet.direction==WareHouseSheetDirectionEnum.IMPORT:
                 aa+=sheet.quantity
-            if sheet.direction==WareHouseSheetDirectionEnum.EXIT:
+            if sheet.direction==WareHouseSheetDirectionEnum.EXPORT:
                 aa-=sheet.quantity
         return aa
 
@@ -406,6 +407,7 @@ class Store(FinancialAccount,LinkHelper):
     def __str__(self):
         return self.title
 class WareHouse(HesabYarPage):
+    # store=models.ForeignKey("store",related_name="ware_houses", verbose_name=_("store"), on_delete=models.CASCADE)
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     tel=models.CharField(_("tel"),null=True,blank=True, max_length=50)
     owner=models.ForeignKey("FinancialAccount", verbose_name=_("owner"), on_delete=models.CASCADE)
@@ -423,6 +425,7 @@ class WareHouseSheet(models.Model,LinkHelper):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_registered=models.DateTimeField(_("date_registered"), auto_now=False, auto_now_add=False)
     creator=models.ForeignKey("authentication.profile", verbose_name=_("creator"), on_delete=models.CASCADE)    
+    invoice=models.ForeignKey("invoice", verbose_name=_("invoice"), on_delete=models.CASCADE)    
     product=models.ForeignKey("product", verbose_name=_("product"), on_delete=models.CASCADE)    
     quantity=models.IntegerField(_("quantity"))
     unit_name=models.CharField(_("unit_name"),choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD, max_length=50)
@@ -440,12 +443,19 @@ class WareHouseSheet(models.Model,LinkHelper):
     def save(self,*args, **kwargs):
         self.class_name="warehousesheet"
         super(WareHouseSheet,self).save(*args, **kwargs)
-
+    def available(self):
+        a=0;
+        for aa in WareHouseSheet.objects.filter(ware_house=self.ware_house).filter(product=self.product).filter(status=WareHouseSheetStatusEnum.DONE):
+            if aa.direction==WareHouseSheetDirectionEnum.IMPORT:
+                a+=aa.quantity
+            if aa.direction==WareHouseSheetDirectionEnum.EXPORT:
+                a-=aa.quantity
+        return a
     def color(self):
         color="primary"
-        if self.direction==WareHouseSheetDirectionEnum.ENTER:
+        if self.direction==WareHouseSheetDirectionEnum.IMPORT:
             color="success"
-        if self.direction==WareHouseSheetDirectionEnum.EXIT:
+        if self.direction==WareHouseSheetDirectionEnum.EXPORT:
             color="danger"
         return color
 class Payment(Transaction):

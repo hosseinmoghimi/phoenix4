@@ -53,13 +53,18 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'title', 'get_absolute_url','available','unit_price','unit_name','thumbnail']
 
+class InvoiceBriefSerializer(serializers.ModelSerializer):
+      class Meta:
+        model = Invoice
+        fields = ['id','title','get_absolute_url']
 
 class WareHouseSheetSerializer(serializers.ModelSerializer):
     ware_house=WareHouseSerializer()
     product=ProductSerializer()
+    invoice=InvoiceBriefSerializer()
     class Meta:
         model = WareHouseSheet
-        fields = ['id','persian_date_registered','unit_name','color', 'ware_house','product','direction','status', 'get_absolute_url','quantity']
+        fields = ['id','available','persian_date_registered','invoice','unit_name','color', 'ware_house','product','direction','status', 'get_absolute_url','quantity','get_edit_url']
 
 
 

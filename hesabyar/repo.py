@@ -333,6 +333,10 @@ class WareHouseRepo():
             return self.objects.filter(pk=kwargs['ware_house_id']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk=kwargs['pk']).first()
+        if 'store_id' in kwargs:
+            return self.objects.filter(store_id=kwargs['store_id']).first()
+        if 'owner_id' in kwargs:
+            return self.objects.filter(owner_id=kwargs['owner_id']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk=kwargs['id']).first()
             
@@ -354,6 +358,8 @@ class WareHouseSheetRepo:
             objects = objects.filter(for_home=kwargs['for_home'])
         if 'product_id' in kwargs:
             objects = objects.filter(product_id=kwargs['product_id'])
+        if 'invoice_id' in kwargs:
+            objects = objects.filter(invoice_id=kwargs['invoice_id'])
         if 'ware_house_id' in kwargs:
             objects = objects.filter(ware_house_id=kwargs['ware_house_id'])
         if 'search_for' in kwargs:
@@ -496,8 +502,6 @@ class InvoiceRepo:
         if invoice.title is None or invoice.title=="":
             invoice.title=f"فاکتور شماره {invoice.pk}"
         invoice.save()
-        print(invoice.payment_method)
-        print(10*"#$$%")
         if invoice.payment_method==PaymentMethodEnum.CARD or invoice.payment_method==PaymentMethodEnum.POS:
             payment=Payment()
             payment.title="پرداخت برای "+invoice.title
@@ -509,6 +513,12 @@ class InvoiceRepo:
             payment.payment_method=invoice.payment_method
             payment.save()
         # self.update_financial_documents(invoice)
+        if invoice.status==InvoiceStatusEnum.DELIVERED:
+            for invoice_line in invoice.invoice_lines():
+                wh_sheet=WareHouseSheet()
+                wh_sheet.invoice=invoice
+                wh_sheet.product=invoice_line.product
+
         return invoice
     # def update_financial_documents(self,invoice,*args, **kwargs):
     #     financial_year=FinancialYear.get_by_date(date=invoice.invoice_datetime)

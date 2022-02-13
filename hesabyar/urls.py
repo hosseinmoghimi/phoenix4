@@ -15,6 +15,8 @@ urlpatterns = [
     path('edit_invoice/<int:pk>/',login_required(views.InvoiceViews().edit_invoice),name="edit_invoice"),
     path('invoice_print/<int:pk>/',login_required(views.InvoiceViews().invoice_print),name="invoice_print"),
     path('cheque/<int:pk>/',login_required(views.ChequeViews().cheque),name="cheque"),
+    path('invoice_deliver/<int:pk>/',login_required(views.InvoiceViews().invoice_deliver),name="invoice_deliver"),
+    
     path('new_payment/',login_required(views.PaymentViews().new_payment),name="new_payment"),
     path('payments/',login_required(views.PaymentViews().payments),name="payments"),
     path('payment/<int:pk>/',login_required(views.PaymentViews().payment),name="payment"),

@@ -20,6 +20,7 @@
                     {{invoice.seller.title}}
                     <a href="{{invoice.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i class="material-icons text-success">print</i></a>
 
+                    <a href="{% url 'hesabyar:invoice_deliver' pk=invoice.pk %}" target="_blank" title="تحویل" class="mx-2"><i class="fa fa-trash text-warning"></i></a>
                     {% if perms.hesabyar.change_invoice %}
                     <a href="{{invoice.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
                             class="fa fa-edit text-info"></i></a>

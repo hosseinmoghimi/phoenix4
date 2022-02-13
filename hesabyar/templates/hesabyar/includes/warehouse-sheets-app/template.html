@@ -20,6 +20,12 @@
                     انبار
                 </th>
                 {% endif %}
+                {% if not invoice %}
+
+                <th>
+                    فاکتور
+                </th>
+                {% endif %}
 
                 <th>
                     تعداد
@@ -58,11 +64,27 @@
                         </a>
                     </td>
                     {% endif %}
+                    {% if not invoice %}
+
+                    <td>
+                        <a :href="warehouse_sheet.invoice.get_absolute_url">
+                            <span v-text="warehouse_sheet.invoice.title"></span>
+                        </a>
+                    </td>
+                    {% endif %}
 
 
                     <td>
                         <span v-text="warehouse_sheet.quantity"></span>
                         <span class="text-muted" v-text="warehouse_sheet.unit_name"></span>
+                        <div>
+                            <small class="text-muted">
+
+                                موجودی کل :
+                                <span v-text="warehouse_sheet.available"></span>
+                            </small>
+                                
+                        </div>
                     </td>
 
                     <td>
@@ -78,6 +100,7 @@
                     <td>
 
                         <a :href="warehouse_sheet.get_absolute_url"><i class="material-icons">ballot</i></a>
+                        <a :href="warehouse_sheet.get_edit_url"><i class="fa fa-edit text-warning"></i></a>
                     </td>
                 </tr>
             </tbody>
