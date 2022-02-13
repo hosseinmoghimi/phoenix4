@@ -8,7 +8,7 @@ from .apps import APP_NAME
 from .models import (Cheque, Cost, FinancialAccount, FinancialDocument,
                      FinancialDocumentCategory, FinancialYear, Guarantee,
                      Invoice, InvoiceLine, Payment, Product, Service, Store,
-                     Tag, WareHouse, WareHouseSheet)
+                     Tag, Wage, WareHouse, WareHouseSheet)
 
 
 class FinancialDocumentCategoryRepo:
@@ -699,7 +699,100 @@ class CostRepo:
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
     def add_cost(self,*args, **kwargs):
-        print(kwargs)
+        # return
+        if not self.request.user.has_perm(APP_NAME+".add_cost"):
+            return
+        cost=Cost(cost_type=CostTypeEnum.WATER,spend_type=SpendTypeEnum.COST)
+        cost.creator=self.profile
+        cost_type=None
+        if 'pay_from_id' in kwargs:
+            cost.pay_from_id=kwargs['pay_from_id']
+        if 'cost_type' in kwargs:
+            cost_type=kwargs['cost_type']
+            cost_acc=FinancialAccount.objects.filter(title=cost_type).first()
+            if cost_acc is None:
+                cost_acc=FinancialAccount(title=cost_type)
+                cost_acc.save()
+            cost.pay_from_id=cost_acc.id
+        if 'title' in kwargs:
+            cost.title=kwargs['title']
+
+        if 'description' in kwargs:
+            cost.description=kwargs['description']
+        if 'pay_to_id' in kwargs:
+            cost.pay_to_id=kwargs['pay_to_id']
+        if 'amount' in kwargs:
+            cost.amount=kwargs['amount']
+        if 'payment_method' in kwargs:
+            cost.payment_method=kwargs['payment_method']
+
+        if 'transaction_datetime' in kwargs:
+            cost.transaction_datetime=kwargs['transaction_datetime']
+        else:
+            cost.transaction_datetime=timezone.now()
+        if 'financial_year_id' in kwargs:
+            cost.financial_year_id=kwargs['financial_year_id']
+        else:
+            cost.financial_year_id=FinancialYear.get_by_date(date=cost.transaction_datetime).id
+
+        cost.save()
+        return cost
+
+class WageRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Wage.objects
+        self.profile = ProfileRepo(user=self.user).me
+        self.me=Store.objects.filter(profile=self.profile).first()
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'invoice_id' in kwargs:
+            objects = objects.filter(invoice_id=kwargs['invoice_id'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+    def cost_sum(self,*args, **kwargs):
+
+        if 'financial_account' in kwargs:
+            financial_account=kwargs['financial_account']
+        if 'end_date' in kwargs:
+            end_date=kwargs['end_date']
+        if 'start_date' in kwargs:
+            start_date=kwargs['start_date']
+        cost_type='all'
+        if 'cost_type' in kwargs:
+            cost_type=kwargs['cost_type']
+
+        sum=0
+        if cost_type=='all':
+            costs=Cost.objects.filter(pay_to=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
+        else:
+            cost_acc=FinancialAccount.objects.filter(title=cost_type).first()
+            if cost_acc is None:
+                return 0
+            costs=Cost.objects.filter(pay_to=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date).filter(pay_from=cost_acc)
+
+        for cost in costs:
+            sum+=cost.amount
+        return sum
+    def wage(self, *args, **kwargs):
+        if 'wage_id' in kwargs:
+            return self.objects.filter(pk= kwargs['wage_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+    def add_wage(self,*args, **kwargs):
         # return
         if not self.request.user.has_perm(APP_NAME+".add_cost"):
             return
