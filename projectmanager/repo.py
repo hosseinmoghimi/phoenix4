@@ -216,7 +216,7 @@ class ProjectRepo():
         now=timezone.now()
         new_project.start_date=now
         new_project.end_date=now
-        new_project.status=ProjectStatusEnum.INITIAL
+        new_project.status=ProjectStatusEnum.DRAFT
         new_project.save()
         return new_project
 
