@@ -270,8 +270,8 @@ class Project(ProjectManagerPage):
 
     def update_accounting_data(self, *args, **kwargs):
         
-        if not self.status==ProjectStatusEnum.DRAFT:
-            self.update_accounting_data()
+        if self.status==ProjectStatusEnum.DRAFT:
+            return
         if self.employer is None or self.employer.owner is None:
             return
         if self.contractor is None or self.contractor.owner is None:
