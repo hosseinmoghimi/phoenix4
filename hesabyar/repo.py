@@ -596,15 +596,15 @@ class InvoiceRepo:
             invoice.transaction_datetime=timezone.now()
         invoice.creator=self.profile
         invoice.save()
-        invoice_line=InvoiceLine()
-        invoice_line.invoice=invoice
-        invoice_line.productorservice=Product.objects.first()
-        invoice_line.quantity=7
-        invoice_line.unit_price=18000
-        invoice_line.unit_name=UnitNameEnum.ADAD
-        invoice_line.row=1
+        # invoice_line=InvoiceLine()
+        # invoice_line.invoice=invoice
+        # invoice_line.productorservice=Product.objects.first()
+        # invoice_line.quantity=0
+        # invoice_line.unit_price=0
+        # invoice_line.unit_name=UnitNameEnum.ADAD
+        # invoice_line.row=1
 
-        invoice_line.save()
+        # invoice_line.save()
         return invoice
 
 class GuaranteeRepo:
