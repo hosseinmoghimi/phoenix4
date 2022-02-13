@@ -1,12 +1,21 @@
 {% load static %}
 <div id="products-app">
     <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
+    <div class="row">
+        <div class="col-md-4 col-4" v-for="product in products">
+            <div class="card">
+                <div class="card-body farsi py-3">
+                    <div class="text-center">
+                        <img  @click="select_product(product)"  style="cursor: pointer;" class="rounded" :src="product.thumbnail" width="80%" alt="">
+                        <div @click="select_product(product)" style="cursor: pointer;" class="my-3">
+                            <span v-text="product.title" class="text-primary"></span>
 
-    <div class="text-right mb-3" v-for="product in products">
-        <button class="btn btn-block btn-success" @click="select_product(product)">
-    <i class="material-icons">line_style</i>
-    <span v-text="product.title"></span>
-    
-</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>

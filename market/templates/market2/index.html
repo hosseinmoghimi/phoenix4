@@ -1,11 +1,12 @@
 {% extends "market2/layout.html" %} {% load to_price %} {% load static %} {% block content %}
 <div class="row mt-5">
-    <div class="col-md-4">
+    <div class="col-md-12">
         {% include "market2/includes/categories-app/template.html" %}
+        {% include "market2/includes/products-app/template.html" %} 
 
     </div>
     <div class="col-md-8">
-        {% include "market2/includes/products-app/template.html" %} {% include "market2/includes/product-app/template.html" %}
+        {% include "market2/includes/product-app/template.html" %}
 
     </div>
 </div>
