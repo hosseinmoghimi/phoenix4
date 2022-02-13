@@ -1,0 +1,12 @@
+{% load static %}
+<div id="product-app">
+    <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
+    <div v-if="product.title" class="text-right">
+
+
+        <span class="farsi" v-text="product.title"></span>
+    </div>
+
+
+</div>
+</div>

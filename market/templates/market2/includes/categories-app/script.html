@@ -1,0 +1,67 @@
+<script>
+    let root_categories = JSON.parse(`{{root_categories_s|escapejs}}`)
+    let all_categories = JSON.parse(`{{categories_s|escapejs}}`)
+    let categories_app = new Vue({
+        el: "#categories-app",
+        data: {
+            categories: root_categories,
+            selected_category: false,
+            waiting: true
+        },
+        mounted: function() {
+            this.waiting = false
+        },
+        methods: {
+            go_home: function() {
+                this.categories = root_categories
+                products_app.products = []
+
+
+            },
+            go_up: function() {
+                console.log(this.selected_category.id)
+                this.selected_category = all_categories.filter(category1 => {
+                    return category1.id == this.selected_category.parent_id
+                })[0]
+                let selected_category_id = null
+                try {
+
+                    selected_category_id = this.selected_category.id
+                } catch (error) {
+                    this.selected_category = null
+
+                }
+                this.select_category(this.selected_category)
+                this.categories = all_categories.filter(category1 => {
+                    return category1.parent_id == selected_category_id
+                })
+
+
+            },
+            select_category: function(category) {
+
+                products_app.waiting = true
+                product_app.product = {}
+                let url = `/market/apk-api/products/${category.id}/`
+                $.get(url).done(data => {
+                    products_app.waiting = false
+                    console.log(data)
+                    products_app.products = data.products
+                })
+
+                if (this.categories.length == 0) {
+
+                }
+                let categories = all_categories.filter(category1 => {
+                    return category1.parent_id == category.id
+                })
+
+                if (categories.length > 0) {
+                    this.selected_category = category
+                    this.categories = categories
+                }
+
+            }
+        }
+    })
+</script>

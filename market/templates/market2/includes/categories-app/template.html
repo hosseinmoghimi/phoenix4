@@ -1,0 +1,23 @@
+<div id="categories-app">
+    <button @click="go_home()" class="btn btn-block
+    btn-warning  mb-3">
+    <i class="material-icons">line_style</i>
+   خانه
+</button>
+
+    <button v-if="selected_category" @click="go_up()" class="btn btn-block  mb-3
+btn-warning">
+<i class="material-icons">line_style</i>
+بالا
+</button>
+
+
+
+    <div class="text-right mb-3" v-for="category in categories">
+        <button @click="select_category(category)" class="btn btn-block
+            btn-success">
+            <i class="material-icons">line_style</i>
+            <span v-text="category.title"></span>
+        </button>
+    </div>
+</div>

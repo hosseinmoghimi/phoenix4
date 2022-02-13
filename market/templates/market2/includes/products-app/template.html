@@ -1,0 +1,12 @@
+{% load static %}
+<div id="products-app">
+    <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
+
+    <div class="text-right mb-3" v-for="product in products">
+        <button class="btn btn-block btn-success" @click="select_product(product)">
+    <i class="material-icons">line_style</i>
+    <span v-text="product.title"></span>
+    
+</button>
+    </div>
+</div>
