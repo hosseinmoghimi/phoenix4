@@ -80,7 +80,7 @@ class Transaction(models.Model,LinkHelper):
     amount=models.IntegerField(_("مبلغ"),default=0)
     transaction_datetime=models.DateTimeField(_("transaction_datetime"), auto_now=False, auto_now_add=False)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.CARD, max_length=50)
+    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.DRAFT, max_length=50)
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
     
@@ -565,7 +565,7 @@ class Cheque(Transaction,LinkHelper):
         super(Cheque,self).save(*args, **kwargs)
       
 class Cost(models.Model):
-    
+
     
 
     class Meta:

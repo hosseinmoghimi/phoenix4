@@ -28,6 +28,7 @@ class InvoicePaymentMethodEnum(TextChoices):
     CARD="کارت به کارت",_("کارت به کارت")
     IN_CASH="پرداخت نقدی",_("پرداخت نقدی")
 class PaymentMethodEnum(TextChoices):
+    DRAFT="پیش نویس",_("پیش نویس")
     IN_CASH="نقدی",_("نقدی")
     POS="کارتخوان",_("کارتخوان")
     CARD="کارت به کارت",_("کارت به کارت")
