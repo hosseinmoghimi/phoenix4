@@ -176,9 +176,20 @@
 
 
                 <td class="text-right">
-                    <span v-text="to_price(shop.unit_price)">
+                    <div>
 
-                    </span>
+                        <span v-text="to_price(shop.unit_price)">
+                            
+                        </span>
+                    </div>
+
+                    <div style="text-decoration: line-through;font-size: 16px;color: #9a9a9a;">
+                        <small>
+                            <span v-text="to_price(shop.old_price)">
+                            
+                            </span>
+                        </small>
+                    </div>
                 </td>
 
 
