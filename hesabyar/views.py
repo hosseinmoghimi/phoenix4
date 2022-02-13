@@ -168,13 +168,15 @@ class ReportViews(View):
         end_date=timezone.now()
         from datetime import timedelta
         delta=timedelta(days=30)
+        financial_account=FinancialAccountRepo(request=request).me
+        cost_repo=CostRepo(request=request)
         start_date=end_date-delta
-        sell_benefit=12530000
-        tax=1000000
-        wages=5000000
-        costs=1200000
-        buy_service=1250000
-        sell_service=3250000
+        sell_benefit=0
+        tax=0
+        wages=0
+        costs=cost_repo.cost_sum(financial_account=financial_account,start_date=start_date,end_date=end_date)
+        buy_service=0
+        sell_service=0
         rest=0
         rest+=sell_benefit 
         rest-=wages
@@ -200,15 +202,15 @@ class ReportViews(View):
 
 
 
-        buy_=25000000
-        sell_=105000000
-        cost_internet=250000
-        cost_gas=25000
-        cost_water=140000
-        cost_telephone=85000
-        cost_transport=132000
-        cost_rent=1254000
-        cost_electricity=550000
+        buy_=0
+        sell_=0
+        cost_internet=cost_repo.cost_sum(cost_type=CostTypeEnum.INTERNET,financial_account=financial_account,start_date=start_date,end_date=end_date)
+        cost_gas=cost_repo.cost_sum(cost_type=CostTypeEnum.GAS,financial_account=financial_account,start_date=start_date,end_date=end_date)
+        cost_water=cost_repo.cost_sum(cost_type=CostTypeEnum.WATER,financial_account=financial_account,start_date=start_date,end_date=end_date)
+        cost_telephone=cost_repo.cost_sum(cost_type=CostTypeEnum.TELEPHONE,financial_account=financial_account,start_date=start_date,end_date=end_date)
+        cost_electricity=cost_repo.cost_sum(cost_type=CostTypeEnum.ELECTRICITY,financial_account=financial_account,start_date=start_date,end_date=end_date)
+        cost_transport=cost_repo.cost_sum(cost_type=CostTypeEnum.TRANSPORT,financial_account=financial_account,start_date=start_date,end_date=end_date)
+        cost_rent=cost_repo.cost_sum(cost_type=CostTypeEnum.RENT,financial_account=financial_account,start_date=start_date,end_date=end_date)
         rest_=0
         rest_+=sell_
         rest_-=cost_internet

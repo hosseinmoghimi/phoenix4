@@ -667,7 +667,30 @@ class CostRepo:
             search_for=kwargs['search_for']
             objects = objects.filter(title__contains=search_for) 
         return objects
+    def cost_sum(self,*args, **kwargs):
 
+        if 'financial_account' in kwargs:
+            financial_account=kwargs['financial_account']
+        if 'end_date' in kwargs:
+            end_date=kwargs['end_date']
+        if 'start_date' in kwargs:
+            start_date=kwargs['start_date']
+        cost_type='all'
+        if 'cost_type' in kwargs:
+            cost_type=kwargs['cost_type']
+
+        sum=0
+        if cost_type=='all':
+            costs=Cost.objects.filter(pay_to=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
+        else:
+            cost_acc=FinancialAccount.objects.filter(title=cost_type).first()
+            if cost_acc is None:
+                return 0
+            costs=Cost.objects.filter(pay_to=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date).filter(pay_from=cost_acc)
+
+        for cost in costs:
+            sum+=cost.amount
+        return sum
     def cost(self, *args, **kwargs):
         if 'cost_id' in kwargs:
             return self.objects.filter(pk= kwargs['cost_id']).first()
