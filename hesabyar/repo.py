@@ -517,7 +517,7 @@ class InvoiceRepo:
         if invoice.title is None or invoice.title=="":
             invoice.title=f"فاکتور شماره {invoice.pk}"
         invoice.save()
-        if invoice.payment_method==PaymentMethodEnum.CARD or invoice.payment_method==PaymentMethodEnum.POS:
+        if (invoice.status==TransactionStatusEnum.APPROVED or invoice.status==TransactionStatusEnum.DELIVERED)and (invoice.payment_method==PaymentMethodEnum.CARD or invoice.payment_method==PaymentMethodEnum.POS):
             payment=Payment()
             payment.title="پرداخت برای "+invoice.title
             payment.pay_from=invoice.pay_to

@@ -564,3 +564,16 @@ class Cheque(Transaction,LinkHelper):
         self.class_name="cheque"
         super(Cheque,self).save(*args, **kwargs)
       
+class Cost(models.Model):
+    
+    
+
+    class Meta:
+        verbose_name = _("Cost")
+        verbose_name_plural = _("Costs")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Cost_detail", kwargs={"pk": self.pk})
