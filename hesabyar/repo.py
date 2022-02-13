@@ -459,7 +459,10 @@ class InvoiceRepo:
         invoice=self.invoice(*args, **kwargs)
         if invoice is None:
             return
-        if invoice.
+        if invoice.status==InvoiceStatusEnum.DELIVERED:
+            return None
+        if invoice.status==InvoiceStatusEnum.APPROVED:
+            return None
         if 'title' in kwargs:
             invoice.title=kwargs['title']
         if 'pay_from_id' in kwargs:
