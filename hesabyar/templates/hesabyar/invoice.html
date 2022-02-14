@@ -129,8 +129,12 @@
 
 
 
+ 
+    <div class="col-md-6">
+ {% include "hesabyar/includes/transaction-documents-app/template.html" %}
 
-</div>
+    </div>
+</div
 
 {% endblock content %}
 
@@ -141,5 +145,6 @@
     let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
 </script>
 {% include "hesabyar/includes/invoice-lines-app/script.html" %}
+{% include "hesabyar/includes/transaction-documents-app/script.html" %}
 
 {% endblock script %}

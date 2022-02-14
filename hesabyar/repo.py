@@ -1,6 +1,7 @@
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
 from django.utils import timezone
+from core.models import Document
 
 from hesabyar.enums import CostTypeEnum, PaymentMethodEnum, SpendTypeEnum, TransactionStatusEnum
 
@@ -8,7 +9,7 @@ from .apps import APP_NAME
 from .models import (Cheque, Cost, FinancialAccount, FinancialDocument,
                      FinancialDocumentCategory, FinancialYear, Guarantee,
                      Invoice, InvoiceLine, Payment, Product, Service, Spend, Store,
-                     Tag, Wage, WareHouse, WareHouseSheet)
+                     Tag, Transaction, Wage, WareHouse, WareHouseSheet)
 
 
 class FinancialDocumentCategoryRepo:
@@ -424,7 +425,50 @@ class InvoiceLineRepo:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
-        
+       
+class TransactionRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Transaction.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def transaction(self, *args, **kwargs):
+        if 'transaction_id' in kwargs:
+            return self.objects.filter(pk= kwargs['transaction_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+    def add_document(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_transaction"):
+            return
+        transaction=self.transaction(*args, **kwargs)
+        if transaction is None:
+                return
+        is_open=False
+        title=kwargs['title'] if 'title' in kwargs else "سند"
+        file=kwargs['file']
+        priority=kwargs['priority'] if 'priority' in kwargs else 100
+        document=Document(icon_fa="fa fa-download",title=title,is_open=is_open,file=file,priority=priority,profile=self.profile)
+        document.save()
+        document.profiles.add(self.profile)
+        transaction.documents.add(document)
+        return document
      
 class InvoiceRepo:
     def __init__(self, *args, **kwargs):

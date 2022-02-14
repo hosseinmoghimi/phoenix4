@@ -51,6 +51,7 @@ urlpatterns = [
     
 
 
+    path('add_transaction_document/',login_required(apis.TransactionApi().add_transaction_document),name="add_transaction_document"),
     path('add_cost/',login_required(apis.CostApi().add_cost),name="add_cost"),
     path('add_wage/',login_required(apis.WageApi().add_wage),name="add_wage"),
     path('add_financial_document/',login_required(apis.BasicApi().add_financial_document),name="add_financial_document"),

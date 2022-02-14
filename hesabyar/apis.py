@@ -1,10 +1,12 @@
 import json
 from core.constants import FAILED,SUCCEED
 from rest_framework.views import APIView
+from core.serializers import DocumentSerializer
 from hesabyar.enums import WareHouseSheetStatusEnum
+from hesabyar.models import Transaction
 
 from utility.persian import PersianCalendar
-from .repo import ChequeRepo, CostRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo, WageRepo, WareHouseSheetRepo
+from .repo import ChequeRepo, CostRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo, TransactionRepo, WageRepo, WareHouseSheetRepo
 from django.http import JsonResponse
 from .forms import *
 from .serializers import CostSerializer, PaymentSerializer,ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer, WageSerializer, WareHouseSheetSerializer
@@ -91,7 +93,30 @@ class BasicApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+class TransactionApi(APIView):
+    def add_transaction_document(self, request, *args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log += 1
+            add_page_document_form = AddTransactionDocumentForm(
+                request.POST, request.FILES)
+            if add_page_document_form.is_valid():
+                log += 1
+                title = add_page_document_form.cleaned_data['title']
+                transaction_id = add_page_document_form.cleaned_data['transaction_id']
+                file = request.FILES['file1']
+                document = TransactionRepo(request=request).add_document(
+                    title=title, file=file, transaction_id=transaction_id)
+                if document is not None:
+                    context['document'] = DocumentSerializer(
+                        document, context={'request': request}).data
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
 
+    
 class CheuqeApi(APIView):
     def add_cheque(self,request,*args, **kwargs):
         context={}

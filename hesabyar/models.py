@@ -83,7 +83,7 @@ class Transaction(models.Model,LinkHelper):
     payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.DRAFT, max_length=50)
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
-    
+    documents=models.ManyToManyField("core.document",blank=True, verbose_name=_("documents"))
 
     class Meta:
         verbose_name = _("Transaction")

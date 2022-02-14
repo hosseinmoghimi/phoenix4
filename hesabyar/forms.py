@@ -64,3 +64,7 @@ class AddWageForm(forms.Form):
     payment_method=forms.CharField( max_length=50, required=True)
     title=forms.CharField( max_length=500, required=True)
     transaction_datetime=forms.CharField( max_length=50, required=True)
+class AddTransactionDocumentForm(forms.Form):
+    transaction_id=forms.IntegerField(required=True)
+    title=forms.CharField( max_length=50, required=True)
+    

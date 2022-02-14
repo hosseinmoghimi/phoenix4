@@ -3,7 +3,8 @@ from urllib import request
 from django.shortcuts import render,reverse
 from django.utils import timezone
 from authentication.repo import ProfileRepo
-from core.enums import UnitNameEnum 
+from core.enums import UnitNameEnum
+from core.serializers import DocumentSerializer 
 from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
 from .forms import *
 
@@ -248,6 +249,8 @@ class CostViews(View):
         cost=CostRepo(request=request).cost(*args, **kwargs)
         context['cost']=cost
         context['transaction']=cost
+        transaction=cost
+        context.update(getTransactionContext(request=request,transaction=transaction))
         return render(request,TEMPLATE_ROOT+"cost.html",context)
 
 
@@ -277,6 +280,8 @@ class WageViews(View):
         wage=WageRepo(request=request).wage(*args, **kwargs)
         context['wage']=wage
         context['transaction']=wage
+        transaction=wage
+        context.update(getTransactionContext(request=request,transaction=transaction))
         return render(request,TEMPLATE_ROOT+"wage.html",context)
     def wages(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -458,6 +463,8 @@ class InvoiceViews(View):
     def invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
         invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        transaction=invoice
+        context.update(getTransactionContext(request=request,transaction=transaction))
         invoice_lines=invoice.invoice_lines()
         context['invoice']=invoice
         context['invoice_lines']=invoice_lines
@@ -540,6 +547,8 @@ class ChequeViews(View):
         context=getContext(request=request)
         cheque=ChequeRepo(request=request).cheque(*args, **kwargs)
         context['cheque']=cheque
+        transaction=cheque
+        context.update(getTransactionContext(request=request,transaction=transaction))
         return render(request,TEMPLATE_ROOT+"cheque.html",context)
     def cheques(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -568,10 +577,24 @@ class PaymentViews(View):
         context=getContext(request=request)
         payment=PaymentRepo(request=request).payment(*args, **kwargs)
         context['payment']=payment
-        context['transaction']=payment
+        transaction=payment
+        context.update(getTransactionContext(request=request,transaction=transaction))
         return render(request,TEMPLATE_ROOT+"payment.html",context)
     
+class TransactionViews(View):
+    pass
+def getTransactionContext(request,transaction):
+    context={}
+    context['transaction']=transaction
+    documents=transaction.documents.all()
 
+    documents_s=json.dumps(DocumentSerializer(documents,many=True).data)
+    context['documents']=documents
+    context['documents_s']=documents_s
+    if request.user.has_perm(APP_NAME+".change_transaction"):
+        context['add_transaction_document_form']=AddTransactionDocumentForm()
+    return context
+        
 
 class GuaranteeViews(View):
     def guarantee(self,request,*args, **kwargs):
