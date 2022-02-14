@@ -7,7 +7,7 @@ from django.db import models
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 from tinymce.models import HTMLField
-from utility.persian import PersianCalendar
+from utility.persian import PERSIAN_MONTH_NAMES, PersianCalendar
 
 from .apps import APP_NAME
 from .enums import *
@@ -611,6 +611,10 @@ class Cost(Spend,LinkHelper):
         super(Cost,self).save(*args, **kwargs)
 class Wage(Spend,LinkHelper):    
     class_name="wage"
+    month=models.IntegerField(_("month"))
+    year=models.IntegerField(_("year"))
+    def month_year(self):
+        return PERSIAN_MONTH_NAMES[self.month-1]+" " + str(self.year)
     
     class Meta:
         verbose_name = _("Wage")

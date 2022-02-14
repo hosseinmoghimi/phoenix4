@@ -2,7 +2,7 @@
 {% load to_price %}
 {% load to_persian_date %}
 {% block content %}
-<h4 class="text-center">
+<h4 class="text-center my-3">
     {{transaction.title}}
     {% if perms.hesabyar.change_transaction %}
     <a href="{{transaction.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
@@ -83,6 +83,27 @@
     </div>
     
 </div>
+{% block wage %}
+  
+{% endblock  %}
+
+
+{% block cost %}
+  
+{% endblock %}
+{% block cheque %}
+  
+{% endblock %}
+
+{% block invoice %}
+  
+{% endblock %}
+
+
+{% block payment %}
+  
+{% endblock %}
+
 {% endblock content %}
 
 {% block script %}

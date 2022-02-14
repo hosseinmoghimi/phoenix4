@@ -28,7 +28,9 @@
                             دریافت کننده
                         </th>
 
-
+                        <th>
+                            حقوق
+                        </th>
 
                         <th>
                             مبلغ
@@ -50,7 +52,7 @@
                                 <a href="{{wage.get_absolute_url}}">
                                     {{wage.title}}
                                 </a>
-                             
+
                             </td>
 
 
@@ -66,7 +68,9 @@
                                     {{wage.pay_to.title}}
                                 </a>
                             </td>
-
+                            <td>
+                                {{wage.month_year}}
+                            </td>
 
                             <td>
                                 {{wage.amount|to_price}}

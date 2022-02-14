@@ -1,3 +1,21 @@
 {% extends "hesabyar/transaction.html" %}
 {% load to_price %}
 {% load to_persian_date %}
+
+{% block payment %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="farsi">
+                    <div class="text-center">
+                        {{payment}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% endblock %}
