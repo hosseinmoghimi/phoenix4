@@ -7,8 +7,8 @@ from core.enums import UnitNameEnum
 from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
 from .forms import *
 
-from .repo import CostRepo,GuaranteeRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
-from .serializers import ChequeSerializer, GuaranteeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from .repo import CostRepo,GuaranteeRepo, SpendRepo, WageRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, TagRepo, WareHouseSheetRepo
+from .serializers import ChequeSerializer, GuaranteeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, SpendSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, PageContext
 from django.views import View
@@ -169,11 +169,12 @@ class ReportViews(View):
         from datetime import timedelta
         delta=timedelta(days=30)
         financial_account=FinancialAccountRepo(request=request).me
+        wage_repo=WageRepo(request=request)
         cost_repo=CostRepo(request=request)
         start_date=end_date-delta
         sell_benefit=0
         tax=0
-        wages=0
+        wages=wage_repo.wage_sum(financial_account=financial_account,start_date=start_date,end_date=end_date)
         costs=cost_repo.cost_sum(financial_account=financial_account,start_date=start_date,end_date=end_date)
         buy_service=0
         sell_service=0
@@ -213,6 +214,7 @@ class ReportViews(View):
         cost_rent=cost_repo.cost_sum(cost_type=CostTypeEnum.RENT,financial_account=financial_account,start_date=start_date,end_date=end_date)
         rest_=0
         rest_+=sell_
+        rest_-=wages
         rest_-=cost_internet
         rest_-=cost_telephone
         rest_-=buy_
@@ -235,6 +237,12 @@ class ReportViews(View):
         return render(request,TEMPLATE_ROOT+"report.html",context)
 
 class CostViews(View):
+    def costs(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        costs=CostRepo(request=request).list(*args, **kwargs)
+        context['costs']=costs
+        return render(request,TEMPLATE_ROOT+"costs.html",context)
+
     def cost(self,request,*args, **kwargs):
         context=getContext(request=request)
         cost=CostRepo(request=request).cost(*args, **kwargs)
@@ -254,6 +262,40 @@ class CostViews(View):
             context['add_cost_form']=AddCostForm()
         return render(request,TEMPLATE_ROOT+"new-cost.html",context)
 
+class SpendViews(View):
+    def spends(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        spends=SpendRepo(request=request).list(*args, **kwargs)
+        context['spends']=spends
+        spends_s=json.dumps(SpendSerializer(spends,many=True).data)
+        context['spends_s']=spends_s
+        return render(request,TEMPLATE_ROOT+"spends.html",context)
+
+class WageViews(View):
+    def wage(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        wage=WageRepo(request=request).wage(*args, **kwargs)
+        context['wage']=wage
+        context['transaction']=wage
+        return render(request,TEMPLATE_ROOT+"wage.html",context)
+    def wages(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        wages=WageRepo(request=request).list(*args, **kwargs)
+        context['wages']=wages
+        return render(request,TEMPLATE_ROOT+"wages.html",context)
+
+
+    def new_wage(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        financial_accounts=FinancialAccountRepo(request=request).list(*args, **kwargs)
+        context['payment_methods']=(u[0] for u in PaymentMethodEnum.choices)
+        context['cost_types']=(u[0] for u in CostTypeEnum.choices)
+        context['financial_accounts']=financial_accounts
+        
+        if request.user.has_perm(APP_NAME+".add_wage"):
+            context['add_wage_form']=AddWageForm()
+        return render(request,TEMPLATE_ROOT+"new-wage.html",context)
+
 
 
 class WareHouseSheetViews(View):
@@ -263,12 +305,7 @@ class WareHouseSheetViews(View):
         context['warehouse_sheet']=warehouse_sheet
         return render(request,TEMPLATE_ROOT+"ware-house-sheet.html",context)
 
-class WageViews(View):
-    def wage(self,request,*args, **kwargs):
-        pass
-class SpendViews(View):
-    def spend(self,request,*args, **kwargs):
-        pass
+ 
 class WareHouseViews(View):
     def ware_house(self,request,*args, **kwargs):
         print(kwargs)

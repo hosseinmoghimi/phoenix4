@@ -30,7 +30,7 @@ class InvoicePaymentMethodEnum(TextChoices):
 
 class SpendTypeEnum(TextChoices):
     COST="هزینه",("هزینه")
-    Wage="حقوق",("حقوق")
+    WAGE="حقوق",("حقوق")
 class CostTypeEnum(TextChoices):
     WATER="هزینه آب",_("هزینه آب")
     TELEPHONE="هزینه تلفن",_("هزینه تلفن")

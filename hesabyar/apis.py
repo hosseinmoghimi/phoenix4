@@ -4,10 +4,10 @@ from rest_framework.views import APIView
 from hesabyar.enums import WareHouseSheetStatusEnum
 
 from utility.persian import PersianCalendar
-from .repo import ChequeRepo, CostRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo, WareHouseSheetRepo
+from .repo import ChequeRepo, CostRepo, FinancialDocumentRepo, InvoiceRepo,PaymentRepo, WageRepo, WareHouseSheetRepo
 from django.http import JsonResponse
 from .forms import *
-from .serializers import CostSerializer, PaymentSerializer,ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer, WareHouseSheetSerializer
+from .serializers import CostSerializer, PaymentSerializer,ChequeSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineSerializer, WageSerializer, WareHouseSheetSerializer
 class BasicApi(APIView):
     def add_financial_document(self,request,*args, **kwargs):
         context={}
@@ -184,6 +184,41 @@ class CostApi(APIView):
                 )
                 if cost is not None:
                     context['cost']=CostSerializer(cost).data
+                    context['result']=SUCCEED
+        context['log']=log
+        return JsonResponse(context)
+
+class WageApi(APIView):
+    def add_wage(self,request,*args, **kwargs):
+        context={}
+        log=1
+        context['result']=FAILED
+        if request.method=='POST':
+            log=2
+            add_wage_form=AddWageForm(request.POST)
+
+            if add_wage_form.is_valid():
+                log=3
+                fm=add_wage_form.cleaned_data
+                title=fm['title']
+                pay_to_id=fm['pay_to_id']
+                pay_from_id=fm['pay_from_id']
+                amount=fm['amount']
+                transaction_datetime=fm['transaction_datetime']
+                payment_method=fm['payment_method']
+                description=fm['description']
+                transaction_datetime=PersianCalendar().to_gregorian(transaction_datetime+"  00:00:00")
+                wage=WageRepo(request=request).add_wage(
+                    title=title,
+                    pay_to_id=pay_to_id,
+                    pay_from_id=pay_from_id,
+                    amount=amount,
+                    transaction_datetime=transaction_datetime,
+                    payment_method=payment_method,
+                    description=description,
+                )
+                if wage is not None:
+                    context['wage']=WageSerializer(wage).data
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)

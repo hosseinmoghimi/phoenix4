@@ -1,0 +1,101 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<h4 class="text-center">
+    حقوق ها
+</h4>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>
+                            عنوان
+                        </th>
+
+
+                        <th>
+                            پرداخت کننده
+                        </th>
+
+
+                        <th>
+                            دریافت کننده
+                        </th>
+
+
+
+                        <th>
+                            مبلغ
+                        </th>
+
+                        <th>
+                            تاریخ
+                        </th>
+
+                    </thead>
+                    <tbody>
+                        {% for wage in wages %}
+                        <tr>
+                            <td>
+                                <span class="badge badge-{{wage.color}}">
+
+                                    {{wage.payment_method}}
+                                </span>
+                                <a href="{{wage.get_absolute_url}}">
+                                    {{wage.title}}
+                                </a>
+                             
+                            </td>
+
+
+                            <td>
+                                <a href="{{wage.pay_from.get_absolute_url}}">
+                                    {{wage.pay_from.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                <a href="{{wage.pay_to.get_absolute_url}}">
+                                    {{wage.pay_to.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                {{wage.amount|to_price}}
+                            </td>
+
+
+
+
+                            <td>
+
+                                <small class="text-muted">
+
+                                    {{wage.transaction_datetime|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+
+
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

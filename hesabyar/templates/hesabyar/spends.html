@@ -1,0 +1,105 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_price %}
+{% load to_persian_date %}
+{% block content %}
+<h4 class="text-center">
+    خرج کرد ها
+</h4>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <th>
+                            عنوان
+                        </th>
+
+
+                        <th>
+                            پرداخت کننده
+                        </th>
+
+
+                        <th>
+                            دریافت کننده
+                        </th>
+
+
+
+                        <th>
+                            مبلغ
+                        </th>
+
+                        <th>
+                            تاریخ
+                        </th>
+
+                    </thead>
+                    <tbody>
+                        {% for spend in spends %}
+                        <tr>
+                            <td>
+                                <span class="badge badge-{{spend.color}}">
+
+                                    {{spend.spend_type}}
+                                </span>
+                               
+                                <a href="{{spend.get_absolute_url}}">
+                                    {{spend.title}}
+                                </a> 
+                                <span class="badge badge-primary">
+
+                                    {{spend.payment_method}}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <a href="{{spend.pay_from.get_absolute_url}}">
+                                    {{spend.pay_from.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                <a href="{{spend.pay_to.get_absolute_url}}">
+                                    {{spend.pay_to.title}}
+                                </a>
+                            </td>
+
+
+                            <td>
+                                {{spend.amount|to_price}}
+                            </td>
+
+
+
+
+                            <td>
+
+                                <small class="text-muted">
+
+                                    {{spend.transaction_datetime|to_persian_datetime|safe}}
+                                </small>
+                            </td>
+
+
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

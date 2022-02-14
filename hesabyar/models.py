@@ -571,6 +571,13 @@ class Spend(Transaction,LinkHelper):
     class Meta:
         verbose_name = _("Spend")
         verbose_name_plural = _("Spends")
+    def color(self):
+        color='primary'
+        if self.spend_type==SpendTypeEnum.COST:
+            color="danger"
+        if self.spend_type==SpendTypeEnum.WAGE:
+            color="success"
+        return color
 
     def save(self,*args, **kwargs):
         super(Spend,self).save(*args, **kwargs)
@@ -578,6 +585,21 @@ class Spend(Transaction,LinkHelper):
 class Cost(Spend,LinkHelper):    
     cost_type=models.CharField(_("cost"),choices=CostTypeEnum.choices, max_length=50)
     class_name="cost"
+    def color(self):
+        color='primary'
+        if self.cost_type==CostTypeEnum.WATER:
+            color="info"
+        if self.cost_type==CostTypeEnum.INTERNET:
+            color="success"
+        if self.cost_type==CostTypeEnum.TRANSPORT:
+            color="danger"
+        if self.cost_type==CostTypeEnum.ELECTRICITY:
+            color="primary"
+        if self.cost_type==CostTypeEnum.TELEPHONE:
+            color="secondary"
+        if self.cost_type==CostTypeEnum.GAS:
+            color="danger"
+        return color
     
     class Meta:
         verbose_name = _("Cost")

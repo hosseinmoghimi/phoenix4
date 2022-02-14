@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from authentication.serializers import ProfileSerializer
-from .models import Cheque, Cost, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Guarantee, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Store, WareHouse, WareHouseSheet
+from .models import Cheque, Cost, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Guarantee, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Spend, Store, Wage, WareHouse, WareHouseSheet
 
 
 class FinancialAccountSerializer(serializers.ModelSerializer):
@@ -133,6 +133,19 @@ class PaymentSerializer(serializers.ModelSerializer):
 class CostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cost
+        fields = ['id', 'amount','payment_method', 'title', 'persian_transaction_datetime',
+                  'description'
+                  ]
+class WageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wage
+        fields = ['id', 'amount','payment_method', 'title', 'persian_transaction_datetime',
+                  'description'
+                  ]
+
+class SpendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Spend
         fields = ['id', 'amount','payment_method', 'title', 'persian_transaction_datetime',
                   'description'
                   ]
