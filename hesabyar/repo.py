@@ -907,6 +907,18 @@ class WageRepo:
             wage.pay_to_id=kwargs['pay_to_id']
         if 'amount' in kwargs:
             wage.amount=kwargs['amount']
+        if 'month' in kwargs and 'year' in kwargs:
+            wage.month=kwargs['month']
+            wage.year=kwargs['year']
+        else:
+            from utility.persian import PersianCalendar
+            datattt=PersianCalendar().from_gregorian(kwargs['transaction_datetime'])
+            year=(datattt[0:4])
+            month=(datattt[5:7])
+            month=int(month)
+            year=int(year)
+            wage.month=month
+            wage.year=year
         if 'payment_method' in kwargs:
             wage.payment_method=kwargs['payment_method']
 
