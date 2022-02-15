@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from authentication.serializers import ProfileSerializer
-from .models import Cheque, Cost, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Guarantee, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Spend, Store, Wage, WareHouse, WareHouseSheet
+from .models import Cheque, Cost, FinancialDocument, FinancialAccount, FinancialDocumentCategory, Guarantee, Invoice, InvoiceLine, Payment, Product, ProductOrService, Service, Spend, Store, Transaction, TransactionCategory, Wage, WareHouse, WareHouseSheet
 
 
 class FinancialAccountSerializer(serializers.ModelSerializer):
@@ -15,6 +15,15 @@ class FinancialDocumentCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = FinancialDocumentCategory
         fields = ['id', 'title','color', 'get_absolute_url']
+class TransactionCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransactionCategory
+        fields = ['id', 'title','color', 'get_absolute_url']
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['id', 'title','category', 'get_absolute_url']
 
 class FinancialDocumentSerializer(serializers.ModelSerializer):
     account = FinancialAccountSerializer()
@@ -22,7 +31,7 @@ class FinancialDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FinancialDocument
-        fields = ['id', 'title', 'account', 'get_absolute_url', 'bedehkar',
+        fields = ['id', 'title','get_state_badge', 'account', 'get_absolute_url', 'bedehkar',
                   'bestankar', 'persian_document_datetime', 'category']
 
 

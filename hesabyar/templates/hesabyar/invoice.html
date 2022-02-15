@@ -58,6 +58,9 @@
 
                     واحد مبلغ ها تومان می باشد.
                 </div>
+                {% if invoice.tax_amount %}
+                  
+                {% endif %}
                 <div>
                     میزان مالیات : {{invoice.tax_amount|to_price}}
                 </div>
@@ -85,6 +88,9 @@
                 </div>
 
                 {% endif %}
+
+
+               
 
             </div>
         </div>
@@ -134,7 +140,7 @@
  {% include "hesabyar/includes/transaction-documents-app/template.html" %}
 
     </div>
-</div
+</div>
 
 {% endblock content %}
 

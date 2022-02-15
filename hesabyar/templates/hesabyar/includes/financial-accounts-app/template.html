@@ -1,6 +1,24 @@
 {% load to_persian_date %}
 {% load to_price %}
 <div class="card">
+    <div class="card-header">
+
+            <h4 class="text-center">
+                حساب های مالی
+            </h4>
+            {% if page_pre_description %}
+              
+            <h5 class="text-center">
+                {{page_pre_description}}
+            </h5>
+            {% endif %}
+            {% if page_description %}
+              
+            <h4 class="text-center">
+                {{page_description}}
+            </h4>
+            {% endif %}
+    </div>
     <div class="card-body">
         <table class="table table-striped">
             <thead>

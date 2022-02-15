@@ -9,7 +9,7 @@ from .apps import APP_NAME
 from .models import (Cheque, Cost, FinancialAccount, FinancialDocument,
                      FinancialDocumentCategory, FinancialYear, Guarantee,
                      Invoice, InvoiceLine, Payment, Product, Service, Spend, Store,
-                     Tag, Transaction, Wage, WareHouse, WareHouseSheet)
+                     Transaction, TransactionCategory,Tag, Wage, WareHouse, WareHouseSheet)
 
 
 class FinancialDocumentCategoryRepo:
@@ -216,6 +216,38 @@ class FinancialAccountRepo:
     def financial_account(self, *args, **kwargs):
         if 'financial_account_id' in kwargs:
             return self.objects.filter(pk= kwargs['financial_account_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+        
+
+class TransactionCategoryRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = TransactionCategory.objects
+        self.profile = ProfileRepo(user=self.user).me
+
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for) 
+        return objects
+
+    def transaction_category(self, *args, **kwargs):
+        if 'transaction_category_id' in kwargs:
+            return self.objects.filter(pk= kwargs['transaction_category_id']).first()
+        if 'title' in kwargs:
+            return self.objects.filter(title= kwargs['title']).first()
         if 'pk' in kwargs:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:
@@ -438,6 +470,8 @@ class TransactionRepo:
         self.objects = Transaction.objects
         self.profile = ProfileRepo(user=self.user).me
 
+    def transactions(self, *args, **kwargs):
+        return self.list(*args, **kwargs)
     def list(self, *args, **kwargs):
         objects = self.objects.all()
         if 'for_home' in kwargs:
@@ -578,7 +612,7 @@ class InvoiceRepo:
             for invoice_line in invoice.invoice_lines():
                 wh_sheet=WareHouseSheet()
                 wh_sheet.invoice=invoice
-                wh_sheet.product=invoice_line.product
+                wh_sheet.product_id=invoice_line.productorservice.id
 
         return invoice
     # def update_financial_documents(self,invoice,*args, **kwargs):
@@ -754,12 +788,12 @@ class CostRepo:
 
         sum=0
         if cost_type=='all':
-            costs=Cost.objects.filter(pay_to=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
+            costs=Cost.objects.filter(pay_from=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
         else:
             cost_acc=FinancialAccount.objects.filter(title=cost_type).first()
             if cost_acc is None:
                 return 0
-            costs=Cost.objects.filter(pay_to=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date).filter(pay_from=cost_acc)
+            costs=Cost.objects.filter(pay_from=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date).filter(pay_to=cost_acc)
 
         for cost in costs:
             sum+=cost.amount
@@ -786,7 +820,7 @@ class CostRepo:
             if cost_acc is None:
                 cost_acc=FinancialAccount(title=cost_type)
                 cost_acc.save()
-            cost.pay_from_id=cost_acc.id
+            cost.pay_to_id=cost_acc.id
             cost.cost_type=cost_type
         if 'title' in kwargs:
             cost.title=kwargs['title']

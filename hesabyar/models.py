@@ -1,5 +1,4 @@
 
-from django.forms import CharField
 from core.enums import ColorEnum, UnitNameEnum
 from core.models import BasicPage
 from core.settings import ADMIN_URL, MEDIA_URL, STATIC_URL
@@ -53,7 +52,21 @@ class FinancialDocument(HesabYarPage):
     bestankar=models.IntegerField(_("bestankar"),default=0)
     transaction=models.ForeignKey("transaction",blank=True,null=True, verbose_name=_("transaction"), on_delete=models.SET_NULL)
     document_datetime=models.DateTimeField(_("document_datetime"), auto_now=False, auto_now_add=False)
-    
+    tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
+    class_name="financialdocument"
+    def financial_document_(self):
+        return FinancialDocument.objects.filter(transaction=self.transaction).exclude(pk=self.pk).first()
+
+    def get_state_badge(self):
+        if self.bestankar==0:
+            color="danger"
+            state="بدهکار"
+        else:
+            color="success"
+            state="بستانکار"
+
+        return f"""<span class="badge badge-{color}">{state}</span>"""
+
     def category_title(self):
         return self.category.title
 
@@ -69,10 +82,52 @@ class FinancialDocument(HesabYarPage):
         self.class_name="financialdocument"
         return super(FinancialDocument,self).save(*args, **kwargs)
 
- 
+class Tag(models.Model):
+    class_name="tag"
+    name=models.CharField(_("name"), max_length=50)
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
 
+    @property
+    def title(self):
+        return self.name
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.title=="هزینه":
+            return "danger"
+        return 'primary'
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":tag",kwargs={'pk':self.pk})
+        
+    def __str__(self):
+        return self.title
+
+class TransactionCategory(models.Model):
+    class_name="transactioncategory"
+    title=models.CharField(_("title"), max_length=50)
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.title=="هزینه":
+            return "danger"
+        return 'primary'
+    class Meta:
+        verbose_name = 'TransactionCategory'
+        verbose_name_plural = 'TransactionCategories'
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":transactioncategory",kwargs={'pk':self.pk})
+        
+    def __str__(self):
+        return self.title
 class Transaction(models.Model,LinkHelper):
     title=models.CharField(_("عنوان"), max_length=50)
+    category=models.ForeignKey("transactioncategory",null=True,blank=True, verbose_name=_("category"), on_delete=models.SET_NULL)
     status=models.CharField(_("وضعیت"),choices=TransactionStatusEnum.choices,default=TransactionStatusEnum.DRAFT, max_length=50)
     pay_from=models.ForeignKey("financialaccount",related_name="paid_set", verbose_name=_("بستانکار"), on_delete=models.CASCADE)
     pay_to=models.ForeignKey("financialaccount",related_name="received_set", verbose_name=_("بدهکار"), on_delete=models.CASCADE)
@@ -84,11 +139,19 @@ class Transaction(models.Model,LinkHelper):
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
     documents=models.ManyToManyField("core.document",blank=True, verbose_name=_("documents"))
-
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
+    tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
+    
     class Meta:
         verbose_name = _("Transaction")
         verbose_name_plural = _("Transactions")
-
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.pay_from:
+            pass
+        return 'primary'
     def persian_transaction_datetime(self):
         return PersianCalendar().from_gregorian(self.transaction_datetime)
     def __str__(self):
@@ -97,8 +160,8 @@ class Transaction(models.Model,LinkHelper):
     def save(self,*args, **kwargs):
         super(Transaction,self).save(*args, **kwargs)
         financial_year=FinancialYear.get_by_date(date=self.transaction_datetime)
-        FinancialDocumentCategory.objects.get_or_create(title="واریز")
-        category=FinancialDocumentCategory.objects.get(title="واریز")
+        FinancialDocumentCategory.objects.get_or_create(title="تراکنش")
+        category=FinancialDocumentCategory.objects.get(title="تراکنش")
         FinancialDocument.objects.filter(transaction=self).delete()
 
         ifd1=FinancialDocument()
@@ -310,22 +373,6 @@ class FinancialDocumentCategory(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":financial_document_category", kwargs={"pk": self.pk})
-
-
-class Tag(models.Model):
-    name=models.CharField(_("name"), max_length=50)
-    color=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
-    
-
-    class Meta:
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":tag", kwargs={"pk": self.pk})
 
 
 class FinancialAccount(models.Model):

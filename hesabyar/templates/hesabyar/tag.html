@@ -1,18 +1,37 @@
 {% extends "hesabyar/layout.html" %}
 
 {% block content %}
-  <h4 class="text-center">
-      {{title}}
-  </h4>
+<div class="text-center my-5">
+
+  <span class="badge badge-{{tag.color}}">
+    
+    <span class="h4 text-center farsi">
+      {{tag.title}}
+    </h4>
+  </span>
   
+</div>
 
 <div class="row">
   <div class="col-md-12">
 {% include "hesabyar/includes/financial-accounts-app/template.html" %}
   </div>
+
+  
+  <div class="col-md-12">
+    {% include "hesabyar/includes/transactions-app/template.html" %}
+      </div>
+
+      
+  <div class="col-md-12">
+    {% include "hesabyar/includes/financial-documents-app/template.html" %}
+      </div>
 </div>
 {% endblock content %}
 
 {% block script %}
+{% include "hesabyar/includes/financial-accounts-app/script.html" %}
+{% include "hesabyar/includes/transactions-app/script.html" %}
+{% include "hesabyar/includes/financial-documents-app/script.html" %}
   
 {% endblock script %}

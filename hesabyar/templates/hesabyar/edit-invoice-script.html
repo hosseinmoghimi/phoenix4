@@ -31,10 +31,10 @@
     let edit_invoice_app = new Vue({
         el: "#edit-invoice-app",
         data: {
-            message:{
-                show:false,
-                body:"",
-                color:"success",
+            message: {
+                show: false,
+                body: "",
+                color: "success",
             },
             product_search_items: [],
             service_search_items: [],
@@ -144,7 +144,7 @@
                 });
 
                 let payload = {
-                    invoice_id:this.invoice.id,
+                    invoice_id: this.invoice.id,
                     lines: JSON.stringify(lines),
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
                     invoice_datetime2: this.invoice_date,
@@ -162,11 +162,19 @@
                 let url = "{% url 'hesabyar:edit_invoice_post' %}"
                 $.post(url, payload).done((data) => {
                     console.log(data)
-                    if(data.result==='SUCCEED'){
-                        edit_invoice_app.message={show:true,body:"با موفقیت ذخیره شد.",color:'success'}
+                    if (data.result === 'SUCCEED') {
+                        edit_invoice_app.message = { show: true, body: "با موفقیت ذخیره شد.", color: 'success' }
+                        setTimeout(() => {
+                            edit_invoice_app.message = { show: false, body: "با موفقیت ذخیره شد.", color: 'success' }
+
+                        }, 3000);
                     }
-                    if(data.result==='FAILED'){
-                        edit_invoice_app.message={show:true,body:"خطا در ذخیره فاکتور.",color:'danger'}
+                    if (data.result === 'FAILED') {
+                        edit_invoice_app.message = { show: true, body: "خطا در ذخیره فاکتور.", color: 'danger' }
+                        setTimeout(() => {
+                            edit_invoice_app.message = { show: false, body: "با موفقیت ذخیره شد.", color: 'success' }
+
+                        }, 3000);
                     }
                 })
             }

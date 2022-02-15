@@ -16,7 +16,10 @@
 <body>
     <div class="container" style="margin-bottom: 75px;">
 
+        {% if not no_nav_bar %}
+          
         {% include "phoenix/includes/navbar.html" %}
+        {% endif %}
 
         <div class="pt-5" style="margin-top:50px;">
 
@@ -28,7 +31,10 @@
 
 
     </div>
+    {% if not no_footer %}
+      
     {% include "phoenix/includes/footer.html" %}
+    {% endif %}
    
     <!-- Optional JavaScript; choose one of the two! -->
 

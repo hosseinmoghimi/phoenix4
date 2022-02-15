@@ -69,7 +69,7 @@
           <li class="nav-item">
             <a href="#" class="nav-link">صورتحساب</a>
             <a href="#" class="nav-link">دارایی</a>
-            <a href="{% url 'hesabyar:report' %}" class="nav-link">گزارش</a>
+            <a href="{% url 'hesabyar:report' financial_account_id=0 %}" class="nav-link">گزارش</a>
             <a href="{% url 'hesabyar:wages' %}" class="nav-link">حقوق ها</a>
             <a href="{% url 'hesabyar:costs' %}" class="nav-link">هزینه های جاری</a>
             <a href="{% url 'hesabyar:spends' %}" class="nav-link">خرج کرد ها</a>
@@ -78,6 +78,7 @@
             <a href="{% url 'hesabyar:products' %}" class="nav-link">کالا ها</a>
             <a href="{% url 'hesabyar:guarantees' %}" class="nav-link">گارانتی ها</a>
             <a href="{% url 'hesabyar:services' %}" class="nav-link">خدمات</a>
+            <a href="{% url 'hesabyar:transactions' %}" class="nav-link">تراکنش ها</a>
             <a href="{% url 'hesabyar:invoices' %}" class="nav-link">فاکتور ها</a>
             <a href="{% url 'hesabyar:financial_documents' %}" class="nav-link">اسناد مالی</a>
             <a href="#" class="nav-link">صندوق</a>

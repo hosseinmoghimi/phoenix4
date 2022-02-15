@@ -1,0 +1,99 @@
+{% load to_price %}
+{% load to_persian_date %}
+<div class="card" id="costs-app">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <th>
+                    عنوان
+                </th>
+
+
+                <th>
+                    پرداخت کننده
+                </th>
+
+
+                <th>
+                    دریافت کننده
+                </th>
+
+
+
+                <th>
+                    مبلغ
+                </th>
+
+                <th>
+                    تاریخ
+                </th>
+
+            </thead>
+            <tbody>
+                {% for cost in costs %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{cost.color}}">
+
+                            {{cost.cost_type}}
+                        </span>
+
+                        <a href="{{cost.get_absolute_url}}">
+                            {{cost.title}}
+                        </a>
+                        {% if cost.tags.all %}
+                        {% for tag in cost.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+                            <span class="badge badge-{{tag.color}}">
+
+                                {{tag.title}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                        {% endif %}
+
+                        <span class="badge badge-primary">
+
+                            {{cost.payment_method}}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        <a href="{{cost.pay_from.get_absolute_url}}">
+                            {{cost.pay_from.title}}
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <a href="{{cost.pay_to.get_absolute_url}}">
+                            {{cost.pay_to.title}}
+                        </a>
+                    </td>
+
+
+                    <td>
+                        {{cost.amount|to_price}}
+                    </td>
+
+
+
+
+                    <td>
+
+                        <small class="text-muted">
+
+                            {{cost.transaction_datetime|to_persian_datetime|safe}}
+                        </small>
+                    </td>
+
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>

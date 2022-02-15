@@ -21,13 +21,31 @@
     {% include "core/includes/page-links-app/template.html" %}
 
   </div>
-  <div class="col-md-12">
-    <h4>فاکتور ها</h4>
-    {% include "hesabyar/includes/invoice-lines-app/template.html" %}
+  <div class="col-md-4">
+    {% include "core/includes/page-documents-app/template.html" %}
+
+  </div>
+  <div class="col-md-4">
+    {% include "core/includes/page-tags-app/template.html" %}
 
   </div>
   <div class="col-md-12">
-    <h4>برگه های انبار</h4>
+    <div class="card">
+      <div class="card-header">
+
+        <h4 class="text-center">فاکتور ها</h4>
+      </div>
+    </div>
+    {% include "hesabyar/includes/invoice-lines-app/template.html" %}
+
+  </div>
+
+  <div class="col-md-12">
+    {% include "hesabyar/includes/warehouse-availables/template.html" %}
+
+  </div>
+
+  <div class="col-md-12">
     {% include "hesabyar/includes/warehouse-sheets-app/template.html" %}
 
   </div>
@@ -41,7 +59,10 @@
 
 </script>
 {% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
 {% include "hesabyar/includes/warehouse-sheets-app/script.html" %}
 {% include "hesabyar/includes/invoice-lines-app/script.html" %}
+{% include "hesabyar/includes/warehouse-availables/script.html" %}
 
 {% endblock script %}

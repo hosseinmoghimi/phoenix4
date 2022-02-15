@@ -85,6 +85,19 @@ class Tag(models.Model):
     priority = models.IntegerField(_("ترتیب"), default=100)
     title = models.CharField(_("عنوان"), max_length=50)
     icon=models.ForeignKey("Icon", verbose_name=_("icon"),null=True,blank=True, on_delete=models.CASCADE)
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
+    
+    @property
+    def name(self):
+        return self.title
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.title=="هزینه":
+            return "danger"
+        return 'primary'
+
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")

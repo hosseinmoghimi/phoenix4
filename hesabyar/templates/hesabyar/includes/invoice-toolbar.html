@@ -24,3 +24,15 @@
 <a href="{{invoice.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
         class="fa fa-trash text-danger"></i></a>
 {% endif %}
+<div>
+        {% if invoice.tags.all %}
+        {% for tag in invoice.tags.all %}
+        <a href="{{tag.get_absolute_url}}" class="mx-2 my-2">
+            <span class="badge badge-{{tag.color}}">
+
+                    {{tag.title}}
+            </span>
+        </a>
+        {% endfor %}
+        {% endif %}
+</div>

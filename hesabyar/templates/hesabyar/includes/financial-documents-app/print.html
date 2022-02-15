@@ -31,9 +31,7 @@
                 <tr v-for="financial_document in financial_documents">
                     {% if not financial_account %}
                     <td>
-                        <a :href="financial_document.account.get_absolute_url">
                             <span v-text="financial_document.account.title"></span>
-                        </a>
                     </td>
                     {% endif %}
 
@@ -43,10 +41,8 @@
 
                     </td>
                     <td>
-                        <a :href="financial_document.get_absolute_url">
                             <span v-text="financial_document.title"></span>
 
-                        </a>
                     </td>
 
                     <td>

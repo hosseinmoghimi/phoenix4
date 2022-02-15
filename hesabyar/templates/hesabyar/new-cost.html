@@ -1,15 +1,18 @@
 {% extends "hesabyar/layout.html" %}
 {% load static %}
 {% block content %}
-<h4 class="text-center">
-    {{title}}
-</h4>
+
 
 
 <div class="row">
 
     <div class="col-md-12">
-        <div class="card" id="new-cost-app">
+        <div class="card mt-5" id="new-cost-app">
+            <div class="card-header">
+                <h4 class="text-center">
+                    ثبت هزینه جدید
+                    </h4>
+            </div>
             <div class="card-body">
                 <form @submit.prevent="add_cost()">
 
@@ -36,8 +39,8 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="">هزینه برای</label>
-                                <select class="form-control" v-model="pay_to_id" name="" id="">
+                                <label for="">هزینه کننده</label>
+                                <select class="form-control" v-model="pay_from_id" name="" id="">
                                     {% for financial_account in financial_accounts %}
                                     <option value="{{financial_account.id}}">{{financial_account.title}}</option>
                                     {% endfor %}
@@ -47,20 +50,36 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="">هزینه</label>
+                                <label for="">هزینه برای</label>
 
 
-                                <select v-model="cost_type" class="form-control">
-                                    {% for cost_type in cost_types %}
-                                    <option value="{{cost_type}}">{{cost_type}}</option>
-
-                                    {% endfor %}
-                                </select>
+                                <select v-model="pay_to_id" class="form-control">
+                                        {% for financial_account in financial_accounts %}
+                                        <option value="{{financial_account.id}}">{{financial_account.title}}</option>
+                                        {% endfor %}
+                                    </select>
 
                             </div>
 
 
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">هزینه برای</label>
+
+
+                                <select v-model="cost_type" class="form-control">
+                                        {% for cost_type in cost_types %}
+                                        <option value="{{cost_type}}">{{cost_type}}</option>
+                                        {% endfor %}
+                                    </select>
+
+                            </div>
+
+
+                        </div>
+
 
 
                         <div class="col-md-4">

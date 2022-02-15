@@ -1,6 +1,25 @@
 {% load to_persian_date %}
 {% load to_price %}
 <div class="card" id="financial-documents-app">
+    <div class="card-header">
+        
+<h4 class="text-center">
+    اسناد مالی
+</h4>
+{% if page_pre_description %}
+  
+<h5 class="text-center">
+    {{page_pre_description}}
+</h5>
+{% endif %}
+{% if page_description %}
+  
+<h4 class="text-center">
+    {{page_description}}
+</h4>
+{% endif %}
+
+    </div>
     <div class="card-body">
         <table class="table table-striped">
             <thead>
@@ -26,7 +45,7 @@
                 </th>
             </thead>
             <tbody>
-               
+
 
                 <tr v-for="financial_document in financial_documents">
                     {% if not financial_account %}
@@ -34,6 +53,17 @@
                         <a :href="financial_document.account.get_absolute_url">
                             <span v-text="financial_document.account.title"></span>
                         </a>
+                        {% if financial_document.tags.all %}
+                        {% for tag in financial_document.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+                            <span class="badge badge-{{tag.color}}">
+
+                                    {{tag.title}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                        {% endif %}
+                        <div v-html="financial_document.get_state_badge"></div>
                     </td>
                     {% endif %}
 
@@ -76,9 +106,9 @@
 
         </p>
         {% if financial_account %}
-          
+
         <p>
-            
+
             <a href="{{financial_account.get_print_url}}" class="btn btn-info">
                 <i class="fa fa-print"></i>
             </a>

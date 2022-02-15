@@ -1,6 +1,7 @@
 {% extends "hesabyar/layout.html" %}
 {% load to_persian_date %}
 {% load to_price %}
+{% load to_transaction_side %}
 {% block content %}
 <h4 class="text-center">
     {{financial_document.title}}
@@ -18,6 +19,8 @@
 
                         {{financial_document.account.title}}
                     </a>
+                    {{financial_document|to_transaction_side|safe}}
+
                     <br>
                     تاریخ :
                     {{financial_document.document_datetime|to_persian_datetime|safe}}
@@ -38,6 +41,45 @@
             </div>
         </div>
     </div>
+
+    {% if financial_document_ %}
+      
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <p>
+
+                    حساب مربوطه:
+                    <a href="{{financial_document.account.get_absolute_url}}">
+
+                        {{financial_document_.account.title}}
+                        
+                    </a>
+                    
+                    {{financial_document_|to_transaction_side|safe}}
+
+                    <br>
+                    تاریخ :
+                    {{financial_document_.document_datetime|to_persian_datetime|safe}}
+                    <br>
+
+                    بدهکار :
+                    {{financial_document_.bedehkar|to_price}}
+                    <br>
+                    بستانکار :
+                    {{financial_document_.bestankar|to_price}}
+                    <br>
+                    تراکنش مربوطه:
+                    <a href="{{financial_document.transaction.get_absolute_url}}">
+
+                        {{financial_document_.transaction.title}}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock content %}
 

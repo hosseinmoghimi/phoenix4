@@ -1,15 +1,31 @@
 <div id="availables-list" class="card">
- 
+    <div class="card-header">
+        <h5 class="text-center">
+            موجودی انبار
+        </h5>
+    </div>
     <div class="card-body">
 
         <table class="table table-striped">
             <tr v-for="available_item in availables_list">
+                {% if not ware_house %}
+
+                <td>
+                    <a :href="available_item.ware_house.get_absolute_url">
+
+                        <span v-text="available_item.ware_house.title"></span>
+                    </a>
+                </td>
+                {% endif %}
+                {% if not product %}
+
                 <td>
                     <a :href="available_item.product.get_absolute_url">
 
                         <span v-text="available_item.product.title"></span>
                     </a>
                 </td>
+                {% endif %}
                 <td>
                     <span v-text="available_item.available"></span>
                     <span v-text="available_item.unit_name"></span>
