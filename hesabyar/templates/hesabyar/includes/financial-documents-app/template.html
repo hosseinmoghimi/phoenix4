@@ -45,6 +45,11 @@
                 <th>
                     بستانکار
                 </th>
+                {% if financial_account %}
+                <th>
+                    مانده
+                </th>
+                {% endif %}
             </thead>
             <tbody>
 
@@ -99,6 +104,13 @@
                         <span v-text="to_price(financial_document.bestankar)"></span>
 
                     </td>
+                    {% if financial_account %}
+                    <td>
+                        <span v-text="to_price(financial_document.rest)"></span>
+
+                    </td>
+                    {% endif %}
+
                 </tr>
 
             </tbody>

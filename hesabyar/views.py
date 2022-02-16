@@ -10,7 +10,7 @@ from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, Tr
 from .forms import *
 
 from .repo import CostRepo,GuaranteeRepo, SpendRepo, TransactionCategoryRepo, TransactionRepo, WageRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, WareHouseSheetRepo
-from .serializers import ChequeSerializer, GuaranteeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, SpendSerializer, TransactionSerializer, WareHouseSerializer, WareHouseSheetSerializer
+from .serializers import ChequeSerializer, FinancialDocumentForAccountSerializer, GuaranteeSerializer, ServiceSerializer, FinancialDocumentSerializer, InvoiceFullSerializer, InvoiceLineForProductOrServiceSerializer, InvoiceLineSerializer, ProductSerializer, SpendSerializer, TransactionSerializer, WareHouseSerializer, WareHouseSheetSerializer
 from .apps import APP_NAME
 from core.views import CoreContext, MessageView, PageContext
 from django.views import View
@@ -93,7 +93,7 @@ class FinancialAccountViews(View):
             account_id=financial_account.id)
         context['financial_documents'] = financial_documents
         financial_documents_s = json.dumps(
-            FinancialDocumentSerializer(financial_documents, many=True).data)
+            FinancialDocumentForAccountSerializer(financial_documents, many=True).data)
         context['financial_documents_s'] = financial_documents_s
         context['rest']=financial_account.rest()
         if request.user.has_perm(APP_NAME+".add_financialdocumet"):

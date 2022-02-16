@@ -36,6 +36,17 @@ class FinancialDocumentSerializer(serializers.ModelSerializer):
 
 
 
+class FinancialDocumentForAccountSerializer(serializers.ModelSerializer):
+    account = FinancialAccountSerializer()
+    category = FinancialDocumentCategorySerializer()
+
+    class Meta:
+        model = FinancialDocument
+        fields = ['id', 'title','get_state_badge', 'rest','account', 'get_absolute_url', 'bedehkar',
+                  'bestankar', 'persian_document_datetime', 'category']
+
+
+
 class ProductOrServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductOrService
