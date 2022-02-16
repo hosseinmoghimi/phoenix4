@@ -54,11 +54,21 @@ class FinancialDocument(HesabYarPage):
     document_datetime=models.DateTimeField(_("document_datetime"), auto_now=False, auto_now_add=False)
     tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
     class_name="financialdocument"
-    def rest(self):
-        rest=0
+    def fds(self):
         # rest+=self.bestankar
         # rest-=self.bedehkar
-        fds= FinancialDocument.objects.filter(account=self.account).filter(document_datetime__lte=self.document_datetime).filter(pk__lte=self.pk)
+        
+        fds= FinancialDocument.objects
+        fds=fds.exclude(pk=self.pk)
+        fds=fds.filter(account_id=self.account.id)
+        fds=fds.filter(document_datetime__lte=self.document_datetime)
+
+        return fds
+    def rest(self):
+        rest=0
+        rest+=self.bestankar
+        rest-=self.bedehkar
+        fds= self.fds()
         for fd in fds:
             rest+=fd.bestankar
             rest-=fd.bedehkar

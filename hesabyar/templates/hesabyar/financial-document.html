@@ -44,12 +44,21 @@
                     بستانکار :
                     {{financial_document.bestankar|to_price}}
                     <br>
+                    مانده :
+                    {{financial_document.rest|to_price}}
+                    <br>
                     تراکنش مربوطه:
                     <a href="{{financial_document.transaction.get_absolute_url}}">
 
                         {{financial_document.transaction.title}}
                     </a>
                 </p>
+                {% for fd in financial_document1.fds %}
+                <div>
+                    <a href="{{fd.get_absolute_url}}">{{fd.title}}</a>
+                </div>
+                  
+                {% endfor %}
             </div>
         </div>
     </div>
