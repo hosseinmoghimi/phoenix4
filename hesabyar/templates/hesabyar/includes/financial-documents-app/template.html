@@ -2,121 +2,135 @@
 {% load to_price %}
 <div class="card" id="financial-documents-app">
     <div class="card-header">
-        
-<h4 class="text-center">
-    اسناد مالی
-</h4>
-{% if page_pre_description %}
-  
-<h5 class="text-center">
-    {{page_pre_description}}
-</h5>
-{% endif %}
-{% if page_description %}
-  
-<h4 class="text-center">
-    {{page_description}}
-</h4>
-{% endif %}
+
+        <h4 class="text-center">
+            اسناد مالی
+        </h4>
+        {% if page_pre_description %}
+
+        <h5 class="text-center">
+            {{page_pre_description}}
+        </h5>
+        {% endif %}
+        {% if page_description %}
+
+        <h4 class="text-center">
+            {{page_description}}
+        </h4>
+        {% endif %}
 
     </div>
     <div class="card-body">
-    <div class="table-responsive">
+        <div class="table-responsive">
 
-        <table class="table table-striped">
-            <thead>
-                <th>
-                    عنوان سند
-                </th>
-                {% if not financial_account %}
-                <th>
-                    حساب
-                </th>
-                {% endif %}
-                <th>
-                    دسته بندی
-                </th>
-                <th>
-                    تاریخ
-                </th>
-                <th>
-                    بدهکار
-                </th>
-                <th>
-                    بستانکار
-                </th>
-                {% if financial_account %}
-                <th>
-                    مانده
-                </th>
-                {% endif %}
-            </thead>
-            <tbody>
-
-
-                <tr v-for="financial_document in financial_documents">
-                    <td>
-                        <a :href="financial_document.get_absolute_url">
-                            <span v-text="financial_document.title"></span>
-
-                        </a>
-                    </td>
-
+            <table class="table table-striped">
+                <thead>
+                    <th>
+                        عنوان سند
+                    </th>
                     {% if not financial_account %}
-                    <td>
-                        <a :href="financial_document.account.get_absolute_url">
-                            <span v-text="financial_document.account.title"></span>
-                        </a>
-                        {% if financial_document.tags.all %}
-                        {% for tag in financial_document.tags.all %}
-                        <a href="{{tag.get_absolute_url}}">
-                            <span class="badge badge-{{tag.color}}">
+                    <th>
+                        حساب
+                    </th>
+                    {% endif %}
+                    <th>
+                        دسته بندی
+                    </th>
+                    <th>
+                        تاریخ
+                    </th>
+                    <th>
+                        بدهکار
+                    </th>
+                    <th>
+                        بستانکار
+                    </th>
+                    {% if financial_account %}
+                    <th>
+                        مانده
+                    </th>
+                    {% endif %}
+                </thead>
+                <tbody>
+
+
+                    <tr v-for="financial_document in financial_documents">
+                        <td>
+                            <div>
+                                <a :href="financial_document.get_absolute_url">
+                                    <span v-text="financial_document.title"></span>
+
+                                </a>
+                            </div>
+
+
+                            <div v-if="financial_document.transaction">
+                                <a :href="financial_document.transaction.get_absolute_url">
+                                    <!-- <span v-text="financial_document.transaction.title"></span> -->
+                                    <span class="text-muted small">
+                                        تراکنش
+
+                                    </span>
+                                </a>
+                            </div>
+
+                        </td>
+
+                        {% if not financial_account %}
+                        <td>
+                            <a :href="financial_document.account.get_absolute_url">
+                                <span v-text="financial_document.account.title"></span>
+                            </a>
+                            {% if financial_document.tags.all %}
+                            {% for tag in financial_document.tags.all %}
+                            <a href="{{tag.get_absolute_url}}">
+                                <span class="badge badge-{{tag.color}}">
 
                                     {{tag.title}}
-                            </span>
-                        </a>
-                        {% endfor %}
+                                </span>
+                            </a>
+                            {% endfor %}
+                            {% endif %}
+                            <div v-html="financial_document.get_state_badge"></div>
+                        </td>
                         {% endif %}
-                        <div v-html="financial_document.get_state_badge"></div>
-                    </td>
-                    {% endif %}
 
-                    <td>
-                        <a :href="financial_document.category.get_absolute_url">
-                            <span :class="'badge badge-'+financial_document.category.color">
+                        <td>
+                            <a :href="financial_document.category.get_absolute_url">
+                                <span :class="'badge badge-'+financial_document.category.color">
 
-                                <span v-text="financial_document.category.title"></span>
-                            </span>
-                        </a>
+                                    <span v-text="financial_document.category.title"></span>
+                                </span>
+                            </a>
 
-                    </td>
-                   
+                        </td>
 
-                    <td>
-                        <span v-text="financial_document.persian_document_datetime"></span>
 
-                    </td>
-                    <td>
-                        <span v-text="to_price(financial_document.bedehkar)"></span>
+                        <td>
+                            <span v-text="financial_document.persian_document_datetime"></span>
 
-                    </td>
-                    <td>
-                        <span v-text="to_price(financial_document.bestankar)"></span>
+                        </td>
+                        <td>
+                            <span v-text="to_price(financial_document.bedehkar)"></span>
 
-                    </td>
-                    {% if financial_account %}
-                    <td>
-                        <span v-text="to_price(financial_document.rest)"></span>
+                        </td>
+                        <td>
+                            <span v-text="to_price(financial_document.bestankar)"></span>
 
-                    </td>
-                    {% endif %}
+                        </td>
+                        {% if financial_account %}
+                        <td>
+                            <span v-text="to_price(financial_document.rest)"></span>
 
-                </tr>
+                        </td>
+                        {% endif %}
 
-            </tbody>
-        </table>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
     <div class="card-footer">
         <p>
             مانده : <span v-text="to_price(rest)"></span>

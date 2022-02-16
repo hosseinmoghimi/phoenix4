@@ -28,10 +28,11 @@ class TransactionSerializer(serializers.ModelSerializer):
 class FinancialDocumentSerializer(serializers.ModelSerializer):
     account = FinancialAccountSerializer()
     category = FinancialDocumentCategorySerializer()
+    transaction = TransactionSerializer()
 
     class Meta:
         model = FinancialDocument
-        fields = ['id', 'title','get_state_badge', 'account', 'get_absolute_url', 'bedehkar',
+        fields = ['id', 'title','transaction','get_state_badge', 'account', 'get_absolute_url', 'bedehkar',
                   'bestankar', 'persian_document_datetime', 'category']
 
 

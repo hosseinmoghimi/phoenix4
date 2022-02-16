@@ -10,6 +10,10 @@
                     خدمات
                 </th>
                 
+                <th>
+                    اجرت
+                </th>
+                
 
             </thead>
             <tbody>
@@ -19,6 +23,13 @@
                         <a :href="service.get_absolute_url">
                             <span v-text="service.title"></span>
                         </a>
+                    </td>
+
+                    <td>
+                        هر
+                        <span v-text="service.unit_name"></span>
+                        :
+                            <span v-text="to_price(service.unit_price,'{{CURRENCY}}')"></span>
                     </td>
 
                    
