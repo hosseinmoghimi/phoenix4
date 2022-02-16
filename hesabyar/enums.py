@@ -41,7 +41,9 @@ class CostTypeEnum(TextChoices):
     RENT="هزینه اجاره",_("هزینه اجاره")
 class PaymentMethodEnum(TextChoices):
     DRAFT="پیش نویس",_("پیش نویس")
+    MOBILE_BANK="همراه بانک",_("همراه بانک")
     IN_CASH="نقدی",_("نقدی")
+    CHEQUE="چک",_("چک")
     POS="کارتخوان",_("کارتخوان")
     CARD="کارت به کارت",_("کارت به کارت")
 class TransactionStatusEnum(TextChoices):

@@ -62,8 +62,8 @@
                         <div>
 
                             <a href="{{transaction.category.get_absolute_url}}">
+                                
                                 <span class="badge badge-{{transaction.category.color}}">
-
                                     {{transaction.category.title}}
                                 </span>
                             </a>
@@ -78,14 +78,14 @@
                     </td>
                     <td>
 
-
+                        <span class="badge badge-{{transaction.color}}">
+*
+                        </span>
                         <a href="{{transaction.get_absolute_url}}">
-                            <span class="badge badge-{{transaction.color}}">
                                 <span class="h4">
 
                                     {{transaction.title}}
                                 </span>
-                            </span>
                         </a>
                         {% if transaction.tags.all %}
                         {% for tag in transaction.tags.all %}
