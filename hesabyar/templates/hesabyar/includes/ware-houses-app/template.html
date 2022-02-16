@@ -4,8 +4,7 @@
     <div class="card-header">
 
         <h4 class="text-center">
-            حساب های مالی
-        </h4>
+            انبار ها </h4>
         {% if page_pre_description %}
 
         <h5 class="text-center">
@@ -25,48 +24,39 @@
             <table class="table table-striped">
                 <thead>
                     <th>
-                        حساب
+                        انبار
+                    </th>
+                    <th>
+                        حساب مرتبط
                     </th>
                     <th>
 
-                    </th>
-                    <th>
-                        مانده
                     </th>
                 </thead>
                 <tbody>
-                    {% for financial_account in financial_accounts %}
+                    {% for ware_house in ware_houses %}
 
                     <tr>
                         <td>
-                            <a href="{{financial_account.get_absolute_url}}">
+                            <a href="{{ware_house.get_absolute_url}}">
 
-                                {{financial_account.title}}
-                            </a>
-
-                            {% for tag in financial_account.tags.all %}
-                            <a href="{{tag.get_absolute_url}}">
-
-                                <span class="badge badge-{{tag.color}}">
-                                    {{tag.name}}
-                                </span>
-                            </a>
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <a href="{{financial_account.profile.get_absolute_url}}">
-                                <img src="{{financial_account.profile.image}}" class="rounded-circle" width="32" alt="">
-                                {{financial_account.profile.name}}
+                                {{ware_house.title}}
                             </a>
 
                         </td>
                         <td>
-                            <span>
+                            <a href="{{ware_house.owner.get_absolute_url}}">
 
-                                {{financial_account.rest|to_price}}
-                            </span>
-
+                                {{ware_house.owner}}
+                            </a>
                         </td>
+                        <td>
+                            <a href="{{ware_house.owner.profile.get_absolute_url}}">
+                                <img src="{{ware_house.owner.profile.image}}" class="rounded-circle" width="32" alt="">
+                                {{ware_house.owner.profile.name}}
+                            </a>
+                        </td>
+
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -280,7 +280,7 @@ class FinancialAccountRepo:
             objects = objects.filter(for_home=kwargs['for_home'])
         if 'search_for' in kwargs:
             search_for=kwargs['search_for']
-            objects = objects.filter(title__contains=search_for) 
+            objects = objects.filter(Q(title__contains=search_for) |Q(profile__user__first_name__contains=search_for)|Q(profile__user__last_name__contains=search_for))
         return objects
 
     def financial_account(self, *args, **kwargs):

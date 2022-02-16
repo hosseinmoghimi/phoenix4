@@ -6,7 +6,8 @@
 
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
+            
+            <div class="card-body">
                 <h4>
                     <small>
 
@@ -16,26 +17,9 @@
                         {{search_for}}
                     </strong>
                 </h4>
-            </div>
-            <div class="card-body">
-
                 <p>
                     {{message|safe}}
                 </p>
-                {% if financial_accounts %}
-                <h5 class="mt-4">
-                    حساب ها :
-                </h5>
-                {% for financial_account in financial_accounts %}
-                <p class="mr-5">
-                    <a href="{{financial_account.get_absolute_url}}">
-
-                        {{financial_account.title}}
-                    </a>
-                </p>
-                {% endfor %}
-
-                {% endif %}
 
 
 
@@ -84,7 +68,7 @@
                 {% endif %}
 
 
-                
+
                 {% if invoices %}
                 <h5 class="mt-4">
                     فاکتور ها :
@@ -106,7 +90,14 @@
             </div>
         </div>
     </div>
+    <div class="col-md-12">
+        {% if financial_accounts %}
+        {% include "hesabyar/includes/financial-accounts-app/template.html" %}
 
+
+        {% endif %}
+
+    </div>
 
 
 </div>
