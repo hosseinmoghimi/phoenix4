@@ -1,3 +1,4 @@
+from datetime import timedelta
 from urllib import request
 from django.db.models import Q
 from authentication.repo import ProfileRepo
@@ -667,7 +668,8 @@ class InvoiceRepo:
             payment.pay_to=invoice.pay_from
             payment.creator=self.profile
             payment.amount=invoice.amount
-            payment.transaction_datetime=invoice.transaction_datetime
+            delta=timedelta(minutes=1)
+            payment.transaction_datetime=invoice.transaction_datetime+delta
             payment.payment_method=invoice.payment_method
             payment.save()
         # self.update_financial_documents(invoice)

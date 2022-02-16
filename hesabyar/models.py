@@ -56,9 +56,9 @@ class FinancialDocument(HesabYarPage):
     class_name="financialdocument"
     def rest(self):
         rest=0
-        rest+=self.bestankar
-        rest-=self.bedehkar
-        fds= FinancialDocument.objects.filter(account=self.account).filter(document_datetime__lte=self.document_datetime).exclude(pk__gte=self.pk)
+        # rest+=self.bestankar
+        # rest-=self.bedehkar
+        fds= FinancialDocument.objects.filter(account=self.account).filter(document_datetime__lte=self.document_datetime).filter(pk__lte=self.pk)
         for fd in fds:
             rest+=fd.bestankar
             rest-=fd.bedehkar
