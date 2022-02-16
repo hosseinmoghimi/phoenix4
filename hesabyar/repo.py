@@ -372,6 +372,14 @@ class WareHouseRepo():
             self.user = kwargs['user']
         self.profile=ProfileRepo(*args, **kwargs).me
         self.objects=WareHouse.objects
+
+        if self.user.has_perm(APP_NAME+".view_warehouse"):
+            self.objects = WareHouse.objects.order_by('title')
+        elif self.profile is not None:
+            self.objects = WareHouse.objects.filter(owner__profile=self.profile).order_by('title')
+        else:
+            self.objects = WareHouse.objects.filter(pk__lte=0).order_by('title')
+
     def list(self):
         objects=self.objects
         return objects
@@ -398,6 +406,14 @@ class WareHouseSheetRepo:
             self.user = kwargs['user']
         self.objects = WareHouseSheet.objects.order_by('-date_registered')
         self.profile = ProfileRepo(user=self.user).me
+
+        if self.user.has_perm(APP_NAME+".view_warehousesheet"):
+            self.objects = WareHouseSheet.objects.order_by('-date_registered')
+        elif self.profile is not None:
+            self.objects = WareHouseSheet.objects.filter(ware_house__owner__profile=self.profile).order_by('-date_registered')
+            # self.objects = WareHouseSheet.objects.filter(pk__gte=0).order_by('-date_registered')
+        else:
+            self.objects = WareHouseSheet.objects.filter(pk__lte=0).order_by('-date_registered')
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -447,10 +463,19 @@ class InvoiceLineRepo:
         self.objects = InvoiceLine.objects
         self.profile = ProfileRepo(user=self.user).me
 
+        if self.user.has_perm(APP_NAME+".view_invoiceline"):
+            self.objects = InvoiceLine.objects.order_by('invoice__transaction_datetime')
+        elif self.profile is not None:
+            self.objects = InvoiceLine.objects.filter(Q(invoice__pay_from__profile=self.profile)|Q(invoice__pay_to__profile=self.profile)).order_by('invoice__transaction_datetime')
+        else:
+            self.objects = InvoiceLine.objects.filter(pk__lte=0).order_by('invoice__transaction_datetime')
+
     def list(self, *args, **kwargs):
         objects = self.objects.all()
         if 'for_home' in kwargs:
             objects = objects.filter(for_home=kwargs['for_home'])
+        if 'invoice_id' in kwargs:
+            objects = objects.filter(invoice_id=kwargs['invoice_id'])
         if 'product_id' in kwargs:
             objects = objects.filter(productorservice_id=kwargs['product_id'])
         if 'service_id' in kwargs:
