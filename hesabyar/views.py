@@ -115,7 +115,7 @@ class FinancialAccountViews(View):
             account_id=financial_account.id)
         context['financial_documents'] = financial_documents
         financial_documents_s = json.dumps(
-            FinancialDocumentSerializer(financial_documents, many=True).data)
+            FinancialDocumentForAccountSerializer(financial_documents, many=True).data)
         context['financial_documents_s'] = financial_documents_s
         context['rest']=financial_account.rest()
         
