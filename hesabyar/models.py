@@ -50,7 +50,7 @@ class FinancialDocument(HesabYarPage):
     category=models.ForeignKey("financialdocumentcategory", verbose_name=_("category"), on_delete=models.CASCADE)
     bedehkar=models.IntegerField(_("bedehkar"),default=0)
     bestankar=models.IntegerField(_("bestankar"),default=0)
-    transaction=models.ForeignKey("transaction",blank=True,null=True, verbose_name=_("transaction"), on_delete=models.SET_NULL)
+    transaction=models.ForeignKey("transaction", verbose_name=_("transaction"), on_delete=models.CASCADE)
     document_datetime=models.DateTimeField(_("document_datetime"), auto_now=False, auto_now_add=False)
     tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
     class_name="financialdocument"
