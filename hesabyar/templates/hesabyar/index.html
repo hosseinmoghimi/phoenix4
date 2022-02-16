@@ -1,5 +1,15 @@
 {% extends "hesabyar/layout.html" %}
 
+{% block style %}
+<style>
+  .nav-item {
+    display: block!important;
+  }
+  .title{
+    /* color: blueviolet; */
+  }
+</style>
+{% endblock %}
 {% block content %}
 <h4 class="text-center">
   {{title}}
@@ -7,10 +17,10 @@
 
 
 <div class="row">
-  
+
   <div class="col-md-4">
- 
-   
+
+
     <div class="card">
       <div class="card-header">
         <h5 class="title">
@@ -18,16 +28,30 @@
         </h5>
       </div>
       <div class="card-body">
-        <ul class="nav">
+        <ul class="nav1">
           <li class="nav-item">
             <a href="{% url 'hesabyar:new_payment' %}" class="nav-link">پرداخت</a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">دریافت</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:new_cost' %}" class="nav-link">ثبت هزینه جدید</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:new_wage' %}" class="nav-link">واریز حقوق</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:sell' %}" class="nav-link">فروش</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:buy' %}" class="nav-link">خرید</a>
+          </li>
+          <li class="nav-item">
 
             <a href="#" class="nav-link">خروج از انبار</a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">ورود به انبار</a>
           </li>
         </ul>
@@ -42,20 +66,29 @@
         </h5>
       </div>
       <div class="card-body">
-        <ul class="nav">
+        <ul class="nav1">
           <li class="nav-item">
-            <a href="{{ADMIN_URL}}{{APP_NAME}}/product/add/" class="nav-link">کالای جدید</a>
-            <a href="#" class="nav-link">انبار جدید</a>
-            <a href="#" class="nav-link">خدمات جدید</a>
-            <a href="#" class="nav-link">شخص جدید</a>
-            <a href="#" class="nav-link">فروشگاه جدید</a>
-            <a href="#" class="nav-link">حساب بانکی جدید</a>
-            <a href="#" class="nav-link">صندوق فروشگاهی جدید</a>
-            <a href="#" class="nav-link">بانک جدید</a>
-            
+            <a href="{% url 'hesabyar:financial_accounts' %}" class="nav-link">طرف حساب ها </a>
+          </li>
+          <li class="nav-item"><a href="{% url 'hesabyar:ware_houses' %}" class="nav-link">انبار ها</a></li>
+          <li class="nav-item">
+            <a href="{% url 'hesabyar:stores' %}" class="nav-link">فروشنده ها</a>
+          </li> 
+          <li class="nav-item">
+            <a href="{% url 'hesabyar:bank_accounts' %}" class="nav-link">حساب های بانکی</a>
+          </li> 
+          <li class="nav-item">
+            <a href="{% url 'hesabyar:banks' %}" class="nav-link">بانک ها</a>
+          </li>
+          <li class="nav-item">
+
             <a href="#" class="nav-link">صورتحساب</a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">دارایی</a>
           </li>
+
+
         </ul>
       </div>
     </div>
@@ -68,21 +101,42 @@
         </h5>
       </div>
       <div class="card-body">
-        <ul class="nav">
+        <ul class="nav1">
           <li class="nav-item">
             <a href="{% url 'hesabyar:report' financial_account_id=0 %}" class="nav-link">گزارش</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:wages' %}" class="nav-link">حقوق ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:costs' %}" class="nav-link">هزینه های جاری</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:spends' %}" class="nav-link">خرج کرد ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:cheques' %}" class="nav-link">چک ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:payments' %}" class="nav-link">پرداخت ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:products' %}" class="nav-link">کالا ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:guarantees' %}" class="nav-link">گارانتی ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:services' %}" class="nav-link">خدمات</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:transactions' %}" class="nav-link">تراکنش ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:invoices' %}" class="nav-link">فاکتور ها</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'hesabyar:financial_documents' %}" class="nav-link">اسناد مالی</a>
-         
           </li>
         </ul>
       </div>

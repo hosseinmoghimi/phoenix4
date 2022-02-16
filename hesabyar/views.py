@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render,reverse
 from django.utils import timezone
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
-from .repo import TagRepo
+from .repo import BankAccountRepo, BankRepo, TagRepo
 from core.serializers import DocumentSerializer
 from hesabyar.models import TransactionCategory 
 from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
@@ -79,6 +79,11 @@ class BasicViews(View):
         return render(request, TEMPLATE_ROOT+"tag.html", context)
 
 class FinancialAccountViews(View):
+    def financial_accounts(self, request, *args, **kwargs):
+        context = getContext(request=request)
+        financial_accounts = FinancialAccountRepo(request=request).list()
+        context['financial_accounts'] = financial_accounts
+        return render(request, TEMPLATE_ROOT+"financial-accounts.html", context)
     def financial_account(self, request, *args, **kwargs):
         context = getContext(request=request)
         context['title'] = "HesabYar Ver 1.0.0"
@@ -374,6 +379,16 @@ class WareHouseViews(View):
 
         return render(request,TEMPLATE_ROOT+"ware-house.html",context)
 
+    def ware_houses(self,request,*args, **kwargs):
+        print(kwargs)
+        context=getContext(request=request)
+        ware_houses=WareHouseRepo(request=request).list(*args, **kwargs)
+        context['ware_houses']=ware_houses
+        
+         
+
+        return render(request,TEMPLATE_ROOT+"ware-houses.html",context)
+
 class InvoiceViews(View):
     def buy(self,request,*args, **kwargs):
         pass
@@ -577,8 +592,38 @@ class BankAccountViews(View):
         context['invoice']=invoice
         context['invoice_lines']=invoice_lines
         context['invoice_lines_s']=invoice_lines_s
-        return render(request,TEMPLATE_ROOT+"invoice.html",context)
+        return render(request,TEMPLATE_ROOT+"bank-account.html",context)
+    def bank_accounts(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        bank_accounts=BankAccountRepo(request=request).list(*args, **kwargs)
+        context['bank_accounts']=bank_accounts
+        return render(request,TEMPLATE_ROOT+"bank-accounts.html",context)
+
+
+class BankViews(View):
+    def bank(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        invoice_financial_document=FinancialDocumentRepo(request=request).financial_document(*args, **kwargs)
+        invoice=invoice_financial_document.invoice
+        invoice_lines=invoice.invoice_lines()
+        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
+        context['invoice']=invoice
+        context['invoice_lines']=invoice_lines
+        context['invoice_lines_s']=invoice_lines_s
+        return render(request,TEMPLATE_ROOT+"bank.html",context)
+    def banks(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        banks=BankRepo(request=request).list(*args, **kwargs)
+        context['banks']=banks
+        return render(request,TEMPLATE_ROOT+"banks.html",context)
+
 class StoreViews(View):
+    def stores(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        stores=StoreRepo(request=request).list(*args, **kwargs)
+        context['stores']=stores
+        return render(request,TEMPLATE_ROOT+"stores.html",context)
+
     def store(self,request,*args, **kwargs):
         context=getContext(request=request)
         store=StoreRepo(request=request).store(*args, **kwargs)

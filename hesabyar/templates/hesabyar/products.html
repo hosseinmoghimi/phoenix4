@@ -5,7 +5,12 @@
     کالاها
   </h4>
   
+{% if perms.hesabya.add_product %}
+  <div class="text-right farsi">
 
+    <a href="{{ADMIN_URL}}{{APP_NAME}}/product/add/" class="nav-link">کالای جدید </a>
+  </div>
+{% endif %}
 <div class="row"> 
   <div class="col-md-12">
 {% include "hesabyar/includes/products-app/template.html" %}

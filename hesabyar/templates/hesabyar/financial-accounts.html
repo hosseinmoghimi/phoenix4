@@ -1,0 +1,30 @@
+{% extends "hesabyar/layout.html" %}
+
+{% block style %}
+<style>
+  .nav-item {
+    display: block!important;
+  }
+  .title{
+    /* color: blueviolet; */
+  }
+</style>
+{% endblock %}
+{% block content %}
+<h4 class="text-center">
+ حساب های مالی
+</h4>
+
+
+<div class="row">
+
+ 
+  <div class="col-md-12">
+    {% include "hesabyar/includes/financial-accounts-app/template.html" %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

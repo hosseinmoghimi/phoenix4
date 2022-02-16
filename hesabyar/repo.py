@@ -9,12 +9,68 @@ from core.models import Document
 from hesabyar.enums import CostTypeEnum, PaymentMethodEnum, SpendTypeEnum, TransactionStatusEnum
 
 from .apps import APP_NAME
-from .models import (Cheque, Cost, FinancialAccount, FinancialDocument,
+from .models import (Bank, BankAccount, Cheque, Cost, FinancialAccount, FinancialDocument,
                      FinancialDocumentCategory, FinancialYear, Guarantee,
                      Invoice, InvoiceLine, Payment, Product, Service, Spend, Store,
                      Transaction, TransactionCategory,Tag, Wage, WareHouse, WareHouseSheet)
 
+class BankAccountRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = BankAccount.objects.all()
+        self.profile = ProfileRepo(user=self.user).me
+        
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
+        return objects
 
+    def bank_account(self, *args, **kwargs):
+        if 'bank_account_id' in kwargs:
+            return self.objects.filter(pk= kwargs['bank_account_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+
+class BankRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = Bank.objects.all()
+        self.profile = ProfileRepo(user=self.user).me
+        
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
+        return objects
+
+    def bank(self, *args, **kwargs):
+        if 'bank_id' in kwargs:
+            return self.objects.filter(pk= kwargs['bank_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
 class FinancialDocumentCategoryRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
