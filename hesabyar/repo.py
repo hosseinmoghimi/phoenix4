@@ -1,3 +1,4 @@
+from urllib import request
 from django.db.models import Q
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
@@ -233,7 +234,23 @@ class FinancialAccountRepo:
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
         
-
+    def report(self,financial_account_id,start_date,end_date):
+        sell_benefit=0
+        sell_loss=0
+        tax=0
+        sell_service=0
+        buy_service=0
+        ship_fee=0
+        fds=FinancialDocumentRepo(request=self.request).list(account_id=financial_account_id).filter(document_datetime__lte=end_date).filter(document_datetime__gte=start_date)
+        for fd in fds:
+            for fb in fd.financialbalance_set.all():
+                sell_benefit+=fb.sell_benefit
+                sell_loss+=fb.sell_loss
+                tax+=fb.tax
+                sell_service+=fb.sell_service
+                buy_service+=fb.buy_service
+                ship_fee+=fb.ship_fee
+        return (sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)
 class TransactionCategoryRepo:
     def __init__(self, *args, **kwargs):
         self.request = None

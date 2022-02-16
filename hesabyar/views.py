@@ -195,22 +195,26 @@ class ReportViews(View):
         end_date=timezone.now()
         from datetime import timedelta
         delta=timedelta(days=30)
+        start_date=end_date-delta
         financial_account_id=kwargs['financial_account_id'] if 'financial_account_id' in kwargs else 0
+        financial_account_repo=FinancialAccountRepo(request=request)
         if financial_account_id==0:
-            financial_account=FinancialAccountRepo(request=request).me
+            financial_account=financial_account_repo.me
         else:
-            financial_account=FinancialAccountRepo(request=request).financial_account(*args, **kwargs)
+            financial_account=financial_account_repo.financial_account(*args, **kwargs)
 
+        (sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)=financial_account_repo.report(financial_account_id=financial_account.id,start_date=start_date,end_date=end_date)
         wage_repo=WageRepo(request=request)
         cost_repo=CostRepo(request=request)
         context['financial_account']=financial_account
-        start_date=end_date-delta
-        sell_benefit=0
-        tax=0
+        sell_benefit=sell_benefit
+        sell_loss=sell_loss
+        tax=tax
+        ship_fee=ship_fee
         wages=wage_repo.wage_sum(financial_account=financial_account,start_date=start_date,end_date=end_date)
         costs=cost_repo.cost_sum(financial_account=financial_account,start_date=start_date,end_date=end_date)
-        buy_service=0
-        sell_service=0
+        buy_service=buy_service
+        sell_service_benefit=sell_service-buy_service
         rest=0
         rest+=sell_benefit 
         rest-=wages
@@ -219,12 +223,14 @@ class ReportViews(View):
         rest-=tax
         rest-=costs
         context['tax']=tax
+        context['sell_service_benefit']=sell_service_benefit
         context['wages']=wages
         context['sell_benefit']=sell_benefit
         context['start_date']=start_date
         context['end_date']=end_date
         context['buy_service']=buy_service
         context['sell_service']=sell_service
+        context['ship_fee']=ship_fee
         context['costs']=costs
         context['rest']=rest
 
@@ -443,14 +449,17 @@ class InvoiceViews(View):
             from_ware_house=WareHouseRepo(request=request).objects.create(owner_id=invoice.pay_from.id,title="انبار "+invoice.pay_from.title)
         
         ware_house_sheet_repo=WareHouseSheetRepo(request=request)
+        product_repo=ProductRepo(request=request)
         me=ProfileRepo(request=request).me
         for invoice_line in invoice_lines:
-            warehouse_sheet=ware_house_sheet_repo.objects.filter(ware_house=to_ware_house).filter(invoice=invoice).filter(product=invoice_line.productorservice).first()
-            if warehouse_sheet is None:
-                warehouse_sheet=ware_house_sheet_repo.objects.create(ware_house=to_ware_house,invoice=invoice,product_id=invoice_line.productorservice.id,creator_id=me.id,direction=WareHouseSheetDirectionEnum.IMPORT,date_registered=timezone.now(),unit_name=invoice_line.unit_name,quantity=invoice_line.quantity)
-            warehouse_sheet=ware_house_sheet_repo.objects.filter(ware_house=from_ware_house).filter(invoice=invoice).filter(product=invoice_line.productorservice).first()
-            if warehouse_sheet is None:
-                warehouse_sheet=ware_house_sheet_repo.objects.create(ware_house=from_ware_house,invoice=invoice,product_id=invoice_line.productorservice.id,creator_id=me.id,direction=WareHouseSheetDirectionEnum.EXPORT,date_registered=timezone.now(),unit_name=invoice_line.unit_name,quantity=invoice_line.quantity)
+            product=product_repo.product(product_id=invoice_line.productorservice.id)
+            if product is not None:
+                warehouse_sheet=ware_house_sheet_repo.objects.filter(ware_house=to_ware_house).filter(invoice=invoice).filter(product=invoice_line.productorservice).first()
+                if warehouse_sheet is None:
+                    warehouse_sheet=ware_house_sheet_repo.objects.create(ware_house=to_ware_house,invoice=invoice,product_id=invoice_line.productorservice.id,creator_id=me.id,direction=WareHouseSheetDirectionEnum.IMPORT,date_registered=timezone.now(),unit_name=invoice_line.unit_name,quantity=invoice_line.quantity)
+                warehouse_sheet=ware_house_sheet_repo.objects.filter(ware_house=from_ware_house).filter(invoice=invoice).filter(product=invoice_line.productorservice).first()
+                if warehouse_sheet is None:
+                    warehouse_sheet=ware_house_sheet_repo.objects.create(ware_house=from_ware_house,invoice=invoice,product_id=invoice_line.productorservice.id,creator_id=me.id,direction=WareHouseSheetDirectionEnum.EXPORT,date_registered=timezone.now(),unit_name=invoice_line.unit_name,quantity=invoice_line.quantity)
             
 
         

@@ -5,6 +5,15 @@
 {% block content %}
 <h4 class="text-center">
     {{financial_document.title}}
+    {% if perms.hesabyar.change_financialdocument %}
+    <a href="{{financial_document.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+            class="fa fa-edit text-info"></i></a>
+    {% endif %}
+
+    {% if perms.hesabyar.delete_financialdocument %}
+    <a href="{{financial_document.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+            class="fa fa-trash text-danger"></i></a>
+    {% endif %}
 </h4>
 
 
@@ -12,6 +21,9 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
+
+
+
                 <p>
 
                     حساب مربوطه:
@@ -42,8 +54,66 @@
         </div>
     </div>
 
-    {% if financial_document_ %}
-      
+    {% for financial_balance in financial_document.financialbalance_set.all %}
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body farsi text-right">
+
+
+                {% if perms.hesabyar.change_financialbalance %}
+                <a href="{{financial_balance.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+                        class="fa fa-edit text-info"></i></a>
+                {% endif %}
+
+                {% if perms.hesabyar.delete_financialbalance %}
+                <a href="{{financial_balance.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+                        class="fa fa-trash text-danger"></i></a>
+                {% endif %}
+
+                <div class="text-success">
+
+                    سود حاصل از فروش :
+                    {{financial_balance.sell_benefit|to_price}}
+                </div>
+
+                <div class="text-success">
+
+                    فروش خدمات
+                    {{financial_balance.sell_service|to_price}}
+                </div>
+
+                <div class="text-danger">
+                    خرید خدمات :
+                    {{financial_balance.buy_service|to_price}}
+                </div>
+                <div class="text-danger">
+                    زیان حاصل از فروش :
+
+                    {{financial_balance.sell_loss|to_price}}
+                </div>
+                <div class="text-warning">
+
+                    مالیات :
+                    {{financial_balance.tax|to_price}}
+                </div>
+                <div class="text-danger">
+
+                    حمل :
+                    {{financial_balance.ship_fee|to_price}}
+                </div>
+                <div class="text-danger">
+
+                    هزینه :
+                    {{financial_balance.cost|to_price}}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% if financial_document_1 %}
+
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
@@ -53,9 +123,9 @@
                     <a href="{{financial_document_.account.get_absolute_url}}">
 
                         {{financial_document_.account.title}}
-                        
+
                     </a>
-                    
+
                     {{financial_document_|to_transaction_side|safe}}
 
                     <br>

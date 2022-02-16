@@ -76,11 +76,33 @@ class FinancialDocument(HesabYarPage):
     class Meta:
         verbose_name = _("FinancialDocument")
         verbose_name_plural = _("FinancialDocuments")
-
-
+ 
     def save(self,*args, **kwargs):
         self.class_name="financialdocument"
-        return super(FinancialDocument,self).save(*args, **kwargs)
+
+        super(FinancialDocument,self).save(*args, **kwargs)
+        if len(self.financialbalance_set.all())==0:
+            FinancialBalance.objects.create(financial_document=self)
+
+class FinancialBalance(models.Model,LinkHelper):
+    financial_document=models.ForeignKey("FinancialDocument", verbose_name=_("FinancialDocument"), on_delete=models.CASCADE)
+    class_name="financialbalance"
+    sell_benefit=models.IntegerField(_("سود حاصل از فروش"),default=0)
+    sell_loss=models.IntegerField(_("زیان حاصل از فروش"),default=0)
+    cost=models.IntegerField(_("هزینه"),default=0)
+    tax=models.IntegerField(_("مالیات"),default=0)
+    sell_service=models.IntegerField(_("فروش خدمات"),default=0)
+    buy_service=models.IntegerField(_("خرید خدمات"),default=0)
+    ship_fee=models.IntegerField(_("هزینه حمل"),default=0)
+    
+
+    class Meta:
+        verbose_name = _("FinancialBalance")
+        verbose_name_plural = _("FinancialBalances")
+
+    def __str__(self):
+        return self.financial_document.title 
+
 
 class Tag(models.Model):
     class_name="tag"
