@@ -23,6 +23,9 @@
     <div class="card-body">
         <table class="table table-striped">
             <thead>
+                <th>
+                    عنوان سند
+                </th>
                 {% if not financial_account %}
                 <th>
                     حساب
@@ -30,9 +33,6 @@
                 {% endif %}
                 <th>
                     دسته بندی
-                </th>
-                <th>
-                    عنوان سند
                 </th>
                 <th>
                     تاریخ
@@ -48,6 +48,13 @@
 
 
                 <tr v-for="financial_document in financial_documents">
+                    <td>
+                        <a :href="financial_document.get_absolute_url">
+                            <span v-text="financial_document.title"></span>
+
+                        </a>
+                    </td>
+                    
                     {% if not financial_account %}
                     <td>
                         <a :href="financial_document.account.get_absolute_url">
@@ -76,12 +83,7 @@
                         </a>
 
                     </td>
-                    <td>
-                        <a :href="financial_document.get_absolute_url">
-                            <span v-text="financial_document.title"></span>
-
-                        </a>
-                    </td>
+                   
 
                     <td>
                         <span v-text="financial_document.persian_document_datetime"></span>

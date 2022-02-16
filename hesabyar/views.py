@@ -84,8 +84,12 @@ class FinancialAccountViews(View):
         context['title'] = "HesabYar Ver 1.0.0"
         financial_account = FinancialAccountRepo(
             request=request).financial_account(*args, **kwargs)
+        if financial_account is None:
+            mv=MessageView(request=request)
+            mv.title="دسترسی غیر مجاز برای شما"
+            return mv.response()
         context['financial_account'] = financial_account
-        financial_documents = FinancialDocumentRepo().list(
+        financial_documents = FinancialDocumentRepo(request=request).list(
             account_id=financial_account.id)
         context['financial_documents'] = financial_documents
         financial_documents_s = json.dumps(
@@ -107,7 +111,7 @@ class FinancialAccountViews(View):
         financial_account = FinancialAccountRepo(
             request=request).financial_account(*args, **kwargs)
         context['financial_account'] = financial_account
-        financial_documents = FinancialDocumentRepo().list(
+        financial_documents = FinancialDocumentRepo(request=request).list(
             account_id=financial_account.id)
         context['financial_documents'] = financial_documents
         financial_documents_s = json.dumps(
@@ -506,7 +510,7 @@ class FinancialDocumentViews(View):
     
     def financial_document(self, request, *args, **kwargs):
         context = getContext(request=request)
-        financial_document = FinancialDocumentRepo().financial_document(*args, **kwargs)
+        financial_document = FinancialDocumentRepo(request=request).financial_document(*args, **kwargs)
         context['financial_document'] = financial_document
         financial_document_=financial_document.financial_document_()
         context['financial_document_'] = financial_document_

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
 from django.utils import timezone
@@ -99,8 +100,13 @@ class FinancialDocumentRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = FinancialDocument.objects.order_by('document_datetime')
         self.profile = ProfileRepo(user=self.user).me
+        if self.user.has_perm(APP_NAME+".view_financialdocument"):
+            self.objects = FinancialDocument.objects.order_by('document_datetime')
+        elif self.profile is not None:
+            self.objects = FinancialDocument.objects.filter(account__profile=self.profile).order_by('document_datetime')
+        else:
+            self.objects = FinancialDocument.objects.filter(pk__lte=0).order_by('document_datetime')
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -200,6 +206,12 @@ class FinancialAccountRepo:
         self.objects = FinancialAccount.objects
         self.profile = ProfileRepo(user=self.user).me
         self.me=FinancialAccount.objects.filter(profile=self.profile).first()
+        if self.user.has_perm(APP_NAME+".view_financialqaccount"):
+            self.objects = FinancialAccount.objects.order_by('profile')
+        elif self.profile is not None:
+            self.objects = FinancialAccount.objects.filter(profile=self.profile).order_by('profile')
+        else:
+            self.objects = FinancialAccount.objects.filter(pk__lte=0).order_by('profile')
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()
@@ -515,6 +527,15 @@ class InvoiceRepo:
             self.user = kwargs['user']
         self.objects = Invoice.objects
         self.profile = ProfileRepo(user=self.user).me
+
+        if self.user.has_perm(APP_NAME+".view_invoice"):
+            self.objects = Invoice.objects.order_by('transaction_datetime')
+        elif self.profile is not None:
+            self.objects = Invoice.objects.filter(Q(pay_from__profile=self.profile)|Q(pay_to__profile=self.profile)).order_by('transaction_datetime')
+        else:
+            self.objects = Invoice.objects.filter(pk__lte=0).order_by('transaction_datetime')
+
+
 
     def list(self, *args, **kwargs):
         objects = self.objects.all()

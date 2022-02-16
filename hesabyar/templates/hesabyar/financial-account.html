@@ -3,6 +3,9 @@
 {% block content %}
 <h4 class="text-center">
   {{financial_account.title}}
+  <a href="{{financial_account.profile.get_absolute_url}}" target="_blank" title="پروفایل" class="mx-2"><i class="fa fa-user text-info"></i></a>
+
+
   <a href="{{financial_account.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i class="fa fa-print text-success"></i></a>
 
 
