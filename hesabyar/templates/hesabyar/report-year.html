@@ -27,79 +27,83 @@
                     </span>
 
                 </div>
-                <table class="table table-striped">
-                    <thead>
-                        <th>
+                <div class="table-responsive">
 
-                        </th>
-                        <th>
-                            سود فروش
-                        </th>
-                        <th>
-                            فروش خدمات
-                        </th>
-                        <th>
-                            حقوق
-                        </th>
-                        <th>
-                            هزینه
-                        </th>
-                        <th>
-                            خرید خدمات
-                        </th>
-                        <th>
-                            هزینه حمل
-                        </th>
-                    </thead>
-                    <tbody>
-                        {% for rep_item in rep %}
-                        <tr>
-                            <td>
-                                {{rep_item.month_name}}
-                            </td>
-                            <td>
-                                {{rep_item.sell_benefit|to_price}}
+                    <table class="table table-striped">
+                        <thead>
+                            <th>
 
-                            </td>
-                            <td>
+                            </th>
+                            <th>
+                                سود فروش
+                            </th>
+                            <th>
+                                فروش خدمات
+                            </th>
+                            <th>
+                                حقوق
+                            </th>
+                            <th>
+                                هزینه
+                            </th>
+                            <th>
+                                خرید خدمات
+                            </th>
+                            <th>
+                                هزینه حمل
+                            </th>
+                        </thead>
+                        <tbody>
+                            {% for rep_item in rep %}
+                            <tr>
+                                <td>
+                                    {{rep_item.month_name}}
+                                </td>
+                                <td>
+                                    {{rep_item.sell_benefit|to_price}}
 
-                                {{rep_item.sell_benefit|to_price}}
-                            </td>
-                            <td>
+                                </td>
+                                <td>
 
-                                {{rep_item.wage|to_price}}
-                            </td>
-                            <td>
+                                    {{rep_item.sell_benefit|to_price}}
+                                </td>
+                                <td>
 
-                                {{rep_item.cost|to_price}}
-                            </td>
-                            <td>
-                                {{rep_item.buy_service|to_price}}
-                            </td>
+                                    {{rep_item.wage|to_price}}
+                                </td>
+                                <td>
 
-                            <td>
-                                {{rep_item.ship_fee|to_price}}
-                            </td>
-                        </tr>
-                        {% endfor %}
+                                    {{rep_item.cost|to_price}}
+                                </td>
+                                <td>
+                                    {{rep_item.buy_service|to_price}}
+                                </td>
+
+                                <td>
+                                    {{rep_item.ship_fee|to_price}}
+                                </td>
+                            </tr>
+                            {% endfor %}
 
 
 
-                    </tbody>
-                    <tfoot>
-                        <th>
+                        </tbody>
+                        <tfoot>
+                            <th>
 
-                        </th>
-                        <th>
-                            سود خالص
+                            </th>
+                            <th>
+                                سود خالص
 
-                        </th>
-                        <th>
-                            {{rest|to_price}}
+                            </th>
+                            <th>
+                                {{rest|to_price}}
 
-                        </th>
-                    </tfoot>
-                </table>
+                            </th>
+                        </tfoot>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -189,7 +193,7 @@
         chart_data_wage.push(month.wage)
         chart_data_sell_benefit.push(month.sell_benefit)
     });
-    var xValues = ["فروردین", "اردیبهشت","خرداد","تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+    var xValues = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
     function drawVoltageLinearChart() {
 
         new Chart("report-linear-chart", {
