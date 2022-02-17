@@ -291,20 +291,26 @@ class InvoiceViews(View):
         pass
     def get_edit_invoice_context(self,request,*args, **kwargs):
         context={}
-        customers=FinancialAccountRepo(request=request).list()
+        customers=FinancialAccountRepo(request=request).list(all=True)
         context['customers']=customers
 
         stores=StoreRepo(request=request).list()
         context['stores']=stores
          
-        
+        sps=StorePriceRepo(request=request).objects.all()
         products=ProductRepo(request=request).list()
+        for product in products:
+            sp=sps.filter(productorservice_id=product.id).order_by('-date_added').first()
+            product.unit_price=sp.sell_price if sp is not None else product.unit_price 
         context['products']=products
         context['products_s']=json.dumps(ProductSerializer(products,many=True).data)
 
 
         
         services=ServiceRepo(request=request).list()
+        for service in services:
+            sp=sps.filter(productorservice_id=service.id).order_by('-date_added').first()
+            service.unit_price=sp.sell_price if sp is not None else service.unit_price 
         context['services']=services
         context['services_s']=json.dumps(ServiceSerializer(services,many=True).data)
 
@@ -316,8 +322,10 @@ class InvoiceViews(View):
     def sell(self,request,*args, **kwargs):
         context=getContext(request=request)
         context.update(self.get_edit_invoice_context(request=request))
-        
-        invoice=InvoiceRepo(request=request).add(*args, **kwargs)
+        store=StoreRepo(request=request).me
+        print(store)
+        print(100*"#")
+        invoice=InvoiceRepo(request=request).add(store=store,*args, **kwargs)
         context['invoice']=invoice
         return redirect(invoice.get_edit_url2())
 
@@ -687,7 +695,7 @@ class ReportViews(View):
         rep=[]
         for month in range(12):
             
-            (start_date,end_date,sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)=financial_account_repo.report_year(financial_account_id=financial_account_id,year=year,month=month+1)
+            (start_date,end_date,sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee,discount)=financial_account_repo.report_year(financial_account_id=financial_account_id,year=year,month=month+1)
             cost=CostRepo(request=request).cost_sum(financial_account_id=financial_account_id,start_date=start_date,end_date=end_date)
             wage=WageRepo(request=request).wage_sum(financial_account_id=financial_account_id,start_date=start_date,end_date=end_date)
             rep.append({
@@ -698,6 +706,7 @@ class ReportViews(View):
                 'tax':tax,
                 'cost':cost,
                 'wage':wage,
+                'discount':discount,
                 'sell_service':sell_service,
                 'buy_service':buy_service,
                 'ship_fee':ship_fee,

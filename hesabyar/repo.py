@@ -326,6 +326,8 @@ class FinancialAccountRepo:
             self.objects = FinancialAccount.objects.filter(pk__lte=0).order_by('profile')
 
     def list(self, *args, **kwargs):
+        if 'all' in kwargs and kwargs['all']==True:
+            return FinancialAccount.objects.order_by("profile__user__last_name")
         objects = self.objects.all()
         if 'tag_id' in kwargs:
             tag=TagRepo(request=self.request).tag(tag_id=kwargs['tag_id'])
@@ -390,6 +392,7 @@ class FinancialAccountRepo:
         buy_service=0
         ship_fee=0
         wage=0
+        discount=0
         docs=FinancialBalance.objects.filter(financial_document__account=financial_account).filter(financial_document__document_datetime__lte=end_date).filter(financial_document__document_datetime__gte=start_date)
         for doc in docs:
             sell_benefit+=doc.sell_benefit        
@@ -398,8 +401,8 @@ class FinancialAccountRepo:
             sell_service+=doc.sell_service        
             buy_service+=doc.buy_service        
             ship_fee+=doc.ship_fee        
-            # wage+=doc.wage        
-        return (start_date,end_date,sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)
+            discount+=doc.discount        
+        return (start_date,end_date,sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee,discount)
 
 class TransactionCategoryRepo:
     def __init__(self, *args, **kwargs):
@@ -671,8 +674,14 @@ class TransactionRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Transaction.objects
+        self.objects = Transaction.objects.all().order_by('transaction_datetime')
         self.profile = ProfileRepo(user=self.user).me
+        if self.user.has_perm(APP_NAME+".view_transaction"):
+            self.objects = self.objects
+        elif self.profile is not None:
+            self.objects = self.objects.filter(Q(pay_from__profile=self.profile)|Q(pay_to__profile=self.profile))
+        else:
+            self.objects = self.objects.filter(pk__lte=0)
 
     def transactions(self, *args, **kwargs):
         return self.list(*args, **kwargs)
@@ -747,10 +756,14 @@ class InvoiceRepo:
             return self.objects.filter(pk= kwargs['id']).first()
     
     def edit_invoice(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".change_invoice"):
-            return
         invoice=self.invoice(*args, **kwargs)
         if invoice is None:
+            return
+        if self.user.has_perm(APP_NAME+".change_invoice"):
+            pass
+        elif invoice.pay_from.profile==self.profile:
+            pass
+        else:
             return
         if invoice.status==TransactionStatusEnum.DELIVERED:
             return None
@@ -828,7 +841,19 @@ class InvoiceRepo:
                 wh_sheet=WareHouseSheet()
                 wh_sheet.invoice=invoice
                 wh_sheet.product_id=invoice_line.productorservice.id
-
+        fd=FinancialDocument.objects.filter(account=invoice.pay_from).filter(transaction=invoice).first()
+        if fd is not None:
+            fb=FinancialBalance(financial_document=fd)
+            sell_benefit=0
+            for line in invoice.invoiceline_set.all():
+                sp=StorePrice.objects.filter(store_id=invoice.pay_from.id).filter(productorservice_id=line.productorservice.id).order_by('-date_added').first()
+                if sp is not None:
+                    sell_benefit+=line.quantity*(line.unit_price-sp.buy_price)
+            fb.sell_benefit=sell_benefit
+            fb.tax=invoice.tax_amount
+            fb.discount=invoice.discount
+            fb.ship_fee=invoice.ship_fee
+            fb.save()
         return invoice
     # def update_financial_documents(self,invoice,*args, **kwargs):
     #     financial_year=FinancialYear.get_by_date(date=invoice.invoice_datetime)
@@ -864,16 +889,22 @@ class InvoiceRepo:
     #     ifd1.save()
           
     def add(self,*args, **kwargs):
-        if not self.user.has_perm(APP_NAME+".add_invoice"):
+        store=StoreRepo(request=self.request).me
+        if self.user.has_perm(APP_NAME+".add_invoice"):
+            pass
+        elif 'store' in kwargs:
+            store=kwargs['store']
+        elif store is not None:
+            pass
+        else:
             return
         invoice=Invoice()
-        me_store=StoreRepo(request=self.request).me
         me_p=FinancialAccountRepo(request=self.request).me
 
         if 'pay_from_id' in kwargs:
             invoice.pay_from_id=kwargs['pay_from_id'] 
         else:
-            invoice.pay_from_id=me_store.id
+            invoice.pay_from_id=store.id
 
         if 'pay_to_id' in kwargs:
             invoice.pay_to_id=kwargs['pay_to_id'] 

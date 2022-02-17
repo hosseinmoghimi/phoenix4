@@ -38,19 +38,22 @@
                                 سود فروش
                             </th>
                             <th>
-                                فروش خدمات
-                            </th>
-                            <th>
                                 حقوق
                             </th>
                             <th>
                                 هزینه
                             </th>
                             <th>
+                                فروش خدمات
+                            </th>
+                            <th>
                                 خرید خدمات
                             </th>
                             <th>
                                 هزینه حمل
+                            </th>
+                            <th>
+                                تخفیف
                             </th>
                         </thead>
                         <tbody>
@@ -65,10 +68,6 @@
                                 </td>
                                 <td>
 
-                                    {{rep_item.sell_benefit|to_price}}
-                                </td>
-                                <td>
-
                                     {{rep_item.wage|to_price}}
                                 </td>
                                 <td>
@@ -76,11 +75,18 @@
                                     {{rep_item.cost|to_price}}
                                 </td>
                                 <td>
+
+                                    {{rep_item.sell_service|to_price}}
+                                </td>
+                                <td>
                                     {{rep_item.buy_service|to_price}}
                                 </td>
 
                                 <td>
                                     {{rep_item.ship_fee|to_price}}
+                                </td>
+                                <td>
+                                    {{rep_item.discount|to_price}}
                                 </td>
                             </tr>
                             {% endfor %}
