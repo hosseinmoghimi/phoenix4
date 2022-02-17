@@ -81,6 +81,46 @@
                 </div>
             </div>
             {% endfor %}
+            {% for our_work in our_works %}
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <a href="{{our_work.get_absolute_url}}">
+                        <img src="{{our_work.thumbnail}}" class="w-100 rounded" alt="">
+                    </a>
+                </div>
+                <div class="col-md-8 text-right">
+                        <span class="farsi text-muted small">
+                            پروژه
+                        </span>
+                    <a href="{{our_work.get_absolute_url}}">
+                        
+                        <h4>
+                          {{our_work.title}}
+
+                        </h4>
+
+                    </a>
+                    {% if our_work.short_description %}
+                    <div class="text-muted small mt-2">
+
+                        {{our_work.short_description|safe}}
+                    </div>
+                    {% endif %}
+                    <div>
+
+                        {% for tag in our_work.tags.all %}
+                        <a href="{{tag.get_absolute_url}}">
+                            
+                            <span class="badge badge-success farsi">
+                                {{tag.title}}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
 
 
             {% for page in crypto_tokens %}
