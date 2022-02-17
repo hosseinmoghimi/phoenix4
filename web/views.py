@@ -5,7 +5,7 @@ from core.repo import ParameterRepo, PictureRepo
 from django.shortcuts import render
 from .repo import *
 from django.views import View
-from core.views import CoreContext, PageContext
+from core.views import CoreContext, MessageView, PageContext
 from .enums import ParameterEnum
 from .forms import *
 
@@ -120,6 +120,13 @@ class OurTeamViews(View):
         context['main_class']='main-raised'
         parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
         our_team=OurTeamRepo(request=request).our_team(*args, **kwargs)
+        if our_team is None:
+            mv=MessageView(request=request)
+            return mv.response()
+        blogs=BlogRepo(request=request).list(our_team_id=our_team.id)
+        context['blogs']=blogs
+        our_works=OurWorkRepo(request=request).list(our_team_id=our_team.id)
+        context['our_works']=our_works
         context.update(ProfileContext(request=request,profile=our_team.profile))
         context['our_team']=our_team
         return render(request,TEMPLATE_ROOT+"our-team.html",context)

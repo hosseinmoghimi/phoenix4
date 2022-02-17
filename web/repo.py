@@ -67,6 +67,10 @@ class BlogRepo:
         objects= self.objects.all()
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
+        if 'author_id' in kwargs:
+            objects=objects.filter(author_id=kwargs['author_id'])
+        if 'our_team_id' in kwargs:
+            objects=objects.filter(author_id=kwargs['our_team_id'])
         if 'search_for' in kwargs:
             search_for=kwargs['search_for']
             objects=objects.filter(Q(title__contains=search_for) | Q(meta_data__contains=search_for)|Q(description__contains=search_for))
@@ -237,6 +241,10 @@ class OurWorkRepo:
         objects= self.objects.all()
         if 'for_home' in kwargs:
             objects=objects.filter(for_home=kwargs['for_home'])
+        if 'author_id' in kwargs:
+            objects=objects.filter(author_id=kwargs['author_id'])
+        if 'our_team_id' in kwargs:
+            objects=objects.filter(author_id=kwargs['our_team_id'])
         return objects
     def our_work(self,*args, **kwargs):
         pk=0
