@@ -2,26 +2,22 @@
 {% load to_price %}
 {% load to_persian_date %}
 {% block content %}
-<h4 class="text-center">
-    {{payment.title}}
-    {% if perms.hesabyar.change_guarantee %}
-    <a href="{{guarantee.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
-            class="fa fa-edit text-info"></i></a>
-    {% endif %}
-    {% if perms.hesabyar.delete_guarantee %}
-    <a href="{{guarantee.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
-            class="fa fa-trash text-danger"></i></a>
-    {% endif %}
 
 
-</h4>
 
 
 <div class="row farsi">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5>گارانتی</h5>
+                <h5>گارانتی  {% if perms.hesabyar.change_guarantee %}
+    <a href="{{guarantee.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+            class="fa fa-edit text-info"></i></a>
+    {% endif %}
+    {% if perms.hesabyar.delete_guarantee %}
+    <a href="{{guarantee.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+            class="fa fa-trash text-danger"></i></a>
+    {% endif %}</h5>
             </div>
             <div class="card-body">
                 <div class="row">

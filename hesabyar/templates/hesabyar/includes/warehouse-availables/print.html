@@ -1,0 +1,42 @@
+<div id="availables-list" class="card">
+    <div class="card-header">
+        <h5 class="text-center">
+            موجودی  
+            {{ware_house.title}}
+        </h5>
+    </div>
+    <div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tr v-for="available_item in availables_list">
+                {% if not ware_house %}
+
+                <td>
+
+                        <span v-text="available_item.ware_house.title"></span>
+                </td>
+                {% endif %}
+                {% if not product %}
+
+                <td>
+
+                        <span v-text="available_item.product.title"></span>
+                </td>
+                {% endif %}
+                <td>
+                    <span v-text="available_item.available"></span>
+                    <span v-text="available_item.unit_name"></span>
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+
+            </tr>
+        </table>
+
+</div>
+    </div>
+</div>

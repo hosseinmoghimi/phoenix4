@@ -50,6 +50,7 @@ urlpatterns = [
     path('wages/',login_required(views.WageViews().wages),name="wages"),
     path('ware_house/<int:pk>/',login_required(views.WareHouseViews().ware_house),name="warehouse"),
     path('ware_houses/',login_required(views.WareHouseViews().ware_houses),name="ware_houses"),
+    path('ware_house_print/<int:pk>/',login_required(views.WareHouseViews().ware_house_print),name="ware_house_print"),
     path('ware_house_sheet/<int:pk>/',login_required(views.WareHouseSheetViews().ware_house_sheet),name="warehousesheet"),
     # path('profile_financial_account/<pk>/',login_required(views.ReportViews().profile_financial_account),name="profile_financial_account"),
     

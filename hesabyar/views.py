@@ -717,7 +717,6 @@ class WageViews(View):
  
 class WareHouseViews(View):
     def ware_house(self,request,*args, **kwargs):
-        print(kwargs)
         context=getContext(request=request)
         ware_house=WareHouseRepo(request=request).ware_house(*args, **kwargs)
         context['ware_house']=ware_house
@@ -739,6 +738,30 @@ class WareHouseViews(View):
         context['availables_list']=json.dumps(availables_list)
 
         return render(request,TEMPLATE_ROOT+"ware-house.html",context)
+
+    def ware_house_print(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        context['no_footer']=True
+        context['no_nav_bar']=True
+        ware_house=WareHouseRepo(request=request).ware_house(*args, **kwargs)
+        context['ware_house']=ware_house
+        
+        warehouse_sheets=WareHouseSheetRepo(request=request).list(ware_house_id=ware_house.id).order_by('date_registered')
+    
+    
+
+        products=ProductRepo(request=request).list()
+        availables_list=[]
+        for product in products:    
+            line=warehouse_sheets.filter(product_id=product.id).filter(ware_house=ware_house).first()
+            if line is not None:
+                list_item={'product':{'id':product.pk,'title':product.title,'get_absolute_url':product.get_absolute_url()}}
+                list_item['available']=line.available()
+                list_item['unit_name']=line.unit_name
+                availables_list.append(list_item)
+        context['availables_list']=json.dumps(availables_list)
+
+        return render(request,TEMPLATE_ROOT+"ware-house-print.html",context)
 
     def ware_houses(self,request,*args, **kwargs):
         print(kwargs)

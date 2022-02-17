@@ -3,7 +3,8 @@
 {% block content %}
 <h4 class="text-center">
     {{ware_house.title}}
-    
+    <a href="{{ware_house.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i
+        class="material-icons text-success">print</i></a>
   {% if perms.hesabyar.change_warehouse %}
   <a href="{{ware_house.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
       class="fa fa-edit text-info"></i></a>
@@ -22,6 +23,8 @@
 <h5>
 
     {{ware_house.title}}
+    <a href="{{ware_house.get_print_url}}" target="_blank" title="چاپ" class="mx-2"><i
+        class="material-icons text-success">print</i></a>
     {% if perms.hesabyar.change_warehouse %}
     <a href="{{ware_house.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
         class="fa fa-edit text-info"></i></a>

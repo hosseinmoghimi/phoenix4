@@ -516,12 +516,16 @@ class Store(FinancialAccount,LinkHelper):
 
     def __str__(self):
         return self.title
+
+
 class WareHouse(HesabYarPage):
     # store=models.ForeignKey("store",related_name="ware_houses", verbose_name=_("store"), on_delete=models.CASCADE)
     address=models.CharField(_("address"),null=True,blank=True, max_length=50)
     tel=models.CharField(_("tel"),null=True,blank=True, max_length=50)
     owner=models.ForeignKey("FinancialAccount", verbose_name=_("owner"), on_delete=models.CASCADE)
-    
+    def get_print_url(self):
+        return reverse(APP_NAME+":ware_house_print",kwargs={'pk':self.pk})
+
     class Meta:
         verbose_name = _("WareHouse")
         verbose_name_plural = _("WareHouses")
@@ -529,6 +533,7 @@ class WareHouse(HesabYarPage):
     def save(self,*args, **kwargs):
         self.class_name="warehouse"
         return super(WareHouse,self).save(*args, **kwargs)
+
 
 class Guarantee(models.Model,LinkHelper):
     invoice=models.ForeignKey("invoice", verbose_name=_("فاکتور"), on_delete=models.CASCADE)
@@ -587,6 +592,8 @@ class WareHouseSheet(models.Model,LinkHelper):
         if self.direction==WareHouseSheetDirectionEnum.EXPORT:
             color="danger"
         return color
+
+
 class Payment(Transaction):
     
 
@@ -624,6 +631,7 @@ class Payment(Transaction):
         ifd1.account=self.pay_from
         ifd1.save()
 
+
 class Cheque(Transaction,LinkHelper):
     cheque_date=models.DateField(_("تاریخ چک"), auto_now=False, auto_now_add=False)
     def persian_cheque_date(self):
@@ -652,7 +660,8 @@ class Cheque(Transaction,LinkHelper):
     def save(self,*args, **kwargs):
         self.class_name="cheque"
         super(Cheque,self).save(*args, **kwargs)
-      
+
+
 class Spend(Transaction,LinkHelper):    
     spend_type=models.CharField(_("spend_type"),choices=SpendTypeEnum.choices, max_length=50)
     class_name="spend"
@@ -671,6 +680,7 @@ class Spend(Transaction,LinkHelper):
     def save(self,*args, **kwargs):
         super(Spend,self).save(*args, **kwargs)
    
+
 class Cost(Spend,LinkHelper):    
     cost_type=models.CharField(_("cost"),choices=CostTypeEnum.choices, max_length=50)
     class_name="cost"
@@ -698,6 +708,8 @@ class Cost(Spend,LinkHelper):
     def save(self,*args, **kwargs):
         self.class_name="cost"
         super(Cost,self).save(*args, **kwargs)
+
+
 class Wage(Spend,LinkHelper):    
     class_name="wage"
     month=models.IntegerField(_("month"))
