@@ -33,6 +33,8 @@ class BasicViews(View):
                 log += 1
                 search_for = search_form.cleaned_data['search_for']
                 context['search_for'] = search_for
+                context['our_works'] = OurWorkRepo(
+                    request=request).list(search_for=search_for) 
                 context['blogs'] = BlogRepo(
                     request=request).list(search_for=search_for) 
                 context['crypto_tokens'] = CryptoTokenRepo(
