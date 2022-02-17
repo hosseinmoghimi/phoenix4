@@ -1,3 +1,4 @@
+from utility.persian import PersianCalendar
 import json
 from django.shortcuts import redirect, render,reverse
 from django.utils import timezone
@@ -549,19 +550,32 @@ class ProductViews(View):
 
 class ReportViews(View):
     def report(self,request,*args, **kwargs):
-        context=getContext(request=request)
+        financial_account_repo=FinancialAccountRepo(request=request)
+        financial_account=financial_account_repo.financial_account(*args, **kwargs)
+        financial_account_id=financial_account.id if financial_account is not None else 0
+        if financial_account_id==0:
+            financial_account=financial_account_repo.me
+            financial_account_id=financial_account.id
+            
         end_date=timezone.now()
         from datetime import timedelta
         delta=timedelta(days=30)
         start_date=end_date-delta
         financial_account_id=kwargs['financial_account_id'] if 'financial_account_id' in kwargs else 0
-        financial_account_repo=FinancialAccountRepo(request=request)
-        if financial_account_id==0:
-            financial_account=financial_account_repo.me
-        else:
-            financial_account=financial_account_repo.financial_account(*args, **kwargs)
-
-        (sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)=financial_account_repo.report(financial_account_id=financial_account.id,start_date=start_date,end_date=end_date)
+        log=1
+        if request.method=='POST':
+            log=2
+            get_report_form=GetReportForm(request.POST)
+            if get_report_form.is_valid():
+                log=3
+                cd=get_report_form.cleaned_data
+                end_date=cd['end_date']
+                start_date=cd['start_date']
+                financial_account_id=int(cd['financial_account_id'])
+                start_date=PersianCalendar().to_gregorian(start_date)
+                end_date=PersianCalendar().to_gregorian(end_date)+timedelta(days=1)
+        context=getContext(request=request)
+        (sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)=financial_account_repo.report(financial_account_id=financial_account_id,start_date=start_date,end_date=end_date)
         wage_repo=WageRepo(request=request)
         cost_repo=CostRepo(request=request)
         context['financial_account']=financial_account
@@ -591,13 +605,6 @@ class ReportViews(View):
         context['ship_fee']=ship_fee
         context['costs']=costs
         context['rest']=rest
-
-        
-
-
-
-
-
 
 
         buy_=0
@@ -631,6 +638,7 @@ class ReportViews(View):
         context['cost_transport']=cost_transport
         context['cost_rent']=cost_rent
         context['rest_']=rest_
+        context['get_report_form']=GetReportForm()
         return render(request,TEMPLATE_ROOT+"report.html",context)
 
 

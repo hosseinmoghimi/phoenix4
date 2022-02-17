@@ -1,6 +1,7 @@
 {% extends "hesabyar/layout.html" %}
 {% load to_persian_date %}
 {% load to_price %}
+{% load static %}
 {% block content %}
 
 
@@ -156,7 +157,6 @@
         </div>
     </div>
     <div class="col-md-3"></div>
-
 </div>
 
 
@@ -199,7 +199,7 @@
                                 <span class="badge badge-success">+</span>
                             </td>
                             <td>
-                                 فروش
+                                فروش
                             </td>
                             <td>
                                 {{sell_|to_price}}
@@ -207,14 +207,14 @@
 
                         </tr>
 
-                       
+
                         <tr>
                             <td>
                                 <span class="badge badge-danger">-</span>
                             </td>
                             <td>
-                                خرید          
-                                               </td>
+                                خرید
+                            </td>
                             <td>
                                 {{buy_|to_price}}
                             </td>
@@ -272,7 +272,7 @@
                         </tr>
 
 
-                        
+
                         <tr>
                             <td>
                                 <span class="badge badge-danger">-</span>
@@ -285,7 +285,7 @@
 
                         </tr>
 
-                        
+
                         <tr>
                             <td>
                                 <span class="badge badge-danger">-</span>
@@ -309,7 +309,7 @@
                             </td>
 
                         </tr>
-                        
+
                         <tr>
                             <td>
                                 <span class="badge badge-danger">-</span>
@@ -329,7 +329,7 @@
 
                         </th>
                         <th>
-                            سود 
+                            سود
 
                         </th>
                         <th>
@@ -345,7 +345,110 @@
 
 </div>
 
+<div class="row mt-3">
+
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card" id="get-report-form-app">
+            <div class="card-header">
+                <h4>
+                    گزارش گیری
+                </h4>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'hesabyar:report' financial_account_id=0 %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="financial_account_id" :value="financial_account_id">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">
+                                    تاریخ شروع
+                                </label>
+                                <date-picker v-model="start_date"></date-picker>
+                                <input type="hidden" name="start_date" :value="start_date">
+                            </div>
+                            <span class="farsi text-left">
+
+                            </span>
+
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">
+                                    تاریخ پایان
+                                </label>
+                                <date-picker v-model="end_date"></date-picker>
+                                <input type="hidden" name="end_date" :value="end_date">
+
+                            </div>
+                            <span class="farsi text-left">
+
+                            </span>
+
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">
+                                    &nbsp; </label>
+                                <button class="btn btn-success" type="submit">گزارش</button>
+                            </div>
+                            <span class="farsi text-left">
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+
+    
+
+</div>
 {% endblock content %}
 
 {% block script %}
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+
+<script>
+    let financial_account_id = parseInt("{{financial_account.id}}")
+    let get_report_form_app = new Vue({
+        el: "#get-report-form-app",
+        data: {
+            financial_account_id: financial_account_id,
+            start_date: current_date,
+            end_date: current_date,
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker,
+
+        },
+        methods: {
+            get_report: function () {
+                let url = "{% url 'hesabyar:report' financial_account_id=0 %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    financial_account_id: this.financial_account_id,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+
+                }
+                $.post(url, payload).done(data => {
+                    console.log(data)
+                })
+            }
+        }
+    })
+</script>
 {% endblock script %}

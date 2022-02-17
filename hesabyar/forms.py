@@ -2,6 +2,11 @@ from django import forms
 
 class SearchFrom(forms.Form):
     search_for=forms.CharField( max_length=200, required=True)
+    
+class GetReportForm(forms.Form):
+    financial_account_id=forms.IntegerField(required=True)
+    start_date=forms.CharField(max_length=50, required=True)
+    end_date=forms.CharField(max_length=50, required=True)
 class AddFinancialDocumentForm(forms.Form):
     title=forms.CharField( max_length=200, required=True)
     document_datetime=forms.CharField(max_length=20, required=True)
