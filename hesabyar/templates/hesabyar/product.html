@@ -17,6 +17,17 @@
 
 
 <div class="row">
+  {% if add_store_price_form %}
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        {% include "hesabyar/includes/new-store-price-form.html" %}
+
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
   <div class="col-md-12">
     {% include "hesabyar/includes/price-list-app/template.html" %}
 

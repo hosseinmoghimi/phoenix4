@@ -1,0 +1,130 @@
+{% load static %}
+{% if add_payment_form %}
+  
+<form @submit.prevent="add_payment()">
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="">عنوان
+
+                </label>
+
+
+                <input required type="text" class="form-control" v-model="title">
+
+            </div>
+
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">پرداخت کننده</label>
+                <select class="form-control" v-model="pay_from_id" name="" id="">
+                    {% for financial_account in financial_accounts %}
+                    <option value="{{financial_account.id}}">{{financial_account.title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">دریافت کننده</label>
+                <select class="form-control" v-model="pay_to_id" name="" id="">
+                    {% for financial_account in financial_accounts %}
+                    <option value="{{financial_account.id}}">{{financial_account.title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">تاریخ</label>
+
+                <div class="row">
+
+                    <div class="col-8">
+
+                        <date-picker v-model="transaction_datetime"></date-picker>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">مبلغ
+                    :
+                    <span v-text="to_price(amount)"></span>
+
+                </label>
+
+
+                <input required type="number" class="form-control" min="0" v-model="amount">
+
+            </div>
+
+
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">نحوه پرداخت</label>
+
+
+                <select v-model="payment_method" class="form-control">
+                    {% for payment_method in payment_methods %}
+                    <option value="{{payment_method}}">{{payment_method}}</option>
+
+                    {% endfor %}
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="">توضیحات
+
+                </label>
+
+
+                <input type="text" class="form-control" v-model="description">
+
+            </div>
+
+
+        </div>
+
+
+        <div class="col-md-12 pt-4">
+            <div class="form-group">
+                <label for="">
+                </label>
+                <button class="btn px-5 btn-success" type="submit">افزودن</button>
+            </div>
+
+        </div>
+        <div class="col-md-12 text-right">
+            <div class="my-3 text-right" v-if="message.show">
+                <span :class="'alert alert-'+message.color">
+                    <span class="farsi" v-html="message.body"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+{% endif %}

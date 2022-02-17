@@ -182,8 +182,8 @@ class FinancialDocument(HesabYarPage):
         self.class_name="financialdocument"
 
         super(FinancialDocument,self).save(*args, **kwargs)
-        if len(self.financialbalance_set.all())==0:
-            FinancialBalance.objects.create(financial_document=self)
+        # if len(self.financialbalance_set.all())==0:
+        #     FinancialBalance.objects.create(financial_document=self)
 
 
 class FinancialBalance(models.Model,LinkHelper):
@@ -195,6 +195,7 @@ class FinancialBalance(models.Model,LinkHelper):
     tax=models.IntegerField(_("مالیات"),default=0)
     sell_service=models.IntegerField(_("فروش خدمات"),default=0)
     buy_service=models.IntegerField(_("خرید خدمات"),default=0)
+    discount=models.IntegerField(_("تخفیف"),default=0)
     ship_fee=models.IntegerField(_("هزینه حمل"),default=0)
     
 
@@ -687,6 +688,8 @@ class Cheque(Transaction,LinkHelper):
         if self.status==ChequeStatusEnum.RETURNED:
             return 'danger'
         if self.status==ChequeStatusEnum.PAID:
+            return 'success'
+        if self.status==ChequeStatusEnum.PASSED:
             return 'success'
 
         return color

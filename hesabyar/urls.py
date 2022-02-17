@@ -5,6 +5,8 @@ from . import views,apis
 app_name=APP_NAME
 urlpatterns = [
     path('',login_required(views.BasicViews().home),name="home"),
+    
+    path('add_store_price/',login_required(views.ProductViews().add_store_price),name="add_store_price"),
     path('bank_account/<int:pk>/',login_required(views.BankAccountViews().bank_account),name="bank_account"),
     path('bank_accounts/',login_required(views.BankAccountViews().bank_accounts),name="bank_accounts"),
     path('banks/',login_required(views.BankViews().banks),name="banks"),

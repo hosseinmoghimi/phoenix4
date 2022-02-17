@@ -24,6 +24,20 @@
 
 <div class="row">
   <div class="col-md-12">
+    <div class="card" id="new-payment-app">
+      <div class="card-header">
+        <h5>
+          پرداخت
+        </h5>
+      </div>
+        <div class="card-body">
+          {% include "hesabyar/includes/new-payment-form.html" %}
+
+        </div>
+    </div>
+</div>
+
+  <div class="col-md-12">
     <div class="text-center">
       <span class="farsi">
         <a href="{% url 'hesabyar:report' financial_account_id=financial_account.id %}">
@@ -45,4 +59,57 @@
 </script>
 {% include "hesabyar/includes/financial-documents-app/script.html" %}
 
+
+<script>
+  let new_payment_app = new Vue({
+      el: "#new-payment-app",
+      data: {
+          payments: [],
+          pay_to_id: financial_account_id,
+          pay_from_id: financial_account_id,
+          amount: 0,
+          transaction_datetime: current_date,
+          payment_method: "",
+          title: "پرداخت",
+          description: "",
+          message: { color: "success", body: "", show: false }
+      },
+      components: {
+          DatePicker: VuePersianDatetimePicker,
+
+      },
+      methods: {
+          to_price: function (vall) {
+              return to_price(vall, "{{CURRENCY}}")
+          },
+          add_payment: function () {
+              let payload = {
+                  csrfmiddlewaretoken: csrfmiddlewaretoken,
+                  pay_to_id: parseInt(this.pay_to_id),
+                  pay_from_id: parseInt(this.pay_from_id),
+                  title: this.title,
+                  description: this.description,
+                  amount: parseInt(this.amount),
+                  transaction_datetime: this.transaction_datetime,
+                  payment_method: this.payment_method,
+
+              }
+              console.log(payload)
+              let url = "{% url 'hesabyar:add_payment' %}"
+              $.post(url, payload).done((data) => {
+
+                  if (data.result === 'SUCCEED') {
+                      this.message = { show: true, body: "با موفقیت ذخیره شد.", color: 'success' }
+                  }
+                  if (data.result === 'FAILED') {
+                      console.log(data)
+                      this.message = { show: true, body: "خطا در ذخیره سازی ", color: 'danger' }
+                  }
+
+              })
+
+          }
+      }
+  })
+</script>
 {% endblock script %}

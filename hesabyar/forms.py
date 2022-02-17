@@ -3,6 +3,13 @@ from django import forms
 class SearchFrom(forms.Form):
     search_for=forms.CharField( max_length=200, required=True)
     
+class AddStorePriceForm(forms.Form):
+    productorservice_id=forms.IntegerField(required=True)
+    store_id=forms.IntegerField(required=True)
+    sell_price=forms.IntegerField(required=True)
+    buy_price=forms.IntegerField(required=True)
+
+
 class GetReportForm(forms.Form):
     financial_account_id=forms.IntegerField(required=True)
     start_date=forms.CharField(max_length=50, required=True)

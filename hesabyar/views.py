@@ -169,6 +169,8 @@ class FinancialAccountViews(View):
         return render(request, TEMPLATE_ROOT+"financial-accounts.html", context)
     def financial_account(self, request, *args, **kwargs):
         context = getContext(request=request)
+        context.update(PaymentViews().getNewPaymentContext(request=request))
+
         context['title'] = "HesabYar Ver 1.0.0"
         financial_account = FinancialAccountRepo(
             request=request).financial_account(*args, **kwargs)
@@ -464,13 +466,17 @@ class StoreViews(View):
 
 
 class PaymentViews(View):
+    def getNewPaymentContext(self,request,*args, **kwargs):
+        context={}
+        if request.user.has_perm(APP_NAME+".add_payment"):
+            financial_accounts=FinancialAccountRepo(request=request).list(*args, **kwargs)
+            context['payment_methods']=(u[0] for u in PaymentMethodEnum.choices)
+            context['financial_accounts']=financial_accounts
+            context['add_payment_form']=AddPaymentForm()
+        return context
     def new_payment(self,request,*args, **kwargs):
         context=getContext(request=request)
-        financial_accounts=FinancialAccountRepo(request=request).list(*args, **kwargs)
-        context['payment_methods']=(u[0] for u in PaymentMethodEnum.choices)
-        context['financial_accounts']=financial_accounts
-        if request.user.has_perm(APP_NAME+".add_payment"):
-            context['add_payment_form']=AddPaymentForm()
+        context.update(self.getNewPaymentContext(request=request))
         return render(request,TEMPLATE_ROOT+"new-payment.html",context)
     def payments(self,request,*args, **kwargs):
         context=getContext(request=request)
@@ -488,6 +494,23 @@ class PaymentViews(View):
 
 
 class ProductViews(View):
+    def add_store_price(self,request,*args, **kwargs):
+        if request.method=='POST':
+            add_store_price_form=AddStorePriceForm(request.POST)
+            if add_store_price_form.is_valid():
+                cd=add_store_price_form.cleaned_data
+                productorservice_id=cd['productorservice_id']
+                store_id=cd['store_id']
+                sell_price=cd['sell_price']
+                buy_price=cd['buy_price']
+                store_price=StorePriceRepo(request=request).add(
+                    productorservice_id=productorservice_id,
+                    store_id=store_id,
+                    sell_price=sell_price,
+                    buy_price=buy_price,
+                    )
+                if store_price is not None:
+                    return redirect(store_price.productorservice.get_absolute_url())
     def present(self,request,*args, **kwargs):
         product=ProductRepo(request=request).product(*args, **kwargs)
         context=getContext(request=request)
@@ -500,8 +523,11 @@ class ProductViews(View):
     def product(self,request,*args, **kwargs):
         if not request.user.has_perm(APP_NAME+".view_product"):
             return (self.present(request=request,*args, **kwargs))
-        product=ProductRepo(request=request).product(*args, **kwargs)
         context=getContext(request=request)
+        if request.user.has_perm(APP_NAME+".add_storeprice"):
+            context['add_store_price_form']=AddStorePriceForm()
+            context['stores']=StoreRepo(request=request).list()
+        product=ProductRepo(request=request).product(*args, **kwargs)
         context.update(PageContext(request=request,page=product))
 
         price_list=StorePriceRepo(request=request).list(productorservice_id=product.id)
@@ -531,7 +557,7 @@ class ProductViews(View):
                 list_item['unit_name']=line.unit_name
                 list_item['ware_house']={'title':ware_house.title,'get_absolute_url':ware_house.get_absolute_url()}
                 availables_list.append(list_item)
-                context['availables_list']=json.dumps(availables_list)
+        context['availables_list']=json.dumps(availables_list)
 
 
         return render(request,TEMPLATE_ROOT+"product.html",context)
@@ -691,6 +717,9 @@ class ServiceViews(View):
     def service(self,request,*args, **kwargs):
         service=ServiceRepo(request=request).service(*args, **kwargs)
         context=getContext(request=request)
+        if request.user.has_perm(APP_NAME+".add_storeprice"):
+            context['add_store_price_form']=AddStorePriceForm()
+            context['stores']=StoreRepo(request=request).list()
         context.update(PageContext(request=request,page=service))
         
         context['service']=service

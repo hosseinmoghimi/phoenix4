@@ -1,0 +1,60 @@
+{% load static %}
+<div id="">
+
+    <form action="{% url 'hesabyar:add_store_price' %}" method="POST">
+        {% if product %}
+        <input type="hidden" name="productorservice_id" value="{{product.id}}">
+          
+        {% endif %}
+        {% if service %}
+        <input type="hidden" name="productorservice_id" value="{{service.id}}">
+          
+        {% endif %}
+        <div class="row">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">فروشگاه</label>
+                    <select class="form-control" v-model="store_id" name="store_id" id="">
+                        {% for store in stores %}
+                        <option value="{{store.id}}">{{store.title}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">قیمت خرید
+
+                    </label>
+
+
+                    <input required type="number" class="form-control" min="0" name="buy_price">
+
+                </div>
+
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="">قیمت فروش
+
+                    </label>
+
+
+                    <input required type="number" class="form-control" min="0" name="sell_price">
+
+                </div>
+
+
+            </div>
+
+
+            <div class="col-md-12 pt-4">
+                <button class="btn px-5 btn-success" type="submit">افزودن</button>
+            </div>
+        </div>
+    </form>
+</div>

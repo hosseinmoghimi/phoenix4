@@ -79,7 +79,23 @@ class StorePriceRepo:
             productorservice_id=kwargs['productorservice_id']
             objects = objects.filter(productorservice_id=productorservice_id)
         return objects
- 
+    def add(self,*args, **kwargs):
+        store=StoreRepo(request=self.request).store(*args, **kwargs)
+        
+        if store is None :
+            return
+
+        sp=StorePrice(store=store)
+        if 'productorservice_id' in kwargs:
+            sp.productorservice_id=kwargs['productorservice_id']
+        if 'sell_price' in kwargs:
+            sp.sell_price=kwargs['sell_price']
+        if 'buy_price' in kwargs:
+            sp.buy_price=kwargs['buy_price']
+        sp.save()
+        return sp
+   
+
 
 class BankRepo:
     def __init__(self, *args, **kwargs):

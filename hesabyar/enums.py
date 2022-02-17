@@ -21,9 +21,11 @@ class WareHouseSheetStatusEnum(TextChoices):
 class ChequeStatusEnum(TextChoices):
     DRAFT="پیش نویس",_("پیش نویس")
     RETURNED="برگشت خورده",_("برگشت خورده")
+    PASSED="پاس شده",_("پاس شده")
     PAID="تسویه شده",_("تسویه شده")
 class InvoicePaymentMethodEnum(TextChoices):
     NO_PAYMENT="پرداخت نشده",_("پرداخت نشده")
+    CHEQUE="چک",_("چک")
     POS="کارتخوان",_("کارتخوان")
     CARD="کارت به کارت",_("کارت به کارت")
     IN_CASH="پرداخت نقدی",_("پرداخت نقدی")
@@ -52,3 +54,4 @@ class TransactionStatusEnum(TextChoices):
     DELIVERED="تحویل شده",_("تحویل شده")
     APPROVED="تایید شده",_("تایید شده")
     CANCELED="کنسل شده",_("کنسل شده")
+    PASSED="پاس شده",_("پاس شده")
