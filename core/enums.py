@@ -43,8 +43,8 @@ class AppNameEnum(TextChoices):
     farm='farm',_('farm')
     core='core',_('core')
     market='market',_('market')
-    # dashboard='dashboard',_('dashboard')
-    # realestate='realestate',_('realestate')
+    map='map',_('map')
+    hesabyar='hesabyar',_('hesabyar')
     # vehicles='vehicles',_('vehicles')
     # projectcontrol='projectcontrol',_('projectcontrol')
   
