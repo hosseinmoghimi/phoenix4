@@ -1089,6 +1089,16 @@ class WageRepo:
             wage.financial_year_id=FinancialYear.get_by_date(date=wage.transaction_datetime).id
 
         wage.save()
+
+        # payment=Payment()
+        # payment.pay_from=wage.pay_to
+        # payment.pay_to=wage.pay_from
+        # payment.transaction_datetime=wage.transaction_datetime
+        # payment.amount=wage.amount
+        # payment.creator=self.profile
+        # payment.title="کارکرد حقوق "+wage.month_year()
+        # payment.save()
+
         return wage
 
 class StoreRepo:
