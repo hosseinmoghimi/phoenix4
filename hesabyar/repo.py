@@ -11,7 +11,7 @@ from hesabyar.enums import CostTypeEnum, PaymentMethodEnum, SpendTypeEnum, Trans
 from .apps import APP_NAME
 from .models import (Bank, BankAccount, Cheque, Cost, FinancialAccount, FinancialDocument,
                      FinancialDocumentCategory, FinancialYear, Guarantee,
-                     Invoice, InvoiceLine, Payment, Product, Service, Spend, Store,
+                     Invoice, InvoiceLine, Payment, Product, Service, Spend, Store, StorePrice,
                      Transaction, TransactionCategory,Tag, Wage, WareHouse, WareHouseSheet)
 
 class BankAccountRepo:
@@ -42,6 +42,42 @@ class BankAccountRepo:
             return self.objects.filter(pk= kwargs['pk']).first()
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
+
+class StorePriceRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = StorePrice.objects.all()
+        self.profile = ProfileRepo(user=self.user).me
+        if self.user.has_perm(APP_NAME+".view_storeprice"):
+            self.objects = StorePrice.objects.all()
+        elif self.profile is not None:
+            self.objects = StorePrice.objects.filter(Q(store__profile=self.profile))
+        else:
+            self.objects = StorePrice.objects.filter(pk__lte=0)
+
+
+        
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
+        if 'store_id' in kwargs:
+            store_id=kwargs['store_id']
+            objects = objects.filter(store_id=store_id)
+        if 'productorservice_id' in kwargs:
+            productorservice_id=kwargs['productorservice_id']
+            objects = objects.filter(productorservice_id=productorservice_id)
+        return objects
+ 
 
 class BankRepo:
     def __init__(self, *args, **kwargs):

@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render,reverse
 from django.utils import timezone
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
-from .repo import BankAccountRepo, BankRepo, TagRepo
+from .repo import BankAccountRepo, BankRepo, StorePriceRepo, TagRepo
 from core.serializers import DocumentSerializer
 from hesabyar.models import TransactionCategory 
 from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
@@ -487,10 +487,25 @@ class PaymentViews(View):
 
 
 class ProductViews(View):
-    def product(self,request,*args, **kwargs):
+    def present(self,request,*args, **kwargs):
         product=ProductRepo(request=request).product(*args, **kwargs)
         context=getContext(request=request)
         context.update(PageContext(request=request,page=product))
+        price_list=StorePriceRepo(request=request).list(productorservice_id=product.id)
+        context['price_list']=price_list
+        context['product']=product
+        return render(request,TEMPLATE_ROOT+"product-present.html",context)
+
+    def product(self,request,*args, **kwargs):
+        if not request.user.has_perm(APP_NAME+".view_product"):
+            return (self.present(request=request,*args, **kwargs))
+        product=ProductRepo(request=request).product(*args, **kwargs)
+        context=getContext(request=request)
+        context.update(PageContext(request=request,page=product))
+
+        price_list=StorePriceRepo(request=request).list(productorservice_id=product.id)
+        context['price_list']=price_list
+        
         
         context['product']=product
         warehouse_sheets=WareHouseSheetRepo(request=request).list(product_id=product.id).order_by('date_registered')
@@ -627,7 +642,8 @@ class ServiceViews(View):
         context.update(PageContext(request=request,page=service))
         
         context['service']=service
-
+        price_list=StorePriceRepo(request=request).list(productorservice_id=service.id)
+        context['price_list']=price_list
 
         invoice_lines=InvoiceLineRepo(request=request).list(service_id=service.id)
         invoice_lines_s=json.dumps(InvoiceLineForProductOrServiceSerializer(invoice_lines,many=True).data)

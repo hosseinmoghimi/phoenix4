@@ -1,0 +1,112 @@
+{% load to_persian_date %}
+{% load to_price %}
+<div class="card">
+    <div class="card-header">
+
+        <h4 class="text-center">
+            قیمت
+        </h4>
+        {% if page_pre_description %}
+
+        <h5 class="text-center">
+            {{page_pre_description}}
+        </h5>
+        {% endif %}
+        {% if page_description %}
+
+        <h4 class="text-center">
+            {{page_description}}
+        </h4>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+                <thead>
+                    {% if not store %}
+
+                    <th>
+                        فروشگاه
+                    </th>
+                    {% endif %}
+                    {% if not productorservice %}
+
+                    <th>
+                        کالا
+                    </th>
+                    {% endif %}
+                    <th>
+                        قیمت خرید
+                    </th>
+                    <th>
+                        قیمت فروش
+                    </th>
+                    <th>
+                        درصد سود
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+                <tbody>
+                    {% for price_item in price_list %}
+
+                    <tr>
+                        {% if not store %}
+
+                        <td>
+                            <a href="{{price_item.store.get_absolute_url}}">
+                                {{price_item.store.title}}
+                            </a>
+
+                        </td>
+                        {% endif %}
+                        {% if not productorservice %}
+
+                        <td>
+                            <a href="{{price_item.productorservice.get_absolute_url}}">
+
+                                {{price_item.productorservice.title}}
+                            </a>
+
+
+                        </td>
+                        {% endif %}
+                        <td>
+                            <span>
+
+                                {{price_item.buy_price|to_price}}
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <span>
+
+                                {{price_item.sell_price|to_price}}
+                            </span>
+
+                        </td>
+                        <td>
+                            {{price_item.benefit_percentage}}
+                        </td>
+                        <td>
+
+                            {% if perms.hesabyar.change_storeprice %}
+                            <a href="{{price_item.get_edit_url}}" target="_blank" title="ویرایش" class="mx-2"><i
+                                    class="fa fa-edit text-info"></i></a>
+                            {% endif %}
+                            {% if perms.hesabyar.delete_storeprice %}
+                            <a href="{{price_item.get_delete_url}}" target="_blank" title="حذف" class="mx-2"><i
+                                    class="fa fa-trash text-danger"></i></a>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

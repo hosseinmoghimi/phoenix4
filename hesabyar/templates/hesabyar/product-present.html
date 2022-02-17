@@ -1,0 +1,55 @@
+{% extends "hesabyar/layout.html" %}
+{% load to_price %}
+{% block content %}
+<h4 class="text-center">
+  {{product.title}}
+
+
+</h4>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body farsi text-right">
+        <h4>
+
+          {{product.title}}
+        </h4>
+        <h5>
+          هر
+          {{product.unit_name}}
+          :
+          {{product.unit_price|to_price}}
+        </h5>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    {% include "core/includes/page-links-app/template.html" %}
+
+  </div>
+  <div class="col-md-4">
+    {% include "core/includes/page-documents-app/template.html" %}
+
+  </div>
+  <div class="col-md-4">
+    {% include "core/includes/page-tags-app/template.html" %}
+
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  let page_id = parseInt("{{page.id}}")
+  let invoice_lines = JSON.parse(`{{invoice_lines_s|escapejs}}`)
+
+</script>
+{% include "core/includes/page-links-app/script.html" %}
+{% include "core/includes/page-documents-app/script.html" %}
+{% include "core/includes/page-tags-app/script.html" %}
+
+{% endblock script %}

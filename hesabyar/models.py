@@ -28,6 +28,86 @@ class LinkHelper():
     def get_delete_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
 
+
+
+class Transaction(models.Model,LinkHelper):
+    title=models.CharField(_("عنوان"), max_length=50)
+    category=models.ForeignKey("transactioncategory",null=True,blank=True, verbose_name=_("category"), on_delete=models.SET_NULL)
+    status=models.CharField(_("وضعیت"),choices=TransactionStatusEnum.choices,default=TransactionStatusEnum.DRAFT, max_length=50)
+    pay_from=models.ForeignKey("financialaccount",related_name="paid_set", verbose_name=_("بستانکار"), on_delete=models.CASCADE)
+    pay_to=models.ForeignKey("financialaccount",related_name="received_set", verbose_name=_("بدهکار"), on_delete=models.CASCADE)
+    creator=models.ForeignKey("authentication.profile", verbose_name=_("ثبت شده توسط"), on_delete=models.CASCADE)
+    amount=models.IntegerField(_("مبلغ"),default=0)
+    transaction_datetime=models.DateTimeField(_("transaction_datetime"), auto_now=False, auto_now_add=False)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.DRAFT, max_length=50)
+    description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
+    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
+    documents=models.ManyToManyField("core.document",blank=True, verbose_name=_("documents"))
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
+    tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
+    
+    class Meta:
+        verbose_name = _("Transaction")
+        verbose_name_plural = _("Transactions")
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.pay_from:
+            pass
+        return 'primary'
+    def persian_transaction_datetime(self):
+        return PersianCalendar().from_gregorian(self.transaction_datetime)
+    def __str__(self):
+        return self.title
+   
+    def save(self,*args, **kwargs):
+        super(Transaction,self).save(*args, **kwargs)
+        financial_year=FinancialYear.get_by_date(date=self.transaction_datetime)
+        FinancialDocumentCategory.objects.get_or_create(title="تراکنش")
+        category=FinancialDocumentCategory.objects.get(title="تراکنش")
+        FinancialDocument.objects.filter(transaction=self).delete()
+
+        ifd1=FinancialDocument()
+        ifd1.financial_year=financial_year
+        ifd1.category=category
+        ifd1.transaction=self
+        ifd1.bedehkar=self.amount
+        ifd1.title=str(self)
+        ifd1.document_datetime=self.transaction_datetime
+        ifd1.account=self.pay_to
+        ifd1.save()
+
+        ifd1=FinancialDocument()
+        ifd1.bestankar=self.amount
+        ifd1.transaction=self
+        ifd1.title=str(self)
+        ifd1.financial_year=financial_year
+        ifd1.category=category
+        ifd1.document_datetime=self.transaction_datetime
+        ifd1.account=self.pay_from
+        ifd1.save()
+
+
+class Bank(models.Model):
+    name=models.CharField(_("بانک"), max_length=50)
+    branch=models.CharField(_("شعبه"),null=True,blank=True, max_length=50)
+    address=models.CharField(_("آدرس"),null=True,blank=True, max_length=50)
+    tel=models.CharField(_("تلفن"),null=True,blank=True, max_length=50)
+    
+    
+    def __str__(self):
+        return f"""بانک {self.name}  {(("شعبه "+self.branch) or "")}"""
+
+
+    class Meta:
+        verbose_name = _("Bank")
+        verbose_name_plural = _("Banks")
+ 
+
+
+
 class FinancialYear(models.Model):
     title=models.CharField(_("عنوان"), max_length=50)
     year=models.IntegerField(_("year"))
@@ -43,6 +123,7 @@ class FinancialYear(models.Model):
     class Meta:
         verbose_name = _("FinancialYear")
         verbose_name_plural = _("FinancialYears")
+
 
 class FinancialDocument(HesabYarPage):
     financial_year=models.ForeignKey("FinancialYear", verbose_name=_("financial_year"), on_delete=models.CASCADE)
@@ -104,6 +185,7 @@ class FinancialDocument(HesabYarPage):
         if len(self.financialbalance_set.all())==0:
             FinancialBalance.objects.create(financial_document=self)
 
+
 class FinancialBalance(models.Model,LinkHelper):
     financial_document=models.ForeignKey("FinancialDocument", verbose_name=_("FinancialDocument"), on_delete=models.CASCADE)
     class_name="financialbalance"
@@ -124,152 +206,84 @@ class FinancialBalance(models.Model,LinkHelper):
         return self.financial_document.title 
 
 
-class Tag(models.Model):
-    class_name="tag"
-    name=models.CharField(_("name"), max_length=50)
-    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
-
-    @property
-    def title(self):
-        return self.name
-    @property
-    def color(self):
-        if self.color_origin:
-            return self.color_origin
-        if self.title=="هزینه":
-            return "danger"
-        return 'primary'
+class FinancialDocumentCategory(models.Model):
+    title=models.CharField(_("دسته بندی"),max_length=100) 
+    color=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
     class Meta:
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":tag",kwargs={'pk':self.pk})
-        
+        verbose_name = _("FinancialDocumentCategory")
+        verbose_name_plural = _("FinancialDocumentCategories")
+
     def __str__(self):
         return self.title
 
-class TransactionCategory(models.Model):
-    class_name="transactioncategory"
-    title=models.CharField(_("title"), max_length=50)
-    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
-    @property
-    def color(self):
-        if self.color_origin:
-            return self.color_origin
-        if self.title=="هزینه":
-            return "danger"
-        return 'primary'
-    class Meta:
-        verbose_name = 'TransactionCategory'
-        verbose_name_plural = 'TransactionCategories'
+    def save(self,*args, **kwargs):
+        self.class_name='financialdocumentcategory'
+        return super(FinancialDocumentCategory,self).save(*args, **kwargs)
+
+
     def get_absolute_url(self):
-        return reverse(APP_NAME+":transactioncategory",kwargs={'pk':self.pk})
-        
-    def __str__(self):
-        return self.title
-class Transaction(models.Model,LinkHelper):
-    title=models.CharField(_("عنوان"), max_length=50)
-    category=models.ForeignKey("transactioncategory",null=True,blank=True, verbose_name=_("category"), on_delete=models.SET_NULL)
-    status=models.CharField(_("وضعیت"),choices=TransactionStatusEnum.choices,default=TransactionStatusEnum.DRAFT, max_length=50)
-    pay_from=models.ForeignKey("financialaccount",related_name="paid_set", verbose_name=_("بستانکار"), on_delete=models.CASCADE)
-    pay_to=models.ForeignKey("financialaccount",related_name="received_set", verbose_name=_("بدهکار"), on_delete=models.CASCADE)
-    creator=models.ForeignKey("authentication.profile", verbose_name=_("ثبت شده توسط"), on_delete=models.CASCADE)
-    amount=models.IntegerField(_("مبلغ"),default=0)
-    transaction_datetime=models.DateTimeField(_("transaction_datetime"), auto_now=False, auto_now_add=False)
-    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-    payment_method=models.CharField(_("نوع پرداخت"),choices=PaymentMethodEnum.choices,default=PaymentMethodEnum.DRAFT, max_length=50)
-    description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
-    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
-    documents=models.ManyToManyField("core.document",blank=True, verbose_name=_("documents"))
-    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
+        return reverse(APP_NAME+":financial_document_category", kwargs={"pk": self.pk})
+
+
+class FinancialAccount(models.Model):
+    profile=models.ForeignKey("authentication.profile",null=True,blank=True,related_name="hesabyar_accounts", verbose_name=_("profile"), on_delete=models.CASCADE)
+    title=models.CharField(_("title"),blank=True, max_length=200)
     tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
-    
+    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
+    def rest(self):
+        rest=0
+        for t in FinancialDocument.objects.filter(account=self):
+            rest=rest-t.bedehkar
+            rest=rest+t.bestankar
+        return rest
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":financial_account",kwargs={'pk':self.pk})
     class Meta:
-        verbose_name = _("Transaction")
-        verbose_name_plural = _("Transactions")
-    @property
-    def color(self):
-        if self.color_origin:
-            return self.color_origin
-        if self.pay_from:
-            pass
-        return 'primary'
-    def persian_transaction_datetime(self):
-        return PersianCalendar().from_gregorian(self.transaction_datetime)
+        verbose_name = _("FinancialAccount")
+        verbose_name_plural = _("FinancialAccounts")
+
+    def __str__(self):
+        return self.title 
+
+    def get_print_url(self):
+        return reverse(APP_NAME+":financial_account_print",kwargs={'pk':self.pk})
+
+    def save(self,*args, **kwargs):
+        if self.title is None or self.title=="":
+            self.title=self.profile.name
+        if self.class_name is None or self.class_name=="":
+            self.class_name='financialaccount'
+        return super(FinancialAccount,self).save(*args, **kwargs)
+
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
+    def get_delete_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
+
+
+class BankAccount(FinancialAccount):
+    bank=models.ForeignKey("bank", verbose_name=_("bank"), on_delete=models.CASCADE)
+    account_no=models.CharField(_("shomareh"),null=True,blank=True, max_length=50)
+    card_no=models.CharField(_("card"),null=True,blank=True, max_length=50)
+    shaba_no=models.CharField(_("shaba"),null=True,blank=True, max_length=50)
+    class_name='bankaccount'
+    class Meta:
+        verbose_name = _("BankAccount")
+        verbose_name_plural = _("BankAccounts")
+
+   
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":bank_account", kwargs={"pk": self.pk})
+
+
     def __str__(self):
         return self.title
-   
-    def save(self,*args, **kwargs):
-        super(Transaction,self).save(*args, **kwargs)
-        financial_year=FinancialYear.get_by_date(date=self.transaction_datetime)
-        FinancialDocumentCategory.objects.get_or_create(title="تراکنش")
-        category=FinancialDocumentCategory.objects.get(title="تراکنش")
-        FinancialDocument.objects.filter(transaction=self).delete()
 
-        ifd1=FinancialDocument()
-        ifd1.financial_year=financial_year
-        ifd1.category=category
-        ifd1.transaction=self
-        ifd1.bedehkar=self.amount
-        ifd1.title=str(self)
-        ifd1.document_datetime=self.transaction_datetime
-        ifd1.account=self.pay_to
-        ifd1.save()
-
-        ifd1=FinancialDocument()
-        ifd1.bestankar=self.amount
-        ifd1.transaction=self
-        ifd1.title=str(self)
-        ifd1.financial_year=financial_year
-        ifd1.category=category
-        ifd1.document_datetime=self.transaction_datetime
-        ifd1.account=self.pay_from
-        ifd1.save()
-
-
-class ProductOrService(HesabYarPage):
-    unit_price=models.IntegerField(_("unit_price"),default=0)
-    
-    unit_name=models.CharField(_("unit_name"),max_length=50,choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD)
-
-    class Meta:
-        verbose_name = _("ProductOrService")
-        verbose_name_plural = _("ProductOrServices")
 
     def save(self,*args, **kwargs):
-        return super(ProductOrService,self).save(*args, **kwargs)
- 
-
-class Product(ProductOrService):
-    
-    def available(self):
-        aa=0
-        for sheet in WareHouseSheet.objects.filter(status=WareHouseSheetStatusEnum.DONE).filter(product=self):
-            if sheet.direction==WareHouseSheetDirectionEnum.IMPORT:
-                aa+=sheet.quantity
-            if sheet.direction==WareHouseSheetDirectionEnum.EXPORT:
-                aa-=sheet.quantity
-        return aa
-
-    class Meta:
-        verbose_name = _("Product")
-        verbose_name_plural = _("Products")
-
-    def save(self,*args, **kwargs):
-        self.class_name="product"
-        return super(Product,self).save(*args, **kwargs)
- 
-class Service(ProductOrService):
-    
-
-    class Meta:
-        verbose_name = _("Service")
-        verbose_name_plural = _("Services")
-
-    def save(self,*args, **kwargs):
-        self.class_name="service"
-        return super(Service,self).save(*args, **kwargs)
-
+        self.title=f"""حساب {self.bank} {self.profile.name}"""
+        return super(BankAccount,self).save(*args, **kwargs)
 
 class Invoice(Transaction):
     tax_percent=models.IntegerField(_("درصد مالیات"),default=9)
@@ -385,6 +399,7 @@ class InvoiceLine(models.Model):
     unit_price=models.IntegerField(_("unit_price"))
     unit_name=models.CharField(_("unit_name"),max_length=50,choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD)
     description=models.CharField(_("description"),null=True,blank=True, max_length=50)
+    
     def save(self,*args, **kwargs):
         super(InvoiceLine,self).save(*args, **kwargs)
         self.invoice.save()
@@ -398,101 +413,74 @@ class InvoiceLine(models.Model):
     def get_absolute_url(self):
         return reverse("InvoiceLine_detail", kwargs={"pk": self.pk})
 
-class FinancialDocumentCategory(models.Model):
-    title=models.CharField(_("دسته بندی"),max_length=100) 
-    color=models.CharField(_("color"),choices=ColorEnum.choices,default=ColorEnum.PRIMARY, max_length=50)
-    class Meta:
-        verbose_name = _("FinancialDocumentCategory")
-        verbose_name_plural = _("FinancialDocumentCategories")
 
-    def __str__(self):
-        return self.title
-
-    def save(self,*args, **kwargs):
-        self.class_name='financialdocumentcategory'
-        return super(FinancialDocumentCategory,self).save(*args, **kwargs)
-
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":financial_document_category", kwargs={"pk": self.pk})
-
-
-class FinancialAccount(models.Model):
-    profile=models.ForeignKey("authentication.profile",null=True,blank=True,related_name="hesabyar_accounts", verbose_name=_("profile"), on_delete=models.CASCADE)
-    title=models.CharField(_("title"),blank=True, max_length=200)
-    tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
-    class_name=models.CharField(_("class_name"),blank=True, max_length=50)
-    def rest(self):
-        rest=0
-        for t in FinancialDocument.objects.filter(account=self):
-            rest=rest-t.bedehkar
-            rest=rest+t.bestankar
-        return rest
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":financial_account",kwargs={'pk':self.pk})
-    class Meta:
-        verbose_name = _("FinancialAccount")
-        verbose_name_plural = _("FinancialAccounts")
-
-    def __str__(self):
-        return self.title 
-
-    def get_print_url(self):
-        return reverse(APP_NAME+":financial_account_print",kwargs={'pk':self.pk})
-
-    def save(self,*args, **kwargs):
-        if self.title is None or self.title=="":
-            self.title=self.profile.name
-        if self.class_name is None or self.class_name=="":
-            self.class_name='financialaccount'
-        return super(FinancialAccount,self).save(*args, **kwargs)
-
-    def get_edit_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
-    def get_delete_url(self):
-        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/delete/"
-
-
-class BankAccount(FinancialAccount):
-    bank=models.ForeignKey("bank", verbose_name=_("bank"), on_delete=models.CASCADE)
-    account_no=models.CharField(_("shomareh"),null=True,blank=True, max_length=50)
-    card_no=models.CharField(_("card"),null=True,blank=True, max_length=50)
-    shaba_no=models.CharField(_("shaba"),null=True,blank=True, max_length=50)
-    class_name='bankaccount'
-    class Meta:
-        verbose_name = _("BankAccount")
-        verbose_name_plural = _("BankAccounts")
-
-   
-
-    def get_absolute_url(self):
-        return reverse(APP_NAME+":bank_account", kwargs={"pk": self.pk})
-
-
-    def __str__(self):
-        return self.title
-
-
-    def save(self,*args, **kwargs):
-        self.title=f"""حساب {self.bank} {self.profile.name}"""
-        return super(BankAccount,self).save(*args, **kwargs)
-
-
-class Bank(models.Model):
-    name=models.CharField(_("بانک"), max_length=50)
-    branch=models.CharField(_("شعبه"),null=True,blank=True, max_length=50)
-    address=models.CharField(_("آدرس"),null=True,blank=True, max_length=50)
-    tel=models.CharField(_("تلفن"),null=True,blank=True, max_length=50)
+class ProductOrService(HesabYarPage):
+    unit_price=models.IntegerField(_("unit_price"),default=0)
     
-    
-    def __str__(self):
-        return f"""بانک {self.name}  {(("شعبه "+self.branch) or "")}"""
-
+    unit_name=models.CharField(_("unit_name"),max_length=50,choices=UnitNameEnum.choices,default=UnitNameEnum.ADAD)
 
     class Meta:
-        verbose_name = _("Bank")
-        verbose_name_plural = _("Banks")
+        verbose_name = _("ProductOrService")
+        verbose_name_plural = _("ProductOrServices")
+
+    def save(self,*args, **kwargs):
+        return super(ProductOrService,self).save(*args, **kwargs)
  
+
+class Product(ProductOrService):
+    
+    def available(self):
+        aa=0
+        for sheet in WareHouseSheet.objects.filter(status=WareHouseSheetStatusEnum.DONE).filter(product=self):
+            if sheet.direction==WareHouseSheetDirectionEnum.IMPORT:
+                aa+=sheet.quantity
+            if sheet.direction==WareHouseSheetDirectionEnum.EXPORT:
+                aa-=sheet.quantity
+        return aa
+
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
+    def save(self,*args, **kwargs):
+        self.class_name="product"
+        return super(Product,self).save(*args, **kwargs)
+ 
+
+
+class Service(ProductOrService):
+    
+
+    class Meta:
+        verbose_name = _("Service")
+        verbose_name_plural = _("Services")
+
+    def save(self,*args, **kwargs):
+        self.class_name="service"
+        return super(Service,self).save(*args, **kwargs)
+
+
+class StorePrice(models.Model,LinkHelper):
+    class_name="storeprice"
+    store=models.ForeignKey("store", verbose_name=_("store"), on_delete=models.CASCADE)
+    productorservice=models.ForeignKey("productorservice", verbose_name=_("productorservice"), on_delete=models.CASCADE)
+    buy_price=models.IntegerField(_("قیمت خرید"),default=0)
+    sell_price=models.IntegerField(_("قیمت فروش"),default=0)
+    date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
+    class Meta:
+        verbose_name = _("StorePrice")
+        verbose_name_plural = _("StorePrices")
+
+    def __str__(self):
+        return f"{self.store} @ {self.productorservice}"
+
+    def get_absolute_url(self):
+        return reverse("SellPrice_detail", kwargs={"pk": self.pk})
+
+    def benefit(self):
+        return self.sell_price-self.buy_price
+    def benefit_percentage(self):
+        return int((100.0*self.benefit())/self.buy_price)
 
 class Store(FinancialAccount,LinkHelper):
     logo_origin=models.ImageField(_("logo"),null=True,blank=True, upload_to=IMAGE_FOLDER+"store/", height_field=None, width_field=None, max_length=None)
@@ -514,6 +502,53 @@ class Store(FinancialAccount,LinkHelper):
         self.class_name="store"
         return super(Store,self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.title
+
+
+
+class Tag(models.Model):
+    class_name="tag"
+    name=models.CharField(_("name"), max_length=50)
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
+
+    @property
+    def title(self):
+        return self.name
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.title=="هزینه":
+            return "danger"
+        return 'primary'
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":tag",kwargs={'pk':self.pk})
+        
+    def __str__(self):
+        return self.title
+
+
+class TransactionCategory(models.Model):
+    class_name="transactioncategory"
+    title=models.CharField(_("title"), max_length=50)
+    color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
+    @property
+    def color(self):
+        if self.color_origin:
+            return self.color_origin
+        if self.title=="هزینه":
+            return "danger"
+        return 'primary'
+    class Meta:
+        verbose_name = 'TransactionCategory'
+        verbose_name_plural = 'TransactionCategories'
+    def get_absolute_url(self):
+        return reverse(APP_NAME+":transactioncategory",kwargs={'pk':self.pk})
+        
     def __str__(self):
         return self.title
 
