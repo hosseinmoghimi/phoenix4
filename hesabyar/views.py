@@ -557,9 +557,9 @@ class ReportViews(View):
             financial_account=financial_account_repo.me
             financial_account_id=financial_account.id
             
-        end_date=timezone.now()
         from datetime import timedelta
-        delta=timedelta(days=30)
+        end_date=timezone.now()+timedelta(days=1)
+        delta=timedelta(days=29)
         start_date=end_date-delta
         financial_account_id=kwargs['financial_account_id'] if 'financial_account_id' in kwargs else 0
         log=1
