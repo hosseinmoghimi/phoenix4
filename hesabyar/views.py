@@ -1,4 +1,4 @@
-from utility.persian import PersianCalendar
+from utility.persian import PERSIAN_MONTH_NAMES, PersianCalendar
 import json
 from django.shortcuts import redirect, render,reverse
 from django.utils import timezone
@@ -640,6 +640,50 @@ class ReportViews(View):
         context['rest_']=rest_
         context['get_report_form']=GetReportForm()
         return render(request,TEMPLATE_ROOT+"report.html",context)
+
+
+    def report_year(self,request,*args, **kwargs):
+        year=0
+        if 'year' in kwargs:
+            year=kwargs['year']
+        if year==0:
+            year=PersianCalendar().from_gregorian(timezone.now())[:4]
+        year=int(year)
+        financial_account_id=kwargs['financial_account_id'] if 'financial_account_id' in kwargs else 0
+        financial_account_repo=FinancialAccountRepo(request=request)
+        financial_account=financial_account_repo.financial_account(*args, **kwargs)
+        financial_account_id=financial_account.id if financial_account is not None else 0
+        if financial_account_id==0:
+            financial_account=financial_account_repo.me
+            financial_account_id=financial_account.id
+            
+        context=getContext(request=request)
+        rep=[]
+        for month in range(12):
+            
+            (start_date,end_date,sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)=financial_account_repo.report_year(financial_account_id=financial_account_id,year=year,month=month+1)
+            cost=CostRepo(request=request).cost_sum(financial_account_id=financial_account_id,start_date=start_date,end_date=end_date)
+            wage=WageRepo(request=request).wage_sum(financial_account_id=financial_account_id,start_date=start_date,end_date=end_date)
+            rep.append({
+                'start_date':PersianCalendar().from_gregorian(start_date),
+                'end_date':PersianCalendar().from_gregorian(end_date),
+                'sell_benefit':sell_benefit,
+                'sell_loss':sell_loss,
+                'tax':tax,
+                'cost':cost,
+                'wage':wage,
+                'sell_service':sell_service,
+                'buy_service':buy_service,
+                'ship_fee':ship_fee,
+                'month_name':PERSIAN_MONTH_NAMES[month]
+
+            })
+        context['financial_account']=financial_account
+        context['rep_s']=json.dumps(rep)
+        context['rep']=rep
+        context['year']=year
+         
+        return render(request,TEMPLATE_ROOT+"report-year.html",context)
 
 
 

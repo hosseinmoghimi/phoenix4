@@ -46,6 +46,7 @@ class BasicApi(APIView):
                     context['result']=SUCCEED
         context['log']=log
         return JsonResponse(context)
+class InvoiceApi(APIView):
 
     def edit_invoice(self,request,*args, **kwargs):
         context={}

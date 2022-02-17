@@ -1,4 +1,5 @@
 from datetime import timedelta
+from tracemalloc import start
 from urllib import request
 from django.db.models import Q
 from authentication.repo import ProfileRepo
@@ -7,9 +8,10 @@ from django.utils import timezone
 from core.models import Document
 
 from hesabyar.enums import CostTypeEnum, PaymentMethodEnum, SpendTypeEnum, TransactionStatusEnum
+from utility.persian import PersianCalendar
 
 from .apps import APP_NAME
-from .models import (Bank, BankAccount, Cheque, Cost, FinancialAccount, FinancialDocument,
+from .models import (Bank, BankAccount, Cheque, Cost, FinancialAccount, FinancialBalance, FinancialDocument,
                      FinancialDocumentCategory, FinancialYear, Guarantee,
                      Invoice, InvoiceLine, Payment, Product, Service, Spend, Store, StorePrice,
                      Transaction, TransactionCategory,Tag, Wage, WareHouse, WareHouseSheet)
@@ -344,6 +346,45 @@ class FinancialAccountRepo:
                 buy_service+=fb.buy_service
                 ship_fee+=fb.ship_fee
         return (sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)
+
+    def report_year(self,*args, **kwargs):
+        financial_account=self.financial_account(*args, **kwargs)
+        year=int(kwargs['year'])
+        month=int(kwargs['month'])
+        if month>0 and month<13:
+            if month<9:
+                start_date=str(year)+"/0"+str(month)+"/01 00:00:00"
+                end_date=str(year)+"/0"+str(month+1)+"/01 00:00:00"
+            elif month==9:
+                start_date=str(year)+"/09/01 00:00:00"
+                end_date=str(year)+"/10/01 00:00:00"
+            elif month==12:
+                start_date=str(year)+"/12/01 00:00:00"
+                end_date=str(year+1)+"/01/01 00:00:00"
+            else:
+                start_date=str(year)+"/"+str(month)+"/01 00:00:00"
+                end_date=str(year)+"/"+str(month+1)+"/01 00:00:00"
+            
+        start_date=PersianCalendar().to_gregorian(start_date)
+        end_date=PersianCalendar().to_gregorian(end_date)
+        sell_benefit=0
+        sell_loss=0
+        tax=0
+        sell_service=0
+        buy_service=0
+        ship_fee=0
+        wage=0
+        docs=FinancialBalance.objects.filter(financial_document__account=financial_account).filter(financial_document__document_datetime__lte=end_date).filter(financial_document__document_datetime__gte=start_date)
+        for doc in docs:
+            sell_benefit+=doc.sell_benefit        
+            tax+=doc.tax        
+            sell_loss+=doc.sell_loss        
+            sell_service+=doc.sell_service        
+            buy_service+=doc.buy_service        
+            ship_fee+=doc.ship_fee        
+            # wage+=doc.wage        
+        return (start_date,end_date,sell_benefit,sell_loss,tax,sell_service,buy_service,ship_fee)
+
 class TransactionCategoryRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -715,6 +756,7 @@ class InvoiceRepo:
 
         if 'invoice_datetime' in kwargs:
             invoice.invoice_datetime=kwargs['invoice_datetime']
+            invoice.transaction_datetime=kwargs['invoice_datetime']
 
         if 'description' in kwargs:
             invoice.description=kwargs['description']
@@ -933,8 +975,11 @@ class CostRepo:
         return objects
     def cost_sum(self,*args, **kwargs):
 
+        if 'financial_account_id' in kwargs:
+            financial_account_id=kwargs['financial_account_id']
         if 'financial_account' in kwargs:
             financial_account=kwargs['financial_account']
+            financial_account_id=financial_account.id
         if 'end_date' in kwargs:
             end_date=kwargs['end_date']
         if 'start_date' in kwargs:
@@ -945,12 +990,12 @@ class CostRepo:
 
         sum=0
         if cost_type=='all':
-            costs=Cost.objects.filter(pay_from=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
+            costs=Cost.objects.filter(pay_from_id=financial_account_id).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
         else:
             cost_acc=FinancialAccount.objects.filter(title=cost_type).first()
             if cost_acc is None:
                 return 0
-            costs=Cost.objects.filter(pay_from=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date).filter(pay_to=cost_acc)
+            costs=Cost.objects.filter(pay_from_id=financial_account_id).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date).filter(pay_to=cost_acc)
 
         for cost in costs:
             sum+=cost.amount
@@ -1030,13 +1075,16 @@ class WageRepo:
 
         if 'financial_account' in kwargs:
             financial_account=kwargs['financial_account']
+            financial_account_id=financial_account.id
+        if 'financial_account_id' in kwargs:
+            financial_account_id=kwargs['financial_account_id']
         if 'end_date' in kwargs:
             end_date=kwargs['end_date']
         if 'start_date' in kwargs:
             start_date=kwargs['start_date']
 
         sum=0
-        wages=Wage.objects.filter(pay_from=financial_account).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
+        wages=Wage.objects.filter(pay_from_id=financial_account_id).filter(transaction_datetime__gte=start_date).filter(transaction_datetime__lte=end_date)
         
         for wage in wages:
             sum+=wage.amount

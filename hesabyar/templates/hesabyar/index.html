@@ -88,7 +88,15 @@
             <a href="#" class="nav-link">دارایی</a>
           </li>
 
-
+ <li class="nav-item">
+            <a href="{% url 'hesabyar:products' %}" class="nav-link">کالا ها</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'hesabyar:guarantees' %}" class="nav-link">گارانتی ها</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'hesabyar:services' %}" class="nav-link">خدمات</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -104,6 +112,8 @@
         <ul class="nav1">
           <li class="nav-item">
             <a href="{% url 'hesabyar:report' financial_account_id=0 %}" class="nav-link">گزارش</a>
+          </li>  <li class="nav-item">
+            <a href="{% url 'hesabyar:report_year' financial_account_id=0 year=0 %}" class="nav-link">گزارش سالانه</a>
           </li>
           <li class="nav-item">
             <a href="{% url 'hesabyar:wages' %}" class="nav-link">حقوق ها</a>
@@ -120,15 +130,7 @@
           <li class="nav-item">
             <a href="{% url 'hesabyar:payments' %}" class="nav-link">پرداخت ها</a>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'hesabyar:products' %}" class="nav-link">کالا ها</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'hesabyar:guarantees' %}" class="nav-link">گارانتی ها</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'hesabyar:services' %}" class="nav-link">خدمات</a>
-          </li>
+         
           <li class="nav-item">
             <a href="{% url 'hesabyar:transactions' %}" class="nav-link">تراکنش ها</a>
           </li>

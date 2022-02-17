@@ -1,0 +1,226 @@
+{% extends "phoenix/wide-layout.html" %}
+{% load to_persian_date %}
+{% load to_price %}
+{% load static %}
+{% block content %}
+
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="text-center farsi">
+            <a href="{{financial_account.get_absolute_url}}">{{financial_account.title}}</a>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+
+                <h4 class="text-center">
+                    گزارش
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="farsi text-center">
+                    گزارش سالانه
+                    <span class="mx-3">
+                        {{year}}
+                    </span>
+
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+
+                        </th>
+                        <th>
+                            سود فروش
+                        </th>
+                        <th>
+                            فروش خدمات
+                        </th>
+                        <th>
+                            حقوق
+                        </th>
+                        <th>
+                            هزینه
+                        </th>
+                        <th>
+                            خرید خدمات
+                        </th>
+                        <th>
+                            هزینه حمل
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% for rep_item in rep %}
+                        <tr>
+                            <td>
+                                {{rep_item.month_name}}
+                            </td>
+                            <td>
+                                {{rep_item.sell_benefit|to_price}}
+
+                            </td>
+                            <td>
+
+                                {{rep_item.sell_benefit|to_price}}
+                            </td>
+                            <td>
+
+                                {{rep_item.wage|to_price}}
+                            </td>
+                            <td>
+
+                                {{rep_item.cost|to_price}}
+                            </td>
+                            <td>
+                                {{rep_item.buy_service|to_price}}
+                            </td>
+
+                            <td>
+                                {{rep_item.ship_fee|to_price}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+
+
+                    </tbody>
+                    <tfoot>
+                        <th>
+
+                        </th>
+                        <th>
+                            سود خالص
+
+                        </th>
+                        <th>
+                            {{rest|to_price}}
+
+                        </th>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class=" farsi text-right">
+                    <span class="text-info">
+                        سود حاصل از فروش
+                    </span>
+                    <span class="text-danger">
+
+                        هزینه ها
+                    </span>
+
+                    <span class="text-success">
+                        حقوق </span>
+
+                </div>
+                <div class="text-center">
+
+                    <canvas id="report-linear-chart" style="width:100%;max-width:800px"></canvas>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'persian/moment.js' %}"></script>
+<script src="{% static 'persian/moment-jalaali.js' %}"></script>
+<script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
+
+<script src="https://cdn
+js.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+    let financial_account_id = parseInt("{{financial_account.id}}")
+    let get_report_form_app = new Vue({
+        el: "#get-report-form-app",
+        data: {
+            financial_account_id: financial_account_id,
+            start_date: current_date,
+            end_date: current_date,
+        },
+        components: {
+            DatePicker: VuePersianDatetimePicker,
+
+        },
+        methods: {
+            get_report: function () {
+                let url = "{% url 'hesabyar:report' financial_account_id=0 %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    financial_account_id: this.financial_account_id,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+
+                }
+                $.post(url, payload).done(data => {
+                    console.log(data)
+                })
+            }
+        }
+    })
+</script>
+
+
+<script>
+
+    $(document).ready(() => {
+        drawVoltageLinearChart()
+    })
+
+    let report_data = JSON.parse(`{{rep_s|escapejs}}`)
+    let chart_data_cost = []
+    let chart_data_wage = []
+    let chart_data_sell_benefit = []
+    report_data.forEach(month => {
+        chart_data_cost.push(month.cost)
+        chart_data_wage.push(month.wage)
+        chart_data_sell_benefit.push(month.sell_benefit)
+    });
+    var xValues = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    function drawVoltageLinearChart() {
+
+        new Chart("report-linear-chart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: chart_data_cost,
+                    borderColor: "red",
+                    fill: false
+                }, {
+                    data: chart_data_wage,
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: chart_data_sell_benefit,
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+
+
+    }
+
+</script>
+
+{% endblock script %}

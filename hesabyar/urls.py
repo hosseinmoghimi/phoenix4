@@ -36,6 +36,8 @@ urlpatterns = [
     path('product/<int:pk>/',(views.ProductViews().product),name="product"),
     path('products/',login_required(views.ProductViews().products),name="products"),
     path('report/<int:financial_account_id>/',login_required(views.ReportViews().report),name="report"),
+    path('report_year/<int:financial_account_id>/<int:year>/',login_required(views.ReportViews().report_year),name="report_year"),
+    
     path('search/',login_required(views.BasicViews().search),name="search"),
     path('sell/',login_required(views.InvoiceViews().sell),name="sell"),
     path('service/<int:pk>/',login_required(views.ServiceViews().service),name="service"),
@@ -63,7 +65,7 @@ urlpatterns = [
     path('add_cost/',login_required(apis.CostApi().add_cost),name="add_cost"),
     path('add_wage/',login_required(apis.WageApi().add_wage),name="add_wage"),
     path('add_financial_document/',login_required(apis.BasicApi().add_financial_document),name="add_financial_document"),
-    path('edit_invoice_post/',login_required(apis.BasicApi().edit_invoice),name="edit_invoice_post"),
+    path('edit_invoice_post/',login_required(apis.InvoiceApi().edit_invoice),name="edit_invoice_post"),
     path('add_cheque/',login_required(apis.CheuqeApi().add_cheque),name="add_cheque"),
     path('add_payment/',login_required(apis.PaymentApi().add_payment),name="add_payment"),
     path('change_warehouse_sheet_state/',login_required(apis.WareHouseSheetApi().change_warehouse_sheet_state),name="change_warehouse_sheet_state"),
