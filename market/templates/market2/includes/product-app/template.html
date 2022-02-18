@@ -2,10 +2,12 @@
 <div id="product-app">
     <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
     <div v-if="product.title" class="text-right">
-
-
+        
+        
+        <a :href="product.get_absolute_url">
         <span class="farsi" v-text="product.title"></span>
-    </div>
+    </a>
+</div>
 
 
 </div>
