@@ -310,6 +310,7 @@ class InvoiceViews(View):
         context['products_s']=json.dumps(ProductSerializer(products,many=True).data)
 
 
+
         
         services=ServiceRepo(request=request).list()
         for service in services:
