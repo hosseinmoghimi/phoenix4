@@ -726,15 +726,15 @@ class InvoiceRepo:
             self.user = self.request.user
         if 'user' in kwargs:
             self.user = kwargs['user']
-        self.objects = Invoice.objects
+        self.objects = Invoice.objects.order_by('-transaction_datetime')
         self.profile = ProfileRepo(user=self.user).me
 
         if self.user.has_perm(APP_NAME+".view_invoice"):
-            self.objects = Invoice.objects.order_by('transaction_datetime')
+            self.objects = self.objects
         elif self.profile is not None:
-            self.objects = Invoice.objects.filter(Q(pay_from__profile=self.profile)|Q(pay_to__profile=self.profile)).order_by('transaction_datetime')
+            self.objects = self.objects.filter(Q(pay_from__profile=self.profile)|Q(pay_to__profile=self.profile))
         else:
-            self.objects = Invoice.objects.filter(pk__lte=0).order_by('transaction_datetime')
+            self.objects = self.objects.filter(pk__lte=0)
 
 
 
