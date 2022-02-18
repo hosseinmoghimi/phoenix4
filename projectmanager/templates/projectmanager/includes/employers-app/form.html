@@ -1,0 +1,23 @@
+{% load static %}
+<form @submit.prevent="add_employer()">
+    <div class="row">
+        <div class="col-md-4">
+            <input required type="text" v-model="new_employer_title" class="farsi form-control"
+                placeholder="کارفرمای جدید">
+
+        </div>
+        <div class="col-md-4">
+            <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+
+
+            <button v-if="!waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
+
+        </div>
+        <div class="col-md-4 text-right">
+            <span class="farsi text-right">
+                <span v-text="message"></span>
+            </span>
+        </div>
+    </div>
+
+</form>

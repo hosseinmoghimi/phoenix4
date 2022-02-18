@@ -10,6 +10,7 @@ app_name=APP_NAME
 urlpatterns = [
     path('',login_required(views.BasicViews().home),name="home"),
     path('search/',login_required(views.BasicViews().search),name="search"),
+    path('employers/',login_required(views.EmployerViews().employers),name="employers"),
     path('projects/',login_required(views.ProjectViews().projects),name="projects"),
     path('events/',login_required(views.EventViews().events),name="events"),
     path('material_requests/',login_required(views.MaterialRequestViews().material_requests),name="material_requests"),
@@ -28,7 +29,7 @@ urlpatterns = [
     
     path('projects-chart/<int:pk>/',login_required(views.ProjectViews().projects_chart),name="projects_chart"),
     path('organization_units_chart/<int:employer_id>/',login_required(views.OrganizationUnitViews().organization_units_chart),name="organization_units_chart"),
-    path('employer/<int:pk>/',login_required(views.OrganizationUnitViews().employer),name="employer"),
+    path('employer/<int:pk>/',login_required(views.EmployerViews().employer),name="employer"),
     path('employee/<int:pk>/',login_required(views.EmployeeViews().employee),name="employee"),
     path('employees/<int:employer_id>/<int:organization_unit_id>/',login_required(views.EmployeeViews().employees),name="employees"),
     path('organizationunit/<int:pk>/',login_required(views.OrganizationUnitViews().organization_unit),name="organizationunit"),

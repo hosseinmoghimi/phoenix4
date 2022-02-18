@@ -1,0 +1,60 @@
+{% extends "projectmanager/layout.html" %}
+{% load static %}
+{% block navbar %}
+
+<li class="nav-item my-auto mx-2">
+    <a class="nav-link farsi " href="{% url 'projectmanager:project_chart' %}">
+        مدیریت
+    </a>
+</li>
+
+{% endblock %}
+{% block content %}
+
+
+<div class="row">
+    {% if carousels %}
+    <div class="col-12">
+        {% include "web/includes/carousels.html" %}
+    </div>
+    {% endif %}
+    {% if splash.image %}
+    <div class="col-12 mb-3">
+
+        <img src="{{splash.image}}" class="rounded " width="100%" alt="">
+    </div>
+    {% endif %}
+    {% if perms.core.change_picture %}
+    <!-- <div class="col-12">
+        <div class="farsi text-center">
+
+            {{splash.get_edit_btn|safe}}
+        </div>
+    </div> -->
+    {% endif %}
+</div>
+<div>
+    <div class="row ">
+        <div class="col-md-12">
+
+
+
+
+
+
+            {% include "projectmanager/includes/employers-app/template.html" %}
+
+
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+</script>
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+{% include "projectmanager/includes/employers-app/script.html" %}
+
+{% endblock %}

@@ -569,6 +569,8 @@ class OrganizationUnitViews(View):
             request=request, organization_unit=organization_unit))
         return render(request, TEMPLATE_ROOT+"organization-unit.html", context)
 
+class EmployerViews(View):
+
     def employer(self, request, *args, **kwargs):
         employer = EmployerRepo(request=request).employer(*args, **kwargs)
         if employer is None:
@@ -583,6 +585,18 @@ class OrganizationUnitViews(View):
         context['layout'] = "base-layout.html"
         context['organization_units'] = employer.organizationunit_set.all()
         return render(request, TEMPLATE_ROOT+"employer.html", context)
+
+    def employers(self, request, *args, **kwargs):
+        context = getContext(request)
+        if request.user.has_perm(APP_NAME+".add_employer"):
+            context['add_employer_form'] = AddEmployerForm()
+        context['show_employer_list']=True
+        employers = EmployerRepo(
+            request=request).list(for_home=True)
+        context['employers'] = employers
+        context['employers_s'] = json.dumps(
+            EmployerSerializer(employers, many=True).data)
+        return render(request, TEMPLATE_ROOT+"employers.html", context)
 
 
 class EmployeeViews(View):

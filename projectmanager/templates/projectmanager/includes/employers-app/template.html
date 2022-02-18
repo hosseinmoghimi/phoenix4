@@ -4,73 +4,64 @@
 <div id="accordion">
 
 
-<div class="card mb-3" id="employers-app">
-    <div class="card-header" id="headingEmployers">
+    <div class="card mb-3" id="employers-app">
+        <div class="card-header" id="headingEmployers">
 
-        <h5 class="card-title text-center farsi">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEmployers"
-            aria-expanded="true" aria-controls="collapseEmployers">
-            لیست کارفرما ها
-        </button>
-        </h5>
-
-
-    </div>
-    <div id="collapseEmployers" class="collapse" aria-labelledby="headingEmployers" data-parent="#accordion">
-      
-    <div class="card-body">
-    
-        <div v-for="employer in employers" class="mb-3">
-            <a :href="employer.get_absolute_url">
-                <div class="media">
-
-                    <i class="material-icons">
-                        apartment
-                    </i>
-
-                    <div class="media-body farsi mr-2">
-
-                        <h5>
-                            <small v-text="employer.pre_title">
-
-                            </small>
-                            <span v-html="employer.title">
-                            </span>
-
-                        </h5>
+            <h5 class="card-title text-center farsi">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEmployers"
+                    aria-expanded="true" aria-controls="collapseEmployers">
+                    لیست کارفرما ها
+                </button>
+            </h5>
 
 
-
-                    </div>
-                </div>
-            </a>
         </div>
-    </div>
-    <div class="card-footer ">
+        <div id="collapseEmployers" class="collapse {% if show_employer_list %}show{% endif %}"
+            aria-labelledby="headingEmployers" data-parent="#accordion">
 
-        {% if add_employer_form %}
+            <div class="card-body">
+                <div class="my-3">
+                    {% if add_employer_form and show_employer_list %}
 
-        <form @submit.prevent="add_employer()">
-            <div class="row">
-                <div class="col-8">
-                    <input required type="text" v-model="new_employer_title" class="farsi form-control"
-                        placeholder="کارفرمای جدید">
+                  {% include "projectmanager/includes/employers-app/form.html" %}
+                    {% endif %}
 
                 </div>
-                <div class="col-4">
-                    <img v-if="waiting" width="32" src="{% static 'leo/img/loading.gif' %}" alt="">
+                <div v-for="employer in employers" class="mb-3">
+                    <a :href="employer.get_absolute_url">
+                        <div class="media">
+
+                            <i class="material-icons">
+                                apartment
+                            </i>
+
+                            <div class="media-body farsi mr-2">
+
+                                <h5>
+                                    <small v-text="employer.pre_title">
+
+                                    </small>
+                                    <span v-html="employer.title">
+                                    </span>
+
+                                </h5>
 
 
-                    <button v-if="!waiting" class="btn btn-primary btn-block" type="submit">تایید</button>
 
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
+            <div class="card-footer ">
 
-        </form>
-        {% endif %}
+                {% if add_employer_form %}
+                {% include "projectmanager/includes/employers-app/form.html" %}
+ 
+                {% endif %}
 
 
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>

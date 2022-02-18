@@ -8,7 +8,7 @@
         data: {
             new_employer_title: "",
             employers: employers,
-
+            message: "",
             waiting: false,
         },
         methods: {
@@ -25,7 +25,10 @@
 
                     employers_app.waiting = false
                     if (data.result === 'SUCCEED') {
-
+                        employers_app.message = "با موفقیت افزوده شد."
+                        setTimeout(() => {
+                            employers_app.message = ""
+                        }, 2000);
                         employers_app.employers.push(data.employer)
                         employers_app.new_employer_title = ""
                     }

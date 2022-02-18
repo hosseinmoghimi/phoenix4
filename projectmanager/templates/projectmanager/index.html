@@ -102,9 +102,27 @@
 
 
             </div>
-            {% include "projectmanager/includes/projects-app/template.html" %}
 
+
+            <div class="card mb-3">
+                <div class="card-header card-header-success">
+                    <h5 class="card-title text-center farsi">
+                        <a href="{% url 'projectmanager:employers' %}" class="btn btn-link">
+                            کارفرما ها
+                        </a>
+                    </h5>
+                </div>
+            </div>
+
+            {% if show_projects_list %}
+            {% include "projectmanager/includes/projects-app/template.html" %}
+              
+            {% endif %}
+            {% if show_employers_list %}
             {% include "projectmanager/includes/employers-app/template.html" %}
+              
+            {% endif %}
+
             <div class="card mb-3" id="employees-app">
                 <div class="card-header card-header-success" id="headingEmployees">
                     <h5 class="card-title text-center farsi">
