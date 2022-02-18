@@ -15,24 +15,24 @@
             {{resume_index.skills_top|safe}}
         </div>
         {% endif %}
-<div class="row">   
-    {% for skill in skills %}
+        <div class="row">
+            {% for skill in skills %}
 
-    <div class="col-md-6">
-        <div class="text-right">
+            <div class="col-md-6">
+                <div class="text-right mb-3">
+                    {{forloop.counter}} -
+                    {{skill.title}}
 
-            {{skill.title}}
-            
-            <span class="badge badge-primary">
-                
-                {{skill.percentage}}%
-            </span>
+                    <span class="badge badge-primary">
+
+                        {{skill.percentage}}%
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+
         </div>
-    </div>
-    {% endfor %}
 
-</div>
-       
     </div>
 </div>
 
