@@ -994,7 +994,7 @@ class SampleForm(ProjectManagerPage):
 
     class Meta:
         verbose_name = _("SampleForm")
-        verbose_name_plural = _("SampleForms")
+        verbose_name_plural = _("فرم های اداری نمونه")
 
     def save(self):
         self.class_name="sampleform"

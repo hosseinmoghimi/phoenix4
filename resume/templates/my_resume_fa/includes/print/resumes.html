@@ -19,15 +19,12 @@
     <div class="mr-5">
 
         {% for resume_category in resume_index.resumecategory_set.all %}
+<div class="my-5 text-right farsi">
 
-        <div class="card">
-            <div class="card-header">
-                <h4>
+        <h4>
                     <i class="material-icons">ballot</i>
                     {{resume_category.title}}
                 </h4>
-            </div>
-            <div class="card-body">
 
 
                 <div class="mr-5">
@@ -63,7 +60,6 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
 
         {% endfor %}
     </div>

@@ -1000,11 +1000,11 @@ section {
 .contact .info i {
   font-size: 20px;
   color: #0563bb;
-  float: left;
+  /* float: left; */
   width: 44px;
   height: 44px;
   background: #eef7ff;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   border-radius: 50px;

@@ -29,8 +29,12 @@
     <div class="container">
         <div class="section section-text" style="padding-top: 10px !important;">
             <div class="row">
-                <div class="col-md-8 ml-auto mr-auto">
-                    <h3 class="title text-center">{{page.title}}</h3>
+                <div class="col-md-8 ml-auto mr-auto pt-4">
+                    {% if page.sub_title %}
+                      
+                    <h4 class="mb-0 mt-4 text-center">{{page.sub_title}}</h4>
+                    {% endif %}
+                    <h3 class="mt-0 title text-center">{{page.title}}</h3>
                     <div class=" text-center mb-3">
                         {% if perms.web.change_webpage %}
 
