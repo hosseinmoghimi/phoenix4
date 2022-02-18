@@ -291,6 +291,10 @@ class InvoiceViews(View):
         pass
     def get_edit_invoice_context(self,request,*args, **kwargs):
         context={}
+        if 'store_id' in kwargs:
+            store_id=kwargs['store_id']
+        else:
+            store_id=0
         customers=FinancialAccountRepo(request=request).list(all=True)
         context['customers']=customers
 
@@ -300,7 +304,7 @@ class InvoiceViews(View):
         sps=StorePriceRepo(request=request).objects.all()
         products=ProductRepo(request=request).list()
         for product in products:
-            sp=sps.filter(productorservice_id=product.id).order_by('-date_added').first()
+            sp=sps.filter(productorservice_id=product.id).filter(store_id=store_id).order_by('-date_added').first()
             product.unit_price=sp.sell_price if sp is not None else product.unit_price 
         context['products']=products
         context['products_s']=json.dumps(ProductSerializer(products,many=True).data)
@@ -309,7 +313,7 @@ class InvoiceViews(View):
         
         services=ServiceRepo(request=request).list()
         for service in services:
-            sp=sps.filter(productorservice_id=service.id).order_by('-date_added').first()
+            sp=sps.filter(productorservice_id=service.id).filter(store_id=store_id).order_by('-date_added').first()
             service.unit_price=sp.sell_price if sp is not None else service.unit_price 
         context['services']=services
         context['services_s']=json.dumps(ServiceSerializer(services,many=True).data)
@@ -333,9 +337,9 @@ class InvoiceViews(View):
         
     def edit_invoice(self,request,*args, **kwargs):
         context=getContext(request=request)
-        context.update(self.get_edit_invoice_context(request=request))
         
         invoice=InvoiceRepo(request=request).invoice(*args, **kwargs)
+        context.update(self.get_edit_invoice_context(request=request,store_id=invoice.pay_from.id))
         context['invoice']=invoice
         invoice_lines=invoice.invoice_lines()
         
