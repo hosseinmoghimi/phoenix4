@@ -888,7 +888,7 @@ class InvoiceRepo:
     #     ifd1.account=invoice.seller
     #     ifd1.save()
           
-    def add(self,*args, **kwargs):
+    def new(self,*args, **kwargs):
         store=StoreRepo(request=self.request).me
         if self.user.has_perm(APP_NAME+".add_invoice"):
             pass
@@ -899,6 +899,7 @@ class InvoiceRepo:
         else:
             return
         invoice=Invoice()
+        invoice.payment_method=PaymentMethodEnum.DRAFT
         me_p=FinancialAccountRepo(request=self.request).me
 
         if 'pay_from_id' in kwargs:

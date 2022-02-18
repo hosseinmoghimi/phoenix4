@@ -23,12 +23,7 @@ class ChequeStatusEnum(TextChoices):
     RETURNED="برگشت خورده",_("برگشت خورده")
     PASSED="پاس شده",_("پاس شده")
     PAID="تسویه شده",_("تسویه شده")
-class InvoicePaymentMethodEnum(TextChoices):
-    NO_PAYMENT="پرداخت نشده",_("پرداخت نشده")
-    CHEQUE="چک",_("چک")
-    POS="کارتخوان",_("کارتخوان")
-    CARD="کارت به کارت",_("کارت به کارت")
-    IN_CASH="پرداخت نقدی",_("پرداخت نقدی")
+
 
 class SpendTypeEnum(TextChoices):
     COST="هزینه",("هزینه")
@@ -43,6 +38,7 @@ class CostTypeEnum(TextChoices):
     RENT="هزینه اجاره",_("هزینه اجاره")
 class PaymentMethodEnum(TextChoices):
     DRAFT="پیش نویس",_("پیش نویس")
+    NO_PAYMENT="پرداخت نشده",_("پرداخت نشده")
     MOBILE_BANK="همراه بانک",_("همراه بانک")
     IN_CASH="نقدی",_("نقدی")
     CHEQUE="چک",_("چک")

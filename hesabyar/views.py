@@ -7,7 +7,7 @@ from core.enums import UnitNameEnum
 from .repo import BankAccountRepo, BankRepo, StorePriceRepo, TagRepo
 from core.serializers import DocumentSerializer
 from hesabyar.models import TransactionCategory 
-from .enums import CostTypeEnum, InvoicePaymentMethodEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
+from .enums import CostTypeEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
 from .forms import *
 
 from .repo import CostRepo,GuaranteeRepo, SpendRepo, TransactionCategoryRepo, TransactionRepo, WageRepo, WareHouseRepo,ChequeRepo, FinancialDocumentCategoryRepo,FinancialDocumentRepo,  InvoiceLineRepo, InvoiceRepo,  PaymentRepo, ProductRepo, FinancialAccountRepo, ServiceRepo, StoreRepo, WareHouseSheetRepo
@@ -321,7 +321,7 @@ class InvoiceViews(View):
 
         context['unit_names']=(u[0] for u in UnitNameEnum.choices)
         context['invoice_statuses']=(u[0] for u in TransactionStatusEnum.choices)
-        context['invoice_payment_methods']=(u[0] for u in InvoicePaymentMethodEnum.choices)
+        context['invoice_payment_methods']=(u[0] for u in PaymentMethodEnum.choices)
         
         return context
     def sell(self,request,*args, **kwargs):
@@ -330,7 +330,7 @@ class InvoiceViews(View):
         store=StoreRepo(request=request).me
         print(store)
         print(100*"#")
-        invoice=InvoiceRepo(request=request).add(store=store,*args, **kwargs)
+        invoice=InvoiceRepo(request=request).new(store=store,*args, **kwargs)
         context['invoice']=invoice
         return redirect(invoice.get_edit_url2())
 
