@@ -1,6 +1,6 @@
 <nav id="cd-vertical-nav">
 
-  <ul>
+  <ul class="mr-4">
 
   
     {% for link in vertical_navs %}
@@ -11,6 +11,8 @@
       </a>
     </li>
     {% empty %}
+    {% if not no_vertical_navbar %}
+      
     <li>
       <a href="#headers" data-number="1">
         <span class="cd-dot"></span>
@@ -54,6 +56,8 @@
         <span class="cd-label">ارتباط با ما</span>
       </a>
     </li>
+    {% endif %}
+
     {% endfor %}
   </ul>
 </nav>
