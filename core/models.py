@@ -690,7 +690,7 @@ class Parameter(models.Model):
             return ''
         return self.value_origin
     @property
-    def boolesan_value(self):
+    def boolean_value(self):
         if self.value_origin is None:
             return False
         if self.value_origin =='True':

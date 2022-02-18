@@ -14,7 +14,7 @@ from utility.persian import PersianCalendar
 from web.repo import CarouselRepo
 
 from .apps import APP_NAME
-from .enums import (PictureNameEnums, ProjectStatusEnum, RequestStatusEnum,
+from .enums import (PictureNameEnums, ProjectManagerParameterEnum, ProjectStatusEnum, RequestStatusEnum,
                     SignatureStatusEnum, UnitNameEnum)
 from .forms import *
 from map.repo import LocationRepo
@@ -106,6 +106,8 @@ class BasicViews(View):
 
     def home(self, request, *args, **kwargs):
         context = getContext(request)
+        parameter_repo=ParameterRepo(request=request,app_name=APP_NAME)
+        context['show_favorites_list']=parameter_repo.parameter(name=ProjectManagerParameterEnum.SHOW_FAVORITE_OPEN_ON_HOME).boolean_value
         context['parent_id'] = 0
         picture_repo = PictureRepo(request=request, app_name=APP_NAME)
         carousel_repo = CarouselRepo(request=request, app_name=APP_NAME)

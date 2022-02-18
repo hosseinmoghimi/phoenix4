@@ -10,7 +10,7 @@ from .enums import ParametersEnum
 
 def show_archives(request):
         parameter_repo = ParameterRepo(request=request,app_name=APP_NAME)
-        show_archives=parameter_repo.parameter(ParametersEnum.SHOW_ARCHIVES).boolesan_value
+        show_archives=parameter_repo.parameter(ParametersEnum.SHOW_ARCHIVES).boolean_value
         return show_archives
 class TaxRepo():
     def __init__(self, *args, **kwargs):

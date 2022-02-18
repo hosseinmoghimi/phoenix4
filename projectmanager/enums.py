@@ -103,6 +103,8 @@ def StatusColor(status):
     return color
 
 
+class ProjectManagerParameterEnum(TextChoices):
+    SHOW_FAVORITE_OPEN_ON_HOME="نمایش لیست مورد علاقه به صورت گسترده در خانه",_("نمایش لیست مورد علاقه به صورت گسترده در خانه")
 class DeviceConfiguratinoEnum(TextChoices):
     MAC_ADDRESS="MAC Address",_("MAC Address")
     LOCATION="location",_("location")
