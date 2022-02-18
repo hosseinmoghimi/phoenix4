@@ -3,6 +3,7 @@
     <img src="{% static 'leo/img/loading.gif' %}" width="32" v-if="waiting" alt="">
     <div v-if="product.title" class="text-right">
         
+        <img  style="" class="rounded" :src="product.thumbnail" width="80%" alt="">
         
         <a :href="product.get_absolute_url">
         <span class="farsi" v-text="product.title"></span>
