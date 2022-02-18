@@ -65,7 +65,7 @@ class BasicViews(View):
                 context['products'] = products
                 context['services'] = services
 
-                if len(financial_accounts)>0  or len(products)>0  or len(services)>0  :
+                if len(financial_accounts)>0  or len(products)>0  or len(services)>0  or len(invoices)>0  :
                     context['message']=""
                 else:
                     context['message']=f"""<span class="material-icons">search_off</span> موردی پیدا نشد."""
