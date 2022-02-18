@@ -17,12 +17,14 @@
                         {{search_for}}
                     </strong>
                 </h4>
+                
+                
+                
+                {% if not_found %}
                 <p>
-                    {{message|safe}}
+                    <span class="material-icons">search_off</span> موردی پیدا نشد.
                 </p>
-
-
-
+{% endif %}
 
 
 

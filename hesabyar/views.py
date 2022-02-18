@@ -67,8 +67,10 @@ class BasicViews(View):
 
                 if len(financial_accounts)>0  or len(products)>0  or len(services)>0  or len(invoices)>0  :
                     context['message']=""
+                    context['not_found']=False
                 else:
-                    context['message']=f"""<span class="material-icons">search_off</span> موردی پیدا نشد."""
+                    context['not_found']=True
+                    # context['message']=f"""<span class="material-icons">search_off</span> موردی پیدا نشد."""
                 context['log'] = log
                 return render(request, TEMPLATE_ROOT+"search.html", context)
         return BasicViews().home(request=request)
