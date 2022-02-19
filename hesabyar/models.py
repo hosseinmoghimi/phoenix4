@@ -318,7 +318,7 @@ class Invoice(Transaction):
         return self.pay_to
     @property
     def seller(self):
-        return self.pay_from
+        return Store.objects.filter(pk=self.pay_from.pk).first()
 
 
     def get_edit_url2(self):
