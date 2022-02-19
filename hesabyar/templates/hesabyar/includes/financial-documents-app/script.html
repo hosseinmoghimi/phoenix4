@@ -32,8 +32,8 @@
         rest: function () {
             let rest = 0
             this.financial_documents.forEach(financial_document => {
-                rest += financial_document.bedehkar
-                rest -= financial_document.bestankar
+                rest -= financial_document.bedehkar
+                rest += financial_document.bestankar
             })
             return rest
         },
@@ -81,8 +81,8 @@
         rest: function () {
             let rest = 0
             this.financial_documents.forEach(financial_document => {
-                rest += financial_document.bedehkar
-                rest -= financial_document.bestankar
+                rest -= financial_document.bedehkar
+                rest += financial_document.bestankar
             })
             return rest
         },

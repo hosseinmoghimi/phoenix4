@@ -32,7 +32,7 @@ class FinancialDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FinancialDocument
-        fields = ['id', 'title','transaction','get_state_badge', 'account', 'get_absolute_url', 'bedehkar',
+        fields = ['id', 'title','transaction','get_state_badge', 'account', 'get_absolute_url', 'bedehkar','rest',
                   'bestankar', 'persian_document_datetime', 'category']
 
 
