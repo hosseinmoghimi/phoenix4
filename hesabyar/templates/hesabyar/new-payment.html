@@ -43,7 +43,8 @@
             payment_method: "",
             title: "",
             description: "",
-            message: { color: "success", body: "", show: false }
+            message: { color: "success", body: "", show: false },
+            waiting:false,
         },
         components: {
             DatePicker: VuePersianDatetimePicker,
@@ -65,9 +66,11 @@
                     payment_method: this.payment_method,
 
                 }
+                new_payment_app.waiting=true
                 console.log(payload)
                 let url = "{% url 'hesabyar:add_payment' %}"
                 $.post(url, payload).done((data) => {
+                new_payment_app.waiting=false
 
                     if (data.result === 'SUCCEED') {
                         this.message = { show: true, body: "با موفقیت ذخیره شد.", color: 'success' }
