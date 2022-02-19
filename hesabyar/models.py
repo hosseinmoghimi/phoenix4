@@ -272,7 +272,8 @@ class BankAccount(FinancialAccount):
         verbose_name = _("BankAccount")
         verbose_name_plural = _("BankAccounts")
 
-   
+    def balance(self):
+        return 0-self.rest()
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":bank_account", kwargs={"pk": self.pk})

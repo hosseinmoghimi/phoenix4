@@ -111,16 +111,16 @@
 
                         </td>
                         <td>
-                            <span v-text="to_price(financial_document.bedehkar)"></span>
+                            <span v-text="to_price(financial_document.bedehkar,'')"></span>
 
                         </td>
                         <td>
-                            <span v-text="to_price(financial_document.bestankar)"></span>
+                            <span v-text="to_price(financial_document.bestankar,'')"></span>
 
                         </td>
                         {% if financial_account %}
                         <td>
-                            <span v-text="to_price(financial_document.rest)"></span>
+                            <span v-text="to_price(financial_document.rest,'')"></span>
 
                         </td>
                         {% endif %}
@@ -133,7 +133,7 @@
     </div>
     <div class="card-footer">
         <p>
-            مانده : <span v-text="to_price(rest)"></span>
+            مانده : <span v-text="to_price(rest(),'{{CURRENCY}}')"></span>
 
         </p>
         {% if financial_account %}

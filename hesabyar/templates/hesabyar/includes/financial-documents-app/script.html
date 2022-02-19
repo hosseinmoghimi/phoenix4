@@ -5,10 +5,10 @@
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
 
 <script>
-    let rest=parseInt("{{rest}}")
+    let rest_ = parseInt("{{rest}}")
     let financial_documents = JSON.parse(`{{financial_documents_s|escapejs}}`)
 </script>
-{% if add_financial_document_form %}
+{% if add_payment_form %}
 
 <script>
 
@@ -22,13 +22,20 @@
         category_id: "",
         show_form: false,
         waiting: false,
-        rest:rest,
     }
 
 
     let financial_documents_app_methods = {
-        to_price: function (vall) {
-            return to_price(vall, "")
+        to_price: function (vall,curr) {
+            return to_price(vall, curr)
+        }, 
+        rest: function () {
+            let rest = 0
+            this.financial_documents.forEach(financial_document => {
+                rest += financial_document.bedehkar
+                rest -= financial_document.bestankar
+            })
+            return rest
         },
         add_financial_document: function () {
             financial_documents_app.waiting = true
@@ -49,9 +56,9 @@
                 console.log(data)
                 if (data.result === 'SUCCEED') {
                     financial_documents_app.financial_documents.push(data.financial_document)
-                    financial_documents_app.rest=data.rest
-                    financial_documents_app.bestankar=0
-                    financial_documents_app.bedehkar=0
+                    financial_documents_app.rest = data.rest
+                    financial_documents_app.bestankar = 0
+                    financial_documents_app.bedehkar = 0
                 }
             })
         }
@@ -65,13 +72,20 @@
 
     let financial_documents_app_data = {
         financial_documents: financial_documents,
-        rest:rest,
 
     }
     let financial_documents_app_methods = {
-        to_price: function (vall) {
-            return to_price(vall, "")
-        }
+        to_price: function (vall,curr) {
+            return to_price(vall, curr)
+        }, 
+        rest: function () {
+            let rest = 0
+            this.financial_documents.forEach(financial_document => {
+                rest += financial_document.bedehkar
+                rest -= financial_document.bestankar
+            })
+            return rest
+        },
     }
 </script>
 {% endif %}

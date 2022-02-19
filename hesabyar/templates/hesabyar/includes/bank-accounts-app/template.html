@@ -1,0 +1,47 @@
+{% load to_price %}
+<div class="card">
+    <div class="card-header">
+        <h4>
+            حساب های بانکی
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+                <thead>
+                    <th>
+                        بانک
+                    </th>
+                    <th>
+                        حساب
+                    </th>
+                    <th>
+                        موجودی
+                    </th>
+                </thead>
+                <tbody>
+                    {% for bank_account in bank_accounts %}
+
+                    <tr>
+                        <td>
+                            <a href="{{bank_account.get_absolute_url}}">
+
+                                {{bank_account.title}}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{bank_account.get_absolute_url}}">
+                                {{bank_account.bank}}
+                            </a>
+                        </td>
+                        <td>
+                            {{bank_account.balance|to_price}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

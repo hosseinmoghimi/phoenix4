@@ -1,3 +1,4 @@
+from re import A
 from utility.persian import PERSIAN_MONTH_NAMES, PersianCalendar
 import json
 from django.shortcuts import redirect, render,reverse
@@ -189,7 +190,7 @@ class FinancialAccountViews(View):
         if request.user.has_perm(APP_NAME+".add_financialdocumet"):
             document_categories=FinancialDocumentCategoryRepo(request=request).list()
             context['document_categories']=document_categories
-            context['add_financial_document_form'] = AddFinancialDocumentForm()
+            context['add_payment_form'] = AddPaymentForm()
         return render(request, TEMPLATE_ROOT+"financial-account.html", context)
 
     def financial_account_print(self, request, *args, **kwargs):
@@ -446,13 +447,17 @@ class InvoiceViews(View):
 class BankAccountViews(View):
     def bank_account(self,request,*args, **kwargs):
         context=getContext(request=request)
-        invoice_financial_document=FinancialDocumentRepo(request=request).financial_document(*args, **kwargs)
-        invoice=invoice_financial_document.invoice
-        invoice_lines=invoice.invoice_lines()
-        invoice_lines_s=json.dumps(InvoiceLineSerializer(invoice_lines,many=True).data)
-        context['invoice']=invoice
-        context['invoice_lines']=invoice_lines
-        context['invoice_lines_s']=invoice_lines_s
+        bank_account=BankAccountRepo(request=request).bank_account(*args, **kwargs)
+        financial_documents=FinancialDocumentRepo(request=request).list(account_id=bank_account.id)
+        context['financial_documents']=financial_documents
+        context['financial_documents_s']=json.dumps(FinancialDocumentSerializer(financial_documents,many=True).data)
+        context['bank_account']=bank_account
+        rest=90
+        context['rest']=rest
+        if request.user.has_perm(APP_NAME+".add_payment"):
+            context['add_payment_form']=AddPaymentForm()
+            context.update(PaymentViews().getNewPaymentContext(request=request))
+        context['financial_account']=bank_account
         return render(request,TEMPLATE_ROOT+"bank-account.html",context)
     def bank_accounts(self,request,*args, **kwargs):
         context=getContext(request=request)
