@@ -79,4 +79,8 @@ class AddWageForm(forms.Form):
 class AddTransactionDocumentForm(forms.Form):
     transaction_id=forms.IntegerField(required=True)
     title=forms.CharField( max_length=50, required=True)
+class AddTransactionLinkForm(forms.Form):
+    transaction_id=forms.IntegerField(required=True)
+    title=forms.CharField( max_length=500000, required=True)
+    url=forms.CharField( max_length=500000, required=True)
     

@@ -6,7 +6,7 @@ from django.utils import timezone
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
 from .repo import BankAccountRepo, BankRepo, StorePriceRepo, TagRepo
-from core.serializers import DocumentSerializer
+from core.serializers import DocumentSerializer,PageLikeSerializer, PageLinkSerializer
 from hesabyar.models import TransactionCategory 
 from .enums import CostTypeEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
 from .forms import *
@@ -34,12 +34,18 @@ def getTransactionContext(request,transaction):
     context={}
     context['transaction']=transaction
     documents=transaction.documents.all()
+    links=transaction.links.all()
 
     documents_s=json.dumps(DocumentSerializer(documents,many=True).data)
     context['documents']=documents
     context['documents_s']=documents_s
-    if request.user.has_perm(APP_NAME+".change_transaction"):
+    if request.user.has_perm("core.change_transaction"):
         context['add_transaction_document_form']=AddTransactionDocumentForm()
+    links_s=json.dumps(PageLinkSerializer(links,many=True).data)
+    context['links']=links
+    context['links_s']=links_s
+    if request.user.has_perm("core.change_link"):
+        context['add_transaction_link_form']=AddTransactionLinkForm()
     return context
 
 

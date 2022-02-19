@@ -44,6 +44,7 @@ class Transaction(models.Model,LinkHelper):
     description=HTMLField(_("توضیحات"),null=True,blank=True, max_length=50000)
     class_name=models.CharField(_("class_name"),blank=True, max_length=50)
     documents=models.ManyToManyField("core.document",blank=True, verbose_name=_("documents"))
+    links=models.ManyToManyField("core.link",blank=True, verbose_name=_("links"))
     color_origin=models.CharField(_("color"),choices=ColorEnum.choices,null=True,blank=True, max_length=50)
     tags=models.ManyToManyField("tag",blank=True, verbose_name=_("برچسب ها"))
     

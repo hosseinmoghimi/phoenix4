@@ -5,7 +5,7 @@ from django.db.models import Q
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
 from django.utils import timezone
-from core.models import Document
+from core.models import Document, Link
 
 from hesabyar.enums import CostTypeEnum, PaymentMethodEnum, SpendTypeEnum, TransactionStatusEnum
 from utility.persian import PersianCalendar
@@ -716,6 +716,20 @@ class TransactionRepo:
         document.profiles.add(self.profile)
         transaction.documents.add(document)
         return document
+
+    def add_link(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".change_transaction"):
+            return
+        transaction=self.transaction(*args, **kwargs)
+        if transaction is None:
+                return
+        title=kwargs['title'] if 'title' in kwargs else "لینک"
+        url=kwargs['url']
+        priority=kwargs['priority'] if 'priority' in kwargs else 100
+        link=Link(icon_fa="fa fa-link",title=title,url=url,priority=priority)
+        link.save()
+        transaction.links.add(link)
+        return link
      
 class InvoiceRepo:
     def __init__(self, *args, **kwargs):

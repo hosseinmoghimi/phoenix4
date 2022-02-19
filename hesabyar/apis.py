@@ -1,7 +1,7 @@
 import json
 from core.constants import FAILED,SUCCEED
 from rest_framework.views import APIView
-from core.serializers import DocumentSerializer
+from core.serializers import DocumentSerializer,PageLinkSerializer
 from hesabyar.enums import WareHouseSheetStatusEnum
 from hesabyar.models import Transaction
 
@@ -113,6 +113,28 @@ class TransactionApi(APIView):
                 if document is not None:
                     context['document'] = DocumentSerializer(
                         document, context={'request': request}).data
+                    context['result'] = SUCCEED
+        context['log'] = log
+        return JsonResponse(context)
+
+    def add_transaction_link(self, request, *args, **kwargs):
+        log = 1
+        context = {}
+        context['result'] = FAILED
+        if request.method == 'POST':
+            log += 1
+            add_page_link_form = AddTransactionLinkForm(
+                request.POST, request.FILES)
+            if add_page_link_form.is_valid():
+                log += 1
+                title = add_page_link_form.cleaned_data['title']
+                transaction_id = add_page_link_form.cleaned_data['transaction_id']
+                url = add_page_link_form.cleaned_data['url']
+                link = TransactionRepo(request=request).add_link(
+                    title=title, url=url, transaction_id=transaction_id)
+                if link is not None:
+                    context['transaction_link'] = PageLinkSerializer(
+                        link, context={'request': request}).data
                     context['result'] = SUCCEED
         context['log'] = log
         return JsonResponse(context)

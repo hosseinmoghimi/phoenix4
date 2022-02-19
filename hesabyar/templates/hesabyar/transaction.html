@@ -96,6 +96,10 @@
  {% include "hesabyar/includes/transaction-documents-app/template.html" %}
 
     </div>
+    <div class="col-md-6">
+ {% include "hesabyar/includes/transaction-links-app/template.html" %}
+
+    </div>
 </div>
 {% block wage %}
   
@@ -121,5 +125,6 @@
 {% endblock content %}
 
 {% block script %}
+ {% include "hesabyar/includes/transaction-links-app/script.html" %}
  {% include "hesabyar/includes/transaction-documents-app/script.html" %}
 {% endblock script %}
