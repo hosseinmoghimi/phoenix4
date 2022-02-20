@@ -148,7 +148,8 @@ class AuthenticationViews(View):
                     context['back_url']=back_url
                     return render(request,TEMPLATE_ROOT+'login.html',context)
         else:
-            context=getContext(request)
+            context=getContext(request)            
+            logout(request)
             back_url=request.GET.get('next','/')
             context['back_url']=back_url
             return render(request,TEMPLATE_ROOT+"login.html",context)
