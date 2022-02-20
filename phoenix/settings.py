@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'todocalendar',
     'bms',  
     'hesabyar',
+    'log',
     'mafia',
     'restaurant',
     'messenger',

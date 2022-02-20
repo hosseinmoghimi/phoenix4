@@ -81,4 +81,6 @@ class DocumentViews(View):
                 response['Content-Disposition'] = 'inline; filename=' + \
                     os.path.basename(file_path)
                 return response
+        from log.repo import LogRepo
+        LogRepo(request=request).add_log(title="Http404 stock views 1") 
         raise Http404

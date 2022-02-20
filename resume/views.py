@@ -74,6 +74,9 @@ class BasicViews(View):
 
     def home(self, request, *args, **kwargs):
         if 'profile_id' not in kwargs:
+            
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 resume views 1") 
             raise Http404
         language = LanguageEnum.ENGLISH
         # language=LanguageEnum.ENGLISH

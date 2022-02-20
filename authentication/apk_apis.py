@@ -1,5 +1,5 @@
 
-from cgitb import reset
+from django.http import Http404
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
@@ -22,6 +22,10 @@ from .models import Profile
 class RegisterProfile(APIView):
 
     def post(self,request,*args, **kwargs):
+        
+            
+        from log.repo import LogRepo
+        LogRepo(request=request).add_log(title="Http404 authentication api views")
         raise Http404
         result=FAILED
         context={'result':FAILED}

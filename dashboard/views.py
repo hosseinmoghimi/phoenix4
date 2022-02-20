@@ -20,6 +20,9 @@ class BasicViews():
 
     def parameters(self,request,*args, **kwargs):
         if not 'app_name' in kwargs:
+            
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 dashboard views 1")
             raise Http404
         if not request.user.has_perm("core.change_parameter"):
             mv=MessageView(title="دسترسی غیر مجاز",body="<p>شما مجوز لازم برای دسترسی به این صفحه را ندارید.</p>")

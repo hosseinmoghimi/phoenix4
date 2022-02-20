@@ -81,6 +81,8 @@ def CoreContext(request, *args, **kwargs):
 
 def PageContext(request, page):
     if page is None:
+        from log.repo import LogRepo
+        LogRepo(request=request).add_log(title="Http404 core views 1")
         raise Http404
     if page is None:
         return {}
@@ -271,6 +273,8 @@ class PageViews(View):
             pass
         elif request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
             if document is None:
+                from log.repo import LogRepo
+                LogRepo(request=request).add_log(title="Http404 core views 2")
                 raise Http404
             return document.download_response()
 

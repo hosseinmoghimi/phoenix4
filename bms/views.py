@@ -80,6 +80,9 @@ class BasicViews(View):
     def command(self, request, pk, *args, **kwargs):
         command = CommandRepo(request=request).command(pk)
         if command is None:
+            
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 bms views 1")
             raise Http404
         context = getContext(request)
         context['command'] = command
@@ -90,6 +93,8 @@ class BasicViews(View):
     def relay(self, request, pk, *args, **kwargs):
         relay = RelayRepo(request=request).relay(pk)
         if relay is None:
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 bms views 2")
             raise Http404
 
         context = getContext(request)

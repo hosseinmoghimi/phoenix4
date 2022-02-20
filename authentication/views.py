@@ -68,6 +68,9 @@ class ProfileViews(View):
         if request.user.has_perm(APP_NAME+".change_profile") or (me_profile is not None and selected_profile.id==me_profile.id):
             pass
         else:
+            
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 authentication views")
             raise Http404
         context['selected_profile']=selected_profile
         context['upload_profile_image_form']=UploadProfileImageForm()

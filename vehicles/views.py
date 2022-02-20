@@ -346,6 +346,9 @@ class TripViews(View):
         context=getContext(request=request)
         me_passenger=context['me_passenger']
         if me_passenger is None and not request.user.has_perm(APP_NAME+"add_trip"):
+            
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 vehicles views 1") 
             raise Http404
         if me_passenger is None:
             context['passenger_id']=0

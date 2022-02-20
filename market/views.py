@@ -138,6 +138,10 @@ class MenuViews(View):
                 description = confirm_menu_form.cleaned_data['description']
                 me_customer = CustomerRepo(request=request).me
                 if me_customer is None:
+                    
+            
+                    from log.repo import LogRepo
+                    LogRepo(request=request).add_log(title="Http404 market wiews 1")
                     raise Http404
                 customer_id = me_customer.id
                 cart_lines = CartRepo(request=request).cart(
@@ -166,6 +170,9 @@ class MenuViews(View):
         # context['menu_lines_s']=json.dumps(MenuLineSerializer(menu_lines,many=True).data)
         me_customer = context['me_customer']
         if me_customer is None:
+            
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 market views 2")
             raise Http404
         cart_lines = CartRepo(request=request).cart(
             customer_id=me_customer.id).lines
@@ -208,9 +215,13 @@ class ShopViews(View):
 
     def shops(self, request, *args, **kwargs):
         if not request.user.has_perm(APP_NAME+".view_shop"):
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 market views 3")
             raise Http404
         supplier = SupplierRepo(request=request).supplier(*args, **kwargs)
         if supplier is None:
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 market views 4")
             raise Http404
         context = getContext(request=request)
 
@@ -265,6 +276,8 @@ class CartViews(View):
         else:
             customer = CustomerRepo(request=request).me
         if customer is None:
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 market views 5")
             raise Http404
         context = getContext(request)
         cart_repo = CartRepo(request=request)
@@ -337,6 +350,8 @@ class ProductViews(View):
                 if category is not None:
                     return redirect(category.get_absolute_url())
 
+        from log.repo import LogRepo
+        LogRepo(request=request).add_log(title="Http404 market views 6")
         raise Http404
 
     def product_feature(self, request, *args, **kwargs):
@@ -563,6 +578,8 @@ class OrderViews(View):
         user = request.user
         order = OrderRepo(request=request).order(*args, **kwargs)
         if order is None:
+            # from log.repo import LogRepo
+            # LogRepo(request=request).add_log(title="Http404 market views 7")
             # raise Http404
             message = MessageView(request=request)
             message.header_text = "چنین سفارشی وجود ندارد."
@@ -607,6 +624,8 @@ class OrderViews(View):
         user = request.user
         order = OrderRepo(request=request).order(*args, **kwargs)
         if order is None:
+            from log.repo import LogRepo
+            LogRepo(request=request).add_log(title="Http404 market views 8")
             raise Http404
             # message= MessageView(request=request)
             # message.title="همچنین "
