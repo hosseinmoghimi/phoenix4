@@ -642,7 +642,7 @@ class ReportViews(View):
         rest-=wages
         rest-=buy_service
         rest+=sell_service
-        rest-=tax
+        # rest-=tax
         rest-=costs
         context['tax']=tax
         context['sell_service_benefit']=sell_service_benefit
