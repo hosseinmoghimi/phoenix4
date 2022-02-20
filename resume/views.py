@@ -93,6 +93,7 @@ class BasicViews(View):
         context['call'] = parameter_repo.get(name='call')
         context['resume_index'] = resume_index
         context['title'] = resume_index.title
+        context['resume_skills'] = resume_index.resumeskill_set.all()
 
 
         services=resume_index.resumeservice_set.all().order_by('priority')

@@ -30,17 +30,18 @@
 
             {% endif %}
 
-            {% for skill in resume_index.resumeskill_set.all %}
+            {% for skill in resume_skills %}
 
             <div class="col-lg-6">
 
                 <div class="progress">
-                    <span class="skill farsi">{{skill.title}}
+                    <span class="skill farsi rtl">
+                        {{skill.title}}
                         {% if perms.resume.change_resumeskill %}
 
                         {{skill.get_edit_btn|safe}}
                         {% endif %}
-                        <i class="val">{{skill.percentage}}%</i></span>
+                        <i class="val" style="float: unset !important;">{{skill.percentage}}%</i></span>
                     <div class="progress-bar-wrap">
                         <div class="progress-bar" role="progressbar" aria-valuenow="{{skill.percentage}}"
                             aria-valuemin="0" aria-valuemax="100"></div>
