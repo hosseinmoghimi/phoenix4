@@ -82,5 +82,5 @@ class DocumentViews(View):
                     os.path.basename(file_path)
                 return response
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 stock views 1") 
+        LogRepo(request=request).add_log(title="Http404 stock views 1",app_name=APP_NAME) 
         raise Http404

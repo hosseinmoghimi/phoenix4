@@ -28,7 +28,7 @@ class SalaryViews(View):
         employee_salary=EmployeeSalaryRepo(request=request).employee_salary(*args, **kwargs)
         if employee_salary is None:
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 salary views 1") 
+            LogRepo(request=request).add_log(title="Http404 salary views 1",app_name=APP_NAME) 
             raise Http404
         context=getContext(request=request)
         context['employee_salary']=employee_salary
@@ -49,7 +49,7 @@ class SalaryViews(View):
         employee_salary=EmployeeSalaryRepo(request=request).employee_salary(*args, **kwargs)
         if employee_salary is None:
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 salary views 2") 
+            LogRepo(request=request).add_log(title="Http404 salary views 2",app_name=APP_NAME) 
             raise Http404
         context=getContext(request=request)
         context['employee_salary']=employee_salary

@@ -648,7 +648,7 @@ class Document(Icon):
                 self.save()
                 return response
         from log.repo import LogRepo
-        LogRepo().add_log(title="Http404 core models")
+        LogRepo().add_log(title="Http404 core models",app_name=APP_NAME)
         raise Http404
 
     def __str__(self):

@@ -598,7 +598,7 @@ class OrderRepo:
         if order_line is None:
             
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 market repo 1")
+            LogRepo(request=request).add_log(title="Http404 market repo 1",app_name=APP_NAME)
             raise Http404
         if order_line.order.supplier.profile==self.profile:
             return order_line
@@ -608,7 +608,7 @@ class OrderRepo:
             return order_line
         
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 market repo 2")
+        LogRepo(request=request).add_log(title="Http404 market repo 2",app_name=APP_NAME)
         raise Http404
 
     def do_pack(self, *args, **kwargs):

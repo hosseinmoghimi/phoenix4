@@ -41,6 +41,8 @@ class LogRepo():
         log=Log()
         if 'title' in kwargs:            
             log.title=kwargs['title']
+        if 'app_name' in kwargs:     
+            log.app_name=kwargs['app_name']
         if 'description' in kwargs:            
             log.description=kwargs['description']
         log.save()

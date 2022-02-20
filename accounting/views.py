@@ -230,7 +230,7 @@ class FinancialAccountViews(View):
         if financial_account is None:
             
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 accounting views")
+            LogRepo(request=request).add_log(title="Http404 accounting views",app_name=APP_NAME)
             raise Http404
         context['financial_account']=financial_account
         transactions=TransactionRepo(request=request).list(financial_account_id=financial_account.id)

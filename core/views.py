@@ -1,10 +1,12 @@
 import json
+from pydoc import describe
 from core.serializers import DocumentSerializer,BasicPageSerializer, ImageSerializer, PageCommentSerializer, PageImageSerializer, PageLikeSerializer, PageLinkSerializer, TagSerializer
 from django.utils import timezone
 from django.shortcuts import render,reverse
 
 from .enums import ParametersEnum
 
+from log.repo import LogRepo
 
 
 from .apps import APP_NAME
@@ -19,6 +21,7 @@ TEMPLATE_ROOT = "core/"
 from phoenix.server_settings import apps
 
 def CoreContext(request, *args, **kwargs):
+    # LogRepo(request=request).add_log(title="Core_Context ",description=json.dumps(kwargs),app_name=APP_NAME)
     context = {}
     app_name = 'core'
     context['wide_layout_parent']="phoenix/wide-layout.html"
@@ -81,8 +84,7 @@ def CoreContext(request, *args, **kwargs):
 
 def PageContext(request, page):
     if page is None:
-        from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 core views 1")
+        LogRepo(request=request).add_log(title="Http404 core views 1",app_name=APP_NAME)
         raise Http404
     if page is None:
         return {}
@@ -273,8 +275,7 @@ class PageViews(View):
             pass
         elif request.user.has_perm("core.change_document") or document.is_open or me in document.profiles.all():
             if document is None:
-                from log.repo import LogRepo
-                LogRepo(request=request).add_log(title="Http404 core views 2")
+                LogRepo(request=request).add_log(title="Http404 core views 2",app_name=APP_NAME)
                 raise Http404
             return document.download_response()
 

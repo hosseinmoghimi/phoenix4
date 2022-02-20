@@ -8,7 +8,7 @@ from .repo import ProfileRepo
 from .serializers import ProfileSerializer
 from django.http import JsonResponse
 from core.constants import SUCCEED,FAILED
-
+from.apps import APP_NAME
 
 
 from django.views.decorators.csrf import csrf_exempt
@@ -25,7 +25,7 @@ class RegisterProfile(APIView):
         
             
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 authentication api views")
+        LogRepo(request=request).add_log(title="Http404 authentication api views",app_name=APP_NAME)
         raise Http404
         result=FAILED
         context={'result':FAILED}

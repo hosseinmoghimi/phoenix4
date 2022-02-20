@@ -41,7 +41,7 @@ def getContext(request):
     me_employee = EmployeeRepo(request=request).me
     if me_employee is None:
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 pm views 1")
+        LogRepo(request=request).add_log(title="Http404 pm views 1",app_name=APP_NAME)
         raise Http404
         # mv=MessageView()
         # mv.message_text_html="دسترسی غیر مجاز"
@@ -177,7 +177,7 @@ class ProjectViews(View):
                     if project is not None:
                         return redirect(project.get_absolute_url())
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 pm views 2") 
+        LogRepo(request=request).add_log(title="Http404 pm views 2",app_name=APP_NAME) 
         raise Http404
 
     def projects_chart(self, request, *args, **kwargs):
@@ -493,7 +493,7 @@ class RequestViews(View):
                         return redirect(reverse(APP_NAME+":servicerequest", kwargs={'pk': service_request_id}))
 
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 pm views 3") 
+        LogRepo(request=request).add_log(title="Http404 pm views 3",app_name=APP_NAME) 
         raise Http404
 
 
@@ -541,7 +541,7 @@ class OrganizationUnitViews(View):
             pass
         else:
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 pm views 4") 
+            LogRepo(request=request).add_log(title="Http404 pm views 4",app_name=APP_NAME) 
             raise Http404
 
         if request.user.has_perm(APP_NAME+".add_organizationunit") or can_change:

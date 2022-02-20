@@ -141,7 +141,7 @@ class MenuViews(View):
                     
             
                     from log.repo import LogRepo
-                    LogRepo(request=request).add_log(title="Http404 market wiews 1")
+                    LogRepo(request=request).add_log(title="Http404 market wiews 1",app_name=APP_NAME)
                     raise Http404
                 customer_id = me_customer.id
                 cart_lines = CartRepo(request=request).cart(
@@ -172,7 +172,7 @@ class MenuViews(View):
         if me_customer is None:
             
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 market views 2")
+            LogRepo(request=request).add_log(title="Http404 market views 2",app_name=APP_NAME)
             raise Http404
         cart_lines = CartRepo(request=request).cart(
             customer_id=me_customer.id).lines
@@ -216,12 +216,12 @@ class ShopViews(View):
     def shops(self, request, *args, **kwargs):
         if not request.user.has_perm(APP_NAME+".view_shop"):
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 market views 3")
+            LogRepo(request=request).add_log(title="Http404 market views 3",app_name=APP_NAME)
             raise Http404
         supplier = SupplierRepo(request=request).supplier(*args, **kwargs)
         if supplier is None:
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 market views 4")
+            LogRepo(request=request).add_log(title="Http404 market views 4",app_name=APP_NAME)
             raise Http404
         context = getContext(request=request)
 
@@ -277,7 +277,7 @@ class CartViews(View):
             customer = CustomerRepo(request=request).me
         if customer is None:
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 market views 5")
+            LogRepo(request=request).add_log(title="Http404 market views 5",app_name=APP_NAME)
             raise Http404
         context = getContext(request)
         cart_repo = CartRepo(request=request)
@@ -351,7 +351,7 @@ class ProductViews(View):
                     return redirect(category.get_absolute_url())
 
         from log.repo import LogRepo
-        LogRepo(request=request).add_log(title="Http404 market views 6")
+        LogRepo(request=request).add_log(title="Http404 market views 6",app_name=APP_NAME)
         raise Http404
 
     def product_feature(self, request, *args, **kwargs):
@@ -625,7 +625,7 @@ class OrderViews(View):
         order = OrderRepo(request=request).order(*args, **kwargs)
         if order is None:
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 market views 8")
+            LogRepo(request=request).add_log(title="Http404 market views 8",app_name=APP_NAME)
             raise Http404
             # message= MessageView(request=request)
             # message.title="همچنین "

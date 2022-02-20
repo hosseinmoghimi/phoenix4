@@ -70,7 +70,7 @@ class ProfileViews(View):
         else:
             
             from log.repo import LogRepo
-            LogRepo(request=request).add_log(title="Http404 authentication views")
+            LogRepo(request=request).add_log(title="Http404 authentication views",app_name=APP_NAME)
             raise Http404
         context['selected_profile']=selected_profile
         context['upload_profile_image_form']=UploadProfileImageForm()
