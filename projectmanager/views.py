@@ -34,8 +34,9 @@ from .serializers import (EmployeeSerializer, EmployeeSerializer2,
 from .utils import AdminUtility
 
 TEMPLATE_ROOT = APP_NAME+"/"
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def getContext(request):
     me_employee = EmployeeRepo(request=request).me
     if me_employee is None:
