@@ -370,18 +370,21 @@ class FinancialAccountRepo:
         year=int(kwargs['year'])
         month=int(kwargs['month'])
         if month>0 and month<13:
-            if month<9:
+            if month<7:
                 start_date=str(year)+"/0"+str(month)+"/01 00:00:00"
-                end_date=str(year)+"/0"+str(month+1)+"/01 00:00:00"
+                end_date=str(year)+"/0"+str(month)+"/31 23:59:59"
+            elif month<9:
+                start_date=str(year)+"/0"+str(month)+"/01 00:00:00"
+                end_date=str(year)+"/0"+str(month)+"/30 23:59:59"
             elif month==9:
                 start_date=str(year)+"/09/01 00:00:00"
-                end_date=str(year)+"/10/01 00:00:00"
+                end_date=str(year)+"/09/30 23:59:59"
             elif month==12:
                 start_date=str(year)+"/12/01 00:00:00"
-                end_date=str(year+1)+"/01/01 00:00:00"
-            else:
+                end_date=str(year+1)+"/12/29 23:59:59"
+            elif month==10 or month==11:
                 start_date=str(year)+"/"+str(month)+"/01 00:00:00"
-                end_date=str(year)+"/"+str(month+1)+"/01 00:00:00"
+                end_date=str(year)+"/"+str(month)+"/30 23:59:59"
             
         start_date=PersianCalendar().to_gregorian(start_date)
         end_date=PersianCalendar().to_gregorian(end_date)
