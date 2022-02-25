@@ -194,6 +194,7 @@ class FinancialBalance(models.Model,LinkHelper):
     sell_loss=models.IntegerField(_("زیان حاصل از فروش"),default=0)
     cost=models.IntegerField(_("هزینه"),default=0)
     tax=models.IntegerField(_("مالیات"),default=0)
+    wage=models.IntegerField(_("حقوق"),default=0)
     sell_service=models.IntegerField(_("فروش خدمات"),default=0)
     buy_service=models.IntegerField(_("خرید خدمات"),default=0)
     discount=models.IntegerField(_("تخفیف"),default=0)
@@ -748,6 +749,11 @@ class Cost(Spend,LinkHelper):
     def save(self,*args, **kwargs):
         self.class_name="cost"
         super(Cost,self).save(*args, **kwargs)
+        for fd in self.financialdocument_set.all():
+            FinancialBalance.objects.filter(financial_document=fd).delete()
+            fb=FinancialBalance(financial_document=fd)
+            fb.cost=self.amount
+            fb.save()
 
 
 class Wage(Spend,LinkHelper):    
@@ -764,4 +770,9 @@ class Wage(Spend,LinkHelper):
    
     def save(self,*args, **kwargs):
         self.class_name="wage"
-        super(Spend,self).save(*args, **kwargs)
+        super(Wage,self).save(*args, **kwargs)
+        for fd in self.financialdocument_set.all():
+            FinancialBalance.objects.filter(financial_document=fd).delete()
+            fb=FinancialBalance(financial_document=fd)
+            fb.wage=self.amount
+            fb.save()

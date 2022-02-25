@@ -51,6 +51,7 @@ urlpatterns = [
     path('transactions/',login_required(views.TransactionViews().transactions),name="transactions"),
     path('tag/<int:pk>/',login_required(views.BasicViews().tag),name="tag"),
     path('wage/<int:pk>/',login_required(views.WageViews().wage),name="wage"),
+    path('financial_balances/',login_required(views.FinancialBalanceViews().financial_balances),name="financial_balances"),
     path('wages/',login_required(views.WageViews().wages),name="wages"),
     path('ware_house/<int:pk>/',login_required(views.WareHouseViews().ware_house),name="warehouse"),
     path('ware_houses/',login_required(views.WareHouseViews().ware_houses),name="ware_houses"),

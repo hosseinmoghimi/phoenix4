@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render,reverse
 from django.utils import timezone
 from authentication.repo import ProfileRepo
 from core.enums import UnitNameEnum
-from .repo import BankAccountRepo, BankRepo, StorePriceRepo, TagRepo
+from .repo import BankAccountRepo, BankRepo, FinancialBalanceRepo, StorePriceRepo, TagRepo
 from core.serializers import DocumentSerializer,PageLikeSerializer, PageLinkSerializer
 from hesabyar.models import TransactionCategory 
 from .enums import CostTypeEnum, PaymentMethodEnum, TransactionStatusEnum, WareHouseSheetDirectionEnum
@@ -764,6 +764,29 @@ class ServiceViews(View):
         context['services_s']=services_s
         return render(request,TEMPLATE_ROOT+"services.html",context)
 
+
+
+class FinancialBalanceViews(View):
+    def financial_balance(self,request,*args, **kwargs):
+        financial_balance=ServiceRepo(request=request).financial_balance(*args, **kwargs)
+        context=getContext(request=request)
+        if request.user.has_perm(APP_NAME+".add_storeprice"):
+            context['add_store_price_form']=AddStorePriceForm()
+            context['stores']=StoreRepo(request=request).list()
+        context.update(PageContext(request=request,page=service))
+        
+        context['financial_balance']=financial_balance
+
+        return render(request,TEMPLATE_ROOT+"financial-balance.html",context)
+
+
+    def financial_balances(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        financial_balances=FinancialBalanceRepo(request=request).list()
+        context['financial_balances']=financial_balances
+        # services_s=json.dumps(ServiceSerializer(services,many=True).data)
+        # context['services_s']=services_s
+        return render(request,TEMPLATE_ROOT+"financial-balances.html",context)
 
 
 class SpendViews(View):

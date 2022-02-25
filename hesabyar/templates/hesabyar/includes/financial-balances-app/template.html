@@ -1,0 +1,89 @@
+{% load to_price %}
+<div class="card">
+    <div class="card-header">
+        <h4>
+            تراز های مالی
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsice">
+            <table class="table table-striped">
+                <thead>
+                    <th>
+                        سند
+                    </th>
+                    <th>
+                        حقوق
+                    </th>
+                    <th>
+                        هزینه
+                    </th>
+                    <th>
+                        مالیات
+                    </th>
+                    <th>
+                        خرید خدمات
+                    </th>
+                    <th>
+                        فروش خدمات
+                    </th>
+                    <th>
+                        سود فروش
+                    </th>
+                </thead>
+                <tbody>
+                    {% for financial_balance in financial_balances %}
+
+                    <tr>
+                        <td>
+                            <a href="{{financial_balance.financial_document.get_absolute_url}}">
+                                {{financial_balance.financial_document.title}}
+                            </a>
+                            <div>
+                                <a href="{{financial_balance.financial_document.account.get_absolute_url}}">
+                                    <small>
+
+                                        {{financial_balance.financial_document.account.title}}
+                                    </small>
+                                </a>
+                                
+
+                            </div>
+                        </td>
+                        <td>
+                            {{financial_balance.wage|to_price_pure}}
+
+                        </td>
+
+                        
+                        <td>
+                            {{financial_balance.cost|to_price_pure}}
+
+                        </td>
+
+                        
+                        <td>
+                            {{financial_balance.tax|to_price_pure}}
+
+                        </td>
+
+                        
+                        <td>
+                            {{financial_balance.buy_service|to_price_pure}}
+
+                        </td>
+                        <td>
+                            {{financial_balance.sell_service|to_price_pure}}
+
+                        </td>
+                        <td>
+                            {{financial_balance.sell_benefit|to_price_pure}}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

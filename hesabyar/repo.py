@@ -45,6 +45,42 @@ class BankAccountRepo:
         if 'id' in kwargs:
             return self.objects.filter(pk= kwargs['id']).first()
 
+class FinancialBalanceRepo:
+    def __init__(self, *args, **kwargs):
+        self.request = None
+        self.user = None
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+            self.user = self.request.user
+        if 'user' in kwargs:
+            self.user = kwargs['user']
+        self.objects = FinancialBalance.objects.all()
+        self.profile = ProfileRepo(user=self.user).me
+        if self.user.has_perm(APP_NAME+".view_financialbalance"):
+            self.objects = self.objects
+        elif self.profile is not None:
+            self.objects = self.objects.filter(financial_document__account__profile=self.profile)
+        else:
+            self.objects = self.objects.filter(pk__lte=0)
+
+        
+    def list(self, *args, **kwargs):
+        objects = self.objects.all()
+        if 'for_home' in kwargs:
+            objects = objects.filter(for_home=kwargs['for_home'])
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects = objects.filter(title__contains=search_for)
+        return objects
+
+    def financial_balance(self, *args, **kwargs):
+        if 'financial_balance_id' in kwargs:
+            return self.objects.filter(pk= kwargs['financial_balance_id']).first()
+        if 'pk' in kwargs:
+            return self.objects.filter(pk= kwargs['pk']).first()
+        if 'id' in kwargs:
+            return self.objects.filter(pk= kwargs['id']).first()
+
 class StorePriceRepo:
     def __init__(self, *args, **kwargs):
         self.request = None
@@ -1149,6 +1185,11 @@ class CostRepo:
             cost.financial_year_id=FinancialYear.get_by_date(date=cost.transaction_datetime).id
 
         cost.save()
+        # for fd in cost.financialdocument_set.all():
+        #     FinancialBalance.objects.filter(financial_document=fd).delete()
+        #     fb=FinancialBalance(financial_document=fd)
+        #     fb.cost=cost.amount
+        #     fb.save()
         return cost
 
 class WageRepo:
@@ -1240,15 +1281,12 @@ class WageRepo:
             wage.financial_year_id=FinancialYear.get_by_date(date=wage.transaction_datetime).id
 
         wage.save()
+        # for fd in wage.financialdocument_set.all():
+        #     fb=FinancialBalance(financial_document=fd)
+        #     fb.wage=wage.amount
+        #     fb.save()
 
-        # payment=Payment()
-        # payment.pay_from=wage.pay_to
-        # payment.pay_to=wage.pay_from
-        # payment.transaction_datetime=wage.transaction_datetime
-        # payment.amount=wage.amount
-        # payment.creator=self.profile
-        # payment.title="کارکرد حقوق "+wage.month_year()
-        # payment.save()
+        
 
         return wage
 
