@@ -94,7 +94,7 @@
 
 
                         </tbody>
-                       
+
                     </table>
                 </div>
 
@@ -119,7 +119,7 @@
                 </div>
                 <div class="text-center">
 
-                    <canvas id="report-linear-chart" style="width:100%;max-width:800px"></canvas>
+                    <canvas id="report-linear-chart-1" style="width:100%;max-width:800px"></canvas>
 
                 </div>
 
@@ -128,6 +128,93 @@
 
         </div>
     </div>
+
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class=" farsi text-right">
+
+                    <span class="text-success">
+                        خدمات </span>
+
+                </div>
+                <div class="text-center">
+
+                    <canvas id="report-linear-chart-service" style="width:100%;max-width:800px"></canvas>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class=" farsi text-right">
+
+                    <span class="text-success">
+                        مالیات </span>
+
+                </div>
+                <div class="text-center">
+
+                    <canvas id="report-linear-chart-tax" style="width:100%;max-width:800px"></canvas>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class=" farsi text-right">
+
+                    <span class="text-success">
+                        حقوق </span>
+
+                </div>
+                <div class="text-center">
+
+                    <canvas id="report-linear-chart-wage" style="width:100%;max-width:800px"></canvas>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class=" farsi text-right">
+
+                    <span class="text-danger">
+                        هزینه ها </span>
+
+                </div>
+                <div class="text-center">
+
+                    <canvas id="report-linear-chart-cost" style="width:100%;max-width:800px"></canvas>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
 </div>
 
 
@@ -181,16 +268,22 @@
     let report_data = JSON.parse(`{{rep_s|escapejs}}`)
     let chart_data_cost = []
     let chart_data_wage = []
+    let chart_data_tax = []
+    let chart_data_sell_service = []
+    let chart_data_buy_service = []
     let chart_data_sell_benefit = []
     report_data.forEach(month => {
         chart_data_cost.push(month.cost)
         chart_data_wage.push(month.wage)
+        chart_data_sell_service.push(month.sell_service)
+        chart_data_tax.push(month.tax)
+        chart_data_buy_service.push(month.buy_service)
         chart_data_sell_benefit.push(month.sell_benefit)
     });
     var xValues = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
     function drawVoltageLinearChart() {
 
-        new Chart("report-linear-chart", {
+        new Chart("report-linear-chart-1", {
             type: "line",
             data: {
                 labels: xValues,
@@ -205,6 +298,97 @@
                 }, {
                     data: chart_data_sell_benefit,
                     borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+        new Chart("report-linear-chart-service", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: chart_data_sell_service,
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: chart_data_buy_service,
+                    borderColor: "red",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+
+        new Chart("report-linear-chart-service", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: chart_data_sell_service,
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: chart_data_buy_service,
+                    borderColor: "red",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+
+        new Chart("report-linear-chart-tax", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: chart_data_tax,
+                    borderColor: "red",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+
+
+        new Chart("report-linear-chart-wage", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: chart_data_wage,
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+        new Chart("report-linear-chart-cost", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: chart_data_cost,
+                    borderColor: "red",
                     fill: false
                 }]
             },

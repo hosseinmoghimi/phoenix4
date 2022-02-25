@@ -832,8 +832,6 @@ class InvoiceRepo:
                     invoice_line.unit_name=line['unit_name']
                     invoice_line.save()
                     amount1=invoice_line.unit_price*invoice_line.quantity
-                    # print(amount1)
-                    # print(10*"%$#@#$%^")
                     amount=amount+amount1
         tax_amount=int(0.01*invoice.tax_percent*(amount+invoice.ship_fee))
         invoice.amount=amount+invoice.ship_fee+tax_amount-invoice.discount
@@ -862,10 +860,50 @@ class InvoiceRepo:
         if fd is not None:
             fb=FinancialBalance(financial_document=fd)
             sell_benefit=0
+            sum_services=0
             for line in invoice.invoiceline_set.all():
-                sp=StorePrice.objects.filter(store_id=invoice.pay_from.id).filter(productorservice_id=line.productorservice.id).order_by('-date_added').first()
-                if sp is not None:
-                    sell_benefit+=line.quantity*(line.unit_price-sp.buy_price)
+                line_class_name=line.productorservice.class_name
+                # product=ProductRepo(request=self.request).service(pk=line.productorservice.id)
+                if line_class_name=="product":
+                    sp=StorePrice.objects.filter(store_id=invoice.pay_from.id).filter(productorservice_id=line.productorservice.id).order_by('-date_added').first()
+                    if sp is not None:
+                        sell_benefit+=line.quantity*(line.unit_price-sp.buy_price)
+                # service=ServiceRepo(request=self.request).service(pk=line.productorservice.id)
+                if line_class_name=="service":
+                # if service is not None:
+                    sum_services+=line.quantity*line.unit_price
+            fb.sell_service=sum_services if fb.financial_document.account.id==invoice.pay_from.id else 0
+            fb.buy_service=sum_services if fb.financial_document.account.id==invoice.pay_to.id else 0
+            
+            fb.sell_benefit=sell_benefit
+            fb.tax=invoice.tax_amount
+            fb.discount=invoice.discount
+            fb.ship_fee=invoice.ship_fee
+            fb.save()
+
+
+
+        fd=FinancialDocument.objects.filter(account=invoice.pay_to).filter(transaction=invoice).first()
+        if fd is not None:
+            fb=FinancialBalance(financial_document=fd)
+            sell_benefit=0
+            sum_services=0
+            for line in invoice.invoiceline_set.all():
+                line_class_name=line.productorservice.class_name
+                # product=ProductRepo(request=self.request).service(pk=line.productorservice.id)
+                if line_class_name=="product":
+                    # sp=StorePrice.objects.filter(store_id=invoice.pay_to.id).filter(productorservice_id=line.productorservice.id).order_by('-date_added').first()
+                    # if sp is not None:
+                        # sp=StorePrice()
+                        # sp.
+                    pass
+                # service=ServiceRepo(request=self.request).service(pk=line.productorservice.id)
+                if line_class_name=="service":
+                # if service is not None:
+                    sum_services+=line.quantity*line.unit_price
+            fb.sell_service=sum_services if fb.financial_document.account.id==invoice.pay_from.id else 0
+            fb.buy_service=sum_services if fb.financial_document.account.id==invoice.pay_to.id else 0
+            
             fb.sell_benefit=sell_benefit
             fb.tax=invoice.tax_amount
             fb.discount=invoice.discount

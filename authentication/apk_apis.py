@@ -131,15 +131,12 @@ class ProfileApi(APIView):
     def login(self,request,*args, **kwargs):
         context={}
         if request.method=='GET':
-            print(request.session)
-            print(100*"#@$")
             token=request.session.csrf_token
             context['token']=token
             context['result']=SUCCEED
             return JsonResponse(context)
         if request.method=='POST':
 
-            print(100*"#@$")
             
             context['result']=FAILED
             # if request.method=='POST':

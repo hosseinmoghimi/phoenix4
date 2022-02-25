@@ -335,8 +335,6 @@ class InvoiceViews(View):
         context=getContext(request=request)
         context.update(self.get_edit_invoice_context(request=request))
         store=StoreRepo(request=request).me
-        print(store)
-        print(100*"#")
         invoice=InvoiceRepo(request=request).new(store=store,*args, **kwargs)
         context['invoice']=invoice
         return redirect(invoice.get_edit_url2())
