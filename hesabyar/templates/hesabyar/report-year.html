@@ -5,6 +5,7 @@
 {% block content %}
 
 
+
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="text-center farsi">
@@ -119,7 +120,7 @@
                 </div>
                 <div class="text-center">
 
-                    <canvas id="report-linear-chart-1" style="width:100%;max-width:800px"></canvas>
+                    <canvas id="report-linear-chart-1" style="width:100%;"></canvas>
 
                 </div>
 
@@ -128,6 +129,7 @@
 
         </div>
     </div>
+
 
 
     <div class="col-md-6">
@@ -224,38 +226,11 @@
 <script src="{% static 'persian/moment.js' %}"></script>
 <script src="{% static 'persian/moment-jalaali.js' %}"></script>
 <script src="{% static 'persian/vue-persian-datetime-picker-browser.js' %}"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="{% static 'charts/Chart.min.js' %}"></script>
 
 <script>
     let financial_account_id = parseInt("{{financial_account.id}}")
-    let get_report_form_app = new Vue({
-        el: "#get-report-form-app",
-        data: {
-            financial_account_id: financial_account_id,
-            start_date: current_date,
-            end_date: current_date,
-        },
-        components: {
-            DatePicker: VuePersianDatetimePicker,
-
-        },
-        methods: {
-            get_report: function () {
-                let url = "{% url 'hesabyar:report' financial_account_id=0 %}"
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    financial_account_id: this.financial_account_id,
-                    start_date: this.start_date,
-                    end_date: this.end_date,
-
-                }
-                $.post(url, payload).done(data => {
-                    console.log(data)
-                })
-            }
-        }
-    })
+ 
 </script>
 
 
@@ -401,6 +376,42 @@
 
 
     }
+
+</script>
+
+
+
+<script>
+
+</script>
+
+<!-- <script src="{% static 'charts/chart.js' %}"></script> -->
+
+<script>
+
+    // const data = {
+    //     labels: [
+    //         'Red',
+    //         'Blue',
+    //         'Yellow'
+    //     ],
+    //     datasets: [{
+    //         label: 'My First Dataset',
+    //         data: [300, 50, 100],
+    //         backgroundColor: [
+    //             'rgb(255, 99, 132)',
+    //             'rgb(54, 162, 235)',
+    //             'rgb(255, 205, 86)'
+    //         ],
+    //         hoverOffset: 4
+    //     }]
+    // };
+
+    // const config = {
+    //     type: 'pie',
+    //     data: data,
+    // };
+
 
 </script>
 
